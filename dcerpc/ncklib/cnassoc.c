@@ -807,7 +807,7 @@ unsigned32              *st;
                  *    rejected or a local error occurred OR
                  *
                  * 2) the connection request failed and the binding
-                 *    timeout was not infinite.
+                 *    timeout was less than 6
                  */
                 if (!rpc__cn_network_connect_fail (*st))
                 {
@@ -815,7 +815,7 @@ unsigned32              *st;
                 }
                 else
                 {
-                    if (binding_r->common.timeout != rpc_c_binding_infinite_timeout)
+                    if (binding_r->common.timeout < 6)
                     {
                         return (NULL);
                     }
@@ -833,7 +833,7 @@ unsigned32              *st;
          *
          * 1) the connection request failed because it either timed
          *    out or the server rejected it and the binding timeout
-         *    was infinite or
+         *    was 6 or higher or
          *
          * 2) the maximum number of associations were reached on a
          *    particular group.
@@ -3157,7 +3157,19 @@ unsigned32      prej;
         case RPC_C_CN_PREJ_PROTOCOL_VERSION_NOT_SUPPORTED:
         return (rpc_s_rpc_prot_version_mismatch);
 
+	/* Win 2003 server (and possibly other Microsoft products) return
+	 * a bind_nak with reject reason 0 (reason not specified) if a second
+	 * bind session is created to the same named pipe from a different
+	 * tcp connection.
+	 *
+	 * To work around this issue, we treat it like the server rejected the
+	 * bind because there are too many remote connections. This causes
+	 * the bind to be retried, or an existing binding is reused when it
+	 * becomes free (which works for win 2003 server).
+	 */
         case RPC_C_CN_PREJ_REASON_NOT_SPECIFIED:
+        return (rpc_s_too_many_rem_connects);
+
         default:
         return (rpc_s_unknown_reject);
     }

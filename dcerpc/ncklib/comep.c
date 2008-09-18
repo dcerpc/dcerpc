@@ -349,14 +349,38 @@ unsigned32                  *status;
     {
         if (binding_vec->binding_h[i] != NULL) 
         {   
-            if (((rpc_binding_rep_p_t) binding_vec->binding_h[i])
-                ->addr_has_endpoint == false)
+            rpc_binding_rep_p_t binding_rep = (rpc_binding_rep_p_t) binding_vec->binding_h[i];
+            if (binding_rep->addr_has_endpoint == false)
             {
                 *status = rpc_s_invalid_binding;
                 return;
             }
 
+#ifdef __hpux__
+            if (binding_rep->rpc_addr && binding_rep->rpc_addr->sa.family == RPC_C_NAF_ID_IP)
+            {
+                struct sockaddr_in* addr = (struct sockaddr_in*) &binding_rep->rpc_addr->sa;
+                unsigned char* addr_bytes = (unsigned char*) &addr->sin_addr.s_addr;
+             
+                /* Don't attempt to connect on the loopback interface on HP-UX
+                   because the ep mapper incorrectly rejects attempts to register
+                   mappings through it */
+                if (addr_bytes[0] == 127)
+                {
+                    continue;
+                }
+            }
+
+            if (binding_rep->rpc_addr && binding_rep->rpc_addr->rpc_protseq_id == RPC_C_PROTSEQ_ID_NCALRPC)
+            {
+                /* Don't attempt to connect over ncalrpc on HP-UX because its native DCE
+                   implementation does not understand it */
+                continue;
+            }
+#endif
+
             curr_hand = i;
+            break;
         }
     }
 
@@ -389,14 +413,23 @@ unsigned32                  *status;
 
     for (curr_hand = 0; curr_hand < binding_vec->count; curr_hand++)
     {                
+        rpc_binding_rep_p_t binding_rep = (rpc_binding_rep_p_t) binding_vec->binding_h[curr_hand];
         /*
          * Skip over NULL entries.
          */
 
-        if (binding_vec->binding_h[curr_hand] == NULL)
+        if (binding_rep == NULL)
         {
             continue;
         }
+
+#ifdef __hpux__
+        /* Skip over ncalrpc endpoints on HP-UX because its DCE implementation does not understand them */
+        if (binding_rep->rpc_addr && binding_rep->rpc_addr->rpc_protseq_id == RPC_C_PROTSEQ_ID_NCALRPC)
+        {
+            continue;
+        }
+#endif
 
         /*
          * Convert the binding handle to tower_ref vector.
