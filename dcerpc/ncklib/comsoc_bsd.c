@@ -719,6 +719,34 @@ rpc_addr_p_t        addr;
 }
 
 /*
+ * R P C _ _ S O C K E T _ I N Q _ P E E R _ E N D P O I N T
+ *
+ */
+
+PRIVATE rpc_socket_error_t rpc__socket_inq_peer_endpoint
+#ifdef _DCE_PROTO_
+(
+    rpc_socket_t        sock,
+    rpc_addr_p_t        addr
+)
+#else
+(sock, addr)
+rpc_socket_t        sock;
+rpc_addr_p_t        addr;
+#endif
+{
+    rpc_socket_error_t  serr;
+
+    RPC_LOG_SOCKET_INQ_EP_NTR;
+    RPC_SOCKET_FIX_ADDRLEN(addr);
+    RPC_SOCKET_DISABLE_CANCEL;
+    serr = (getpeername(sock, (void*)&addr->sa, &addr->len) == -1) ? errno : RPC_C_SOCKET_OK;
+    RPC_SOCKET_RESTORE_CANCEL;
+    RPC_SOCKET_FIX_ADDRLEN(addr);
+    RPC_LOG_SOCKET_INQ_EP_XIT;
+    return (serr);
+}
+/*
  * R P C _ _ S O C K E T _ S E T _ B R O A D C A S T
  *
  * Enable broadcasting for the socket (as best it can).

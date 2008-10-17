@@ -284,6 +284,30 @@ PRIVATE rpc_socket_error_t rpc__socket_inq_endpoint _DCE_PROTOTYPE_((
         rpc_addr_p_t /*addr*/
     ));
 
+/*
+ * R P C _ _ S O C K E T _ I N Q _ P E E R _ E N D P O I N T
+ *
+ * Return the local address associated with a socket.  A rpc_addr_t
+ * appropriate for the NAF corresponding to this socket must be provided.
+ * addr.len must set to the actual size of addr.sa.  This operation fills
+ * in addr.sa and sets addr.len to the new size of the field.
+ *
+ * !!! NOTE: You should use rpc__naf_desc_inq_addr() !!!
+ *
+ * This routine is indended for use only by the internal routine:
+ * rpc__naf_desc_inq_addr().  rpc__socket_inq_endpoint() only has the
+ * functionality of BSD UNIX getsockname() which doesn't (at least not
+ * on all systems) return the local network portion of a socket's address.
+ * rpc__naf_desc_inq_addr() returns the complete address for a socket.
+ *
+ * (see BSD UNIX getsockname(2)).
+ */
+
+PRIVATE rpc_socket_error_t rpc__socket_inq_peer_endpoint _DCE_PROTOTYPE_((
+        rpc_socket_t  /*sock*/,
+        rpc_addr_p_t /*addr*/
+    ));
+
 
 /*
  * R P C _ _ S O C K E T _ S E T _ B R O A D C A S T

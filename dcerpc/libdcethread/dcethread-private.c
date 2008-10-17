@@ -75,7 +75,7 @@ self_destructor(void* data)
         dcethread* self = (dcethread*) data;
         dcethread__lock(self);
         dcethread__change_state(self, DCETHREAD_STATE_DEAD);
-	dcethread__release(self);
+        dcethread__release(self);
         dcethread__unlock(self);
     }
 }
@@ -575,4 +575,12 @@ dcethread__end_block(dcethread* thread, int (*interrupt)(dcethread*, void*), voi
     dcethread__unlock(thread);
 
     return state == DCETHREAD_STATE_INTERRUPT && interruptible;
+}
+
+void
+dcethread__cleanup_self(dcethread* self)
+{
+    dcethread__change_state(self, DCETHREAD_STATE_DEAD);
+    dcethread__release(self);
+    pthread_setspecific(dcethread_self_key, NULL);
 }

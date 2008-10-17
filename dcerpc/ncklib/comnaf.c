@@ -947,16 +947,43 @@ unsigned32                *status;
 #else
     addr->len = (long) (&(addr->sa.data) - &(addr->sa));
 #endif /* AIX32 */
+    
+    addr->sa.family = 0;
     serr = rpc__socket_inq_endpoint (desc, addr);
+
     if (RPC_SOCKET_IS_ERR (serr))
     {
         *status = rpc_s_cant_inq_socket;
+        goto error;
     }
-    else
+    
+    /* On some systems, getsockname fails silently on UNIX
+       domain sockets.  This has been seen on HP-UX, Darwin, and AIX.
+       Detect this case and try getpeername instead */
+    if (addr->sa.family == 0)   
     {
-        *naf_id = addr->sa.family;
-        *status = rpc_s_ok;
+        serr = rpc__socket_inq_peer_endpoint (desc, addr);
+
+        if (RPC_SOCKET_IS_ERR (serr))
+        {
+            *status = rpc_s_cant_inq_socket;
+            goto error;
+        }
     }
+
+    *naf_id = addr->sa.family;
+
+    /* If we *still* got 0 for some reason, force it to AF_UNIX */
+    if (*naf_id == 0)
+    {
+        *naf_id = AF_UNIX;
+    }
+
+    *status = rpc_s_ok;
+
+error:
+
+    return;
 }
 
 /*

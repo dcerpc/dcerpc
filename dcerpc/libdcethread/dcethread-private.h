@@ -102,5 +102,6 @@ int dcethread__poll_end_block(dcethread* thread, int (*interrupt)(dcethread*, vo
 int dcethread__end_block(dcethread* thread, int (*interrupt)(dcethread*, void*), void* data);
 int dcethread__interrupt_syscall(dcethread* thread, void* data);
 int dcethread__interrupt_condwait(dcethread* thread, void* data);
+void dcethread__cleanup_self(dcethread* self);
 
 #endif

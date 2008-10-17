@@ -238,7 +238,7 @@ INTERNAL rpc_cn_syntax_t *rpc__cn_assoc_syntax_alloc _DCE_PROTOTYPE_ ((
  * The maximum amount of time in seconds after each connection
  * request attempt.
  */
-#define RPC_C_ASSOC_MAX_WAIT_INTERVAL           100
+#define RPC_C_ASSOC_MAX_WAIT_INTERVAL           5
 
 PRIVATE NPC_TOKEN_ID rpc__get_current_token_id(unsigned32 *st)
 {

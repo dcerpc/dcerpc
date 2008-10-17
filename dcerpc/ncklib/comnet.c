@@ -420,17 +420,6 @@ unsigned32              *status;
         RPC_DBG_GPRINTF (("(rpc_server_listen) Shutting down...\n"));
 
         /*
-         * Stop all the call executors (gracefully).
-         *
-         * Unlock the listener mutex while awaiting cthread termination.
-         * Failure to do this can result in deadlock (e.g. if a cthread/RPC
-         * tries to execute a "stop listening" while we're blocked with
-         * the listener's mutex held).
-         */
-
-        RPC_MUTEX_LOCK (listener_state.mutex);
-
-        /*
          * Make the real listener stop listening on our server sockets now.
          */
     
@@ -451,6 +440,15 @@ unsigned32              *status;
          */
         *status = listener_state.status;
 
+        /*
+         * Stop all the call executors (gracefully).
+         *
+         * Unlock the listener mutex while awaiting cthread termination.
+         * Failure to do this can result in deadlock (e.g. if a cthread/RPC
+         * tries to execute a "stop listening" while we're blocked with
+         * the listener's mutex held).
+         */
+
         RPC_MUTEX_UNLOCK (listener_state.mutex);
 
         /*
@@ -459,7 +457,7 @@ unsigned32              *status;
          * stopped call threads (HP fix JAGad42160).
          */
         rpc__cthread_stop_all (status);
-    
+
         RPC_DBG_PRINTF (rpc_e_dbg_general, 2, ("(rpc_server_listen) cthreads stopped\n"));
 
     }

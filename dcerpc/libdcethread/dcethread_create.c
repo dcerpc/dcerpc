@@ -67,10 +67,11 @@ proxy_start(void *arg)
     
     dcethread__lock(args->self);
     args->self->status = result;
+    dcethread__cleanup_self(args->self);   
     dcethread__unlock(args->self);
 
     free(args);
-    
+
     return result;
 }
 
