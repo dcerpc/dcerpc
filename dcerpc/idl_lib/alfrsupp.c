@@ -268,6 +268,31 @@ void rpc_ss_init_allocate_once(
 
 /******************************************************************************/
 /*                                                                            */
+/*    Replacement for malloc guaranteed to allocate something like some       */
+/*    versions of malloc do.                                                  */
+/*                                                                            */
+/******************************************************************************/
+static void *rpc_ss_client_default_malloc
+(
+    size_t size
+)
+{
+    void *result = NULL;
+
+    if ( size )
+    {
+        result = malloc(size);
+    }
+    else
+    {
+        result = malloc(1);
+    }
+
+    return result;
+}
+
+/******************************************************************************/
+/*                                                                            */
 /*    Do we currently have thread context data?                               */
 /*    If not, create local storage with malloc() and free() as the            */
 /*      allocate and free routines                                            */
@@ -317,7 +342,7 @@ static void rpc_ss_client_get_thread_ctx
 #       ifdef IDL_PROTOTYPES
             idl_size_t size
 #       endif
-            ))malloc;
+            ))rpc_ss_client_default_malloc;
 
         p_support_ptrs->p_free = (void (*)(
 #       ifdef IDL_PROTOTYPES
