@@ -436,6 +436,51 @@ rpc_binding_rep_p_t     binding_rep;
 /*
 **++
 **
+**  ROUTINE NAME:       rpc__np_auth_info_binding_release  
+**
+**  SCOPE:              PRIVATE - declared in comauth.h
+**
+**  DESCRIPTION:   
+**
+**  Release reference to named pipe authentication info (stored in passed
+**  binding handle).  If we don't have any named pipe auth info, do nothing.
+**      
+**  INPUTS:
+**
+**      binding_rep     RPC binding handle
+**
+**  INPUTS/OUTPUTS:
+**
+**  OUTPUTS:            none
+**
+**  IMPLICIT INPUTS:    none
+**
+**  IMPLICIT OUTPUTS:   none
+**
+**  FUNCTION VALUE:     none
+**
+**  SIDE EFFECTS:       none
+**
+**--
+**/
+
+PRIVATE void rpc__np_auth_info_binding_release
+#ifdef _DCE_PROTO_
+(
+  rpc_binding_rep_p_t     binding_rep
+)
+#else
+(binding_rep)
+rpc_binding_rep_p_t     binding_rep;
+#endif
+{
+    rpc__np_auth_info_release (&binding_rep->np_auth_info);
+}
+
+
+/*
+**++
+**
 **  ROUTINE NAME:       rpc__auth_info_release
 **
 **  SCOPE:              PRIVATE - declared in com.h

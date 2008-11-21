@@ -50,6 +50,7 @@
 #include <sys/stat.h>
 #include <cnp.h>
 #include <npc.h>
+#include <comnp.h>
 /*#include <dce/cma_ux_wrappers.h>*/
 
 /* ======================================================================== */
@@ -419,6 +420,7 @@ rpc_cn_assoc_t     *assoc;
     //rpc_binding_rep_t *binding_rep;
     unsigned_char_t *netaddr, *endpoint;
     unsigned32      dbg_status;
+    rpc_np_auth_info_t *np_auth = NULL;
     unsigned char sess_key[64] = {0};
     size_t sess_key_len = 0;
 
@@ -457,26 +459,43 @@ connect_again:
 
     if (addr->rpc_protseq_id == RPC_C_PROTSEQ_ID_NCACN_NP)
     {
-	RPC_MEM_ALLOC(assoc->np_auth_info, rpc_np_auth_info_t*,
-		      sizeof(rpc_np_auth_info_t), 0, 0);
-	if (assoc->np_auth_info)
-        {
-	    rpc_np_auth_info_t *auth = assoc->np_auth_info;
+	assoc->security.assoc_named_pipe_info = NULL;
 
-	    auth->refcount        = 1;
-	    auth->princ_name      = NULL;
-	    auth->workstation     = NULL;
-	    auth->session_key_len = sess_key_len;
+	RPC_MEM_ALLOC(np_auth, rpc_np_auth_info_t*, sizeof(rpc_np_auth_info_t),
+		      RPC_C_MEM_NAMED_PIPE_INFO, 0);
+	if (np_auth)
+	{
+	    np_auth->refcount        = 0;
+	    np_auth->princ_name      = NULL;
+	    np_auth->workstation     = NULL;
+	    np_auth->session_key_len = sess_key_len;
 
-	    RPC_MEM_ALLOC(auth->session_key, unsigned char*,
-			  (sizeof(unsigned char)*(sess_key_len+1)), 0, 0);
-	    if (auth->session_key)
-            {
-		memcpy(auth->session_key, sess_key, sess_key_len);
+	    RPC_MEM_ALLOC(np_auth->session_key, unsigned char*,
+			  (sizeof(unsigned char)*(sess_key_len+1)),
+			  RPC_C_MEM_NAMED_PIPE_INFO, 0);
+	    if (np_auth->session_key)
+	    {
+		memcpy(np_auth->session_key, sess_key, sess_key_len);
 	    }
+	    else
+	    {
+		RPC_MEM_FREE(np_auth, RPC_C_MEM_NAMED_PIPE_INFO);
+		serr = ENOMEM;
+		goto done;
+	    }
+
+	    assoc->security.assoc_named_pipe_info = np_auth;
+
+	    /* Add association reference to named pipe auth info */
+	    rpc__np_auth_info_reference(assoc->security.assoc_named_pipe_info);
+	}
+	else
+	{
+	    serr = ENOMEM;
 	}
     }
 
+done:
     rpc_string_free (&netaddr, &dbg_status);
     rpc_string_free (&endpoint, &dbg_status);
 

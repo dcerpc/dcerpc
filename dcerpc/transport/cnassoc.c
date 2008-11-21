@@ -510,8 +510,13 @@ unsigned32              *st;
 
 			    /* 
 			     * Pass named pipe authentication info cached with association
+			     * We're assuming the connection is opened over named pipes transport
+			     * even though named pipe auth info pointer could be NULL.
+			     * rpc__np_auth_info_reference function handles NULL pointer safely.
 			     */
-			    binding_r->common.np_auth_info = assoc->np_auth_info;
+			    binding_r->common.np_auth_info = assoc->security.assoc_named_pipe_info;
+			    rpc__np_auth_info_reference(binding_r->common.np_auth_info);
+
                             return (assoc);
                         }
                     }
@@ -747,9 +752,13 @@ unsigned32              *st;
 
 		    /*
 		     * Pass just obtained named pipe authentication cached
-		     * along with new association
+		     * along with new association.
+		     * We're assuming the connection is opened over named pipes transport
+		     * even though named pipe auth info pointer could be NULL.
+		     * rpc__np_auth_info_reference function handles NULL pointer safely.
 		     */
-		    binding_r->common.np_auth_info = assoc->np_auth_info;
+		    binding_r->common.np_auth_info = assoc->security.assoc_named_pipe_info;
+		    rpc__np_auth_info_reference(binding_r->common.np_auth_info);
 
                     /*
                      * The association has been allocated and is now
@@ -1231,6 +1240,12 @@ unsigned32              *st;
             }
             RPC_LIST_INIT (assoc->msg_list);
         }
+
+	/*
+	 * Release named pipe auth info
+	 */
+        rpc__np_auth_info_release (&assoc->security.assoc_named_pipe_info);
+
         /*
          * Deallocate the association control block.
          */
@@ -4600,7 +4615,6 @@ rpc_cn_assoc_p_t   assoc;
             rpc__cn_assoc_sec_free (&sec_context);
             sec_context = next_sec_context;
         }
-        rpc__np_auth_info_release (&assoc->security.assoc_named_pipe_info);
         RPC_LIST_INIT (assoc->security.context_list);
         memset (&assoc->security, 0, sizeof (rpc_cn_assoc_sec_context_t));
 

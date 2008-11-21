@@ -2124,6 +2124,9 @@ unsigned32              *status;
     }
     else
     {
+        /* Force the address family to a correct value since getpeername can fail
+           silently on some platforms for UNIX domain sockets */
+        np_addr->sa.sun_family = RPC_C_NAF_ID_UXD;
         RPC_DBG_GPRINTF(("(desc_inq_peer_addr) peer address is %s (socket->%d)\n", np_addr->sa.sun_path, desc));
         *status = rpc_s_ok;
     }

@@ -45,8 +45,8 @@ rpc_np_auth_info_p_t   np_auth_info;
 {
     if (np_auth_info == NULL) return;
 
-    RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc__np_auth_info_reference) %x: bumping refcount (was %u, now %u)\n",
-				       np_auth_info, (unsigned int)np_auth_info->refcount,
+    RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc__np_auth_info_reference) %lx: bumping refcount (was %u, now %u)\n",
+				       (unsigned long)np_auth_info, (unsigned int)np_auth_info->refcount,
 				       (unsigned int)(np_auth_info->refcount + 1)));
 
     np_auth_info->refcount++;
@@ -70,8 +70,8 @@ rpc_np_auth_info_p_t  *np_auth_info;
     info = *np_auth_info;
     if (info == NULL) return;
 
-    RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc__np_auth_info_release) %x: dropping refcount (was %d, now %d)\n",
-				       info, info->refcount, info->refcount-1));
+    RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc__np_auth_info_release) %lx: dropping refcount (was %d, now %d)\n",
+				       (unsigned long)info, info->refcount, info->refcount-1));
 
     /*
      * Remove the reference
@@ -82,15 +82,23 @@ rpc_np_auth_info_p_t  *np_auth_info;
     {
         /* Free existing np_auth_info data */
 
-        if (info->princ_name) RPC_MEM_FREE(info->princ_name, 0);
-        if (info->workstation) RPC_MEM_FREE(info->workstation, 0);
+        if (info->princ_name)
+        {
+            RPC_MEM_FREE(info->princ_name, RPC_C_MEM_NAMED_PIPE_INFO);
+        }
 
-        if (info->session_key) {
+        if (info->workstation)
+        {
+            RPC_MEM_FREE(info->workstation, RPC_C_MEM_NAMED_PIPE_INFO);
+        }
+
+        if (info->session_key)
+        {
             memset((void*)info->session_key, 0, info->session_key_len);
-            RPC_MEM_FREE(info->session_key, 0);
+            RPC_MEM_FREE(info->session_key, RPC_C_MEM_NAMED_PIPE_INFO);
 	}
 
-        RPC_MEM_FREE(info, 0);
+        RPC_MEM_FREE(info, RPC_C_MEM_NAMED_PIPE_INFO);
     }
 
     *np_auth_info = NULL;

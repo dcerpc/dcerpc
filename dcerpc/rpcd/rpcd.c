@@ -885,7 +885,7 @@ int main(int argc, char *argv[])
         }
 #endif /* TIOCNOTTY */
 
-        pid = fork();
+        pid = dcethread_fork();
         if (pid > 0)
             exit(0);
 

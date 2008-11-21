@@ -159,6 +159,10 @@ PRIVATE void rpc__auth_info_binding_release _DCE_PROTOTYPE_ ((
         rpc_binding_rep_p_t     binding_rep
     ));
 
+PRIVATE void rpc__np_auth_info_binding_release _DCE_PROTOTYPE_ ((
+        rpc_binding_rep_p_t     binding_rep
+    ));
+
 PRIVATE void rpc__auth_inq_my_princ_name _DCE_PROTOTYPE_ ((
         unsigned32              /*dce_rpc_authn_protocol*/,
         unsigned32              /*princ_name_size*/,

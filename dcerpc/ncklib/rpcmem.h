@@ -182,9 +182,10 @@
 #define RPC_C_MEM_NS_INFO 96                /* name services info err...    */
 #define RPC_C_MEM_SCHNAUTH_INFO    98
 #define RPC_C_MEM_SCHNAUTH_CN_INFO 99
+#define RPC_C_MEM_NAMED_PIPE_INFO  100      /* rpc_np_auth_info_t */
 
 /* can only use up to "rpc_c_mem_maxtypes - 1" without upping it */
-#define RPC_C_MEM_MAX_TYPES        100       /* i.e. 0 : (max_types - 1)     */
+#define RPC_C_MEM_MAX_TYPES        101       /* i.e. 0 : (max_types - 1)     */
 
 
 /*

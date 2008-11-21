@@ -215,10 +215,22 @@ PRIVATE void rpc__clock_timespec
     struct timespec *ts;
 #endif
 {
+    int whole_secs;
+    int remaining_ticks;
+
     clock -= rpc_clock_skew;
-    ts->tv_sec = start_time.tv_sec + (clock / RPC_C_CLOCK_HZ);
+
+    whole_secs = (int)clock / RPC_C_CLOCK_HZ;
+    remaining_ticks = (int)clock % RPC_C_CLOCK_HZ;
+    if (remaining_ticks < 0)
+    {
+        whole_secs--;
+        remaining_ticks += RPC_C_CLOCK_HZ;
+    }
+
+    ts->tv_sec = start_time.tv_sec + whole_secs;
     ts->tv_nsec = (1000 * start_time.tv_usec) + 
-        (clock % RPC_C_CLOCK_HZ) * (1000000000 / RPC_C_CLOCK_HZ);
+        remaining_ticks * (1000000000 / RPC_C_CLOCK_HZ);
     if (ts->tv_nsec >= 1000000000) 
     {
 	ts->tv_nsec -= 1000000000;

@@ -74,6 +74,22 @@
  * would be a Bad Idea.
  */
 
+
+/* !!! HACK !!!
+ *
+ * Certain versions of SPARC Solaris 10 have a regression in the behavior of pthread_atfork()
+ * that can cause freezes and other bizarre behavior.  Therefore, we do not use it
+ * on that platform.
+ *
+ * The bug in question is Solaris bug 6570016.  It is fixed by patch 127111-03 or Solaris 10 u5.
+ *
+ * This hack means that DCE/RPC applications must always call exec() soon after fork(),
+ * or use dcethread_fork() instead.
+ */
+#if defined (sun) && defined(sparc)
+#  define AVOID_PTHREAD_ATFORK
+#endif
+
 typedef struct
 {
     void *user_state;
@@ -159,8 +175,9 @@ dcethread_atfork(void *user_state, void (*pre_fork)(void *), void (*parent_fork)
     handler.child_fork = child_fork;
     handler.parent_fork = parent_fork;
     
-    /* If no handlers have been registered yet, register our proxy functions
-       exactly once with the real pthread_atfork */
+#ifndef AVOID_PTHREAD_ATFORK
+    /* If no handlers have been registered yet, register our proxy functions exactly once with the
+       real pthread_atfork */
     if (atfork_handlers_len == 0)
     {
 	if (dcethread__set_errno(pthread_atfork(__dcethread_pre_fork, __dcethread_parent_fork, __dcethread_child_fork)))
@@ -169,7 +186,8 @@ dcethread_atfork(void *user_state, void (*pre_fork)(void *), void (*parent_fork)
 	    return -1;
 	}
     }
-    
+#endif    
+
     /* Add handler to array */
     atfork_handlers[atfork_handlers_len++] = handler;
 	
@@ -182,6 +200,31 @@ int
 dcethread_atfork_throw(void *user_state, void (*pre_fork)(void *), void (*parent_fork)(void *), void (*child_fork)(void *))
 {
     DCETHREAD_WRAP_THROW(dcethread_atfork(user_state, pre_fork, parent_fork, child_fork));
+}
+
+pid_t
+dcethread_fork(void)
+{
+    pid_t pid = -1;
+
+#ifdef AVOID_PTHREAD_ATFORK
+    __dcethread_pre_fork();
+#endif
+
+    pid = fork();
+
+#ifdef AVOID_PTHREAD_ATFORK
+    if (pid == 0)
+    {
+        __dcethread_child_fork();
+    }
+    else if (pid != -1)
+    {
+        __dcethread_parent_fork();
+    }
+#endif
+
+    return pid;
 }
 
 #endif /* API */
@@ -227,7 +270,7 @@ MU_TEST(dcethread_atfork, basic)
 
     MU_TRY_DCETHREAD( dcethread_atfork(&called, pre_handler, parent_handler, child_handler) );
 
-    if ((child = fork()))
+    if ((child = dcethread_fork()))
     {
 	if (child == -1)
 	{

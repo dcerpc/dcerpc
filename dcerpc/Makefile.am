@@ -1,7 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 include $(top_srcdir)/include.mk
 
-SUBDIRS=flex-2.5.4 libdcethread idl_compiler include idl_lib uuid ncklib dcelib rpcd demos . perf
+SUBDIRS=flex-2.5.4 libdcethread idl_compiler include idl_lib uuid ncklib dcelib transport rpcd demos . perf
 
 EXTRA_DIST=include.mk buildconf
 

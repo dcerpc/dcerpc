@@ -172,7 +172,9 @@ unsigned32              *status;
      * if we have any authentication info, free it up now.
      */
     rpc__auth_info_binding_release(binding_rep);
- 
+
+    rpc__np_auth_info_binding_release(binding_rep);
+
     /*
      * Free the name service-specific part of the binding.
      */

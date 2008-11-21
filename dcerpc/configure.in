@@ -468,6 +468,7 @@ ncklib/include/solaris2.10/Makefile
 ncklib/include/darwin6.0/Makefile
 ncklib/include/hpux11.11/Makefile
 ncklib/include/Makefile
+transport/Makefile
 dcelib/Makefile
 rpcd/Makefile
 demos/Makefile

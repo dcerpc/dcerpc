@@ -449,6 +449,8 @@ ssize_t dcethread_recvfrom(int s, void *buf, size_t len, int flags, struct socka
 ssize_t dcethread_recvmsg(int s, struct msghdr *msg, int flags);
 int dcethread_select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout);
 
+pid_t dcethread_fork(void);
+
 #ifdef DCETHREAD_ENFORCE_API
 #ifdef DCETHREAD_USE_THROW
 #define dcethread_attr_create ($ ERROR $)
