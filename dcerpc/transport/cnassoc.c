@@ -514,6 +514,7 @@ unsigned32              *st;
 			     * even though named pipe auth info pointer could be NULL.
 			     * rpc__np_auth_info_reference function handles NULL pointer safely.
 			     */
+			    rpc__np_auth_info_release(&binding_r->common.np_auth_info);
 			    binding_r->common.np_auth_info = assoc->security.assoc_named_pipe_info;
 			    rpc__np_auth_info_reference(binding_r->common.np_auth_info);
 
@@ -757,6 +758,7 @@ unsigned32              *st;
 		     * even though named pipe auth info pointer could be NULL.
 		     * rpc__np_auth_info_reference function handles NULL pointer safely.
 		     */
+		    rpc__np_auth_info_release(&binding_r->common.np_auth_info);
 		    binding_r->common.np_auth_info = assoc->security.assoc_named_pipe_info;
 		    rpc__np_auth_info_reference(binding_r->common.np_auth_info);
 
@@ -1240,11 +1242,6 @@ unsigned32              *st;
             }
             RPC_LIST_INIT (assoc->msg_list);
         }
-
-	/*
-	 * Release named pipe auth info
-	 */
-        rpc__np_auth_info_release (&assoc->security.assoc_named_pipe_info);
 
         /*
          * Deallocate the association control block.
@@ -4616,6 +4613,12 @@ rpc_cn_assoc_p_t   assoc;
             sec_context = next_sec_context;
         }
         RPC_LIST_INIT (assoc->security.context_list);
+
+	/*
+	 * Release named pipe auth info
+	 */
+        rpc__np_auth_info_release (&assoc->security.assoc_named_pipe_info);
+
         memset (&assoc->security, 0, sizeof (rpc_cn_assoc_sec_context_t));
 
         /*
