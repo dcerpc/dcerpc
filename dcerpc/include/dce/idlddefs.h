@@ -535,16 +535,20 @@ idl_ulong_int rpc_ss_arm_switch_value
 /*
  *  Alignment macros for NDR marshalling
  *  Note that the end of a marshalling buffer is always 8-byte aligned.
- *  Therefore if a buffer exists align bytes can always be written into it
- *  NB: here is where a memset() can be inserted to zero padded bytes.
+ *  Therefore if a buffer exists align bytes can always be written into it.
+ *  The pad bytes are zeroed out since this buffer eventually gets written
+ *  to the wire. Otherwise, user data may be inadvertently sent.
  */
 
 #define IDL_MARSH_ALIGN_MP(IDL_msp, alignment)\
     if (IDL_msp->IDL_buff_addr == NULL)\
         rpc_ss_ndr_marsh_init_buffer(IDL_msp);\
-    IDL_msp->IDL_mp = (idl_byte *)\
-        (((IDL_msp->IDL_mp - (idl_byte *)0) + (alignment-1)) & ~(alignment-1));\
-    IDL_msp->IDL_left_in_buff = (IDL_msp->IDL_left_in_buff & ~(alignment-1))
+    {\
+        int advance = IDL_msp->IDL_left_in_buff - (IDL_msp->IDL_left_in_buff & ~(alignment-1));\
+        memset(IDL_msp->IDL_mp, 0, advance);\
+        IDL_msp->IDL_mp += advance;\
+        IDL_msp->IDL_left_in_buff -= advance;\
+    }
 
 /*
  *  Buffers delivered by the runtime are always 8-byte aligned multiples of

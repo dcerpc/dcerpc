@@ -395,6 +395,12 @@ unsigned32              *st;
     call_rep->sec = NULL;
 
     /*
+     * Init the association in case allocating it later in this function
+     * fails.
+     */
+    call_rep->assoc = NULL;
+
+    /*
      * Init some booleans.
      */
     call_rep->cn_call_status = rpc_s_ok;
