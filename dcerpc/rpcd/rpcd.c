@@ -841,7 +841,109 @@ error:
     }
 }
 
-//#endif /* defined(UNIX) || defined(unix) */
+
+static
+void
+attach_log_file(
+    void
+    )
+{
+    int fd;
+    char *fname;
+    char *p;
+
+    if ((fname = malloc(strlen(rpcd_c_database_name_prefix1) +
+                        strlen(rpcd_c_database_name_prefix2) +
+                        strlen(rpcd_c_logfile_name) + 1)) != NULL)
+    {
+        sprintf((char *) fname, "%s%s%s", rpcd_c_database_name_prefix1,
+                rpcd_c_database_name_prefix2, rpcd_c_logfile_name);
+        if ((fd = open(fname, O_WRONLY|O_CREAT|O_TRUNC,
+                       S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH)) != -1)
+        {
+            (void)dup2(fd,2);
+        }
+        (void)close(fd);
+        /*
+         * We don't care if open() or dup2() failed.
+         */
+
+        if ((p = strrchr(fname, (int)'/')) != NULL)
+        {
+            *p = '\0';
+            if (chdir(fname))
+            {
+                /*
+                 * Again, we don't care if chdir() failed.
+                 */
+            }
+        }
+        free(fname);
+    }
+}
+
+static
+void
+start_as_daemon(
+    void
+    )
+{
+    int pid;
+    int fd;
+
+    /* Use dcethread_fork() rather than fork() because we link with DCE/RPC */
+    if ((pid = dcethread_fork()) != 0)
+    {
+        // Parent terminates
+        exit(0);
+    }
+
+    // Let the first child be a session leader
+    setsid();
+
+    // Ignore SIGHUP, because when the first child terminates
+    // it would be a session leader, and thus all processes in
+    // its session would receive the SIGHUP signal. By ignoring
+    // this signal, we are ensuring that our second child will
+    // ignore this signal and will continue execution.
+    if (signal(SIGHUP, SIG_IGN) < 0)
+    {
+        exit(1);
+    }
+
+    // Spawn a second child
+    if ((pid = fork()) != 0) {
+        // Let the first child terminate
+        // This will ensure that the second child cannot be a session leader
+        // Therefore, the second child cannot hold a controlling terminal
+        exit(0);
+    }
+
+    for (fd = 0; fd < 3; fd++)
+    {
+        close(fd);
+    }
+
+    for (fd = 0; fd < 3; fd++)
+    {
+        int null_fd = open("/dev/null", O_RDWR, 0);
+        if (null_fd < 0)
+        {
+            null_fd = open("/dev/null", O_WRONLY, 0);
+        }
+        if (null_fd < 0)
+        {
+            exit(1);
+        }
+        if (null_fd != fd)
+        {
+            exit(1);
+        }
+    }
+
+    create_pid_file();
+    attach_log_file();
+}
 
 int main(int argc, char *argv[])
 {
@@ -869,68 +971,7 @@ int main(int argc, char *argv[])
 
     if (!dflag && !foreground) 
     {
-//#if defined(UNIX) || defined(unix)
-        int pid, fd;
-
-#ifdef TIOCNOTTY
-        /*
-         * Lose our controlling TTY, fork off the child to be the real rpcd,
-         * and make the child a process group leader.
-         */
-
-        if ((fd = open("/dev/tty", O_RDWR)) >= 0)
-        {
-            ioctl(fd, TIOCNOTTY, 0);
-            close(fd);
-        }
-#endif /* TIOCNOTTY */
-
-        pid = dcethread_fork();
-        if (pid > 0)
-            exit(0);
-
-#if SETPGRP_ARGS == 2
-        setpgrp(0, getpid());
-#else
-        setpgrp();
-#endif /* SETPGRP_ARGS */
-        {
-           create_pid_file();
-        }
-        {
-            char *fname;
-            char *p;
-
-            if ((fname = malloc(strlen(rpcd_c_database_name_prefix1) + 
-                           strlen(rpcd_c_database_name_prefix2) + 
-                           strlen(rpcd_c_logfile_name) + 1)) != NULL)
-            {
-                sprintf((char *) fname, "%s%s%s", rpcd_c_database_name_prefix1,
-                        rpcd_c_database_name_prefix2, rpcd_c_logfile_name);
-                if ((fd = open(fname, O_WRONLY|O_CREAT|O_TRUNC,
-                               S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH)) != -1)
-                {
-                    (void)dup2(fd,2);
-                }
-                (void)close(fd);
-                /*
-                 * We don't care if open() or dup2() failed.
-                 */
-
-                if ((p = strrchr(fname, (int)'/')) != NULL)
-                {
-                    *p = '\0';
-                    if (chdir(fname))
-                    {
-                        /*
-                         * Again, we don't care if chdir() failed.
-                         */
-                    }
-                }
-                free(fname);
-            }
-        }
-//#endif
+        start_as_daemon();
     }
 
     /*
