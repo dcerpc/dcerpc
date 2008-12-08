@@ -39,7 +39,6 @@
 
 #include <dce/schannel.h>
 #include <schnauth.h>
-#include <sec_id_pickle.h>
 
 /*
  * Size of buffer used when asking for remote server's principal name
@@ -82,9 +81,9 @@ PRIVATE void rpc__schnauth_bnd_set_auth
         unsigned32 *stp
 )
 {
-    int st;
-    rpc_schnauth_info_p_t schnauth_info;
-    rpc_schannel_auth_info_p_t auth_info;
+    int st = rpc_s_ok;
+    rpc_schnauth_info_p_t schnauth_info = NULL;
+    rpc_schannel_auth_info_p_t auth_info = NULL;
 
     RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_ROUTINE_TRACE,
 		   ("(rpc__schnauth_bnd_set_auth)\n"));
@@ -92,7 +91,8 @@ PRIVATE void rpc__schnauth_bnd_set_auth
     auth_info = (rpc_schannel_auth_info_p_t)auth_ident;
 
     rpc_g_schnauth_alloc_count++;
-    RPC_MEM_ALLOC(schnauth_info, rpc_schnauth_info_p_t, sizeof(*schnauth_info), RPC_C_MEM_UTIL, RPC_C_MEM_WAITOK);
+    RPC_MEM_ALLOC(schnauth_info, rpc_schnauth_info_p_t, sizeof(*schnauth_info),
+		  RPC_C_MEM_UTIL, RPC_C_MEM_WAITOK);
 
     /* I don't know yet why it has to be either of values */
     if ((authz_prot != rpc_c_authz_name) &&
@@ -113,6 +113,10 @@ PRIVATE void rpc__schnauth_bnd_set_auth
 
     if (auth_info->domain_name != NULL) {
 	server_name = rpc_stralloc(auth_info->domain_name);
+	if (server_name == NULL) {
+            st = rpc_s_no_memory;
+	    goto poison;
+	}
     }
 
     RPC_DBG_PRINTF(rpc_e_dbg_auth, 1, (
@@ -132,29 +136,29 @@ PRIVATE void rpc__schnauth_bnd_set_auth
 
     schnauth_info->auth_info.refcount = 1;
 
-    schnauth_info->creds_valid  = 1;
-    schnauth_info->level_valid  = 1;
-    schnauth_info->client_valid = 1;
-
     /* copy schannel data */
     memcpy(schnauth_info->sec_ctx.session_key, auth_info->session_key, 16);
+
     schnauth_info->sec_ctx.domain_name  = rpc_stralloc(auth_info->domain_name);
+    if (schnauth_info->sec_ctx.domain_name == NULL) {
+        st = rpc_s_no_memory;
+        goto poison;
+    }
+
     schnauth_info->sec_ctx.machine_name = rpc_stralloc(auth_info->machine_name);
-    schnauth_info->sec_ctx.sender_flags = auth_info->sender_flags;
-    schnauth_info->sec_ctx.seq_num      = 0;
+    if (schnauth_info->sec_ctx.machine_name == NULL) {
+        st = rpc_s_no_memory;
+        goto poison;
+    }
 
-    *infop = &schnauth_info->auth_info;
-    schnauth_info->status = rpc_s_ok;
-    *stp = rpc_s_ok;
-
-    return;
+    /* setting auth info on binding handle means that we're initiating
+       schannel connection, so ensure "rpc_schn_initiator_flags" set */
+    schnauth_info->sec_ctx.sender_flags = rpc_schn_initiator_flags |
+                                          auth_info->sender_flags;
 
 poison:
     *infop = (rpc_auth_info_p_t) &schnauth_info->auth_info;
-    schnauth_info->status = st;
     *stp = st;
-
-    return;
 }
 
 
@@ -216,7 +220,7 @@ PRIVATE void rpc__schnauth_init
     *epv = &rpc_g_schnauth_epv;
     *rpc_prot_epv = rpc_g_schnauth_rpc_prot_epv;
 
-    *st = 0;
+    *st = rpc_s_ok;
 }
 
 
@@ -248,12 +252,6 @@ PRIVATE void rpc__schnauth_free_info
     }
 
     (*info)->u.s.privs = 0;
-    if (schnauth_info->client_name)
-    {
-        rpc_string_free(&schnauth_info->client_name, &tst);
-    }
-
-    sec_id_pac_free (&schnauth_info->client_pac);
 
     memset(schnauth_info, 0x69, sizeof(*schnauth_info));
     RPC_MEM_FREE(schnauth_info, RPC_C_MEM_UTIL);
@@ -282,7 +280,7 @@ PRIVATE void rpc__schnauth_mgt_inq_def
     RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_ROUTINE_TRACE,
 		   ("(rpc__schnauth_mgt_inq_def)\n"));
   
-    *authn_level = rpc_c_authn_level_none;
+    *authn_level = rpc_c_authn_level_pkt_privacy;
     *stp = rpc_s_ok;
 }
 
@@ -359,6 +357,7 @@ PRIVATE error_status_t rpc__schnauth_resolve_identity
     RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_ROUTINE_TRACE,
 		   ("(rpc__schnauth_resolve_identity)\n"));
 
+    *out_identity = in_identity;
     return rpc_s_ok;
 }
 
@@ -386,12 +385,16 @@ PRIVATE void rpc__schnauth_release_identity
 PRIVATE void rpc__schnauth_inq_sec_context
 (
         rpc_auth_info_p_t           auth_info  ATTRIBUTE_UNUSED,
-        void                        **mech_context  ATTRIBUTE_UNUSED,
-        unsigned32                  *st  ATTRIBUTE_UNUSED
+        void                        **mech_context,
+        unsigned32                  *st
 )
 {
     RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_ROUTINE_TRACE,
 		   ("(rpc__schnauth_inq_sec_context)\n"));
+
+    /* This function is for the server side of schannel which
+       we don't support yet */
+    *mech_context = NULL;
 
     *st = rpc_s_ok;
 }

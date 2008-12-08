@@ -1,6 +1,3 @@
-#ifndef _SCHNAUTH_H
-#define _SCHNAUTH_H
-
 /*
  * 
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
@@ -23,6 +20,8 @@
  */
 /*
  */
+#ifndef _SCHNAUTH_H
+#define _SCHNAUTH_H
 /*
 **
 **  NAME
@@ -57,17 +56,6 @@
 typedef struct rpc_schnauth_info_t {
     rpc_auth_info_t auth_info;  /* This must be the first element. */
     rpc_mutex_t lock;
-    unsigned32 status;          /* "poison" status. */
-
-    unsigned_char_p_t client_name; /* client string name, if any */
-    sec_id_pac_t client_pac;   /* client PAC */
-
-    /* FAKE-EPAC */
-    rpc_authz_cred_handle_t  client_creds;  /* 1.1 epac-style cred handle */
-    
-    int creds_valid: 1;         /* credentials valid */
-    int level_valid: 1;         /* level valid */
-    int client_valid: 1;        /* is client valid? */
 
     /*
      * Schannel security context

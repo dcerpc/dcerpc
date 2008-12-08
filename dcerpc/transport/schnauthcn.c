@@ -472,9 +472,9 @@ rpc_cn_sec_context_p_t          sec;
 unsigned32                      *st;
 #endif
 {
-  rpc_schnauth_cn_info_t          *schnauth_cn_info ATTRIBUTE_UNUSED;
-    rpc_schnauth_info_p_t         schnuth_info ATTRIBUTE_UNUSED;
-    boolean32                     different_creds;
+    rpc_schnauth_cn_info_t *schnauth_cn_info ATTRIBUTE_UNUSED;
+    rpc_schnauth_info_p_t   schnuth_info ATTRIBUTE_UNUSED;
+    boolean32               different_creds;
 
     CODING_ERROR (st);
 
@@ -553,8 +553,9 @@ rpc_auth_info_p_t               auth_info;
 unsigned32                      *st;
 #endif
 {
-    rpc_schnauth_cn_info_t        *schnauth_cn_info ATTRIBUTE_UNUSED;
-    rpc_schnauth_info_p_t         schnauth_info ATTRIBUTE_UNUSED;
+    rpc_schnauth_info_p_t schnauth_info;
+
+    schnauth_info = (rpc_schnauth_info_p_t)auth_info;
 
     CODING_ERROR (st);
 
@@ -676,17 +677,6 @@ unsigned32                      * /* st */
     {
         *st = RPC_S_CN_DBG_AUTH_FAILURE;
         return;
-    }
-#endif
-#if 0
-    if (*auth_value_len < RPC_CN_PKT_SIZEOF_BIND_AUTH_VAL)
-    {
-        *st = rpc_s_credentials_too_large;
-        return;
-    }
-    else
-    {
-        *auth_value_len = RPC_CN_PKT_SIZEOF_BIND_AUTH_VAL;
     }
 #endif
 
@@ -1083,36 +1073,6 @@ unsigned32                      *st;
         return;
     }
 #endif
-#if 0
-    if (sec->sec_info->authn_level >= rpc_c_authn_level_pkt)
-    {
-        if (*auth_value_len < RPC_CN_PKT_SIZEOF_AUTH_VAL_CKSM)
-        {
-            *st = rpc_s_credentials_too_large;
-            return;
-        }
-        else
-        {
-            *auth_value_len = RPC_CN_PKT_SIZEOF_AUTH_VAL_CKSM;
-        }
-    }
-    else
-    {
-        if (*auth_value_len < RPC_CN_PKT_SIZEOF_AUTH_VAL)
-        {
-            *st = rpc_s_credentials_too_large;
-            return;
-        }
-        else
-        {
-            *auth_value_len = RPC_CN_PKT_SIZEOF_AUTH_VAL;
-        }
-    }
-
-    priv_auth_value = (rpc_cn_auth_value_priv_t *)auth_value;
-    priv_auth_value->sub_type = RPC_C_CN_DCE_SUB_TYPE;
-    priv_auth_value->checksum_length = 0;
-#endif
 
     *auth_value_len = sizeof(rpc_cn_schnauth_tlr_t);
 
@@ -1124,15 +1084,15 @@ unsigned32                      *st;
  * Sign the packet prior to sending
  */
 
-INTERNAL void schn_sign_pdu
+INTERNAL void rpc__schnauth_cn_wrap_pdu
 #ifdef _DCE_PROTO_
 (
     rpc_cn_assoc_sec_context_p_t    assoc_sec ATTRIBUTE_UNUSED,
-    rpc_cn_sec_context_p_t          sec ATTRIBUTE_UNUSED,
-    rpc_socket_iovec_p_t            iov ATTRIBUTE_UNUSED,
-    unsigned32                      iovlen ATTRIBUTE_UNUSED,
-    rpc_socket_iovec_p_t            out_iov ATTRIBUTE_UNUSED,
-    unsigned32                      *st ATTRIBUTE_UNUSED
+    rpc_cn_sec_context_p_t          sec,
+    rpc_socket_iovec_p_t            iov,
+    unsigned32                      iovlen,
+    rpc_socket_iovec_p_t            out_iov,
+    unsigned32                      *st
 )
 #else
 (assoc_sec, sec, iov, iovlen, out_iov, st)
@@ -1145,16 +1105,13 @@ unsigned32                      *st;
 #endif
 {
     const unsigned32 hdr_idx = 0;
-#if 0
-    /* Testing blob */
-    const char *testing_blob = "RAFAL";
-    const unsigned32 testing_blob_len = 5;
-#endif
+    unsigned32 status = rpc_s_ok;
     rpc_schnauth_cn_info_p_t schn_auth;
     rpc_cn_common_hdr_p_t com_hdr;
     rpc_cn_auth_tlr_p_t com_tlr;
     rpc_cn_schnauth_tlr_p_t schn_tlr;
     unsigned32 tlr_idx;
+    unsigned32 part_idx;
     unsigned_char_p_t pdu_blob;
     unsigned32 pdu_blob_len;
     unsigned16 packet_len, stub_len, auth_pad_len;
@@ -1170,47 +1127,92 @@ unsigned32                      *st;
     tlr_idx = iovlen - 1;
     com_tlr = (rpc_cn_auth_tlr_p_t)(iov[tlr_idx].iov_base);
     schn_tlr = (rpc_cn_schnauth_tlr_p_t)(com_tlr->auth_value);
-
-    /* allocate the entire packet in one piece */
     com_hdr = (rpc_cn_common_hdr_p_t)(iov[hdr_idx].iov_base);
-    stub_len = com_hdr->frag_len - (RPC_CN_PKT_SIZEOF_RQST_HDR +
-				    RPC_CN_PKT_SIZEOF_COM_AUTH_TLR +
-				    sizeof(rpc_cn_schnauth_tlr_t));
+
+
+    /*
+     * Calculate header + stub length (including initial padding)
+     */
+
+    part_idx = hdr_idx;
+    stub_len = 0;
+    while (part_idx < tlr_idx) {
+	stub_len += iov[part_idx++].iov_len;
+    }
+
+    stub_len -= RPC_CN_PKT_SIZEOF_RQST_HDR;
+
     /* ensure auth trailer padding */
     auth_pad_len = stub_len % 0x0008;
-    packet_len = com_hdr->frag_len + auth_pad_len;
+
+    /*
+     * Allocate the entire packet in one piece
+     */
+    packet_len = stub_len + (RPC_CN_PKT_SIZEOF_RQST_HDR +
+			     RPC_CN_PKT_SIZEOF_COM_AUTH_TLR +
+			     RPC_CN_PKT_SIZEOF_SCHNAUTH_TLR +
+			     auth_pad_len);
 
     out_iov->iov_len = packet_len;
-
     RPC_MEM_ALLOC(out_iov->iov_base,
 		  pointer_t,
 		  out_iov->iov_len,
 		  RPC_C_MEM_SCHNAUTH_INFO,
 		  RPC_C_MEM_WAITOK);
+    if (out_iov->iov_base == NULL) {
+        *st = rpc_s_no_memory;
+	return;
+    }
+
     memset(out_iov->iov_base, 0, out_iov->iov_len);
 
-    com_hdr->frag_len = packet_len;
-    com_tlr->stub_pad_length = auth_pad_len;
+    /* Update packet and padding length after adding auth padding bytes */
+    com_hdr->frag_len        += auth_pad_len;
+    com_tlr->stub_pad_length += auth_pad_len;
 
-    /* create the packet blob including auth traile padding */
+    /*
+     * Create the packet blob including auth trailer padding
+     */
+
     base = out_iov->iov_base;
-    memcpy(base, iov[hdr_idx].iov_base, iov[hdr_idx].iov_len);
-    base += iov[hdr_idx].iov_len + auth_pad_len;
+
+    /* header [idx = 0] */
+    memcpy(base, (void*)com_hdr, RPC_CN_PKT_SIZEOF_COMMON_HDR);
+    base += RPC_CN_PKT_SIZEOF_COMMON_HDR;
+
+    /* stub [idx = 0] (the rest of it following header) */
+    memcpy(base, iov[hdr_idx].iov_base + RPC_CN_PKT_SIZEOF_COMMON_HDR,
+	   iov[hdr_idx].iov_len - RPC_CN_PKT_SIZEOF_COMMON_HDR);
+    base += iov[hdr_idx].iov_len - RPC_CN_PKT_SIZEOF_COMMON_HDR;
+
+    /* stub [idx = 1 .. (tlr_idx - 1)] (if there is any remaining part) */
+    part_idx = 1;
+    while (part_idx < tlr_idx) {
+	/* This packet is longer than 2 parts (header+stub and trailer)
+	   so make sure we copy all of them */
+	memcpy(base, iov[part_idx].iov_base, iov[part_idx].iov_len);
+	base += iov[part_idx].iov_len;
+	part_idx++;
+    }
+
+    /* auth padding */
+    base += auth_pad_len;
+
+    /* common trailer [idx = tlr_idx] */
     memcpy(base, (void*)com_tlr, RPC_CN_PKT_SIZEOF_COM_AUTH_TLR);
     base += RPC_CN_PKT_SIZEOF_COM_AUTH_TLR;
-    memcpy(base, (void*)schn_tlr, RPC_CN_PKT_SIZEOF_SCHNAUTH_TLR);
 
+    /* schannel trailer */
+    memcpy(base, (void*)schn_tlr, RPC_CN_PKT_SIZEOF_SCHNAUTH_TLR);
+    base += RPC_CN_PKT_SIZEOF_SCHNAUTH_TLR;
+
+    /* set PDU blob pointer and length */
     pdu_blob = out_iov->iov_base + RPC_CN_PKT_SIZEOF_RQST_HDR;
     pdu_blob_len = stub_len + auth_pad_len;
 
+    /* set new location of common and schannel trailer */
     com_tlr = (rpc_cn_auth_tlr_p_t)(pdu_blob + pdu_blob_len);
     schn_tlr = (rpc_cn_schnauth_tlr_p_t)(com_tlr->auth_value);
-
-#if 0
-    /* HACK for testing */
-    memset(nonce, 0, sizeof(nonce));
-    nonce[0] = 1;
-#endif
 
     switch (com_tlr->auth_level) {
     case rpc_c_protect_level_pkt_integ:
@@ -1222,15 +1224,14 @@ unsigned32                      *st;
 	break;
 
     default:
-	/* TODO: unsupported authz level ? */
-	*st = -1;
+	*st = rpc_s_unsupported_protect_level;
 	return;
     }
 
     input_token.base = (uint8*)pdu_blob;
     input_token.len  = pdu_blob_len;
 
-    schn_wrap(schn_ctx, sec_level, &input_token, &output_token, &tail);
+    status = schn_wrap(schn_ctx, sec_level, &input_token, &output_token, &tail);
 
     memcpy(pdu_blob, output_token.base, output_token.len);
 
@@ -1239,7 +1240,9 @@ unsigned32                      *st;
     memcpy(schn_tlr->seq_number, tail.seq_number, 8);
     memcpy(schn_tlr->nonce, tail.nonce, 8);
 
-    *st = rpc_s_ok;
+    schn_free_blob(&output_token);
+
+    *st = status;
 }
 
 
@@ -1302,8 +1305,8 @@ INTERNAL void rpc__schnauth_cn_pre_send
     rpc_cn_assoc_sec_context_p_t    assoc_sec,
     rpc_cn_sec_context_p_t          sec,
     rpc_socket_iovec_p_t            iov,
-    unsigned32                      iovlen ATTRIBUTE_UNUSED,
-    rpc_socket_iovec_p_t            out_iov ATTRIBUTE_UNUSED,
+    unsigned32                      iovlen,
+    rpc_socket_iovec_p_t            out_iov,
     unsigned32                      *st
 )
 #else
@@ -1352,8 +1355,8 @@ unsigned32                      *st;
         case RPC_C_CN_PKT_REQUEST:
         case RPC_C_CN_PKT_RESPONSE:
         {
-            schn_sign_pdu(assoc_sec, sec, iov, iovlen, out_iov, st);
-            break;
+            rpc__schnauth_cn_wrap_pdu(assoc_sec, sec, iov, iovlen, out_iov, st);
+            return;
         }
 
         case RPC_C_CN_PKT_FAULT:
@@ -1376,17 +1379,17 @@ unsigned32                      *st;
 }
 
 
-INTERNAL void schn_check_signature
+INTERNAL void rpc__schnauth_cn_unwrap_pdu
 #ifdef _DCE_PROTO_
 (
     rpc_cn_assoc_sec_context_p_t    assoc_sec ATTRIBUTE_UNUSED,
-    rpc_cn_sec_context_p_t          sec ATTRIBUTE_UNUSED,
-    rpc_cn_common_hdr_p_t           pdu ATTRIBUTE_UNUSED,
-    unsigned32                      pdu_len ATTRIBUTE_UNUSED,
-    unsigned32                      cred_len ATTRIBUTE_UNUSED,
-    rpc_cn_auth_tlr_p_t             auth_tlr ATTRIBUTE_UNUSED,
+    rpc_cn_sec_context_p_t          sec,
+    rpc_cn_common_hdr_p_t           pdu,
+    unsigned32                      pdu_len,
+    unsigned32                      cred_len,
+    rpc_cn_auth_tlr_p_t             auth_tlr,
     boolean32                       unpack_ints ATTRIBUTE_UNUSED,
-    unsigned32                      *st ATTRIBUTE_UNUSED
+    unsigned32                      *st
 )
 #else
 (assoc_sec, sec, pdu, pdu_len, cred_len, auth_tlr, unpack_ints, st)
@@ -1400,7 +1403,7 @@ boolean32                       unpack_ints;
 unsigned32                      *st;
 #endif
 {
-    unsigned32 status = 0;
+    unsigned32 status = rpc_s_ok;
     rpc_schnauth_cn_info_p_t schn_auth;
     rpc_cn_schnauth_tlr_p_t schn_tlr;
     unsigned32 sec_level;
@@ -1421,8 +1424,7 @@ unsigned32                      *st;
 	break;
 
     default:
-	/* TODO: unsupported authz level ? */
-	*st = -1;
+	*st = rpc_s_unsupported_protect_level;
 	return;
     }
 
@@ -1445,6 +1447,7 @@ unsigned32                      *st;
 			 &tail);
 
     memcpy(input_token.base, output_token.base, output_token.len);
+    schn_free_blob(&output_token);
 
     *st = status;
 }
@@ -1570,8 +1573,8 @@ unsigned32                      *st;
         case RPC_C_CN_PKT_REQUEST:
         case RPC_C_CN_PKT_RESPONSE:
 	{
-	    schn_check_signature(assoc_sec, sec, pdu, pdu_len, cred_len,
-				 auth_tlr, unpack_ints, st);
+	    rpc__schnauth_cn_unwrap_pdu(assoc_sec, sec, pdu, pdu_len, cred_len,
+					auth_tlr, unpack_ints, st);
         }
         case RPC_C_CN_PKT_FAULT:
         case RPC_C_CN_PKT_BIND:
