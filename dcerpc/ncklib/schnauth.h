@@ -21,7 +21,7 @@
 /*
  */
 #ifndef _SCHNAUTH_H
-#define _SCHNAUTH_H
+#define _SCHNAUTH_H	1
 /*
 **
 **  NAME
