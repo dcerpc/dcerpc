@@ -84,15 +84,6 @@ typedef struct iovec rpc_socket_iovec_t;
 typedef struct iovec *rpc_socket_iovec_p_t;
 typedef int rpc_socket_error_t;
 
-#include <comsoc_sys.h>
-#include <comnaf.h>
-#include <ipnaf.h>
-#include <cnp.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /*
  * bkoropoff // Likewise
  *
@@ -105,6 +96,8 @@ typedef boolean (*rpc_socket_enum_iface_fn_p_t) (
     rpc_addr_p_t netmask_addr,
     rpc_addr_p_t broadcast_addr
     );
+
+typedef struct rpc_cn_assoc_s_t rpc_cn_assoc_t, *rpc_cn_assoc_p_t;
 
 typedef struct rpc_socket_vtbl_s
 {
@@ -266,6 +259,15 @@ typedef struct rpc_socket_handle_s
 } rpc_socket_handle_t, *rpc_socket_handle_p_t;
 
 typedef int rpc_socket_basic_t;
+
+#include <comsoc_sys.h>
+#include <comnaf.h>
+#include <ipnaf.h>
+#include <cnp.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*
  * R P C _ _ S O C K E T _ O P E N
