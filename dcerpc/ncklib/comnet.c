@@ -2490,7 +2490,7 @@ unsigned32          *status;
 CLEANUP:
 
     if (have_desc)
-        rpc__socket_close(desc);
+        RPC_SOCKET_CLOSE(desc);
 
     if (have_addr_vec)
         rpc__naf_addr_vector_free (&addr_vector, &temp_status);

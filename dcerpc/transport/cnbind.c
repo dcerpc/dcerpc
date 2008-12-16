@@ -208,7 +208,7 @@ PRIVATE void rpc__cn_binding_init
     }
     else
     {
-        NPC_TOKEN_ID current_id = rpc__get_current_token_id(st);
+        rpc_id_token_t current_id = rpc__get_current_token_id(st);
         if(*st != rpc_s_ok)
             return;
 

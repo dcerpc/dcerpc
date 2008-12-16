@@ -6,7 +6,7 @@ NCK_IDL_FLAGS=-keep c_source -no_cpp -v -no_mepv -I$(IDL_INCLUDE_DIR)/.. -I$(top
 
 SUBDIRS=include
 
-AM_CFLAGS += -Wall -Werror -fno-strict-aliasing -DDCETHREAD_ENFORCE_API
+AM_CFLAGS += -Wall -Werror -fno-strict-aliasing
 
 # Initialize
 lib_LTLIBRARIES=
@@ -51,6 +51,7 @@ noinst_HEADERS+= \
 	comprot.h		\
 	comsoc.h		\
 	comsoc_bsd.h		\
+	comsoc_smb.h            \
 	comtwr.h		\
 	comtwrflr.h		\
 	comtwrref.h		\
@@ -141,7 +142,9 @@ librpc_la_SOURCES=dce_error.c rpcclock.c rpcdbg.c rpclist.c \
 
 noinst_LTLIBRARIES+=libtrans.la
 
-libtrans_la_SOURCES=comsoc_bsd.c
+libtrans_la_CPPFLAGS = $(AM_CPPFLAGS)
+libtrans_la_SOURCES = comsoc.c comsoc_bsd.c comsoc_smb.c
+libtrans_la_LIBADD = -llsmbclient
 
 ######################################################################
 ## COMPONENT: auth - comprises of libauth_none shared lib

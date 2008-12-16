@@ -39,8 +39,6 @@
 **
 */
 
-#include <npctypes.h>
-
 
 /******************************************************************************/
 /*
@@ -149,7 +147,7 @@ error "***Make sure memcmp works on this version of UUIDs***"
     RPC_CALL_UNLOCK (((rpc_call_rep_t *) assoc->call_rep));\
 }
  
-PRIVATE NPC_TOKEN_ID rpc__get_current_token_id(
+PRIVATE rpc_id_token_t rpc__get_current_token_id(
     unsigned32 *st);
 
 
@@ -404,7 +402,7 @@ PRIVATE void rpc__cn_assoc_acb_dealloc _DCE_PROTOTYPE_ ((rpc_cn_assoc_p_t/* asso
 
 PRIVATE rpc_cn_local_id_t rpc__cn_assoc_grp_alloc _DCE_PROTOTYPE_ ((
     rpc_addr_p_t             /* rpc_addr */,
-    NPC_TOKEN_ID             /* token_id */,
+    rpc_id_token_t             /* token_id */,
     unsigned32               /* type */,
     unsigned32               /* rem_id */,                                                             
     unsigned32              * /* st */ ));
@@ -438,7 +436,7 @@ PRIVATE void rpc__cn_assoc_grp_rem_assoc _DCE_PROTOTYPE_ ((
 
 PRIVATE rpc_cn_local_id_t rpc__cn_assoc_grp_lkup_by_addr _DCE_PROTOTYPE_ ((
     rpc_addr_p_t                 /* rpc_addr */,
-    NPC_TOKEN_ID                 /* imp_token */,
+    rpc_id_token_t                 /* imp_token */,
     unsigned32                   /* type */,
     unsigned32                  * /* st */ ));
 

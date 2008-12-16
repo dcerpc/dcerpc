@@ -44,13 +44,30 @@
 #include <comprot.h>
 #include <comnaf.h>
 #include <comp.h>
+#include <comsoc_bsd.h>
 #include <fcntl.h>
 #include <sys/un.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <cnp.h>
-#include <npc.h>
-#include <comnp.h>
+
+/* Bizarre hack for HP-UX ia64 where a system header
+ * makes reference to a kernel-only data structure
+ */
+#if defined(__hpux) && defined(__ia64)
+union mpinfou {};
+#endif
+#include <net/if.h>
+#include <sys/ioctl.h>
+/* Hack to ensure we actually get a definition of ioctl on AIX */
+#if defined(_AIX) && defined(_BSD)
+int ioctl(int d, int request, ...);
+#endif
+#include <unistd.h>
+#ifdef HAVE_SYS_SOCKIO_H
+#include <sys/sockio.h> /* Not just Linux */
+#endif
+
 /*#include <dce/cma_ux_wrappers.h>*/
 
 /* ======================================================================== */
@@ -91,6 +108,170 @@
 #define RPC_SOCKET_DISABLE_CANCEL	{ int __cs = dcethread_enableinterrupt_throw(0);
 #define RPC_SOCKET_RESTORE_CANCEL	dcethread_enableinterrupt_throw(__cs); }
 
+/*
+ * Macros to paper over the difference between the 4.4bsd and 4.3bsd
+ * socket API.
+ *
+ * The layout of a 4.4 struct sockaddr includes a 1 byte "length" field
+ * which used to be one of the bytes of the "family" field.  (The "family"
+ * field is now 1 byte instead of 2 bytes.)  4.4 provides binary
+ * compatibility with applications compiled with a 4.3 sockaddr definition
+ * by inferring a default length when the supplied length is zero.  Source
+ * compatibility is blown however (if _SOCKADDR_LEN is #define'd) --
+ * applications that assign only to the "family" field will leave the
+ * "length" field possibly non-zero.
+ *
+ * Note that RPC's "sockaddr_t" is always defined to contains only a
+ * family.  (We defined "rpc_addr_t" to be a struct that contains a length
+ * and a sockaddr rather than mucking with the sockaddr itself.)  We
+ * assumed that "sockaddr_t" and "struct sockaddr" are the same.  At
+ * 4.4, this assumption caused problems.  We use RPC_SOCKET_FIX_ADDRLEN
+ * at various opportunities to make sure sockaddrs' length is zero and
+ * that makes the problems go away.
+ *
+ * ADDENDUM:
+ *    This only makes the problem go away on little-endian systems
+ *    where the length field on the 4.4 struct occupies the same position
+ *    as the high byte of the family field on the 4.3 struct.  This is
+ *    no good for i386 FreeBSD, so we have actually adapted sockaddr_t
+ *    to match the system struct sockaddr.
+ *                                           -- Brian Koropoff, Likewise
+ *
+ * RPC_SOCKET_FIX_ADDRLEN takes an "rpc_addr_p_t" (or "rpc_ip_addr_p_t")
+ * as input.  The complicated casting (as opposed to simply setting
+ * ".sa_len" to zero) is to ensure that the right thing happens regardless
+ * of the integer endian-ness of the system).
+ *
+ * RPC_SOCKET_INIT_MGRHDR deals with the differences in the field names of
+ * the "struct msghdr" data type between 4.3 and 4.4.
+ */
+
+#ifdef BSD_4_4_SOCKET
+#define RPC_SOCKET_INIT_MSGHDR(msgp) ( \
+    (msgp)->msg_control         = NULL, \
+    (msgp)->msg_controllen      = 0, \
+    (msgp)->msg_flags           = 0 \
+)
+#else
+#define RPC_SOCKET_INIT_MSGHDR(msgp) ( \
+    (msgp)->msg_accrights       = NULL, \
+    (msgp)->msg_accrightslen    = 0 \
+)
+#endif /* BSD_4_4_SOCKET */
+
+/*#if defined(_SOCKADDR_LEN)
+#define RPC_SOCKET_FIX_ADDRLEN(addrp) ( \
+      ((struct osockaddr *) &(addrp)->sa)->sa_family = \
+              ((struct sockaddr *) &(addrp)->sa)->sa_family \
+  )
+  #else*/
+#define RPC_SOCKET_FIX_ADDRLEN(addrp) do { } while (0)
+/*#endif*/
+
+/*
+ * Macros for performance critical operations.
+ */
+
+inline static void RPC_SOCKET_SENDMSG(
+	rpc_socket_t sock,
+	rpc_socket_iovec_p_t iovp,
+	int iovlen,
+	rpc_addr_p_t addrp,
+	volatile int *ccp,
+	volatile rpc_socket_error_t *serrp
+		)
+{
+	struct msghdr msg;
+sendmsg_again:
+	memset(&msg, 0, sizeof(msg));
+	RPC_LOG_SOCKET_SENDMSG_NTR;
+	RPC_SOCKET_INIT_MSGHDR(&msg);
+	if ((addrp) != NULL)
+	{
+		RPC_SOCKET_FIX_ADDRLEN(addrp);
+		msg.msg_name = (caddr_t) &(addrp)->sa;
+		msg.msg_namelen = (addrp)->len;
+	}
+	else
+	{
+		msg.msg_name = (caddr_t) NULL;
+	}
+	msg.msg_iov = (struct iovec *) iovp;
+	msg.msg_iovlen = iovlen;
+	*(ccp) = dcethread_sendmsg ((int) sock->data.word, (struct msghdr *) &msg, 0);
+	*(serrp) = (*(ccp) == -1) ? errno : RPC_C_SOCKET_OK;
+	RPC_LOG_SOCKET_SENDMSG_XIT;
+	if (*(serrp) == EINTR)
+	{
+		goto sendmsg_again;
+	}
+}
+
+inline static void RPC_SOCKET_RECVFROM
+(
+    rpc_socket_t        sock,
+    byte_p_t            buf,        /* buf for rcvd data */
+    int                 buflen,        /* len of above buf */
+    rpc_addr_p_t        from,       /* addr of sender */
+    volatile int                 *ccp,        /* returned number of bytes actually rcvd */
+	 volatile rpc_socket_error_t *serrp
+)
+{
+recvfrom_again:
+	if ((from) != NULL) RPC_SOCKET_FIX_ADDRLEN(from);
+	RPC_LOG_SOCKET_RECVFROM_NTR;
+	*(ccp) = dcethread_recvfrom ((int) sock->data.word, (char *) buf, (int) buflen, (int) 0,
+			(struct sockaddr *) (&(from)->sa), (&(from)->len));
+	*(serrp) = (*(ccp) == -1) ? errno : RPC_C_SOCKET_OK;
+	RPC_LOG_SOCKET_RECVFROM_XIT;
+	RPC_SOCKET_FIX_ADDRLEN(from);
+	if (*(serrp) == EINTR)
+	{
+		goto recvfrom_again;
+	}
+
+}
+
+inline static void RPC_SOCKET_RECVMSG
+(
+    rpc_socket_t        sock,
+    rpc_socket_iovec_p_t iovp,       /* array of bufs for rcvd data */
+    int                 iovlen,    /* number of bufs */
+    rpc_addr_p_t        addrp,       /* addr of sender */
+    volatile int                 *ccp,        /* returned number of bytes actually rcvd */
+	 volatile rpc_socket_error_t *serrp
+)
+{
+	struct msghdr msg;
+recvmsg_again:
+	memset(&msg, 0, sizeof(msg));
+	RPC_LOG_SOCKET_RECVMSG_NTR;
+	RPC_SOCKET_INIT_MSGHDR(&msg);
+	if ((addrp) != NULL)
+	{
+		RPC_SOCKET_FIX_ADDRLEN(addrp);
+		msg.msg_name = (caddr_t) &(addrp)->sa;
+		msg.msg_namelen = (addrp)->len;
+	}
+	else
+	{
+		msg.msg_name = (caddr_t) NULL;
+	}
+	msg.msg_iov = (struct iovec *) iovp;
+	msg.msg_iovlen = iovlen;
+	*(ccp) = dcethread_recvmsg ((int) sock->data.word, (struct msghdr *) &msg, 0);
+	if ((addrp) != NULL)
+	{
+		(addrp)->len = msg.msg_namelen;
+	}
+	*(serrp) = (*(ccp) == -1) ? errno : RPC_C_SOCKET_OK;
+	RPC_LOG_SOCKET_RECVMSG_XIT;
+	if (*(serrp) == EINTR)
+	{
+		goto recvmsg_again;
+	}
+}
+
 /* ======================================================================== */
 
 /*
@@ -102,29 +283,21 @@
  * (see BSD UNIX socket(2)).
  */
 
-PRIVATE rpc_socket_error_t rpc__socket_open
-#ifdef _DCE_PROTO_
-(
-    rpc_protseq_id_t    pseq_id,
-    rpc_socket_t        *sock
-)
-#else
-(pseq_id, sock)
-rpc_protseq_id_t    pseq_id;
-rpc_socket_t        *sock;
-#endif
+INTERNAL rpc_socket_error_t
+rpc__bsd_socket_construct(
+    rpc_socket_t sock,
+    rpc_protseq_id_t    pseq_id
+    )
 {
     rpc_socket_error_t  serr;
 
-    RPC_LOG_SOCKET_OPEN_NTR;
     RPC_SOCKET_DISABLE_CANCEL;
-    *sock = socket(
+    sock->data.word = socket(
         (int) RPC_PROTSEQ_INQ_NAF_ID(pseq_id),
         (int) RPC_PROTSEQ_INQ_NET_IF_ID(pseq_id),
         0 /*(int) RPC_PROTSEQ_INQ_NET_PROT_ID(pseq_id)*/);
-    serr = ((*sock == -1) ? errno : RPC_C_SOCKET_OK);
+    serr = ((sock->data.word == -1) ? errno : RPC_C_SOCKET_OK);
     RPC_SOCKET_RESTORE_CANCEL;
-    RPC_LOG_SOCKET_OPEN_XIT;
 
     return serr;
 }
@@ -137,21 +310,13 @@ rpc_socket_t        *sock;
  * determine what network services are supported by the host OS.
  */
 
-PRIVATE rpc_socket_error_t rpc__socket_open_basic
-#ifdef _DCE_PROTO_
-(
+PRIVATE rpc_socket_error_t
+rpc__bsd_socket_open_basic(
     rpc_naf_id_t        naf,
     rpc_network_if_id_t net_if,
     rpc_network_protocol_id_t net_prot ATTRIBUTE_UNUSED,
-    rpc_socket_t        *sock
-)
-#else
-(naf, net_if, net_prot, sock)
-rpc_naf_id_t        naf;
-rpc_network_if_id_t net_if;
-rpc_network_protocol_id_t net_prot;
-rpc_socket_t        *sock;
-#endif
+    rpc_socket_basic_t        *sock
+    )
 {
     rpc_socket_error_t  serr;
 
@@ -166,6 +331,23 @@ rpc_socket_t        *sock;
 
     return serr;
 }
+
+PRIVATE rpc_socket_error_t
+rpc__bsd_socket_close_basic(
+    rpc_socket_basic_t        sock
+    )
+{
+    rpc_socket_error_t  serr;
+
+    RPC_LOG_SOCKET_CLOSE_NTR;
+    RPC_SOCKET_DISABLE_CANCEL;
+    serr = (close(sock) == -1) ? errno : RPC_C_SOCKET_OK;
+    RPC_SOCKET_RESTORE_CANCEL;
+    RPC_LOG_SOCKET_CLOSE_XIT;
+
+    return (serr);
+}
+
 
 /*
  * R P C _ _ S O C K E T _ C L O S E
@@ -175,7 +357,7 @@ rpc_socket_t        *sock;
  * (see BSD UNIX close(2)).
  */
 
-PRIVATE rpc_socket_error_t rpc__socket_close
+INTERNAL rpc_socket_error_t rpc__bsd_socket_destruct
 #ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock
@@ -189,7 +371,7 @@ rpc_socket_t        sock;
 
     RPC_LOG_SOCKET_CLOSE_NTR;
     RPC_SOCKET_DISABLE_CANCEL;
-    serr = (close(sock) == -1) ? errno : RPC_C_SOCKET_OK;
+    serr = (close(sock->data.word) == -1) ? errno : RPC_C_SOCKET_OK;
     RPC_SOCKET_RESTORE_CANCEL;
     RPC_LOG_SOCKET_CLOSE_XIT;
 
@@ -204,7 +386,7 @@ rpc_socket_t        sock;
  * (see BSD UNIX bind(2)).
  */
 
-PRIVATE rpc_socket_error_t rpc__socket_bind
+INTERNAL rpc_socket_error_t rpc__bsd_socket_bind
 #ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock,
@@ -225,8 +407,7 @@ rpc_addr_p_t        addr;
 
     RPC_LOG_SOCKET_BIND_NTR;
 
-    ncalrpc = addr->rpc_protseq_id == RPC_C_PROTSEQ_ID_NCALRPC ||
-              addr->rpc_protseq_id == RPC_C_PROTSEQ_ID_NCACN_NP;
+    ncalrpc = addr->rpc_protseq_id == RPC_C_PROTSEQ_ID_NCALRPC;
 
     /*
      * Check if the address has a well-known endpoint.
@@ -261,7 +442,7 @@ rpc_addr_p_t        addr;
         else
         {
 #if defined(SOL_SOCKET) && defined(SO_REUSEADDR)
-	    setsockopt(sock, SOL_SOCKET, SO_REUSEADDR,
+	    setsockopt(sock->data.word, SOL_SOCKET, SO_REUSEADDR,
 		       &setsock_val, sizeof(setsock_val));
 #endif
             if (addr->sa.family == AF_UNIX && addr->sa.data[0] != '\0')
@@ -274,7 +455,7 @@ rpc_addr_p_t        addr;
                 unlink((const char*)addr->sa.data);
             }
             serr = 
-                (bind(sock, (struct sockaddr *)&addr->sa, addr->len) == -1) ? 
+                (bind(sock->data.word, (struct sockaddr *)&addr->sa, addr->len) == -1) ?
                       errno : RPC_C_SOCKET_OK;
         }
     }                                   /* no port restriction */
@@ -289,10 +470,10 @@ rpc_addr_p_t        addr;
         if (has_endpoint)
         {
 #if defined(SOL_SOCKET) && defined(SO_REUSEADDR)
-	    setsockopt(sock, SOL_SOCKET, SO_REUSEADDR,
+	    setsockopt(sock->data.word, SOL_SOCKET, SO_REUSEADDR,
 		       &setsock_val, sizeof(setsock_val));
 #endif
-            serr = (bind(sock, (struct sockaddr *)&addr->sa, addr->len) == -1)?
+            serr = (bind(sock->data.word, (struct sockaddr *)&addr->sa, addr->len) == -1)?
                 errno : RPC_C_SOCKET_OK;
         }                               /* well-known endpoint */
         else
@@ -308,7 +489,7 @@ rpc_addr_p_t        addr;
 
 	    if (c != '\0')       /* test for null string */
 	    {
-	        serr = (bind(sock, (struct sockaddr *)&addr->sa, addr->len) == -1)?
+	        serr = (bind(sock->data.word, (struct sockaddr *)&addr->sa, addr->len) == -1)?
 		    errno : RPC_C_SOCKET_OK;
 	    }                               /* well-known endpoint */
 
@@ -360,7 +541,7 @@ rpc_addr_p_t        addr;
 		        break;
 		    }
 
-		    if (bind(sock, (struct sockaddr *)&temp_addr->sa, temp_addr->len) == 0)
+		    if (bind(sock->data.word, (struct sockaddr *)&temp_addr->sa, temp_addr->len) == 0)
 		    {
 		        found = true;
 		        serr = RPC_C_SOCKET_OK;
@@ -402,12 +583,12 @@ rpc_addr_p_t        addr;
  * (see BSD UNIX connect(2)).
  */
 
-PRIVATE rpc_socket_error_t rpc__socket_connect
+INTERNAL rpc_socket_error_t rpc__bsd_socket_connect
 #ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock,
     rpc_addr_p_t        addr,
-    rpc_cn_assoc_t      *assoc
+    rpc_cn_assoc_t      *assoc ATTRIBUTE_UNUSED
 )
 #else
 (sock, addr, binding_rep)
@@ -420,9 +601,6 @@ rpc_cn_assoc_t     *assoc;
     //rpc_binding_rep_t *binding_rep;
     unsigned_char_t *netaddr, *endpoint;
     unsigned32      dbg_status;
-    rpc_np_auth_info_t *np_auth = NULL;
-    unsigned char sess_key[64] = {0};
-    size_t sess_key_len = 0;
 
     rpc__naf_addr_inq_netaddr (addr,
                                &netaddr,
@@ -438,64 +616,17 @@ rpc_cn_assoc_t     *assoc;
 
 connect_again:
     RPC_LOG_SOCKET_CONNECT_NTR;
-    if(addr->rpc_protseq_id == RPC_C_PROTSEQ_ID_NCACN_NP)
-    {
-        serr = NpcConnectExistingSocket((int)sock, "np", (char*) netaddr, (char*) endpoint, NULL,
-					sizeof(sess_key), &sess_key_len, sess_key);
-    }
-    else
-    {
-        serr = (connect (
-                         (int) sock,
-                         (struct sockaddr *) (&addr->sa),
-                         (int) (addr->len))
-                == -1) ? errno : RPC_C_SOCKET_OK;
-    }
+    serr = (connect (
+                (int) sock->data.word,
+                (struct sockaddr *) (&addr->sa),
+                (int) (addr->len))
+            == -1) ? errno : RPC_C_SOCKET_OK;
     RPC_LOG_SOCKET_CONNECT_XIT;
     if (serr == EINTR)
     {
         goto connect_again;
     }
 
-    if (addr->rpc_protseq_id == RPC_C_PROTSEQ_ID_NCACN_NP)
-    {
-	assoc->security.assoc_named_pipe_info = NULL;
-
-	RPC_MEM_ALLOC(np_auth, rpc_np_auth_info_t*, sizeof(rpc_np_auth_info_t),
-		      RPC_C_MEM_NAMED_PIPE_INFO, 0);
-	if (np_auth)
-	{
-	    np_auth->refcount        = 0;
-	    np_auth->princ_name      = NULL;
-	    np_auth->workstation     = NULL;
-	    np_auth->session_key_len = sess_key_len;
-
-	    RPC_MEM_ALLOC(np_auth->session_key, unsigned char*,
-			  (sizeof(unsigned char)*(sess_key_len+1)),
-			  RPC_C_MEM_NAMED_PIPE_INFO, 0);
-	    if (np_auth->session_key)
-	    {
-		memcpy(np_auth->session_key, sess_key, sess_key_len);
-	    }
-	    else
-	    {
-		RPC_MEM_FREE(np_auth, RPC_C_MEM_NAMED_PIPE_INFO);
-		serr = ENOMEM;
-		goto done;
-	    }
-
-	    assoc->security.assoc_named_pipe_info = np_auth;
-
-	    /* Add association reference to named pipe auth info */
-	    rpc__np_auth_info_reference(assoc->security.assoc_named_pipe_info);
-	}
-	else
-	{
-	    serr = ENOMEM;
-	}
-    }
-
-done:
     rpc_string_free (&netaddr, &dbg_status);
     rpc_string_free (&endpoint, &dbg_status);
 
@@ -515,7 +646,7 @@ done:
  * (see BSD UNIX accept(2)).
  */
 
-PRIVATE rpc_socket_error_t rpc__socket_accept
+INTERNAL rpc_socket_error_t rpc__bsd_socket_accept
 #ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock,
@@ -531,6 +662,16 @@ rpc_socket_t        *newsock;
 {
     rpc_socket_error_t  serr;
 
+    *newsock = malloc(sizeof (**newsock));
+
+    if (!*newsock)
+    {
+        return ENOMEM;
+    }
+
+    (*newsock)->vtbl = sock->vtbl;
+    (*newsock)->pseq_id = sock->pseq_id;
+
 accept_again:
     RPC_LOG_SOCKET_ACCEPT_NTR;
     if (addr == NULL)
@@ -538,21 +679,24 @@ accept_again:
         socklen_t addrlen;
 
         addrlen = 0;
-        *newsock = accept
-            ((int) sock, (struct sockaddr *) NULL, &addrlen);
+        (*newsock)->data.word = accept
+            ((int) sock->data.word, (struct sockaddr *) NULL, &addrlen);
     }
     else
     {
-        RPC_SOCKET_FIX_ADDRLEN(addr);
-        *newsock = accept
-            ((int) sock, (struct sockaddr *) (&addr->sa), (&addr->len));
-        RPC_SOCKET_FIX_ADDRLEN(addr);
+        (*newsock)->data.word = accept
+            ((int) sock->data.word, (struct sockaddr *) (&addr->sa), (&addr->len));
     }
-    serr = (*newsock == -1) ? errno : RPC_C_SOCKET_OK;
+    serr = ((*newsock)->data.word == -1) ? errno : RPC_C_SOCKET_OK;
     RPC_LOG_SOCKET_ACCEPT_XIT;
     if (serr == EINTR)
     {
         goto accept_again;
+    }
+
+    if (serr && *newsock)
+    {
+        free(*newsock);
     }
     return (serr);
 }
@@ -566,7 +710,7 @@ accept_again:
  * (see BSD UNIX listen(2)).
  */
 
-PRIVATE rpc_socket_error_t rpc__socket_listen
+INTERNAL rpc_socket_error_t rpc__bsd_socket_listen
 #ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock,
@@ -582,7 +726,7 @@ int                 backlog;
 
     RPC_LOG_SOCKET_LISTEN_NTR;
     RPC_SOCKET_DISABLE_CANCEL;
-    serr = (listen(sock, backlog) == -1) ? errno : RPC_C_SOCKET_OK;
+    serr = (listen(sock->data.word, backlog) == -1) ? errno : RPC_C_SOCKET_OK;
     RPC_SOCKET_RESTORE_CANCEL;
     RPC_LOG_SOCKET_LISTEN_XIT;
     return (serr);
@@ -597,7 +741,7 @@ int                 backlog;
  * (see BSD UNIX sendmsg(2)).
  */
 
-PRIVATE rpc_socket_error_t rpc__socket_sendmsg
+INTERNAL rpc_socket_error_t rpc__bsd_socket_sendmsg
 #ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock,
@@ -634,7 +778,7 @@ int                 *cc;        /* returned number of bytes actually sent */
  * (see BSD UNIX recvfrom(2)).
  */
 
-PRIVATE rpc_socket_error_t rpc__socket_recvfrom
+INTERNAL rpc_socket_error_t rpc__bsd_socket_recvfrom
 #ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock,
@@ -670,7 +814,7 @@ int                 *cc;        /* returned number of bytes actually rcvd */
  * (see BSD UNIX recvmsg(2)).
  */
 
-PRIVATE rpc_socket_error_t rpc__socket_recvmsg
+INTERNAL rpc_socket_error_t rpc__bsd_socket_recvmsg
 #ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock,
@@ -705,7 +849,7 @@ int                 *cc;        /* returned number of bytes actually rcvd */
  * !!! NOTE: You should use rpc__naf_desc_inq_addr() !!!
  *
  * This routine is indended for use only by the internal routine:
- * rpc__naf_desc_inq_addr().  rpc__socket_inq_endpoint() only has the
+ * rpc__naf_desc_inq_addr().  rpc__bsd_socket_inq_endpoint() only has the
  * functionality of BSD UNIX getsockname() which doesn't (at least not
  * on all systems) return the local network portion of a socket's address.
  * rpc__naf_desc_inq_addr() returns the complete address for a socket.
@@ -713,7 +857,7 @@ int                 *cc;        /* returned number of bytes actually rcvd */
  * (see BSD UNIX getsockname(2)).
  */
 
-PRIVATE rpc_socket_error_t rpc__socket_inq_endpoint
+INTERNAL rpc_socket_error_t rpc__bsd_socket_inq_endpoint
 #ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock,
@@ -730,41 +874,13 @@ rpc_addr_p_t        addr;
     RPC_LOG_SOCKET_INQ_EP_NTR;
     RPC_SOCKET_FIX_ADDRLEN(addr);
     RPC_SOCKET_DISABLE_CANCEL;
-    serr = (getsockname(sock, (void*)&addr->sa, &addr->len) == -1) ? errno : RPC_C_SOCKET_OK;
+    serr = (getsockname(sock->data.word, (void*)&addr->sa, &addr->len) == -1) ? errno : RPC_C_SOCKET_OK;
     RPC_SOCKET_RESTORE_CANCEL;
     RPC_SOCKET_FIX_ADDRLEN(addr);
     RPC_LOG_SOCKET_INQ_EP_XIT;
     return (serr);
 }
-
-/*
- * R P C _ _ S O C K E T _ I N Q _ P E E R _ E N D P O I N T
- *
- */
 
-PRIVATE rpc_socket_error_t rpc__socket_inq_peer_endpoint
-#ifdef _DCE_PROTO_
-(
-    rpc_socket_t        sock,
-    rpc_addr_p_t        addr
-)
-#else
-(sock, addr)
-rpc_socket_t        sock;
-rpc_addr_p_t        addr;
-#endif
-{
-    rpc_socket_error_t  serr;
-
-    RPC_LOG_SOCKET_INQ_EP_NTR;
-    RPC_SOCKET_FIX_ADDRLEN(addr);
-    RPC_SOCKET_DISABLE_CANCEL;
-    serr = (getpeername(sock, (void*)&addr->sa, &addr->len) == -1) ? errno : RPC_C_SOCKET_OK;
-    RPC_SOCKET_RESTORE_CANCEL;
-    RPC_SOCKET_FIX_ADDRLEN(addr);
-    RPC_LOG_SOCKET_INQ_EP_XIT;
-    return (serr);
-}
 /*
  * R P C _ _ S O C K E T _ S E T _ B R O A D C A S T
  *
@@ -772,7 +888,7 @@ rpc_addr_p_t        addr;
  * Used only by Datagram based Protocol Services.
  */
 
-PRIVATE rpc_socket_error_t rpc__socket_set_broadcast
+INTERNAL rpc_socket_error_t rpc__bsd_socket_set_broadcast
 #ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock
@@ -787,12 +903,12 @@ rpc_socket_t        sock;
     rpc_socket_error_t  serr;
 
     RPC_SOCKET_DISABLE_CANCEL;
-    serr = (setsockopt(sock, SOL_SOCKET, SO_BROADCAST, 
+    serr = (setsockopt(sock->data.word, SOL_SOCKET, SO_BROADCAST,
             &setsock_val, sizeof(setsock_val)) == -1) ? errno : RPC_C_SOCKET_OK;
     RPC_SOCKET_RESTORE_CANCEL;
     if (serr)
     {
-        RPC_DBG_GPRINTF(("(rpc__socket_set_broadcast) error=%d\n", serr));
+        RPC_DBG_GPRINTF(("(rpc__bsd_socket_set_broadcast) error=%d\n", serr));
     }
 
     return(serr);
@@ -818,7 +934,7 @@ rpc_socket_t        sock;
  * system default (i.e. we don't set anything at all).
  */
 
-PRIVATE rpc_socket_error_t rpc__socket_set_bufs
+INTERNAL rpc_socket_error_t rpc__bsd_socket_set_bufs
     
 #ifdef _DCE_PROTO_
 (
@@ -851,11 +967,11 @@ unsigned32          *nrxsize;
     txsize = MIN(txsize, RPC_C_SOCKET_MAX_SNDBUF);
     if (txsize != 0)
     {
-        e = setsockopt(sock, SOL_SOCKET, SO_SNDBUF, &txsize, sizeof(txsize));
+        e = setsockopt(sock->data.word, SOL_SOCKET, SO_SNDBUF, &txsize, sizeof(txsize));
         if (e == -1)
         {
             RPC_DBG_GPRINTF
-(("(rpc__socket_set_bufs) WARNING: set sndbuf (%d) failed - error = %d\n", 
+(("(rpc__bsd_socket_set_bufs) WARNING: set sndbuf (%d) failed - error = %d\n",
                 txsize, errno));
         }
     }
@@ -863,11 +979,11 @@ unsigned32          *nrxsize;
     rxsize = MIN(rxsize, RPC_C_SOCKET_MAX_RCVBUF);
     if (rxsize != 0)
     {
-        e = setsockopt(sock, SOL_SOCKET, SO_RCVBUF, &rxsize, sizeof(rxsize));
+        e = setsockopt(sock->data.word, SOL_SOCKET, SO_RCVBUF, &rxsize, sizeof(rxsize));
         if (e == -1)
         {
             RPC_DBG_GPRINTF
-(("(rpc__socket_set_bufs) WARNING: set rcvbuf (%d) failed - error = %d\n", 
+(("(rpc__bsd_socket_set_bufs) WARNING: set rcvbuf (%d) failed - error = %d\n",
                 rxsize, errno));
         }
     }
@@ -877,21 +993,21 @@ unsigned32          *nrxsize;
      */
     *ntxsize = 0;
     sizelen = sizeof *ntxsize;
-    e = getsockopt(sock, SOL_SOCKET, SO_SNDBUF, ntxsize, &sizelen);
+    e = getsockopt(sock->data.word, SOL_SOCKET, SO_SNDBUF, ntxsize, &sizelen);
     if (e == -1)
     {
         RPC_DBG_GPRINTF
-(("(rpc__socket_set_bufs) WARNING: get sndbuf failed - error = %d\n", errno));
+(("(rpc__bsd_socket_set_bufs) WARNING: get sndbuf failed - error = %d\n", errno));
         *ntxsize = RPC_C_SOCKET_GUESSED_SNDBUF;
     }
 
     *nrxsize = 0;
     sizelen = sizeof *nrxsize;
-    e = getsockopt(sock, SOL_SOCKET, SO_RCVBUF, nrxsize, &sizelen);
+    e = getsockopt(sock->data.word, SOL_SOCKET, SO_RCVBUF, nrxsize, &sizelen);
     if (e == -1)
     {
         RPC_DBG_GPRINTF
-(("(rpc__socket_set_bufs) WARNING: get rcvbuf failed - error = %d\n", errno));
+(("(rpc__bsd_socket_set_bufs) WARNING: get rcvbuf failed - error = %d\n", errno));
         *nrxsize = RPC_C_SOCKET_GUESSED_RCVBUF;
     }
 
@@ -932,7 +1048,7 @@ unsigned32          *nrxsize;
  * Return RPC_C_SOCKET_OK on success, otherwise an error value.
  */
 
-PRIVATE rpc_socket_error_t rpc__socket_set_nbio
+INTERNAL rpc_socket_error_t rpc__bsd_socket_set_nbio
 #ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock
@@ -947,11 +1063,11 @@ rpc_socket_t        sock;
     rpc_socket_error_t  serr;
 
     RPC_SOCKET_DISABLE_CANCEL;
-    serr = ((fcntl(sock, F_SETFL, O_NDELAY) == -1) ? errno : RPC_C_SOCKET_OK);
+    serr = ((fcntl(sock->data.word, F_SETFL, O_NDELAY) == -1) ? errno : RPC_C_SOCKET_OK);
     RPC_SOCKET_RESTORE_CANCEL;
     if (serr)
     {
-        RPC_DBG_GPRINTF(("(rpc__socket_set_nbio) error=%d\n", serr));
+        RPC_DBG_GPRINTF(("(rpc__bsd_socket_set_nbio) error=%d\n", serr));
     }
 
     return (serr);
@@ -983,7 +1099,7 @@ rpc_socket_t        sock;
  * Return RPC_C_SOCKET_OK on success, otherwise an error value.
  */
 
-PRIVATE rpc_socket_error_t rpc__socket_set_close_on_exec
+INTERNAL rpc_socket_error_t rpc__bsd_socket_set_close_on_exec
 #ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock
@@ -997,11 +1113,11 @@ rpc_socket_t        sock;
     rpc_socket_error_t  serr;
 
     RPC_SOCKET_DISABLE_CANCEL;
-    serr = ((fcntl(sock, F_SETFD, 1) == -1) ? errno : RPC_C_SOCKET_OK);
+    serr = ((fcntl(sock->data.word, F_SETFD, 1) == -1) ? errno : RPC_C_SOCKET_OK);
     RPC_SOCKET_RESTORE_CANCEL;
     if (serr)
     {
-        RPC_DBG_GPRINTF(("(rpc__socket_set_close_on_exec) error=%d\n", serr));
+        RPC_DBG_GPRINTF(("(rpc__bsd_socket_set_close_on_exec) error=%d\n", serr));
     }
     return (serr);
 #else
@@ -1018,7 +1134,7 @@ rpc_socket_t        sock;
  * (see BSD UNIX getpeername(2)).
  */
 
-PRIVATE rpc_socket_error_t rpc__socket_getpeername 
+INTERNAL rpc_socket_error_t rpc__bsd_socket_getpeername
 #ifdef _DCE_PROTO_
 (
     rpc_socket_t sock,
@@ -1034,7 +1150,7 @@ rpc_addr_p_t addr;
 
     RPC_SOCKET_FIX_ADDRLEN(addr);
     RPC_SOCKET_DISABLE_CANCEL;
-    serr = (getpeername(sock, (void *)&addr->sa, &addr->len) == -1) ? errno : RPC_C_SOCKET_OK;
+    serr = (getpeername(sock->data.word, (void *)&addr->sa, &addr->len) == -1) ? errno : RPC_C_SOCKET_OK;
     RPC_SOCKET_RESTORE_CANCEL;
     RPC_SOCKET_FIX_ADDRLEN(addr);
 
@@ -1049,7 +1165,7 @@ rpc_addr_p_t addr;
  * (see BSD UNIX getsockopt(2)).
  */
 
-PRIVATE rpc_socket_error_t rpc__socket_get_if_id 
+INTERNAL rpc_socket_error_t rpc__bsd_socket_get_if_id
 #ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock,
@@ -1067,7 +1183,7 @@ rpc_network_if_id_t *network_if_id;
     optlen = sizeof(rpc_network_if_id_t);
 
     RPC_SOCKET_DISABLE_CANCEL;
-    serr = (getsockopt (sock,
+    serr = (getsockopt (sock->data.word,
                         SOL_SOCKET,
                         SO_TYPE,
                         network_if_id,
@@ -1088,7 +1204,7 @@ rpc_network_if_id_t *network_if_id;
  * (see BSD UNIX setsockopt(2)).
  */
 
-PRIVATE rpc_socket_error_t rpc__socket_set_keepalive
+INTERNAL rpc_socket_error_t rpc__bsd_socket_set_keepalive
 #ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock
@@ -1103,12 +1219,12 @@ rpc_socket_t        sock;
     rpc_socket_error_t  serr;
 
     RPC_SOCKET_DISABLE_CANCEL;
-    serr = ((setsockopt(sock, SOL_SOCKET, SO_KEEPALIVE,
+    serr = ((setsockopt(sock->data.word, SOL_SOCKET, SO_KEEPALIVE,
        &setsock_val, sizeof(setsock_val)) == -1) ? errno : RPC_C_SOCKET_OK);
     RPC_SOCKET_RESTORE_CANCEL;
     if (serr)
     {
-        RPC_DBG_GPRINTF(("(rpc__socket_set_keepalive) error=%d\n", serr));
+        RPC_DBG_GPRINTF(("(rpc__bsd_socket_set_keepalive) error=%d\n", serr));
     }
 
     return(serr);
@@ -1127,7 +1243,7 @@ rpc_socket_t        sock;
  * if a timeout occurs.  This operation in not cancellable.
  */
 
-PRIVATE rpc_socket_error_t rpc__socket_nowriteblock_wait
+INTERNAL rpc_socket_error_t rpc__bsd_socket_nowriteblock_wait
 #ifdef _DCE_PROTO_
 (
     rpc_socket_t sock,
@@ -1144,8 +1260,8 @@ struct timeval *tmo;
     rpc_socket_error_t  serr;
 
     FD_ZERO (&write_fds);
-    FD_SET (sock, &write_fds);
-    nfds = sock + 1;
+    FD_SET (sock->data.word, &write_fds);
+    nfds = sock->data.word + 1;
                   
     RPC_SOCKET_DISABLE_CANCEL;
     num_found = dcethread_select(nfds, NULL, (void *)&write_fds, NULL, tmo);
@@ -1154,13 +1270,13 @@ struct timeval *tmo;
 
     if (serr)
     {
-        RPC_DBG_GPRINTF(("(rpc__socket_nowriteblock_wait) error=%d\n", serr));
+        RPC_DBG_GPRINTF(("(rpc__bsd_socket_nowriteblock_wait) error=%d\n", serr));
         return serr;
     }
 
     if (num_found == 0)
     {
-        RPC_DBG_GPRINTF(("(rpc__socket_nowriteblock_wait) timeout\n"));
+        RPC_DBG_GPRINTF(("(rpc__bsd_socket_nowriteblock_wait) timeout\n"));
         return RPC_C_SOCKET_ETIMEDOUT;
     }
 
@@ -1177,7 +1293,7 @@ struct timeval *tmo;
  * (see BSD UNIX setsockopt(2)).
  */
 
-PRIVATE rpc_socket_error_t rpc__socket_set_rcvtimeo
+INTERNAL rpc_socket_error_t rpc__bsd_socket_set_rcvtimeo
 #ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock,
@@ -1193,12 +1309,12 @@ struct timeval      *tmo;
     rpc_socket_error_t  serr;
 
     RPC_SOCKET_DISABLE_CANCEL;
-    serr = ((setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO,
+    serr = ((setsockopt(sock->data.word, SOL_SOCKET, SO_RCVTIMEO,
        tmo, sizeof(*tmo)) == -1) ? errno : RPC_C_SOCKET_OK);
     RPC_SOCKET_RESTORE_CANCEL;
     if (serr)
     {
-        RPC_DBG_GPRINTF(("(rpc__socket_set_rcvtimeo) error=%d\n", serr));
+        RPC_DBG_GPRINTF(("(rpc__bsd_socket_set_rcvtimeo) error=%d\n", serr));
     }
 
     return(serr);
@@ -1213,7 +1329,7 @@ struct timeval      *tmo;
  * Get UNIX domain socket peer credentials
  */
 
-PRIVATE rpc_socket_error_t rpc__socket_getpeereid
+INTERNAL rpc_socket_error_t rpc__bsd_socket_getpeereid
 #ifdef _DCE_PROTO_
 (
     ATTRIBUTE_UNUSED rpc_socket_t        sock,
@@ -1233,7 +1349,7 @@ ATTRIBUTE_UNUSED gid_t		    *egid;
     socklen_t		peercredlen = sizeof(peercred);
 
     RPC_SOCKET_DISABLE_CANCEL;
-    serr = ((getsockopt(sock, SOL_SOCKET, SO_PEERCRED,
+    serr = ((getsockopt(sock->data.word, SOL_SOCKET, SO_PEERCRED,
 	&peercred, &peercredlen) == -1) ? errno : RPC_C_SOCKET_OK);
     RPC_SOCKET_RESTORE_CANCEL;
     if (serr == RPC_C_SOCKET_OK)
@@ -1243,7 +1359,7 @@ ATTRIBUTE_UNUSED gid_t		    *egid;
     }
     else
     {
-        RPC_DBG_GPRINTF(("(rpc__socket_getpeereid) error=%d\n", serr));
+        RPC_DBG_GPRINTF(("(rpc__bsd_socket_getpeereid) error=%d\n", serr));
     }
 
     return(serr);
@@ -1251,3 +1367,455 @@ ATTRIBUTE_UNUSED gid_t		    *egid;
     return(RPC_C_SOCKET_OK);
 #endif
 }
+
+INTERNAL
+int rpc__bsd_socket_get_select_desc(
+    rpc_socket_t sock
+    )
+{
+    return sock->data.word;
+}
+
+INTERNAL
+rpc_socket_error_t
+rpc__bsd_socket_enum_ifaces(
+    rpc_socket_t sock,
+    rpc_socket_enum_iface_fn_p_t efun,
+    rpc_addr_vector_p_t *rpc_addr_vec,
+    rpc_addr_vector_p_t *netmask_addr_vec,
+    rpc_addr_vector_p_t *broadcast_addr_vec
+)
+{
+    rpc_ip_addr_p_t         ip_addr = NULL;
+    rpc_ip_addr_p_t         netmask_addr = NULL;
+    rpc_ip_addr_p_t         broadcast_addr = NULL;
+    int                     n_ifs;
+    unsigned char           buf[1024];
+    struct ifconf           ifc;
+    struct ifreq            *ifr, *last_ifr;
+    struct ifreq            ifreq;
+    short                   if_flags;
+    struct sockaddr         if_addr;
+    unsigned int                     i;
+#ifdef _SOCKADDR_LEN
+    int                     prev_size;
+#else
+    const int prev_size = sizeof(struct ifreq) ;
+#endif
+    rpc_socket_error_t err = 0;
+    int desc = sock->data.word;
+
+    /*
+     * Get the list of network interfaces.
+     */
+    ifc.ifc_len = sizeof (buf);
+    ifc.ifc_buf = (caddr_t) buf;
+
+ifconf_again:
+    if (ioctl (desc, SIOCGIFCONF, (caddr_t) &ifc) < 0)
+    {
+        if (errno == EINTR)
+        {
+            goto ifconf_again;
+        }
+        err = errno;   /* !!! */
+        goto done;
+    }
+
+    /*
+     * Figure out how many interfaces there must be and allocate an
+     * RPC address vector with the appropriate number of elements.
+     * (We may ask for a few too many in case some of the interfaces
+     * are uninteresting.)
+     */
+    n_ifs = ifc.ifc_len / sizeof (struct ifreq);
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 10,
+        ("%d bytes of ifreqs, ifreq is %d bytes\n", ifc.ifc_len, sizeof(struct ifreq)));
+
+#ifdef MAX_DEBUG
+    if (RPC_DBG2(rpc_e_dbg_general, 15))
+    {
+        int i;
+	char msgbuf[128];
+
+        for (i=0; i<ifc.ifc_len; i++) {
+            if ((i % 32) == 0) {
+		if (i != 0)
+		    RPC_DBG_PRINTF(rpc_e_dbg_general, 15, ("%s\n",msgbuf));
+                sprintf(msgbuf, "%4x: ", i);
+	    }
+            sprintf(msgbuf, "%s%02x ", msgbuf, buf[i]);
+        }
+	if (i != 0)
+	    RPC_DBG_PRINTF(rpc_e_dbg_general, 15, ("%s\n",msgbuf));
+    }
+#endif
+
+    if (rpc_addr_vec != NULL)
+    {
+        RPC_MEM_ALLOC (
+            *rpc_addr_vec,
+            rpc_addr_vector_p_t,
+            (sizeof **rpc_addr_vec) + ((n_ifs - 1) * (sizeof (rpc_addr_p_t))),
+            RPC_C_MEM_RPC_ADDR_VEC,
+            RPC_C_MEM_WAITOK);
+
+        if (*rpc_addr_vec == NULL)
+        {
+            err = ENOMEM;
+            goto done;
+        }
+    }
+
+    if (netmask_addr_vec != NULL)
+    {
+        RPC_MEM_ALLOC (
+            *netmask_addr_vec,
+            rpc_addr_vector_p_t,
+         (sizeof **netmask_addr_vec) + ((n_ifs - 1) * (sizeof (rpc_addr_p_t))),
+            RPC_C_MEM_RPC_ADDR_VEC,
+            RPC_C_MEM_WAITOK);
+
+        if (*netmask_addr_vec == NULL)
+        {
+            err = ENOMEM;
+            RPC_MEM_FREE (*netmask_addr_vec, RPC_C_MEM_RPC_ADDR_VEC);
+            goto done;
+        }
+
+        (*netmask_addr_vec)->len = 0;
+    }
+
+    if (broadcast_addr_vec != NULL)
+    {
+        RPC_MEM_ALLOC (
+            *broadcast_addr_vec,
+            rpc_addr_vector_p_t,
+         (sizeof **broadcast_addr_vec) + ((n_ifs - 1) * (sizeof (rpc_addr_p_t))),
+            RPC_C_MEM_RPC_ADDR_VEC,
+            RPC_C_MEM_WAITOK);
+
+        if (*broadcast_addr_vec == NULL)
+        {
+            err = ENOMEM;
+            RPC_MEM_FREE (*broadcast_addr_vec, RPC_C_MEM_RPC_ADDR_VEC);
+            goto done;
+        }
+
+        (*broadcast_addr_vec)->len = 0;
+    }
+
+    /*
+     * Go through the interfaces and get the info associated with them.
+     */
+    (*rpc_addr_vec)->len = 0;
+    last_ifr = (struct ifreq *) (ifc.ifc_buf + ifc.ifc_len);
+
+    for (i=0, ifr = ifc.ifc_req; ifr < last_ifr ;
+         i++, ifr = (struct ifreq *)(( (char *) ifr ) + prev_size))
+    {
+#ifdef _SOCKADDR_LEN
+        prev_size = sizeof (struct ifreq) - sizeof(struct sockaddr) + ifr->ifr_addr.sa_len ;
+#endif
+        RPC_DBG_PRINTF(rpc_e_dbg_general, 10, ("interface %d: %s\n",
+            i, ifr->ifr_name));
+        /*
+         * Get the interface's flags.  If the flags say that the interface
+         * is not up or is the loopback interface, skip it.  Do the
+         * SIOCGIFFLAGS on a copy of the ifr so we don't lose the original
+         * contents of the ifr.  (ifr's are unions that hold only one
+         * of the interesting interface attributes [address, flags, etc.]
+         * at a time.)
+         */
+        memcpy(&ifreq, ifr, sizeof(ifreq));
+ifflags_again:
+        if (ioctl(desc, SIOCGIFFLAGS, &ifreq) < 0)
+        {
+            RPC_DBG_PRINTF(rpc_e_dbg_general, 10,
+                ("SIOCGIFFLAGS returned errno %d\n", errno));
+            if (errno == EINTR)
+            {
+                goto ifflags_again;
+            }
+            continue;
+        }
+        if_flags = ifreq.ifr_flags;     /* Copy out the flags */
+        RPC_DBG_PRINTF(rpc_e_dbg_general, 10, ("flags are %x\n", if_flags));
+
+        /*
+         * Ignore interfaces which are not 'up'.
+         */
+        if ((if_flags & IFF_UP) == 0)
+
+	  continue;
+
+#ifndef USE_LOOPBACK
+	/*
+	 * Ignore the loopback interface
+	 */
+
+        if (if_flags & IFF_LOOPBACK) continue;
+#endif
+	/*
+	 * Ignore Point-to-Point interfaces (i.e. SLIP/PPP )
+         * *** NOTE:  We need an Environment Variable Evaluation at
+	 * some point so we can selectively allow RPC servers to
+	 * some up with/without SLIP/PPP bindings. For Dynamic PPP/SLIP
+	 * interfaces, this creates problems for now.
+	 */
+
+        if (if_flags & IFF_POINTOPOINT) continue;
+
+        /*
+         * Get the addressing stuff for this interface.
+         */
+
+#ifdef NO_SIOCGIFADDR
+
+        /*
+         * Note that some systems do not return the address for the
+         * interface given.  However the ifr array elts contained in
+         * the ifc block returned from the SIOCGIFCONF ioctl above already
+         * contains the correct addresses. So these systems should define
+         * NO_SIOCGIFADDR in their platform specific include file.
+         */
+        if_addr = ifr->ifr_addr;
+
+#else
+
+        /*
+         * Do the SIOCGIFADDR on a copy of the ifr.  See above.
+         */
+        memcpy(&ifreq, ifr, sizeof(ifreq));
+    ifaddr_again:
+        if (ioctl(desc, SIOCGIFADDR, &ifreq) < 0)
+        {
+            RPC_DBG_PRINTF(rpc_e_dbg_general, 10,
+                           ("SIOCGIFADDR returned errno %d\n", errno));
+            if (errno == EINTR)
+            {
+                goto ifaddr_again;
+            }
+
+            err = errno;
+            goto FREE_IT;
+        }
+
+        memcpy (&if_addr, &ifr->ifr_addr, sizeof(struct sockaddr));
+
+#endif  /* NO_SIOCGIFADDR */
+
+        /*
+         * If this isn't an Internet-family address, ignore it.
+         */
+        if (if_addr.sa_family != AF_INET)
+        {
+            RPC_DBG_PRINTF(rpc_e_dbg_general, 10, ("AF %d not INET\n",
+                                                   if_addr.sa_family));
+            continue;
+        }
+
+        if (rpc_addr_vec != NULL)
+        {
+            /*
+             * Allocate and fill in an IP RPC address for this interface.
+             */
+            RPC_MEM_ALLOC (
+                ip_addr,
+                rpc_ip_addr_p_t,
+                sizeof (rpc_ip_addr_t),
+                RPC_C_MEM_RPC_ADDR,
+                RPC_C_MEM_WAITOK);
+
+            if (ip_addr == NULL)
+            {
+                err = ENOMEM;
+                goto FREE_IT;
+            }
+
+            ip_addr->rpc_protseq_id = sock->pseq_id;
+            ip_addr->len            = sizeof (struct sockaddr_in);
+
+            memcpy (&ip_addr->sa, &if_addr, sizeof(struct sockaddr_in));
+        }
+        else
+        {
+            ip_addr = NULL;
+        }
+
+        if (netmask_addr_vec != NULL && (if_flags & IFF_LOOPBACK) == 0)
+        {
+            memcpy(&ifreq, ifr, sizeof(ifreq));
+
+            while (ioctl(desc, SIOCGIFNETMASK, &ifreq) == -1)
+            {
+                if (errno != EINTR)
+                {
+                    err = errno;
+                    goto FREE_IT;
+                }
+            }
+
+            RPC_MEM_ALLOC (
+                netmask_addr,
+                rpc_ip_addr_p_t,
+                sizeof (rpc_ip_addr_t),
+                RPC_C_MEM_RPC_ADDR,
+                RPC_C_MEM_WAITOK);
+
+            if (netmask_addr == NULL)
+            {
+                err = ENOMEM;
+                goto FREE_IT;
+            }
+
+            netmask_addr->rpc_protseq_id = sock->pseq_id;
+            netmask_addr->len            = sizeof (struct sockaddr_in);
+            memcpy(&netmask_addr->sa, &ifreq.ifr_addr, sizeof(struct sockaddr_in));
+        }
+        else
+        {
+            netmask_addr = NULL;
+        }
+
+        if (broadcast_addr_vec != NULL && (if_flags & IFF_BROADCAST))
+        {
+            memcpy(&ifreq, ifr, sizeof(ifreq));
+
+            while (ioctl(desc, SIOCGIFBRDADDR, &ifreq) == -1)
+            {
+                if (errno != EINTR)
+                {
+                    err = errno;
+                    goto FREE_IT;
+                }
+            }
+
+            RPC_MEM_ALLOC (
+                broadcast_addr,
+                rpc_ip_addr_p_t,
+                sizeof (rpc_ip_addr_t),
+                RPC_C_MEM_RPC_ADDR,
+                RPC_C_MEM_WAITOK);
+
+            if (broadcast_addr == NULL)
+            {
+                err = ENOMEM;
+                goto FREE_IT;
+            }
+
+            broadcast_addr->rpc_protseq_id = sock->pseq_id;
+            broadcast_addr->len            = sizeof (struct sockaddr_in);
+            memcpy(&broadcast_addr->sa, &ifreq.ifr_broadaddr, sizeof(struct sockaddr_in));
+        }
+        else
+        {
+            broadcast_addr = NULL;
+        }
+
+        /*
+         * Call out to do any final filtering and get the desired IP address
+         * for this interface.  If the callout function returns false, we
+         * forget about this interface.
+         */
+        if ((*efun) (sock, (rpc_addr_p_t) ip_addr, (rpc_addr_p_t) netmask_addr, (rpc_addr_p_t) broadcast_addr) == false)
+        {
+            if (ip_addr != NULL)
+                RPC_MEM_FREE (ip_addr, RPC_C_MEM_RPC_ADDR);
+            if (netmask_addr != NULL)
+                RPC_MEM_FREE (netmask_addr, RPC_C_MEM_RPC_ADDR);
+            if (broadcast_addr != NULL)
+                RPC_MEM_FREE (broadcast_addr, RPC_C_MEM_RPC_ADDR);
+            continue;
+        }
+
+        if (rpc_addr_vec != NULL && ip_addr != NULL)
+            (*rpc_addr_vec)->addrs[(*rpc_addr_vec)->len++]
+                = (rpc_addr_p_t) ip_addr;
+        if (netmask_addr_vec != NULL && netmask_addr != NULL)
+            (*netmask_addr_vec)->addrs[(*netmask_addr_vec)->len++]
+                = (rpc_addr_p_t) netmask_addr;
+        if (broadcast_addr_vec != NULL && broadcast_addr != NULL)
+            (*broadcast_addr_vec)->addrs[(*broadcast_addr_vec)->len++]
+                = (rpc_addr_p_t) broadcast_addr;
+    }
+
+    if ((*rpc_addr_vec)->len == 0)
+    {
+        err = EINVAL;   /* !!! */
+        goto FREE_IT;
+    }
+
+    err = RPC_C_SOCKET_OK;
+done:
+
+    return err;
+
+FREE_IT:
+
+    if (ip_addr != NULL)
+    {
+        RPC_MEM_FREE (ip_addr, RPC_C_MEM_RPC_ADDR);
+    }
+    if (netmask_addr != NULL)
+    {
+        RPC_MEM_FREE (netmask_addr, RPC_C_MEM_RPC_ADDR);
+    }
+    if (broadcast_addr != NULL)
+    {
+        RPC_MEM_FREE (broadcast_addr, RPC_C_MEM_RPC_ADDR);
+    }
+
+    if (rpc_addr_vec != NULL)
+    {
+        for (i = 0; i < (*rpc_addr_vec)->len; i++)
+        {
+            RPC_MEM_FREE ((*rpc_addr_vec)->addrs[i], RPC_C_MEM_RPC_ADDR);
+        }
+        RPC_MEM_FREE (*rpc_addr_vec, RPC_C_MEM_RPC_ADDR_VEC);
+    }
+    if (netmask_addr_vec != NULL)
+    {
+        for (i = 0; i < (*netmask_addr_vec)->len; i++)
+        {
+            RPC_MEM_FREE ((*netmask_addr_vec)->addrs[i], RPC_C_MEM_RPC_ADDR);
+        }
+        RPC_MEM_FREE (*netmask_addr_vec, RPC_C_MEM_RPC_ADDR_VEC);
+    }
+    if (broadcast_addr_vec != NULL)
+    {
+        for (i = 0; i < (*netmask_addr_vec)->len; i++)
+        {
+            RPC_MEM_FREE ((*netmask_addr_vec)->addrs[i], RPC_C_MEM_RPC_ADDR);
+        }
+        RPC_MEM_FREE (*netmask_addr_vec, RPC_C_MEM_RPC_ADDR_VEC);
+    }
+
+    goto done;
+}
+
+PRIVATE rpc_socket_vtbl_t rpc_g_bsd_socket_vtbl =
+{
+    .socket_construct = rpc__bsd_socket_construct,
+    .socket_destruct = rpc__bsd_socket_destruct,
+    .socket_bind = rpc__bsd_socket_bind,
+    .socket_connect = rpc__bsd_socket_connect,
+    .socket_accept = rpc__bsd_socket_accept,
+    .socket_listen = rpc__bsd_socket_listen,
+    .socket_sendmsg = rpc__bsd_socket_sendmsg,
+    .socket_recvfrom = rpc__bsd_socket_recvfrom,
+    .socket_recvmsg = rpc__bsd_socket_recvmsg,
+    .socket_inq_endpoint = rpc__bsd_socket_inq_endpoint,
+    .socket_set_broadcast = rpc__bsd_socket_set_broadcast,
+    .socket_set_bufs = rpc__bsd_socket_set_bufs,
+    .socket_set_nbio = rpc__bsd_socket_set_nbio,
+    .socket_set_close_on_exec = rpc__bsd_socket_set_close_on_exec,
+    .socket_getpeername = rpc__bsd_socket_getpeername,
+    .socket_get_if_id = rpc__bsd_socket_get_if_id,
+    .socket_set_keepalive = rpc__bsd_socket_set_keepalive,
+    .socket_nowriteblock_wait = rpc__bsd_socket_nowriteblock_wait,
+    .socket_set_rcvtimeo = rpc__bsd_socket_set_rcvtimeo,
+    .socket_getpeereid = rpc__bsd_socket_getpeereid,
+    .socket_get_select_desc = rpc__bsd_socket_get_select_desc,
+    .socket_enum_ifaces = rpc__bsd_socket_enum_ifaces
+};

@@ -352,14 +352,14 @@ rpc_cn_assoc_p_t        assoc;
                  * to closed.
                  */
                 RPC_CN_STATS_INCR (closed_connections);
-                serr = rpc__socket_close (assoc->cn_ctlblk.cn_sock); /* must not be a cancellation point */
+                serr = RPC_SOCKET_CLOSE (assoc->cn_ctlblk.cn_sock); /* must not be a cancellation point */
                 if (RPC_SOCKET_IS_ERR(serr))
                 {
                     /*
                      * The socket close failed.
                      */
                     RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
-("(rpc__cn_network_receiver) assoc->%x desc->%x rpc__socket_close failed, error = %d\n", 
+("(rpc__cn_network_receiver) assoc->%x desc->%x RPC_SOCKET_CLOSE failed, error = %d\n",
                                      assoc,
                                      assoc->cn_ctlblk.cn_sock,                                  
                                      RPC_SOCKET_ETOI(serr)));
@@ -1379,12 +1379,12 @@ unsigned32              *st;
 	    dcethread_enableasync_throw(1);
 	    dcethread_checkinterrupt();
 #endif /* NON_CANCELLABLE_IO */
-            RPC_SOCKET_RECVMSG (assoc->cn_ctlblk.cn_sock,
-                                &iov,
-                                1,
-                                addr,
-                                &bytes_rcvd,
-                                &serr);
+            serr = rpc__socket_recvmsg(
+                assoc->cn_ctlblk.cn_sock,
+                &iov,
+                1,
+                addr,
+                (int*) &bytes_rcvd);
 #ifdef NON_CANCELLABLE_IO
 	    dcethread_enableasync_throw(0);
 #endif /* NON_CANCELLABLE_IO */

@@ -962,7 +962,7 @@ unsigned32                *status;
        Detect this case and try getpeername instead */
     if (addr->sa.family == 0)   
     {
-        serr = rpc__socket_inq_peer_endpoint (desc, addr);
+        serr = rpc__socket_getpeername (desc, addr);
 
         if (RPC_SOCKET_IS_ERR (serr))
         {

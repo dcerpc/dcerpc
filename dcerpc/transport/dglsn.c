@@ -1547,8 +1547,12 @@ rpc_dg_recvq_elt_p_t rqe;
     }
     assert(i <= RPC_C_DG_MAX_NUM_PKTS_IN_FRAG);
 
-    RPC_SOCKET_RECVMSG(sp->sock, iov, i, (rpc_addr_p_t)(&rqe->from), 
-                       &recv_len, &serr);
+    serr = rpc__socket_recvmsg(
+        sp->sock,
+        iov,
+        i,
+        (rpc_addr_p_t)(&rqe->from),
+        &recv_len);
 
     RPC_DG_SOCK_UPDATE_ERR_COUNT(sp, serr);
 

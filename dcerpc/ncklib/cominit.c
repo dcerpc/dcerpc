@@ -867,7 +867,7 @@ INTERNAL boolean supported_naf
 rpc_naf_id_elt_p_t      naf;
 #endif
 {
-    rpc_socket_t            socket;
+    rpc_socket_basic_t            socket;
     rpc_socket_error_t      socket_error;
     
     if (naf->naf_id == 0)
@@ -878,7 +878,7 @@ rpc_naf_id_elt_p_t      naf;
 
     if (! RPC_SOCKET_IS_ERR (socket_error))
     {
-        rpc__socket_close (socket);
+        rpc__socket_close_basic (socket);
         return (true);
     }
 
@@ -938,7 +938,7 @@ rpc_network_if_id_t     network_if;
 rpc_network_protocol_id_t network_protocol;
 #endif
 {
-    rpc_socket_t            socket;
+    rpc_socket_basic_t            socket;
     rpc_socket_error_t      socket_error;
 
     socket_error = rpc__socket_open_basic
@@ -946,7 +946,7 @@ rpc_network_protocol_id_t network_protocol;
 
     if (! RPC_SOCKET_IS_ERR (socket_error))
     {
-        (void) rpc__socket_close (socket);
+        (void) rpc__socket_close_basic (socket);
         return (true);
     }
 

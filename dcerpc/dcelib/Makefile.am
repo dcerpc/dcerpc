@@ -21,4 +21,4 @@ libdcerpc_la_LIBADD =			\
 	$(LIB_socket)			\
 	$(LIB_nsl)			\
 	$(LIB_dl)			\
-	$(LIB_unistr) -lnpc
+	$(LIB_unistr)

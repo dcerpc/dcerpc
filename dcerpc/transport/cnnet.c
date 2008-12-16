@@ -446,7 +446,7 @@ unsigned32              *status;
         rpc__naf_addr_set_endpoint (endpoint, &rpc_addr, status);
         if (*status != rpc_s_ok)
         {
-            rpc__socket_close (sock);
+            RPC_SOCKET_CLOSE (sock);
             break;
         }
         
@@ -454,7 +454,7 @@ unsigned32              *status;
         if (RPC_SOCKET_IS_ERR (serr))
         {
             *status = rpc_s_cant_bind_sock;
-            rpc__socket_close (sock);
+            RPC_SOCKET_CLOSE (sock);
             break;
         }
 
@@ -468,7 +468,7 @@ unsigned32              *status;
                                                status);
         if (*status != rpc_s_ok)
         {
-            rpc__socket_close (sock);
+            RPC_SOCKET_CLOSE (sock);
             break;
         }
 
@@ -485,7 +485,7 @@ unsigned32              *status;
         
         if (*status != rpc_s_ok)
         {
-            rpc__socket_close (sock);
+            RPC_SOCKET_CLOSE (sock);
             break;
         }
 
@@ -508,7 +508,7 @@ unsigned32              *status;
              created_sock_index++)
         {
             rpc__network_remove_desc (sock_list[created_sock_index], &temp_status);
-            rpc__socket_close (sock_list[created_sock_index]);
+            RPC_SOCKET_CLOSE (sock_list[created_sock_index]);
         }
     }
     else
@@ -592,7 +592,7 @@ unsigned32              backlog;
 unsigned32              *status;
 #endif
 {
-    rpc_socket_t        connected_desc = -1;
+    rpc_socket_t        connected_desc = RPC_SOCKET_INVALID;
     rpc_addr_vector_p_t rpc_addr_vec;
     rpc_addr_p_t        rpc_addr;
     unsigned_char_t     *endpoint;
@@ -659,7 +659,7 @@ unsigned32              *status;
                             ("(rpc__cn_network_init_desc) rpc__socket_open failed, error = %d\n",
                              RPC_SOCKET_ETOI(serr)));
             rpc__naf_addr_vector_free (&rpc_addr_vec, status);
-            *desc = -1;
+            *desc = RPC_SOCKET_INVALID;
             *status = rpc_s_cant_create_sock;
             return (NULL);
         }
@@ -971,7 +971,7 @@ unsigned32              *st;
              */
             RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
                             ("CN: desc->%x socket not active ... being closed\n", newdesc));
-            serr = rpc__socket_close (newdesc);
+            serr = RPC_SOCKET_CLOSE (newdesc);
         }
         else
         {
@@ -1046,7 +1046,7 @@ unsigned32              *st;
                 /* 
                  * The association listen failed. Close the connection.
                  */
-                serr = rpc__socket_close (newdesc);
+                serr = RPC_SOCKET_CLOSE (newdesc);
             }
 
 	    /*
@@ -1208,14 +1208,14 @@ unsigned32              *st;
                              st);
         if (*st != rpc_s_ok)
         {
-            serr = rpc__socket_close (assoc->cn_ctlblk.cn_sock);
+            serr = RPC_SOCKET_CLOSE (assoc->cn_ctlblk.cn_sock);
             if (RPC_SOCKET_IS_ERR(serr))
             {
                 /*
                  * The socket close failed.
                  */
                 RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
-                                ("(rpc__cn_network_req_connect) desc->%x rpc__socket_close failed, error = %d\n", 
+                                ("(rpc__cn_network_req_connect) desc->%x RPC_SOCKET_CLOSE failed, error = %d\n",
                                  assoc->cn_ctlblk.cn_sock, 
                                  RPC_SOCKET_ETOI(serr)));
             }
@@ -1239,14 +1239,14 @@ unsigned32              *st;
              * The bind request failed. Close the socket just created
              * and free the association control block.
              */
-            serr = rpc__socket_close (assoc->cn_ctlblk.cn_sock);
+            serr = RPC_SOCKET_CLOSE (assoc->cn_ctlblk.cn_sock);
             if (RPC_SOCKET_IS_ERR(serr))
             {
                 /*
                  * The socket close failed.
                  */
                 RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
-                                ("(rpc__cn_network_req_connect) desc->%x rpc__socket_close failed, error = %d\n", 
+                                ("(rpc__cn_network_req_connect) desc->%x RPC_SOCKET_CLOSE failed, error = %d\n",
                                  assoc->cn_ctlblk.cn_sock, 
                                  RPC_SOCKET_ETOI(serr)));
             }
@@ -1332,7 +1332,7 @@ unsigned32              *st;
             if (!retry_op)
             {
                 RPC_CN_LOCK ();
-                rpc__socket_close (assoc->cn_ctlblk.cn_sock);
+                RPC_SOCKET_CLOSE (assoc->cn_ctlblk.cn_sock);
                 return;
             }
 
@@ -1366,14 +1366,14 @@ unsigned32              *st;
              * The connect request failed. Close the socket just created
              * and free the association control block.
              */
-            serr = rpc__socket_close (assoc->cn_ctlblk.cn_sock);
+            serr = RPC_SOCKET_CLOSE (assoc->cn_ctlblk.cn_sock);
             if (RPC_SOCKET_IS_ERR(serr))
             {
                 /*
                  * The socket close failed.
                  */
                 RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
-                                ("(rpc__cn_network_req_connect) desc->%x rpc__socket_close failed, error = %d\n", 
+                                ("(rpc__cn_network_req_connect) desc->%x RPC_SOCKET_CLOSE failed, error = %d\n",
                                  assoc->cn_ctlblk.cn_sock, 
                                  RPC_SOCKET_ETOI(serr)));
             }

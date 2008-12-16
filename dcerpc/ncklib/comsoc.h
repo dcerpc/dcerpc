@@ -65,20 +65,24 @@
 #include <dce/dce.h>
 #endif
 
+/*
+ * The maximum number of iov elements which can be sent through
+ * sendmsg is MSG_IOVLEN-1.
+ */
+#define RPC_C_MAX_IOVEC_LEN ( MSG_MAXIOVLEN - 1)
 
-
+/*
+ * The maximum number of connections which can be queued on a socket.
+ */
+#define RPC_C_LISTEN_BACKLOG SOMAXCONN
 
 /*
  * Changing anything below will affect other portions of the runtime.
  */
 
-/* a BSD UNIX iovec */
-/*typedef struct {  
-    byte_p_t base;
-    int len;
-}*/
 typedef struct iovec rpc_socket_iovec_t;
 typedef struct iovec *rpc_socket_iovec_p_t;
+typedef int rpc_socket_error_t;
 
 #include <comsoc_sys.h>
 #include <comnaf.h>
@@ -89,6 +93,179 @@ typedef struct iovec *rpc_socket_iovec_p_t;
 extern "C" {
 #endif
 
+/*
+ * bkoropoff // Likewise
+ *
+ * New types that allow for socket handles that are more abstract than just a file descriptor
+ */
+
+typedef boolean (*rpc_socket_enum_iface_fn_p_t) (
+    rpc_socket_t sock,
+    rpc_addr_p_t ip_addr,
+    rpc_addr_p_t netmask_addr,
+    rpc_addr_p_t broadcast_addr
+    );
+
+typedef struct rpc_socket_vtbl_s
+{
+    /* Used when opening a socket */
+    rpc_socket_error_t
+    (*socket_construct) (
+        rpc_socket_t sock,
+        rpc_protseq_id_t pseq_id
+        );
+    /* Used when closing a socket */
+    rpc_socket_error_t
+    (*socket_destruct) (
+        rpc_socket_t sock
+        );
+    /* Bind the socket */
+    rpc_socket_error_t
+    (*socket_bind) (
+        rpc_socket_t sock,
+        rpc_addr_p_t addr
+        );
+    /* Connect the socket */
+    rpc_socket_error_t
+    (*socket_connect) (
+        rpc_socket_t sock,
+        rpc_addr_p_t addr,
+        rpc_cn_assoc_t* assoc
+        );
+    /* Accept a connection on a listen socket */
+    rpc_socket_error_t
+    (*socket_accept) (
+        rpc_socket_t sock,
+        rpc_addr_p_t addr,
+        rpc_socket_t* newsock
+        );
+    /* Begin listening for connections on a socket */
+    rpc_socket_error_t
+    (*socket_listen) (
+        rpc_socket_t sock,
+        int backlog
+        );
+    /* Send a message over the socket */
+    rpc_socket_error_t
+    (*socket_sendmsg) (
+        rpc_socket_t sock,
+        rpc_socket_iovec_p_t iov,
+        int iov_len,
+        rpc_addr_p_t addr,
+        int * cc
+        );
+    /* Receive data from the socket */
+    rpc_socket_error_t
+    (*socket_recvfrom) (
+        rpc_socket_t sock,
+        byte_p_t buf,
+        int len,
+        rpc_addr_p_t from,
+        int *cc
+        );
+    /* Receive a message from the socket */
+    rpc_socket_error_t
+    (*socket_recvmsg) (
+        rpc_socket_t sock,
+        rpc_socket_iovec_p_t iov,
+        int iov_len,
+        rpc_addr_p_t addr,
+        int * cc
+        );
+    /* Inquire local socket endpoint */
+    rpc_socket_error_t
+    (*socket_inq_endpoint) (
+        rpc_socket_t sock,
+        rpc_addr_p_t addr
+        );
+    /* Enabled broadcasting on datagram socket */
+    rpc_socket_error_t
+    (*socket_set_broadcast) (
+        rpc_socket_t sock
+        );
+    /* Set socket buffer sizes */
+    rpc_socket_error_t
+    (*socket_set_bufs) (
+        rpc_socket_t sock,
+        unsigned32 txsize,
+        unsigned32 rxsize,
+        unsigned32* ntxsize,
+        unsigned32* nrxsize
+        );
+    /* Set socket as non-blocking */
+    rpc_socket_error_t
+    (*socket_set_nbio) (
+        rpc_socket_t sock
+        );
+    /* Set socket to close automatically when the process loads a new executable */
+    rpc_socket_error_t
+    (*socket_set_close_on_exec) (
+        rpc_socket_t sock
+        );
+    /* Get peer address */
+    rpc_socket_error_t
+    (*socket_getpeername) (
+        rpc_socket_t sock,
+        rpc_addr_p_t addr
+        );
+    /* Get socket network interface */
+    rpc_socket_error_t
+    (*socket_get_if_id) (
+        rpc_socket_t sock,
+        rpc_network_if_id_t* network_if_id
+        );
+    /* Set socket as keep-alive */
+    rpc_socket_error_t
+    (*socket_set_keepalive) (
+        rpc_socket_t sock
+        );
+    /* Block for the specified period of time until the socket is ready for writing */
+    rpc_socket_error_t
+    (*socket_nowriteblock_wait) (
+        rpc_socket_t sock,
+        struct timeval *tmo
+        );
+    /* Set socket receive timeout */
+    rpc_socket_error_t
+    (*socket_set_rcvtimeo) (
+        rpc_socket_t sock,
+        struct timeval *tmo
+        );
+    /* Get peer credentials for local connection */
+    rpc_socket_error_t
+    (*socket_getpeereid) (
+        rpc_socket_t sock,
+        uid_t* uid,
+        gid_t* gid
+        );
+    /* Get a file descriptor suitable for using select() to decide when data is readable */
+    int
+    (*socket_get_select_desc) (
+        rpc_socket_t sock
+        );
+    /* Enumerate available network interfaces for the socket */
+    rpc_socket_error_t
+    (*socket_enum_ifaces) (
+        rpc_socket_t sock,
+        rpc_socket_enum_iface_fn_p_t efun,
+        rpc_addr_vector_p_t *rpc_addr_vec,
+        rpc_addr_vector_p_t *netmask_addr_vec,
+        rpc_addr_vector_p_t *broadcast_addr_vec
+        );
+} rpc_socket_vtbl_t, *rpc_socket_vtbl_p_t;
+
+typedef struct rpc_socket_handle_s
+{
+    rpc_socket_vtbl_t* vtbl;
+    rpc_protseq_id_t pseq_id;
+    union
+    {
+        ssize_t word;
+        void* pointer;
+    } data;
+} rpc_socket_handle_t, *rpc_socket_handle_p_t;
+
+typedef int rpc_socket_basic_t;
 
 /*
  * R P C _ _ S O C K E T _ O P E N
@@ -117,7 +294,7 @@ PRIVATE rpc_socket_error_t rpc__socket_open_basic _DCE_PROTOTYPE_((
         rpc_naf_id_t  /*naf*/,
         rpc_network_if_id_t  /*net_if*/,
         rpc_network_protocol_id_t  /*net_prot*/,
-        rpc_socket_t * /*sock*/
+        rpc_socket_basic_t * /*sock*/
     ));
 
 
@@ -133,6 +310,18 @@ PRIVATE rpc_socket_error_t rpc__socket_close _DCE_PROTOTYPE_((
         rpc_socket_t /*sock*/
     ));
 
+
+/*
+ * R P C _ _ S O C K E T _ C L O S E _ B A S I C
+ *
+ * Close (destroy) a basic socket.
+ *
+ * (see BSD UNIX close(2)).
+ */
+
+PRIVATE rpc_socket_error_t rpc__socket_close_basic _DCE_PROTOTYPE_((
+        rpc_socket_basic_t /*sock*/
+    ));
 
 /*
  * R P C _ _ S O C K E T _ B I N D
@@ -444,5 +633,78 @@ PRIVATE rpc_socket_error_t rpc__socket_getpeereid _DCE_PROTOTYPE_ ((
 	uid_t *,
 	gid_t *
     ));
+
+PRIVATE int
+rpc__socket_get_select_desc(
+    rpc_socket_t sock
+    );
+
+PRIVATE rpc_socket_error_t
+rpc__socket_enum_ifaces (
+    rpc_socket_t sock,
+    rpc_socket_enum_iface_fn_p_t efun,
+    rpc_addr_vector_p_t *rpc_addr_vec,
+    rpc_addr_vector_p_t *netmask_addr_vec,
+    rpc_addr_vector_p_t *broadcast_addr_vec
+    );
+
+/*
+ * Public error constants and functions for comparing errors.
+ * The _ETOI_ (error-to-int) function converts a socket error to a simple
+ * integer value that can be used in error mesages.
+ */
+
+#define RPC_C_SOCKET_OK           0             /* a successful error value */
+#define RPC_C_SOCKET_EWOULDBLOCK  EWOULDBLOCK   /* operation would block */
+#define RPC_C_SOCKET_EINTR        EINTR         /* operation was interrupted */
+#define RPC_C_SOCKET_EIO          EIO           /* I/O error */
+#define RPC_C_SOCKET_EADDRINUSE   EADDRINUSE    /* address was in use (see bind) */
+#define RPC_C_SOCKET_ECONNRESET   ECONNRESET    /* connection reset by peer */
+#define RPC_C_SOCKET_ETIMEDOUT    ETIMEDOUT     /* connection request timed out*/
+#define RPC_C_SOCKET_ECONNREFUSED ECONNREFUSED  /* connection request refused */
+#define RPC_C_SOCKET_ENOTSOCK     ENOTSOCK      /* descriptor was not a socket */
+#define RPC_C_SOCKET_ENETUNREACH  ENETUNREACH   /* network is unreachable*/
+#define RPC_C_SOCKET_ENOSPC       ENOSPC        /* no local or remote resources */
+#define RPC_C_SOCKET_ENETDOWN     ENETDOWN      /* network is down */
+#define RPC_C_SOCKET_ETOOMANYREFS ETOOMANYREFS  /* too many remote connections */
+#define RPC_C_SOCKET_ESRCH        ESRCH         /* remote endpoint not found */
+#define RPC_C_SOCKET_EHOSTDOWN    EHOSTDOWN     /* remote host is down */
+#define RPC_C_SOCKET_EHOSTUNREACH EHOSTUNREACH  /* remote host is unreachable */
+#define RPC_C_SOCKET_ECONNABORTED ECONNABORTED  /* local host aborted connect */
+#define RPC_C_SOCKET_ECONNRESET   ECONNRESET    /* remote host reset connection */
+#define RPC_C_SOCKET_ENETRESET    ENETRESET     /* remote host crashed */
+#define RPC_C_SOCKET_ENOEXEC      ENOEXEC       /* invalid endpoint format for remote */
+#define RPC_C_SOCKET_EACCESS      EACCES        /* access control information */
+                                                /* invalid at remote node */
+#define RPC_C_SOCKET_EPIPE        EPIPE         /* a write on a pipe */
+                                                /* or socket for which there */
+                                                /* is no process to */
+                                                /* read the data. */
+#define RPC_C_SOCKET_EAGAIN       EAGAIN        /* no more processes */
+#define RPC_C_SOCKET_EALREADY     EALREADY      /* operation already */
+                                                /* in progress */
+#define RPC_C_SOCKET_EDEADLK      EDEADLK       /* resource deadlock */
+                                                /* would occur */
+#define RPC_C_SOCKET_EINPROGRESS  EINPROGRESS   /* operation now in */
+                                                /* progress */
+#define RPC_C_SOCKET_EISCONN      EISCONN       /* socket is already */
+                                                /* connected */
+
+/*
+ * A macro to determine if an socket error can be recovered from by
+ * retrying.
+ */
+#define RPC_SOCKET_ERR_IS_BLOCKING(s) \
+    ((s == RPC_C_SOCKET_EAGAIN) || (s == RPC_C_SOCKET_EWOULDBLOCK) || (s == RPC_C_SOCKET_EINPROGRESS) || \
+     (s == RPC_C_SOCKET_EALREADY) || (s == RPC_C_SOCKET_EDEADLK))
+
+#define RPC_SOCKET_ERR_EQ(serr, e)  ((serr) == e)
+
+#define RPC_SOCKET_IS_ERR(serr)     (! RPC_SOCKET_ERR_EQ(serr, RPC_C_SOCKET_OK))
+
+#define RPC_SOCKET_ETOI(serr)       (serr)
+
+#define RPC_SOCKET_CLOSE(s) \
+    ({ int __err = rpc__socket_close(s); s = NULL; __err; })
 
 #endif /* _COMSOC_H */

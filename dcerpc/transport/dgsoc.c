@@ -83,7 +83,7 @@ rpc_dg_sock_pool_elt_p_t *sp;
     /*
      * Close the socket desc.
      */
-    serr = rpc__socket_close((*sp)->sock);
+    serr = RPC_SOCKET_CLOSE((*sp)->sock);
     if (RPC_SOCKET_IS_ERR(serr))
     {
         RPC_DBG_GPRINTF((
@@ -470,7 +470,7 @@ CLEANUP:
      * setup status.
      */
     if (sock_open)
-        serr = rpc__socket_close(socket_desc);
+        serr = RPC_SOCKET_CLOSE(socket_desc);
 
     RPC_MEM_FREE(eltp, RPC_C_MEM_DG_SOCK_POOL_ELT);
     RPC_DG_SOCK_POOL_UNLOCK(0);
@@ -656,7 +656,7 @@ rpc_fork_stage_id_t stage;
             for (eltp = rpc_g_dg_sock_pool.private_sockets; eltp != NULL;
                  eltp = neltp)
             {
-                serr = rpc__socket_close(eltp->sock);
+                serr = RPC_SOCKET_CLOSE(eltp->sock);
                 neltp = eltp->next;
                 RPC_MEM_FREE(eltp, RPC_C_MEM_DG_SOCK_POOL_ELT);
             }
@@ -665,7 +665,7 @@ rpc_fork_stage_id_t stage;
             for (eltp = rpc_g_dg_sock_pool.shared_sockets; eltp != NULL;
                  eltp = neltp)
             {
-                serr = rpc__socket_close(eltp->sock);
+                serr = RPC_SOCKET_CLOSE(eltp->sock);
                 neltp = eltp->next;
                 RPC_MEM_FREE(eltp, RPC_C_MEM_DG_SOCK_POOL_ELT);
             }

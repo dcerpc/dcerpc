@@ -2128,7 +2128,7 @@ typedef struct rpc_dg_binding_server_t {
 
 #define RPC_DG_SOCKET_RECVFROM(sock, buf, buflen, from, ccp, serrp) \
     { \
-        RPC_SOCKET_RECVFROM(sock, (byte_p_t)(buf), buflen, from, ccp, serrp); \
+        *(serrp) = rpc__socket_recvfrom(sock, (byte_p_t)(buf), buflen, from, ccp); \
         if (! RPC_SOCKET_IS_ERR(*serrp)) \
         { \
             RPC_DG_PLOG_RECVFROM_PKT(&(buf->hdr), &(buf->body)); \
@@ -2156,7 +2156,7 @@ typedef struct rpc_dg_binding_server_t {
 
 #  define RPC_DG_SOCKET_SENDMSG(sock, iov, iovlen, addr, ccp, serrp) \
         { \
-            RPC_SOCKET_SENDMSG(sock, iov, iovlen, addr, ccp, serrp); \
+            *(serrp) = rpc__socket_sendmsg(sock, iov, iovlen, addr, ccp); \
             if (! RPC_SOCKET_IS_ERR(*serrp)) \
             { \
                 RPC_DG_PLOG_SENDMSG_PKT(iov, iovlen); \

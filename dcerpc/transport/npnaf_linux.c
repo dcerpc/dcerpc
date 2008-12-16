@@ -195,26 +195,19 @@ unsigned32 *status;
 **/
 
 PRIVATE void rpc__np_desc_inq_addr 
-#ifdef _DCE_PROTO_
 (
     rpc_protseq_id_t        protseq_id,
-    rpc_socket_t            desc,
+    rpc_socket_t            sock,
     rpc_addr_vector_p_t     *rpc_addr_vec,
     unsigned32              *status
 )
-#else
-(protseq_id, desc, rpc_addr_vec, status)
-rpc_protseq_id_t        protseq_id;
-rpc_socket_t            desc;
-rpc_addr_vector_p_t     *rpc_addr_vec;
-unsigned32              *status;
-#endif
 {
     rpc_np_addr_p_t         np_addr;
     rpc_np_addr_t           loc_np_addr;
 #ifdef NP_NETADDR
     char                    *p;
 #endif
+    int                     err = 0;
 
     CODING_ERROR (status);
 
@@ -229,73 +222,71 @@ unsigned32              *status;
      * interfaces the local host has and construct an RPC address for
      * each one of them.
      */
-    loc_np_addr.len = sizeof (rpc_np_addr_t);
-    RPC_SOCKET_FIX_ADDRLEN(&loc_np_addr);
 
-    if (getsockname (desc, (struct sockaddr *)&loc_np_addr.sa, &loc_np_addr.len) < 0)
+    err = rpc__socket_inq_endpoint(sock, (rpc_addr_p_t) &loc_np_addr);
+
+    if (err)
     {
-        *status = rpc_s_cant_inq_socket;
+        *status = -1;
         return;
     }
 
-    RPC_SOCKET_FIX_ADDRLEN(&loc_np_addr);
+    RPC_MEM_ALLOC (
+        np_addr,
+        rpc_np_addr_p_t,
+        sizeof (rpc_np_addr_t),
+        RPC_C_MEM_RPC_ADDR,
+        RPC_C_MEM_WAITOK);
 
-	RPC_MEM_ALLOC (
-		np_addr,
-		rpc_np_addr_p_t,
-		sizeof (rpc_np_addr_t),
-		RPC_C_MEM_RPC_ADDR,
-		RPC_C_MEM_WAITOK);
+    if (np_addr == NULL)
+    {
+        *status = rpc_s_no_memory;
+        return;
+    }
 
-	if (np_addr == NULL)
-	{
-		*status = rpc_s_no_memory;
-		return;
-	}
+    RPC_MEM_ALLOC (
+        *rpc_addr_vec,
+        rpc_addr_vector_p_t,
+        sizeof **rpc_addr_vec,
+        RPC_C_MEM_RPC_ADDR_VEC,
+        RPC_C_MEM_WAITOK);
 
-	RPC_MEM_ALLOC (
-		*rpc_addr_vec,
-		rpc_addr_vector_p_t,
-		sizeof **rpc_addr_vec,
-		RPC_C_MEM_RPC_ADDR_VEC,
-		RPC_C_MEM_WAITOK);
+    if (*rpc_addr_vec == NULL)
+    {
+        RPC_MEM_FREE (np_addr, RPC_C_MEM_RPC_ADDR);
+        *status = rpc_s_no_memory;
+        return;
+    }
 
-	if (*rpc_addr_vec == NULL)
-	{
-		RPC_MEM_FREE (np_addr, RPC_C_MEM_RPC_ADDR);
-		*status = rpc_s_no_memory;
-		return;
-	}
+    memset(np_addr, 0, sizeof(rpc_np_addr_t));
+    np_addr->rpc_protseq_id = protseq_id;
+    np_addr->len = sizeof (struct sockaddr_un);
+    np_addr->sa = loc_np_addr.sa;
 
-	memset(np_addr, 0, sizeof(rpc_np_addr_t));
-	np_addr->rpc_protseq_id = protseq_id;
-	np_addr->len = sizeof (struct sockaddr_un);
-	np_addr->sa = loc_np_addr.sa;
+    /*
+     * Force the address family to AF_UNIX as getsockname()
+     * does not work for UNIX domain sockets on all platforms
+     */
+    np_addr->sa.sun_family = AF_UNIX;
 
-	/*
-	 * Force the address family to AF_UNIX as getsockname()
-	 * does not work for UNIX domain sockets on all platforms
-	 */
-	np_addr->sa.sun_family = AF_UNIX;
-
-	if (np_addr->rpc_protseq_id == RPC_C_PROTSEQ_ID_NCACN_NP)
-	{
+    if (np_addr->rpc_protseq_id == RPC_C_PROTSEQ_ID_NCACN_NP)
+    {
 #ifdef NP_NETADDR
-		np_addr->sa.sun_path[RPC_C_ENDPOINT_NP_MAX + 1] = '\\';
-		np_addr->sa.sun_path[RPC_C_ENDPOINT_NP_MAX + 2] = '\\';
-		gethostname(&np_addr->sa.sun_path[RPC_C_ENDPOINT_NP_MAX + 3], RPC_C_NETADDR_NP_MAX - 3);
-		np_addr->sa.sun_path[RPC_C_NETADDR_NP_MAX - 1] = '\0';
-		for (p = &np_addr->sa.sun_path[RPC_C_ENDPOINT_NP_MAX + 3]; *p != '.' && *p != '\0'; p++)
-			*p = toupper(*p);
-		*p = '\0';
+        np_addr->sa.sun_path[RPC_C_ENDPOINT_NP_MAX + 1] = '\\';
+        np_addr->sa.sun_path[RPC_C_ENDPOINT_NP_MAX + 2] = '\\';
+        gethostname(&np_addr->sa.sun_path[RPC_C_ENDPOINT_NP_MAX + 3], RPC_C_NETADDR_NP_MAX - 3);
+        np_addr->sa.sun_path[RPC_C_NETADDR_NP_MAX - 1] = '\0';
+        for (p = &np_addr->sa.sun_path[RPC_C_ENDPOINT_NP_MAX + 3]; *p != '.' && *p != '\0'; p++)
+            *p = toupper(*p);
+        *p = '\0';
 #endif /* NP_NETADDR */
-	}
+    }
 
-	(*rpc_addr_vec)->len = 1;
-	(*rpc_addr_vec)->addrs[0] = (rpc_addr_p_t) np_addr;
+    (*rpc_addr_vec)->len = 1;
+    (*rpc_addr_vec)->addrs[0] = (rpc_addr_p_t) np_addr;
 
-	*status = rpc_s_ok;
-	return;
+    *status = rpc_s_ok;
+    return;
 }
 
 /*

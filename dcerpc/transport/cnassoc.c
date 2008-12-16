@@ -55,7 +55,8 @@
 
 #include <dce/rpcexc.h>
 #include <syslog.h>
-#include <npc.h>
+
+#include <lsmb/lsmb.h>
 
 
 
@@ -110,7 +111,7 @@ INTERNAL boolean32              grp_new_in_progress;
 INTERNAL void rpc__cn_assoc_open _DCE_PROTOTYPE_ ((
     rpc_cn_assoc_p_t             /*assoc*/,
     rpc_addr_p_t                 /*rpc_addr*/,
-    NPC_TOKEN_ID                 /*imp_token*/,
+    rpc_id_token_t                 /*imp_token*/,
     rpc_if_rep_p_t               /*if_r*/,
     rpc_cn_local_id_t            /*grp_id*/,
     rpc_auth_info_p_t            /*info*/,
@@ -240,21 +241,46 @@ INTERNAL rpc_cn_syntax_t *rpc__cn_assoc_syntax_alloc _DCE_PROTOTYPE_ ((
  */
 #define RPC_C_ASSOC_MAX_WAIT_INTERVAL           5
 
-PRIVATE NPC_TOKEN_ID rpc__get_current_token_id(unsigned32 *st)
+PRIVATE rpc_id_token_t rpc__get_current_token_id(unsigned32 *st)
 {
-    NPC_TOKEN_HANDLE current_handle = NpcGetThreadImpersonationToken();
-    NPC_TOKEN_ID current_id;
+    HANDLE handle = NULL;
 
-    *st = rpc_s_ok;
-
-    if(current_handle == NPC_TOKEN_HANDLE_NOT_IMPERSONATING)
-        current_id = 0;
-    else if(NpcGetImpersonationTokenId(current_handle, &current_id) != 0)
+    if (SMBGetThreadToken(&handle))
     {
-        *st = rpc_s_coding_error;
-        return 0;
+        *st = -1;
+        return NULL;
     }
-    return current_id;
+    else
+    {
+        *st = rpc_s_ok;
+        return handle;
+    }
+}
+
+PRIVATE void rpc__release_token_id(rpc_id_token_t token)
+{
+    SMBCloseHandle(NULL, token);
+}
+
+PRIVATE int rpc__compare_token_id(rpc_id_token_t token1, rpc_id_token_t token2)
+{
+    BOOL equal = FALSE;
+
+    return !SMBCompareHandles(token1, token2, &equal) && equal;
+}
+
+PRIVATE rpc_id_token_t rpc__copy_token_id(rpc_id_token_t token)
+{
+    rpc_id_token_t copy = NULL;
+
+    if (SMBCopyHandle(token, &copy))
+    {
+        return NULL;
+    }
+    else
+    {
+        return copy;
+    }
 }
 
 
@@ -400,7 +426,7 @@ unsigned32              *st;
                                                st);
         if (*st != rpc_s_ok)
         {
-            NPC_TOKEN_ID current_id = rpc__get_current_token_id(st);
+            rpc_id_token_t current_id = rpc__get_current_token_id(st);
 
             if(*st != rpc_s_ok)
                 return NULL;
@@ -413,6 +439,8 @@ unsigned32              *st;
                                                      current_id,
                                                      RPC_C_CN_ASSOC_GRP_CLIENT, 
                                                      st);
+
+            rpc__release_token_id(current_id);
         }
         
         /*
@@ -653,7 +681,7 @@ unsigned32              *st;
              ||
             (assoc_grp->grp_cur_assoc < assoc_grp->grp_max_assoc))
         {
-            NPC_TOKEN_ID current_id = rpc__get_current_token_id(st);
+            rpc_id_token_t current_id = rpc__get_current_token_id(st);
 
             if(*st != rpc_s_ok)
                 return NULL;
@@ -711,6 +739,8 @@ unsigned32              *st;
                                 context_id, 
                                 sec,
                                 st);
+
+            rpc__release_token_id(current_id);
 
             /*
              * Release the grp_new mutex if we locked it.
@@ -1978,12 +2008,12 @@ unsigned32              *st;
             dcethread_enableasync_throw(1);
 	    dcethread_checkinterrupt_throw();
 #endif /* NON_CANCELLABLE_IO */
-            RPC_SOCKET_SENDMSG (assoc->cn_ctlblk.cn_sock, 
-                                iovp, 
-                                iovcnt,
-                                addr,
-                                &cc,
-                                &serr);
+            serr = rpc__socket_sendmsg (
+                assoc->cn_ctlblk.cn_sock,
+                iovp,
+                iovcnt,
+                addr,
+                (int*) &cc);
 
 #ifdef NON_CANCELLABLE_IO
 	    dcethread_enableasync_throw(0);
@@ -3308,7 +3338,7 @@ INTERNAL void rpc__cn_assoc_open
 (
   rpc_cn_assoc_p_t        assoc,
   rpc_addr_p_t            rpc_addr,
-  NPC_TOKEN_ID            imp_token,
+  rpc_id_token_t            imp_token,
   rpc_if_rep_p_t          if_r,
   rpc_cn_local_id_t       grp_id,
   rpc_auth_info_p_t       info,
@@ -3321,7 +3351,7 @@ INTERNAL void rpc__cn_assoc_open
 (assoc, rpc_addr, imp_token, if_r, grp_id, info, syntax, context_id, sec, st)
 rpc_cn_assoc_p_t        assoc;
 rpc_addr_p_t            rpc_addr;
-NPC_TOKEN_ID            imp_token;
+rpc_id_token_t            imp_token;
 rpc_if_rep_p_t          if_r;
 rpc_cn_local_id_t       grp_id;
 rpc_auth_info_p_t       info;
@@ -3410,7 +3440,8 @@ unsigned32              *st;
 
         assoc->cn_ctlblk.rpc_addr = rpc_addr1;
     }
-    assoc->cn_ctlblk.imp_token = imp_token;
+
+    assoc->cn_ctlblk.imp_token = rpc__copy_token_id(imp_token);
 
     /*
      * This seems redundant, but we need this structure in the association
@@ -4639,6 +4670,11 @@ rpc_cn_assoc_p_t   assoc;
             assoc->call_rep = NULL;
         }
 
+        if (assoc->cn_ctlblk.imp_token)
+        {
+            rpc__release_token_id(assoc->cn_ctlblk.imp_token);
+        }
+
         assoc->cn_ctlblk.cn_state = RPC_C_SM_CLOSED_STATE;
         assoc->assoc_status = rpc_s_ok;
         assoc->assoc_local_status = rpc_s_ok;
@@ -5122,7 +5158,7 @@ PRIVATE rpc_cn_local_id_t rpc__cn_assoc_grp_alloc
 #ifdef _DCE_PROTO_
 (
   rpc_addr_p_t            rpc_addr,
-  NPC_TOKEN_ID            token_id,
+  rpc_id_token_t            token_id,
   unsigned32              type,
   unsigned32              rem_id,
   unsigned32              *st
@@ -5130,7 +5166,7 @@ PRIVATE rpc_cn_local_id_t rpc__cn_assoc_grp_alloc
 #else
 (rpc_addr, token_id, type, rem_id, st)
 rpc_addr_p_t            rpc_addr;
-NPC_TOKEN_ID            token_id;
+rpc_id_token_t            token_id;
 unsigned32              type;
 unsigned32              rem_id;
 unsigned32              *st;
@@ -5206,7 +5242,8 @@ unsigned32              *st;
             return (grp_id);
         }
     }
-    assoc_grp->grp_imp_token = token_id;
+
+    assoc_grp->grp_imp_token = rpc__copy_token_id(token_id);
     
     /*
      * Set up the type of this association group.
@@ -5337,6 +5374,11 @@ rpc_cn_local_id_t       grp_id;
         rpc__naf_addr_free (&assoc_grp->grp_secaddr, &st);
     }
     
+    if (assoc_grp->grp_imp_token)
+    {
+        rpc__release_token_id(assoc_grp->grp_imp_token);
+    }
+
     /*
      * Set up other fields in the group for the next time it is
      * allocated.
@@ -5569,14 +5611,14 @@ PRIVATE rpc_cn_local_id_t rpc__cn_assoc_grp_lkup_by_addr
 #ifdef _DCE_PROTO_
 (
   rpc_addr_p_t            rpc_addr,
-  NPC_TOKEN_ID            imp_token,
+  rpc_id_token_t            imp_token,
   unsigned32              type,
   unsigned32              *st
 )
 #else
 (rpc_addr, imp_token, type, st)
 rpc_addr_p_t            rpc_addr;
-NPC_TOKEN_ID            imp_token;
+rpc_id_token_t            imp_token;
 unsigned32              type;
 unsigned32              *st;
 #endif
@@ -5614,6 +5656,7 @@ unsigned32              *st;
                 && 
                 (assoc_grp[i].grp_state.cur_state == RPC_C_ASSOC_GRP_ACTIVE))
             {
+
                 /*
                  * The association group has associations. Compare the RPC
                  * address given against the primary address in the
@@ -5626,7 +5669,8 @@ unsigned32              *st;
                  * If the input argument RPC address matched that in
                  * the association group return it.
                  */
-                if (addrs_equal && assoc_grp[i].grp_imp_token == imp_token)
+                if (addrs_equal &&
+                    rpc__compare_token_id(assoc_grp[i].grp_imp_token, imp_token))
                 {
                     *st = rpc_s_ok;
                     return (assoc_grp[i].grp_id);
@@ -5844,7 +5888,7 @@ unsigned32              *st;
      */
     if (RPC_CN_LOCAL_ID_VALID (grp_id))
     {
-        NPC_TOKEN_ID current_id = rpc__get_current_token_id(st);
+        rpc_id_token_t current_id = rpc__get_current_token_id(st);
 
         if(*st != rpc_s_ok)
         {
@@ -5865,11 +5909,18 @@ unsigned32              *st;
         if (RPC_CN_LOCAL_ID_EQUAL (assoc_grp->grp_id, grp_id) &&
             (assoc_grp->grp_flags & type) &&
             (assoc_grp->grp_state.cur_state == RPC_C_ASSOC_GRP_ACTIVE) &&
-            (assoc_grp->grp_imp_token == current_id) )
+            (rpc__compare_token_id(assoc_grp->grp_imp_token, current_id)))
         {
+            rpc__release_token_id(current_id);
+
             *st = rpc_s_ok;
             RPC_LOG_CN_GRP_ID_LKUP_XIT;
+
             return (grp_id);
+        }
+        else
+        {
+            rpc__release_token_id(current_id);
         }
     }
     

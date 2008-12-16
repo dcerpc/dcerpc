@@ -379,6 +379,7 @@ typedef struct
     rpc_network_if_id_t         network_if_id;
     rpc_protseq_t               rpc_protseq;
     rpc_port_restriction_list_p_t        port_restriction_list;
+    struct rpc_socket_vtbl_s*   socket_vtbl;
 } rpc_protseq_id_elt_t, *rpc_protseq_id_elt_p_t;
 
 /***********************************************************************/
@@ -459,6 +460,11 @@ typedef struct
     socklen_t               len;
     sockaddr_t              sa;
 } *rpc_addr_p_t;  
+
+typedef struct rpc_socket_handle_s* rpc_socket_t;
+
+#define RPC_SOCKET_INVALID (NULL)
+
 
 /***********************************************************************/
 /*

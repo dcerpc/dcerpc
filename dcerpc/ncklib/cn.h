@@ -86,6 +86,8 @@
 #define RPC_C_CN_LARGE_FRAG_SIZE        4096
 #define RPC_C_CN_SMALL_FRAG_SIZE        256
 
+typedef void* rpc_id_token_t;
+
 /*
  * R P C _ C N _ A U T H _ I N F O _ T
  */

@@ -292,14 +292,15 @@ rpc_listener_state_p_t  lstate;
     for (nd = 0, listener_state_copy.num_desc = 0; nd < lstate->high_water; nd++)
     {
         rpc_listener_sock_p_t lsock = &lstate->socks[nd];
+        int desc = rpc__socket_get_select_desc(lsock->desc);
 
         if (lsock->busy)
         {
             listener_state_copy.socks[listener_state_copy.num_desc++] = *lsock;
-            FD_SET (lsock->desc, &listener_readfds);
-            if (lsock->desc + 1 > listener_nfds)
+            FD_SET (desc, &listener_readfds);
+            if (desc + 1 > listener_nfds)
             {
-                listener_nfds = lsock->desc + 1;
+                listener_nfds = desc + 1;
             }
         }
     }
@@ -453,8 +454,9 @@ INTERNAL void lthread_loop (void)
         for (nd = 0; n_found && (nd < listener_state_copy.num_desc); nd++)
         {
             rpc_listener_sock_p_t lsock = &listener_state_copy.socks[nd];
+            int desc = rpc__socket_get_select_desc(lsock->desc);
 
-            if (lsock->busy && FD_ISSET (lsock->desc, &readfds_copy))
+            if (lsock->busy && FD_ISSET (desc, &readfds_copy))
             {
                 n_found--;
 

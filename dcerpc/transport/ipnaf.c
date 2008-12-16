@@ -46,6 +46,7 @@
 #include <com.h>
 #include <comnaf.h>
 #include <ipnaf.h>
+#include <comsoc_bsd.h>
 
 #undef __USE_GNU
 
@@ -309,7 +310,8 @@ PRIVATE void rpc__module_init_func(void)
         RPC_C_NETWORK_PROTOCOL_ID_TCP,
         RPC_C_NETWORK_IF_ID_STREAM,
         RPC_PROTSEQ_NCACN_IP_TCP,
-        (rpc_port_restriction_list_p_t) NULL
+        (rpc_port_restriction_list_p_t) NULL,
+        &rpc_g_bsd_socket_vtbl
     },
     {                                   /* Datagram-RPC / IP / UDP */
         0,
@@ -319,7 +321,8 @@ PRIVATE void rpc__module_init_func(void)
         RPC_C_NETWORK_PROTOCOL_ID_UDP,
         RPC_C_NETWORK_IF_ID_DGRAM,
         RPC_PROTSEQ_NCADG_IP_UDP,
-        (rpc_port_restriction_list_p_t) NULL
+        (rpc_port_restriction_list_p_t) NULL,
+        &rpc_g_bsd_socket_vtbl
     }
 
 	};
@@ -1679,19 +1682,15 @@ unsigned32                *status;
 **/
 
 INTERNAL void set_pkt_nodelay 
-#ifdef _DCE_PROTO_
 (
-    rpc_socket_t            desc,
+    rpc_socket_t            sock,
     unsigned32              *status
 )
-#else
-(desc, status)
-rpc_socket_t            desc;
-unsigned32              *status;
-#endif
 {
     int                 err;
     int                 delay = 1;
+    /* FIXME: this really ought to become a new socket vtbl entry point */
+    int                 desc = rpc__socket_get_select_desc(sock);
 
     /*
      * Assume this is a TCP socket and corresponding connection. If

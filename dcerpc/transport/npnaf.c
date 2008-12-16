@@ -75,6 +75,8 @@
 #include <com.h>
 #include <comnaf.h>
 #include <npnaf.h>
+#include <comsoc_smb.h>
+#include <comsoc_bsd.h>
 #include <ctype.h>
 #include <sys/param.h>
 #include <syslog.h>
@@ -334,7 +336,8 @@ PRIVATE void rpc__module_init_func(void)
         RPC_C_NETWORK_PROTOCOL_ID_NP, 
         RPC_C_NETWORK_IF_ID_STREAM,
         RPC_PROTSEQ_NCACN_NP,
-        (rpc_port_restriction_list_p_t) NULL
+        (rpc_port_restriction_list_p_t) NULL,
+        &rpc_g_smb_socket_vtbl
     },
     {                                   /* Connection-RPC / UXD */
         0,
@@ -344,7 +347,8 @@ PRIVATE void rpc__module_init_func(void)
         RPC_C_NETWORK_PROTOCOL_ID_UXD,
         RPC_C_NETWORK_IF_ID_STREAM,
         RPC_PROTSEQ_NCALRPC,
-        (rpc_port_restriction_list_p_t) NULL
+        (rpc_port_restriction_list_p_t) NULL,
+        &rpc_g_bsd_socket_vtbl
     }
 
 	};

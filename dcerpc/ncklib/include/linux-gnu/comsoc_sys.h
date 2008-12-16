@@ -26,6 +26,5 @@
 
 #include <sys/uio.h>
 #include <sys/socket.h>
-#include <comsoc_bsd.h>
 
 #endif /* _COMSOC_SYS_H */
