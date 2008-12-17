@@ -266,7 +266,9 @@ PRIVATE int rpc__compare_token_id(rpc_id_token_t token1, rpc_id_token_t token2)
 {
     BOOL equal = FALSE;
 
-    return !SMBCompareHandles(token1, token2, &equal) && equal;
+    return
+        (token1 == NULL && token2 == NULL) ||
+        (!SMBCompareHandles(token1, token2, &equal) && equal);
 }
 
 PRIVATE rpc_id_token_t rpc__copy_token_id(rpc_id_token_t token)
