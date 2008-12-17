@@ -86,7 +86,7 @@
 #   define PAGE_SIZE   512              /* length of system page */
 #else 
 #if defined(__linux__)
-#include <asm/page.h>
+#   define PAGE_SIZE   4096
 #elif !defined(PAGE_SIZE)
 #   define PAGE_SIZE   1024             /* length of system page */
 #endif
