@@ -70,6 +70,6 @@ rpc__bsd_socket_close_basic(
     rpc_socket_basic_t        sock
     );
 
-PRIVATE rpc_socket_vtbl_t rpc_g_bsd_socket_vtbl;
+EXTERNAL PRIVATE rpc_socket_vtbl_t rpc_g_bsd_socket_vtbl;
 
 #endif /* _COMSOC_BSD_H */
