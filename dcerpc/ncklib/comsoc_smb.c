@@ -316,6 +316,11 @@ rpc__smb_socket_destroy(
 {
     if (sock)
     {
+        if (sock->np && sock->connection)
+        {
+            SMBCloseHandle(sock->connection, sock->np);
+        }
+
         if (sock->connection)
         {
             SMBCloseServer(sock->connection);
