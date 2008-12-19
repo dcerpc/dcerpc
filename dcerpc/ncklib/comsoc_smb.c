@@ -25,9 +25,9 @@
 
 typedef enum rpc_smb_state_e
 {
-    SMB_STATE_NEUTRAL = 0,
-    SMB_STATE_MUST_SEND,
-    SMB_STATE_MUST_RECV
+    SMB_STATE_SEND,
+    SMB_STATE_RECV,
+    SMB_STATE_ERROR
 } rpc_smb_state_t;
 
 typedef struct rpc_smb_buffer_s
@@ -593,7 +593,7 @@ rpc__smb_socket_connect(
     memcpy(&smb->peeraddr, addr, sizeof(smb->peeraddr));
 
     /* Since we did a connect, we will be sending first */
-    smb->state = SMB_STATE_MUST_SEND;
+    smb->state = SMB_STATE_SEND;
 
 done:
 
@@ -731,7 +731,7 @@ rpc__smb_socket_do_transact(
 
     /* Now that a complete message has been sent, we must switch
        into recv mode so the receiver thread can empty the recv buffer */
-    rpc__smb_socket_change_state(smb, SMB_STATE_MUST_RECV);
+    rpc__smb_socket_change_state(smb, SMB_STATE_RECV);
 
     /* Write a byte into the write end of the select pipe to wake up
        anything in a select */
@@ -835,7 +835,7 @@ rpc__smb_socket_do_send_recv(
 
     /* Now that a complete message has been sent, we must switch
        into recv mode so the receiver thread can empty the recv buffer */
-    rpc__smb_socket_change_state(smb, SMB_STATE_MUST_RECV);
+    rpc__smb_socket_change_state(smb, SMB_STATE_RECV);
 
     /* Write a byte into the write end of the select pipe to wake up
        anything in a select */
@@ -871,8 +871,13 @@ rpc__smb_socket_sendmsg(
     SMB_SOCKET_LOCK(sock);
 
     /* Wait until we are in a state where we can send */
-    while (smb->state != SMB_STATE_MUST_SEND)
+    while (smb->state != SMB_STATE_SEND)
     {
+        if (smb->state == SMB_STATE_ERROR)
+        {
+            serr = -1;
+            goto error;
+        }
         rpc__smb_socket_wait(smb);
     }
 
@@ -909,11 +914,17 @@ rpc__smb_socket_sendmsg(
         }
     }
 
-error:
+cleanup:
 
     SMB_SOCKET_UNLOCK(sock);
 
     return serr;
+
+error:
+
+    rpc__smb_socket_change_state(smb, SMB_STATE_ERROR);
+
+    goto cleanup;
 }
 
 INTERNAL
@@ -951,8 +962,13 @@ rpc__smb_socket_recvmsg(
 
     SMB_SOCKET_LOCK(sock);
 
-    while (smb->state != SMB_STATE_MUST_RECV)
+    while (smb->state != SMB_STATE_RECV)
     {
+        if (smb->state == SMB_STATE_ERROR)
+        {
+            serr = -1;
+            goto error;
+        }
         rpc__smb_socket_wait(smb);
     }
 
@@ -977,7 +993,7 @@ rpc__smb_socket_recvmsg(
             /* Reset buffer because we have emptied it */
             smb->recvbuffer.start_cursor = smb->recvbuffer.end_cursor = smb->recvbuffer.base;
             /* Switch into send mode */
-            rpc__smb_socket_change_state(smb, SMB_STATE_MUST_SEND);
+            rpc__smb_socket_change_state(smb, SMB_STATE_SEND);
             /* Clear select pipe since no data is available for reading */
             if (smb->selectfd_triggered)
             {
@@ -997,11 +1013,17 @@ rpc__smb_socket_recvmsg(
         memcpy(addr, &smb->peeraddr, sizeof(smb->peeraddr));
     }
 
-error:
+cleanup:
 
     SMB_SOCKET_UNLOCK(sock);
 
     return serr;
+
+error:
+
+    rpc__smb_socket_change_state(smb, SMB_STATE_ERROR);
+
+    goto cleanup;
 }
 
 INTERNAL
