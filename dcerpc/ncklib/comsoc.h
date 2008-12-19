@@ -707,6 +707,6 @@ rpc__socket_enum_ifaces (
 #define RPC_SOCKET_ETOI(serr)       (serr)
 
 #define RPC_SOCKET_CLOSE(s) \
-    ({ int __err = rpc__socket_close(s); s = NULL; __err; })
+    ({ int __err = 0; if (s) { __err = rpc__socket_close(s); s = NULL; }; __err; })
 
 #endif /* _COMSOC_H */
