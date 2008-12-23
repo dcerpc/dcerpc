@@ -1640,9 +1640,11 @@ rpc_authn_protocol_id_t             authn_protocol;
              ((server_princ_name == NULL)
               && (auth_info->server_princ_name == NULL))
              ||
-             (strcmp ((char *) server_princ_name, 
-                      (char *) auth_info->server_princ_name) == 0)
-            )
+             (server_princ_name
+	      && auth_info->server_princ_name
+	      && (strcmp ((char *) server_princ_name,
+			  (char *) auth_info->server_princ_name) == 0))
+	    )
             &&
             (authn_level == auth_info->authn_level)
             &&
