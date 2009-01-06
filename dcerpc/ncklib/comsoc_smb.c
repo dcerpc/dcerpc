@@ -508,7 +508,7 @@ rpc__smb_socket_connect(
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
     rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
-    unsigned_char_t *netaddr, *endpoint;
+    unsigned_char_t *netaddr = NULL, *endpoint = NULL;
     unsigned32 dbg_status = 0;
     /* FIXME: don't use a static buffer unless smb paths are guaranteed to have a maxmimum length */
     char smbpath[2048];
@@ -608,6 +608,10 @@ done:
     }
 
     SMB_SOCKET_UNLOCK(sock);
+
+    // rpc_string_free handles when *ptr is NULL
+    rpc_string_free(&netaddr, &dbg_status);
+    rpc_string_free(&endpoint, &dbg_status);
 
     return serr;
 
