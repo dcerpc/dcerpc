@@ -1135,7 +1135,7 @@ unsigned32              *st;
      * contained in the RPC address given. First create a socket to
      * do the connect on.
      */
-    serr = rpc__socket_open (rpc_addr->rpc_protseq_id, &assoc->cn_ctlblk.cn_sock);
+    serr = rpc__socket_open (rpc_addr->rpc_protseq_id, (rpc_socket_t*) &assoc->cn_ctlblk.cn_sock);
     if (RPC_SOCKET_IS_ERR(serr))
     {
         RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,

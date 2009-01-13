@@ -1912,6 +1912,12 @@ unsigned32              *st;
     RPC_CN_DBG_RTN_PRINTF(rpc__cn_assoc_send_frag);
     CODING_ERROR(st);
 
+    if (!assoc->cn_ctlblk.cn_sock)
+    {
+        *st = rpc_s_connection_closed;
+        return;
+    }
+
     memset(&iov[0], 0, sizeof(iov));
 
     /*

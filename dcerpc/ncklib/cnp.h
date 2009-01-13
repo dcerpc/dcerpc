@@ -568,18 +568,18 @@ typedef struct rpc_cn_assoc_grp_s_t
 
 typedef struct
 {
-    unsigned16                          cn_state;
-    unsigned16                          cn_rcvr_waiters;
+    unsigned16 volatile                 cn_state;
+    unsigned16 volatile                 cn_rcvr_waiters;
     rpc_mutex_t                         cn_rcvr_mutex; /* unused so far */
     rpc_cond_t                          cn_rcvr_cond;
     dcethread*                          cn_rcvr_thread_id;
     unsigned_char_t                     *cn_listening_endpoint;
-    rpc_socket_t                        cn_sock;
+    rpc_socket_t volatile               cn_sock;
     rpc_addr_p_t                        rpc_addr;
     rpc_id_token_t                      imp_token;
-    unsigned                            exit_rcvr : 1;
-    unsigned                            in_sendmsg : 1;
-    unsigned                            waiting_for_sendmsg_complete : 1;
+    unsigned volatile                   exit_rcvr : 1;
+    unsigned volatile                   in_sendmsg : 1;
+    unsigned volatile                   waiting_for_sendmsg_complete : 1;
 } rpc_cn_ctlblk_t, *rpc_cn_ctlblk_p_t;
 
 #define RPC_CN_ASSOC_LOCK(__assoc)	RPC_MUTEX_LOCK((__assoc)->cn_ctlblk.cn_rcvr_mutex)

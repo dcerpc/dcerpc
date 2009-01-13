@@ -334,6 +334,8 @@ rpc__smb_socket_destroy(
 
         dcethread_mutex_destroy_throw(&sock->lock);
         dcethread_cond_destroy_throw(&sock->event);
+
+        free(sock);
     }
 
     return;
@@ -378,7 +380,16 @@ rpc__smb_socket_wait(
     rpc_smb_socket_p_t sock
     )
 {
-    dcethread_cond_wait_throw(&sock->event, &sock->lock);
+    DCETHREAD_TRY
+    {
+        dcethread_cond_wait_throw(&sock->event, &sock->lock);
+    }
+    DCETHREAD_CATCH_ALL(e)
+    {
+        dcethread_mutex_unlock(&sock->lock);
+        DCETHREAD_RAISE(*e);
+    }
+    DCETHREAD_ENDTRY;
 }
 
 INTERNAL
@@ -1122,6 +1133,8 @@ rpc__smb_socket_getpeername(
     memcpy(addr, &smb->peeraddr, sizeof(smb->peeraddr));
 
 error:
+
+    SMB_SOCKET_UNLOCK(sock);
 
     return serr;
 }
