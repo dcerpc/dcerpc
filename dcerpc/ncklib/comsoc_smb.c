@@ -332,6 +332,16 @@ rpc__smb_socket_destroy(
             close(sock->selectfd[1]);
         }
 
+        if (sock->sendbuffer.base)
+        {
+            free(sock->sendbuffer.base);
+        }
+
+        if (sock->recvbuffer.base)
+        {
+            free(sock->recvbuffer.base);
+        }
+
         dcethread_mutex_destroy_throw(&sock->lock);
         dcethread_cond_destroy_throw(&sock->event);
 
