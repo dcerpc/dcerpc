@@ -230,6 +230,8 @@ PRIVATE void rpc__cn_binding_init
          */
         ((rpc_cn_binding_rep_t *)binding_r)->grp_id = grp_id;
         RPC_CN_UNLOCK ();
+
+        rpc__release_token_id(current_id);
     }
         
     /*

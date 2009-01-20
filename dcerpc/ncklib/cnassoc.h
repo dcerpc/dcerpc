@@ -147,8 +147,13 @@ error "***Make sure memcmp works on this version of UUIDs***"
     RPC_CALL_UNLOCK (((rpc_call_rep_t *) assoc->call_rep));\
 }
  
-PRIVATE rpc_id_token_t rpc__get_current_token_id(
-    unsigned32 *st);
+PRIVATE rpc_id_token_t rpc__get_current_token_id(unsigned32 *st);
+
+PRIVATE void rpc__release_token_id(rpc_id_token_t token);
+
+PRIVATE int rpc__compare_token_id(rpc_id_token_t token1, rpc_id_token_t token2);
+
+PRIVATE rpc_id_token_t rpc__copy_token_id(rpc_id_token_t token);
 
 
 /******************************************************************************/
