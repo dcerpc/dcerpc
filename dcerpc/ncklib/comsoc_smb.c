@@ -123,12 +123,6 @@ error:
     return serr;
 }
 
-#ifdef WORDS_BIGENDIAN
-#  define NATIVE_ORDER 0
-#else
-#  define NATIVE_ORDER 1
-#endif
-
 INTERNAL
 inline
 size_t
@@ -146,10 +140,11 @@ rpc__smb_buffer_packet_size(
     else
     {
         int packet_order = ((packet->drep[0] >> 4) & 1);
+        int native_order = (NDR_LOCAL_INT_REP == ndr_c_int_big_endian) ? 0 : 1;
 
-        if (packet_order != NATIVE_ORDER)
+        if (packet_order != native_order)
         {
-            swab(&packet->frag_len, &result, 2);
+            result = SWAB_16(packet->frag_len);
         }
         else
         {
