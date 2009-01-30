@@ -144,7 +144,7 @@ noinst_LTLIBRARIES+=libtrans.la
 
 libtrans_la_CPPFLAGS = $(AM_CPPFLAGS)
 libtrans_la_SOURCES = comsoc.c comsoc_bsd.c comsoc_smb.c
-libtrans_la_LIBADD = -llsmbclient
+libtrans_la_LIBADD = -llwrdrclient
 
 ######################################################################
 ## COMPONENT: auth - comprises of libauth_none shared lib

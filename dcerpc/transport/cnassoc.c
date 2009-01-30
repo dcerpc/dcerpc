@@ -56,7 +56,7 @@
 #include <dce/rpcexc.h>
 #include <syslog.h>
 
-#include <lsmb/lsmb.h>
+#include <lwrdr/lwrdr.h>
 
 
 

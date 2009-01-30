@@ -12,7 +12,7 @@
 #include <npnaf.h>
 #include <stddef.h>
 
-#include <lsmb/lsmb.h>
+#include <lwrdr/lwrdr.h>
 
 #define SMB_SOCKET_LOCK(sock) (rpc__smb_socket_lock((rpc_smb_socket_p_t) (sock)->data.pointer))
 #define SMB_SOCKET_UNLOCK(sock) (rpc__smb_socket_unlock((rpc_smb_socket_p_t) (sock)->data.pointer))
