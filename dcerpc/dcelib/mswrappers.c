@@ -4,7 +4,7 @@
 #include <wc16str.h>
 #include <errno.h>
 
-RPC_STATUS WideChar16ToMultiByte(LPWSTR input, idl_char **output)
+RPC_STATUS WideChar16ToMultiByte(PWSTR input, idl_char **output)
 {
     *output = awc16stombs(input);
     if(*output == NULL)
@@ -16,7 +16,7 @@ RPC_STATUS WideChar16ToMultiByte(LPWSTR input, idl_char **output)
     return rpc_s_ok;
 }
 
-RPC_STATUS MultiByteToWideChar16(idl_char *input, LPWSTR *output)
+RPC_STATUS MultiByteToWideChar16(idl_char *input, PWSTR *output)
 {
     *output = ambstowc16s(input);
     if(*output == NULL)
@@ -91,12 +91,12 @@ RPC_STATUS RpcStringBindingComposeA(
 }
 
 RPC_STATUS RpcStringBindingComposeW(
-    /* [in] */ LPWSTR string_object_uuid,
-    /* [in] */ LPWSTR string_protseq,
-    /* [in] */ LPWSTR string_netaddr,
-    /* [in] */ LPWSTR string_endpoint,
-    /* [in] */ LPWSTR string_options,
-    /* [out] */ LPWSTR *string_binding
+    /* [in] */ PWSTR string_object_uuid,
+    /* [in] */ PWSTR string_protseq,
+    /* [in] */ PWSTR string_netaddr,
+    /* [in] */ PWSTR string_endpoint,
+    /* [in] */ PWSTR string_options,
+    /* [out] */ PWSTR *string_binding
 )
 {
     RPC_STATUS status = rpc_s_ok;
@@ -139,7 +139,7 @@ RPC_STATUS RpcBindingFromStringBindingA(
 }
 
 RPC_STATUS RpcBindingFromStringBindingW(
-    /* [in] */ LPWSTR string_binding,
+    /* [in] */ PWSTR string_binding,
     /* [out] */ RPC_BINDING_HANDLE *binding_handle
 )
 {
@@ -169,7 +169,7 @@ RPC_STATUS RpcStringFreeA(
 }
 
 RPC_STATUS RpcStringFreeW(
-    /* [in, out] */ LPWSTR *string
+    /* [in, out] */ PWSTR *string
 )
 {
     //We allocated this string, not dce rpc
@@ -203,9 +203,9 @@ RPC_STATUS RpcServerUseProtseqEpA(
 }
 
 RPC_STATUS RpcServerUseProtseqEpW(
-    /* [in] */ LPWSTR protseq,
+    /* [in] */ PWSTR protseq,
     /* [in] */ unsigned int max_call_requests,
-    /* [in] */ LPWSTR endpoint,
+    /* [in] */ PWSTR endpoint,
     void *security /*not used*/
 )
 {

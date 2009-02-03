@@ -56,7 +56,7 @@
 #include <dce/rpcexc.h>
 #include <syslog.h>
 
-#include <lwrdr/lwrdr.h>
+#include <lwio/lwio.h>
 
 
 
@@ -243,9 +243,9 @@ INTERNAL rpc_cn_syntax_t *rpc__cn_assoc_syntax_alloc _DCE_PROTOTYPE_ ((
 
 PRIVATE rpc_id_token_t rpc__get_current_token_id(unsigned32 *st)
 {
-    HANDLE handle = NULL;
+    PIO_ACCESS_TOKEN handle = NULL;
 
-    if (SMBGetThreadToken(&handle))
+    if (LwIoGetThreadAccessToken(&handle))
     {
         *st = -1;
         return NULL;
@@ -259,23 +259,19 @@ PRIVATE rpc_id_token_t rpc__get_current_token_id(unsigned32 *st)
 
 PRIVATE void rpc__release_token_id(rpc_id_token_t token)
 {
-    SMBCloseHandle(NULL, token);
+    LwIoDeleteAccessToken(token);
 }
 
 PRIVATE int rpc__compare_token_id(rpc_id_token_t token1, rpc_id_token_t token2)
 {
-    BOOL equal = FALSE;
-
-    return
-        (token1 == NULL && token2 == NULL) ||
-        (!SMBCompareHandles(token1, token2, &equal) && equal);
+    return (int) LwIoCompareAccessTokens(token1, token2);
 }
 
 PRIVATE rpc_id_token_t rpc__copy_token_id(rpc_id_token_t token)
 {
     rpc_id_token_t copy = NULL;
 
-    if (SMBCopyHandle(token, &copy))
+    if (LwIoCopyAccessToken(token, &copy))
     {
         return NULL;
     }

@@ -4,8 +4,7 @@
 #endif
 #define IDL_CHAR_IS_CHAR
 
-#include <winnttypes.h>
-#include <wchar16.h>
+#include <lw/base.h>
 #include <dce/idlbase.h>
 #include <dce/rpc.h>
 #define DCETHREAD_CHECKED
@@ -47,12 +46,12 @@ RPC_STATUS RpcStringBindingComposeA(
 );
 
 RPC_STATUS RpcStringBindingComposeW(
-    /* [in] */ LPWSTR string_object_uuid,
-    /* [in] */ LPWSTR string_protseq,
-    /* [in] */ LPWSTR string_netaddr,
-    /* [in] */ LPWSTR string_endpoint,
-    /* [in] */ LPWSTR string_options,
-    /* [out] */ LPWSTR *string_binding
+    /* [in] */ PWSTR string_object_uuid,
+    /* [in] */ PWSTR string_protseq,
+    /* [in] */ PWSTR string_netaddr,
+    /* [in] */ PWSTR string_endpoint,
+    /* [in] */ PWSTR string_options,
+    /* [out] */ PWSTR *string_binding
 );
 
 RPC_STATUS RpcBindingFromStringBindingA(
@@ -61,7 +60,7 @@ RPC_STATUS RpcBindingFromStringBindingA(
 );
 
 RPC_STATUS RpcBindingFromStringBindingW(
-    /* [in] */ LPWSTR string_binding,
+    /* [in] */ PWSTR string_binding,
     /* [out] */ RPC_BINDING_HANDLE *binding_handle
 );
 
@@ -70,7 +69,7 @@ RPC_STATUS RpcStringFreeA(
 );
 
 RPC_STATUS RpcStringFreeW(
-    /* [in, out] */ LPWSTR *string
+    /* [in, out] */ PWSTR *string
 );
 
 RPC_STATUS RpcBindingFree(
@@ -84,9 +83,9 @@ RPC_STATUS RpcServerUseProtseqEpA(
     void *security /*not used*/
 );
 RPC_STATUS RpcServerUseProtseqEpW(
-    /* [in] */ LPWSTR protseq,
+    /* [in] */ PWSTR protseq,
     /* [in] */ unsigned int max_call_requests,
-    /* [in] */ LPWSTR endpoint,
+    /* [in] */ PWSTR endpoint,
     void *security /*not used*/
 );
 
