@@ -622,7 +622,7 @@ rpc__smb_socket_connect(
     }
 
     serr = NtStatusToUnixErrno(
-        SmbCtxGetSessionKey(
+        LwIoCtxGetSessionKey(
             smb->context,
             smb->np,
             &sesskeylen,
@@ -740,7 +740,13 @@ rpc__smb_socket_accept(
 
     npsmb->state = SMB_STATE_RECV;
 
-    /* FIXME: set up peer address and session key */
+    memcpy(&npsmb->localaddr, &smb->localaddr, sizeof(npsmb->localaddr));
+
+    /* FIXME: query for and use real peer address */
+    memcpy(&npsmb->peeraddr, &smb->localaddr, sizeof(npsmb->peeraddr));
+    memcpy(addr, &npsmb->peeraddr, sizeof(npsmb->peeraddr));
+
+    /* FIXME: set up session key */
 
     *newsock = npsock;
 
@@ -769,6 +775,7 @@ rpc__smb_socket_listen_thread(void* data)
     IO_FILE_NAME filename;
     size_t i;
     char c = 0;
+    LONG64 default_timeout = 0;
 
     SMB_SOCKET_LOCK(smb);
 
@@ -836,15 +843,15 @@ rpc__smb_socket_listen_thread(void* data)
                 NULL, /* Security QOS */
                 GENERIC_READ | GENERIC_WRITE, /* Desired access mode */
                 SHARE_READ | SHARE_WRITE, /* Share access mode */
-                CREATE_NEW, /* ??? Create disposition */
-                0, /* ??? Create options */
-                0, /* ??? Named pipe type */
-                0, /* ??? Read mode */
-                0, /* ??? Completion mode */
+                OPEN_EXISTING, /* Create disposition */
+                0, /* Create options */
+                0, /* Named pipe type */
+                0, /* Read mode */
+                0, /* Completion mode */
                 smb->accept_backlog.capacity, /* Maximum instances */
-                1, /* ??? Inbound quota */
-                1, /* ??? Outbound quota */
-                NULL /* ??? Default timeout */
+                0, /* Inbound quota */
+                0, /* Outbound quota */
+                &default_timeout /* ??? Default timeout */
                 ));
         if (serr)
         {
@@ -852,7 +859,15 @@ rpc__smb_socket_listen_thread(void* data)
             goto error;
         }
 
-        /* FIXME: Do connect named pipe here */
+        serr = NtStatusToUnixErrno(
+            LwIoCtxConnectNamedPipe(
+                smb->context,
+                smb->np));
+        if (serr)
+        {
+            SMB_SOCKET_LOCK(smb);
+            goto error;
+        }
 
         SMB_SOCKET_LOCK(smb);
 
