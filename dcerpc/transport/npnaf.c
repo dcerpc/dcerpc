@@ -80,6 +80,8 @@
 #include <ctype.h>
 #include <sys/param.h>
 #include <syslog.h>
+#include <stddef.h>
+
 
 /***********************************************************************
  *
@@ -1611,7 +1613,7 @@ unsigned32                *status;
         return;
     }
 
-    addr.len = sizeof(addr);
+    addr.len = sizeof(addr) - offsetof(rpc_np_addr_t, sa);
     serr = rpc__socket_inq_endpoint (desc, (rpc_addr_p_t)&addr);
     if (RPC_SOCKET_IS_ERR (serr))
     {

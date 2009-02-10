@@ -80,6 +80,7 @@
 
 #include <sys/ioctl.h>
 #include <ctype.h>
+#include <stddef.h>
 
 
 /***********************************************************************
@@ -212,6 +213,8 @@ PRIVATE void rpc__np_desc_inq_addr
     CODING_ERROR (status);
 
     memset (&loc_np_addr, 0, sizeof(rpc_np_addr_t));
+
+    loc_np_addr.len = sizeof(loc_np_addr) - offsetof(rpc_np_addr_t, sa);
 
     /*
      * Do a "getsockname" into a local IP RPC address.  If the network

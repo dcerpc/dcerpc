@@ -686,7 +686,7 @@ INTERNAL
 rpc_socket_error_t
 rpc__smb_socket_accept(
     rpc_socket_t sock,
-    rpc_addr_p_t addr ATTRIBUTE_UNUSED,
+    rpc_addr_p_t addr,
     rpc_socket_t *newsock
     )
 {
@@ -697,6 +697,8 @@ rpc__smb_socket_accept(
     IO_FILE_HANDLE np = NULL;
     size_t i;
     char c = 0;
+
+    *newsock = NULL;
 
     SMB_SOCKET_LOCK(smb);
 
@@ -718,7 +720,7 @@ rpc__smb_socket_accept(
             np = smb->accept_backlog.queue[i];
             smb->accept_backlog.queue[i] = NULL;
             smb->accept_backlog.length--;
-            if (read(smb->accept_backlog.selectfd[0], &c, sizeof(c)) != c)
+            if (read(smb->accept_backlog.selectfd[0], &c, sizeof(c)) != sizeof(c))
             {
                 serr = errno;
                 goto error;
@@ -744,7 +746,11 @@ rpc__smb_socket_accept(
 
     /* FIXME: query for and use real peer address */
     memcpy(&npsmb->peeraddr, &smb->localaddr, sizeof(npsmb->peeraddr));
-    memcpy(addr, &npsmb->peeraddr, sizeof(npsmb->peeraddr));
+
+    if (addr)
+    {
+        memcpy(addr, &npsmb->peeraddr, sizeof(npsmb->peeraddr));
+    }
 
     /* FIXME: set up session key */
 
@@ -1008,6 +1014,9 @@ rpc__smb_socket_do_recv(
     DWORD bytes_requested = 0;
     DWORD bytes_read = 0;
     IO_STATUS_BLOCK io_status;
+    NTSTATUS status = STATUS_SUCCESS;
+
+    memset(&io_status, 0, sizeof(io_status));
 
     do
     {
@@ -1021,25 +1030,29 @@ rpc__smb_socket_do_recv(
         bytes_read = 0;
         bytes_requested = rpc__smb_buffer_available(&smb->recvbuffer);
 
-        serr = NtStatusToUnixErrno(
-            NtCtxReadFile(
-                smb->context,                 /* IO context */
-                smb->np,                      /* File handle */
-                NULL,                         /* Async control block */
-                &io_status,                   /* IO status block */
-                smb->recvbuffer.end_cursor,   /* Buffer */
-                bytes_requested,              /* Length */
-                NULL,                         /* Byte offset */
-                NULL                          /* Key */
-                ));
-        if (serr)
-        {
-            goto error;
-        }
+        status = NtCtxReadFile(
+            smb->context,                 /* IO context */
+            smb->np,                      /* File handle */
+            NULL,                         /* Async control block */
+            &io_status,                   /* IO status block */
+            smb->recvbuffer.end_cursor,   /* Buffer */
+            bytes_requested,              /* Length */
+            NULL,                         /* Byte offset */
+            NULL                          /* Key */
+            );
 
-        bytes_read = io_status.BytesTransferred;
-        smb->recvbuffer.end_cursor += bytes_read;
-    } while (bytes_read == bytes_requested);
+        if (status == STATUS_END_OF_FILE)
+        {
+            serr = 0;
+            bytes_read = 0;
+        }
+        else
+        {
+            serr = NtStatusToUnixErrno(status);
+            bytes_read = io_status.BytesTransferred;
+            smb->recvbuffer.end_cursor += bytes_read;
+        }
+    } while (status == STATUS_SUCCESS && bytes_read == bytes_requested);
 
 error:
 
@@ -1220,10 +1233,15 @@ rpc__smb_socket_inq_endpoint(
 )
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
-    rpc_np_addr_p_t npaddr = (rpc_np_addr_p_t) addr;
     rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
 
-    *npaddr = smb->localaddr;
+    if (addr->len == 0)
+    {
+        addr->len = sizeof(addr->sa);
+    }
+
+    addr->rpc_protseq_id = smb->localaddr.rpc_protseq_id;
+    memcpy(&addr->sa, &smb->localaddr.sa, addr->len);
 
     return serr;
 }
@@ -1312,9 +1330,9 @@ rpc__smb_socket_get_if_id(
     rpc_network_if_id_t *network_if_id ATTRIBUTE_UNUSED
     )
 {
-    rpc_socket_error_t serr = ENOTSUP;
+    rpc_socket_error_t serr = RPC_C_SOCKET_OK;
 
-    fprintf(stderr, "WARNING: unsupported smb socket function %s\n", __FUNCTION__);
+    *network_if_id = SOCK_STREAM;
 
     return serr;
 }
