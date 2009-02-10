@@ -170,23 +170,16 @@ int main(int argc, char *argv[])
      * Register bindings with the endpoint mapper
      */
 
-    if (protocol != PROTOCOL_NP)
-    {
-        printf("registering bindings with endpoint mapper\n");
+    printf("registering bindings with endpoint mapper\n");
 
-        rpc_ep_register(echo_v1_0_s_ifspec,
-                        server_binding,
-                        NULL,
-                        (unsigned char *)"QDA application server",
-                        &status);
-        chk_dce_err(status, "rpc_ep_register()", "", 1);
+    rpc_ep_register(echo_v1_0_s_ifspec,
+                    server_binding,
+                    NULL,
+                    (unsigned char *)"QDA application server",
+                    &status);
+    chk_dce_err(status, "rpc_ep_register()", "", 1);
 
-        printf("registered.\n");
-    }
-    else
-    {
-        printf("using named pipe endpoint; not registering with endpoint mapper\n");
-    }
+    printf("registered.\n");
 
     /*
      * Print out the servers endpoints (TCP and UDP port numbers)

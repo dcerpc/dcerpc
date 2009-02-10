@@ -332,6 +332,7 @@ PRIVATE void rpc__module_init_func(void)
 	static rpc_protseq_id_elt_t seq_ids[2] = {
     {                                   /* Connection-RPC / NP / NB */
         0,
+        0, /* Does not use endpoint mapper */
         RPC_C_PROTSEQ_ID_NCACN_NP,
         RPC_C_PROTOCOL_ID_NCACN,
         RPC_C_NAF_ID_UXD,
@@ -343,6 +344,7 @@ PRIVATE void rpc__module_init_func(void)
     },
     {                                   /* Connection-RPC / UXD */
         0,
+        0, /* Does not use endpoint mapper */
         RPC_C_PROTSEQ_ID_NCALRPC,
         RPC_C_PROTOCOL_ID_NCACN,
         RPC_C_NAF_ID_UXD,

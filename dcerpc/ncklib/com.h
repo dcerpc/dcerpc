@@ -372,6 +372,7 @@ typedef struct
 typedef struct
 {
     boolean                     supported;
+    boolean                     uses_ep_mapper;
     rpc_protseq_id_t            rpc_protseq_id;
     rpc_protocol_id_t           rpc_protocol_id;
     rpc_naf_id_t                naf_id;

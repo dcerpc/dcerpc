@@ -423,13 +423,11 @@ unsigned32                  *status;
             continue;
         }
 
-#ifdef __hpux__
-        /* Skip over ncalrpc endpoints on HP-UX because its DCE implementation does not understand them */
-        if (binding_rep->rpc_addr && binding_rep->rpc_addr->rpc_protseq_id == RPC_C_PROTSEQ_ID_NCALRPC)
+        if (binding_rep->rpc_addr && rpc_g_protseq_id[binding_rep->rpc_addr->rpc_protseq_id].uses_ep_mapper == 0)
         {
+            /* Skip over protocol sequences that do not require the endpoint mapper */
             continue;
         }
-#endif
 
         /*
          * Convert the binding handle to tower_ref vector.
