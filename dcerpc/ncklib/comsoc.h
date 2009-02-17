@@ -105,7 +105,8 @@ typedef struct rpc_socket_vtbl_s
     rpc_socket_error_t
     (*socket_construct) (
         rpc_socket_t sock,
-        rpc_protseq_id_t pseq_id
+        rpc_protseq_id_t pseq_id,
+        rpc_transport_info_handle_t info
         );
     /* Used when closing a socket */
     rpc_socket_error_t
@@ -245,6 +246,23 @@ typedef struct rpc_socket_vtbl_s
         rpc_addr_vector_p_t *netmask_addr_vec,
         rpc_addr_vector_p_t *broadcast_addr_vec
         );
+    /* Inquire transport-level info */
+    rpc_socket_error_t
+    (*socket_inq_transport_info) (
+        rpc_socket_t sock,
+        rpc_transport_info_handle_t* info
+        );
+    /* Free transport-level info */
+    void
+    (*transport_info_free) (
+        rpc_transport_info_handle_t info
+        );
+
+    boolean
+    (*transport_info_equal) (
+        rpc_transport_info_handle_t info1,
+        rpc_transport_info_handle_t info2
+        );
 } rpc_socket_vtbl_t, *rpc_socket_vtbl_p_t;
 
 typedef struct rpc_socket_handle_s
@@ -280,7 +298,8 @@ extern "C" {
 
 PRIVATE rpc_socket_error_t rpc__socket_open _DCE_PROTOTYPE_((
         rpc_protseq_id_t pseq_id,
-        rpc_socket_t * /*sock*/
+        rpc_transport_info_handle_t info,
+        rpc_socket_t * sock
     ));
 
 
@@ -337,7 +356,6 @@ PRIVATE rpc_socket_error_t rpc__socket_bind _DCE_PROTOTYPE_((
         rpc_socket_t  /*sock*/,
         rpc_addr_p_t /*addr*/
     ));
-
 
 /*
  * R P C _ _ S O C K E T _ C O N N E C T
@@ -648,6 +666,29 @@ rpc__socket_enum_ifaces (
     rpc_addr_vector_p_t *rpc_addr_vec,
     rpc_addr_vector_p_t *netmask_addr_vec,
     rpc_addr_vector_p_t *broadcast_addr_vec
+    );
+
+PRIVATE rpc_socket_error_t
+rpc__transport_info_create(
+    rpc_protseq_id_t protseq,
+    rpc_transport_info_handle_t handle,
+    rpc_transport_info_p_t* info
+    );
+
+PRIVATE void
+rpc__transport_info_retain(
+    rpc_transport_info_p_t info
+    );
+
+PRIVATE void
+rpc__transport_info_release(
+    rpc_transport_info_p_t info
+    );
+
+PRIVATE boolean
+rpc__transport_info_equal(
+    rpc_transport_info_p_t info1,
+    rpc_transport_info_p_t info2
     );
 
 /*

@@ -31,6 +31,7 @@ rpc__socket_close_basic (
 rpc_socket_error_t
 rpc__socket_open (
     rpc_protseq_id_t pseq_id,
+    rpc_transport_info_handle_t info,
     rpc_socket_t* sock
     )
 {
@@ -47,7 +48,7 @@ rpc__socket_open (
     (*sock)->vtbl = rpc_g_protseq_id[pseq_id].socket_vtbl;
     (*sock)->pseq_id = pseq_id;
 
-    err = (*sock)->vtbl->socket_construct(*sock, pseq_id);
+    err = (*sock)->vtbl->socket_construct(*sock, pseq_id, info);
     if (err)
     {
         goto error;
@@ -290,4 +291,126 @@ rpc__socket_enum_ifaces (
     )
 {
     return sock->vtbl->socket_enum_ifaces(sock, efun, rpc_addr_vec, netmask_addr_vec, broadcast_addr_vec);
+}
+
+rpc_socket_error_t
+rpc__transport_info_create(
+    rpc_protseq_id_t protseq,
+    rpc_transport_info_handle_t handle,
+    rpc_transport_info_p_t* info
+    )
+{
+    rpc_socket_error_t serr = RPC_C_SOCKET_OK;
+    rpc_transport_info_p_t my_info = NULL;
+
+    my_info = malloc(sizeof(*my_info));
+    if (!my_info)
+    {
+        serr = ENOMEM;
+        goto error;
+    }
+
+    my_info->refcount = 1;
+    my_info->protseq = protseq;
+    my_info->handle = handle;
+
+    *info = my_info;
+
+error:
+
+    return serr;
+}
+
+void
+rpc__transport_info_retain(
+    rpc_transport_info_p_t info
+    )
+{
+    info->refcount++;
+}
+
+void
+rpc__transport_info_release(
+    rpc_transport_info_p_t info
+    )
+{
+    if (--info->refcount == 0)
+    {
+        rpc_g_protseq_id[info->protseq].socket_vtbl->transport_info_free(info->handle);
+        free(info);
+    }
+}
+
+PRIVATE boolean
+rpc__transport_info_equal(
+    rpc_transport_info_p_t info1,
+    rpc_transport_info_p_t info2
+    )
+{
+    return
+        (info1 == NULL && info2 == NULL) ||
+        (info1 != NULL && info2 != NULL && info1->protseq == info2->protseq &&
+         rpc_g_protseq_id[info1->protseq].socket_vtbl->transport_info_equal(info1->handle, info2->handle));
+}
+
+void
+rpc_binding_set_transport_info(
+    rpc_binding_handle_t         binding_handle,
+    rpc_transport_info_handle_t  info_handle,
+    unsigned32                   *st
+    )
+{
+    rpc_socket_error_t serr = RPC_C_SOCKET_OK;
+    rpc_binding_rep_p_t binding_r = (rpc_binding_rep_p_t) binding_handle;
+
+    CODING_ERROR (st);
+    RPC_VERIFY_INIT ();
+
+    serr = rpc__transport_info_create(
+        binding_r->rpc_addr->rpc_protseq_id,
+        info_handle,
+        &binding_r->transport_info);
+
+    if (serr)
+    {
+        *st = rpc_s_no_memory;
+        goto error;
+    }
+
+    (*rpc_g_protocol_id[binding_r->protocol_id].binding_epv->binding_changed) (binding_r, st);
+
+    if (*st)
+    {
+        goto error;
+    }
+
+    *st = rpc_s_ok;
+
+error:
+
+    return;
+}
+
+void
+rpc_binding_inq_transport_info(
+    rpc_binding_handle_t         binding_handle,
+    rpc_transport_info_handle_t  *info,
+    unsigned32                   *st
+    )
+{
+    rpc_binding_rep_p_t binding_r = (rpc_binding_rep_p_t) binding_handle;
+
+    CODING_ERROR (st);
+    RPC_VERIFY_INIT ();
+
+    if (binding_r->transport_info)
+    {
+        *info = binding_r->transport_info->handle;
+    }
+    else
+    {
+        *info = NULL;
+    }
+
+    *st = rpc_s_ok;
 }

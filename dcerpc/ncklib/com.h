@@ -734,6 +734,13 @@ typedef struct
     } u;
 } rpc_auth_info_t, *rpc_auth_info_p_t;
 
+typedef struct
+{
+    unsigned16 refcount;
+    rpc_protseq_id_t protseq;
+    rpc_transport_info_handle_t handle;
+} rpc_transport_info_t, *rpc_transport_info_p_t;
+
 /*
  * SMB Named Pipe authentication info.
  */
@@ -840,6 +847,7 @@ typedef struct rpc_handle_s_t
     unsigned                    addr_is_dynamic: 1;
     rpc_auth_info_p_t           auth_info;
     rpc_np_auth_info_p_t        np_auth_info;
+    rpc_transport_info_p_t      transport_info;
     unsigned32                  fork_count;
     unsigned32			extended_bind_flag;
     /*

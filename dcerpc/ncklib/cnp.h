@@ -549,7 +549,7 @@ typedef struct rpc_cn_assoc_grp_s_t
     unsigned16                          grp_refcnt;
     rpc_addr_p_t                        grp_address;
     rpc_addr_p_t                        grp_secaddr;
-    rpc_id_token_t			grp_imp_token;
+    rpc_transport_info_p_t              grp_transport_info;
     rpc_cn_local_id_t                   grp_id;
     unsigned16                          grp_max_assoc;
     unsigned16                          grp_cur_assoc;
@@ -576,7 +576,6 @@ typedef struct
     unsigned_char_t                     *cn_listening_endpoint;
     rpc_socket_t volatile               cn_sock;
     rpc_addr_p_t                        rpc_addr;
-    rpc_id_token_t                      imp_token;
     unsigned volatile                   exit_rcvr : 1;
     unsigned volatile                   in_sendmsg : 1;
     unsigned volatile                   waiting_for_sendmsg_complete : 1;
@@ -621,6 +620,7 @@ struct rpc_cn_assoc_s_t
     rpc_list_t                          syntax_list;    /* rpc_cn_syntax_t */
     rpc_list_t                          msg_list;       /* rpc_cn_fragbuf_t */
     rpc_cn_assoc_sec_context_t          security;
+    rpc_transport_info_p_t              transport_info;
     rpc_cn_fragbuf_p_t                  raw_packet_p;
     rpc_cn_assoc_sm_work_p_t            assoc_sm_work;
     unsigned32                          bind_packets_sent;

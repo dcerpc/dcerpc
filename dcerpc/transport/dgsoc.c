@@ -278,7 +278,7 @@ unsigned32 *st;
     /*
      * Create a network descriptor for this RPC Protocol Sequence.
      */
-    serr = rpc__socket_open(pseq_id, &socket_desc);
+    serr = rpc__socket_open(pseq_id, NULL, &socket_desc);
 
     if (RPC_SOCKET_IS_ERR(serr))
     {

@@ -111,10 +111,10 @@ INTERNAL boolean32              grp_new_in_progress;
 INTERNAL void rpc__cn_assoc_open _DCE_PROTOTYPE_ ((
     rpc_cn_assoc_p_t             /*assoc*/,
     rpc_addr_p_t                 /*rpc_addr*/,
-    rpc_id_token_t                 /*imp_token*/,
     rpc_if_rep_p_t               /*if_r*/,
     rpc_cn_local_id_t            /*grp_id*/,
-    rpc_auth_info_p_t            /*info*/,
+    rpc_auth_info_p_t            /*auth_info*/,
+    rpc_transport_info_p_t       /*transport_info*/,
     rpc_transfer_syntax_t       * /*syntax*/,
     unsigned16                  * /*context_id*/,
     rpc_cn_sec_context_p_t      * /*sec*/,
@@ -240,46 +240,6 @@ INTERNAL rpc_cn_syntax_t *rpc__cn_assoc_syntax_alloc _DCE_PROTOTYPE_ ((
  * request attempt.
  */
 #define RPC_C_ASSOC_MAX_WAIT_INTERVAL           5
-
-PRIVATE rpc_id_token_t rpc__get_current_token_id(unsigned32 *st)
-{
-    PIO_ACCESS_TOKEN handle = NULL;
-
-    if (LwIoGetThreadAccessToken(&handle))
-    {
-        *st = -1;
-        return NULL;
-    }
-    else
-    {
-        *st = rpc_s_ok;
-        return handle;
-    }
-}
-
-PRIVATE void rpc__release_token_id(rpc_id_token_t token)
-{
-    LwIoDeleteAccessToken(token);
-}
-
-PRIVATE int rpc__compare_token_id(rpc_id_token_t token1, rpc_id_token_t token2)
-{
-    return (int) LwIoCompareAccessTokens(token1, token2);
-}
-
-PRIVATE rpc_id_token_t rpc__copy_token_id(rpc_id_token_t token)
-{
-    rpc_id_token_t copy = NULL;
-
-    if (LwIoCopyAccessToken(token, &copy))
-    {
-        return NULL;
-    }
-    else
-    {
-        return copy;
-    }
-}
 
 
 /******************************************************************************/
@@ -421,24 +381,18 @@ unsigned32              *st;
          */
         grp_id = rpc__cn_assoc_grp_lkup_by_id (binding_r->grp_id,
                                                RPC_C_CN_ASSOC_GRP_CLIENT,
+                                               binding_r->common.transport_info,
                                                st);
         if (*st != rpc_s_ok)
         {
-            rpc_id_token_t current_id = rpc__get_current_token_id(st);
-
-            if(*st != rpc_s_ok)
-                return NULL;
-
             /*
              * The assoc group was not found using the group ID in the
              * binding rep. Now try the RPC address in the binding rep.
              */
             grp_id = rpc__cn_assoc_grp_lkup_by_addr (binding_r->common.rpc_addr, 
-                                                     current_id,
+                                                     binding_r->common.transport_info,
                                                      RPC_C_CN_ASSOC_GRP_CLIENT, 
                                                      st);
-
-            rpc__release_token_id(current_id);
         }
         
         /*
@@ -679,11 +633,6 @@ unsigned32              *st;
              ||
             (assoc_grp->grp_cur_assoc < assoc_grp->grp_max_assoc))
         {
-            rpc_id_token_t current_id = rpc__get_current_token_id(st);
-
-            if(*st != rpc_s_ok)
-                return NULL;
-
             /*
              * We can add another association to the group (if we
              * have one) if it can be established. First create an
@@ -729,16 +678,14 @@ unsigned32              *st;
 
             rpc__cn_assoc_open (assoc, 
                                 rpc_addr,
-                                current_id,
                                 if_r,
                                 rem_grp_id,
                                 binding_r->common.auth_info,
+                                binding_r->common.transport_info,
                                 syntax, 
                                 context_id, 
                                 sec,
                                 st);
-
-            rpc__release_token_id(current_id);
 
             /*
              * Release the grp_new mutex if we locked it.
@@ -3338,32 +3285,18 @@ unsigned32      pprov;
 **/
 
 INTERNAL void rpc__cn_assoc_open 
-#ifdef _DCE_PROTO_
 (
   rpc_cn_assoc_p_t        assoc,
   rpc_addr_p_t            rpc_addr,
-  rpc_id_token_t            imp_token,
   rpc_if_rep_p_t          if_r,
   rpc_cn_local_id_t       grp_id,
-  rpc_auth_info_p_t       info,
+  rpc_auth_info_p_t       auth_info,
+  rpc_transport_info_p_t  transport_info,
   rpc_transfer_syntax_t   *syntax,
   unsigned16              *context_id,
   rpc_cn_sec_context_p_t  *sec,
   unsigned32              *st
 )
-#else
-(assoc, rpc_addr, imp_token, if_r, grp_id, info, syntax, context_id, sec, st)
-rpc_cn_assoc_p_t        assoc;
-rpc_addr_p_t            rpc_addr;
-rpc_id_token_t            imp_token;
-rpc_if_rep_p_t          if_r;
-rpc_cn_local_id_t       grp_id;
-rpc_auth_info_p_t       info;
-rpc_transfer_syntax_t   *syntax;
-unsigned16              *context_id;
-rpc_cn_sec_context_p_t  *sec;
-unsigned32              *st;
-#endif
 {
     rpc_cn_syntax_t             *pres_context;
     rpc_cn_sec_context_t        *sec_context;
@@ -3395,14 +3328,14 @@ unsigned32              *st;
      * Determine whether security is required for the RPC being
      * executed.
      */
-    if (RPC_CN_AUTH_REQUIRED (info))
+    if (RPC_CN_AUTH_REQUIRED (auth_info))
     {
         /*
          * Allocate and init a security context element and add it
          * to the tail of the association security context element
          * list. Also, put a pointer to it in the state machine work structure.
          */
-        sec_context = rpc__cn_assoc_sec_alloc (info, st);
+        sec_context = rpc__cn_assoc_sec_alloc (auth_info, st);
         if (*st != rpc_s_ok)
         {
             RPC_LIST_REMOVE (assoc->syntax_list, pres_context);
@@ -3445,7 +3378,12 @@ unsigned32              *st;
         assoc->cn_ctlblk.rpc_addr = rpc_addr1;
     }
 
-    assoc->cn_ctlblk.imp_token = rpc__copy_token_id(imp_token);
+    assoc->transport_info = transport_info;
+
+    if (transport_info)
+    {
+        rpc__transport_info_retain(transport_info);
+    }
 
     /*
      * This seems redundant, but we need this structure in the association
@@ -3476,7 +3414,7 @@ unsigned32              *st;
     {
         RPC_LIST_REMOVE (assoc->syntax_list, pres_context);
         rpc__cn_assoc_syntax_free (&pres_context);
-        if (RPC_CN_AUTH_REQUIRED (info))
+        if (RPC_CN_AUTH_REQUIRED (auth_info))
         {
             RPC_LIST_REMOVE (assoc->security.context_list, sec_context);
             rpc__cn_assoc_sec_free (&sec_context);
@@ -3490,7 +3428,7 @@ unsigned32              *st;
      */
     while (!(pres_context->syntax_valid) 
            ||
-           (RPC_CN_AUTH_REQUIRED (info) && (sec_context->sec_state != RPC_C_SEC_STATE_COMPLETE)))
+           (RPC_CN_AUTH_REQUIRED (auth_info) && (sec_context->sec_state != RPC_C_SEC_STATE_COMPLETE)))
     {
         rpc__cn_assoc_receive_frag (assoc, &fragbuf, st);
         if (*st != rpc_s_ok)
@@ -3507,12 +3445,12 @@ unsigned32              *st;
             *st = pres_context->syntax_status;
             return;
         }
-        if (RPC_CN_AUTH_REQUIRED (info) && (sec_context->sec_status != rpc_s_ok))
+        if (RPC_CN_AUTH_REQUIRED (auth_info) && (sec_context->sec_status != rpc_s_ok))
         {
             *st = sec_context->sec_status;
             return;
         }
-        if (RPC_CN_AUTH_REQUIRED (info) && (sec_context->sec_state == RPC_C_SEC_STATE_INCOMPLETE))
+        if (RPC_CN_AUTH_REQUIRED (auth_info) && (sec_context->sec_state == RPC_C_SEC_STATE_INCOMPLETE))
         {
             RPC_CN_ASSOC_EVAL_USER_EVENT (assoc,
                                           RPC_C_ASSOC_ALTER_CONTEXT_REQ,
@@ -4674,9 +4612,11 @@ rpc_cn_assoc_p_t   assoc;
             assoc->call_rep = NULL;
         }
 
-        if (assoc->cn_ctlblk.imp_token)
+
+        if (assoc->transport_info)
         {
-            rpc__release_token_id(assoc->cn_ctlblk.imp_token);
+            rpc__transport_info_release(assoc->transport_info);
+            assoc->transport_info = NULL;
         }
 
         assoc->cn_ctlblk.cn_state = RPC_C_SM_CLOSED_STATE;
@@ -5162,7 +5102,7 @@ PRIVATE rpc_cn_local_id_t rpc__cn_assoc_grp_alloc
 #ifdef _DCE_PROTO_
 (
   rpc_addr_p_t            rpc_addr,
-  rpc_id_token_t            token_id,
+  rpc_transport_info_p_t  transport_info,
   unsigned32              type,
   unsigned32              rem_id,
   unsigned32              *st
@@ -5247,7 +5187,12 @@ unsigned32              *st;
         }
     }
 
-    assoc_grp->grp_imp_token = rpc__copy_token_id(token_id);
+    assoc_grp->grp_transport_info = transport_info;
+
+    if (transport_info)
+    {
+        rpc__transport_info_retain(transport_info);
+    }
     
     /*
      * Set up the type of this association group.
@@ -5378,9 +5323,10 @@ rpc_cn_local_id_t       grp_id;
         rpc__naf_addr_free (&assoc_grp->grp_secaddr, &st);
     }
     
-    if (assoc_grp->grp_imp_token)
+    if (assoc_grp->grp_transport_info)
     {
-        rpc__release_token_id(assoc_grp->grp_imp_token);
+        rpc__transport_info_release(assoc_grp->grp_transport_info);
+        assoc_grp->grp_transport_info = NULL;
     }
 
     /*
@@ -5615,7 +5561,7 @@ PRIVATE rpc_cn_local_id_t rpc__cn_assoc_grp_lkup_by_addr
 #ifdef _DCE_PROTO_
 (
   rpc_addr_p_t            rpc_addr,
-  rpc_id_token_t            imp_token,
+  rpc_transport_info_p_t  transport_info,
   unsigned32              type,
   unsigned32              *st
 )
@@ -5673,8 +5619,7 @@ unsigned32              *st;
                  * If the input argument RPC address matched that in
                  * the association group return it.
                  */
-                if (addrs_equal &&
-                    rpc__compare_token_id(assoc_grp[i].grp_imp_token, imp_token))
+                if (addrs_equal && rpc__transport_info_equal(assoc_grp[i].grp_transport_info, transport_info))
                 {
                     *st = rpc_s_ok;
                     return (assoc_grp[i].grp_id);
@@ -5857,18 +5802,12 @@ unsigned32              *st;
 **/
 
 PRIVATE rpc_cn_local_id_t rpc__cn_assoc_grp_lkup_by_id 
-#ifdef _DCE_PROTO_
 (
   rpc_cn_local_id_t       grp_id,
   unsigned32              type,
+  rpc_transport_info_p_t  transport_info,
   unsigned32              *st
 )
-#else
-(grp_id, type, st)
-rpc_cn_local_id_t       grp_id;
-unsigned32              type;
-unsigned32              *st;
-#endif
 {
     rpc_cn_assoc_grp_t  *assoc_grp;
     rpc_cn_local_id_t   ret_grp_id;
@@ -5892,8 +5831,6 @@ unsigned32              *st;
      */
     if (RPC_CN_LOCAL_ID_VALID (grp_id))
     {
-        rpc_id_token_t current_id = rpc__get_current_token_id(st);
-
         if(*st != rpc_s_ok)
         {
             RPC_CN_LOCAL_ID_CLEAR (ret_grp_id);
@@ -5913,18 +5850,12 @@ unsigned32              *st;
         if (RPC_CN_LOCAL_ID_EQUAL (assoc_grp->grp_id, grp_id) &&
             (assoc_grp->grp_flags & type) &&
             (assoc_grp->grp_state.cur_state == RPC_C_ASSOC_GRP_ACTIVE) &&
-            (rpc__compare_token_id(assoc_grp->grp_imp_token, current_id)))
+            (rpc__transport_info_equal(assoc_grp->grp_transport_info, transport_info)))
         {
-            rpc__release_token_id(current_id);
-
             *st = rpc_s_ok;
             RPC_LOG_CN_GRP_ID_LKUP_XIT;
 
             return (grp_id);
-        }
-        else
-        {
-            rpc__release_token_id(current_id);
         }
     }
     

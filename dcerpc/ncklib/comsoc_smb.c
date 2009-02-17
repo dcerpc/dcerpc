@@ -1,3 +1,4 @@
+#include <dce/smb.h>
 #include <commonp.h>
 #include <com.h>
 #include <comprot.h>
@@ -18,6 +19,17 @@
 #define SMB_SOCKET_LOCK(sock) (rpc__smb_socket_lock(sock))
 #define SMB_SOCKET_UNLOCK(sock) (rpc__smb_socket_unlock(sock))
 
+typedef struct rpc_smb_transport_info_s
+{
+    struct
+    {
+        unsigned32 length;
+        void* data;
+    } session_key;
+    PIO_ACCESS_TOKEN access_token;
+    boolean schannel;
+} rpc_smb_transport_info_t, *rpc_smb_transport_info_p_t;
+
 typedef enum rpc_smb_state_e
 {
     SMB_STATE_SEND,
@@ -37,9 +49,11 @@ typedef struct rpc_smb_buffer_s
 typedef struct rpc_smb_socket_s
 {
     rpc_smb_state_t volatile state;
+    boolean is_schannel;
     rpc_np_addr_t peeraddr;
     rpc_np_addr_t localaddr;
     PIO_CONTEXT context;
+    PIO_ACCESS_TOKEN acctoken;
     IO_FILE_HANDLE np;
     rpc_smb_buffer_t sendbuffer;
     rpc_smb_buffer_t recvbuffer;
@@ -54,6 +68,77 @@ typedef struct rpc_smb_socket_s
     dcethread_mutex lock;
     dcethread_cond event;
 } rpc_smb_socket_t, *rpc_smb_socket_p_t;
+
+void
+rpc_smb_transport_info_from_lwio_token(
+    void* access_token,
+    boolean schannel,
+    rpc_transport_info_handle_t* info,
+    unsigned32* st
+    )
+{
+    rpc_smb_transport_info_p_t smb_info = NULL;
+
+    smb_info = calloc(1, sizeof(*smb_info));
+
+    if (!smb_info)
+    {
+        *st = rpc_s_no_memory;
+        goto error;
+    }
+
+    if (LwIoCopyAccessToken(access_token, &smb_info->access_token) != 0)
+    {
+        *st = rpc_s_no_memory;
+        goto error;
+    }
+
+    smb_info->schannel = schannel;
+
+    *info = (rpc_transport_info_handle_t) smb_info;
+
+    *st = rpc_s_ok;
+
+error:
+
+    if (*st != rpc_s_ok && smb_info)
+    {
+        rpc_smb_transport_info_free((rpc_transport_info_handle_t) smb_info);
+    }
+
+    return;
+}
+
+void
+rpc_smb_transport_info_free(
+    rpc_transport_info_handle_t info
+    )
+{
+    rpc_smb_transport_info_p_t smb_info = (rpc_smb_transport_info_p_t) info;
+
+    if (smb_info->access_token)
+    {
+        LwIoDeleteAccessToken(smb_info->access_token);
+    }
+
+    free(smb_info);
+}
+
+INTERNAL
+boolean
+rpc__smb_transport_info_equal(
+    rpc_transport_info_handle_t info1,
+    rpc_transport_info_handle_t info2
+    )
+{
+    rpc_smb_transport_info_p_t smb_info1 = (rpc_smb_transport_info_p_t) info1;
+    rpc_smb_transport_info_p_t smb_info2 = (rpc_smb_transport_info_p_t) info2;
+
+    return (smb_info1->schannel == smb_info2->schannel &&
+            ((smb_info1->access_token == NULL && smb_info2->access_token == NULL) ||
+             (smb_info1->access_token != NULL && smb_info2->access_token != NULL &&
+              LwIoCompareAccessTokens(smb_info1->access_token, smb_info2->access_token))));
+}
 
 INTERNAL
 inline
@@ -345,6 +430,11 @@ rpc__smb_socket_destroy(
             free(sock->recvbuffer.base);
         }
 
+        if (sock->acctoken)
+        {
+            LwIoDeleteAccessToken(sock->acctoken);
+        }
+
         dcethread_mutex_destroy_throw(&sock->lock);
         dcethread_cond_destroy_throw(&sock->event);
 
@@ -409,17 +499,29 @@ INTERNAL
 rpc_socket_error_t
 rpc__smb_socket_construct(
     rpc_socket_t sock,
-    rpc_protseq_id_t pseq_id ATTRIBUTE_UNUSED
+    rpc_protseq_id_t pseq_id ATTRIBUTE_UNUSED,
+    rpc_transport_info_handle_t info
     )
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
     rpc_smb_socket_p_t smb_sock = NULL;
+    rpc_smb_transport_info_p_t smb_info = (rpc_smb_transport_info_p_t) info;
 
     serr = rpc__smb_socket_create(&smb_sock);
 
     if (serr)
     {
         goto error;
+    }
+
+    if (smb_info && smb_info->access_token)
+    {
+        serr = NtStatusToUnixErrno(
+            LwIoCopyAccessToken(smb_info->access_token, &smb_sock->acctoken));
+        if (serr)
+        {
+            goto error;
+        }
     }
 
     sock->data.pointer = (void*) smb_sock;
@@ -539,7 +641,6 @@ rpc__smb_socket_connect(
     char *netaddr, *endpoint, *pipename;
     unsigned32 dbg_status = 0;
     PSTR smbpath = NULL;
-    PIO_ACCESS_TOKEN acctoken = NULL;
     PBYTE sesskey = NULL;
     USHORT sesskeylen = 0;
     IO_FILE_NAME filename;
@@ -590,16 +691,9 @@ rpc__smb_socket_connect(
     }
 
     serr = NtStatusToUnixErrno(
-        LwIoGetThreadAccessToken(&acctoken));
-    if (serr)
-    {
-        goto error;
-    }
-
-    serr = NtStatusToUnixErrno(
         NtCtxCreateFile(
             smb->context,                    /* IO context */
-            acctoken,                        /* Security token */
+            smb->acctoken,                   /* Security token */
             &smb->np,                        /* Created handle */
             NULL,                            /* Async control block */
             &io_status,                      /* Status block ??? */
@@ -648,11 +742,6 @@ rpc__smb_socket_connect(
     smb->state = SMB_STATE_SEND;
 
 done:
-
-    if (acctoken != NULL)
-    {
-        LwIoDeleteAccessToken(acctoken);
-    }
 
     if (sesskey)
     {
@@ -729,7 +818,7 @@ rpc__smb_socket_accept(
         }
     }
 
-    serr = rpc__socket_open(sock->pseq_id, &npsock);
+    serr = rpc__socket_open(sock->pseq_id, NULL, &npsock);
     if (serr)
     {
         goto error;
@@ -1407,11 +1496,49 @@ rpc__smb_socket_enum_ifaces(
     rpc_addr_vector_p_t *rpc_addr_vec ATTRIBUTE_UNUSED,
     rpc_addr_vector_p_t *netmask_addr_vec ATTRIBUTE_UNUSED,
     rpc_addr_vector_p_t *broadcast_addr_vec ATTRIBUTE_UNUSED
-)
+    )
 {
     rpc_socket_error_t serr = ENOTSUP;
 
     fprintf(stderr, "WARNING: unsupported smb socket function %s\n", __FUNCTION__);
+
+    return serr;
+}
+
+INTERNAL
+rpc_socket_error_t
+rpc__smb_socket_inq_transport_info(
+    rpc_socket_t sock,
+    rpc_transport_info_handle_t* info
+    )
+{
+    rpc_socket_error_t serr = RPC_C_SOCKET_OK;
+    rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
+    unsigned32 st = rpc_s_ok;
+
+    *info = NULL;
+
+    rpc_smb_transport_info_from_lwio_token(
+        smb->acctoken,
+        smb->is_schannel,
+        info,
+        &st);
+
+    if (st)
+    {
+        serr = ENOMEM;
+        goto error;
+    }
+
+error:
+
+    if (serr)
+    {
+        if (*info)
+        {
+            rpc_smb_transport_info_free(*info);
+        }
+    }
 
     return serr;
 }
@@ -1439,5 +1566,8 @@ rpc_socket_vtbl_t rpc_g_smb_socket_vtbl =
     .socket_set_rcvtimeo = rpc__smb_socket_set_rcvtimeo,
     .socket_getpeereid = rpc__smb_socket_getpeereid,
     .socket_get_select_desc = rpc__smb_socket_get_select_desc,
-    .socket_enum_ifaces = rpc__smb_socket_enum_ifaces
+    .socket_enum_ifaces = rpc__smb_socket_enum_ifaces,
+    .socket_inq_transport_info = rpc__smb_socket_inq_transport_info,
+    .transport_info_free = rpc_smb_transport_info_free,
+    .transport_info_equal = rpc__smb_transport_info_equal
 };

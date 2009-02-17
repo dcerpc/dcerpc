@@ -176,6 +176,14 @@ unsigned32              *status;
     rpc__np_auth_info_binding_release(binding_rep);
 
     /*
+     * if we have transport information, free it up now
+     */
+    if (binding_rep->transport_info)
+    {
+        rpc__transport_info_release(binding_rep->transport_info);
+    }
+
+    /*
      * Free the name service-specific part of the binding.
      */
     if (binding_rep->ns_specific != NULL)
@@ -739,6 +747,16 @@ unsigned32              *status;
     {
         rpc__np_auth_info_reference (src_binding_rep->np_auth_info);
         dst_binding_rep->np_auth_info = src_binding_rep->np_auth_info;
+    }
+
+    /*
+     * Copy transport information
+     */
+
+    if (src_binding_rep->transport_info != NULL)
+    {
+        rpc__transport_info_retain(src_binding_rep->transport_info);
+        dst_binding_rep->transport_info = src_binding_rep->transport_info;
     }
 
     /*

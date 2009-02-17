@@ -288,6 +288,8 @@ typedef struct
  */
 typedef rpc_opaque_ptr_t rpc_auth_identity_handle_t;
 
+typedef rpc_opaque_ptr_t rpc_transport_info_handle_t;
+
 /*
  * Protection level
  */

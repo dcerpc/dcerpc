@@ -835,7 +835,7 @@ unsigned32              *st;
     boolean                 need_to_free_server_name = false;
     
     CODING_ERROR (st);  
-    RPC_VERIFY_INIT (); 
+    RPC_VERIFY_INIT ();
 
     RPC_BINDING_VALIDATE_CLIENT(binding_rep, st);
     if (*st != rpc_s_ok)

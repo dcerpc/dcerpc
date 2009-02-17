@@ -2403,7 +2403,7 @@ unsigned32          *status;
     /*
      * Create a network descriptor for this RPC Protocol Sequence.
      */
-    serr = rpc__socket_open(pseq_id, &desc);
+    serr = rpc__socket_open(pseq_id, NULL, &desc);
 
     if (RPC_SOCKET_IS_ERR(serr))
     {

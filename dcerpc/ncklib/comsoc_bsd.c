@@ -286,7 +286,8 @@ recvmsg_again:
 INTERNAL rpc_socket_error_t
 rpc__bsd_socket_construct(
     rpc_socket_t sock,
-    rpc_protseq_id_t    pseq_id
+    rpc_protseq_id_t    pseq_id,
+    rpc_transport_info_handle_t info ATTRIBUTE_UNUSED
     )
 {
     rpc_socket_error_t  serr;

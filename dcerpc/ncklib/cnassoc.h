@@ -147,14 +147,6 @@ error "***Make sure memcmp works on this version of UUIDs***"
     RPC_CALL_UNLOCK (((rpc_call_rep_t *) assoc->call_rep));\
 }
  
-PRIVATE rpc_id_token_t rpc__get_current_token_id(unsigned32 *st);
-
-PRIVATE void rpc__release_token_id(rpc_id_token_t token);
-
-PRIVATE int rpc__compare_token_id(rpc_id_token_t token1, rpc_id_token_t token2);
-
-PRIVATE rpc_id_token_t rpc__copy_token_id(rpc_id_token_t token);
-
 
 /******************************************************************************/
 /*
@@ -407,7 +399,7 @@ PRIVATE void rpc__cn_assoc_acb_dealloc _DCE_PROTOTYPE_ ((rpc_cn_assoc_p_t/* asso
 
 PRIVATE rpc_cn_local_id_t rpc__cn_assoc_grp_alloc _DCE_PROTOTYPE_ ((
     rpc_addr_p_t             /* rpc_addr */,
-    rpc_id_token_t             /* token_id */,
+    rpc_transport_info_p_t    /* prot_info */,
     unsigned32               /* type */,
     unsigned32               /* rem_id */,                                                             
     unsigned32              * /* st */ ));
@@ -441,7 +433,7 @@ PRIVATE void rpc__cn_assoc_grp_rem_assoc _DCE_PROTOTYPE_ ((
 
 PRIVATE rpc_cn_local_id_t rpc__cn_assoc_grp_lkup_by_addr _DCE_PROTOTYPE_ ((
     rpc_addr_p_t                 /* rpc_addr */,
-    rpc_id_token_t                 /* imp_token */,
+    rpc_transport_info_p_t       /* transport_info */,
     unsigned32                   /* type */,
     unsigned32                  * /* st */ ));
 
@@ -462,6 +454,7 @@ PRIVATE rpc_cn_local_id_t rpc__cn_assoc_grp_lkup_by_remid _DCE_PROTOTYPE_ ((
 PRIVATE rpc_cn_local_id_t rpc__cn_assoc_grp_lkup_by_id _DCE_PROTOTYPE_ ((
     rpc_cn_local_id_t            /* grp_id */,
     unsigned32                   /* type */,
+    rpc_transport_info_p_t  transport_info,
     unsigned32                  * /* st */ ));
 
 /*

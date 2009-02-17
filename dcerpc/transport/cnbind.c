@@ -208,10 +208,6 @@ PRIVATE void rpc__cn_binding_init
     }
     else
     {
-        rpc_id_token_t current_id = rpc__get_current_token_id(st);
-        if(*st != rpc_s_ok)
-            return;
-
         type = RPC_C_CN_ASSOC_GRP_CLIENT;
 
         /*
@@ -220,7 +216,7 @@ PRIVATE void rpc__cn_binding_init
          */
         RPC_CN_LOCK ();
         grp_id = rpc__cn_assoc_grp_lkup_by_addr (binding_r->rpc_addr,
-                                                 current_id,
+                                                 binding_r->transport_info,
                                                  type,
                                                  st);
 
@@ -230,8 +226,6 @@ PRIVATE void rpc__cn_binding_init
          */
         ((rpc_cn_binding_rep_t *)binding_r)->grp_id = grp_id;
         RPC_CN_UNLOCK ();
-
-        rpc__release_token_id(current_id);
     }
         
     /*
@@ -511,6 +505,7 @@ unsigned32              *st;
     grp_id = rpc__cn_assoc_grp_lkup_by_id (
                  ((rpc_cn_binding_rep_t *)binding_r)->grp_id,
                  type,
+                 binding_r->transport_info,
                  st);
 
     /*

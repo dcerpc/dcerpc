@@ -282,6 +282,20 @@ void rpc_binding_inq_auth_client
     [out]       unsigned32              *st
 );
 
+void rpc_binding_set_transport_info
+(
+    [in]        rpc_binding_handle_t         binding_handle,
+    [in]        rpc_transport_info_handle_t  info,
+    [out]       unsigned32                   *st
+);
+
+void rpc_binding_inq_transport_info
+(
+    [in]        rpc_binding_handle_t         binding_handle,
+    [out]       rpc_transport_info_handle_t  *info,
+    [out]       unsigned32                   *st
+);
+
 /*
  * R P C _ B I N D I N G _ S E R V E R _ F R O M _ C L I E N T
  *

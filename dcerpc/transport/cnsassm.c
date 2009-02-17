@@ -2068,6 +2068,7 @@ pointer_t       sm;
             assoc->assoc_grp_id = 
             rpc__cn_assoc_grp_lkup_by_id (grp_id,
                                           RPC_C_CN_ASSOC_GRP_SERVER,
+                                          assoc->transport_info,
                                           &(assoc->assoc_status)); 
             assoc_grp = RPC_CN_ASSOC_GRP (assoc->assoc_grp_id);
             if (assoc->assoc_status == rpc_s_ok)

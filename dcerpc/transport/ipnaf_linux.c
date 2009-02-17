@@ -438,7 +438,7 @@ PRIVATE void rpc__ip_get_broadcast
 
     CODING_ERROR (status);
 
-    err = rpc__socket_open(protseq_id, &sock);
+    err = rpc__socket_open(protseq_id, NULL, &sock);
 
     if (err)
     {
@@ -514,7 +514,7 @@ unsigned32 *status;
 
     CODING_ERROR (status);
 
-    err = rpc__socket_open(RPC_C_PROTSEQ_ID_NCADG_IP_UDP, &sock);
+    err = rpc__socket_open(RPC_C_PROTSEQ_ID_NCADG_IP_UDP, NULL, &sock);
 
     if (err)
     {

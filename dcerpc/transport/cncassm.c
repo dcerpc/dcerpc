@@ -3848,7 +3848,7 @@ pointer_t       sm;
          * There's no existing group. Create a new one.
          */
         assoc->assoc_grp_id = rpc__cn_assoc_grp_alloc (assoc->cn_ctlblk.rpc_addr,
-                                                       assoc->cn_ctlblk.imp_token,
+                                                       assoc->transport_info,
                                                        RPC_C_CN_ASSOC_GRP_CLIENT,
                                                        RPC_CN_PKT_ASSOC_GROUP_ID (header),
                                                        &(assoc->assoc_status));

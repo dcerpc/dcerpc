@@ -427,7 +427,7 @@ unsigned32              *status;
         else
 #endif
         {
-            serr = rpc__socket_open(pseq_id, &sock);
+            serr = rpc__socket_open(pseq_id, NULL, &sock);
             if (RPC_SOCKET_IS_ERR (serr))
             {
                 *status = rpc_s_cant_create_sock;
@@ -652,7 +652,7 @@ unsigned32              *status;
          * original descriptor passed to us to be closed since it's being
          * listened to due to the rpc__cn_assoc_listen() call below.
          */
-        serr = rpc__socket_open (pseq_id, desc);
+        serr = rpc__socket_open (pseq_id, NULL, desc);
         if (RPC_SOCKET_IS_ERR(serr))
         {
             RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
@@ -1135,7 +1135,9 @@ unsigned32              *st;
      * contained in the RPC address given. First create a socket to
      * do the connect on.
      */
-    serr = rpc__socket_open (rpc_addr->rpc_protseq_id, (rpc_socket_t*) &assoc->cn_ctlblk.cn_sock);
+    serr = rpc__socket_open (rpc_addr->rpc_protseq_id,
+                             assoc->transport_info ? assoc->transport_info->handle : NULL,
+                             (rpc_socket_t*) &assoc->cn_ctlblk.cn_sock);
     if (RPC_SOCKET_IS_ERR(serr))
     {
         RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
@@ -1601,6 +1603,7 @@ unsigned32              *st;
     grp_id.all = (unsigned long) client_h;
     grp_id = rpc__cn_assoc_grp_lkup_by_id (grp_id,
                                            RPC_C_CN_ASSOC_GRP_SERVER,
+                                           binding_r->transport_info,
                                            st);
 
     /*
@@ -1687,6 +1690,7 @@ unsigned32              *st;
     grp_id.all = (unsigned long) client_h;
     grp_id = rpc__cn_assoc_grp_lkup_by_id (grp_id,
                                            RPC_C_CN_ASSOC_GRP_SERVER,
+                                           binding_r->transport_info,
                                            st);
 
     /*
@@ -1770,6 +1774,7 @@ unsigned32              *st;
     grp_id = rpc__cn_assoc_grp_lkup_by_id (((rpc_cn_binding_rep_t *)
                                             (binding_r))->grp_id,
                                            RPC_C_CN_ASSOC_GRP_CLIENT,
+                                           binding_r->transport_info,
                                            st);  
     
     /*
@@ -1851,6 +1856,7 @@ unsigned32              *st;
     grp_id = rpc__cn_assoc_grp_lkup_by_id (((rpc_cn_binding_rep_t *)
                                             (binding_r))->grp_id,
                                            RPC_C_CN_ASSOC_GRP_CLIENT,
+                                           binding_r->transport_info,
                                            st); 
     
     /*
@@ -2218,6 +2224,7 @@ unsigned32              *st;
     grp_id = rpc__cn_assoc_grp_lkup_by_id (((rpc_cn_binding_rep_t *)
                                             (binding_r))->grp_id,
                                            RPC_C_CN_ASSOC_GRP_CLIENT,
+                                           binding_r->transport_info,
                                            st); 
     
     /*
