@@ -228,6 +228,8 @@ dcethread_fork(void)
 {
     pid_t pid = -1;
 
+    dcethread_atfork_init();
+
 #ifdef AVOID_PTHREAD_ATFORK
     __dcethread_pre_fork();
 #endif
