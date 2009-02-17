@@ -98,8 +98,10 @@ typedef struct
     void (*child_fork)(void *);
 } dcethread_atfork_handler;
 
-/* Exclusion lock */
-static pthread_mutex_t atfork_lock = PTHREAD_MUTEX_INITIALIZER;
+/* Initilization once control */
+static pthread_once_t atfork_once = DCETHREAD_ONCE_INIT;
+/* Exclusion lock -- prevents modification of handler list while fork()s are active */
+static pthread_rwlock_t atfork_lock;
 /* Array of handlers */
 static volatile dcethread_atfork_handler atfork_handlers[ATFORK_MAX_HANDLERS];
 /* Current size of the array */
@@ -111,7 +113,7 @@ __dcethread_pre_fork(void)
 {
     unsigned int i;
     
-    pthread_mutex_lock(&atfork_lock);
+    pthread_rwlock_rdlock(&atfork_lock);
     
     for (i = 0; i < atfork_handlers_len; i++)
     {
@@ -119,7 +121,7 @@ __dcethread_pre_fork(void)
 	    atfork_handlers[i].pre_fork(atfork_handlers[i].user_state);
     }
     
-    pthread_mutex_unlock(&atfork_lock);
+    pthread_rwlock_unlock(&atfork_lock);
 }
 
 static void
@@ -127,7 +129,7 @@ __dcethread_parent_fork(void)
 {
     unsigned int i;
 
-    pthread_mutex_lock(&atfork_lock);
+    pthread_rwlock_rdlock(&atfork_lock);
     
     for (i = 0; i < atfork_handlers_len; i++)
     {
@@ -135,7 +137,7 @@ __dcethread_parent_fork(void)
 	    atfork_handlers[i].parent_fork(atfork_handlers[i].user_state);
     }
     
-    pthread_mutex_unlock(&atfork_lock);
+    pthread_rwlock_unlock(&atfork_lock);
 }
 
 static void
@@ -143,7 +145,7 @@ __dcethread_child_fork(void)
 {
     unsigned int i;
 
-    pthread_mutex_lock(&atfork_lock);
+    pthread_rwlock_rdlock(&atfork_lock);
     
     for (i = 0; i < atfork_handlers_len; i++)
     {
@@ -151,21 +153,40 @@ __dcethread_child_fork(void)
 	    atfork_handlers[i].child_fork(atfork_handlers[i].user_state);
     }
     
-    pthread_mutex_unlock(&atfork_lock);
+    pthread_rwlock_unlock(&atfork_lock);
 }
 
 /* Registration function to add a new handler */
+
+static
+void
+__dcethread_atfork_init(void)
+{
+    if (pthread_rwlock_init(&atfork_lock, NULL) != 0)
+    {
+        abort();
+    }
+}
+
+static
+void
+dcethread_atfork_init()
+{
+    pthread_once(&atfork_once, __dcethread_atfork_init);
+}
 
 int
 dcethread_atfork(void *user_state, void (*pre_fork)(void *), void (*parent_fork)(void *), void (*child_fork)(void *))
 {
     dcethread_atfork_handler handler;
     
-    pthread_mutex_lock(&atfork_lock);
+    dcethread_atfork_init();
+
+    pthread_rwlock_wrlock(&atfork_lock);
     
     if (atfork_handlers_len >= ATFORK_MAX_HANDLERS)
     {
-	pthread_mutex_unlock(&atfork_lock);
+	pthread_rwlock_unlock(&atfork_lock);
 	return dcethread__set_errno(ENOMEM);
     }
     
@@ -182,7 +203,7 @@ dcethread_atfork(void *user_state, void (*pre_fork)(void *), void (*parent_fork)
     {
 	if (dcethread__set_errno(pthread_atfork(__dcethread_pre_fork, __dcethread_parent_fork, __dcethread_child_fork)))
 	{
-	    pthread_mutex_unlock(&atfork_lock);
+	    pthread_rwlock_unlock(&atfork_lock);
 	    return -1;
 	}
     }
@@ -191,7 +212,7 @@ dcethread_atfork(void *user_state, void (*pre_fork)(void *), void (*parent_fork)
     /* Add handler to array */
     atfork_handlers[atfork_handlers_len++] = handler;
 	
-    pthread_mutex_unlock(&atfork_lock);
+    pthread_rwlock_unlock(&atfork_lock);
     
     return dcethread__set_errno(0);
 }
