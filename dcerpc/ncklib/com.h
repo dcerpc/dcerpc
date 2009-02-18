@@ -741,18 +741,6 @@ typedef struct
     rpc_transport_info_handle_t handle;
 } rpc_transport_info_t, *rpc_transport_info_p_t;
 
-/*
- * SMB Named Pipe authentication info.
- */
-typedef struct
-{
-    unsigned16          refcount;
-    unsigned_char_p_t   princ_name;
-    unsigned_char_p_t   workstation;
-    unsigned32		session_key_len;
-    unsigned_char_p_t   session_key;
-} rpc_np_auth_info_t, *rpc_np_auth_info_p_t;
-
 /***********************************************************************/
 
 /*
@@ -846,7 +834,6 @@ typedef struct rpc_handle_s_t
     unsigned                    is_server: 1;
     unsigned                    addr_is_dynamic: 1;
     rpc_auth_info_p_t           auth_info;
-    rpc_np_auth_info_p_t        np_auth_info;
     rpc_transport_info_p_t      transport_info;
     unsigned32                  fork_count;
     unsigned32			extended_bind_flag;

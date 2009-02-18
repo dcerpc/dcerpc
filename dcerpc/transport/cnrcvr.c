@@ -53,7 +53,6 @@
 #include <cncall.h>     /* NCA connection call service */
 #include <comcthd.h>    /* Externals for call thread services component */
 #include <cncthd.h>     /* NCA Connection call executor service */
-#include <cnnp.h>       /* Named Pipes */
 
 
 /******************************************************************************/
@@ -543,8 +542,6 @@ rpc_cn_assoc_p_t        assoc;
      */
     for (i = 0;; i++)
     {
-	rpc_protseq_id_t protseq_id;
-
         RPC_LOG_CN_PROCESS_PKT_NTR;
 
         /*
@@ -558,31 +555,7 @@ rpc_cn_assoc_p_t        assoc;
          */
         DCETHREAD_TRY
         {
-            if (i == 0 && (assoc->assoc_flags & RPC_C_CN_ASSOC_SERVER))
-            {
-                /*
-                 * For Named Pipes, we need to read a short preamble which
-                 * contains the security context. Before doing this, we
-                 * need first check whether the client is a named pipe or
-                 * not. 
-                 */
-                rpc__naf_desc_inq_protseq_id(assoc->cn_ctlblk.cn_sock,
-                    RPC_C_PROTOCOL_ID_NCACN,
-                    &protseq_id,
-                    &st);
-                RPC_DBG_PRINTF(rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                    ("CN_NP: call_rep->%x assoc->%x desc->%d protseq_id->%x%s\n",
-                        assoc->call_rep, assoc, assoc->cn_ctlblk.cn_sock, protseq_id,
-                        (protseq_id == RPC_C_PROTSEQ_ID_NCACN_NP) ? " (received on named pipe)" : ""));
-                if (st == rpc_s_ok && protseq_id == RPC_C_PROTSEQ_ID_NCACN_NP)
-                {
-                    rpc__np_get_auth_info(assoc, &st);
-                }
-            }
-            if (st == rpc_s_ok)
-            {
-                receive_packet (assoc, &fragbuf_p, &ovf_fragbuf_p, &st);
-            }
+            receive_packet (assoc, &fragbuf_p, &ovf_fragbuf_p, &st);
         }
         DCETHREAD_CATCH(dcethread_interrupt_e)
         {
@@ -1033,14 +1006,10 @@ rpc_cn_assoc_p_t        assoc;
                 }
 
                 /*
-                 * Attach the named pipe auth info, if any, to the new 
-                 * binding rep. Make sure to add a reference to it.
+                 * Attach transport info to the bindng rep
                  */
-                if (assoc->security.assoc_named_pipe_info != NULL)
-                {
-                    call_r->binding_rep->np_auth_info = assoc->security.assoc_named_pipe_info;
-		    RPC_NP_AUTH_ADD_REFERENCE (assoc->security.assoc_named_pipe_info);
-                } 
+                call_r->binding_rep->transport_info = assoc->transport_info;
+                rpc__transport_info_retain(assoc->transport_info);
 
                 /*
                  * Post the event to the call state machine.

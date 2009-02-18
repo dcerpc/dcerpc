@@ -1123,6 +1123,7 @@ unsigned32              *st;
     rpc_addr_p_t        temp_rpc_addr;
     unsigned32          temp_status;
     unsigned32          ssize, rsize;
+    rpc_transport_info_p_t transport_info = NULL;
 
     //DO_NOT_CLOBBER(serr);
     //DO_NOT_CLOBBER(connect_completed);
@@ -1401,6 +1402,23 @@ unsigned32              *st;
             }
 #endif
             
+            /*
+             * Update the transport information by querying the socket
+             */
+            serr = rpc__socket_inq_transport_info(assoc->cn_ctlblk.cn_sock, &transport_info);
+            if (RPC_SOCKET_IS_ERR(serr))
+            {
+                RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
+                                ("(rpc__cn_network_req_connect) desc->%x rpc__socket_inq_transport_info failed, error = %d\n",
+                                 assoc->cn_ctlblk.cn_sock,
+                                 serr));
+            }
+            else
+            {
+                rpc__transport_info_release(assoc->transport_info);
+                assoc->transport_info = transport_info;
+            }
+
             /*
              * Indicate that there is a valid connection.
              */

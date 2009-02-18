@@ -135,7 +135,7 @@ unsigned32              *st;
 
     brp->common.rpc_addr = NULL;
     brp->common.auth_info = NULL;
-    brp->common.np_auth_info = NULL;
+    brp->common.transport_info = NULL;
 
     *st = rpc_s_ok;
     return ((rpc_binding_rep_p_t) brp);

@@ -669,6 +669,12 @@ rpc__socket_enum_ifaces (
     );
 
 PRIVATE rpc_socket_error_t
+rpc__socket_inq_transport_info(
+    rpc_socket_t sock,
+    rpc_transport_info_p_t* info
+    );
+
+PRIVATE rpc_socket_error_t
 rpc__transport_info_create(
     rpc_protseq_id_t protseq,
     rpc_transport_info_handle_t handle,

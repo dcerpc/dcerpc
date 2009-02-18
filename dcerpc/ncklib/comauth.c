@@ -40,7 +40,6 @@
 #include <commonp.h>    /* Common declarations for all RPC runtime */
 #include <com.h>        /* Common communications services */
 #include <comp.h>       /* Private communications services */
-#include <comnp.h>      /* Common declarations for named pipes transport */
 #include <comauth.h>    /* Common Authentication services */
 
 
@@ -433,51 +432,7 @@ rpc_binding_rep_p_t     binding_rep;
 }
 
 
-/*
-**++
-**
-**  ROUTINE NAME:       rpc__np_auth_info_binding_release  
-**
-**  SCOPE:              PRIVATE - declared in comauth.h
-**
-**  DESCRIPTION:   
-**
-**  Release reference to named pipe authentication info (stored in passed
-**  binding handle).  If we don't have any named pipe auth info, do nothing.
-**      
-**  INPUTS:
-**
-**      binding_rep     RPC binding handle
-**
-**  INPUTS/OUTPUTS:
-**
-**  OUTPUTS:            none
-**
-**  IMPLICIT INPUTS:    none
-**
-**  IMPLICIT OUTPUTS:   none
-**
-**  FUNCTION VALUE:     none
-**
-**  SIDE EFFECTS:       none
-**
-**--
-**/
 
-PRIVATE void rpc__np_auth_info_binding_release
-#ifdef _DCE_PROTO_
-(
-  rpc_binding_rep_p_t     binding_rep
-)
-#else
-(binding_rep)
-rpc_binding_rep_p_t     binding_rep;
-#endif
-{
-    rpc__np_auth_info_release (&binding_rep->np_auth_info);
-}
-
-
 /*
 **++
 **
@@ -1245,7 +1200,6 @@ unsigned32              *st;
 {
     rpc_binding_rep_p_t     binding_rep = (rpc_binding_rep_p_t) binding_h;
     rpc_auth_info_p_t       auth_info;
-    rpc_np_auth_info_p_t    np_auth_info;
 
     CODING_ERROR (st);
     RPC_VERIFY_INIT ();
@@ -1255,26 +1209,11 @@ unsigned32              *st;
         return;
 
     auth_info = ((rpc_binding_rep_p_t)binding_h)->auth_info;
-    np_auth_info = ((rpc_binding_rep_p_t)binding_h)->np_auth_info;
 
     if (auth_info == NULL)
     {
-        if (np_auth_info == NULL)
-        {
-            *st = rpc_s_binding_has_no_auth;
-            return;
-        }
-        else
-        {
-            ASSIGN(privs,                np_auth_info->princ_name);
-            ASSIGN(server_princ_name,    NULL);
-            ASSIGN(authn_level,          rpc_c_protect_level_none);
-            ASSIGN(authn_protocol,       rpc_c_authn_winnt);
-            ASSIGN(authz_protocol,       rpc_c_authz_name);
-
-            *st = rpc_s_ok;
-            return;
-        }
+        *st = rpc_s_binding_has_no_auth;
+        return;
     }
 
     assert(auth_info->is_server);
@@ -1795,89 +1734,6 @@ rpc_auth_info_p_t       auth_info;
     RPC_MUTEX_UNLOCK (auth_info_cache_mutex);
 }
 
-
-PUBLIC void rpc_binding_inq_auth_session_key
-#ifdef _DCE_PROTO_
-(
-    rpc_binding_handle_t    binding_h,
-    byte                    **value,
-    unsigned32              *length,
-    unsigned32              *st
-)
-#else
-(binding_h, value, length, st)
-rpc_binding_handle_t    binding_h;
-byte                    **value;
-unsigned32              *length;
-unsigned32              *st;
-#endif
-{
-    //rpc_binding_rep_p_t     binding_rep = (rpc_binding_rep_p_t) binding_h;
-    rpc_np_auth_info_p_t    np_auth_info = NULL;
-    byte                    *sess_key = NULL;
-    unsigned32              i = 0;
-
-    CODING_ERROR (st);
-    RPC_VERIFY_INIT ();
-
-    if (binding_h == NULL ||
-	value == NULL || length == NULL)
-    {
-        if (st) *st = rpc_s_invalid_arg;
-        return;
-    }
-
-    /*
-      TURNED OFF until I understand why this function requires to be
-      the server side to be allowed calling it
-
-    RPC_BINDING_VALIDATE_SERVER(binding_rep, st);
-    if (*st != rpc_s_ok)
-        return;
-    */
-
-    *st = rpc_s_binding_has_no_auth;
-    *value = NULL;
-
-    np_auth_info = ((rpc_binding_rep_p_t)binding_h)->np_auth_info;
-
-    if (np_auth_info != NULL)
-    {
-        ASSIGN(length,        np_auth_info->session_key_len);
-
-	if (np_auth_info->session_key)
-        {
-            /* Allocate and return a copy of the session key so there's
-               no need to refence np_auth_info pointer */
-
-            RPC_MEM_ALLOC(sess_key, byte*,
-                          (sizeof(byte)*((*length)+1)),
-			  RPC_C_MEM_STRING, RPC_C_MEM_WAITOK);
-            memcpy(sess_key, np_auth_info->session_key, *length);
-
-            for (i = 0; i < np_auth_info->session_key_len; i++)
-            {
-                if (np_auth_info->session_key[i] != '\0')
-                {
-                    /* Check there is at least one non-zero byte */
-                    *st = rpc_s_ok;
-                    break;
-                }
-            }
-	}
-
-	*value = sess_key;
-    }
-    else
-    {
-	/* For non-named pipe clients, there is a fixed session key */
-	ASSIGN(value,           (unsigned char*) "SystemLibraryDTC");
-	ASSIGN(length,          sizeof("SystemLibraryDTC") - 1);
-    }
-
-    return;
-}
-
 
 /*
 **++
@@ -1931,7 +1787,6 @@ unsigned32              *st;
 {
     rpc_binding_rep_p_t     binding_rep = (rpc_binding_rep_p_t) binding_h;
     rpc_auth_info_p_t       auth_info;
-    rpc_np_auth_info_p_t    np_auth_info;
     rpc_call_attributes_v1_t *v1_attributes;
 
     CODING_ERROR (st);
@@ -1942,9 +1797,8 @@ unsigned32              *st;
         return;
 
     auth_info = ((rpc_binding_rep_p_t)binding_h)->auth_info;
-    np_auth_info = ((rpc_binding_rep_p_t)binding_h)->np_auth_info;
 
-    if (auth_info == NULL && np_auth_info == NULL)
+    if (auth_info == NULL)
     {
         *st = rpc_s_binding_has_no_auth;
         return;
@@ -1962,45 +1816,27 @@ unsigned32              *st;
 
     if (v1_attributes->flags & rpc_query_server_principal_name)
     {
-        if (auth_info == NULL)
-        {
-            ASSIGN_COPY(v1_attributes->server_princ_name,
-                        v1_attributes->server_princ_name_buff_len,
-                        NULL);
-        }
-        else
-        {
-            ASSIGN_COPY(v1_attributes->server_princ_name,
-                        v1_attributes->server_princ_name_buff_len,
-                        auth_info->server_princ_name);
-        }
+        ASSIGN_COPY(v1_attributes->server_princ_name,
+                    v1_attributes->server_princ_name_buff_len,
+                    auth_info->server_princ_name);
     }
 
     if (v1_attributes->flags & rpc_query_client_principal_name)
     {
-        if (auth_info == NULL)
+        if (auth_info->authz_protocol != rpc_c_authz_name)
         {
-            ASSIGN_COPY(v1_attributes->client_princ_name,
-                        v1_attributes->client_princ_name_buff_len,
-                        np_auth_info->princ_name);
+            *st = rpc_s_binding_has_no_auth;
+            return;
         }
-        else
-        {
-            if (auth_info->authz_protocol != rpc_c_authz_name)
-            {
-                *st = rpc_s_binding_has_no_auth;
-                return;
-            }
 
-            ASSIGN_COPY(v1_attributes->client_princ_name,
-                        v1_attributes->client_princ_name_buff_len,
-                        (unsigned_char_p_t)auth_info->u.s.privs);
-        }
+        ASSIGN_COPY(v1_attributes->client_princ_name,
+                    v1_attributes->client_princ_name_buff_len,
+                    (unsigned_char_p_t)auth_info->u.s.privs);
     }
 
     v1_attributes->authn_level = auth_info ? auth_info->authn_level : rpc_c_protect_level_none;
     v1_attributes->authn_protocol = auth_info ? auth_info->authn_protocol : rpc_c_authn_winnt;
-    v1_attributes->null_session = (np_auth_info && strlen((char*) np_auth_info->princ_name) == 0);
+    v1_attributes->null_session = /* FIXME: determine meaning of this flag */ 0;
 
     *st = rpc_s_ok;
 }

@@ -294,6 +294,48 @@ rpc__socket_enum_ifaces (
 }
 
 rpc_socket_error_t
+rpc__socket_inq_transport_info(
+    rpc_socket_t sock,
+    rpc_transport_info_p_t* info
+    )
+{
+    rpc_socket_error_t serr = RPC_C_SOCKET_OK;
+    rpc_transport_info_handle_t handle = NULL;
+
+    serr = sock->vtbl->socket_inq_transport_info(sock, &handle);
+    if (serr)
+    {
+        goto error;
+    }
+
+    if (handle != NULL)
+    {
+        serr = rpc__transport_info_create(sock->pseq_id, handle, info);
+        if (serr)
+        {
+            goto error;
+        }
+    }
+    else
+    {
+        *info = NULL;
+    }
+
+error:
+
+    if (serr)
+    {
+        *info = NULL;
+        if (handle != NULL)
+        {
+            sock->vtbl->transport_info_free(handle);
+        }
+    }
+
+    return serr;
+}
+
+rpc_socket_error_t
 rpc__transport_info_create(
     rpc_protseq_id_t protseq,
     rpc_transport_info_handle_t handle,
@@ -326,7 +368,10 @@ rpc__transport_info_retain(
     rpc_transport_info_p_t info
     )
 {
-    info->refcount++;
+    if (info)
+    {
+        info->refcount++;
+    }
 }
 
 void
@@ -334,7 +379,7 @@ rpc__transport_info_release(
     rpc_transport_info_p_t info
     )
 {
-    if (--info->refcount == 0)
+    if (info && --info->refcount == 0)
     {
         rpc_g_protseq_id[info->protseq].socket_vtbl->transport_info_free(info->handle);
         free(info);

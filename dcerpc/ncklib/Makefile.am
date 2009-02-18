@@ -30,7 +30,6 @@ noinst_HEADERS+= \
 	cnid.h			\
 	cnmgmt.h		\
 	cnnet.h			\
-	cnnp.h			\
 	cnp.h			\
 	cnpkt.h			\
 	cnrcvr.h		\
@@ -46,7 +45,6 @@ noinst_HEADERS+= \
 	commonp.h		\
 	comnaf.h		\
 	comnetp.h		\
-	comnp.h			\
 	comp.h			\
 	comprot.h		\
 	comsoc.h		\
@@ -108,7 +106,7 @@ noinst_LTLIBRARIES+=libcom.la libstubs.la
 
 libcom_la_SOURCES=comauth.c combind.c comcall.c comcthd.c comep.c comif.c \
  cominit.c cominit_ux.c comnaf.c comnet.c comnlsn.c comobj.c comp.c \
- comtwr.c comtwrflr.c comtwrref.c comutil.c nsldap.c sec_id.c comnp.c
+ comtwr.c comtwrflr.c comtwrref.c comutil.c nsldap.c sec_id.c
 libcom_la_CPPFLAGS=$(AM_CPPFLAGS) -DIMAGE_DIR=\"$(libdir)\"
 libcom_la_LIBADD=libstubs.la
 

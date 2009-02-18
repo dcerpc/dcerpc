@@ -49,11 +49,10 @@ typedef struct rpc_smb_buffer_s
 typedef struct rpc_smb_socket_s
 {
     rpc_smb_state_t volatile state;
-    boolean is_schannel;
     rpc_np_addr_t peeraddr;
     rpc_np_addr_t localaddr;
+    rpc_smb_transport_info_t info;
     PIO_CONTEXT context;
-    PIO_ACCESS_TOKEN acctoken;
     IO_FILE_HANDLE np;
     rpc_smb_buffer_t sendbuffer;
     rpc_smb_buffer_t recvbuffer;
@@ -109,19 +108,50 @@ error:
     return;
 }
 
+INTERNAL
 void
-rpc_smb_transport_info_free(
-    rpc_transport_info_handle_t info
+rpc__smb_transport_info_destroy(
+    rpc_smb_transport_info_p_t smb_info
     )
 {
-    rpc_smb_transport_info_p_t smb_info = (rpc_smb_transport_info_p_t) info;
-
     if (smb_info->access_token)
     {
         LwIoDeleteAccessToken(smb_info->access_token);
     }
 
-    free(smb_info);
+    if (smb_info->session_key.data)
+    {
+        free(smb_info->session_key.data);
+    }
+}
+
+void
+rpc_smb_transport_info_free(
+    rpc_transport_info_handle_t info
+    )
+{
+    rpc__smb_transport_info_destroy((rpc_smb_transport_info_p_t) info);
+    free(info);
+}
+
+void
+rpc_smb_transport_info_inq_session_key(
+    rpc_transport_info_handle_t info,
+    unsigned char** sess_key,
+    unsigned32* sess_key_len
+    )
+{
+    rpc_smb_transport_info_p_t smb_info = (rpc_smb_transport_info_p_t) info;
+
+    if (sess_key)
+    {
+        *sess_key = smb_info->session_key.data;
+    }
+
+    if (sess_key_len)
+    {
+        *sess_key_len = (unsigned32) smb_info->session_key.length;
+    }
 }
 
 INTERNAL
@@ -342,7 +372,6 @@ rpc__smb_socket_create(
         goto done;
     }
 
-
     sock->accept_backlog.selectfd[0] = -1;
     sock->accept_backlog.selectfd[1] = -1;
 
@@ -430,10 +459,7 @@ rpc__smb_socket_destroy(
             free(sock->recvbuffer.base);
         }
 
-        if (sock->acctoken)
-        {
-            LwIoDeleteAccessToken(sock->acctoken);
-        }
+        rpc__smb_transport_info_destroy(&sock->info);
 
         dcethread_mutex_destroy_throw(&sock->lock);
         dcethread_cond_destroy_throw(&sock->event);
@@ -514,13 +540,15 @@ rpc__smb_socket_construct(
         goto error;
     }
 
-    if (smb_info && smb_info->access_token)
+    if (smb_info)
     {
-        serr = NtStatusToUnixErrno(
-            LwIoCopyAccessToken(smb_info->access_token, &smb_sock->acctoken));
-        if (serr)
+        if (smb_info->access_token)
         {
-            goto error;
+            serr = NtStatusToUnixErrno(LwIoCopyAccessToken(smb_info->access_token, &smb_sock->info.access_token));
+            if (serr)
+            {
+                goto error;
+            }
         }
     }
 
@@ -567,65 +595,6 @@ rpc__smb_socket_bind(
     smb->localaddr = *npaddr;
 
     return serr;
-}
-
-INTERNAL
-rpc_socket_error_t
-rpc__smb_socket_set_session_key(
-    rpc_cn_assoc_t *assoc,
-    size_t len,
-    unsigned char* key
-    )
-{
-    rpc_socket_error_t serr = RPC_C_SOCKET_OK;
-    rpc_np_auth_info_t *np_auth = NULL;
-
-    RPC_MEM_ALLOC(np_auth, rpc_np_auth_info_t*, sizeof(rpc_np_auth_info_t), RPC_C_MEM_NP_SEC_CONTEXT, 0);
-
-    if (!np_auth)
-    {
-        serr = ENOMEM;
-        goto error;
-    }
-
-    np_auth->refcount = 0;
-    np_auth->princ_name = NULL;
-    np_auth->workstation = NULL;
-    np_auth->session_key_len = len;
-
-    RPC_MEM_ALLOC(np_auth->session_key, unsigned char*,
-                  (sizeof(unsigned char)*(len+1)),
-                  RPC_C_MEM_NP_SEC_CONTEXT, 0);
-
-    if (!np_auth->session_key)
-    {
-        serr = ENOMEM;
-        goto error;
-    }
-
-    memcpy(np_auth->session_key, key, len);
-
-    assoc->security.assoc_named_pipe_info = np_auth;
-
-    np_auth->refcount++;
-
-done:
-
-    return serr;
-
-error:
-
-    if (np_auth)
-    {
-        if (np_auth->session_key)
-        {
-            RPC_MEM_FREE(np_auth->session_key, RPC_C_MEM_NP_SEC_CONTEXT);
-        }
-
-        RPC_MEM_FREE(np_auth, RPC_C_MEM_NP_SEC_CONTEXT);
-    }
-
-    goto done;
 }
 
 INTERNAL
@@ -693,7 +662,7 @@ rpc__smb_socket_connect(
     serr = NtStatusToUnixErrno(
         NtCtxCreateFile(
             smb->context,                    /* IO context */
-            smb->acctoken,                   /* Security token */
+            smb->info.access_token,          /* Security token */
             &smb->np,                        /* Created handle */
             NULL,                            /* Async control block */
             &io_status,                      /* Status block ??? */
@@ -726,14 +695,14 @@ rpc__smb_socket_connect(
         goto error;
     }
 
-    serr = rpc__smb_socket_set_session_key(
-        assoc,
-        (size_t) sesskeylen,
-        (unsigned char*) sesskey);
-    if (serr)
+    smb->info.session_key.length = sesskeylen;
+    smb->info.session_key.data = malloc(sesskeylen);
+    if (!smb->info.session_key.data)
     {
+        serr = ENOMEM;
         goto error;
     }
+    memcpy(smb->info.session_key.data, sesskey, sesskeylen);
 
     /* Save address for future inquiries on this socket */
     memcpy(&smb->peeraddr, addr, sizeof(smb->peeraddr));
@@ -1514,29 +1483,51 @@ rpc__smb_socket_inq_transport_info(
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
     rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
-    unsigned32 st = rpc_s_ok;
+    rpc_smb_transport_info_p_t smb_info = NULL;
 
-    *info = NULL;
+    smb_info = calloc(1, sizeof(*smb_info));
 
-    rpc_smb_transport_info_from_lwio_token(
-        smb->acctoken,
-        smb->is_schannel,
-        info,
-        &st);
-
-    if (st)
+    if (!smb_info)
     {
         serr = ENOMEM;
         goto error;
     }
 
+    smb_info->schannel = smb->info.schannel;
+
+    if (smb->info.access_token)
+    {
+        serr = NtStatusToUnixErrno(LwIoCopyAccessToken(smb->info.access_token, &smb_info->access_token));
+        if (serr)
+        {
+            goto error;
+        }
+    }
+
+    if (smb->info.session_key.data)
+    {
+        smb_info->session_key.data = malloc(smb->info.session_key.length);
+        if (!smb_info->session_key.data)
+        {
+            serr = ENOMEM;
+            goto error;
+        }
+
+        memcpy(smb_info->session_key.data, smb->info.session_key.data, smb->info.session_key.length);
+        smb_info->session_key.length = smb->info.session_key.length;
+    }
+
+    *info = (rpc_transport_info_handle_t) smb_info;
+
 error:
 
     if (serr)
     {
-        if (*info)
+        *info = NULL;
+
+        if (smb_info)
         {
-            rpc_smb_transport_info_free(*info);
+            rpc_smb_transport_info_free((rpc_transport_info_handle_t) smb_info);
         }
     }
 

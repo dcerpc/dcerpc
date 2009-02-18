@@ -24,7 +24,7 @@ libprot_ncacn_la_LDFLAGS = $(MODULELDFLAGS) $(DCERPC_LDFLAGS) -version-info 1:0:
 libprot_ncacn_la_SOURCES = cnassoc.c cnbind.c cncall.c cncasgsm.c \
  cncassm.c cncclsm.c cncthd.c cnfbuf.c cnid.c cninit.c cnmgmt.c \
  cnnet.c cnp.c cnpkt.c cnrcvr.c cnsasgsm.c cnsassm.c cnsclsm.c \
- cnsm.c cnxfer.c cnnp.c
+ cnsm.c cnxfer.c
 libprot_ncacn_la_LIBADD = ../dcelib/libdcerpc.la
 
 endif

@@ -51,7 +51,6 @@
 #include <comauth.h>    /* Externals for Auth. Services sub-component   */
 #include <cncall.h>     /* NCA connection call service */
 #include <cnassoc.h>    
-#include <comnp.h>
 
 #include <dce/rpcexc.h>
 #include <syslog.h>
@@ -488,15 +487,13 @@ unsigned32              *st;
                                              assoc,
                                              assoc->cn_ctlblk.cn_sock));
 
-			    /* 
-			     * Pass named pipe authentication info cached with association
-			     * We're assuming the connection is opened over named pipes transport
-			     * even though named pipe auth info pointer could be NULL.
-			     * rpc__np_auth_info_reference function handles NULL pointer safely.
-			     */
-			    rpc__np_auth_info_release(&binding_r->common.np_auth_info);
-			    binding_r->common.np_auth_info = assoc->security.assoc_named_pipe_info;
-			    rpc__np_auth_info_reference(binding_r->common.np_auth_info);
+                            /*
+                             * Update transport information on binding handle
+                             */
+
+                            rpc__transport_info_release(binding_r->common.transport_info);
+                            binding_r->common.transport_info = assoc->transport_info;
+                            rpc__transport_info_retain(binding_r->common.transport_info);
 
                             return (assoc);
                         }
@@ -726,16 +723,13 @@ unsigned32              *st;
                      */
                     binding_r->grp_id.all = assoc->assoc_grp_id.all;
 
-		    /*
-		     * Pass just obtained named pipe authentication cached
-		     * along with new association.
-		     * We're assuming the connection is opened over named pipes transport
-		     * even though named pipe auth info pointer could be NULL.
-		     * rpc__np_auth_info_reference function handles NULL pointer safely.
-		     */
-		    rpc__np_auth_info_release(&binding_r->common.np_auth_info);
-		    binding_r->common.np_auth_info = assoc->security.assoc_named_pipe_info;
-		    rpc__np_auth_info_reference(binding_r->common.np_auth_info);
+                    /*
+                     * Update transport information on binding handle
+                     */
+
+                    rpc__transport_info_release(binding_r->common.transport_info);
+                    binding_r->common.transport_info = assoc->transport_info;
+                    rpc__transport_info_retain(binding_r->common.transport_info);
 
                     /*
                      * The association has been allocated and is now
@@ -4587,11 +4581,6 @@ rpc_cn_assoc_p_t   assoc;
         }
         RPC_LIST_INIT (assoc->security.context_list);
 
-	/*
-	 * Release named pipe auth info
-	 */
-        rpc__np_auth_info_release (&assoc->security.assoc_named_pipe_info);
-
         memset (&assoc->security, 0, sizeof (rpc_cn_assoc_sec_context_t));
 
         /*
@@ -4613,12 +4602,8 @@ rpc_cn_assoc_p_t   assoc;
         }
 
 
-        if (assoc->transport_info)
-        {
-            rpc__transport_info_release(assoc->transport_info);
-            assoc->transport_info = NULL;
-        }
-
+        rpc__transport_info_release(assoc->transport_info);
+        assoc->transport_info = NULL;
         assoc->cn_ctlblk.cn_state = RPC_C_SM_CLOSED_STATE;
         assoc->assoc_status = rpc_s_ok;
         assoc->assoc_local_status = rpc_s_ok;

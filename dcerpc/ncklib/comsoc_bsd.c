@@ -1795,6 +1795,18 @@ FREE_IT:
     goto done;
 }
 
+INTERNAL
+rpc_socket_error_t
+rpc__bsd_socket_inq_transport_info(
+    rpc_socket_t sock ATTRIBUTE_UNUSED,
+    rpc_transport_info_handle_t* info
+    )
+{
+    *info = NULL;
+
+    return RPC_C_SOCKET_OK;
+}
+
 PRIVATE rpc_socket_vtbl_t rpc_g_bsd_socket_vtbl =
 {
     .socket_construct = rpc__bsd_socket_construct,
@@ -1818,5 +1830,6 @@ PRIVATE rpc_socket_vtbl_t rpc_g_bsd_socket_vtbl =
     .socket_set_rcvtimeo = rpc__bsd_socket_set_rcvtimeo,
     .socket_getpeereid = rpc__bsd_socket_getpeereid,
     .socket_get_select_desc = rpc__bsd_socket_get_select_desc,
-    .socket_enum_ifaces = rpc__bsd_socket_enum_ifaces
+    .socket_enum_ifaces = rpc__bsd_socket_enum_ifaces,
+    .socket_inq_transport_info = rpc__bsd_socket_inq_transport_info
 };

@@ -228,19 +228,6 @@ void rpc_binding_inq_auth_info
 );
 
 /*
- * R P C _ B I N D I N G _ I N Q _ A U T H _ S E S S I O N _ K E Y
- *
- * Return the underlying session key. 
- */
-void rpc_binding_inq_auth_session_key
-(
-    [in]        rpc_binding_handle_t    binding_handle,
-    [out]	byte			**value,
-    [out]	unsigned32		*length,
-    [out]	error_status_t		*status
-);
-
-/*
  * R P C _ B I N D I N G _ I N Q _ A U T H _ C A L L E R
  *
  * Return an opaque handle on version 1.1+ authentication and
