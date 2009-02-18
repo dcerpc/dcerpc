@@ -5831,12 +5831,6 @@ PRIVATE rpc_cn_local_id_t rpc__cn_assoc_grp_lkup_by_id
      */
     if (RPC_CN_LOCAL_ID_VALID (grp_id))
     {
-        if(*st != rpc_s_ok)
-        {
-            RPC_CN_LOCAL_ID_CLEAR (ret_grp_id);
-            return (ret_grp_id);
-        }
-        
         /*
          * An association group will be located by using the lower 16
          * bits of the id as an index into the association group table.

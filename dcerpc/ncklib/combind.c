@@ -2096,6 +2096,7 @@ unsigned32              *status;
     binding_rep->ns_specific = NULL;
     binding_rep->auth_info = NULL;
     binding_rep->np_auth_info = NULL;
+    binding_rep->transport_info = NULL;
     binding_rep->bound_server_instance = false;
     binding_rep->addr_has_endpoint = false;
     binding_rep->refcnt = 1;            /* the reference we are returning */
