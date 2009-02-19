@@ -276,6 +276,10 @@ ReverseIt(
     unsigned result_size;
     args * result;
     unsigned32 i,j,l;
+    rpc_transport_info_handle_t transport_info = NULL;
+    unsigned32 rpcstatus = 0;
+    unsigned char* sesskey = NULL;
+    unsigned32 sesskey_len = 0;
 
     /*
      * Get some info about the client binding
@@ -286,6 +290,23 @@ ReverseIt(
     {
         printf ("ReverseIt() called by client: %s\n", binding_info);
     }
+
+    rpc_binding_inq_transport_info(h, &transport_info, &rpcstatus);
+
+    if (transport_info)
+    {
+        rpc_smb_transport_info_inq_session_key(transport_info, &sesskey, &sesskey_len);
+
+        printf ("Session key: ");
+
+        for (i = 0; i < sesskey_len; i++)
+        {
+            printf("%X", sesskey[i]);
+        }
+
+        printf ("\n");
+    }
+
 
     if (in_text == NULL) return 0;
 

@@ -2099,8 +2099,8 @@ pointer_t       sm;
             /*
              * A new association group needs to be created.
              */
-            assoc->assoc_grp_id = rpc__cn_assoc_grp_alloc (NULL,
-                                                           0,
+            assoc->assoc_grp_id = rpc__cn_assoc_grp_alloc (assoc->cn_ctlblk.rpc_addr,
+                                                           assoc->transport_info,
                                                            RPC_C_CN_ASSOC_GRP_SERVER,
                                                            0,
                                                            &(assoc->assoc_status));

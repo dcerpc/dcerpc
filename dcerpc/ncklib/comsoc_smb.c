@@ -755,6 +755,8 @@ rpc__smb_socket_accept(
     IO_FILE_HANDLE np = NULL;
     size_t i;
     char c = 0;
+    PBYTE sesskey = NULL;
+    USHORT sesskeylen = 0;
 
     *newsock = NULL;
 
@@ -784,6 +786,7 @@ rpc__smb_socket_accept(
                 goto error;
             }
             dcethread_cond_broadcast_throw(&smb->event);
+            break;
         }
     }
 
@@ -810,7 +813,25 @@ rpc__smb_socket_accept(
         memcpy(addr, &npsmb->peeraddr, sizeof(npsmb->peeraddr));
     }
 
-    /* FIXME: set up session key */
+    serr = NtStatusToUnixErrno(
+        LwIoCtxGetSessionKey(
+            npsmb->context,
+            npsmb->np,
+            &sesskeylen,
+            &sesskey));
+    if (serr)
+    {
+        goto error;
+    }
+
+    npsmb->info.session_key.length = sesskeylen;
+    npsmb->info.session_key.data = malloc(sesskeylen);
+    if (!npsmb->info.session_key.data)
+    {
+        serr = ENOMEM;
+        goto error;
+    }
+    memcpy(npsmb->info.session_key.data, sesskey, sesskeylen);
 
     *newsock = npsock;
 
@@ -819,6 +840,11 @@ error:
     if (np)
     {
         NtCtxCloseFile(smb->context, np);
+    }
+
+    if (sesskey)
+    {
+        RtlMemoryFree(sesskey);
     }
 
     SMB_SOCKET_UNLOCK(smb);

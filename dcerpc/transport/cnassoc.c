@@ -978,7 +978,9 @@ unsigned32              *st;
 #endif
 {
     rpc_cn_assoc_t      *assoc;
-    
+    rpc_socket_error_t serr = RPC_C_SOCKET_OK;
+    rpc_transport_info_p_t transport_info = NULL;
+
     RPC_LOG_CN_ASSOC_LIS_NTR;
     RPC_CN_DBG_RTN_PRINTF(rpc__cn_assoc_listen);
     CODING_ERROR (st);
@@ -1001,6 +1003,21 @@ unsigned32              *st;
     assoc->cn_ctlblk.cn_state = RPC_C_CN_OPEN;
     assoc->cn_ctlblk.cn_sock  = newsock;
     assoc->cn_ctlblk.cn_listening_endpoint = endpoint;
+
+    /* Attempt to query socket for transport information */
+    serr = rpc__socket_inq_transport_info(newsock, &transport_info);
+    if (RPC_SOCKET_IS_ERR(serr))
+    {
+        RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
+                        ("(rpc__cn_assoc_listen) desc->%x rpc__socket_inq_transport_info failed, error = %d\n",
+                         assoc->cn_ctlblk.cn_sock,
+                         serr));
+    }
+    else
+    {
+        rpc__transport_info_release(assoc->transport_info);
+        assoc->transport_info = transport_info;
+    }
 
     /*
      * A connection is now set up. Tell the receiver thread to begin
