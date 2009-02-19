@@ -280,6 +280,7 @@ ReverseIt(
     unsigned32 rpcstatus = 0;
     unsigned char* sesskey = NULL;
     unsigned32 sesskey_len = 0;
+    unsigned char* principal_name = NULL;
 
     /*
      * Get some info about the client binding
@@ -295,8 +296,10 @@ ReverseIt(
 
     if (transport_info)
     {
+        rpc_smb_transport_info_inq_peer_principal_name(transport_info, &principal_name);
         rpc_smb_transport_info_inq_session_key(transport_info, &sesskey, &sesskey_len);
 
+        printf ("Client principal name: %s\n", (char*) principal_name);
         printf ("Session key: ");
 
         for (i = 0; i < sesskey_len; i++)

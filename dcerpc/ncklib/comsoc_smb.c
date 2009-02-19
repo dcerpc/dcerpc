@@ -21,10 +21,11 @@
 
 typedef struct rpc_smb_transport_info_s
 {
+    char* peer_principal;
     struct
     {
-        unsigned32 length;
-        void* data;
+        unsigned16 length;
+        unsigned char* data;
     } session_key;
     PIO_ACCESS_TOKEN access_token;
     boolean schannel;
@@ -123,6 +124,11 @@ rpc__smb_transport_info_destroy(
     {
         free(smb_info->session_key.data);
     }
+
+    if (smb_info->peer_principal)
+    {
+        free(smb_info->peer_principal);
+    }
 }
 
 void
@@ -138,7 +144,7 @@ void
 rpc_smb_transport_info_inq_session_key(
     rpc_transport_info_handle_t info,
     unsigned char** sess_key,
-    unsigned32* sess_key_len
+    unsigned16* sess_key_len
     )
 {
     rpc_smb_transport_info_p_t smb_info = (rpc_smb_transport_info_p_t) info;
@@ -151,6 +157,20 @@ rpc_smb_transport_info_inq_session_key(
     if (sess_key_len)
     {
         *sess_key_len = (unsigned32) smb_info->session_key.length;
+    }
+}
+
+void
+rpc_smb_transport_info_inq_peer_principal_name(
+    rpc_transport_info_handle_t info,
+    unsigned char** principal
+    )
+{
+    rpc_smb_transport_info_p_t smb_info = (rpc_smb_transport_info_p_t) info;
+
+    if (principal)
+    {
+        *principal = (unsigned char*) smb_info->peer_principal;
     }
 }
 
@@ -755,8 +775,8 @@ rpc__smb_socket_accept(
     IO_FILE_HANDLE np = NULL;
     size_t i;
     char c = 0;
-    PBYTE sesskey = NULL;
-    USHORT sesskeylen = 0;
+    BYTE clientaddr[4] = {0, 0, 0, 0};
+    USHORT clientaddrlen = sizeof(clientaddr);
 
     *newsock = NULL;
 
@@ -805,33 +825,53 @@ rpc__smb_socket_accept(
 
     memcpy(&npsmb->localaddr, &smb->localaddr, sizeof(npsmb->localaddr));
 
-    /* FIXME: query for and use real peer address */
+    /* Use our address as a template for client address */
     memcpy(&npsmb->peeraddr, &smb->localaddr, sizeof(npsmb->peeraddr));
+
+    /* Query for client address */
+    serr = NtStatusToUnixErrno(
+        LwIoCtxGetPeerAddress(
+            npsmb->context,
+            npsmb->np,
+            clientaddr,
+            &clientaddrlen));
+    if (serr)
+    {
+        goto error;
+    }
+
+    if (clientaddrlen == sizeof(clientaddr))
+    {
+        snprintf(npsmb->peeraddr.remote_host, sizeof(npsmb->peeraddr.remote_host) - 1,
+                 "%u.%u.%u.%u", clientaddr[0], clientaddr[1], clientaddr[2], clientaddr[3]);
+    }
 
     if (addr)
     {
         memcpy(addr, &npsmb->peeraddr, sizeof(npsmb->peeraddr));
     }
 
-    serr = NtStatusToUnixErrno(
-        LwIoCtxGetSessionKey(
+     serr = NtStatusToUnixErrno(
+        LwIoCtxGetPeerPrincipalName(
             npsmb->context,
             npsmb->np,
-            &sesskeylen,
-            &sesskey));
+            &npsmb->info.peer_principal));
     if (serr)
     {
         goto error;
     }
 
-    npsmb->info.session_key.length = sesskeylen;
-    npsmb->info.session_key.data = malloc(sesskeylen);
-    if (!npsmb->info.session_key.data)
+
+    serr = NtStatusToUnixErrno(
+        LwIoCtxGetSessionKey(
+            npsmb->context,
+            npsmb->np,
+            &npsmb->info.session_key.length,
+            &npsmb->info.session_key.data));
+    if (serr)
     {
-        serr = ENOMEM;
         goto error;
     }
-    memcpy(npsmb->info.session_key.data, sesskey, sesskeylen);
 
     *newsock = npsock;
 
@@ -840,11 +880,6 @@ error:
     if (np)
     {
         NtCtxCloseFile(smb->context, np);
-    }
-
-    if (sesskey)
-    {
-        RtlMemoryFree(sesskey);
     }
 
     SMB_SOCKET_UNLOCK(smb);
@@ -1526,6 +1561,16 @@ rpc__smb_socket_inq_transport_info(
         serr = NtStatusToUnixErrno(LwIoCopyAccessToken(smb->info.access_token, &smb_info->access_token));
         if (serr)
         {
+            goto error;
+        }
+    }
+
+    if (smb->info.peer_principal)
+    {
+        smb_info->peer_principal = strdup(smb->info.peer_principal);
+        if (!smb_info->peer_principal)
+        {
+            serr = ENOMEM;
             goto error;
         }
     }
