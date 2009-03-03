@@ -681,23 +681,23 @@ rpc__smb_socket_connect(
 
     serr = NtStatusToUnixErrno(
         NtCtxCreateFile(
-            smb->context,                    /* IO context */
-            smb->info.access_token,          /* Security token */
-            &smb->np,                        /* Created handle */
-            NULL,                            /* Async control block */
-            &io_status,                      /* Status block ??? */
-            &filename,                       /* Filename */
-            NULL,                            /* Security descriptor */
-            NULL,                            /* Security QOS */
-            GENERIC_READ | GENERIC_WRITE,    /* Access mode */
-            0,                               /* Allocation size */
-            0,                               /* File attributes */
-            SHARE_WRITE | SHARE_READ,        /* Sharing mode */
-            OPEN_EXISTING,                   /* Create disposition */
-            0,                               /* Create options */
-            NULL,                            /* EA buffer */
-            0,                               /* EA buffer length */
-            NULL                             /* ECP List */
+            smb->context,                            /* IO context */
+            smb->info.access_token,                  /* Security token */
+            &smb->np,                                /* Created handle */
+            NULL,                                    /* Async control block */
+            &io_status,                              /* Status block */
+            &filename,                               /* Filename */
+            NULL,                                    /* Security descriptor */
+            NULL,                                    /* Security QOS */
+            GENERIC_READ | GENERIC_WRITE,            /* Access mode */
+            0,                                       /* Allocation size */
+            0,                                       /* File attributes */
+            FILE_SHARE_READ | FILE_SHARE_WRITE,      /* Sharing mode */
+            FILE_OPEN,                               /* Create disposition */
+            FILE_CREATE_TREE_CONNECTION,             /* Create options */
+            NULL,                                    /* EA buffer */
+            0,                                       /* EA buffer length */
+            NULL                                     /* ECP List */
             ));
     if (serr)
     {
@@ -958,25 +958,25 @@ rpc__smb_socket_listen_thread(void* data)
 
         serr = NtStatusToUnixErrno(
             LwNtCtxCreateNamedPipeFile(
-                smb->context, /* IO context */
-                NULL, /* Security token */
-                &smb->np, /* NP handle */
-                NULL, /* Async control */
-                &status_block, /* IO status block */
-                &filename, /* Filename */
-                NULL, /* Security descriptor */
-                NULL, /* Security QOS */
-                GENERIC_READ | GENERIC_WRITE, /* Desired access mode */
-                SHARE_READ | SHARE_WRITE, /* Share access mode */
-                OPEN_EXISTING, /* Create disposition */
-                0, /* Create options */
-                0, /* Named pipe type */
-                0, /* Read mode */
-                0, /* Completion mode */
-                smb->accept_backlog.capacity, /* Maximum instances */
-                0, /* Inbound quota */
-                0, /* Outbound quota */
-                &default_timeout /* ??? Default timeout */
+                smb->context,                            /* IO context */
+                NULL,                                    /* Security token */
+                &smb->np,                                /* NP handle */
+                NULL,                                    /* Async control */
+                &status_block,                           /* IO status block */
+                &filename,                               /* Filename */
+                NULL,                                    /* Security descriptor */
+                NULL,                                    /* Security QOS */
+                GENERIC_READ | GENERIC_WRITE,            /* Desired access mode */
+                FILE_SHARE_READ | FILE_SHARE_WRITE,      /* Share access mode */
+                FILE_CREATE,                             /* Create disposition */
+                0,                                       /* Create options */
+                0,                                       /* Named pipe type */
+                0,                                       /* Read mode */
+                0,                                       /* Completion mode */
+                smb->accept_backlog.capacity,            /* Maximum instances */
+                0,                                       /* Inbound quota */
+                0,                                       /* Outbound quota */
+                &default_timeout                         /* Default timeout */
                 ));
         if (serr)
         {
