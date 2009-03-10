@@ -203,6 +203,16 @@ rpc__smb_buffer_pending(
 INTERNAL
 inline
 size_t
+rpc__smb_buffer_length(
+    rpc_smb_buffer_p_t buffer
+    )
+{
+    return buffer->end_cursor - buffer->base;
+}
+
+INTERNAL
+inline
+size_t
 rpc__smb_buffer_available(
     rpc_smb_buffer_p_t buffer
     )
@@ -366,7 +376,10 @@ rpc__smb_buffer_advance_cursor(rpc_smb_buffer_p_t buffer, size_t* amount)
 
         if (last)
         {
-            *amount = buffer->start_cursor - buffer->base;
+            if (amount)
+            {
+                *amount = buffer->start_cursor - buffer->base;
+            }
 
             return true;
         }
@@ -1125,7 +1138,8 @@ error:
 INTERNAL
 rpc_socket_error_t
 rpc__smb_socket_do_recv(
-    rpc_socket_t sock
+    rpc_socket_t sock,
+    size_t* count
     )
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
@@ -1136,6 +1150,8 @@ rpc__smb_socket_do_recv(
     NTSTATUS status = STATUS_SUCCESS;
 
     memset(&io_status, 0, sizeof(io_status));
+
+    *count = 0;
 
     do
     {
@@ -1171,6 +1187,8 @@ rpc__smb_socket_do_recv(
             bytes_read = io_status.BytesTransferred;
             smb->recvbuffer.end_cursor += bytes_read;
         }
+
+        *count += bytes_read;
     } while (status == STATUS_SUCCESS && bytes_read == bytes_requested);
 
 error:
@@ -1278,6 +1296,7 @@ rpc__smb_socket_recvmsg(
     rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
     int i;
     size_t pending;
+    size_t count;
 
     SMB_SOCKET_LOCK(smb);
 
@@ -1293,14 +1312,24 @@ rpc__smb_socket_recvmsg(
 
     *cc = 0;
 
-    /* Read data until we have something in the buffer */
-    while (rpc__smb_buffer_pending(&smb->recvbuffer) == 0)
+    if (rpc__smb_buffer_length(&smb->recvbuffer) == 0)
     {
-        serr = rpc__smb_socket_do_recv(sock);
-        if (serr)
+        /* Nothing in buffer, read a complete message */
+        do
         {
-            goto error;
-        }
+            serr = rpc__smb_socket_do_recv(sock, &count);
+            if (serr)
+            {
+                goto error;
+            }
+            if (count == 0)
+            {
+                break;
+            }
+        } while (!rpc__smb_buffer_advance_cursor(&smb->recvbuffer, NULL));
+
+        /* Reset cursor back to start to begin disperal into scatter buffer */
+        smb->recvbuffer.start_cursor = smb->recvbuffer.base;
     }
 
     for (i = 0; i < iov_len; i++)
