@@ -47,6 +47,17 @@ AC_OBJEXT
 AC_C_INLINE
 XAC_C_ATTRIBUTE_UNUSED
 
+AX_CFLAGS_GCC_OPTION(-Wall)
+AX_CFLAGS_GCC_OPTION(-Wextra)
+AX_CFLAGS_GCC_OPTION(-Wshorten-64-to-32)
+AX_CFLAGS_GCC_OPTION(-Wmissing-format-attribute)
+AX_CFLAGS_GCC_OPTION(-Wbad-function-cast)
+AX_CFLAGS_GCC_OPTION(-Wstrict-prototypes)
+AX_CFLAGS_GCC_OPTION(-Wpointer-arith)
+AX_CFLAGS_GCC_OPTION(-Wcast-align)
+AX_CFLAGS_GCC_OPTION(-Wwrite-strings)
+AX_CFLAGS_GCC_OPTION(-Wformat=2)
+
 # Specify desired UNIX interface
 case "$target_os" in
      *darwin*)
