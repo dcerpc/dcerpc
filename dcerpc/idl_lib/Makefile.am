@@ -1,7 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 include $(top_srcdir)/include.mk
 
-AM_CFLAGS+=-DMIA -D_POSIX_C_SOURCE -I$(top_srcdir)/ncklib/ -I$(srcdir) -Wall -Werror -DDCETHREAD_ENFORCE_API
+AM_CPPFLAGS+=-DMIA -D_POSIX_C_SOURCE -I$(top_srcdir)/ncklib/ -I$(srcdir) -DDCETHREAD_ENFORCE_API
 
 noinst_LTLIBRARIES=libidl.la
 

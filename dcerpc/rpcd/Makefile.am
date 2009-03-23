@@ -1,7 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 include $(top_srcdir)/include.mk
 C_FLAGS=-Drpcd_c_database_name_prefix1=\"$(localstatedir)/run/\" -I$(top_srcdir)/ncklib -I$(top_srcdir)/ncklib/include/$(target_os)
-AM_CFLAGS+=$(C_FLAGS) -Wall -DDCETHREAD_ENFORCE_API
+AM_CPPFLAGS+=$(C_FLAGS) -DDCETHREAD_ENFORCE_API
 
 MY_IDLFLAGS=-keep c_source -v -no_mepv -cepv -I. -I$(IDL_INCLUDE_DIR)/.. @DCETHREADINCLUDES@ -I$(top_builddir)/include
 

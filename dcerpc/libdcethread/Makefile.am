@@ -84,7 +84,7 @@ API_FILES = $(COMMON_FILES) \
 libdcethread_la_SOURCES = $(API_FILES)
 libdcethread_la_LIBADD = @LIB_pthread@ @LIB_rt@
 libdcethread_la_LDFLAGS = -version-info 1:0:0
-libdcethread_la_CFLAGS = -Wall -Werror -DAPI
+libdcethread_la_CPPFLAGS = -DAPI
 
 
 if HAVE_MOONUNIT

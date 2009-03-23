@@ -6,8 +6,6 @@ NCK_IDL_FLAGS=-keep c_source -no_cpp -v -no_mepv -I$(IDL_INCLUDE_DIR)/.. -I$(top
 
 SUBDIRS=include
 
-AM_CFLAGS += -Wall -Werror -fno-strict-aliasing
-
 # Initialize
 lib_LTLIBRARIES=
 noinst_LTLIBRARIES=
