@@ -22,29 +22,16 @@ typedef short int 		ndr_short_int;
 
 typedef unsigned short int 	ndr_ushort_int;
 
-typedef long int 	        ndr_long_int;
+typedef int 	                ndr_long_int;
 
-typedef unsigned long int 	ndr_ulong_int;
+typedef unsigned int 	        ndr_ulong_int;
 
-struct ndr_hyper_int_rep_s_t   {
-    ndr_long_int high; 
-    ndr_ulong_int low;
-};
+typedef signed long int         ndr_hyper_int;
 
-struct ndr_uhyper_int_rep_s_t  {
-    ndr_ulong_int high; 
-    ndr_ulong_int low;
-};
+typedef unsigned long int       ndr_uhyper_int;
 
-#ifdef __GNUC__
-typedef long long int		ndr_hyper_int;
-typedef unsigned long long int	ndr_uhyper_int;
-#else
-typedef struct ndr_hyper_int_rep_s_t ndr_hyper_int;
-typedef struct ndr_uhyper_int_rep_s_t ndr_uhyper_int;
-#endif /* __GNUC__ */
+typedef float 		        ndr_short_float;
 
-typedef float 		ndr_short_float;
-typedef double 		ndr_long_float;
+typedef double 		        ndr_long_float;
 
 #endif /* NDRTYPES_H */
