@@ -1722,23 +1722,41 @@ ifflags_again:
         if ((*efun) (sock, (rpc_addr_p_t) ip_addr, (rpc_addr_p_t) netmask_addr, (rpc_addr_p_t) broadcast_addr) == false)
         {
             if (ip_addr != NULL)
+            {
                 RPC_MEM_FREE (ip_addr, RPC_C_MEM_RPC_ADDR);
+                ip_addr = NULL;
+            }
             if (netmask_addr != NULL)
+            {
                 RPC_MEM_FREE (netmask_addr, RPC_C_MEM_RPC_ADDR);
+                netmask_addr = NULL;
+            }
             if (broadcast_addr != NULL)
+            {
                 RPC_MEM_FREE (broadcast_addr, RPC_C_MEM_RPC_ADDR);
+                broadcast_addr = NULL;
+            }
             continue;
         }
 
         if (rpc_addr_vec != NULL && ip_addr != NULL)
+        {
             (*rpc_addr_vec)->addrs[(*rpc_addr_vec)->len++]
                 = (rpc_addr_p_t) ip_addr;
+            ip_addr = NULL;
+        }
         if (netmask_addr_vec != NULL && netmask_addr != NULL)
+        {
             (*netmask_addr_vec)->addrs[(*netmask_addr_vec)->len++]
                 = (rpc_addr_p_t) netmask_addr;
+            netmask_addr = NULL;
+        }
         if (broadcast_addr_vec != NULL && broadcast_addr != NULL)
+        {
             (*broadcast_addr_vec)->addrs[(*broadcast_addr_vec)->len++]
                 = (rpc_addr_p_t) broadcast_addr;
+            broadcast_addr = NULL;
+        }
     }
 
     if ((*rpc_addr_vec)->len == 0)
