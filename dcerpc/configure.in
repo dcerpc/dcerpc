@@ -368,29 +368,12 @@ RPC_ARG_DEFINE(ifloopback, USE_LOOPBACK, yes,Include loopback interface support)
 #####################################################################
 ## COMPONENT: dcelib
 
-AC_ARG_WITH(
-	unistr-dir, 
-	[  --with-unistr-dir=<prefix>    look for libunistr in <prefix>],
-	[
-	    UNISTR_INCLUDES=-I$withval/include
-	    UNISTR_LDFLAGS=-L$withval/`basename $libdir`
-	],
-)
+RPC_LIBUNISTR(CPPFLAGS_unistr, LDFLAGS_unistr, LIB_unistr,
+	AC_MSG_ERROR([cannot find a UNICODE converter]))
 
-AC_ARG_WITH(
-	unistr-libdir, 
-	[  --with-unistr-libdir=<libdir>    look for libunistr libraries in <libdir>],
-	[
-	    UNISTR_LDFLAGS="-L$withval"
-	],
-)
-
-CPPFLAGS="$CPPFLAGS $UNISTR_INCLUDES"
-LDFLAGS="$LDFLAGS $UNISTR_LDFLAGS"
-
-AC_CHECK_LIB(unistr, wcstowc16s, [LIB_unistr="-lunistr"], [AC_MSG_ERROR([Could not find libunistr])])
+AC_SUBST(CPPFLAGS_unistr)
+AC_SUBST(LDFLAGS_unistr)
 AC_SUBST(LIB_unistr)
-
 
 #####################################################################
 ## COMPONENT: rpcd
