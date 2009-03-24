@@ -294,6 +294,9 @@ ReverseIt(
 
     rpc_binding_inq_transport_info(h, &transport_info, &rpcstatus);
 
+    printf("SMB transport session calls temporarily disabled -- jpeach\n");
+
+/*
     if (transport_info)
     {
         rpc_smb_transport_info_inq_peer_principal_name(transport_info, &principal_name);
@@ -310,6 +313,7 @@ ReverseIt(
         printf ("\n");
     }
 
+*/
 
     if (in_text == NULL) return 0;
 
