@@ -1,7 +1,7 @@
 dce_includes=-I$(top_srcdir)/include -I$(top_builddir)/include @DCETHREADINCLUDES@
 
 BASE_CPPFLAGS=$(dce_includes)
-BASE_CFLAGS=-g -Wall -W -O -pipe
+#BASE_CFLAGS=-g -Wall -W -O -pipe
 #BASE_CFLAGS+=-Werror
 
 AM_CPPFLAGS=$(BASE_CPPFLAGS)
