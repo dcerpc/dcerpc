@@ -1,8 +1,16 @@
 /* ex: set shiftwidth=4 softtabstop=4 expandtab: */
 #include "compat/mswrappers.h"
 #include <stdlib.h>
-#include <wc16str.h>
 #include <errno.h>
+
+#include "config.h"
+
+#if HAVE_WC16STR_H
+#include <wc16str.h>
+#elif HAVE_COREFOUNDATION_CFSTRINGENCODINGCONVERTER_H
+char *awc16stombs(const wchar16_t *input);
+wchar16_t *ambstowc16s(const char *input);
+#endif
 
 RPC_STATUS WideChar16ToMultiByte(PWSTR input, idl_char **output)
 {
