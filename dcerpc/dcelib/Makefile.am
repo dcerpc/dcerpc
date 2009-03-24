@@ -6,8 +6,8 @@ include $(top_srcdir)/ncklib/ncklib.mk
 # Build the shared library
 lib_LTLIBRARIES = libdcerpc.la
 libdcerpc_la_SOURCES = dummyfuncs.c mswrappers.c
-libdcerpc_la_CPPFLAGS = $(CPPFLAGS_unistr)
-libdcerpc_la_LDFLAGS = $(LDFLAGS_unistr)
+libdcerpc_la_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS_unistr)
+libdcerpc_la_LDFLAGS = $(AM_LDFLAGS) $(LDFLAGS_unistr)
 
 if TARGET_OS_LINUX
 libdcerpc_la_LDFLAGS += -version-info 1:2:0 -all_load -Wl,--version-script,$(srcdir)/exports -Wl,-Bgroup -Wl,--allow-shlib-undefined
