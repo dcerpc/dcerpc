@@ -31,6 +31,8 @@ AC_CONFIG_SRCDIR([uuid/uuid.c])
 AC_CONFIG_HEADER([include/config.h])
 #AM_CONFIG_HEADER([include/config.h])
 
+AM_DISABLE_STATIC
+
 dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_CPP
@@ -141,6 +143,7 @@ RPC_ARG_DEFINE(debug, DEBUG, yes, [Compile with debugging support])
 RPC_ARG_DEFINE(dcom, ENABLE_DCOM, no,[Enable experimental DCOM support])
 AM_CONDITIONAL(ENABLE_DCOM, test x$rpc_arg_dcom = yes)
 AM_CONDITIONAL(TARGET_OS_LINUX, test x$target_os = xlinux-gnu)
+AM_CONDITIONAL(TARGET_OS_DARWIN, test x$target_os = xdarwin6.0)
 
 #####################################################################
 ## COMPONENT: threads
