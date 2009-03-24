@@ -4,7 +4,8 @@
 #endif
 #define IDL_CHAR_IS_CHAR
 
-#include <lw/base.h>
+#include <stdint.h>
+
 #include <dce/idlbase.h>
 #include <dce/rpc.h>
 #define DCETHREAD_CHECKED
@@ -13,6 +14,31 @@
 
 #ifdef __cplusplus
 extern "C" {
+#endif
+
+#if !defined(_wchar16_t_DEFINED)
+#define _wchar16_t_DEFINED
+typedef uint16_t wchar16_t;
+#endif
+
+#if !defined(_UCHAR_DEFINED)
+#define _UCHAR_DEFINED
+typedef uint8_t UCHAR;
+#endif
+
+#if !defined(_WCHAR_DEFINED)
+#define _WCHAR_DEFINED
+typedef wchar16_t WCHAR;
+#endif
+
+#if !defined(_PWSTR_DEFINED)
+#define _PWSTR_DEFINED
+typedef WCHAR * PWSTR;
+#endif
+
+#if !defined(_PUCHAR_DEFINED)
+#define _PUCHAR_DEFINED
+typedef UCHAR * PUCHAR;
 #endif
 
 typedef unsigned int RPC_STATUS;
