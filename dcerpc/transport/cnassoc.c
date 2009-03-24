@@ -55,7 +55,9 @@
 #include <dce/rpcexc.h>
 #include <syslog.h>
 
+#if HAVE_LWIO_LWIO_H
 #include <lwio/lwio.h>
+#endif
 
 
 
