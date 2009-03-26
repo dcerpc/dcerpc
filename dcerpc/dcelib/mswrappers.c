@@ -14,12 +14,19 @@ wchar16_t *ambstowc16s(const char *input);
 
 RPC_STATUS WideChar16ToMultiByte(PWSTR input, idl_char **output)
 {
-    *output = awc16stombs(input);
-    if(*output == NULL)
+    if (input == NULL)
     {
-        if(errno == ENOMEM)
-            return rpc_s_no_memory;
-        return rpc_s_invalid_arg;
+        *output = NULL;
+    }
+    else
+    {
+        *output = awc16stombs(input);
+        if(*output == NULL)
+        {
+            if(errno == ENOMEM)
+                return rpc_s_no_memory;
+            return rpc_s_invalid_arg;
+        }
     }
     return rpc_s_ok;
 }

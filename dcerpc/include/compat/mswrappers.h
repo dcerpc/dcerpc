@@ -1,4 +1,7 @@
 /* ex: set shiftwidth=4 softtabstop=4 expandtab: */
+#ifndef _MSWRAPPERS_H_
+#define _MSWRAPPERS_H_
+
 #if defined(IDLBASE_H) && !defined(IDL_CHAR_IS_CHAR)
 #error Include mswrappers.h before including dce/idlbase.h
 #endif
@@ -46,6 +49,7 @@ typedef handle_t RPC_BINDING_HANDLE;
 typedef rpc_if_handle_t RPC_IF_HANDLE;
 typedef uuid_t UUID;
 typedef rpc_mgr_proc_t RPC_MGR_EPV;
+typedef idl_ushort_int *RPC_WSTR;
 
 #define RPC_C_PROTSEQ_MAX_REQS_DEFAULT rpc_c_protseq_max_reqs_default
 #define RPC_C_LISTEN_MAX_CALLS_DEFAULT rpc_c_listen_max_calls_default
@@ -131,7 +135,12 @@ RPC_STATUS RpcServerListen(
 #define RpcServerUseProtseqEp RpcServerUseProtseqEpA
 #define RpcBindingFromStringBinding RpcBindingFromStringBindingA
 #define RpcStringFree RpcStringFreeA
+#define RpcSsDestroyClientContext(x) rpc_ss_destroy_client_context((rpc_ss_context_t *)x)
+
+#define RPC_S_INVALID_NET_ADDR rpc_s_inval_net_addr
 
 #ifdef __cplusplus
 } //extern C
 #endif
+
+#endif // _MSWRAPPERS_H_
