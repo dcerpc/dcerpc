@@ -1825,6 +1825,25 @@ rpc__bsd_socket_inq_transport_info(
     return RPC_C_SOCKET_OK;
 }
 
+INTERNAL
+void
+rpc__bsd_socket_transport_info_free(
+    rpc_transport_info_handle_t info ATTRIBUTE_UNUSED
+    )
+{
+}
+
+INTERNAL
+boolean
+rpc__bsd_socket_transport_info_equal(
+    rpc_transport_info_handle_t info1,
+    rpc_transport_info_handle_t info2
+    )
+{
+    return (info1 == info2);
+}
+
+
 PRIVATE rpc_socket_vtbl_t rpc_g_bsd_socket_vtbl =
 {
     .socket_construct = rpc__bsd_socket_construct,
@@ -1849,5 +1868,7 @@ PRIVATE rpc_socket_vtbl_t rpc_g_bsd_socket_vtbl =
     .socket_getpeereid = rpc__bsd_socket_getpeereid,
     .socket_get_select_desc = rpc__bsd_socket_get_select_desc,
     .socket_enum_ifaces = rpc__bsd_socket_enum_ifaces,
-    .socket_inq_transport_info = rpc__bsd_socket_inq_transport_info
+    .socket_inq_transport_info = rpc__bsd_socket_inq_transport_info,
+    .transport_info_free = rpc__bsd_socket_transport_info_free,
+    .transport_info_equal = rpc__bsd_socket_transport_info_equal
 };
