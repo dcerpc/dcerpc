@@ -15,6 +15,10 @@ else
 libdcerpc_la_LDFLAGS += -version-info 1:2:0 -all_load
 endif
 
+if TARGET_OS_DARWIN
+libdcerpc_la_SOURCES += darwin/wc16str.c
+endif
+
 libdcerpc_la_LIBADD =			\
 	../ncklib/libnck.la		\
 	../idl_lib/libidl.la		\
