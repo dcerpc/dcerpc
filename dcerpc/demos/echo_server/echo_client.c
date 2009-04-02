@@ -80,7 +80,7 @@ main(
     extern int optind, opterr, optopt;
     int c;
 
-    char * rpc_host = "localhost";
+    char * rpc_host = "127.0.0.1";
     char * protocol = PROTOCOL_TCP;
     char * endpoint = NULL;
 
@@ -154,7 +154,7 @@ main(
                                protocol,
                                endpoint) == 0)
     {
-        printf ("Couldnt obtain RPC server binding. exiting.\n");
+        printf ("Couldn't obtain RPC server binding. exiting.\n");
         exit(1);
     }
 
@@ -165,7 +165,7 @@ main(
      */
 
     inargs = (args *)malloc(sizeof(args) + MAX_USER_INPUT * sizeof(string_t));
-    if (inargs == NULL) printf("FAULT. Didnt allocate inargs.\n");
+    if (inargs == NULL) printf("FAULT. Didn't allocate inargs.\n");
 
     if (generate_length < 0)
     {
