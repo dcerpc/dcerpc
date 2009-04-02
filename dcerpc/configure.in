@@ -319,6 +319,22 @@ LDFLAGS="$tmp_LDFLAGS"
 #####################################################################
 ## COMPONENT: ncklib
 
+# Check whether the Likewise SMB named pipe client library is available. If so,
+# we need to link it for named pipe support.
+AC_CHECK_LIB(lwioclient, LwNtCtxCreateNamedPipeFile,
+	[
+	    NAF_NP_LIBS="-llwioclient"
+	    rpc_have_likewise_lwio=yes
+	    AC_DEFINE(HAVE_LIKEWISE_LWIO, 1,
+		    [whether the Likewise lwioclient API is available])
+	],
+	[
+	    rpc_have_likewise_lwio=no
+	])
+
+AM_CONDITIONAL(HAVE_LIKEWISE_LWIO, test x${rpc_have_likewise_lwio} = xyes)
+AC_SUBST(NAF_NP_LIBS)
+
 RPC_ARG_DEFINE(ncacn, PROT_NCACN, yes,Support connection based transports)
 AM_CONDITIONAL(PROT_NCACN, test x${rpc_arg_ncacn} = xyes)
 
@@ -361,6 +377,11 @@ AM_CONDITIONAL(NAF_IP, test x${rpc_arg_afip} = xyes)
 
 RPC_ARG_DEFINE(afnp, NAF_NP,yes,Named Pipes network address family support)
 AM_CONDITIONAL(NAF_NP, test x${rpc_arg_afnp} = xyes)
+
+if test "x${rpc_arg_afnp}" = "xyes" -a \
+	"x${rpc_have_likewise_lwio}" != "xyes" ; then
+    AC_MSG_WARN(Enabling the named pipe transport without SMB support)
+fi
 
 RPC_ARG_DEFINE(afuxd, NAF_UXD,no,AF_LOCAL network address family support (untested))
 AM_CONDITIONAL(NAF_UXD, test x${rpc_arg_afuxd} = xyes)

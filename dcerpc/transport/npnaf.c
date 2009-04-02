@@ -318,18 +318,21 @@ PRIVATE void rpc__module_init_func(void)
          * semantics, the protocol towers, and the passing of security
          * descriptors.
          */
-	static rpc_tower_prot_ids_t prot_ids[2] = {
+	static rpc_tower_prot_ids_t prot_ids[] = {
+#if HAVE_LIKEWISE_LWIO
         { RPC_C_PROTSEQ_ID_NCACN_NP,   3, 
           { {0x0B,   { 0, 0, 0, 0, 0, {0} }}, /* Connection-oriented */
             {0x0F,   { 0, 0, 0, 0, 0, {0} }}, /* SMB Named Pipes */
             {0x11,   { 0, 0, 0, 0, 0, {0} }}, /* NetBIOS host */
             {0x00,   { 0, 0, 0, 0, 0, {0} }} } },
+#endif
         { RPC_C_PROTSEQ_ID_NCALRPC,   2, 
           { {0x0B,   { 0, 0, 0, 0, 0, {0} }}, /* Connection-oriented */
             {0x20,   { 0, 0, 0, 0, 0, {0} }}, /* socket pathname */
             {0x00,   { 0, 0, 0, 0, 0, {0} }} } }
 	};
-	static rpc_protseq_id_elt_t seq_ids[2] = {
+	static rpc_protseq_id_elt_t seq_ids[] = {
+#if HAVE_LIKEWISE_LWIO
     {                                   /* Connection-RPC / NP / NB */
         0,
         0, /* Does not use endpoint mapper */
@@ -342,6 +345,7 @@ PRIVATE void rpc__module_init_func(void)
         (rpc_port_restriction_list_p_t) NULL,
         &rpc_g_smb_socket_vtbl
     },
+#endif
     {                                   /* Connection-RPC / UXD */
         0,
         0, /* Does not use endpoint mapper */
@@ -356,8 +360,10 @@ PRIVATE void rpc__module_init_func(void)
     }
 
 	};
-	rpc__register_protseq(seq_ids, 2);
-	rpc__register_tower_prot_id(prot_ids, 2);
+	rpc__register_protseq(seq_ids,
+                sizeof(seq_ids)/sizeof(seq_ids[0]));
+	rpc__register_tower_prot_id(prot_ids,
+                sizeof(prot_ids)/sizeof(prot_ids[0]));
 	rpc__register_naf_id(naf, 1);
 }
 #endif

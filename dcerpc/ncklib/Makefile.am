@@ -139,8 +139,12 @@ librpc_la_SOURCES=dce_error.c rpcclock.c rpcdbg.c rpclist.c \
 noinst_LTLIBRARIES+=libtrans.la
 
 libtrans_la_CPPFLAGS = $(AM_CPPFLAGS)
-libtrans_la_SOURCES = comsoc.c comsoc_bsd.c ## XXX comsoc_smb.c
-# XXX libtrans_la_LIBADD = -llwioclient
+libtrans_la_SOURCES = comsoc.c comsoc_bsd.c
+libtrans_la_LIBADD = $(NAF_NP_LIBS)
+
+if HAVE_LIKEWISE_LWIO
+libtrans_la_SOURCES += comsoc_smb.c
+endif
 
 ######################################################################
 ## COMPONENT: auth - comprises of libauth_none shared lib
