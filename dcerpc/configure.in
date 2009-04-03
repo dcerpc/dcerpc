@@ -67,6 +67,15 @@ case "$target_os" in
      *darwin*)
 		FEATURETEST_CFLAGS="-D_SOCKADDR_LEN"
 		IDL_CFLAGS="$IDL_CFLAGS -D_SOCKADDR_LEN"
+
+		# For Intel architectures, we need to be explicit
+		# to make sure the compiler builds the sub architecture
+		# we want on systems that support more than one.
+		case $target_cpu in
+		    i386) AX_CFLAGS_GCC_OPTION(-arch i386) ;;
+		    x86_64) AX_CFLAGS_GCC_OPTION(-arch x86_64) ;;
+		esac
+
 		;;
      *freebsd*) 
 		FEATURETEST_CFLAGS="-D_SOCKADDR_LEN"
