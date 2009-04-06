@@ -78,6 +78,10 @@
 #define RPC_NLS_FORMAT "%s.cat"
 #endif
 
+#ifndef MAXPATHLEN
+#define MAXPATHLEN 1024
+#endif
+
 
 /*
 **++
@@ -139,8 +143,8 @@ int                     *status;
     char        component_name[4];
     char        *facility_name;
     char        filename_prefix[7];
-    char        nls_filename[11];
-    char        alt_filename[80];
+    char        nls_filename[MAXPATHLEN];
+    char        alt_filename[MAXPATHLEN];
     char        *message;
     static char alphabet[] = "abcdefghijklmnopqrstuvwxyz_0123456789-+@";
     static char *facility_names[] = {
@@ -210,7 +214,12 @@ int                     *status;
 
     sprintf ((char*) filename_prefix, "%3s%3s", facility_name, component_name);
 
+#if defined(CATALOG_DIR)
+    sprintf ((char*) nls_filename,
+	    CATALOG_DIR "/" RPC_NLS_FORMAT, filename_prefix);
+#else
     sprintf ((char*) nls_filename, RPC_NLS_FORMAT, filename_prefix);
+#endif
 
     /*
      * Open the message file

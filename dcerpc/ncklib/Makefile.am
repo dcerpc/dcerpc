@@ -128,10 +128,17 @@ ep.h ep_cstub.c: $(IDL_INCLUDE_DIR)/ep.idl
 ######################################################################
 ## COMPONENT: rpc - comprises of librpc convenience lib
 
+pkgdata_DATA=dcerpc.cat
+BUILT_SOURCES=dcerpc.cat
+
 noinst_LTLIBRARIES+=librpc.la
 
+librpc_la_CPPFLAGS = $(AM_CPPFLAGS) -DCATALOG_DIR=\"$(pkgdatadir)\"
 librpc_la_SOURCES=dce_error.c rpcclock.c rpcdbg.c rpclist.c \
  rpclog.c rpcmem.c rpcmutex.c rpcrand.c rpctimer.c
+
+dcerpc.cat: dcerpc.m
+	$(GENCAT) $@ $<
 
 ######################################################################
 ## COMPONENT: transport - comprises of libtrans convenience lib
