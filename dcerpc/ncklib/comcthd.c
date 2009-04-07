@@ -1832,12 +1832,19 @@ unsigned32  *status;
 **--
 **/
 
-PUBLIC void rpc_server_create_thread_pool (n_threads, phandle, status)
-
+PUBLIC void rpc_server_create_thread_pool
+#ifdef _DCE_PROTO_
+(
+    unsigned32      n_threads,
+    rpc_thread_pool_handle_t *phandle,
+    unsigned32      *status
+)
+#else
+(n_threads, phandle, status)
 unsigned32      n_threads;
 rpc_thread_pool_handle_t *phandle;
 unsigned32      *status;
-
+#endif
 {
     cthread_pool_elt_p_t    p;
 
