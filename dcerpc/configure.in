@@ -505,4 +505,5 @@ demos/echo_number/Makefile
 demos/echo_union/Makefile
 demos/samr_test/Makefile
 perf/Makefile
+tools/Makefile
 )
