@@ -1123,6 +1123,11 @@ typedef struct
 
 #define RPC_IF_VALIDATE(ifrep, status) \
 { \
+    if (!(ifrep)) \
+    { \
+	*(status) = rpc_s_coding_error; \
+	return; \
+    } \
     if ((ifrep)->ifspec_vers != RPC_C_IFSPEC_VERS_DCE_1_0) \
     { \
         *(status) = rpc_s_unknown_ifspec_vers; \
