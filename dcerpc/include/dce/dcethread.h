@@ -438,7 +438,7 @@ extern dcethread_exc dcethread_exit_thread_e;        /* Used to terminate a thre
  * Interruptible system calls, etc
  */
 
-int dcethread_pause();
+int dcethread_pause(void);
 ssize_t dcethread_read(int fd, void *buf, size_t count);
 ssize_t dcethread_write(int fd, void *buf, size_t count);
 ssize_t dcethread_send(int s, const void *buf, size_t len, int flags);

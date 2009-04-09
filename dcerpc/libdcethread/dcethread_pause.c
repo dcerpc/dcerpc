@@ -9,7 +9,7 @@
 #ifdef API
 
 int
-dcethread_pause()
+dcethread_pause(void)
 {
     DCETHREAD_SYSCALL(int, pause());
 }
