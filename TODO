@@ -31,3 +31,8 @@ that we can run the local services on well-known endpoints.
 
 - Add instant-off support to the RPC runtime.
 
+- Clean up dce_error_inq_text to use error_status_t and dce_error_string_t
+parameters.
+
+- Fix CoreFoundation linking. This ought to only be linked with
+libdce, not with every application.
