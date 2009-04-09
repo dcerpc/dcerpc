@@ -1,0 +1,33 @@
+- Not all errors are in the message catalogue, eg.
+rpc_s_protseq_not_supported is missing. Need to find and catalogue all
+errors.
+
+- Add buildit support, including multi-arch support.
+
+- Fix generated headers for multi-arch support.
+
+- Fix the IDL compiler so that [in] reference parameters are declared
+as const.
+
+- Clean up the instaled headers so that we only include the ones
+that are actually useful. We don't want to be installing cruft.
+
+- Consider not installing the libtool .la files. Not sure what
+impact this will have, probably should be OK.
+
+- Fix the main library symbol decorations so that only public symbols are
+exported.
+
+- Fix the build system so that -no-undefined is passed when linking
+the dylibs.  Do this for the NAF modules as well if possible.
+
+- Implement SMB named pipe client module using the the SMBClient
+framework.
+
+- Implement ncacn_mach transport for local RPC. We need this so
+that we can run the local services on well-known endpoints.
+
+- Add launchd support to the RPC runtime and to rpcd.
+
+- Add instant-off support to the RPC runtime.
+
