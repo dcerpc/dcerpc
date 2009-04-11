@@ -17,7 +17,7 @@ esac
 case $target_os in
      linux*)   target_os="linux-gnu";;
      hpux11.*) target_os="hpux11.11";;
-     darwin*) target_os="darwin6.0";;
+     darwin*) target_os="darwin";;
      solaris2.1*) target_os="solaris2.10";;
      freebsd6.*|freebsd7.*|freebsd8.*) target_os="freebsd6.0";;
 esac
@@ -152,7 +152,7 @@ RPC_ARG_DEFINE(debug, DEBUG, yes, [Compile with debugging support])
 RPC_ARG_DEFINE(dcom, ENABLE_DCOM, no,[Enable experimental DCOM support])
 AM_CONDITIONAL(ENABLE_DCOM, test x$rpc_arg_dcom = yes)
 AM_CONDITIONAL(TARGET_OS_LINUX, test x$target_os = xlinux-gnu)
-AM_CONDITIONAL(TARGET_OS_DARWIN, test x$target_os = xdarwin6.0)
+AM_CONDITIONAL(TARGET_OS_DARWIN, test x$target_os = xdarwin)
 
 #####################################################################
 ## COMPONENT: threads
@@ -467,7 +467,7 @@ include/dce/ndr_rep.h
 include/dce/ndrtypes.h
 include/dce/sec_authn.h
 include/dce/aix5.2.0.0/Makefile
-include/dce/darwin6.0/Makefile
+include/dce/darwin/Makefile
 include/dce/linux-gnu/Makefile
 include/dce/freebsd6.0/Makefile
 include/dce/solaris2.8/Makefile
@@ -493,7 +493,7 @@ ncklib/include/freebsd6.0/Makefile
 ncklib/include/solaris2.8/Makefile
 ncklib/include/solaris2.9/Makefile
 ncklib/include/solaris2.10/Makefile
-ncklib/include/darwin6.0/Makefile
+ncklib/include/darwin/Makefile
 ncklib/include/hpux11.11/Makefile
 ncklib/include/Makefile
 transport/Makefile
