@@ -2,8 +2,6 @@
 include $(top_srcdir)/include.mk
 include $(top_srcdir)/ncklib/ncklib.mk
 
-NCK_IDL_FLAGS=-keep c_source -no_cpp -v -no_mepv -I$(IDL_INCLUDE_DIR)/.. -I$(top_builddir)/include @DCETHREADINCLUDES@ $(TARGET_OS)
-
 AM_CPPFLAGS += -DDCETHREAD_ENFORCE_API
 
 # Initialize

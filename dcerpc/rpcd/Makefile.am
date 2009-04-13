@@ -3,7 +3,7 @@ include $(top_srcdir)/include.mk
 C_FLAGS=-Drpcd_c_database_name_prefix1=\"$(localstatedir)/run/\" -I$(top_srcdir)/ncklib -I$(top_srcdir)/ncklib/include/$(target_os)
 AM_CPPFLAGS+=$(C_FLAGS) -DDCETHREAD_ENFORCE_API
 
-MY_IDLFLAGS=-keep c_source -v -no_mepv -cepv -I. -I$(IDL_INCLUDE_DIR)/.. @DCETHREADINCLUDES@ -I$(top_builddir)/include
+RPCD_IDLFLAGS=$(IDL_INCLUDES) -I. -keep c_source -v -no_mepv -cepv @DCETHREADINCLUDES@
 
 dcom_sources=objex_sstub.c
 
@@ -21,14 +21,14 @@ CLEANFILES=objex.h object_sstub.c ep_sstub.c dsm.h
 
 if ENABLE_DCOM
 objex_sstub.c: $(IDL_INCLUDE_DIR)/objex.idl
-	$(IDL) $(MY_IDLFLAGS) -client none $<
+	$(IDL) $(RPCD_IDLFLAGS) -client none $<
 endif
 
 ep_sstub.c: $(IDL_INCLUDE_DIR)/ep.idl
-	$(IDL) $(MY_IDLFLAGS) -client none $<
+	$(IDL) $(RPCD_IDLFLAGS) -client none $<
 
 dsm.h:	dsm.idl
-	$(IDL) $(MY_IDLFLAGS) -client none -server none dsm.idl
+	$(IDL) $(RPCD_IDLFLAGS) -client none -server none $<
 
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(localstatedir)/rpc

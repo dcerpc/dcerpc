@@ -2,8 +2,6 @@
 include $(top_srcdir)/include.mk
 include $(top_srcdir)/ncklib/ncklib.mk
 
-NCK_IDL_FLAGS=-keep c_source -no_cpp -v -no_mepv -I$(IDL_INCLUDE_DIR)/.. -I$(top_builddir)/include @DCETHREADINCLUDES@ $(TARGET_OS)
-
 SUBDIRS=include
 
 # Initialize
@@ -118,10 +116,10 @@ noinst_HEADERS+=ep.h
 sec_id.c: pickle.h
 
 pickle.h pickle_cstub.c: pickle.idl
-	$(IDL) -keep c_source -no_cpp -v -no_mepv -I../include -server none $<
+	$(IDL) $(IDL_INCLUDES) -keep c_source -no_cpp -v -no_mepv -server none $<
 
 ep.h ep_cstub.c: $(IDL_INCLUDE_DIR)/ep.idl
-	$(IDL) -keep c_source -no_cpp -v -no_mepv -I../include -cepv -server none $<
+	$(IDL) $(IDL_INCLUDES) -keep c_source -no_cpp -v -no_mepv -cepv -server none $<
 
 # Unused: id_base.h (the copy here came from some IDL w/MS PAC format info?)
 
@@ -202,7 +200,7 @@ libmgmt_stubs_la_CPPFLAGS=-I. $(BASE_CPPFLAGS) $(IDL_CPPFLAGS)
 libmgmt_stubs_la_CFLAGS=$(BASE_CFLAGS)
 
 mgmt_cstub.c mgmt_sstub.c mgmt.h: $(IDL_INCLUDE_DIR)/mgmt.idl
-	$(IDL) -keep c_source -no_cpp -v -no_mepv -I../include -cepv $<
+	$(IDL) $(IDL_INCLUDES) -keep c_source -no_cpp -v -no_mepv -cepv $<
 
 # Unused: comfork_cma.c
 # Unused: dgauth.c ("obsolete")

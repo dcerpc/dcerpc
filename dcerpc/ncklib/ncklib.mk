@@ -5,3 +5,4 @@ NCK_DEFINES=-DNCK -DRPC_C_NP_DIR=\"$(localstatedir)/rpc\" -DRPC_C_UXD_DIR=\"$(lo
 AM_CPPFLAGS+=$(NCK_INCLUDES)
 AM_CFLAGS+=$(NCK_DEFINES)
 
+NCK_IDL_FLAGS=$(IDL_INCLUDES) -keep c_source -no_cpp -v -no_mepv @DCETHREADINCLUDES@ $(TARGET_OS)
