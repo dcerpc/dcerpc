@@ -1,2 +1,6 @@
 /* pull in the header as determined for this platform at configure time */
+#if __APPLE_
+#include <dce/generic/ndr_rep.h>
+#else
 #include <dce/@target_cpu@/ndr_rep.h>
+#endif

@@ -474,6 +474,7 @@ include/dce/solaris2.8/Makefile
 include/dce/solaris2.9/Makefile
 include/dce/solaris2.10/Makefile
 include/dce/hpux11.11/Makefile
+include/dce/generic/Makefile
 include/dce/i386/Makefile
 include/dce/hppa2.0/Makefile
 include/dce/powerpc/Makefile
