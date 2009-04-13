@@ -114,6 +114,16 @@ static void CSPELL_constant_def
 {
     char const *s;
 
+    /* We want to make sure that the literal values for constants are
+     * independent of the architecture of the IDL compiler. We should always
+     * generate the same value.
+     */
+#if __LP64__
+#define LONG_MODIFIER
+#else
+#define LONG_MODIFIER "l"
+#endif
+
     fprintf (fid, "#define ");
     spell_name (fid, cp->name);
     fprintf (fid, " %s", cast);
@@ -125,11 +135,11 @@ static void CSPELL_constant_def
                 fprintf (fid, "NULL");
                 break;
             case AST_int_const_k:
-					 /* handle the signed-ness of the constant */
-					 if (cp->int_signed)
-                	fprintf (fid, "(%ld)", cp->value.int_val);
-					 else
-						fprintf (fid, "(0x%lx)", cp->value.int_val); /* prevent signed-edness problems with cxx */
+		 /* handle the signed-ness of the constant */
+		 if (cp->int_signed)
+                	fprintf (fid, "(%"LONG_MODIFIER"d)", cp->value.int_val);
+		 else
+			fprintf (fid, "(0x%"LONG_MODIFIER"x)", cp->value.int_val); /* prevent signed-edness problems with cxx */
                 break;
             case AST_hyper_int_const_k:
                 fprintf (fid, "{%ld,%lu}",
