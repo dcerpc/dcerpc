@@ -31,6 +31,12 @@ else
 STRIP_X	:= strip -x
 endif
 
+Extra_Configure_Flags :=\
+	--disable-dependency-tracking \
+	--disable-afnp	\
+	--disable-schannel \
+	--disable-demoprogs
+
 build:: MAKEFLAGS += -j $(NPROCS)
 
 # When the default makefiles support building multiple architectures in
