@@ -5,14 +5,14 @@
 # Copyright (c) 1997-1999 Apple Computer, Inc.
 #
 # @APPLE_LICENSE_HEADER_START@
-# 
+#
 # This file contains Original Code and/or Modifications of Original Code
 # as defined in and that are subject to the Apple Public Source License
 # Version 2.0 (the 'License'). You may not use this file except in
 # compliance with the License. Please obtain a copy of the License at
 # http://www.opensource.apple.com/apsl/ and read it before using this
 # file.
-# 
+#
 # The Original Code and all software distributed under the License are
 # distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
 # EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
@@ -20,7 +20,7 @@
 # FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
 # Please see the License for the specific language governing rights and
 # limitations under the License.
-# 
+#
 # @APPLE_LICENSE_HEADER_END@
 ##
 # Set these variables as needed, then include this file, then:
@@ -32,7 +32,7 @@
 #  Install_Source        [ $(NSSOURCEDIR)/Commands/$(ProjectName) ]
 #  Configure             [ $(Sources)/configure                   ]
 #  Extra_Configure_Flags
-#  Extra_Install_Flags 
+#  Extra_Install_Flags
 #  Passed_Targets        [ check                                  ]
 #
 # Additional variables inherited from ReleaseControl/Common.make
@@ -91,8 +91,8 @@ ifndef Configure
 Configure = $(Sources)/configure
 endif
 
-Environment += TEXI2HTML="$(TEXI2HTML) -subdir ." 
-Environment += CC="$(CC) -arch $$arch" CXX="$(CXX) -arch $$arch" 
+Environment += TEXI2HTML="$(TEXI2HTML) -subdir ."
+Environment += CC="$(CC) -arch $$arch" CXX="$(CXX) -arch $$arch"
 Environment += AS="$(AS) -arch $$arch" LD="$(LD) -arch $$arch"
 Environment += NM="nm -arch $$arch"
 Environment += AR=$(AR) STRIP=$(STRIP) RANLIB=ranlib
