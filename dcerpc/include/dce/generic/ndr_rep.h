@@ -37,9 +37,9 @@
 #error Unknown endianness: this is not a generic architecture
 #endif
 
-#ifdef __LITTLE_ENDIAN__
+#if __LITTLE_ENDIAN__
 #define NDR_LOCAL_INT_REP     ndr_c_int_little_endian
-else
+#else
 #define NDR_LOCAL_INT_REP     ndr_c_int_big_endian
 #endif
 
