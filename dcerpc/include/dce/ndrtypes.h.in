@@ -1,6 +1,2 @@
 /* pull in the header as determined for this platform at configure time */
-#if __APPLE__
-#include <dce/generic/ndrtypes.h>
-#else
 #include <dce/@target_cpu@/ndrtypes.h>
-#endif

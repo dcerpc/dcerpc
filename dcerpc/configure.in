@@ -18,7 +18,7 @@ esac
 case $target_os in
      linux*)   target_os="linux-gnu";;
      hpux11.*) target_os="hpux11.11";;
-     darwin*) target_os="darwin";;
+     darwin*) target_os="darwin"; target_cpu=generic;;
      solaris2.1*) target_os="solaris2.10";;
      freebsd6.*|freebsd7.*|freebsd8.*) target_os="freebsd6.0";;
 esac
