@@ -85,7 +85,7 @@ lib_LTLIBRARIES += libauth_gss_negotiate.la
 
 libauth_gss_negotiate_la_SOURCES = gssauth.c gssauthcn.c
 libauth_gss_negotiate_la_CFLAGS = @GSSAPI_INCLUDES@
-libauth_gss_negotiate_la_LDFLAGS = @GSSAPI_LDFLAGS@
+libauth_gss_negotiate_la_LDFLAGS = $(MODULELDFLAGS) @GSSAPI_LDFLAGS@
 libauth_gss_negotiate_la_LIBADD = @GSSAPI_LIBS@ ../dcelib/libdcerpc.la
 endif
 
@@ -94,7 +94,7 @@ lib_LTLIBRARIES += libauth_schannel.la
 
 libauth_schannel_la_SOURCES = schnauth.c schnauthcn.c
 libauth_schannel_la_CFLAGS = @SCHANNEL_INCLUDES@
-libauth_schannel_la_LDFLAGS = @SCHANNEL_LDFLAGS@
+libauth_schannel_la_LDFLAGS = $(MODULELDFLAGS) @SCHANNEL_LDFLAGS@
 libauth_schannel_la_LIBADD = @SCHANNEL_LIBS@ ../dcelib/libdcerpc.la
 endif
 
