@@ -27,10 +27,11 @@ AC_SUBST(target_cpu)
 AC_SUBST(target_os)
 
 AM_INIT_AUTOMAKE(dcerpc, 1.1.0.7)
+LT_INIT([disable-static pic-only dlopen])
+
 AC_PREFIX_DEFAULT(/opt/dcerpc)
 AC_CONFIG_SRCDIR([uuid/uuid.c])
 AC_CONFIG_HEADER([include/config.h])
-#AM_CONFIG_HEADER([include/config.h])
 
 AM_DISABLE_STATIC
 
