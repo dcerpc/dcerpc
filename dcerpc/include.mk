@@ -14,7 +14,7 @@ IDL=$(top_builddir)/idl_compiler/dceidl
 IDL_INCLUDE_DIR=$(top_srcdir)/include/dce
 IDL_INCLUDES=-I$(top_srcdir)/include -I$(top_builddir)/include
 
-MODULELDFLAGS=-module -avoid-version -export-dynamic
+MODULELDFLAGS=-module -avoid-version -export-dynamic -export-symbols-regex rpc__module_init_func
 
 # ylwrap is provided by automake as a wrapper to allow multiple invocations in
 # a single directory.
