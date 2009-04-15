@@ -86,6 +86,9 @@ libdcethread_la_LIBADD = @LIB_pthread@ @LIB_rt@
 libdcethread_la_LDFLAGS = -version-info 1:0:0
 libdcethread_la_CPPFLAGS = -DAPI $(AM_CPPFLAGS)
 
+if TARGET_OS_DARWIN
+libdcethread_la_LDFLAGS += -no-undefined
+endif
 
 if HAVE_MOONUNIT
 lib_LTLIBRARIES += dcethread_mu.la
