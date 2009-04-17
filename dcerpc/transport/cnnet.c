@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2009 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -182,6 +183,94 @@ unsigned32              *status;
      * Free the vector of RPC addresses.
      */
     rpc__naf_addr_vector_free (&rpc_addr_vec, status);
+}
+
+/***********************************************************************/
+
+
+/*
+**++
+**
+**  ROUTINE NAME:       rpc__cn_network_use_socket
+**
+**  SCOPE:              PRIVATE - declared in cnnet.h
+**
+**  DESCRIPTION:
+**
+**  This routine will take the given socket and set it up to
+**  receive connect requests.
+**
+**  INPUTS:
+**
+**      rpc_sock        The protocol socket to set up.
+**      max_calls       The min number of concurrent call requests
+**                      the server wishes to be able to handle.
+**
+**  INPUTS/OUTPUTS:     none
+**
+**  OUTPUTS:
+**
+**      status          status returned
+**                              rpc_s_ok
+**
+**  IMPLICIT INPUTS:    none
+**
+**  IMPLICIT OUTPUTS:   none
+**
+**  FUNCTION VALUE:     none
+**
+**  SIDE EFFECTS:       none
+**
+**--
+**/
+
+PRIVATE void rpc__cn_network_use_socket
+#ifdef _DCE_PROTO_
+(
+    rpc_socket_t    rpc_sock,
+    unsigned32	    max_calls,
+    unsigned32	    *status
+)
+#else
+(rpc_sock, max_calls, status)
+rpc_socket_t    rpc_sock;
+unsigned32	max_calls;
+unsigned32	*status;
+#endif
+{
+
+    pointer_t priv_info;
+
+    /*
+     * Initialize the socket.
+     */
+    priv_info = rpc__cn_network_init_desc (&rpc_sock,
+					   false /* spawned */,
+					   rpc_sock->pseq_id,
+					   RPC_C_LISTEN_BACKLOG,
+					   status);
+    if (*status != rpc_s_ok)
+    {
+	return;
+    }
+
+    /*
+     * Finally, add the socket to the listener thread's select
+     * pool of sockets.
+     */
+    rpc__network_add_desc (rpc_sock,
+			   true /* is_dynamic */,
+			   true /* is_server */,
+			   rpc_sock->pseq_id,
+			   priv_info,
+			   status);
+
+    if (*status != rpc_s_ok)
+    {
+	return;
+    }
+
+    return;
 }
 
 /***********************************************************************/

@@ -4,6 +4,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2009 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -273,6 +274,34 @@ recvmsg_again:
 }
 
 /* ======================================================================== */
+/*
+ * R P C _ _ S O C K E T _ D U P L I C A T E
+ *
+ * Wrap the native socket representation in a rpc_socket_t. We duplicate the
+ * socket file descriptor because we will eventually end up close(2)ing it.
+ */
+
+INTERNAL rpc_socket_error_t
+rpc__bsd_socket_duplicate(
+    rpc_socket_t        sock,
+    rpc_protseq_id_t    pseq_id ATTRIBUTE_UNUSED,
+    const void *        sockrep /* pointer to native representation */
+    )
+{
+    rpc_socket_error_t  serr;
+    const int * sockfd = (const int *)sockrep;
+
+    if (sockfd == NULL || *sockfd == -1) {
+        return RPC_C_SOCKET_ENOTSOCK;
+    }
+
+    RPC_SOCKET_DISABLE_CANCEL;
+    sock->data.word = dup(*sockfd);
+    serr = ((sock->data.word == -1) ? errno : RPC_C_SOCKET_OK);
+    RPC_SOCKET_RESTORE_CANCEL;
+
+    return serr;
+}
 
 /*
  * R P C _ _ S O C K E T _ O P E N
@@ -1846,6 +1875,7 @@ rpc__bsd_socket_transport_info_equal(
 
 PRIVATE rpc_socket_vtbl_t rpc_g_bsd_socket_vtbl =
 {
+    .socket_duplicate = rpc__bsd_socket_duplicate,
     .socket_construct = rpc__bsd_socket_construct,
     .socket_destruct = rpc__bsd_socket_destruct,
     .socket_bind = rpc__bsd_socket_bind,

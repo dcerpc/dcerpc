@@ -101,6 +101,13 @@ typedef struct rpc_cn_assoc_s_t rpc_cn_assoc_t, *rpc_cn_assoc_p_t;
 
 typedef struct rpc_socket_vtbl_s
 {
+    /* Used when wrapping a native descriptor in a rpc_socket_t */
+    rpc_socket_error_t
+    (*socket_duplicate) (
+        rpc_socket_t sock,
+        rpc_protseq_id_t pseq_id,
+        const void * sockrep
+	);
     /* Used when opening a socket */
     rpc_socket_error_t
     (*socket_construct) (
@@ -286,6 +293,19 @@ typedef int rpc_socket_basic_t;
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/*
+ * R P C _ _ S O C K E T _ W R A P
+ *
+ * Take an existing native socket descriptor and wrap it in
+ * a rpc_socket_t.
+ */
+
+PRIVATE rpc_socket_error_t rpc__socket_wrap _DCE_PROTOTYPE_((
+        rpc_protseq_id_t pseq_id,
+        const void *	sockrep,
+        rpc_socket_t *	sock
+    ));
 
 /*
  * R P C _ _ S O C K E T _ O P E N
@@ -738,6 +758,7 @@ rpc__transport_info_equal(
                                                 /* progress */
 #define RPC_C_SOCKET_EISCONN      EISCONN       /* socket is already */
                                                 /* connected */
+#define RPC_C_SOCKET_ENOTSUP      ENOTSUP       /* operation not supported */
 
 /*
  * A macro to determine if an socket error can be recovered from by

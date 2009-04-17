@@ -90,6 +90,15 @@
 }
 
 /*
+ * R P C _ _ C N _ N E T W O R K _ U S E _ S O C K E T
+ */
+
+PRIVATE void rpc__cn_network_use_socket _DCE_PROTOTYPE_ ((
+    rpc_socket_t		/* int */   /*rpc_sock*/,
+    unsigned32                  /* in  */   /*max_calls*/,
+    unsigned32                  /* out */   * /*st*/));
+
+/*
  * R P C _ _ C N _ N E T W O R K _ U S E _ P R O T S E Q 
  */
 

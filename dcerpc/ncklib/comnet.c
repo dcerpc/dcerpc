@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2009 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -2681,6 +2682,143 @@ unsigned32              *status;
     }
 }
 
+/*
+**++
+**
+**  ROUTINE NAME:       rpc_server_use_protseq_socket
+**
+**  SCOPE:              PUBLIC - declared in rpc.idl
+**
+**  DESCRIPTION:
+**
+**  Register an RPC protocol sequence for an already native socket.
+**
+**  INPUTS:
+**
+**      rpc_protseq     The RPC protocol sequence to be registered.
+**
+**      max_calls       The maximum number of concurrent calls to be
+**                      allowed for this protocol sequence.
+**
+**      sockrep         A pointer to a native socket representation
+**                      of the type given by rpc_protseq.
+**
+**  INPUTS/OUTPUTS:     none
+**
+**  OUTPUTS:
+**
+**      status          The result of the operation. One of:
+**                          rpc_s_ok
+**                          rpc_s_no_memory
+**                          rpc_s_coding_error
+**                          rpc_s_invalid_rpc_protseq
+**                          rpc_s_protseq_not_supported
+**
+**  IMPLICIT INPUTS:    none
+**
+**  IMPLICIT OUTPUTS:   none
+**
+**  FUNCTION VALUE:     void
+**
+**  SIDE EFFECTS:       none
+**
+**--
+**/
+extern void rpc_server_use_protseq_socket
+#ifdef _DCE_PROTO_
+(
+    unsigned_char_p_t rpc_protseq,
+    unsigned32 max_calls,
+    void *sockrep,
+    unsigned32 *status
+)
+#else
+(rpc_protseq, max_calls, sockrep, status)
+unsigned_char_p_t rpc_protseq;
+unsigned32 max_calls;
+void *sockrep;
+unsigned32 *status;
+#endif
+{
+    rpc_protseq_id_t        pseq_id;
+    rpc_protocol_id_t       prot_id;
+    rpc_prot_network_epv_p_t net_epv;
+    rpc_socket_t            rpc_sock;
+    rpc_socket_error_t	    serr;
+
+    rpc_addr_vector_p_t     rpc_addr_vec;
+
+    CODING_ERROR (status);
+    RPC_VERIFY_INIT ();
+
+    RPC_DBG_PRINTF (rpc_es_dbg_general, 1, ("use_protseq_socket %s\n", rpc_protseq));
+
+    /* Find the correct entry in the RPC Protocol Sequence ID table using the
+     * RPC Protocol Sequence string passed in as an argument.
+     */
+    pseq_id = rpc__network_pseq_id_from_pseq (rpc_protseq, status);
+    if (*status != rpc_s_ok)
+    {
+        return;
+    }
+
+    if (!RPC_PROTSEQ_INQ_SUPPORTED (pseq_id))
+    {
+	*status = rpc_s_protseq_not_supported;
+	return;
+    }
+
+    /* Duplicate the native socket representation. It's up to the client to
+     * decide whether or not it still wants the original socket.
+     */
+    serr = rpc__socket_duplicate (pseq_id, sockrep, &rpc_sock);
+
+    if (RPC_SOCKET_IS_ERR (serr))
+    {
+        RPC_DBG_GPRINTF (
+            ("rpc_server_use_protseq_socket: can't create - serror %d\n",
+            RPC_SOCKET_ETOI (serr)));
+        *status = rpc_s_cant_create_sock;
+        return;
+    }
+
+    rpc__socket_set_close_on_exec (rpc_sock);
+
+    /* Find the Network EPV in the RPC Protocol table using the RPC
+     * Protocol ID found in the RPC Protocol Sequence ID table entry.
+     */
+    prot_id = RPC_PROTSEQ_INQ_PROT_ID (pseq_id);
+    net_epv = RPC_PROTOCOL_INQ_NETWORK_EPV (prot_id);
+
+    /* Call the protocol service to do the real work of creating the
+     * socket(s), setting them up right, and adding them (via calls
+     * to rpc__network_add_desc). Note that protocols are not
+     * required to support using a pre-made socket.
+     */
+
+    if (net_epv->network_use_socket == NULL)
+    {
+	RPC_SOCKET_CLOSE (rpc_sock);
+	*status = rpc_s_protocol_error;
+	return;
+    }
+
+    /* Ignore max_calls because rpc_server_use_protseq_ep() does.  */
+    max_calls = rpc_c_protseq_max_reqs_default;
+
+    (*net_epv->network_use_socket) (rpc_sock, max_calls, status);
+
+    if (*status != rpc_s_ok)
+    {
+	RPC_SOCKET_CLOSE (rpc_sock);
+	return;
+    }
+
+    *status = rpc_s_ok;
+    return;
+}
+
+
 /*
 **++
 **

@@ -1,3 +1,5 @@
+/* Portions Copyright (c) 2009 Apple Inc. All rights reserved. */
+
 #include <commonp.h>
 #include <com.h>
 #include <comprot.h>
@@ -26,6 +28,52 @@ rpc__socket_close_basic (
     return rpc__bsd_socket_close_basic(sock);
 }
 
+/* Wrap a native socket representation. */
+rpc_socket_error_t
+rpc__socket_duplicate (
+    rpc_protseq_id_t pseq_id,
+    const void * sockrep,
+    rpc_socket_t * sock
+    )
+{
+    int err = RPC_C_SOCKET_OK;
+    struct rpc_socket_vtbl_s * socket_vtbl;
+
+    socket_vtbl = rpc_g_protseq_id[pseq_id].socket_vtbl;
+    if (socket_vtbl->socket_duplicate == NULL) {
+	return RPC_C_SOCKET_ENOTSUP;
+    }
+
+    *sock = calloc(1, sizeof(**sock));
+
+    if (!*sock)
+    {
+        err = ENOMEM;
+        goto error;
+    }
+
+    (*sock)->vtbl = socket_vtbl;
+    (*sock)->pseq_id = pseq_id;
+
+    err = (*sock)->vtbl->socket_duplicate(*sock, pseq_id, sockrep);
+    if (err)
+    {
+        goto error;
+    }
+
+done:
+
+    return err;
+
+error:
+
+    if (*sock)
+    {
+        free(*sock);
+    }
+
+    goto done;
+}
 
 /* Open a socket */
 rpc_socket_error_t

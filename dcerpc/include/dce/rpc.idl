@@ -584,6 +584,23 @@ void rpc_server_use_protseq_ep
 );
 
 /*
+ * R P C _ S E R V E R _ U S E _ P R O T S E Q _ S O C K E T
+ *
+ * This routine tells the RPC runtime to listen for RPCs on the given
+ * native socket handle. The type of the socket must match the given
+ * protocol sequence. Note that the protocol sequence and the socket
+ * representation must be supported by both the RPC runtime and the
+ * operating system.
+ */
+void rpc_server_use_protseq_socket
+(
+    [in]        unsigned_char_p_t       protseq,
+    [in]        unsigned32              max_call_requests,
+    [in]        void                    *sockrep,
+    [out]       unsigned32              *status
+);
+
+/*
  * R P C _ S E R V E R _ U S E _ P R O T S E Q _ I F
  *
  * This routine tells the RPC runtime to listen for RPCs on the protocol

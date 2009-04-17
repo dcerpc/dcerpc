@@ -1636,6 +1636,7 @@ error:
 
 rpc_socket_vtbl_t rpc_g_smb_socket_vtbl =
 {
+    .socket_duplicate = NULL,
     .socket_construct = rpc__smb_socket_construct,
     .socket_destruct = rpc__smb_socket_destruct,
     .socket_bind = rpc__smb_socket_bind,

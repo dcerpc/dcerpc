@@ -225,6 +225,13 @@ typedef struct
 /*
  * The Network EPV.
  */
+
+typedef void (*rpc_prot_net_use_socket_fn_t) _DCE_PROTOTYPE_ ((
+	rpc_socket_t		    /* int */	 /*rpc_sock*/,
+        unsigned32                  /* in  */    /*max_calls*/,
+        unsigned32                  /* out */   * /*st*/
+    ));
+
 typedef void (*rpc_prot_net_use_protseq_fn_t) _DCE_PROTOTYPE_ ((
         rpc_protseq_id_t            /* in  */    /*pseq_id*/,
         unsigned32                  /* in  */    /*max_calls*/,
@@ -277,6 +284,7 @@ typedef void (*rpc_prot_net_inq_prot_vers_fn_t) _DCE_PROTOTYPE_ ((
 
 typedef struct
 {
+    rpc_prot_net_use_socket_fn_t    network_use_socket;
     rpc_prot_net_use_protseq_fn_t   network_use_protseq;
     rpc_prot_net_mon_fn_t           network_mon;
     rpc_prot_net_stop_mon_fn_t      network_stop_mon;
