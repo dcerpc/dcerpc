@@ -37,7 +37,7 @@ rpc__socket_duplicate (
     )
 {
     int err = RPC_C_SOCKET_OK;
-    struct rpc_socket_vtbl_s * socket_vtbl;
+    const rpc_socket_vtbl_t * socket_vtbl;
 
     socket_vtbl = rpc_g_protseq_id[pseq_id].socket_vtbl;
     if (socket_vtbl->socket_duplicate == NULL) {

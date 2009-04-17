@@ -11,6 +11,6 @@
 
 #include <comsoc.h>
 
-EXTERNAL rpc_socket_vtbl_t rpc_g_smb_socket_vtbl;
+EXTERNAL const rpc_socket_vtbl_t rpc_g_smb_socket_vtbl;
 
 #endif

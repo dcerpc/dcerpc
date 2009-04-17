@@ -274,7 +274,7 @@ typedef struct rpc_socket_vtbl_s
 
 typedef struct rpc_socket_handle_s
 {
-    rpc_socket_vtbl_t* vtbl;
+    const rpc_socket_vtbl_t* vtbl;
     rpc_protseq_id_t pseq_id;
     union
     {

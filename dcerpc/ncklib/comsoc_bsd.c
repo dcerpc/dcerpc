@@ -1873,7 +1873,7 @@ rpc__bsd_socket_transport_info_equal(
 }
 
 
-PRIVATE rpc_socket_vtbl_t rpc_g_bsd_socket_vtbl =
+PRIVATE const rpc_socket_vtbl_t rpc_g_bsd_socket_vtbl =
 {
     .socket_duplicate = rpc__bsd_socket_duplicate,
     .socket_construct = rpc__bsd_socket_construct,

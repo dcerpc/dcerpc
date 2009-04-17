@@ -380,7 +380,7 @@ typedef struct
     rpc_network_if_id_t         network_if_id;
     rpc_protseq_t               rpc_protseq;
     rpc_port_restriction_list_p_t        port_restriction_list;
-    struct rpc_socket_vtbl_s*   socket_vtbl;
+    const struct rpc_socket_vtbl_s *   socket_vtbl;
 } rpc_protseq_id_elt_t, *rpc_protseq_id_elt_p_t;
 
 /***********************************************************************/
