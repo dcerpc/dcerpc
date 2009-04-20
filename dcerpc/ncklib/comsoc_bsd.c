@@ -1373,7 +1373,22 @@ ATTRIBUTE_UNUSED uid_t		    *euid;
 ATTRIBUTE_UNUSED gid_t		    *egid;
 #endif
 {
-#ifdef SO_PEERCRED
+    rpc_socket_error_t  serr = RPC_C_SOCKET_ENOTSUP;
+
+#if HAVE_GETPEEREID
+
+    RPC_SOCKET_DISABLE_CANCEL;
+    serr = ((getpeereid(sock->data.word, euid, egid) == -1) ? errno
+                                            : RPC_C_SOCKET_OK);
+    RPC_SOCKET_RESTORE_CANCEL;
+
+    if (serr != RPC_C_SOCKET_OK)
+    {
+        RPC_DBG_GPRINTF(("(rpc__bsd_socket_getpeereid) error=%d\n", serr));
+    }
+
+#elif defined(SO_PEERCRED)
+
     rpc_socket_error_t  serr;
     struct ucred	peercred;
     socklen_t		peercredlen = sizeof(peercred);
@@ -1392,10 +1407,9 @@ ATTRIBUTE_UNUSED gid_t		    *egid;
         RPC_DBG_GPRINTF(("(rpc__bsd_socket_getpeereid) error=%d\n", serr));
     }
 
-    return(serr);
-#else
-    return(RPC_C_SOCKET_OK);
 #endif
+
+    return(serr);
 }
 
 INTERNAL
