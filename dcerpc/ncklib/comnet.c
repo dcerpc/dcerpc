@@ -50,6 +50,7 @@
 #include <comcthd.h>    /* Externals for Call Thread sub-component  */
 #include <comnetp.h>    /* Internals for Network sub-component      */
 #include <comfwd.h>     /* Externals for Common Services Fwd comp   */
+#include <dce/mgmt.h>
 
 /*
 *****************************************************************************
@@ -90,6 +91,13 @@ INTERNAL boolean                    in_server_listen;
  * Condition variable signalled to shutdown "rpc_server_listen" thread.
  */
 INTERNAL rpc_cond_t                 shutdown_cond;
+INTERNAL boolean		    in_server_shutdown;
+
+/*
+ * Count of registered clients for idle detection.
+ */
+INTERNAL rpc_mutex_t active_clients_mutex;
+INTERNAL volatile signed32 active_clients = 0;
 
 
 
@@ -414,7 +422,51 @@ unsigned32              *status;
      */
     DCETHREAD_TRY
     {
-        RPC_COND_WAIT (shutdown_cond, listener_state.mutex);
+        unsigned idle_cycles = 0;
+
+        for (;;)
+        {
+	    unsigned32 timeo = rpc__server_inq_idle_timeout ();
+
+	    if (timeo < rpc_s_server_idle_infinite_timeout)
+	    {
+		struct timespec wtime;
+		wtime.tv_sec = time(NULL) + timeo;
+		wtime.tv_nsec = 0;
+
+		RPC_COND_TIMED_WAIT (shutdown_cond, listener_state.mutex,
+			&wtime);
+	    }
+	    else
+	    {
+		RPC_COND_WAIT (shutdown_cond, listener_state.mutex);
+	    }
+
+            /* First check whether we were asked to shut down. If so, let's
+             * just do it.
+             */
+	    if (in_server_shutdown)
+	    {
+		break;
+	    }
+
+            /* Nope, we must have tripped an idle timeout. */
+            if (active_clients == 0)
+            {
+                ++idle_cycles;
+            }
+            else
+            {
+                idle_cycles = 0;
+            }
+
+            if (idle_cycles > 1)
+            {
+                RPC_DBG_GPRINTF (
+                        ("(rpc_server_listen) idling out\n"));
+                break;
+            }
+        }
     }
     DCETHREAD_FINALLY
     {
@@ -450,6 +502,7 @@ unsigned32              *status;
          * the listener's mutex held).
          */
 
+        in_server_shutdown = false;
         RPC_MUTEX_UNLOCK (listener_state.mutex);
 
         /*
@@ -517,6 +570,7 @@ unsigned32              *status;
         return;
     }
 
+    in_server_shutdown = true;
     RPC_COND_SIGNAL (shutdown_cond, listener_state.mutex);
 
     RPC_MUTEX_UNLOCK (listener_state.mutex);
@@ -561,7 +615,125 @@ PRIVATE boolean32 rpc__server_is_listening (void)
      */
     return (in_server_listen);
 }
-
+
+
+PRIVATE void rpc__server_incr_clients (void)
+{
+    RPC_MUTEX_LOCK (active_clients_mutex);
+    ++active_clients;
+    RPC_MUTEX_UNLOCK (active_clients_mutex);
+}
+
+PRIVATE void rpc__server_decr_clients (void)
+{
+    RPC_MUTEX_LOCK (active_clients_mutex);
+    if (active_clients) {
+        --active_clients;
+    }
+    RPC_MUTEX_UNLOCK (active_clients_mutex);
+}
+
+/*
+**++
+**
+**  ROUTINE NAME:       rpc__server_set_idle_timeout
+**
+**  SCOPE:              PRIVATE - declared in com.h
+**
+**  DESCRIPTION:
+**
+**  Sets the idle period (in seconds) after which rpc_server_listen()
+**  may return.
+**
+**
+**  INPUTS:
+**
+**      idle_secs       The idle timeout in seconds.
+**
+**  INPUTS/OUTPUTS:     none
+**
+**  OUTPUTS:
+**
+**      status          The result of the operation. One of:
+**                          rpc_s_ok
+**                          rpc_s_coding_error
+**
+**  IMPLICIT INPUTS:    none
+**
+**  IMPLICIT OUTPUTS:   none
+**
+**  FUNCTION VALUE:     void
+**
+**  SIDE EFFECTS:       none
+**
+**--
+**/
+
+PRIVATE void rpc__server_set_idle_timeout
+#ifdef _DCE_PROTO_
+(
+    unsigned32                  idle_secs,
+    unsigned32                  *status
+)
+#else
+(idle_secs, status)
+unsigned32                  idle_secs;
+unsigned32                  *status;
+#endif
+{
+
+    CODING_ERROR (status);
+    RPC_VERIFY_INIT ();
+
+    /* On practically every architecture (all?), a single 32bit read or write
+     * is guaranteed to be atomic, so we don't need to lock this.
+     */
+    listener_state.idle_timeout_secs = idle_secs;
+    *status = rpc_s_ok;
+}
+
+/*
+**++
+**
+**  ROUTINE NAME:       rpc__server_inq_idle_timeout
+**
+**  SCOPE:              PRIVATE - declared in com.h
+**
+**  DESCRIPTION:
+**
+**  Returns the idle period (in seconds) after which rpc_server_listen()
+**  may return.
+**
+**
+**  INPUTS:             none
+**
+**  INPUTS/OUTPUTS:     none
+**
+**  OUTPUTS:            none
+**
+**  IMPLICIT INPUTS:    none
+**
+**  IMPLICIT OUTPUTS:   none
+**
+**  FUNCTION VALUE:     void
+**
+**      return - The idle timeout in seconds.
+**
+**  SIDE EFFECTS:       none
+**
+**--
+**/
+PRIVATE unsigned32 rpc__server_inq_idle_timeout (void)
+{
+    unsigned32 idle_secs;
+
+    RPC_VERIFY_INIT ();
+
+    idle_secs = listener_state.idle_timeout_secs;
+    return idle_secs;
+}
+
+
 /*
 **++
 **
@@ -1874,6 +2046,9 @@ unsigned32              *status;
 
     RPC_COND_INIT (shutdown_cond, listener_state.mutex);
 
+
+    RPC_MUTEX_INIT (active_clients_mutex);
+    rpc__server_set_idle_timeout(rpc_s_server_idle_default_timeout, status);
 
     /*
      * Allocate a local protseq vector structure.

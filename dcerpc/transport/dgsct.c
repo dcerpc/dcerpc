@@ -478,6 +478,7 @@ unsigned32 seq;
      * add the SCT monitor to the timer queue to handle aging SCTE's.
      */
 
+    rpc__server_incr_clients();
     num_sct_entries++;
     if (num_sct_entries == 1)
     {
@@ -584,6 +585,7 @@ pointer_t junk;
 
                 RPC_MEM_FREE(scte, RPC_C_MEM_DG_SCTE);
 
+                rpc__server_decr_clients();
                 num_sct_entries--;
 
                 scte = (prev_scte == NULL) ? rpc_g_dg_sct[i] : prev_scte->next;

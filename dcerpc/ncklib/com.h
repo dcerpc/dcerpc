@@ -1656,7 +1656,16 @@ PRIVATE void rpc__server_stop_listening _DCE_PROTOTYPE_ ((
 
 PRIVATE boolean32 rpc__server_is_listening _DCE_PROTOTYPE_ ((void));
 
+PRIVATE void rpc__server_set_idle_timeout _DCE_PROTOTYPE_ ((
+        unsigned32                  /* idle_secs */,
+        unsigned32                  * /* status */
+    ));
 
+PRIVATE unsigned32 rpc__server_inq_idle_timeout _DCE_PROTOTYPE_ ((void));
+
+PRIVATE void rpc__server_incr_clients _DCE_PROTOTYPE_ ((void));
+
+PRIVATE void rpc__server_decr_clients _DCE_PROTOTYPE_ ((void));
 
 /***********************************************************************/
 /***********************************************************************/

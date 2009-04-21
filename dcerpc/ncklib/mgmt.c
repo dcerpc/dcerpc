@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2009 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -642,6 +643,171 @@ unsigned32              *status;
         return (*status == rpc_s_ok ? true : false);
      }
 }
+
+/*
+**++
+**
+**  ROUTINE NAME:       rpc_mgmt_set_server_idle_timeout
+**
+**  SCOPE:              PUBLIC - declared in rpc.idl
+**
+**  DESCRIPTION:
+**
+**  This is a Local/Remote management function that determines sets the
+**  idle timout for a server. If the server is idle for the specified number
+**  of seconds, it is free to exit.
+**
+**  INPUTS:
+**
+**      binding_h       The binding handle for this remote call.
+**      idle_secs       The idle timout in seconds.
+**
+**  INPUTS/OUTPUTS:     none
+**
+**  OUTPUTS:
+**
+**      status          A value indicating the status of the routine.
+**
+**          rpc_s_ok        The call was successful.
+**          rpc_s_invalid_binding
+**                          RPC Protocol ID in binding handle was invalid.
+**
+**  IMPLICIT INPUTS:    none
+**
+**  IMPLICIT OUTPUTS:   none
+**
+**  FUNCTION VALUE:     void
+**
+**  SIDE EFFECTS:       none
+**
+**--
+**/
+
+PUBLIC void rpc_mgmt_set_server_idle_timeout
+#ifdef _DCE_PROTO_
+(
+    rpc_binding_handle_t    binding_h,
+    unsigned32		    idle_secs,
+    unsigned32              *status
+)
+#else
+(binding_h, idle_secs, status)
+rpc_binding_handle_t    binding_h;
+unsigned32              idle_secs;
+unsigned32              *status;
+#endif
+{
+
+    RPC_VERIFY_INIT ();
+
+    /*
+     * if this is a local request, just do it locally
+     */
+    if (binding_h == NULL)
+    {
+        *status = rpc_s_ok;
+        rpc__server_set_idle_timeout(idle_secs, status);
+    }
+    else
+    {
+        remote_binding_validate(binding_h, status);
+        if (*status != rpc_s_ok)
+            return (false);
+
+        /*
+         * call the corresponding remote routine
+         */
+        (*mgmt_v1_0_c_epv.rpc__mgmt_set_server_idle_timeout)
+	    (binding_h, idle_secs, status);
+
+        if (*status == rpc_s_call_cancelled)
+            dcethread_interrupt_throw(dcethread_self());
+
+        return (*status == rpc_s_ok ? true : false);
+     }
+}
+
+/*
+**++
+**
+**  ROUTINE NAME:       rpc_mgmt_inq_server_idle_timeout
+**
+**  SCOPE:              PUBLIC - declared in rpc.idl
+**
+**  DESCRIPTION:
+**
+**  This is a Local/Remote management function that queries the
+**  idle timout for a server. If the server is idle for the specified
+**  number of seconds, it is free to exit.
+**
+**  INPUTS:
+**
+**      binding_h       The binding handle for this remote call.
+**
+**  INPUTS/OUTPUTS:     none
+**
+**  OUTPUTS:
+**
+**      status          A value indicating the status of the routine.
+**
+**          rpc_s_ok        The call was successful.
+**          rpc_s_invalid_binding
+**                          RPC Protocol ID in binding handle was invalid.
+**
+**  IMPLICIT INPUTS:    none
+**
+**  IMPLICIT OUTPUTS:   none
+**
+**  FUNCTION VALUE:     void
+**
+**      return - The idle timeout in seconds.
+**
+**  SIDE EFFECTS:       none
+**
+**--
+**/
+
+PUBLIC unsigned32 rpc_mgmt_inq_server_idle_timeout
+#ifdef _DCE_PROTO_
+(
+    rpc_binding_handle_t    binding_h,
+    error_status_t          *status
+)
+#else
+(binding_h, status)
+rpc_binding_handle_t    binding_h;
+#endif
+{
+
+    RPC_VERIFY_INIT ();
+
+    /*
+     * if this is a local request, just do it locally
+     */
+    if (binding_h == NULL)
+    {
+        *status = rpc_s_ok;
+        return rpc__server_inq_idle_timeout();
+    }
+    else
+    {
+        remote_binding_validate(binding_h, status);
+        if (*status != rpc_s_ok)
+            return (false);
+
+        /*
+         * call the corresponding remote routine
+         */
+        (*mgmt_v1_0_c_epv.rpc__mgmt_inq_server_idle_timeout)
+	    (binding_h, status);
+
+        if (*status == rpc_s_call_cancelled)
+            dcethread_interrupt_throw(dcethread_self());
+
+        return (*status == rpc_s_ok ? true : false);
+     }
+}
+
 
 /*
 **++

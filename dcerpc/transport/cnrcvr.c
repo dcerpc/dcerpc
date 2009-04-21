@@ -313,6 +313,7 @@ rpc_cn_assoc_p_t        assoc;
                  * A connection has been established.
                  */
                 RPC_CN_STATS_INCR (connections);
+                rpc__server_incr_clients ();
                 DCETHREAD_TRY
                 {
                     receive_dispatch (assoc);
@@ -350,6 +351,7 @@ rpc_cn_assoc_p_t        assoc;
                  * close the socket and set the connection state
                  * to closed.
                  */
+                rpc__server_decr_clients();
                 RPC_CN_STATS_INCR (closed_connections);
                 serr = RPC_SOCKET_CLOSE (assoc->cn_ctlblk.cn_sock); /* must not be a cancellation point */
                 if (RPC_SOCKET_IS_ERR(serr))

@@ -893,6 +893,25 @@ boolean32 rpc_mgmt_is_server_listening
 );
 
 /*
+ * R P C _ M G M T _ S E T _ S E R V E R _ I D L E _ T I M E O U T
+ */
+void rpc_mgmt_set_server_idle_timeout
+(
+    [in]        rpc_binding_handle_t    binding_handle,
+    [in]        unsigned32              idle_secs,
+    [out]       error_status_t          *status
+);
+
+/*
+ * R P C _ M G M T _ I N Q _ S E R V E R _ I D L E _ T I M E O U T
+ */
+unsigned32 rpc_mgmt_inq_server_idle_timeout
+(
+    [in]        rpc_binding_handle_t    binding_handle,
+    [out]       error_status_t          *status
+);
+
+/*
  * R P C _ M G M T _ S E T _ C A N C E L _ T I M E O U T
  *
  * Set the amount of time for the RPC runtime to wait for a server to

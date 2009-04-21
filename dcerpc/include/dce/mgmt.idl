@@ -111,4 +111,28 @@ void rpc__mgmt_inq_princ_name
     [out]       error_status_t          *status
 );
 
+const unsigned32 rpc_s_server_idle_default_timeout = 0xffffffff;
+const unsigned32 rpc_s_server_idle_infinite_timeout = 0xffffffff;
+
+/*
+ * R P C _ _ M G M T _ S E T _ S E R V E R _ I D L E _ T I M E O U T
+ */
+[idempotent]
+void rpc__mgmt_set_server_idle_timeout
+(
+    [in]        handle_t                binding_handle,
+    [in]        unsigned32              idle_secs,
+    [out]       error_status_t          *status
+);
+
+/*
+ * R P C _ _ M G M T _ I N Q _ S E R V E R _ I D L E _ T I M E O U T
+ */
+[idempotent]
+unsigned32 rpc__mgmt_inq_server_idle_timeout
+(
+    [in]        handle_t                binding_handle,
+    [out]       error_status_t          *status
+);
+
 }

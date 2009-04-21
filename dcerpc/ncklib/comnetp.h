@@ -83,6 +83,7 @@ typedef struct
     unsigned32          status;      /* used to convey information about */
                                      /* the state of the table.  see     */
                                      /* rpc_server_listen.               */
+    unsigned32          idle_timeout_secs;
     rpc_listener_sock_t socks[ RPC_C_SERVER_MAX_SOCKETS ];
     unsigned            reload_pending: 1;
 } rpc_listener_state_t, *rpc_listener_state_p_t;
