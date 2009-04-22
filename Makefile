@@ -26,7 +26,7 @@ Project         := dcerpc
 UserType        := Developer
 
 Install_Target := install
-Install_Prefix := /opt/local/dcerpc
+Install_Prefix := /usr/local
 RC_Install_Prefix = $(Install_Prefix)
 
 Extra_Configure_Flags := \

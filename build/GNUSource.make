@@ -118,6 +118,7 @@ BUILDHOST := `$(ARCH) | $(XLATE_ARCH)`-apple-darwin
 Configure_Flags = --prefix="$(Install_Prefix)"	\
 		  --mandir="$(Install_Man)"	\
 		  --infodir="$(Install_Info)"	\
+		  --localstatedir="$(VARDIR)"	\
 		  --disable-dependency-tracking \
 		  $(Extra_Configure_Flags)
 
