@@ -25,25 +25,49 @@
 Project         := dcerpc
 UserType        := Developer
 
-ifeq ($(GnuNoStrip),YES)
-STRIP_X	:= true
-else
-STRIP_X	:= strip -x
-endif
+Install_Target := install
+Install_Prefix := /opt/local/dcerpc
+RC_Install_Prefix = $(Install_Prefix)
 
-Extra_Configure_Flags :=\
-	--disable-dependency-tracking \
+Extra_Configure_Flags := \
 	--disable-afnp	\
 	--disable-schannel \
 	--disable-demoprogs
+
+Extra_GCC_Warnings := \
+	-Wall \
+	-Wextra \
+	-Wshadow \
+	-Wshorten-64-to-32 \
+	-Wmissing-format-attribute \
+	-Wbad-function-cast \
+	-Wstrict-prototypes \
+	-Wpointer-arith \
+	-Wcast-align \
+	-Wwrite-strings \
+	-Wformat=2
+
+Extra_CC_Flags := \
+	-D_FORTIFY_SOURCE=2 \
+	-fstack-protector \
+	-fno-strict-aliasing \
+	-fPIC \
+	-Os \
+	-g \
+	$(Extra_GCC_Warnings)
+
+GnuAfterInstall := clean-dstroot install-symroot
+
+NCPU := $(shell sysctl hw.ncpu | awk -F: '{print $$2}' )
+NPROCS := $(shell expr $(NCPU) '*' 2)
 
 build:: MAKEFLAGS += -j $(NPROCS)
 
 # When the default makefiles support building multiple architectures in
 # separate directories with multiple invokations of configure, we
 # can go back to using them.
-# include $(MAKEFILEPATH)/CoreOS/ReleaseControl/GNUSource.make
 
+# include $(MAKEFILEPATH)/CoreOS/ReleaseControl/GNUSource.make
 include build/GNUSource.make
 
 Install_Target := install
@@ -54,6 +78,22 @@ install_source:: autogen
 autogen:
 	cd $(Sources) && ./buildconf
 
-RC_OBJROOTS := $(addprefix $(OBJROOT)/, $(RC_ARCHS))
+# Remove all the default stuff that the DCERPC build installs, but that we
+# don't really want in the OS install.
+clean-dstroot:
+	$(_v)$(RM) -r -f $(DSTROOT)$(Install_Prefix)/bin/idl
+	$(_v)$(RM) -r -f $(DSTROOT)$(Install_Prefix)/bin/uuid
+	$(_v)$(RM) -r -f $(DSTROOT)$(Install_Prefix)/bin/demo
+	$(_v)$(RM) -r -f $(DSTROOT)$(Install_Prefix)/include/ncklib
+	$(_v)$(RM) -r -f $(DSTROOT)$(Install_Prefix)/include/compat
+	$(_v)find $(DSTROOT) -name \*.la -delete
+
+# Copy binaries into $(SYMROOT) so that the builder can generate dSYMs.
+install-symroot:
+	$(_v)for d in bin sbin lib ; do \
+		$(INSTALL_DIRECTORY) $(SYMROOT)$(Install_Prefix)/$$d && \
+		$(CP) $(DSTROOT)$(Install_Prefix)/$$d/* \
+			$(SYMROOT)$(Install_Prefix)/$$d ; \
+	done
 
 # vim: set sw=8 ts=8 noet tw=0 :

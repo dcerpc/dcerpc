@@ -2,7 +2,7 @@
 # Makefile for Apple Release Control (GNU source projects)
 #
 # Wilfredo Sanchez | wsanchez@apple.com
-# Copyright (c) 1997-1999 Apple Computer, Inc.
+# Copyright (c) 1997-2009 Apple Computer, Inc.
 #
 # @APPLE_LICENSE_HEADER_START@
 #
@@ -44,9 +44,9 @@ endif
 
 Passed_Targets += check
 
+# Common.make adds multiple -arch options to Extra_CC_Flags. Firstly,
+# it should NOT dink with this. Secondly, this breaks everything.
 Extra_CC_Flags_saved:=$(Extra_CC_Flags)
-# Common.make adds multiple -arch options to Extra_CC_Flags. Firstly, it should
-# NOT dink with this. Secondly, this breaks everything.
 include $(CoreOSMakefiles)/ReleaseControl/Common.make
 Extra_CC_Flags=$(Extra_CC_Flags_saved)
 
@@ -91,11 +91,17 @@ ifndef Configure
 Configure = $(Sources)/configure
 endif
 
-Environment += TEXI2HTML="$(TEXI2HTML) -subdir ."
-Environment += CC="$(CC) -arch $$arch" CXX="$(CXX) -arch $$arch"
-Environment += AS="$(AS) -arch $$arch" LD="$(LD) -arch $$arch"
-Environment += NM="nm -arch $$arch"
-Environment += AR=$(AR) STRIP=$(STRIP) RANLIB=ranlib
+# Common.make pollutes $(Environment) with CFLAGS and other junk that we
+# can't easily control and that doesn't do the right think for us. So
+# we reset 
+Environment :=
+Environment += CFLAGS="-arch $$arch $(Extra_CC_Flags)"
+Environment += AS="$(AS) -arch $$arch"
+Environment += LD="$(LD) -arch $$arch"
+Environment += NM="$(NM) -arch $$arch"
+Environment += AR=$(AR)
+Environment += STRIP=$(STRIP)
+Environment += RANLIB=$(RANLIB)
 
 CC_Archs      = # set by CC
 
@@ -113,9 +119,12 @@ Configure_Flags = --prefix="$(Install_Prefix)"	\
 		  --mandir="$(Install_Man)"	\
 		  --infodir="$(Install_Info)"	\
 		  --disable-dependency-tracking \
-		  --build=$(BUILDHOST) \
-		  --host=`echo $$arch | $(XLATE_ARCH)`-apple-darwin \
 		  $(Extra_Configure_Flags)
+
+# In some projects, we want to engage the autoconf cross-compilation
+# mechanism, but DCERPC is not set up for that and fails miserably.
+#		  --build=$(BUILDHOST) \
+#		  --host=`echo $$arch | $(XLATE_ARCH)`-apple-darwin \
 
 Install_Flags = DESTDIR=$(BuildDirectory)/install-$$arch \
 	               $(Extra_Install_Flags)

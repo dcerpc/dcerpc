@@ -5,3 +5,33 @@ This project is a fork of the Likewise DCE/RPC renovation.
 
 The Likewise git repository is available here:
     git://git.likewisesoftware.com/likewise-open.git
+
+Build notes.
+------------
+
+The build system for DCE/RPC is relatively complex, partly due to
+the use of automake and libtool and partly because it does a lot
+of code generation.
+
+The automake and libtool issues are generally caused by a lack of
+support for Darwin in these tools. They don't really understand how
+dylibs work, and they certainly don't understand how multi-architecture
+builds ought to work.
+
+The code generation is a problem because it means that the autoconf
+cross-compilation mechanism needs special sauce to work. There is
+no such special sauce in the DCE/RPC build system. For cross-compilation
+to work, we would need to build dceidl for the host system and for
+the target system. The one we build for the host system would need
+to be an IDL cross-compiler, generating c code suitable for th
+target system. Until this mechanism is available, we can't build
+ppc on i386 or vice versa.
+
+So we can really only support multi-arch builds on i386 and x86_64,
+because we use the "generic" RPC architecture, which pulls definitions
+from stdint.h. However, we still can't allow the cross-compilation
+support to engage, so we have to pass the architcture flags in
+CFLAGS. This means that for everything to work right, we need to
+clobber CFLAGS in the top-level makefile and ignore that flags that
+configure detects.
+
