@@ -64,6 +64,14 @@ AX_CFLAGS_GCC_OPTION(-Wcast-align)
 AX_CFLAGS_GCC_OPTION(-Wwrite-strings)
 AX_CFLAGS_GCC_OPTION(-Wformat=2)
 
+# If we have a gcc that does stack protection, also enable
+# string API function checking.
+AX_CFLAGS_GCC_OPTION(-fstack-protector, [],
+    [
+	CFLAGS="$CFLAGS -fstack-protector";
+	CPPFLAGS="$CPPFLAGS -D_FORTIFY_SOURCE=2";
+    ])
+
 # Specify desired UNIX interface
 case "$target_os" in
      *darwin*)
