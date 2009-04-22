@@ -18,7 +18,7 @@ esac
 case $target_os in
      linux*)   target_os="linux-gnu";;
      hpux11.*) target_os="hpux11.11";;
-     darwin*) target_os="darwin"; target_cpu=generic;;
+     darwin*) target_os="darwin";;
      solaris2.1*) target_os="solaris2.10";;
      freebsd6.*|freebsd7.*|freebsd8.*) target_os="freebsd6.0";;
 esac
@@ -76,8 +76,13 @@ case "$target_os" in
 		case $target_cpu in
 		    i386) AX_CFLAGS_GCC_OPTION(-arch i386) ;;
 		    x86_64) AX_CFLAGS_GCC_OPTION(-arch x86_64) ;;
+		    ppc|powerpc) AX_CFLAGS_GCC_OPTION(-arch ppc) ;;
+		    ppc64|powerpc64) AX_CFLAGS_GCC_OPTION(-arch ppc64) ;;
 		esac
 
+		# We need to use the generic arch headers so that we can
+		# merge them during fat builds.
+		target_cpu=generic
 		;;
      *freebsd*) 
 		FEATURETEST_CFLAGS="-D_SOCKADDR_LEN"
