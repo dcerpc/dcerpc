@@ -274,7 +274,7 @@ void rpc_ss_init_allocate_once(
 /******************************************************************************/
 static void *rpc_ss_client_default_malloc
 (
-    size_t size
+    idl_size_t size
 )
 {
     void *result = NULL;
@@ -338,17 +338,9 @@ static void rpc_ss_client_get_thread_ctx
 
         RPC_SS_THREADS_MUTEX_CREATE (&(p_support_ptrs->mutex));
 
-        p_support_ptrs->p_allocate = (idl_void_p_t (*)(
-#       ifdef IDL_PROTOTYPES
-            idl_size_t size
-#       endif
-            ))rpc_ss_client_default_malloc;
+        p_support_ptrs->p_allocate = rpc_ss_client_default_malloc;
 
-        p_support_ptrs->p_free = (void (*)(
-#       ifdef IDL_PROTOTYPES
-            idl_void_p_t ptr
-#       endif
-            ))free;
+        p_support_ptrs->p_free = free;
 
         thread_indirection_ptr = (rpc_ss_thread_indirection_t *)
                         malloc(sizeof(rpc_ss_thread_indirection_t));
@@ -456,17 +448,13 @@ void rpc_ss_set_thread_handle
 void rpc_ss_set_client_alloc_free
 #ifdef IDL_PROTOTYPES
 (
-    idl_void_p_t (*p_allocate)(
-        idl_size_t size
-    ),
-    void (*p_free)(
-        idl_void_p_t ptr
-    )
+    rpc_ss_p_alloc_t p_allocate,
+    rpc_ss_p_free_t p_free
 )
 #else
 ( p_allocate, p_free )
-    idl_void_p_t (*p_allocate)();
-    void (*p_free)();
+    rpc_ss_p_alloc_t p_allocate;
+    rpc_ss_p_free_t p_free;
 #endif
 {
     rpc_ss_thread_support_ptrs_t *p_support_ptrs;
@@ -484,25 +472,17 @@ void rpc_ss_set_client_alloc_free
 void rpc_ss_swap_client_alloc_free
 #ifdef IDL_PROTOTYPES
 (
-    idl_void_p_t (*p_allocate)(
-        idl_size_t size
-    ),
-    void (*p_free)(
-        idl_void_p_t ptr
-    ),
-    idl_void_p_t (**p_p_old_allocate)(
-        idl_size_t size
-    ),
-    void (**p_p_old_free)(
-        idl_void_p_t ptr
-    )
+    rpc_ss_p_alloc_t p_allocate,
+    rpc_ss_p_free_t p_free,
+    rpc_ss_p_alloc_t *p_p_old_allocate,
+    rpc_ss_p_free_t * p_p_old_free
 )
 #else
 ( p_allocate, p_free, p_p_old_allocate, p_p_old_free )
-    idl_void_p_t (*p_allocate)();
-    void         (*p_free)();
-    idl_void_p_t (**p_p_old_allocate)();
-    void         (**p_p_old_free)();
+    rpc_ss_p_alloc_t p_allocate;
+    rpc_ss_p_free_t p_free;
+    rpc_ss_p_alloc_t *p_p_old_allocate;
+    rpc_ss_p_free_t * p_p_old_free;
 #endif
 {
     rpc_ss_thread_support_ptrs_t *p_support_ptrs;

@@ -280,20 +280,25 @@ void rpc_ss_client_free _DCE_PROTOTYPE_ ( (idl_void_p_t) );
 
 typedef idl_void_p_t rpc_ss_thread_handle_t;
 
+/* Pointer to a malloc(3)-like function. */
+typedef idl_void_p_t (*rpc_ss_p_alloc_t)(idl_size_t);
+/* Pointer to a free(3)-like function. */
+typedef void (*rpc_ss_p_free_t)(idl_void_p_t);
+
 rpc_ss_thread_handle_t rpc_ss_get_thread_handle _DCE_PROTOTYPE_ ( (void) );
 
 void rpc_ss_set_thread_handle _DCE_PROTOTYPE_ ( (rpc_ss_thread_handle_t) );
 
 void rpc_ss_set_client_alloc_free _DCE_PROTOTYPE_ ((
-     idl_void_p_t (*)(idl_size_t),
-    void (*)(idl_void_p_t)
+    rpc_ss_p_alloc_t,
+    rpc_ss_p_free_t
 ));
- 
+
 void rpc_ss_swap_client_alloc_free _DCE_PROTOTYPE_ ((
-    idl_void_p_t (*)(idl_size_t),
-    void (*)(idl_void_p_t),
-    idl_void_p_t (**)(idl_size_t),
-    void (**)( idl_void_p_t)
+    rpc_ss_p_alloc_t,
+    rpc_ss_p_free_t,
+    rpc_ss_p_alloc_t *,
+    rpc_ss_p_free_t *
 ));
 
 void rpc_ss_enable_allocate _DCE_PROTOTYPE_ ( (void) );
@@ -329,18 +334,18 @@ void rpc_sm_free _DCE_PROTOTYPE_ ( (idl_void_p_t, idl_ulong_int * ) );
 rpc_ss_thread_handle_t rpc_sm_get_thread_handle _DCE_PROTOTYPE_ ( (idl_ulong_int * ) );
 
 void rpc_sm_set_client_alloc_free  _DCE_PROTOTYPE_ ((
-    idl_void_p_t (*)(idl_size_t),
-    void (*)(idl_void_p_t ),
+    rpc_ss_p_alloc_t,
+    rpc_ss_p_free_t,
     idl_ulong_int *
 ));
 
 void rpc_sm_set_thread_handle _DCE_PROTOTYPE_ ( ( rpc_ss_thread_handle_t , idl_ulong_int * ) );
 
 void rpc_sm_swap_client_alloc_free _DCE_PROTOTYPE_ ((
-     idl_void_p_t (*)(idl_size_t),
-    void (*)(idl_void_p_t),
-    idl_void_p_t (**)(idl_size_t),
-    void (**)(idl_void_p_t),
+    rpc_ss_p_alloc_t,
+    rpc_ss_p_free_t,
+    rpc_ss_p_alloc_t *,
+    rpc_ss_p_free_t *,
     idl_ulong_int *
 ));
 

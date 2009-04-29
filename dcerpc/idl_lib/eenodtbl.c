@@ -331,18 +331,14 @@ rpc_ss_thread_handle_t rpc_sm_get_thread_handle
 void rpc_sm_set_client_alloc_free
 #ifdef IDL_PROTOTYPES
 (
-    rpc_void_p_t (*p_allocate)(
-        idl_size_t size
-    ),
-    void (*p_free)(
-        rpc_void_p_t ptr
-    ),
+    rpc_ss_p_alloc_t p_allocate,
+    rpc_ss_p_free_t p_free,
     error_status_t *p_st
 )
 #else
 ( p_allocate, p_free, p_st )
-    rpc_void_p_t (*p_allocate)();
-    void (*p_free)();
+    rpc_ss_p_alloc_t p_allocate;
+    rpc_ss_p_free_t p_free;
     error_status_t *p_st;
 #endif
 {
@@ -387,26 +383,18 @@ void rpc_sm_set_thread_handle
 void rpc_sm_swap_client_alloc_free
 #ifdef IDL_PROTOTYPES
 (
-    rpc_void_p_t (*p_allocate)(
-        idl_size_t size
-    ),
-    void (*p_free)(
-        rpc_void_p_t ptr
-    ),
-    rpc_void_p_t (**p_p_old_allocate)(
-        idl_size_t size
-    ),
-    void (**p_p_old_free)(
-        rpc_void_p_t ptr
-    ),
+    rpc_ss_p_alloc_t p_allocate,
+    rpc_ss_p_free_t p_free,
+    rpc_ss_p_alloc_t * p_p_old_allocate,
+    rpc_ss_p_free_t  * p_p_old_free,
     error_status_t *p_st
 )
 #else
 ( p_allocate, p_free, p_p_old_allocate, p_p_old_free, p_st )
-    rpc_void_p_t (*p_allocate)();
-    void         (*p_free)();
-    rpc_void_p_t (**p_p_old_allocate)();
-    void         (**p_p_old_free)();
+    rpc_ss_p_alloc_t p_allocate;
+    rpc_ss_p_free_t p_free;
+    rpc_ss_p_alloc_t * p_p_old_allocate;
+    rpc_ss_p_free_t  * p_p_old_free;
     error_status_t *p_st;
 #endif
 {
