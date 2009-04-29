@@ -30,7 +30,6 @@ Install_Prefix := /usr/local
 RC_Install_Prefix = $(Install_Prefix)
 
 Extra_Configure_Flags := \
-	--disable-afnp	\
 	--disable-schannel \
 	--disable-demoprogs
 
