@@ -274,6 +274,7 @@ void rpc_ss_init_allocate_once(
 /******************************************************************************/
 static void *rpc_ss_client_default_malloc
 (
+    idl_void_p_t context ATTRIBUTE_UNUSED,
     idl_size_t size
 )
 {
@@ -289,6 +290,15 @@ static void *rpc_ss_client_default_malloc
     }
 
     return result;
+}
+
+static void rpc_ss_client_default_free
+(
+    idl_void_p_t context ATTRIBUTE_UNUSED,
+    idl_void_p_t ptr
+)
+{
+    free(ptr);
 }
 
 /******************************************************************************/
@@ -340,7 +350,7 @@ static void rpc_ss_client_get_thread_ctx
 
         p_support_ptrs->p_allocate = rpc_ss_client_default_malloc;
 
-        p_support_ptrs->p_free = free;
+        p_support_ptrs->p_free = rpc_ss_client_default_free;
 
         thread_indirection_ptr = (rpc_ss_thread_indirection_t *)
                         malloc(sizeof(rpc_ss_thread_indirection_t));
@@ -517,7 +527,7 @@ void rpc_ss_client_free
     /* Get free routine address */
     rpc_ss_client_get_thread_ctx( &p_support_ptrs );
     /* Invoke free with the specified memory */
-    (*p_support_ptrs->p_free)( p_mem );
+    (*p_support_ptrs->p_free)( NULL, p_mem );
 }
 
 /******************************************************************************/

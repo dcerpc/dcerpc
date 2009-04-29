@@ -281,9 +281,9 @@ void rpc_ss_client_free _DCE_PROTOTYPE_ ( (idl_void_p_t) );
 typedef idl_void_p_t rpc_ss_thread_handle_t;
 
 /* Pointer to a malloc(3)-like function. */
-typedef idl_void_p_t (*rpc_ss_p_alloc_t)(idl_size_t);
+typedef idl_void_p_t (*rpc_ss_p_alloc_t)(idl_void_p_t, idl_size_t);
 /* Pointer to a free(3)-like function. */
-typedef void (*rpc_ss_p_free_t)(idl_void_p_t);
+typedef void (*rpc_ss_p_free_t)(idl_void_p_t, idl_void_p_t);
 
 rpc_ss_thread_handle_t rpc_ss_get_thread_handle _DCE_PROTOTYPE_ ( (void) );
 

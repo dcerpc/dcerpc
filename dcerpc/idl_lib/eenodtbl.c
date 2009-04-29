@@ -44,6 +44,24 @@
 #include <dce/stubbase.h>
 #include <lsysdep.h>
 
+static idl_void_p_t rpc_ss_allocate_ex
+(
+    idl_void_p_t context ATTRIBUTE_UNUSED,
+    idl_size_t size
+)
+{
+    return rpc_ss_allocate(size);
+}
+
+static void rpc_ss_free_ex
+(
+    idl_void_p_t context ATTRIBUTE_UNUSED,
+    idl_void_p_t ptr
+)
+{
+    rpc_ss_free(ptr);
+}
+
 /******************************************************************************/
 /*                                                                            */
 /*    Fill in a support pointers structure and create an indirection          */
@@ -76,8 +94,8 @@ void rpc_ss_build_indirection_struct
 
     RPC_SS_THREADS_MUTEX_CREATE(&(p_thread_support_ptrs->mutex));
     p_thread_support_ptrs->p_mem_h = p_mem_handle;
-    p_thread_support_ptrs->p_allocate = rpc_ss_allocate;
-    p_thread_support_ptrs->p_free = rpc_ss_free;
+    p_thread_support_ptrs->p_allocate = rpc_ss_allocate_ex;
+    p_thread_support_ptrs->p_free = rpc_ss_free_ex;
 
     helper_thread_indirection_ptr = (rpc_ss_thread_indirection_t *)
                             malloc(sizeof(rpc_ss_thread_indirection_t));

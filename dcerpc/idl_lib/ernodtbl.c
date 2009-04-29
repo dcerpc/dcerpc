@@ -1381,7 +1381,7 @@ void rpc_ss_ndr_unmar_deletes
         node_to_delete = (rpc_void_p_t)rpc_ss_lookup_node_by_num(
                                         IDL_msp->IDL_mem_handle.node_table,
                                         delete_list[i]);
-        (*(IDL_msp->IDL_p_free))(node_to_delete);
+        (*(IDL_msp->IDL_p_free))(NULL, node_to_delete);
     }
 }
 
@@ -1827,7 +1827,7 @@ byte_p_t rpc_ss_return_pointer_to_node
     rpc_ss_node_table_t tab,
     unsigned long       num,
     long                size,
-    rpc_void_p_t        (*p_allocate)(idl_size_t size),
+    rpc_ss_p_alloc_t	p_allocate,
     long                *has_been_unmarshalled,
     long                *new_node               /* NULL or addr of return flag */
 )
@@ -1862,7 +1862,7 @@ byte_p_t rpc_ss_return_pointer_to_node
         else
         {
             if (size == 0) size = 1;
-            p = (byte_p_t)(*p_allocate)(size);
+            p = (byte_p_t)(*p_allocate)(NULL, size);
         }
         if (p ==NULL)
             DCETHREAD_RAISE(rpc_x_no_memory);
