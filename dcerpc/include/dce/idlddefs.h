@@ -152,8 +152,7 @@ typedef struct IDL_ms_t {
     rpc_iovector_elt_p_t IDL_elt_p;
                         /* Address of iovector_elt being used for receives */
     rpc_ss_mem_handle IDL_mem_handle;   /* Stub memory management handle */
-    rpc_ss_p_alloc_t IDL_p_allocate;
-    rpc_ss_p_free_t IDL_p_free;
+    rpc_ss_allocator_t IDL_allocator;
     rpc_ss_node_table_t IDL_node_table;   /* node number to pointer table */
     volatile rpc_call_handle_t IDL_call_h;  /* Call handle for RPC call */
     handle_t IDL_h;  /* Client's binding handle - used with contexts

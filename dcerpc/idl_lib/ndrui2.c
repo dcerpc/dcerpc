@@ -317,7 +317,7 @@ void rpc_ss_ndr_unmar_pointee
                     IDL_msp->IDL_node_table,
                     node_number, node_size,
                     (IDL_msp->IDL_side == IDL_client_side_k)
-                        ? IDL_msp->IDL_p_allocate : NULL,
+                        ? &IDL_msp->IDL_allocator : NULL,
                     &already_unmarshalled,
                     &new_node );
         if (p_node == NULL)

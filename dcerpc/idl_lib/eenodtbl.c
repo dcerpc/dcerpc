@@ -43,6 +43,7 @@
 #include <dce/rpc.h>
 #include <dce/stubbase.h>
 #include <lsysdep.h>
+#include <assert.h>
 
 static idl_void_p_t rpc_ss_allocate_ex
 (
@@ -50,6 +51,7 @@ static idl_void_p_t rpc_ss_allocate_ex
     idl_size_t size
 )
 {
+    assert(context == NULL);
     return rpc_ss_allocate(size);
 }
 
@@ -59,6 +61,7 @@ static void rpc_ss_free_ex
     idl_void_p_t ptr
 )
 {
+    assert(context == NULL);
     rpc_ss_free(ptr);
 }
 
@@ -94,8 +97,9 @@ void rpc_ss_build_indirection_struct
 
     RPC_SS_THREADS_MUTEX_CREATE(&(p_thread_support_ptrs->mutex));
     p_thread_support_ptrs->p_mem_h = p_mem_handle;
-    p_thread_support_ptrs->p_allocate = rpc_ss_allocate_ex;
-    p_thread_support_ptrs->p_free = rpc_ss_free_ex;
+    p_thread_support_ptrs->allocator.p_allocate = rpc_ss_allocate_ex;
+    p_thread_support_ptrs->allocator.p_free = rpc_ss_free_ex;
+    p_thread_support_ptrs->allocator.p_context = NULL;
 
     helper_thread_indirection_ptr = (rpc_ss_thread_indirection_t *)
                             malloc(sizeof(rpc_ss_thread_indirection_t));

@@ -896,8 +896,7 @@ typedef struct rpc_ss_marsh_state_t
     rpc_iovector_elt_t *p_rcvd_data;  /* address of received data descriptor */
     rpc_ss_mem_handle *p_mem_h;       /* ptr to stub memory management handle */
     rpc_call_handle_t call_h;
-    rpc_ss_p_alloc_t p_allocate;
-    rpc_ss_p_free_t p_free;
+    rpc_ss_allocator_t allocator;
     rpc_ss_node_table_t node_table;   /* node number to pointer table */
     unsigned long space_in_buff;      /* Space left in buffer */
     rpc_iovector_t  *p_iovec;         /* Address of I/O vector */
@@ -958,7 +957,7 @@ byte_p_t rpc_ss_return_pointer_to_node   _DCE_PROTOTYPE_ ((
     rpc_ss_node_table_t  /*tab*/,
     unsigned long  /*num*/,
     long  /*size*/,
-    rpc_ss_p_alloc_t p_allocate,
+    rpc_ss_allocator_t * p_allocator,
     long * /*has_been_unmarshalled*/,
     long * /*new_node*/
 ));
@@ -1081,8 +1080,7 @@ typedef struct rpc_ss_thread_support_ptrs_t
 {
     RPC_SS_THREADS_MUTEX_T mutex;    /* Helper thread protection */
     rpc_ss_mem_handle *p_mem_h;
-    rpc_ss_p_alloc_t p_allocate;
-    rpc_ss_p_free_t p_free;
+    rpc_ss_allocator_t allocator;
 } rpc_ss_thread_support_ptrs_t;
 
 /*

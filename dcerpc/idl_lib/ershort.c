@@ -129,7 +129,7 @@ rpc_ss_ur_short_int
     if (NIDL_node_type == rpc_ss_mutable_node_k)
       p_node = (idl_short_int *)rpc_ss_return_pointer_to_node(
           p_unmar_params->node_table, node_number, node_size,
-          p_unmar_params->p_allocate, &NIDL_already_unmarshalled, (long *)NULL);
+          &p_unmar_params->allocator, &NIDL_already_unmarshalled, (long *)NULL);
     else
     {
         p_node = (idl_short_int *)rpc_ss_mem_alloc(

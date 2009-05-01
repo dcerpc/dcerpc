@@ -147,8 +147,8 @@ void rpc_ss_ndr_alloc_storage
     }
     else
     {
-        *p_storage_addr = (rpc_void_p_t)(*(IDL_msp->IDL_p_allocate))
-                                                    (NULL, allocation_size);
+        *p_storage_addr = 
+	    rpc_allocator_allocate(&IDL_msp->IDL_allocator, allocation_size);
         if (*p_storage_addr == NULL)
             DCETHREAD_RAISE(rpc_x_no_memory);
     }

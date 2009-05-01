@@ -285,6 +285,24 @@ typedef idl_void_p_t (*rpc_ss_p_alloc_t)(idl_void_p_t, idl_size_t);
 /* Pointer to a free(3)-like function. */
 typedef void (*rpc_ss_p_free_t)(idl_void_p_t, idl_void_p_t);
 
+typedef struct rpc_ss_allocator_t {
+    rpc_ss_p_alloc_t p_allocate;
+    rpc_ss_p_free_t p_free;
+    idl_void_p_t p_context;
+} rpc_ss_allocator_t;
+
+static inline idl_void_p_t
+rpc_allocator_allocate(const rpc_ss_allocator_t * p_alloc, idl_size_t sz)
+{
+    return p_alloc->p_allocate(p_alloc->p_context, sz);
+}
+
+static inline void
+rpc_allocator_free(const rpc_ss_allocator_t * p_alloc, idl_void_p_t ptr)
+{
+    p_alloc->p_free(p_alloc->p_context, ptr);
+}
+
 rpc_ss_thread_handle_t rpc_ss_get_thread_handle _DCE_PROTOTYPE_ ( (void) );
 
 void rpc_ss_set_thread_handle _DCE_PROTOTYPE_ ( (rpc_ss_thread_handle_t) );
@@ -294,11 +312,20 @@ void rpc_ss_set_client_alloc_free _DCE_PROTOTYPE_ ((
     rpc_ss_p_free_t
 ));
 
+void rpc_ss_set_client_alloc_free_ex _DCE_PROTOTYPE_ ((
+    rpc_ss_allocator_t *
+));
+
 void rpc_ss_swap_client_alloc_free _DCE_PROTOTYPE_ ((
     rpc_ss_p_alloc_t,
     rpc_ss_p_free_t,
     rpc_ss_p_alloc_t *,
     rpc_ss_p_free_t *
+));
+
+void rpc_ss_swap_client_alloc_free_ex _DCE_PROTOTYPE_ ((
+    rpc_ss_allocator_t *,
+    rpc_ss_allocator_t *
 ));
 
 void rpc_ss_enable_allocate _DCE_PROTOTYPE_ ( (void) );

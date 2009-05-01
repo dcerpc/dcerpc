@@ -569,7 +569,8 @@ error_status_t idl_es_encode_new_dyn_buff
                                         (sizeof(IDL_dyn_buff_link_t));
         if (p_new_link == NULL)
         {
-            (*(IDL_msp->IDL_p_free))(NULL, *(p_es_state->IDL_p_buff_addr));
+	    rpc_allocator_free(&IDL_msp->IDL_allocator,
+		    *(p_es_state->IDL_p_buff_addr));
             return(rpc_s_no_memory);
         }
         p_new_link->IDL_p_iovec_elt = NULL;
@@ -581,7 +582,8 @@ error_status_t idl_es_encode_new_dyn_buff
                                         (sizeof(rpc_iovector_elt_t));
         if (p_new_iovec_elt == NULL)
         {
-            (*(IDL_msp->IDL_p_free))(NULL, *(p_es_state->IDL_p_buff_addr));
+	    rpc_allocator_free(&IDL_msp->IDL_allocator,
+		    *(p_es_state->IDL_p_buff_addr));
             return(rpc_s_no_memory);
         }
         p_new_link->IDL_p_iovec_elt = p_new_iovec_elt;
@@ -612,7 +614,7 @@ error_status_t idl_es_encode_new_dyn_buff
     p_new_link->IDL_p_iovec_elt = p_new_iovec_elt;
     /* Create the buffer */
     IDL_msp->IDL_buff_addr = (idl_byte *)
-                        (*(IDL_msp->IDL_p_allocate))(NULL, IDL_BUFF_SIZE);
+	rpc_allocator_allocate(&IDL_msp->IDL_allocator, IDL_BUFF_SIZE);
     if (IDL_msp->IDL_buff_addr == NULL)
         return(rpc_s_no_memory);
     memset(IDL_msp->IDL_buff_addr, 0, IDL_BUFF_SIZE);
@@ -1183,7 +1185,8 @@ void idl_es_before_interp_call
             && (p_es_state->IDL_style == IDL_dynamic_k)
             && (*(p_es_state->IDL_p_buff_addr) != NULL) )
         {
-            (*(IDL_msp->IDL_p_free))(NULL, *(p_es_state->IDL_p_buff_addr));
+	    rpc_allocator_free(&IDL_msp->IDL_allocator,
+		*(p_es_state->IDL_p_buff_addr));
         }
         DCETHREAD_RERAISE;
     DCETHREAD_ENDTRY
@@ -1251,7 +1254,7 @@ static void idl_es_encode_dyn_copy_rel
         memcpy(dyn_buff, p_iovec_elt->data_addr, inter_data_len);
         dyn_buff += inter_data_len;
         /* Release head of chain */
-        (*(IDL_msp->IDL_p_free))(NULL, p_iovec_elt->buff_addr);
+	rpc_allocator_free(&IDL_msp->IDL_allocator, p_iovec_elt->buff_addr);
         free(p_iovec_elt);
         p_old_list_elt = p_list_elt;
         p_list_elt = p_list_elt->IDL_next;
@@ -1323,7 +1326,8 @@ void idl_es_after_interp_call
                                                                      &dyn_size);
                     *(p_es_state->IDL_esize) = dyn_size;
                     dyn_buff = (idl_byte *)
-                                        (*(IDL_msp->IDL_p_allocate))(NULL, dyn_size);
+			rpc_allocator_allocate(
+                                        &IDL_msp->IDL_allocator, dyn_size);
                     if (dyn_buff == NULL)
                         DCETHREAD_RAISE(rpc_x_no_memory);
 		    memset(dyn_buff, 0, dyn_size);
@@ -1416,7 +1420,10 @@ void idl_es_clean_up
                 if (p_iovec_elt != NULL)
                 {
                     if (p_iovec_elt->buff_addr != NULL)
-                        (*(IDL_msp->IDL_p_free))(NULL, p_iovec_elt->buff_addr);
+		    {
+			rpc_allocator_free(&IDL_msp->IDL_allocator,
+				p_iovec_elt->buff_addr);
+		    }
                     free(p_iovec_elt);
                 }
                 p_old_list_elt = p_list_elt;

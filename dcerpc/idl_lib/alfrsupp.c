@@ -47,6 +47,7 @@
 #include <dce/idlddefs.h>
 #endif
 #include <lsysdep.h>
+#include <assert.h>
 
 /*
 1. Explanation of the per-thread context
@@ -348,9 +349,9 @@ static void rpc_ss_client_get_thread_ctx
 
         RPC_SS_THREADS_MUTEX_CREATE (&(p_support_ptrs->mutex));
 
-        p_support_ptrs->p_allocate = rpc_ss_client_default_malloc;
-
-        p_support_ptrs->p_free = rpc_ss_client_default_free;
+        p_support_ptrs->allocator.p_allocate = rpc_ss_client_default_malloc;
+        p_support_ptrs->allocator.p_free = rpc_ss_client_default_free;
+        p_support_ptrs->allocator.p_context = NULL;
 
         thread_indirection_ptr = (rpc_ss_thread_indirection_t *)
                         malloc(sizeof(rpc_ss_thread_indirection_t));
@@ -387,8 +388,7 @@ void rpc_ss_client_establish_alloc
     rpc_ss_thread_support_ptrs_t *p_support_ptrs;
 
     rpc_ss_client_get_thread_ctx( &p_support_ptrs );
-    p_unmar_params->p_allocate = p_support_ptrs->p_allocate;
-    p_unmar_params->p_free = p_support_ptrs->p_free;
+    p_unmar_params->allocator = p_support_ptrs->allocator;
 }
 
 /******************************************************************************/
@@ -467,11 +467,33 @@ void rpc_ss_set_client_alloc_free
     rpc_ss_p_free_t p_free;
 #endif
 {
+    rpc_ss_allocator_t allocator;
+
+    allocator.p_allocate = p_allocate;
+    allocator.p_free = p_free;
+    allocator.p_context = NULL;
+
+    rpc_ss_set_client_alloc_free_ex(&allocator);
+}
+
+void rpc_ss_set_client_alloc_free_ex
+(
+#ifdef IDL_PROTOTYPES
+    rpc_ss_allocator_t * p_allocator
+)
+#else
+( p_allocator )
+    rpc_ss_allocator_t * p_allocator;
+#endif
+{
     rpc_ss_thread_support_ptrs_t *p_support_ptrs;
 
     rpc_ss_client_get_thread_ctx( &p_support_ptrs );
-    p_support_ptrs->p_allocate = p_allocate;
-    p_support_ptrs->p_free = p_free;
+
+    /* Make sure we don't lose a context object. */
+    assert(p_support_ptrs->allocator.p_context == NULL);
+
+    p_support_ptrs->allocator = *p_allocator;
 }
 
 /******************************************************************************/
@@ -495,13 +517,44 @@ void rpc_ss_swap_client_alloc_free
     rpc_ss_p_free_t * p_p_old_free;
 #endif
 {
+    rpc_ss_allocator_t allocator;
+
+    allocator.p_allocate = p_allocate;
+    allocator.p_free = p_free;
+    allocator.p_context = NULL;
+
+    rpc_ss_swap_client_alloc_free_ex(&allocator, &allocator);
+
+    /* Make sure we didn't lose a context object. */
+    assert(allocator.p_context == NULL);
+
+    *p_p_old_allocate = allocator.p_allocate;
+    *p_p_old_free = allocator.p_free;
+}
+
+void rpc_ss_swap_client_alloc_free_ex
+#ifdef IDL_PROTOTYPES
+(
+    rpc_ss_allocator_t * p_allocator,
+    rpc_ss_allocator_t * p_old_allocator
+)
+#else
+( p_allocator, p_old_allocator )
+    rpc_ss_allocator_t * p_allocator;
+    rpc_ss_allocator_t * p_old_allocator;
+#endif
+{
+    rpc_ss_allocator_t allocator;
     rpc_ss_thread_support_ptrs_t *p_support_ptrs;
 
     rpc_ss_client_get_thread_ctx( &p_support_ptrs );
-    *p_p_old_allocate = p_support_ptrs->p_allocate;
-    *p_p_old_free = p_support_ptrs->p_free;
-    p_support_ptrs->p_allocate = p_allocate;
-    p_support_ptrs->p_free = p_free;
+
+    /* Make sure it is safe for the old and new pointers to point
+     * to the same allocator.
+     */
+    allocator = *p_allocator;
+    *p_old_allocator = p_support_ptrs->allocator;
+    p_support_ptrs->allocator = allocator;
 }
 
 /****************************************************************************/
@@ -527,7 +580,7 @@ void rpc_ss_client_free
     /* Get free routine address */
     rpc_ss_client_get_thread_ctx( &p_support_ptrs );
     /* Invoke free with the specified memory */
-    (*p_support_ptrs->p_free)( NULL, p_mem );
+    rpc_allocator_free(&p_support_ptrs->allocator, p_mem);
 }
 
 /******************************************************************************/
@@ -623,8 +676,7 @@ void rpc_ss_mts_client_estab_alloc
 #endif
 
     rpc_ss_client_get_thread_ctx( &p_support_ptrs );
-    IDL_msp->IDL_p_allocate = p_support_ptrs->p_allocate;
-    IDL_msp->IDL_p_free = p_support_ptrs->p_free;
+    IDL_msp->IDL_allocator = p_support_ptrs->allocator;
 
 #ifdef PERFMON
     RPC_SS_CLIENT_ESTABLISH_ALLOC_X;
