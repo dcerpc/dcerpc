@@ -90,7 +90,7 @@ const long  rpc_c_binding_infinite_timeout  = 10;
  */
 typedef struct
 {
-    uuid_t                  id;
+    idl_uuid_t                  id;
     unsigned32              version;
 } rpc_syntax_id_t, *rpc_syntax_id_p_t;
 
@@ -384,7 +384,7 @@ typedef void (*rpc_auth_key_retrieval_fn_t)
 typedef void (*rpc_object_inq_fn_t)
 (
     [in]        uuid_p_t                object_uuid,
-    [out]       uuid_t                  *type_uuid,
+    [out]       idl_uuid_t                  *type_uuid,
     [out]       unsigned32              *status
 );
 

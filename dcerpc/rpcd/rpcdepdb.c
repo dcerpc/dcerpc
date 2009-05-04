@@ -264,8 +264,8 @@ handle_t        h;
 epdb_handle_t   *epdb_h;
 error_status_t  *status;
 {
-    uuid_t  obj;
-    uuid_t  epdb_obj;
+    idl_uuid_t  obj;
+    idl_uuid_t  epdb_obj;
 
     SET_STATUS(status, rpc_s_ok);
 
@@ -1854,7 +1854,7 @@ db_entry_t      *entries[];
  */
 PRIVATE void epdb_inq_object(h_, object, status)
 epdb_handle_t h_;
-uuid_t *object;
+idl_uuid_t *object;
 error_status_t *status;
 {
     struct db *h = (struct db *) h_;

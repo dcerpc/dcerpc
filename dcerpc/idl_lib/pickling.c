@@ -736,12 +736,12 @@ void idl_es_encode_attach_buff
 static void idl_es_put_encoding_uuid
 #ifdef IDL_PROTOTYPES
 (
-    uuid_t *p_uuid,     /* [in] Address of UUID */
+    idl_uuid_t *p_uuid,     /* [in] Address of UUID */
     IDL_msp_t IDL_msp
 )
 #else
 (p_uuid, IDL_msp)
-    uuid_t *p_uuid;
+    idl_uuid_t *p_uuid;
     IDL_msp_t IDL_msp;
 #endif
 {
@@ -835,12 +835,12 @@ static void idl_es_put_encoding_header
 static void idl_es_get_encoding_uuid
 #ifdef IDL_PROTOTYPES
 (
-    uuid_t *p_uuid,     /* [in] Address of UUID */
+    idl_uuid_t *p_uuid,     /* [in] Address of UUID */
     IDL_msp_t IDL_msp
 )
 #else
 (p_uuid, IDL_msp)
-    uuid_t *p_uuid;
+    idl_uuid_t *p_uuid;
     IDL_msp_t IDL_msp;
 #endif
 {

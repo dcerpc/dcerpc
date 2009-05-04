@@ -291,7 +291,7 @@ static void rpc_ns__ldap_export_server_element(LDAP *ld,
 	)
 {
 	unsigned_char_p_t dn = NULL, rdn = NULL;
-	uuid_t rdnUuid;
+	idl_uuid_t rdnUuid;
 
 	/* Just create an arbitary UUID to name this entry. */
 	uuid_create(&rdnUuid, status);

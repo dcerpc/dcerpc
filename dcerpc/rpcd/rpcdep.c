@@ -430,7 +430,7 @@ error_status_t      *status;
 
 PRIVATE void ept_inq_object(h, object, status)
 handle_t            h;
-uuid_t              *object;
+idl_uuid_t              *object;
 error_status_t      *status;
 {
     epdb_handle_t epdb;

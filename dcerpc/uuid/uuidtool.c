@@ -42,7 +42,7 @@
 
 int main(int argc, char *argv[])
 {
-	uuid_t uuid;
+	idl_uuid_t uuid;
 	unsigned32 st;
 	unsigned_char_p_t uuid_string;
 

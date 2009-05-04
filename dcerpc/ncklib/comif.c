@@ -84,7 +84,7 @@ typedef struct
 typedef struct
 {
     rpc_list_t      link;
-    uuid_t          type;        /* type of object to which entry applies    */
+    idl_uuid_t          type;        /* type of object to which entry applies    */
     rpc_mgr_epv_t   mepv;        /* pointer to manager procedures            */
     unsigned        copied_mepv: 1; /* 1 = mepv copied at registration time  */
 } rpc_if_type_info_t, *rpc_if_type_info_p_t;

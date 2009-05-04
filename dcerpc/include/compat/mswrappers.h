@@ -47,7 +47,7 @@ typedef UCHAR * PUCHAR;
 typedef unsigned int RPC_STATUS;
 typedef handle_t RPC_BINDING_HANDLE;
 typedef rpc_if_handle_t RPC_IF_HANDLE;
-typedef uuid_t UUID;
+typedef idl_uuid_t UUID;
 typedef rpc_mgr_proc_t RPC_MGR_EPV;
 typedef idl_ushort_int *RPC_WSTR;
 

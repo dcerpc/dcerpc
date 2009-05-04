@@ -202,7 +202,7 @@ INTERNAL char           rpcd_version_str[] =
 	"rpcd version freedce 1.1";
 #endif
 
-GLOBAL   uuid_t         nil_uuid;
+GLOBAL   idl_uuid_t         nil_uuid;
 
 
 
@@ -451,7 +451,7 @@ INTERNAL void init(status)
 error_status_t  *status;
 {
     epdb_handle_t       h;
-    uuid_t              epdb_obj;
+    idl_uuid_t              epdb_obj;
     rpc_if_rep_p_t      ept_if_rep;
     unsigned_char_p_t   fname;
     unsigned_char_p_t   dname;

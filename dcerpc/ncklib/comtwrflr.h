@@ -105,7 +105,7 @@ PRIVATE void rpc__tower_flr_id_from_uuid _DCE_PROTOTYPE_ ((
 
 PRIVATE void rpc__tower_flr_id_to_uuid _DCE_PROTOTYPE_ ((
     unsigned8       * /*prot_id*/,
-    uuid_t          * /*uuid*/,
+    idl_uuid_t          * /*uuid*/,
     unsigned32      * /*version_major*/,
     unsigned32      * /*status*/ 
 ));
@@ -132,7 +132,7 @@ PRIVATE void rpc__tower_flr_to_rpc_prot_id _DCE_PROTOTYPE_ ((
 
 PRIVATE void rpc__tower_flr_to_uuid _DCE_PROTOTYPE_ ((
     rpc_tower_floor_p_t      /*floor*/,
-    uuid_t                  * /*uuid*/,
+    idl_uuid_t                  * /*uuid*/,
     unsigned32              * /*version_major*/,
     unsigned32              * /*version_minor*/,
     unsigned32              * /*status*/ 

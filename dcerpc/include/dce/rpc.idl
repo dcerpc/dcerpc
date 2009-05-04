@@ -102,7 +102,7 @@ void rpc_binding_from_string_binding
 void rpc_binding_inq_object
 (
     [in]        rpc_binding_handle_t    binding_handle,
-    [out]       uuid_t                  *object_uuid,
+    [out]       idl_uuid_t                  *object_uuid,
     [out]       unsigned32              *status
 );
 
@@ -349,7 +349,7 @@ typedef struct rpc_binding_handle_template_v1_s_t {
 	unsigned_char_p_t	network_address;
 	unsigned_char_p_t	string_endpoint;
 	unsigned_char_p_t	reserved;
-	uuid_t			object_uuid;
+	idl_uuid_t			object_uuid;
 } rpc_binding_handle_template_v1_t, rpc_binding_handle_template_t;
 
 typedef struct rpc_binding_handle_security_v1_s_t {
@@ -475,7 +475,7 @@ void rpc_object_set_type
 void rpc_object_inq_type
 (
     [in]        uuid_p_t                object_uuid,
-    [out]       uuid_t                  *type_uuid,
+    [out]       idl_uuid_t                  *type_uuid,
     [out]       unsigned32              *status
 );
 
@@ -1034,7 +1034,7 @@ void rpc_mgmt_ep_elt_inq_next
     [in]      rpc_ep_inq_handle_t       inquiry_context,
     [out]     rpc_if_id_t               *if_id,
     [out]     rpc_binding_handle_t      *binding,
-    [out]     uuid_t                    *object_uuid,
+    [out]     idl_uuid_t                    *object_uuid,
     [out]     unsigned_char_p_t         *annotation,
     [out]     unsigned32                *status
 );
@@ -1266,7 +1266,7 @@ void rpc_ns_entry_object_inq_done
 void rpc_ns_entry_object_inq_next
 (
     [in]        rpc_ns_handle_t         inquiry_context,
-    [out]       uuid_t                  *object_uuid,
+    [out]       idl_uuid_t                  *object_uuid,
     [out]       unsigned32              *status
 );
 

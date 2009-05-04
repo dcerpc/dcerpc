@@ -1571,7 +1571,7 @@ pointer_t       sm;
 {
     rpc_cn_assoc_t              *assoc;
     rpc_cn_assoc_sm_work_t      *assoc_sm_work;
-    uuid_t                      assoc_uuid;
+    idl_uuid_t                      assoc_uuid;
     boolean                     old_server;
     rpc_protocol_version_t      *protocol_version;
     rpc_cn_sm_ctlblk_t		*sm_p;
@@ -1590,7 +1590,7 @@ pointer_t       sm;
     RPC_CN_ASSOC_CHECK_ST (assoc, &(assoc->assoc_status));
     assoc->security.assoc_uuid_crc = 
         rpc__cn_pkt_crc_compute ((unsigned8 *)&assoc_uuid, 
-                                 sizeof (uuid_t));
+                                 sizeof (idl_uuid_t));
     
     /*
      * Check the binding handle for protocol version information

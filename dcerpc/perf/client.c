@@ -52,7 +52,7 @@ typedef struct
     unsigned short              ifspec_vers;
     unsigned short              opcnt;
     unsigned long               vers;
-    uuid_t                      id;
+    idl_uuid_t                      id;
     unsigned short              stub_rtl_if_vers;
 } rpc_if_rep_t, *rpc_if_rep_p_t;
 
@@ -399,7 +399,7 @@ struct msec_time *avg_time;
 
 static handle_t binding_from_string_binding (object, name)
 
-uuid_t              *object;
+idl_uuid_t              *object;
 char                *name;
 
 {
@@ -725,14 +725,14 @@ char                *argv[];
     unsigned_char_t     *endpoint;
 
     rpc_if_rep_p_t      if_rep = (rpc_if_rep_p_t)perfb_v1_0_c_ifspec;
-    uuid_t              if_uuid;
+    idl_uuid_t              if_uuid;
 
     if (argc < 3)
     {
         usage(test);
     }
 
-    memcpy(&if_uuid, &(if_rep->id), sizeof(uuid_t));
+    memcpy(&if_uuid, &(if_rep->id), sizeof(idl_uuid_t));
 
     rh = binding_from_string_binding(NULL, argv[2]);
 
@@ -778,7 +778,7 @@ char                *argv[];
 #ifdef _POSIX_THREADS
     if (! multithread)
 #endif
-    memcpy(&(if_rep->id), &if_uuid, sizeof(uuid_t));
+    memcpy(&(if_rep->id), &if_uuid, sizeof(idl_uuid_t));
 }
 
 /*
@@ -1388,7 +1388,7 @@ char                *argv[];
     }
 
     TRY {
-        uuid_t  random_uuid;
+        idl_uuid_t  random_uuid;
         unsigned32 st;
 
         uuid_create(&random_uuid, &st);

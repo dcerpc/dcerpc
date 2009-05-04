@@ -164,7 +164,7 @@ void rpc_ss_create_callee_context
 #ifdef IDL_PROTOTYPES
 (
     rpc_ss_context_t callee_context,/* The user's local form of the context */
-    uuid_t    *p_uuid,              /* Pointer to the equivalent UUID */
+    idl_uuid_t    *p_uuid,              /* Pointer to the equivalent UUID */
     handle_t h,                     /* Binding handle */
     ctx_rundown_fn_p_t ctx_rundown, /* Pointer to context rundown routine */
     error_status_t *result     /* Function result */
@@ -172,7 +172,7 @@ void rpc_ss_create_callee_context
 #else
 (callee_context, p_uuid, h, ctx_rundown, result)
     rpc_ss_context_t callee_context;/* The user's local form of the context */
-    uuid_t    *p_uuid;              /* Pointer to the equivalent UUID */
+    idl_uuid_t    *p_uuid;              /* Pointer to the equivalent UUID */
     handle_t h;                     /* Binding handle */
     ctx_rundown_fn_p_t ctx_rundown; /* Pointer to context rundown routine */
     error_status_t *result;    /* Function result */
@@ -223,7 +223,7 @@ void rpc_ss_create_callee_context
     memcpy(
         (char *)&new_link->uuid,
         (char *)p_uuid,
-        sizeof(uuid_t)
+        sizeof(idl_uuid_t)
     );
     new_link->user_context = callee_context;
     new_link->rundown = ctx_rundown;
@@ -257,13 +257,13 @@ void rpc_ss_update_callee_context
 #ifdef IDL_PROTOTYPES
 (
     rpc_ss_context_t    callee_context, /* The user's local form of the context */
-    uuid_t              *p_uuid,        /* Pointer to the equivalent UUID */
+    idl_uuid_t              *p_uuid,        /* Pointer to the equivalent UUID */
     error_status_t      *result         /* Function result */
 )
 #else
 (callee_context, p_uuid, result)
     rpc_ss_context_t    callee_context; /* The user's local form of the context */
-    uuid_t              *p_uuid;        /* Pointer to the equivalent UUID */
+    idl_uuid_t              *p_uuid;        /* Pointer to the equivalent UUID */
     error_status_t      *result;        /* Function result */
 #endif
 {
@@ -319,7 +319,7 @@ void rpc_ss_ee_ctx_from_wire
     volatile error_status_t *p_st;
 #endif
 {
-    uuid_t *p_uuid;    /* Pointer to the UUID that has come off the wire */
+    idl_uuid_t *p_uuid;    /* Pointer to the UUID that has come off the wire */
     callee_context_entry_t *this_link;
 
 #ifdef PERFMON
@@ -383,13 +383,13 @@ void rpc_ss_ee_ctx_from_wire
 void rpc_ss_destroy_callee_context
 #ifdef IDL_PROTOTYPES
 (
-    uuid_t *p_uuid,             /* Pointer to UUID of context to be destroyed */
+    idl_uuid_t *p_uuid,             /* Pointer to UUID of context to be destroyed */
     handle_t  h,                /* Binding handle */
     error_status_t *result /* Function result */
 )    /* Returns error_status_ok unless the UUID is not in the lookup table */
 #else
 (p_uuid, h, result)
-    uuid_t *p_uuid;             /* Pointer to UUID of context to be destroyed */
+    idl_uuid_t *p_uuid;             /* Pointer to UUID of context to be destroyed */
     handle_t  h;                /* Binding handle */
     error_status_t *result;/* Function result */
 #endif
@@ -424,14 +424,14 @@ void rpc_ss_destroy_callee_context
 void rpc_ss_lkddest_callee_context
 #ifdef IDL_PROTOTYPES
 (
-    uuid_t *p_uuid,    /* Pointer to UUID of context to be destroyed */
+    idl_uuid_t *p_uuid,    /* Pointer to UUID of context to be destroyed */
     rpc_client_handle_t *p_close_client,
                                 /* Ptr to NULL or client to stop monitoring */
     error_status_t *result /* Function result */
 )    /* Returns error_status_ok unless the UUID is not in the lookup table */
 #else
 (p_uuid, p_close_client, result)
-    uuid_t *p_uuid;    /* Pointer to UUID of context to be destroyed */
+    idl_uuid_t *p_uuid;    /* Pointer to UUID of context to be destroyed */
     rpc_client_handle_t *p_close_client;
                                 /* Ptr to NULL or client to stop monitoring */
     error_status_t *result;/* Function result */
@@ -461,7 +461,7 @@ void rpc_ss_lkddest_callee_context
             memcpy(
                 (char *)&this_link->uuid,
                 (char *)&next_link->uuid,
-                sizeof(uuid_t)
+                sizeof(idl_uuid_t)
             );
             this_link->user_context = next_link->user_context;
             this_link->rundown = next_link->rundown;
@@ -572,7 +572,7 @@ static int debug_context_lookup(uuid_p)
     }
 
     fprintf(debug_fid, "L");
-    for (j=0; j<sizeof(uuid_t); j++)
+    for (j=0; j<sizeof(idl_uuid_t); j++)
     {
         k = *uuid_p++;
         fprintf(debug_fid, " %02x", k);

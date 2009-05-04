@@ -106,7 +106,7 @@ static void rpc_ss_create_caller_context
     memcpy(
             (char *)&p_created_context->context_on_wire.context_handle_uuid,
             (char *)&p_wire_context->context_handle_uuid,
-                        sizeof(uuid_t));
+                        sizeof(idl_uuid_t));
 
     rpc_binding_copy(caller_handle, &p_created_context->using_handle, p_st);
     if (*p_st != error_status_ok) return;
@@ -303,7 +303,7 @@ static int debug_context_uuid(uuid_p, prefix)
     }
 
     fprintf(debug_fid, prefix);
-    for (j=0; j<sizeof(uuid_t); j++)
+    for (j=0; j<sizeof(idl_uuid_t); j++)
     {
         k = *uuid_p++;
         fprintf(debug_fid, " %02x", k);

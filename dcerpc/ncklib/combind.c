@@ -496,13 +496,13 @@ PUBLIC void rpc_binding_inq_object
 #ifdef _DCE_PROTO_
 (
     rpc_binding_handle_t    binding_h,
-    uuid_t                  *object_uuid,
+    idl_uuid_t                  *object_uuid,
     unsigned32              *status
 )
 #else
 (binding_h, object_uuid, status)
 rpc_binding_handle_t    binding_h;
-uuid_t                  *object_uuid;
+idl_uuid_t                  *object_uuid;
 unsigned32              *status;
 #endif
 {
@@ -1117,7 +1117,7 @@ unsigned32              *status;
 #endif
 {
     rpc_binding_rep_p_t     binding_rep;
-    uuid_t                  obj_uuid;
+    idl_uuid_t                  obj_uuid;
     rpc_addr_p_t            rpc_addr = NULL;
     unsigned_char_p_t       string_object_uuid = NULL;
     unsigned_char_p_t       protseq = NULL;

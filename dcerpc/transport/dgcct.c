@@ -107,7 +107,7 @@ INTERNAL void cct_timer_fn _DCE_PROTOTYPE_((
     ));
 
 INTERNAL void create_activity_uuid _DCE_PROTOTYPE_((
-        uuid_t * /*uuid*/
+        idl_uuid_t * /*uuid*/
     ));
 
 /* ========================================================================= */
@@ -536,11 +536,11 @@ pointer_t junk;
 INTERNAL void create_activity_uuid
 #ifdef _DCE_PROTO_
 (
-    uuid_t *uuid
+    idl_uuid_t *uuid
 )
 #else
 (uuid)
-uuid_t *uuid;
+idl_uuid_t *uuid;
 #endif
 {
     unsigned32 st;

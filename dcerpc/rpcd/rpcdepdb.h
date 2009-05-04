@@ -134,7 +134,7 @@ PRIVATE void epdb_fwd
 PRIVATE void epdb_inq_object
     _DCE_PROTOTYPE_ ((
         epdb_handle_t h,
-        uuid_t *object,
+        idl_uuid_t *object,
         error_status_t *status
     ));
 

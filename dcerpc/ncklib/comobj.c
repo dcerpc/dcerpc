@@ -66,8 +66,8 @@ INTERNAL rpc_mutex_t obj_mutex;
 typedef struct
 {
     rpc_list_t      link;
-    uuid_t          object_uuid;
-    uuid_t          type_uuid;
+    idl_uuid_t          object_uuid;
+    idl_uuid_t          type_uuid;
 } rpc_obj_rgy_entry_t, *rpc_obj_rgy_entry_p_t;
 
 
@@ -420,13 +420,13 @@ PUBLIC void rpc_object_inq_type
 #ifdef _DCE_PROTO_
 (
     uuid_p_t                object_uuid,
-    uuid_t                  *type_uuid,
+    idl_uuid_t                  *type_uuid,
     unsigned32              *status
 )
 #else
 (object_uuid, type_uuid, status)
 uuid_p_t                object_uuid;
-uuid_t                  *type_uuid;
+idl_uuid_t                  *type_uuid;
 unsigned32              *status;
 #endif
 {

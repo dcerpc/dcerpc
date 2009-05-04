@@ -54,7 +54,7 @@
 /*
  * U U I D _ G _ N I L _ U U I D
  */
-EXTERNAL uuid_t    uuid_g_nil_uuid;
+EXTERNAL idl_uuid_t    uuid_g_nil_uuid;
 
 
 /***********************************************************************/
@@ -829,7 +829,7 @@ typedef struct rpc_handle_s_t
     rpc_list_t                  link;               /* This must be first! */
     rpc_protocol_id_t           protocol_id;
     signed8                     refcnt;
-    uuid_t                      obj;
+    idl_uuid_t                      obj;
     rpc_addr_p_t                rpc_addr;
     unsigned                    is_server: 1;
     unsigned                    addr_is_dynamic: 1;

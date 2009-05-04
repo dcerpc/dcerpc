@@ -86,7 +86,7 @@ typedef struct
  */
 struct db_file_hdr {
     unsigned32  version;
-    uuid_t      object;
+    idl_uuid_t      object;
 };
 
 /*
@@ -94,7 +94,7 @@ struct db_file_hdr {
  */
 struct db {
     dsm_handle_t        dsh;
-    uuid_t              object;
+    idl_uuid_t              object;
     db_lists_mgmt_t     lists_mgmt;         /* entry, object, interface lists mgmt */
     dcethread_mutex     lock;               /* Database mutex lock */
     dcethread*          sliv_task1_h;       /* Server liveness task 1 handle */
@@ -120,15 +120,15 @@ typedef struct
     ndr_boolean             delete_flag;    /* entry should be deleted when read_nrefs == 0 */
     ndr_boolean             object_nil;
     ndr_boolean             if_nil;
-    uuid_t                  object;
+    idl_uuid_t                  object;
     rpc_if_id_t             interface;
-    uuid_t                  data_rep_id;
+    idl_uuid_t                  data_rep_id;
     unsigned32              data_rep_vers_major;
     unsigned32              data_rep_vers_minor;
     rpc_protocol_id_t       rpc_protocol;
     unsigned32              rpc_protocol_vers_major;
     unsigned32              rpc_protocol_vers_minor;
-    uuid_t                  type;           /* for LB compat */
+    idl_uuid_t                  type;           /* for LB compat */
     unsigned32              llb_flags;      /* for LB compat */
     unsigned32              saddr_len;      /* for LB compat */
     rpc_addr_p_t            addr;

@@ -307,11 +307,11 @@ int             line;
 PRIVATE char *rpc__uuid_string 
 #ifdef _DCE_PROTO_
 (
-    uuid_t          *uuid ATTRIBUTE_UNUSED
+    idl_uuid_t          *uuid ATTRIBUTE_UNUSED
 )
 #else
 (uuid)
-uuid_t          *uuid;
+idl_uuid_t          *uuid;
 #endif
 {
 #ifndef DEBUG

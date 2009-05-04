@@ -741,7 +741,7 @@ rpc_socket_t sock;
 rpc_dg_recvq_elt_p_t rqe1;
 #endif
 {
-    uuid_t clt_actid1;
+    idl_uuid_t clt_actid1;
     unsigned32 clt_boot1;
     boolean b;
     rpc_dg_pkt_hdr_t resp_hdr;
@@ -1053,7 +1053,7 @@ unsigned32 clt_boot;
     rpc_dg_raw_pkt_p_t rawpkt = rqe->pkt;
     unsigned32 way_status;
     unsigned32 way_seq;
-    uuid_t way2_cas_uuid;
+    idl_uuid_t way2_cas_uuid;
 
     RPC_DBG_PRINTF(rpc_e_dbg_general, 3, 
         ("(conv_stub_who_are_you2) Responding to WAY2 callback\n"));
@@ -1185,7 +1185,7 @@ unsigned32 clt_boot;
     signed32 out_round_len;
     unsigned32 way_status;
     unsigned32 way_seq;
-    uuid_t way2_cas_uuid;
+    idl_uuid_t way2_cas_uuid;
     
     /*
      * Unmarshall the remaining arguments:
@@ -1445,7 +1445,7 @@ PRIVATE void rpc__dg_handle_convc
 rpc_dg_recvq_elt_p_t rqe;
 #endif
 {
-    uuid_t cas_uuid;
+    idl_uuid_t cas_uuid;
     rpc_dg_pkt_hdr_p_t hdrp = rqe->hdrp;
     rpc_dg_raw_pkt_p_t rawpkt = rqe->pkt;
 

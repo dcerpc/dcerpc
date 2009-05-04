@@ -75,7 +75,7 @@ const long      uuid_s_ok                   = error_status_ok;
  */
 void uuid_create
 (
-    [out]   uuid_t              *uuid,
+    [out]   idl_uuid_t              *uuid,
     [out]   unsigned32          *status
 );
 
@@ -87,7 +87,7 @@ void uuid_create
  */
 void uuid_create_nil
 (
-    [out]   uuid_t              *uuid,
+    [out]   idl_uuid_t              *uuid,
     [out]   unsigned32          *status
 );
 
@@ -113,7 +113,7 @@ void uuid_to_string
 void uuid_from_string
 (
     [in]    unsigned_char_p_t   uuid_string,
-    [out]   uuid_t              *uuid,
+    [out]   idl_uuid_t              *uuid,
     [out]   unsigned32          *status
 );
  

@@ -66,7 +66,7 @@ const long ept_max_annotation_size  = 64;
 
 typedef struct 
 {
-                uuid_t      object;
+                idl_uuid_t      object;
                 twr_p_t     tower;
     [string]    char        annotation[ept_max_annotation_size];
 } ept_entry_t, *ept_entry_p_t;
@@ -176,7 +176,7 @@ void ept_lookup_handle_free(
 [idempotent]
 void ept_inq_object(
     [in]            handle_t            h,
-    [out]           uuid_t              *ept_object,
+    [out]           idl_uuid_t              *ept_object,
     [out]           error_status_t      *status
 );
 

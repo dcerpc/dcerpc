@@ -242,8 +242,8 @@
  *
  ****************************************************************************/
 
-uuid_t uuid_g_nil_uuid = { 0, 0, 0, 0, 0, {0} };
-uuid_t uuid_nil = { 0, 0, 0, 0, 0, {0} };
+idl_uuid_t uuid_g_nil_uuid = { 0, 0, 0, 0, 0, {0} };
+idl_uuid_t uuid_nil = { 0, 0, 0, 0, 0, {0} };
 
 /****************************************************************************
  *
@@ -544,12 +544,12 @@ unsigned32              *status;
 void uuid_create 
 #ifdef _DCE_PROTO_
 (
-    uuid_t                  *uuid,
+    idl_uuid_t                  *uuid,
     unsigned32              *status
 )
 #else
 (uuid, status)
-uuid_t                  *uuid;
+idl_uuid_t                  *uuid;
 unsigned32              *status;
 #endif
 {
@@ -682,18 +682,18 @@ unsigned32              *status;
 void uuid_create_nil 
 #ifdef _DCE_PROTO_
 (
-    uuid_t              *uuid,
+    idl_uuid_t              *uuid,
     unsigned32          *status
 )
 #else
 (uuid, status)
-uuid_t              *uuid;
+idl_uuid_t              *uuid;
 unsigned32          *status;
 #endif
 {
     CODING_ERROR (status);
     UUID_VERIFY_INIT (EmptyArg);
-    memset (uuid, 0, sizeof (uuid_t));
+    memset (uuid, 0, sizeof (idl_uuid_t));
 
     *status = uuid_s_ok;
 }
@@ -840,17 +840,17 @@ void uuid_from_string
 #ifdef _DCE_PROTO_
 (
     unsigned_char_p_t       uuid_string,
-    uuid_t                  *uuid,
+    idl_uuid_t                  *uuid,
     unsigned32              *status
 )
 #else
 (uuid_string, uuid, status)
 unsigned_char_p_t       uuid_string;
-uuid_t                  *uuid;
+idl_uuid_t                  *uuid;
 unsigned32              *status;
 #endif
 {
-    uuid_t              uuid_new;       /* used for sscanf for new uuid's */
+    idl_uuid_t              uuid_new;       /* used for sscanf for new uuid's */
     uuid_old_t          uuid_old;       /* used for sscanf for old uuid's */
     uuid_p_t            uuid_ptr;       /* pointer to correct uuid (old/new) */
     int                 i;
@@ -986,7 +986,7 @@ unsigned32              *status;
     /*
      * copy the uuid to user
      */
-    memcpy (uuid, uuid_ptr, sizeof (uuid_t));
+    memcpy (uuid, uuid_ptr, sizeof (idl_uuid_t));
 
     *status = uuid_s_ok;
 }
@@ -1135,7 +1135,7 @@ unsigned32          *status;
      * Note: This should later be changed to a field-by-field compare
      * because of portability problems with alignment and garbage in a UUID.
      */
-    if (memcmp (uuid, &uuid_g_nil_uuid, sizeof (uuid_t)) == 0)
+    if (memcmp (uuid, &uuid_g_nil_uuid, sizeof (idl_uuid_t)) == 0)
     {
         return (TRUE);
     }

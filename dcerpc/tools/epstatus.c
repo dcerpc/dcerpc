@@ -70,7 +70,7 @@ struct ep_table_entry
 {
     rpc_if_id_t		    te_interface;
     rpc_binding_handle_t    te_binding;
-    uuid_t		    te_uuid;
+    idl_uuid_t		    te_uuid;
     idl_char *		    te_annotation;
 };
 

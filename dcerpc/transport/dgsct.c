@@ -728,7 +728,7 @@ unsigned32 *st;
     unsigned32 seq;
     unsigned32 xst;
     rpc_key_info_p_t key_info;
-    uuid_t cas_uuid;            /* retrieved but ignored here. */
+    idl_uuid_t cas_uuid;            /* retrieved but ignored here. */
     rpc_binding_handle_t h;
 
     /*
