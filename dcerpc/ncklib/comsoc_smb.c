@@ -640,13 +640,15 @@ rpc__smb_socket_connect(
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
     rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
-    char *netaddr, *endpoint, *pipename;
+    char *netaddr = NULL;
+    char *endpoint = NULL;
+    char *pipename = NULL;
     unsigned32 dbg_status = 0;
     PSTR smbpath = NULL;
     PBYTE sesskey = NULL;
     USHORT sesskeylen = 0;
-    IO_FILE_NAME filename;
-    IO_STATUS_BLOCK io_status;
+    IO_FILE_NAME filename = { 0 };
+    IO_STATUS_BLOCK io_status = { 0 };
 
     SMB_SOCKET_LOCK(smb);
 
@@ -679,9 +681,6 @@ rpc__smb_socket_connect(
     {
         goto error;
     }
-
-    filename.RootFileHandle = NULL;
-    filename.IoNameOptions = 0;
 
     serr = NtStatusToUnixErrno(
         LwRtlWC16StringAllocateFromCString(
@@ -906,11 +905,12 @@ rpc__smb_socket_listen_thread(void* data)
 {
     int serr = RPC_C_SOCKET_OK;
     rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) data;
-    IO_STATUS_BLOCK status_block;
-    char *endpoint, *pipename;
+    IO_STATUS_BLOCK status_block = { 0 };
+    char *endpoint = NULL;
+    char *pipename = NULL;
     unsigned32 dbg_status = 0;
     PSTR smbpath = NULL;
-    IO_FILE_NAME filename;
+    IO_FILE_NAME filename = { 0 };
     size_t i;
     char c = 0;
     LONG64 default_timeout = 0;
@@ -952,9 +952,6 @@ rpc__smb_socket_listen_thread(void* data)
     {
         goto error;
     }
-
-    filename.RootFileHandle = NULL;
-    filename.IoNameOptions = 0;
 
     serr = NtStatusToUnixErrno(
         LwRtlWC16StringAllocateFromCString(
@@ -1040,6 +1037,18 @@ rpc__smb_socket_listen_thread(void* data)
     }
 
 error:
+    if (filename.FileName)
+    {
+        RtlMemoryFree(filename.FileName);
+    }
+
+    if (smbpath)
+    {
+        RtlMemoryFree(smbpath);
+    }
+
+    // rpc_string_free handles when *ptr is NULL
+    rpc_string_free((unsigned_char_t**) &endpoint, &dbg_status);
 
     if (serr)
     {
@@ -1101,7 +1110,7 @@ rpc__smb_socket_do_send(
     rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
     DWORD bytes_written = 0;
     unsigned char* cursor = smb->sendbuffer.base;
-    IO_STATUS_BLOCK io_status;
+    IO_STATUS_BLOCK io_status = { 0 };
 
     do
     {
@@ -1146,10 +1155,8 @@ rpc__smb_socket_do_recv(
     rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
     DWORD bytes_requested = 0;
     DWORD bytes_read = 0;
-    IO_STATUS_BLOCK io_status;
+    IO_STATUS_BLOCK io_status = { 0 };
     NTSTATUS status = STATUS_SUCCESS;
-
-    memset(&io_status, 0, sizeof(io_status));
 
     *count = 0;
 
