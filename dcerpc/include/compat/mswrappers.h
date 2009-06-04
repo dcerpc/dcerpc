@@ -34,6 +34,11 @@ typedef uint8_t UCHAR;
 typedef wchar16_t WCHAR;
 #endif
 
+#if !defined(_DWORD_DEFINED)
+#define _DWORD_DEFINED
+typedef uint32_t DWORD;
+#endif
+
 #if !defined(_PWSTR_DEFINED)
 #define _PWSTR_DEFINED
 typedef WCHAR * PWSTR;
