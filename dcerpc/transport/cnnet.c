@@ -2167,6 +2167,10 @@ unsigned32              *st;
         case RPC_C_SOCKET_ENOEXEC:
         *st = rpc_s_invalid_endpoint_format;
         break;
+
+        case RPC_C_SOCKET_ETIME:
+        *st = rpc_s_auth_skew;
+        break;
         
         default:
         *st = rpc_s_cannot_connect;

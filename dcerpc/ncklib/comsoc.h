@@ -759,6 +759,7 @@ rpc__transport_info_equal(
 #define RPC_C_SOCKET_EISCONN      EISCONN       /* socket is already */
                                                 /* connected */
 #define RPC_C_SOCKET_ENOTSUP      ENOTSUP       /* operation not supported */
+#define RPC_C_SOCKET_ETIME        ETIME         /* A time skew occurred */
 
 /*
  * A macro to determine if an socket error can be recovered from by
