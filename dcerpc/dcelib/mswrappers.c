@@ -174,6 +174,56 @@ RPC_STATUS RpcBindingFromStringBindingW(
     return status;
 }
 
+RPC_STATUS RpcBindingSetAuthInfoA(
+    /* [in] */ RPC_BINDING_HANDLE binding_h,
+    /* [in] */ UCHAR* server_princ_name,
+    /* [in] */ DWORD authn_level,
+    /* [in] */ DWORD authn_protocol,
+    /* [in] */ RPC_AUTH_IDENTITY_HANDLE auth_identity,
+    /* [in] */ DWORD authz_protocol
+)
+{
+    RPC_STATUS status;
+    rpc_binding_set_auth_info(
+            binding_h,
+            server_princ_name,
+            authn_level,
+            authn_protocol,
+            auth_identity,
+            authz_protocol,
+            &status);
+    return status;
+}
+
+RPC_STATUS RpcBindingSetAuthInfoW(
+    /* [in] */ RPC_BINDING_HANDLE binding_h,
+    /* [in] */ PWSTR server_princ_name,
+    /* [in] */ DWORD authn_level,
+    /* [in] */ DWORD authn_protocol,
+    /* [in] */ RPC_AUTH_IDENTITY_HANDLE auth_identity,
+    /* [in] */ DWORD authz_protocol
+)
+{
+    RPC_STATUS status = rpc_s_ok;
+    CONVERT_INPUTSTR(server_princ_name);
+
+    if (status == rpc_s_ok)
+    {
+        rpc_binding_set_auth_info(
+                binding_h,
+                INPUTSTR(server_princ_name),
+                authn_level,
+                authn_protocol,
+                auth_identity,
+                authz_protocol,
+                &status);
+    }
+
+    FREE_INPUTSTR(server_princ_name);
+
+    return status;
+}
+
 RPC_STATUS RpcStringFreeA(
     /* [in, out] */ PUCHAR *string
 )

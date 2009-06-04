@@ -50,6 +50,7 @@ typedef rpc_if_handle_t RPC_IF_HANDLE;
 typedef idl_uuid_t UUID;
 typedef rpc_mgr_proc_t RPC_MGR_EPV;
 typedef idl_ushort_int *RPC_WSTR;
+typedef rpc_auth_identity_handle_t RPC_AUTH_IDENTITY_HANDLE;
 
 #define RPC_C_PROTSEQ_MAX_REQS_DEFAULT rpc_c_protseq_max_reqs_default
 #define RPC_C_LISTEN_MAX_CALLS_DEFAULT rpc_c_listen_max_calls_default
@@ -94,6 +95,24 @@ RPC_STATUS RpcBindingFromStringBindingW(
     /* [out] */ RPC_BINDING_HANDLE *binding_handle
 );
 
+RPC_STATUS RpcBindingSetAuthInfoA(
+    /* [in] */ RPC_BINDING_HANDLE binding_h,
+    /* [in] */ UCHAR* server_princ_name,
+    /* [in] */ DWORD authn_level,
+    /* [in] */ DWORD authn_protocol,
+    /* [in] */ RPC_AUTH_IDENTITY_HANDLE auth_identity,
+    /* [in] */ DWORD authz_protocol
+);
+
+RPC_STATUS RpcBindingSetAuthInfoW(
+    /* [in] */ RPC_BINDING_HANDLE binding_h,
+    /* [in] */ PWSTR server_princ_name,
+    /* [in] */ DWORD authn_level,
+    /* [in] */ DWORD authn_protocol,
+    /* [in] */ RPC_AUTH_IDENTITY_HANDLE auth_identity,
+    /* [in] */ DWORD authz_protocol
+);
+
 RPC_STATUS RpcStringFreeA(
     /* [in, out] */ PUCHAR *string
 );
@@ -135,9 +154,16 @@ RPC_STATUS RpcServerListen(
 #define RpcServerUseProtseqEp RpcServerUseProtseqEpA
 #define RpcBindingFromStringBinding RpcBindingFromStringBindingA
 #define RpcStringFree RpcStringFreeA
+#define RpcBindingSetAuthInfo RpcBindingSetAuthInfoA
 #define RpcSsDestroyClientContext(x) rpc_ss_destroy_client_context((rpc_ss_context_t *)x)
 
 #define RPC_S_INVALID_NET_ADDR rpc_s_inval_net_addr
+
+#define RPC_C_AUTHN_LEVEL_PKT_PRIVACY rpc_c_protect_level_pkt_privacy
+
+#define RPC_C_AUTHN_GSS_NEGOTIATE   rpc_c_authn_gss_negotiate
+
+#define RPC_C_AUTHZ_NAME    rpc_c_authz_name
 
 #ifdef __cplusplus
 } //extern C
