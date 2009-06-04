@@ -1434,7 +1434,11 @@ rpc__bsd_socket_enum_ifaces(
     rpc_ip_addr_p_t         netmask_addr = NULL;
     rpc_ip_addr_p_t         broadcast_addr = NULL;
     int                     n_ifs;
-    unsigned char           buf[1024];
+    union
+    {
+        unsigned char           buf[1024];
+        struct ifreq req;
+    } reqbuf;
     struct ifconf           ifc;
     struct ifreq            *ifr, *last_ifr;
     struct ifreq            ifreq;
@@ -1452,8 +1456,8 @@ rpc__bsd_socket_enum_ifaces(
     /*
      * Get the list of network interfaces.
      */
-    ifc.ifc_len = sizeof (buf);
-    ifc.ifc_buf = (caddr_t) buf;
+    ifc.ifc_len = sizeof (reqbuf.buf);
+    ifc.ifc_buf = (caddr_t) reqbuf.buf;
 
 ifconf_again:
     if (ioctl (desc, SIOCGIFCONF, (caddr_t) &ifc) < 0)
@@ -1488,7 +1492,7 @@ ifconf_again:
 		    RPC_DBG_PRINTF(rpc_e_dbg_general, 15, ("%s\n",msgbuf));
                 sprintf(msgbuf, "%4x: ", i);
 	    }
-            sprintf(msgbuf, "%s%02x ", msgbuf, buf[i]);
+            sprintf(msgbuf, "%s%02x ", msgbuf, reqbuf.buf[i]);
         }
 	if (i != 0)
 	    RPC_DBG_PRINTF(rpc_e_dbg_general, 15, ("%s\n",msgbuf));
