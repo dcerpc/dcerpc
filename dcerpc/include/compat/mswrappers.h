@@ -63,7 +63,7 @@ typedef rpc_auth_identity_handle_t RPC_AUTH_IDENTITY_HANDLE;
 #define RpcTryExcept	DCETHREAD_TRY
 #define RpcExcept	DCETHREAD_CATCH_EXPR
 #define RpcEndExcept	DCETHREAD_ENDTRY
-#define RpcExceptionCode RpcCompatReturnLater(RpcCompatExceptionToCode(DCETHREAD_EXC_CURRENT))
+#define RpcExceptionCode() RpcCompatExceptionToCode(DCETHREAD_EXC_CURRENT)
 
 RPC_STATUS RpcCompatExceptionToCode(dcethread_exc *exc);
 typedef RPC_STATUS (*RpcCompatReturnCodeFuncPtr)(void);
