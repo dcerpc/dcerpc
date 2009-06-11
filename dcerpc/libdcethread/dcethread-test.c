@@ -59,7 +59,7 @@ dcethread__test_init()
     dcethread__exc_set_uncaught_handler(uncaught_callback, NULL);
 }
 
-MU_LIBRARY_SETUP
+MU_LIBRARY_SETUP()
 {
     dcethread__test_init();
 }

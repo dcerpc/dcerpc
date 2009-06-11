@@ -99,7 +99,7 @@ MU_TEST(dcethread_interrupt, disable)
     }
     DCETHREAD_CATCH(dcethread_interrupt_e)
     {
-        MU_ASSERT_NOT_REACHED;
+        MU_ASSERT_NOT_REACHED();
     }
     DCETHREAD_ENDTRY;
 }
