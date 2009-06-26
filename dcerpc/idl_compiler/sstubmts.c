@@ -161,6 +161,61 @@ static void BE_server_binding_analyze
 
 
 /*
+ * CSPELL_zero_initializer
+ *
+ * Emit a type-specifi zero-initializer for a parameter that has been declared
+ * on the stack of a server stub routine.
+ */
+static void CSPELL_zero_initializer
+#ifdef PROTO
+(
+    FILE *fid,
+    const AST_type_n_t *type
+)
+#else
+( fid, type )
+    FILE *fid;
+    const AST_type_n_t *type;
+#endif
+{
+
+	switch (type->kind)
+	{
+	    case AST_pointer_k:
+	    case AST_handle_k:
+		fprintf(fid, " = NULL");
+		break;
+	    case AST_boolean_k:
+		fprintf(fid, " = ndr_false");
+		break;
+	    case AST_short_float_k:
+	    case AST_long_float_k:
+		fprintf(fid, " = 0.0");
+		break;
+	    case AST_small_integer_k:
+	    case AST_short_integer_k:
+	    case AST_long_integer_k:
+	    case AST_small_unsigned_k:
+	    case AST_short_unsigned_k:
+	    case AST_long_unsigned_k:
+		fprintf(fid, " = 0");
+		break;
+	    case AST_hyper_integer_k:
+	    case AST_hyper_unsigned_k:
+		fprintf(fid, " = 0L");
+		break;
+	    case AST_array_k:
+	    case AST_structure_k:
+	    case AST_disc_union_k:
+		fprintf(fid, " = { 0 }");
+		break;
+	    default:
+		fprintf(fid, " /* no initializer for kind %d */", type->kind);
+		break;
+	}
+}
+
+/*
  * DDBE_spell_stack_surrogates
  *
  * Spell server surrogates as stack variables
@@ -251,6 +306,10 @@ static void DDBE_spell_stack_surrogates
                                ? pp->type->type_structure.pointer->pointee_type
                                : pp->type),
                               pp->name, NULL, false, true, false);
+
+	    CSPELL_zero_initializer(fid,
+		    AST_REF_SET(pp) ? pp->type->type_structure.pointer->pointee_type
+                               : pp->type);
         }
         else if ( (pp->type->kind == AST_array_k)
                     && (AST_UNIQUE_SET(pp) || AST_PTR_SET(pp)) )
@@ -268,10 +327,14 @@ static void DDBE_spell_stack_surrogates
                 = &array_elt_ptr_pointer_node;
             CSPELL_typed_name(fid, &array_elt_ptr_type_node,
                               pp->name, NULL, false, true, false);
+	    CSPELL_zero_initializer(fid, &array_elt_ptr_type_node);
         }
         else
+	{
             CSPELL_typed_name(fid, pp->type, pp->name, NULL, false, true, 
                                 false);
+	    CSPELL_zero_initializer(fid, pp->type);
+	}
         fprintf(fid, ";\n");
     }
 }
