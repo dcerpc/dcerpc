@@ -69,7 +69,7 @@ typedef int32_t	ndr_long_int;
 
 typedef uint32_t ndr_ulong_int;
 
-#ifdef __LITTLE_ENDIAN__ || (NDR_LOCAL_REP == ndr_c_int_little_endian)
+#if __LITTLE_ENDIAN__ || (NDR_LOCAL_REP == ndr_c_int_little_endian)
 
 /* 
  * the reps for hyper must match the little-endian NDR rep since
