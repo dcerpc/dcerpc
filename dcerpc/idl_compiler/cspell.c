@@ -494,7 +494,7 @@ void CSPELL_pipe_struct_routine_decl
 #endif
 {
 	type_tail_t tail;
-	char *name = "";
+	const char *name = "";
 
 	/* choose a name for the pipe field, unless a cast expression */
 	if (!cast)
@@ -1091,4 +1091,32 @@ void DDBE_spell_manager_param_cast
 	CSPELL_type_tail (fid, &tail, false);
 
 	fprintf (fid, ")");
+}
+
+/*
+ * CSPELL_midl_compatibility_allocators
+ */
+void CSPELL_midl_compatibility_allocators
+#ifdef PROTO
+(
+ FILE *fid
+)
+#else
+(fid)
+	FILE   *fid;
+#endif
+{
+	fprintf (fid,
+	    "static inline idl_void_p_t IDL_midl_user_allocate(\n"
+	    "    idl_void_p_t context, idl_size_t nbytes)\n"
+	    "{\n"
+	    "    (void)context;\n"
+	    "    return midl_user_allocate(nbytes);\n"
+	    "}\n\n"
+	    "static inline void IDL_midl_user_free(\n"
+	    "    idl_void_p_t context, idl_void_p_t ptr)\n"
+	    "{\n"
+	    "    (void)context;\n"
+	    "    midl_user_free(ptr);\n"
+	    "}\n\n");
 }

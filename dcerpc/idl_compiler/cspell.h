@@ -121,6 +121,13 @@ void CSPELL_pipe_struct_routine_decl
 #endif
 );
 
+void CSPELL_midl_compatibility_allocators
+(
+#ifdef PROTO
+    FILE *fid
+#endif
+);
+
 void DDBE_spell_manager_param_cast
 (
 #ifdef PROTO

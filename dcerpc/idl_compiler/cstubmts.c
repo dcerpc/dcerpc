@@ -273,7 +273,7 @@ static void CSPELL_client_stub_routine
     {
         fprintf(fid, "IDL_ms.IDL_mem_handle.alloc = midl_user_allocate;\n");
         fprintf(fid, "IDL_ms.IDL_mem_handle.free = midl_user_free;\n");
-        fprintf(fid, "rpc_ss_set_client_alloc_free(midl_user_allocate, midl_user_free);\n");
+        fprintf(fid, "rpc_ss_set_client_alloc_free(IDL_midl_user_allocate, IDL_midl_user_free);\n");
     }
 
     fprintf(fid,
@@ -640,6 +640,7 @@ void DDBE_gen_cstub
     /* Exceptions may be declared or external. We need a count of both */
     int num_declared_exceptions;
     int num_extern_exceptions;
+    boolean midl_mode = cmd_opt[opt_midl];
 
 	the_interface = p_interface;
     NAMETABLE_id_to_string(p_interface->name, &p_interface_name);
@@ -652,6 +653,14 @@ void DDBE_gen_cstub
      * Emit #defines and #includes
      */
     CSPELL_mts_includes(fid, header_name);
+
+    /*
+     * Emit MIDL-compatible allocator wrappers
+     */
+    if (midl_mode)
+    {
+	CSPELL_midl_compatibility_allocators(fid);
+    }
 
     /*
      * Emit if_spec definition
