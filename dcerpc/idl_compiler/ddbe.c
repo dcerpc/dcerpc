@@ -422,14 +422,14 @@ static void DDBE_byte_vec_entry
     DDBE_vec_rep_t  **p_defn_p,     /* [io] Ptr to vec entry to insert after */
     DDBE_vec_kind_t entry_kind,     /* [in] Kind of byte value entry */
     byte            value,          /* [in] Byte value */
-    char            *comment ATTRIBUTE_UNUSED        /* [in] Comment string for entry */
+    const char      *comment ATTRIBUTE_UNUSED        /* [in] Comment string for entry */
 )
 #else
 (p_defn_p, entry_kind, value, comment)
     DDBE_vec_rep_t  **p_defn_p;     /* [io] Ptr to vec entry to insert after */
     DDBE_vec_kind_t entry_kind;     /* [in] Kind of byte value entry */
     byte            value;          /* [in] Byte value */
-    char            *comment;       /* [in] Comment string for entry */
+    const char      *comment;       /* [in] Comment string for entry */
 #endif
 {
     DDBE_vec_rep_t  *new_p;
@@ -449,14 +449,14 @@ static void DDBE_short_vec_entry
     DDBE_vec_rep_t  **p_defn_p,     /* [io] Ptr to vec entry to insert after */
     DDBE_vec_kind_t entry_kind,     /* [in] Kind of short value entry */
     short           value,          /* [in] Short value */
-    char            *comment  __attribute__((unused))      /* [in] Comment string for entry */
+    const char      *comment ATTRIBUTE_UNUSED      /* [in] Comment string for entry */
 )
 #else
 (p_defn_p, entry_kind, value, comment)
     DDBE_vec_rep_t  **p_defn_p;     /* [io] Ptr to vec entry to insert after */
     DDBE_vec_kind_t entry_kind;     /* [in] Kind of short value entry */
     short           value;          /* [in] Short value */
-    char            *comment;       /* [in] Comment string for entry */
+    const char      *comment;       /* [in] Comment string for entry */
 #endif
 {
     DDBE_vec_rep_t  *new_p;
@@ -477,14 +477,14 @@ static void DDBE_long_vec_entry
     DDBE_vec_rep_t  **p_defn_p,     /* [io] Ptr to vec entry to insert after */
     DDBE_vec_kind_t entry_kind,     /* [in] Kind of long value entry */
     long            value,          /* [in] Long value */
-    char            *comment ATTRIBUTE_UNUSED        /* [in] Comment string for entry */
+    const char      *comment ATTRIBUTE_UNUSED        /* [in] Comment string for entry */
 )
 #else
 (p_defn_p, entry_kind, value, comment)
     DDBE_vec_rep_t  **p_defn_p;     /* [io] Ptr to vec entry to insert after */
     DDBE_vec_kind_t entry_kind;     /* [in] Kind of long value entry */
     long            value;          /* [in] Long value */
-    char            *comment;       /* [in] Comment string for entry */
+    const char      *comment;       /* [in] Comment string for entry */
 #endif
 {
     DDBE_vec_rep_t  *new_p;
@@ -504,12 +504,12 @@ static void DDBE_comment_vec_entry
 #ifdef PROTO
 (
     DDBE_vec_rep_t  **p_defn_p,     /* [io] Ptr to vec entry to insert after */
-    char            *comment ATTRIBUTE_UNUSED       /* [in] Comment string for entry */
+    const char      *comment ATTRIBUTE_UNUSED       /* [in] Comment string for entry */
 )
 #else
 (p_defn_p, comment)
     DDBE_vec_rep_t  **p_defn_p;     /* [io] Ptr to vec entry to insert after */
-    char            *comment;       /* [in] Comment string for entry */
+    const char      *comment;       /* [in] Comment string for entry */
 #endif
 {
     DDBE_vec_rep_t  *new_p;
@@ -529,14 +529,14 @@ static void DDBE_expr_vec_entry
     DDBE_vec_rep_t  **p_defn_p,     /* [io] Ptr to vec entry to insert after */
     DDBE_vec_kind_t expr_kind,      /* [in] Kind of expression */
     STRTAB_str_t    expr,           /* [in] Expression */
-    char            *comment ATTRIBUTE_UNUSED       /* [in] Comment string for entry */
+    const char      *comment ATTRIBUTE_UNUSED       /* [in] Comment string for entry */
 )
 #else
 (p_defn_p, expr_kind, expr, comment)
     DDBE_vec_rep_t  **p_defn_p;     /* [io] Ptr to vec entry to insert after */
     DDBE_vec_kind_t expr_kind;      /* [in] Kind of expression */
     STRTAB_str_t    expr;           /* [in] Expression */
-    char            *comment;       /* [in] Comment string for entry */
+    const char      *comment;       /* [in] Comment string for entry */
 #endif
 {
     DDBE_vec_rep_t  *new_p;
@@ -557,14 +557,14 @@ static void DDBE_type_info_vec_entry
     DDBE_vec_kind_t kind,           /* [in] Type info entry kind */
     DDBE_vec_rep_t  **p_defn_p,     /* [io] Ptr to vec entry to insert after */
     AST_type_n_t    *type_p,        /* [in] Ptr to AST type node */
-    char            *comment ATTRIBUTE_UNUSED       /* [in] Comment string for entry */
+    const char      *comment ATTRIBUTE_UNUSED       /* [in] Comment string for entry */
 )
 #else
 (kind, p_defn_p, type_p, comment)
     DDBE_vec_kind_t kind;           /* [in] Type info entry kind */
     DDBE_vec_rep_t  **p_defn_p;     /* [io] Ptr to vec entry to insert after */
     AST_type_n_t    *type_p;        /* [in] Ptr to AST type node */
-    char            *comment;       /* [in] Comment string for entry */
+    const char      *comment;       /* [in] Comment string for entry */
 #endif
 {
     DDBE_vec_rep_t  *new_p;
@@ -584,13 +584,13 @@ static void DDBE_name_vec_entry
 (
     DDBE_vec_rep_t  **p_defn_p,     /* [io] Ptr to vec entry to insert after */
     NAMETABLE_id_t  name,           /* [in] Name ID */
-    char            *comment ATTRIBUTE_UNUSED       /* [in] Comment string for entry */
+    const char      *comment ATTRIBUTE_UNUSED       /* [in] Comment string for entry */
 )
 #else
 (p_defn_p, name, comment)
     DDBE_vec_rep_t  **p_defn_p;     /* [io] Ptr to vec entry to insert after */
     NAMETABLE_id_t  name;           /* [in] Name ID */
-    char            *comment;       /* [in] Comment string for entry */
+    const char      *comment;       /* [in] Comment string for entry */
 #endif
 {
     DDBE_vec_rep_t  *new_p;
@@ -735,13 +735,13 @@ static void DDBE_reference_vec_entry
 (
     DDBE_vec_rep_t  **p_defn_p,     /* [io] Ptr to vec entry to insert after */
     DDBE_vec_rep_t  *ref_p,         /* [in] Referenced vector entry */
-    char            *comment ATTRIBUTE_UNUSED       /* [in] Comment string for entry */
+    const char      *comment ATTRIBUTE_UNUSED       /* [in] Comment string for entry */
 )
 #else
 (p_defn_p, ref_p, comment)
     DDBE_vec_rep_t  **p_defn_p;     /* [io] Ptr to vec entry to insert after */
     DDBE_vec_rep_t  *ref_p;         /* [in] Referenced vector entry */
-    char            *comment;       /* [in] Comment string for entry */
+    const char      *comment;       /* [in] Comment string for entry */
 #endif
 {
     DDBE_vec_rep_t  *new_p;
@@ -767,13 +767,13 @@ static void DDBE_indirect_vec_entry
 (
     DDBE_vec_rep_t  **p_defn_p,     /* [io] Ptr to vec entry to insert after */
     DDBE_vec_rep_t  **p_ref_p,      /* [in] Addr of referenced vector entry */
-    char            *comment ATTRIBUTE_UNUSED        /* [in] Comment string for entry */
+    const char      *comment ATTRIBUTE_UNUSED        /* [in] Comment string for entry */
 )
 #else
 (p_defn_p, p_ref_p, comment)
     DDBE_vec_rep_t  **p_defn_p;     /* [io] Ptr to vec entry to insert after */
     DDBE_vec_rep_t  **p_ref_p;      /* [in] Addr of referenced vector entry */
-    char            *comment;       /* [in] Comment string for entry */
+    const char      *comment;       /* [in] Comment string for entry */
 #endif
 {
     DDBE_vec_rep_t  *new_p;
@@ -2323,7 +2323,7 @@ static void DDBE_func_code_vec_entry(
 	byte func_code /* function code */
 	)
 {
-    char * name = NULL;
+    const char * name = NULL;
     STRTAB_str_t    name_id;
 
     switch(func_code)
@@ -2367,7 +2367,7 @@ static void DDBE_op_bound
 #endif
 {
     IR_bound_k_t        bound_kind;         /* Bound kind */
-    char                *bound_text = NULL;        /* Bound attr text for comment */
+    const char          *bound_text = NULL;        /* Bound attr text for comment */
     AST_type_n_t        *ref_type_p;        /* Referenced type  in bound attr */
     AST_parameter_n_t   *ref_param_p;       /* Referenced param in bound attr */
     AST_field_n_t       *ref_field_p;       /* Referenced field in bound attr */
@@ -2506,7 +2506,7 @@ static void DDBE_op_limit
 #endif
 {
     IR_limit_k_t        limit_kind;         /* Data limit kind */
-    char                *limit_text = NULL;        /* Limit attr text for comment */
+    char const          *limit_text = NULL;        /* Limit attr text for comment */
     AST_type_n_t        *ref_type_p;        /* Referenced type  in limit attr */
     AST_parameter_n_t   *ref_param_p;       /* Referenced param in limit attr */
     AST_field_n_t       *ref_field_p;       /* Referenced field in limit attr */
@@ -4747,7 +4747,7 @@ static void DDBE_gen_vector_reps
     vip->offset_vec_size =
         DDBE_compute_vec_offsets(vip->offset_p, sizeof(int), 1, 1, NULL) + 1;
     vip->rtn_vec_size =
-        DDBE_compute_vec_offsets(vip->rtn_p, sizeof(void(*)()), 1, 1, NULL) + 1;
+        DDBE_compute_vec_offsets(vip->rtn_p, sizeof(void(*)(void)), 1, 1, NULL) + 1;
 
     /*
      * Do required alignment for type/definition vector addenda.
