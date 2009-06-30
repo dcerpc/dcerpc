@@ -57,13 +57,13 @@ char *last_string;           /* Last string parsed, for disambiguating */
 int flags_option_count
 #ifdef PROTO
 (
-    OPTIONS table[],
-    char *option
+    const OPTIONS table[],
+    const char *option
 )
 #else
 (table, option)
-    OPTIONS table[];    /* Table of command options */
-    char    *option;    /* Name of option */
+    const OPTIONS table[];    /* Table of command options */
+    const char    *option;    /* Name of option */
 #endif
 {
     int o;
@@ -85,13 +85,13 @@ int flags_option_count
 void flags_incr_count
 #ifdef PROTO
 (
-    OPTIONS table[],
-    char *option,
+    const OPTIONS table[],
+    const char *option,
     int delta
 )
 #else
 (table, option, delta)
-    OPTIONS table[];    /* Table of command options */
+    const OPTIONS table[];    /* Table of command options */
     char    *option;    /* Name of option */
     int     delta;      /* Amount to increment option count by */
 #endif
@@ -182,13 +182,13 @@ void getflags
 (
     int ac,
     char **av,
-    OPTIONS table[]
+    const OPTIONS table[]
 )
 #else
 (ac, av, table)
     int     ac;         /* Argument count */
     char    **av;       /* Argument vector - one per space-delimited cmd arg */
-    OPTIONS table[];    /* Table of command options */
+    const OPTIONS table[];    /* Table of command options */
 #endif
 {
     int             o;
@@ -467,11 +467,11 @@ void getflags
 void printflags
 #ifdef PROTO
 (
-    OPTIONS table[]
+    const OPTIONS table[]
 )
 #else
 (table)
-    OPTIONS table[];    /* Table of command options */
+    const OPTIONS table[];    /* Table of command options */
 #endif
 {
     register int    o;

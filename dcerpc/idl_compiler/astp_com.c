@@ -2979,12 +2979,12 @@ NAMETABLE_id_t AST_generate_name
 #ifdef PROTO
 (
       AST_interface_n_t   *int_p,
-      char                *suffix
+      const char          *suffix
 )
 #else
 (int_p,suffix)
       AST_interface_n_t   *int_p;
-      char                *suffix;
+      const char          *suffix;
 #endif
 {
     char        gen_name[MAX_ID+1];  /* Buffer for generated tag name */

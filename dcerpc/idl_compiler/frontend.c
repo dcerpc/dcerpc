@@ -47,6 +47,7 @@
 #  include <sys/types.h>
 #  include <sys/stat.h>
 #  include <fcntl.h>
+#  include <stdio.h>
 #endif
 
 #include <frontend.h>
@@ -166,7 +167,6 @@ idir_list, cpp_output)
 #endif
 
 {
-    extern FILE *popen();
 #ifdef VMS
     boolean     paren_flag;
     char        dir[max_string_len], name[max_string_len], type[max_string_len];
@@ -618,7 +618,7 @@ static boolean parse
 	   constructions) */
 	if (!add_def_string(DCEIDL_DEF))
         {
-            message_print("Warning: Couldn't define macro %s!\n", DCEIDL_DEF);
+            message_print(NIDL_INTERNAL_ERROR, "Warning: Couldn't define macro %s!\n", DCEIDL_DEF);
         }
 
         cpp((char *)cmd_val[opt_cpp],

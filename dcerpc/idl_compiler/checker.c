@@ -46,7 +46,7 @@
 #include <errors.h>     /* Error reporting functions */
 #include <message.h>    /* reporting functions */
 
-extern char *acf_keyword_lookup(
+extern const char *acf_keyword_lookup(
 #ifdef PROTO
     int token_value     /* Numeric value of keyword token */
 #endif

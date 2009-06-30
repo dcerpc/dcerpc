@@ -106,7 +106,7 @@ static ASTP_attr_k_t       ASTP_bound_type;    /* Array bound attribute */
 %{
 #if YYDEBUG
 extern char const *current_file;
-static void yyprint(FILE * stream, int token, YYSTYPE lval)	{
+static void yyprint(FILE * stream, int token ATTRIBUTE_UNUSED, YYSTYPE lval ATTRIBUTE_UNUSED)	{
 	fprintf(stream, " %s:%d", current_file, *yylineno_p);
 }
 #define YYPRINT yyprint
@@ -1347,7 +1347,6 @@ acf_interface_attr:
 	|
 	IMPLICIT_HANDLE_KW LPAREN IDENTIFIER IDENTIFIER RPAREN
 	{
-		AST_type_n_t * type_p;
 		if (the_interface->implicit_handle_name != NAMETABLE_NIL_ID)
 			log_error(nidl_yylineno, NIDL_ATTRUSEMULT, NULL);
 	

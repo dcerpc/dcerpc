@@ -45,7 +45,7 @@
 typedef char *FLAGDEST;
 typedef struct options
         {
-        char *option;
+        const char *option;
         int ftype;
         FLAGDEST dest;
         } OPTIONS;
@@ -105,7 +105,7 @@ typedef struct options
 
 void printflags (
 #ifdef PROTO
-    OPTIONS table[]
+    const OPTIONS table[]
 #endif
 );
 
@@ -113,22 +113,22 @@ void getflags (
 #ifdef PROTO
     int argc,
     char **argv,
-    OPTIONS table[]
+    const OPTIONS table[]
 #endif
 );
 
 void flags_incr_count (
 #ifdef PROTO
-    OPTIONS table[],
-    char *option,
+    const OPTIONS table[],
+    const char *option,
     int delta
 #endif
 );
 
 int flags_option_count (
 #ifdef PROTO
-    OPTIONS table[],
-    char *option
+    const OPTIONS table[],
+    const char *option
 #endif
 );
 

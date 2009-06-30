@@ -50,8 +50,6 @@
 #include <unistd.h>
 #include "message.h"
 
-extern char *getcwd();
-
 /*
 **  Default filespec; only good for one call to FILE_parse.
 */

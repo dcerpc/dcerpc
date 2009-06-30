@@ -69,33 +69,33 @@ static void     *cmd_val[NUM_OPTS]; /* Values associated w/ options (if any) */
        boolean *CMD_opts = (boolean*)cmd_opt;
        void    **CMD_vals = (void**)cmd_val;
 
-static char     *UNSPECIFIED = "";
-static char     *nidl_library = NULL;
+static const char *UNSPECIFIED = "";
+static const char *nidl_library = NULL;
 
 static int      do_bug[NUM_BUGS];
 static int      do_not_do_bug[NUM_BUGS];
 static boolean  support_bug[NUM_BUGS + 1];
 
-static char     *caux_suffix    = CAUX_SUFFIX,
+static const char *caux_suffix    = CAUX_SUFFIX,
                 *caux_file;
 
-static char     *cc_cmd;
-static char     *cc_opt;
+static const char *cc_cmd;
+static const char *cc_opt;
 
-static char     *client;
+static const char *client;
 #define client_none 0
 #define client_stub 1
 #define client_aux  2
 #define client_all  3
-static char     *client_vals[]    = { "none", "stub", "aux", "all", NULL };
+static const char *client_vals[]    = { "none", "stub", "aux", "all", NULL };
 
 #if defined(VMS) || defined(UNIX)
-char            *CMD_def_cpp_cmd;
-static char     *cpp_cmd;
-static char     *cpp_opt;
+const char      *CMD_def_cpp_cmd;
+static const char *cpp_cmd;
+static const char *cpp_opt;
 #endif
 
-static char     *cstub_suffix   = CSTUB_SUFFIX,
+static const char *cstub_suffix   = CSTUB_SUFFIX,
                 *cstub_file;
 
 static char     *(def_strings[MAX_DEF_STRINGS + 1]);
@@ -117,55 +117,56 @@ static char     *dump_strings[MAX_DUMP_STRINGS+1];
 #define dump_unode     11
 #define dump_uool      12
 #define dump_yy        13
-static char     *dump_vals[]    = { "acf", "ast", "ast_after", "cmd", "debug",
+static const char *dump_vals[]    = { "acf", "ast", "ast_after", "cmd", "debug",
                                     "flat", "mnode", "mool", "nametbl", "recs",
                                     "sends", "unode", "uool", "yy", NULL };
 #endif
 
-static char     *header_suffix  = HEADER_SUFFIX,
+static const char *header_suffix  = HEADER_SUFFIX,
                 *header_file;
 
 /*  List of import directories - allow two extra slots for the implicit
  *  -I CD_DIR -I DEFAULT_IDIR and one for the sentinel.
  */
-static char     *(import_directories[MAX_IMPORT_DIRECTORIES + 2 + 1]);
+static const char *(import_directories[MAX_IMPORT_DIRECTORIES + 2 + 1]);
 
-static char     *keep;
+static const char *keep;
 #define keep_none       0
 #define keep_c_source   1
 #define keep_object     2
 #define keep_both       3
 #define keep_all        4
-static char     *keep_vals[]    = { "none", "c_source", "object", "both",
+static const char *keep_vals[]    = { "none", "c_source", "object", "both",
                                     "all", NULL  };
 
-static char     *out_dir;
+static const char *out_dir;
 
-static char     *saux_suffix    = SAUX_SUFFIX,
+static const char *saux_suffix    = SAUX_SUFFIX,
                 *saux_file;
 
-static char     *server;
+static const char *server;
 #define server_none 0
 #define server_stub 1
 #define server_aux  2
 #define server_all  3
-static char     *server_vals[]    = { "none", "stub", "aux", "all", NULL };
+static const char *server_vals[]    = { "none", "stub", "aux", "all", NULL };
 
-static char     *sstub_suffix   = SSTUB_SUFFIX,
-   
+static const char *sstub_suffix   = SSTUB_SUFFIX,
              *sstub_file;
+
 boolean CMD_DCL_interface = FALSE;
-static char     *standard = "extended";
+static const char *standard = "extended";
 static int      standard_opt;
-static char     *standard_vals[] = {
+static const char *standard_vals[] = {
                 "portable", "dce_v10", "dce_v11", "extended", NULL };
-static int      standard_ivals[] = {
+static const int standard_ivals[] = {
                 opt_standard_dce_1_0, opt_standard_dce_1_0,
                 opt_standard_dce_1_1, opt_standard_dce_1_1 };
 
 #define FD(x)   (FLAGDEST)&x
 #define FDV(x)  (FLAGDEST)x
 
+static const
 OPTIONS option_table[]={
 	{"bug",          VINTARG(NUM_BUGS),              FDV(do_bug)},
 	{"caux",         STRARG,                         FD(caux_file)},
@@ -262,15 +263,15 @@ void CMD_explain_args()
 static int check_str_list
 #ifdef PROTO
 (
-    char        *opt,           /* [in] Name of command option */
-    char        *val,           /* [in] Value assigned to command option */
-    char        **list          /* [in] List of legal values for cmd option */
+    const char        *opt,           /* [in] Name of command option */
+    const char        *val,           /* [in] Value assigned to command option */
+    const char        **list          /* [in] List of legal values for cmd option */
 )
 #else
 (opt, val, list)
-    char        *opt;           /* [in] Name of command option */
-    char        *val;           /* [in] Value assigned to command option */
-    char        **list;         /* [in] List of legal values for cmd option */
+    const char        *opt;           /* [in] Name of command option */
+    const char        *val;           /* [in] Value assigned to command option */
+    const char        **list;         /* [in] List of legal values for cmd option */
 #endif
 
 {
@@ -307,17 +308,17 @@ static int check_str_list
 static int check_str_int_list
 #ifdef PROTO
 (
-    char        *opt,           /* [in] Name of command option */
-    char        *val,           /* [in] Value assigned to command option */
-    char        **list,         /* [in] List of legal values for cmd option */
-    int         *ilist          /* [in] List of corresponding integer values */
+    const char        *opt,           /* [in] Name of command option */
+    const char        *val,           /* [in] Value assigned to command option */
+    const char        **list,         /* [in] List of legal values for cmd option */
+    const int         *ilist          /* [in] List of corresponding integer values */
 )
 #else
 (opt, val, list, ilist)
-    char        *opt;           /* [in] Name of command option */
-    char        *val;           /* [in] Value assigned to command option */
-    char        **list;         /* [in] List of legal values for cmd option */
-    int         *ilist;         /* [in] List of corresponding integer values */
+    const char        *opt;           /* [in] Name of command option */
+    const char        *val;           /* [in] Value assigned to command option */
+    const char        **list;         /* [in] List of legal values for cmd option */
+    const int         *ilist;         /* [in] List of corresponding integer values */
 #endif
 
 {
@@ -350,14 +351,14 @@ static int check_str_int_list
 typedef enum {bit, string, string_list, int_list, number} opt_kind_t;
 typedef struct
 {
-    char *opt_name;
+    const char *opt_name;
     opt_kind_t opt_kind;
 } opt_struct;
 
 /*
  * Entries in this table must be consistent with definitions in command.h.
  */
-static opt_struct opt_info[NUM_OPTS] =
+static const opt_struct opt_info[NUM_OPTS] =
 {
     { "caux",               string },
     { "cc_cmd",             string },
@@ -484,7 +485,7 @@ static void dump_cmd_data()
 static char *alloc_and_copy     /* Returns address of new string */
 #ifdef PROTO
 (
-    char    *orig_str           /* String to copy */
+    const char *orig_str           /* String to copy */
 )
 #else
 (orig_str)
@@ -495,7 +496,7 @@ static char *alloc_and_copy     /* Returns address of new string */
     char    *new_str;           /* Local ptr to new string */
 
     if (orig_str == NULL || orig_str[0] == '\0')
-        return UNSPECIFIED;     /* Empty string */
+        orig_str = UNSPECIFIED;     /* Empty string */
 
     new_str = NEW_VEC (char, strlen(orig_str) + 1);
 
@@ -514,11 +515,11 @@ static char *alloc_and_copy     /* Returns address of new string */
 boolean add_def_string
 #ifdef PROTO
 (
-    char *def_string           /* [in] Additional #define string for preprocessor input */
+    const char *def_string           /* [in] Additional #define string for preprocessor input */
 )
 #else
 (def_string)
-     char *def_string;
+     const char *def_string;
 #endif
 
 {
@@ -534,7 +535,7 @@ boolean add_def_string
     {
 	if (def != NULL)
 	{
-	    /* it makes no sens to define the same thing twice */
+	    /* it makes no sense to define the same thing twice */
 	    if (!strcmp(def, def_string)) return true;
 	    len = strlen(def);
 	}

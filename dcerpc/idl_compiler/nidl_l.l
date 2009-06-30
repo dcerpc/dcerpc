@@ -340,11 +340,11 @@ other           .
     int unsigned_int = false;
 #if defined(vax) && defined(ultrix)
     float fval;
-    char *fval_fmt = "%f";
+#define FLOAT_FORMAT "%f"
 #define FLOAT float
 #else
     double fval;
-    char *fval_fmt = "%lf";
+#define FLOAT_FORMAT "%lf"
 #define FLOAT double
 #endif
 
@@ -375,7 +375,7 @@ other           .
     /*
     ** Convert to a float to get overflow detection.
     */
-    sscanf((char *)yytext, fval_fmt, &fval);
+    sscanf((char *)yytext, FLOAT_FORMAT, &fval);
     nidl_yylval.y_int_info.int_val = 0;
 
     /*

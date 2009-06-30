@@ -107,7 +107,7 @@ static int yywrap(void)
 
 typedef struct                  /* Keyword and corresponding value */
 {
-    char    *keyword;
+    const char *keyword;
     int     token_value;
 } keyword_entry;
 
@@ -320,7 +320,7 @@ static void acf_read_comment()
  *  Looks up a keyword's text string given its numeric token value.
  */
 
-char * acf_keyword_lookup
+const char * acf_keyword_lookup
 #ifdef PROTO
 (
     int         token_value     /* Numeric value of keyword token */

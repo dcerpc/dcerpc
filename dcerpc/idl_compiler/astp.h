@@ -1047,7 +1047,7 @@ void ASTP_validate_forward_ref(
 NAMETABLE_id_t AST_generate_name(
 #ifdef PROTO
     AST_interface_n_t *int_p,
-    char              *suffix
+    const char       *suffix
 #endif
 );
 

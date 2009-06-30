@@ -160,7 +160,7 @@
 
 /* Data exported by command.c */
 
-extern char *CMD_def_cpp_cmd;   /* Default cpp command */
+extern const char *CMD_def_cpp_cmd;   /* Default cpp command */
 
 /* Functions exported by command.c */
 
@@ -182,7 +182,7 @@ extern void CMD_explain_args(
 
 extern boolean add_def_string(
 #ifdef PROTO
-    char *def_string
+    const char *def_string
 #endif
 );
 
