@@ -105,7 +105,7 @@ static pthread_rwlock_t atfork_lock;
 /* Array of handlers */
 static volatile dcethread_atfork_handler atfork_handlers[ATFORK_MAX_HANDLERS];
 /* Current size of the array */
-static volatile ssize_t atfork_handlers_len = 0;
+static volatile unsigned atfork_handlers_len = 0;
 
 /* Proxy callbacks which multiplex calls to all registered handlers */
 static void
@@ -170,7 +170,7 @@ __dcethread_atfork_init(void)
 
 static
 void
-dcethread_atfork_init()
+dcethread_atfork_init(void)
 {
     pthread_once(&atfork_once, __dcethread_atfork_init);
 }

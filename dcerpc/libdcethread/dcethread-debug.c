@@ -1,3 +1,4 @@
+#include "config.h"
 #include "dcethread-debug.h"
 #include <stdarg.h>
 #include <stdlib.h>
@@ -7,7 +8,8 @@
 pthread_mutex_t log_lock = PTHREAD_MUTEX_INITIALIZER;
 
 void
-dcethread__default_log_callback (const char* file, unsigned int line, int level, const char* str, void* data)
+dcethread__default_log_callback (const char* file, unsigned int line,
+	int level, const char* str, void* data ATTRIBUTE_UNUSED)
 {
     const char* level_name = NULL;
 
@@ -56,7 +58,7 @@ my_vasprintf(const char* format, va_list args)
     char *smallBuffer;
     unsigned int bufsize;
     int requiredLength;
-    unsigned int newRequiredLength;
+    int newRequiredLength;
     char* outputString = NULL;
     va_list args2;
 
@@ -81,7 +83,7 @@ my_vasprintf(const char* format, va_list args)
 	free(smallBuffer);
     } while (requiredLength < 0);
 
-    if (requiredLength >= (0xFFFFFFFF - 1))
+    if (requiredLength >= (int)(0xFFFFFFFF - 1))
     {
         return NULL;
     }

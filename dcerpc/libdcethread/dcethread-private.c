@@ -36,6 +36,7 @@
 #include "dcethread-debug.h"
 #include "dcethread-exception.h"
 
+#include "config.h"
 #include <stdlib.h>
 #include <signal.h>
 #include <string.h>
@@ -55,7 +56,7 @@ static pthread_condattr_t dcethread_condattr_default;
 #endif
 
 static void
-interrupt_signal_handler(int sig)
+interrupt_signal_handler(int sig ATTRIBUTE_UNUSED)
 {
     dcethread* thread = dcethread__self();
 
@@ -81,7 +82,7 @@ self_destructor(void* data)
 }
 
 static void
-init()
+init(void)
 {
     int cancelstate, oldstate;
     struct sigaction act;
@@ -119,7 +120,7 @@ void dcethread__init(void)
 }
 
 int
-dcethread__interrupt_syscall(dcethread* thread, void* data)
+dcethread__interrupt_syscall(dcethread* thread, void* data ATTRIBUTE_UNUSED)
 {
     pthread_kill(thread->pthread, INTERRUPT_SIGNAL);
     return 0;
@@ -254,7 +255,7 @@ dcethread__sanity(dcethread* thread)
 {
     if (!thread)
         DCETHREAD_ERROR("NULL thread encountered");
-    if (thread->refs < 0)
+    if ((long)thread->refs < 0)
         DCETHREAD_ERROR("Thread %p: ref count < 0", thread);
     if (!thread->flag.locked)
         DCETHREAD_ERROR("Thread %p: not locked when expected", thread);
@@ -265,7 +266,8 @@ dcethread__sanity(dcethread* thread)
     case DCETHREAD_STATE_BLOCKED:
     case DCETHREAD_STATE_INTERRUPT:
         if (thread->refs == 0)
-            DCETHREAD_ERROR("Thread %p: ref count = 0 in living thread");
+            DCETHREAD_ERROR("Thread %p: ref count = 0 in living thread",
+		    dcethread__self());
         break;
     case DCETHREAD_STATE_DEAD:
         break;

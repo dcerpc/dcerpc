@@ -103,7 +103,8 @@ dcethread_exc dcethread_nostackmem_e;         /* No memory to allocate stack */
 dcethread_exc dcethread_exit_thread_e;        /* Used to terminate a thread */
 
 static void
-default_uncaught_handler(dcethread_exc* exc, const char* file, unsigned int line, void* data)
+default_uncaught_handler(dcethread_exc* exc, const char* file,
+	unsigned int line, void* data ATTRIBUTE_UNUSED)
 {
     if (!dcethread__exc_matches(exc, &dcethread_interrupt_e) &&
         !dcethread__exc_matches(exc, &dcethread_exit_thread_e))
@@ -268,7 +269,7 @@ dcethread__exc_raise(dcethread_exc* exc, const char* file, unsigned int line)
 }
 
 void
-dcethread__exc_handle_interrupt(dcethread* thread, void* data)
+dcethread__exc_handle_interrupt(dcethread* thread ATTRIBUTE_UNUSED, void* data)
 {
     dcethread__exc_raise((dcethread_exc*) data, NULL, 0);
 }
