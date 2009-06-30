@@ -105,10 +105,12 @@ INTERNAL void ep_get_endpoint _DCE_PROTOTYPE_((
     ));
 
 INTERNAL idl_void_p_t rpc__ep_mem_alloc _DCE_PROTOTYPE_ ((
+	idl_void_p_t /* context */,
         idl_size_t  /*size*/
     ));
 
 INTERNAL void rpc__ep_mem_free _DCE_PROTOTYPE_ ((
+	idl_void_p_t /* context */,
         pointer_t  /*ptr*/
     ));
 
@@ -1038,10 +1040,10 @@ unsigned32                *status;
     unsigned32              asize;
     unsigned32              i;
     boolean32               supported_tower = false;
-    idl_void_p_t            (*old_allocate) _DCE_PROTOTYPE_ (( idl_size_t ));
-    idl_void_p_t            (*tmp_allocate) _DCE_PROTOTYPE_ (( idl_size_t ));
-    void                    (*old_free) _DCE_PROTOTYPE_ ((idl_void_p_t ));
-    void                    (*tmp_free) _DCE_PROTOTYPE_ ((idl_void_p_t ));
+    rpc_ss_p_alloc_t        old_allocate;
+    rpc_ss_p_alloc_t        tmp_allocate;
+    rpc_ss_p_free_t         old_free;
+    rpc_ss_p_free_t         tmp_free;
 
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
@@ -1191,7 +1193,7 @@ unsigned32                *status;
                 i < chp->num_ents; 
                 i++, entp++)
             {
-                rpc__ep_mem_free ((pointer_t) entp->tower);
+                rpc__ep_mem_free (NULL, (pointer_t) entp->tower);
             }
 
             chp->num_ents = 0;
@@ -1283,7 +1285,7 @@ unsigned32              *status;
     rpc_binding_free(&chp->ep_binding, status);
 
     for (i = 0, entp = &(chp->entries[0]); i < chp->num_ents; i++, entp++)
-        rpc__ep_mem_free ((pointer_t) entp->tower);
+        rpc__ep_mem_free (NULL, (pointer_t) entp->tower);
 
     RPC_MEM_FREE(chp, RPC_C_MEM_INQ_REP); 
 
@@ -1910,10 +1912,10 @@ unsigned32              *st;
     volatile boolean32                   full_restore_flag = true;
     boolean32                   map_lookup;
     volatile boolean32                   free_prot_version = false;
-    idl_void_p_t            (*old_allocate) _DCE_PROTOTYPE_ (( idl_size_t ));
-    idl_void_p_t            (*tmp_allocate) _DCE_PROTOTYPE_ (( idl_size_t ));
-    void                    (*old_free) _DCE_PROTOTYPE_ ((idl_void_p_t ));
-    void                    (*tmp_free) _DCE_PROTOTYPE_ ((idl_void_p_t ));
+    rpc_ss_p_alloc_t            old_allocate;
+    rpc_ss_p_alloc_t            tmp_allocate;
+    rpc_ss_p_free_t             old_free;
+    rpc_ss_p_free_t             tmp_free;
 
 //	DO_NOT_CLOBBER(towers);
 	towers = NULL;
@@ -2209,7 +2211,7 @@ unsigned32              *st;
                 {
                     for (j = 0; j < num_towers; ++j)
                     {
-                        rpc__ep_mem_free ((pointer_t) towers[j]);
+                        rpc__ep_mem_free (NULL, (pointer_t) towers[j]);
                     }
                     
                     RPC_MEM_FREE (towers, RPC_C_MEM_TOWER);
@@ -2238,7 +2240,7 @@ unsigned32              *st;
                     if (temp_status != rpc_s_ok)
                     {
                         RPC_DBG_PRINTF (rpc_e_dbg_general, 1,
-                                        ("(ep_get_endpoint) call_rep->none binding_rep->%x ept_lookup_handle_free returned %x\n", 
+                                        ("(ep_get_endpoint) call_rep->none binding_rep->%p ept_lookup_handle_free returned %x\n", 
                                          binding_r, temp_status));
                     }
 #endif
@@ -2310,7 +2312,7 @@ unsigned32              *st;
 
 #ifdef DEBUG
         RPC_DBG_PRINTF (rpc_e_dbg_general, 1,
-                        ("(ep_get_endpoint) call_rep->none binding_rep->%x endpoint mapper returned %s\n", 
+                        ("(ep_get_endpoint) call_rep->none binding_rep->%p endpoint mapper returned %s\n", 
                          binding_r, endpoint));
 #endif        
 
@@ -2347,7 +2349,7 @@ CLEANUP:
         {
             if (towers[i] != NULL)
             {
-                rpc__ep_mem_free ((pointer_t) towers[i]);
+                rpc__ep_mem_free (NULL, (pointer_t) towers[i]);
             }
         }
 
@@ -2478,10 +2480,12 @@ EXIT:
 INTERNAL idl_void_p_t rpc__ep_mem_alloc 
 #ifdef _DCE_PROTO_
 (
+ idl_void_p_t	      context ATTRIBUTE_UNUSED,
  idl_size_t           size
 )
 #else
-(size)
+(context, size)
+     idl_void_p_t context;
      idl_size_t size;
 #endif
 {
@@ -2532,10 +2536,12 @@ INTERNAL idl_void_p_t rpc__ep_mem_alloc
 INTERNAL void rpc__ep_mem_free 
 #ifdef _DCE_PROTO_
 (
+  idl_void_p_t         context ATTRIBUTE_UNUSED,
   pointer_t            ptr
 )
 #else
-(ptr)
+(context, ptr)
+idl_void_p_t         context;
 pointer_t            ptr;
 #endif
 {
