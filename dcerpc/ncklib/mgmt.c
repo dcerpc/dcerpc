@@ -105,10 +105,12 @@ INTERNAL void inq_princ_name _DCE_PROTOTYPE_ ((
 
 
 INTERNAL idl_void_p_t my_allocate _DCE_PROTOTYPE_ ((
+	idl_void_p_t /* context */,
         idl_size_t  /*size*/
     ));
 
 INTERNAL void my_free _DCE_PROTOTYPE_ ((
+	idl_void_p_t /* context */,
         idl_void_p_t  /*ptr*/
     ));
 
@@ -155,6 +157,7 @@ PRIVATE unsigned32 rpc__mgmt_init(void)
 
 {
     unsigned32              status;
+
     /*
      * Manager EPV for implementation of mgmt.idl.
      */
@@ -164,10 +167,10 @@ PRIVATE unsigned32 rpc__mgmt_init(void)
         inq_stats,
         is_server_listening,
         rpc__mgmt_stop_server_lsn_mgr,
-        inq_princ_name
+        inq_princ_name,
+	rpc_mgmt_set_server_idle_timeout,
+	rpc_mgmt_inq_server_idle_timeout
     };
-
-    
 
     /*
      * register the remote management interface with the runtime
@@ -344,10 +347,10 @@ rpc_if_id_vector_p_t    *if_id_vector;
 unsigned32              *status;
 #endif
 {
-    idl_void_p_t            (*old_allocate) _DCE_PROTOTYPE_ ((idl_size_t));
-    idl_void_p_t            (*tmp_allocate) _DCE_PROTOTYPE_ ((idl_size_t));
-    void                    (*old_free) _DCE_PROTOTYPE_ ((idl_void_p_t));
-    void                    (*tmp_free) _DCE_PROTOTYPE_ ((idl_void_p_t));
+    rpc_ss_p_alloc_t	    old_allocate;
+    rpc_ss_p_alloc_t	    tmp_allocate;
+    rpc_ss_p_free_t         old_free;
+    rpc_ss_p_free_t         tmp_free;
 
     RPC_VERIFY_INIT ();
     
@@ -712,7 +715,7 @@ unsigned32              *status;
     {
         remote_binding_validate(binding_h, status);
         if (*status != rpc_s_ok)
-            return (false);
+            return;
 
         /*
          * call the corresponding remote routine
@@ -722,8 +725,6 @@ unsigned32              *status;
 
         if (*status == rpc_s_call_cancelled)
             dcethread_interrupt_throw(dcethread_self());
-
-        return (*status == rpc_s_ok ? true : false);
      }
 }
 
@@ -2025,10 +2026,12 @@ unsigned32              *status;
 INTERNAL idl_void_p_t my_allocate 
 #ifdef _DCE_PROTO_
 (
+    idl_void_p_t	 context ATTRIBUTE_UNUSED,
     idl_size_t           size
 )
 #else
-(size)
+(context, size)
+     idl_void_p_t context;
      idl_size_t size;
 #endif
 {
@@ -2079,10 +2082,12 @@ INTERNAL idl_void_p_t my_allocate
 INTERNAL void my_free 
 #ifdef _DCE_PROTO_
 (
+    idl_void_p_t            context ATTRIBUTE_UNUSED,
     idl_void_p_t            ptr
 )
 #else
-(ptr)
+(context, ptr)
+idl_void_p_t            context;
 idl_void_p_t            ptr;
 #endif
 {
