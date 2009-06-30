@@ -46,6 +46,7 @@ AC_PROG_LN_S
 AC_PROG_SED
 AC_PATH_PROG(GENCAT, gencat, true)
 AC_PATH_PROG(BISON, bison)
+AC_PATH_PROG(XCRUN, xcrun)
 AC_SUBST(GENCAT)
 AC_OBJEXT
 AC_C_INLINE
@@ -265,20 +266,34 @@ AC_SUBST(IDL_CFLAGS)
 
 dnl For DCOM, default to C++ compiler for now
 if test "x$ENABLE_DCOM" = "xyes" ; then
-	IDL_CC="$CXX"
+	IDL_CC=" $CXX"
 else
-	IDL_CC="$CC"
+	IDL_CC=" $CC"
 fi
-AC_SUBST(IDL_CC)
 
 dnl If using GCC, we need to add -x c-header to force it to treat idl files
 dnl as C headers; otherwise it tries to do something wierd...
 if test "x${ac_cv_prog_gcc}" = "xyes" ; then
 	IDL_CPP="$CPP -x c-header"
 else
-	IDL_CPP=$CPP
+	IDL_CPP="$CPP"
 fi
+
+# On Darwin, we default the IDL compiler to the default toolchain so that you
+# can do "configure CC=~/bin/cc" and still use xcrun for building the IDL.
+case $target_os in
+    darwin*)
+	IDL_CPP="${XCRUN} cc -E -x c-header"
+	if test "x$ENABLE_DCOM" = "xyes" ; then
+	    IDL_CC="${XCRUN} c++"
+	else
+	    IDL_CC="${XCRUN} cc"
+	fi
+	;;
+esac
+
 AC_SUBST(IDL_CPP)
+AC_SUBST(IDL_CC)
 
 #####################################################################
 ## COMPONENT: AUTH PLUGINS
