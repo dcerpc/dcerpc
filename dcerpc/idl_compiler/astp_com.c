@@ -48,15 +48,6 @@
 #include <irep.h>
 extern int nidl_yylineno;
 
-/*
- * Prototypes
- */
-char *KEYWORDS_lookup_text (
-#ifdef PROTO
-    long    token
-#endif
-);
-
 static AST_type_n_t *AST_propagate_typedef (
 #ifdef PROTO
     AST_type_n_t *type_node_ptr,

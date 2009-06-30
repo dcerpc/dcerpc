@@ -193,8 +193,8 @@ static void indent
 
 static void dump_node_address
 (
-    char   *node_name,
-    char   *node_address,
+    const char *node_name,
+    const char *node_address,
     int    indentation
 )
 {

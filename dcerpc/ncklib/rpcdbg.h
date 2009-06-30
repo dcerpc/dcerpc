@@ -233,7 +233,7 @@ EXTERNAL unsigned8 rpc_g_dbg_switches[];
  */
 
 PUBLIC void rpc__dbg_set_switches    _DCE_PROTOTYPE_ ((
-        char            * /*s*/,
+        const char      * /*s*/,
         unsigned32      * /*st*/
     ));
 
@@ -265,7 +265,11 @@ PUBLIC void rpc__dbg_set_switches    _DCE_PROTOTYPE_ ((
 
 #include <stdarg.h>
 
-PRIVATE int rpc__printf _DCE_PROTOTYPE_ (( char * /*format*/, ...));
+PRIVATE int rpc__printf _DCE_PROTOTYPE_ (( const char * /*format*/, ...))
+#if __GNUC__
+__attribute__((__format__ (__printf__, 1, 2)))
+#endif
+;
 
 #endif /* NO_RPC_PRINTF */
 
@@ -292,7 +296,7 @@ PRIVATE char *rpc__uuid_string _DCE_PROTOTYPE_(( idl_uuid_t */*uuid*/));
  */
 
 PRIVATE void rpc__print_source _DCE_PROTOTYPE_((
-        char            * /*file*/,
+        const char      * /*file*/,
         int             /*line*/
     ));
 

@@ -263,7 +263,7 @@ static void DDBE_spell_long_bool_val
     boolean         little_endian;  /* [in] T/F => spell as little/big endian */
 #endif
 {
-    char        *sym;
+    const char        *sym;
 #ifdef DUMPERS
     char const       *comment;
 #endif
@@ -1700,8 +1700,8 @@ void DDBE_spell_marsh_or_unmar
 (
     FILE            *fid,           /* [in] output file handle */
     AST_operation_n_t *oper_p,      /* [in] ptr to AST operation node */
-    char            *interp_name,   /* [in] marshalling interpreter rtn name */
-    char            *state_ptr_name,/* [in] name of state pointer variable */
+    const char      *interp_name,   /* [in] marshalling interpreter rtn name */
+    const char      *state_ptr_name,/* [in] name of state pointer variable */
     BE_side_t       side,           /* [in] client or server side code */
     BE_marshalling_k_t mar_or_unmar /* [in] spell marshall or unmarshall code */
 )
@@ -1709,8 +1709,8 @@ void DDBE_spell_marsh_or_unmar
 (fid, oper_p, interp_name, state_ptr_name, side, mar_or_unmar)
     FILE            *fid;           /* [in] output file handle */
     AST_operation_n_t *oper_p;      /* [in] ptr to AST operation node */
-    char            *interp_name;   /* [in] marshalling interpreter rtn name */
-    char            *state_ptr_name;/* [in] name of state pointer variable */
+    const char      *interp_name;   /* [in] marshalling interpreter rtn name */
+    const char      *state_ptr_name;/* [in] name of state pointer variable */
     BE_side_t       side;           /* [in] client or server side code */
     BE_marshalling_k_t mar_or_unmar;/* [in] spell marshall or unmarshall code */
 #endif

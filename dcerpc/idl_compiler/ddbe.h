@@ -600,8 +600,8 @@ extern void DDBE_spell_marsh_or_unmar(
 #ifdef PROTO
     FILE            *fid,           /* [in] output file handle */
     AST_operation_n_t *oper_p,      /* [in] ptr to AST operation node */
-    char            *interp_name,   /* [in] marshalling interpreter rtn name */
-    char            *state_ptr_name,/* [in] name of state pointer variable */
+    const char      *interp_name,   /* [in] marshalling interpreter rtn name */
+    const char      *state_ptr_name,/* [in] name of state pointer variable */
     BE_side_t       side,           /* [in] client or server side code */
     BE_marshalling_k_t mar_or_unmar /* [in] spell marshall or unmarshall code */
 #endif

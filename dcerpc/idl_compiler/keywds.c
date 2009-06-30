@@ -55,7 +55,7 @@
 #define HASH(keyword, value)                                            \
         {                                                               \
         int hshval;                                                     \
-        char * p;                                                       \
+        const char * p;                                                 \
         hshval = 0;                                                     \
         for (p = (keyword); *p != 0; p++) {                             \
             /*   Start of hash algorithm.   */                          \
@@ -73,7 +73,7 @@
 typedef struct {
     long next;
     long res_word;
-    char * keyword;
+    const char * keyword;
     long token;
     } keyword_attrib_t;
 
@@ -214,12 +214,12 @@ int i;
 int KEYWORDS_screen
 #ifdef PROTO
 (
-    char * identifier,
+    const char * identifier,
     NAMETABLE_id_t * id
 )
 #else
 (identifier, id)
-    char * identifier;
+    const char * identifier;
     NAMETABLE_id_t * id;
 #endif
 {
@@ -278,7 +278,7 @@ int KEYWORDS_screen
  * Returns:
  *      ASCIZ string of token text
  */
-char *KEYWORDS_lookup_text
+const char *KEYWORDS_lookup_text
 #ifdef PROTO
 (
     long    token

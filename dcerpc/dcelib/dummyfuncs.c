@@ -61,9 +61,9 @@ void
 rpc_ns_binding_import_begin(
     /* [in] */ unsigned32 entry_name_syntax ATTRIBUTE_UNUSED,
     /* [in] */ unsigned_char_p_t entry_name ATTRIBUTE_UNUSED,
-    /* [in] */ rpc_if_handle_t if_spec ,
+    /* [in] */ rpc_if_handle_t if_spec ATTRIBUTE_UNUSED,
     /* [in] */ uuid_p_t object_uuid ATTRIBUTE_UNUSED,
-    /* [out] */ rpc_ns_handle_t *import_context,
+    /* [out] */ rpc_ns_handle_t *import_context ATTRIBUTE_UNUSED,
     /* [out] */ unsigned32 *status
 )
 {
@@ -84,8 +84,8 @@ rpc_ns_binding_import_done(
 
 void
 rpc_ns_mgmt_handle_set_exp_age(
-    /* [in] */ rpc_ns_handle_t ns_handle,
-    /* [in] */ unsigned32 expiration_age,
+    /* [in] */ rpc_ns_handle_t ns_handle ATTRIBUTE_UNUSED,
+    /* [in] */ unsigned32 expiration_age ATTRIBUTE_UNUSED,
     /* [out] */ unsigned32 *status
 
 )
@@ -97,8 +97,8 @@ rpc_ns_mgmt_handle_set_exp_age(
 
 void
 rpc_ns_binding_import_next(
-    /* [in] */ rpc_ns_handle_t import_context,
-    /* [out] */ rpc_binding_handle_t *binding,
+    /* [in] */ rpc_ns_handle_t import_context ATTRIBUTE_UNUSED,
+    /* [out] */ rpc_binding_handle_t *binding ATTRIBUTE_UNUSED,
     /* [out] */ unsigned32 *status
 	       )
 {

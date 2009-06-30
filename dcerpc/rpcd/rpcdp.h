@@ -56,14 +56,14 @@ typedef enum {warning, fatal, fatal_usage} check_mode_t;
 
 PRIVATE boolean32 check_st_bad
     _DCE_PROTOTYPE_ ((
-        char            *str,
-        error_status_t  *st
+        const char      *str,
+        const error_status_t  *st
     ));
 
 PRIVATE void show_st
     _DCE_PROTOTYPE_ ((
-        char            *str,
-        error_status_t  *st
+        const char      *str,
+        const error_status_t  *st
     ));
 
 #endif

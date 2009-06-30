@@ -190,8 +190,8 @@ INTERNAL int is_remote_handle( handle_t h, error_status_t *st )
 /*
  * Check whether endpoint is a named pipe
  */
-PRIVATE boolean ept__is_ncacn_np(entry)
-ept_entry_p_t       entry;
+PRIVATE boolean ept__is_ncacn_np(
+	ept_entry_p_t       entry)
 {
     unsigned16 floor_count, count;
     byte_p_t tower = entry->tower->tower_octet_string;
@@ -258,12 +258,12 @@ ept_entry_p_t       entry;
     return false;
 }
 
-PRIVATE void ept_insert(h, num_ents, entries, replace, status)
-handle_t            h;
-unsigned32          num_ents;
-ept_entry_t         entries[];
-boolean32           replace;
-error_status_t      *status;
+PRIVATE void ept_insert(
+	handle_t            h,
+	unsigned32          num_ents,
+	ept_entry_t         entries[],
+	boolean32           replace,
+	error_status_t      *status)
 {
     epdb_handle_t   epdb;
     ept_entry_t     *entp; 
@@ -306,11 +306,11 @@ error_status_t      *status;
     }
 }
 
-PRIVATE void ept_delete(h, num_ents, entries, status)
-handle_t            h;
-unsigned32          num_ents;
-ept_entry_t         entries[];
-error_status_t      *status;
+PRIVATE void ept_delete(
+	handle_t            h,
+	unsigned32          num_ents,
+	ept_entry_t         entries[],
+	error_status_t      *status)
 
 {
     epdb_handle_t   epdb;
@@ -342,18 +342,17 @@ error_status_t      *status;
     }
 }
 
-PRIVATE void ept_lookup(h, inquiry_type, object, interface, vers_option, entry_handle,
-                      max_ents, num_ents, entries, status)
-handle_t            h;
-unsigned32          inquiry_type;
-uuid_p_t            object;
-rpc_if_id_p_t       interface;
-unsigned32          vers_option;
-ept_lookup_handle_t *entry_handle;
-unsigned32          max_ents;
-unsigned32          *num_ents;
-ept_entry_t         entries[];
-error_status_t      *status;
+PRIVATE void ept_lookup(
+	handle_t            h,
+	unsigned32          inquiry_type,
+	uuid_p_t            object,
+	rpc_if_id_p_t       interface,
+	unsigned32          vers_option,
+	ept_lookup_handle_t *entry_handle,
+	unsigned32          max_ents,
+	unsigned32          *num_ents,
+	ept_entry_t         entries[],
+	error_status_t      *status)
 {
     epdb_handle_t epdb;
 
@@ -371,16 +370,15 @@ error_status_t      *status;
                entry_handle, *entry_handle, (unsigned long) *num_ents);
 }
 
-PRIVATE void ept_map(h, object, map_tower, entry_handle,
-                        max_towers, num_towers, towers, status)
-handle_t            h;
-uuid_p_t            object;
-twr_p_t             map_tower;
-ept_lookup_handle_t *entry_handle;
-unsigned32          max_towers;
-unsigned32          *num_towers;
-twr_t               *towers[];
-error_status_t      *status;
+PRIVATE void ept_map(
+	handle_t            h,
+	uuid_p_t            object,
+	twr_p_t             map_tower,
+	ept_lookup_handle_t *entry_handle,
+	unsigned32          max_towers,
+	unsigned32          *num_towers,
+	twr_t               *towers[],
+	error_status_t      *status)
 {
     epdb_handle_t epdb;
 
@@ -415,10 +413,10 @@ error_status_t      *status;
                entry_handle, *entry_handle, (unsigned long) *num_towers);
 }
 
-PRIVATE void ept_lookup_handle_free(h, entry_handle, status)
-handle_t            h ATTRIBUTE_UNUSED;
-ept_lookup_handle_t *entry_handle;
-error_status_t      *status;
+PRIVATE void ept_lookup_handle_free(
+	handle_t            h ATTRIBUTE_UNUSED,
+	ept_lookup_handle_t *entry_handle,
+	error_status_t      *status)
 {
     epdb_handle_t epdb;
 
@@ -428,10 +426,10 @@ error_status_t      *status;
     SET_STATUS_OK(status);
 }
 
-PRIVATE void ept_inq_object(h, object, status)
-handle_t            h;
-idl_uuid_t              *object;
-error_status_t      *status;
+PRIVATE void ept_inq_object(
+	handle_t            h,
+	idl_uuid_t          *object,
+	error_status_t      *status)
 {
     epdb_handle_t epdb;
 
@@ -442,12 +440,12 @@ error_status_t      *status;
     epdb_inq_object(epdb, object, status);
 }
 
-PRIVATE void ept_mgmt_delete(h, object_speced, object, tower, status)
-handle_t            h;
-boolean32           object_speced;
-uuid_p_t            object;
-twr_p_t             tower;
-error_status_t      *status;
+PRIVATE void ept_mgmt_delete(
+	handle_t            h,
+	boolean32           object_speced,
+	uuid_p_t            object,
+	twr_p_t             tower,
+	error_status_t      *status)
 {
     epdb_handle_t epdb;
     error_status_t tmp_st;
@@ -467,8 +465,8 @@ error_status_t      *status;
     epdb_mgmt_delete(epdb, object_speced, object, tower, status);
 }
 
-PRIVATE void ept_lookup_handle_t_rundown(entry_handle)
-ept_lookup_handle_t entry_handle;
+PRIVATE void ept_lookup_handle_t_rundown(
+	ept_lookup_handle_t entry_handle)
 {
     epdb_handle_t epdb;
 

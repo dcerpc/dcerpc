@@ -78,7 +78,7 @@ static pthread_t helper_thread = (pthread_t)0;
  * only at well defined points, so we can't RAISE the exception; just
  * post the cancel.
  */
-static void *async_signal_handler(void *dummy)
+static void *async_signal_handler(void *dummy ATTRIBUTE_UNUSED)
 {
     /*
      * Wait for and handle asynchronous signals.

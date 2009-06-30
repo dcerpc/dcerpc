@@ -18,7 +18,12 @@
 #define DCETHREAD_TRACE(...) DCETHREAD_DEBUG(DCETHREAD_DEBUG_TRACE, __VA_ARGS__)
 
 void dcethread__debug_set_callback(void (*cb) (const char*, unsigned int, int, const char*, void*), void* data);
-void dcethread__debug_printf(const char* file, unsigned int line, int level, const char* fmt, ...);
+void dcethread__debug_printf(const char* file, unsigned int line, int level, const char* fmt, ...)
+#if __GNUC__
+__attribute__((__format__ (__printf__, 4, 5)))
+#endif
+;
+
 void dcethread__default_log_callback (const char* file, unsigned int line, int level, const char* str, void* data);
 
 #endif

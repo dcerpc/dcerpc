@@ -42,7 +42,7 @@
 #ifdef API
 
 int
-interrupt_join(dcethread* thread, void* data ATTRIBUTE_UNUSED)
+interrupt_join(dcethread* thread ATTRIBUTE_UNUSED, void* data)
 {
     dcethread* other = (dcethread*) data;
     if (!pthread_mutex_trylock((pthread_mutex_t*) &other->lock))

@@ -100,12 +100,12 @@ INTERNAL char         uuid_string_buff[40];
 PUBLIC void rpc__dbg_set_switches 
 #ifdef _DCE_PROTO_
 (
-    char            *s ATTRIBUTE_UNUSED,
+    const char      *s ATTRIBUTE_UNUSED,
     unsigned32      *status
 )
 #else
 (s, status)
-char            *s;
+const char      *s;
 unsigned32      *status;
 #endif
 {
@@ -198,7 +198,7 @@ unsigned32      *status;
  *
  * Only support the stdargs form 
  */
-PRIVATE int rpc__printf (char *format, ...)
+PRIVATE int rpc__printf (const char *format, ...)
 {
     char            buff[300];
     char            *s = buff;
@@ -347,11 +347,17 @@ idl_uuid_t          *uuid;
  * RPC_DBG_PRINT macro.
  */
 
-PRIVATE void rpc__print_source (file, line)
-
-char            *file ATTRIBUTE_UNUSED;
+PRIVATE void rpc__print_source
+#ifdef _DCE_PROTO_
+(
+    const char      *file ATTRIBUTE_UNUSED,
+    int             line ATTRIBUTE_UNUSED
+)
+#else
+(file, line)
+const char      *file ATTRIBUTE_UNUSED;
 int             line ATTRIBUTE_UNUSED;
-
+#endif
 {
 #ifdef DEBUG
     if (RPC_DBG(rpc_e_dbg_source, 1))

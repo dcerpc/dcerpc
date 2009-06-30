@@ -206,9 +206,9 @@ GLOBAL   idl_uuid_t         nil_uuid;
 
 
 
-PRIVATE boolean32 check_st_bad(str, st)
-char            *str;
-error_status_t  *st;
+PRIVATE boolean32 check_st_bad(
+	const char      *str,
+	const error_status_t  *st)
 {
     if (STATUS_OK(st)) 
         return false;
@@ -217,9 +217,9 @@ error_status_t  *st;
     return true;
 }
 
-PRIVATE void show_st(str, st)
-char            *str;
-error_status_t  *st;
+PRIVATE void show_st(
+	const char      *str,
+	const error_status_t  *st)
 {
     dce_error_string_t estr;
     int             tmp_st;
@@ -229,7 +229,7 @@ error_status_t  *st;
     syslog(LOG_ERR, "%s: (0x%lx) %s\n", str, (unsigned long) *st, estr);
 }
 
-INTERNAL void usage()
+INTERNAL void usage(void)
 {
 #ifdef DEBUG
     fprintf(stderr, "usage: rpcd [-vDuf] [-d<debug switches>] [<protseq> ...]\n");
@@ -280,9 +280,9 @@ long min_len;
 /*
  *  Process args
  */
-INTERNAL void process_args(argc, argv)
-int             argc;
-char            *argv[];
+INTERNAL void process_args(
+	int             argc,
+	char            *argv[])
 {
     int             i, c;
     unsigned32      status;
@@ -350,8 +350,8 @@ char            *argv[];
 /*
  *  Register the Endpoint Map and LLB interfaces.
  */
-INTERNAL void register_ifs(status)
-error_status_t  *status;
+INTERNAL void register_ifs(
+	error_status_t  *status)
 {
     ept_v3_0_epv_t* _epv = &ept_v3_0_mgr_epv;
     rpc_mgr_epv_t epv = (rpc_mgr_epv_t) _epv;
@@ -383,8 +383,8 @@ error_status_t  *status;
  * the ept_ endpoints are a superset of the llb_ endpoints (which 
  * precludes us from doing a "use_protseq_if" on both).
  */
-INTERNAL void use_protseqs(status)
-error_status_t  *status;
+INTERNAL void use_protseqs(
+	error_status_t  *status)
 {
     unsigned32 i;
 
@@ -447,8 +447,8 @@ error_status_t  *status;
 /*
  * Do some server database, ... initialization
  */
-INTERNAL void init(status)
-error_status_t  *status;
+INTERNAL void init(
+	error_status_t  *status)
 {
     epdb_handle_t       h;
     idl_uuid_t              epdb_obj;
@@ -473,7 +473,7 @@ error_status_t  *status;
                                        strlen(rpcd_c_database_name_prefix2) + 
                                        strlen(rpcd_c_ep_database_name) + 1);
     if (!fname) {
-	status = rpc_s_no_memory;
+	*status = rpc_s_no_memory;
 	check_st_bad("Error when allocating ept database filename", status);
 	return;
     }
@@ -484,7 +484,7 @@ error_status_t  *status;
     dname = (unsigned_char_p_t) malloc(strlen(rpcd_c_database_name_prefix1) + 
                                        strlen(rpcd_c_database_name_prefix2) + 1);
     if (!dname) {
-	status = rpc_s_no_memory;
+	*status = rpc_s_no_memory;
 	check_st_bad("Error when allocating ept database directory", status);
 	return;
     }
@@ -492,7 +492,7 @@ error_status_t  *status;
     sprintf((char *) dname, "%s%s", rpcd_c_database_name_prefix1,
             rpcd_c_database_name_prefix2);
 
-    if (stat(dname, &statbuf) &&
+    if (stat((const char *)dname, &statbuf) &&
 	errno == ENOENT) {
 	printf("(rpcd) ept database directory [%s] doesn't exist\n", dname);
     }
@@ -553,21 +553,18 @@ error_status_t  *status;
  * of selecting different potential servers in the face of stale entries).
  * 
  */
-INTERNAL void fwd_map
-    (object, interface, data_rep, 
-    rpc_protocol, rpc_protocol_vers_major, rpc_protocol_vers_minor, addr, 
-    actuuid, fwd_addr, fwd_action, status)
-uuid_p_t                object;
-rpc_if_id_p_t           interface;
-rpc_syntax_id_p_t       data_rep;
-rpc_protocol_id_t       rpc_protocol;
-unsigned32              rpc_protocol_vers_major;
-unsigned32              rpc_protocol_vers_minor;
-rpc_addr_p_t            addr;
-uuid_p_t                actuuid ATTRIBUTE_UNUSED;
-rpc_addr_p_t            *fwd_addr;
-rpc_fwd_action_t        *fwd_action;
-error_status_t          *status;
+INTERNAL void fwd_map(
+	uuid_p_t                object,
+	rpc_if_id_p_t           interface,
+	rpc_syntax_id_p_t       data_rep,
+	rpc_protocol_id_t       rpc_protocol,
+	unsigned32              rpc_protocol_vers_major,
+	unsigned32              rpc_protocol_vers_minor,
+	rpc_addr_p_t            addr,
+	uuid_p_t                actuuid ATTRIBUTE_UNUSED,
+	rpc_addr_p_t            *fwd_addr,
+	rpc_fwd_action_t        *fwd_action,
+	error_status_t          *status)
 {
     unsigned32      num_ents;
     epdb_handle_t   h;
@@ -618,11 +615,8 @@ error_status_t          *status;
 #define PID_FILE_CONTENTS_SIZE ((9 * 2) + 2)
 #define RPCD_DAEMON_NAME "rpcd"
 
-static
-void
-StripLeadingWhitespace(
-    char* str
-    )
+INTERNAL void StripLeadingWhitespace(
+	char *str)
 {
     char* pszNew = str;
     char* pszTmp = str;
@@ -641,11 +635,8 @@ StripLeadingWhitespace(
     *pszNew = '\0';
 }
 
-static
-void
-StripTrailingWhitespace(
-    char* str
-    )
+INTERNAL void StripTrailingWhitespace(
+	char *str)
 {
     char* pszLastSpace = NULL;
     char* pszTmp = str;
@@ -664,11 +655,8 @@ StripTrailingWhitespace(
     }
 }
 
-static
-void
-StripWhitespace(
-    char* str
-    )
+INTERNAL void StripWhitespace(
+	char *str)
 {
     if (!str || !*str)
        return;
@@ -676,12 +664,9 @@ StripWhitespace(
     StripTrailingWhitespace(str);
 }
 
-static
-int
-MatchProgramToPID(
-    const char* pszProgramName,
-    pid_t pid
-    )
+INTERNAL int MatchProgramToPID(
+	const char	    *pszProgramName,
+	pid_t	    pid)
 {
     int ceError = 0;
     char szBuf[PATH_MAX+1];
@@ -726,9 +711,7 @@ error:
     return ceError;
 }
 
-static
-pid_t
-pid_from_pid_file()
+INTERNAL pid_t pid_from_pid_file(void)
 {
     pid_t pid = 0;
     int fd = -1;
@@ -793,9 +776,7 @@ delete_pid_file()
 }
 #endif
 
-static
-void
-create_pid_file()
+INTERNAL void create_pid_file(void)
 {
     int result = -1;
     pid_t pid;
@@ -842,11 +823,7 @@ error:
 }
 
 
-static
-void
-attach_log_file(
-    void
-    )
+INTERNAL void attach_log_file(void)
 {
     int fd;
     char *fname;
@@ -882,11 +859,7 @@ attach_log_file(
     }
 }
 
-static
-void
-start_as_daemon(
-    void
-    )
+INTERNAL void start_as_daemon(void)
 {
     int pid;
     int fd;
@@ -906,7 +879,11 @@ start_as_daemon(
     // its session would receive the SIGHUP signal. By ignoring
     // this signal, we are ensuring that our second child will
     // ignore this signal and will continue execution.
+#ifdef SIG_ERR
+    if (signal(SIGHUP, SIG_IGN) == SIG_ERR)
+#else
     if (signal(SIGHUP, SIG_IGN) < 0)
+#endif
     {
         exit(1);
     }

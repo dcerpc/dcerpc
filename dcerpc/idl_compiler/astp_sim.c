@@ -47,16 +47,6 @@
 
 extern int nidl_yylineno;
 
-/*
- * Prototypes
- */
-char *KEYWORDS_lookup_text (
-#ifdef PROTO
-    long    token
-#endif
-);
-
-
 static void AST_synthesize_param_to_oper_attr (
 #ifdef PROTO
     AST_parameter_n_t *parameter_node,

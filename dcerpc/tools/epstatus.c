@@ -53,6 +53,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
+#include <getopt.h>
 #if HAVE_SYSEXITS_H
 #include <sysexits.h>
 #endif
@@ -75,6 +76,15 @@ struct ep_table_entry
 
 static const char PROGNAME[] = "epstatus";
 static boolean verbose = false;
+
+#if __GNUC__
+static void
+status_message(
+    FILE * file,
+    error_status_t status,
+    const char * fmt,
+    ...) __attribute__((__format__ (__printf__, 3, 4)));
+#endif
 
 static void
 status_message(

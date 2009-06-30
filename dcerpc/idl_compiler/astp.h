@@ -1063,7 +1063,7 @@ void KEYWORDS_init(
 #endif
 );
 
-char *KEYWORDS_lookup_text(
+const char *KEYWORDS_lookup_text(
 #ifdef PROTO
     long token
 #endif
@@ -1071,7 +1071,7 @@ char *KEYWORDS_lookup_text(
 
 int KEYWORDS_screen(
 #ifdef PROTO
-    char * identifier,
+    const char * identifier,
     NAMETABLE_id_t * id
 #endif
 );

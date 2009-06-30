@@ -125,21 +125,6 @@ static int yyolduuid (
 #endif
 );
 
-
-
-int KEYWORDS_screen (
-#ifdef PROTO
-    char *token,
-    NAMETABLE_id_t *id
-#endif
-);
-
-char *KEYWORDS_lookup_text (
-#ifdef PROTO
-    long token
-#endif
-);
-
 int yyinput (
 #ifdef PROTO
     void
