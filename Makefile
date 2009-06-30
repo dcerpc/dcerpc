@@ -30,6 +30,7 @@ Install_Prefix := /usr/local
 RC_Install_Prefix = $(Install_Prefix)
 
 Extra_Configure_Flags := \
+	--enable-idldumpers \
 	--disable-schannel \
 	--disable-demoprogs
 
@@ -38,7 +39,6 @@ Extra_GCC_Warnings := \
 	-Wextra \
 	-Wshadow \
 	-Wshorten-64-to-32 \
-	-Wmissing-format-attribute \
 	-Wbad-function-cast \
 	-Wstrict-prototypes \
 	-Wpointer-arith \
