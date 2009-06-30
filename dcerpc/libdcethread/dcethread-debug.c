@@ -52,6 +52,7 @@ dcethread__debug_set_callback(void (*cb) (const char*, unsigned int, int, const 
     log_callback_data = data;
 }
 
+#ifndef HAVE_VASPRINTF
 static char *
 my_vasprintf(const char* format, va_list args)
 {
@@ -106,19 +107,24 @@ my_vasprintf(const char* format, va_list args)
 
     return outputString;
 }
+#endif /* HAVE_VASPRINTF */
 
 void 
 dcethread__debug_printf(const char* file, unsigned int line, int level, const char* fmt, ...)
 {
     va_list ap;
-    char* str;
+    char* str = NULL;
 
     if (!log_callback)
 	return;
 
     va_start(ap, fmt);
 
+#if HAVE_VASPRINTF
+    vasprintf(&str, fmt, ap);
+#else
     str = my_vasprintf(fmt, ap);
+#endif
 
     if (str)
     {

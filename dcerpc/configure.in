@@ -225,6 +225,7 @@ AC_CHECK_FUNCS(pthread_mutexattr_getkind_np)
 AC_CHECK_FUNCS(pthread_mutexattr_setkind_np)
 AC_CHECK_FUNCS(pthread_yield)
 AC_CHECK_FUNCS(sched_yield)
+AC_CHECK_FUNCS(vasprintf)
 
 AC_SUBST(DCETHREADINCLUDES)
 
