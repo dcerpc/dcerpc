@@ -12,8 +12,8 @@
 void 
 chk_dce_err(ecode, where, why, fatal)
      error_status_t ecode;
-     char * where;
-     char * why;
+     const char * where;
+     const char * why;
      unsigned int fatal;
 {
 

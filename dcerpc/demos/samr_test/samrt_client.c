@@ -32,14 +32,14 @@
  */
 
 static int
-get_client_rpc_binding(rpc_binding_handle_t *, char *, 
-		       rpc_if_handle_t, char *, char *, char *);
+get_client_rpc_binding(rpc_binding_handle_t *, const char *,
+		       rpc_if_handle_t, const char *, const char *, const char *);
 
 /*
  * usage()
  */
 
-static void usage()
+static void usage(void)
 {
   printf("usage:   samrt [-h hostname] [-u] [-t] [-k]\n");
   printf("         -u:  use UDP protocol \n");
@@ -50,10 +50,7 @@ static void usage()
   exit(0);
 }
 
-int
-main(argc, argv)
- int argc;
- char *argv[];
+int main(int argc, char *argv[])
 {
 
   /* 
@@ -70,7 +67,7 @@ main(argc, argv)
   char mech[128] = "spnego";
   char level[128] = "connect";
   char rpc_host[128] = "localhost";
-  char * protocol;
+  const char * protocol;
 
   /*
    * stuff needed to make RPC calls
@@ -78,7 +75,7 @@ main(argc, argv)
 
   unsigned32 status;
   rpc_binding_handle_t     samr_server;
-  long ntstatus;
+  long ntstatus = 0;
   void *handle = NULL;
   unsigned32 authn_protocol;
   void *mech_ctx;
@@ -202,17 +199,17 @@ main(argc, argv)
  *==========================================================================*/
 
 static int
-get_client_rpc_binding(binding_handle, hostname, interface_spec, protocol, mech, level)
-     rpc_binding_handle_t * binding_handle;
-     char * hostname;
-     rpc_if_handle_t interface_spec;
-     char * protocol;
-     char * mech;
-     char * level;
+get_client_rpc_binding(
+     rpc_binding_handle_t * binding_handle,
+     const char * hostname,
+     rpc_if_handle_t interface_spec,
+     const char * protocol,
+     const char * mech,
+     const char * level)
 {
   char * resolved_binding;
   char * printable_uuid ATTRIBUTE_UNUSED;
-  char * protocol_family;
+  const char * protocol_family;
   char partial_string_binding[128];
   char server_principal[128];
   rpc_if_id_t nonkeyword_interface ATTRIBUTE_UNUSED;
@@ -276,7 +273,7 @@ get_client_rpc_binding(binding_handle, hostname, interface_spec, protocol, mech,
   }
 
   rpc_binding_set_auth_info(*binding_handle,
-			    server_principal,
+			    (unsigned_char_p_t)server_principal,
 			    authn_level,
 			    authn_protocol,
 			    NULL,

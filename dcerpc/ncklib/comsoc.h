@@ -595,6 +595,18 @@ PRIVATE rpc_socket_error_t rpc__socket_set_close_on_exec _DCE_PROTOTYPE_((
     ));
 
 /*
+ * R P C _ _ S O C K E T _ D U P L I C A T E
+ *
+ * Create a new rpc_socket_t that is a duplicate of an existing platform-native
+ * socket type.
+ */
+PRIVATE rpc_socket_error_t rpc__socket_duplicate _DCE_PROTOTYPE_((
+	rpc_protseq_id_t /* [in] socket protoseq */,
+	const void * sockrep /* [in] native socket representation */,
+	rpc_socket_t * /* [out] RPC socket */
+    ));
+
+/*
  * R P C _ _ S O C K E T _ G E T P E E R N A M E
  *
  * Get name of connected peer.

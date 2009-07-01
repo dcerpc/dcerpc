@@ -35,14 +35,14 @@
  */
 
 static int
-get_client_rpc_binding(rpc_binding_handle_t *, char *, 
-		       rpc_if_handle_t, char *);
+get_client_rpc_binding(rpc_binding_handle_t *, const char *,
+		       rpc_if_handle_t, const char *);
 
 /*
  * usage()
  */
 
-static void usage()
+static void usage(void)
 {
   printf("usage:   echon_client [-h hostname] [-u] [-t] [-i number]\n");
   printf("         -u:  use UDP protocol \n");
@@ -54,10 +54,7 @@ static void usage()
   exit(0);
 }
 
-int
-main(argc, argv)
- int argc;
- char *argv[];
+int main(int argc, char *argv[])
 {
 
   /* 
@@ -72,7 +69,7 @@ main(argc, argv)
   int use_udp = 0;
   int use_tcp = 0;
   char rpc_host[128] = "localhost";
-  char * protocol;
+  const char * protocol;
 
   /*
    * stuff needed to make RPC calls
@@ -81,8 +78,7 @@ main(argc, argv)
   unsigned32 status;
   rpc_binding_handle_t     echo_server;
   int ok;
-  long int in_type;
-  long int out_type;
+  long int in_type = -1;
   EchoUnion *in_value = NULL;
   EchoUnion *out_value = NULL;
   
@@ -114,12 +110,12 @@ main(argc, argv)
       case 'f':
           in_type = 2;
           in_value = malloc(sizeof(EchoUnion));
-          in_value->fp = atof(optarg);
+          in_value->fp = (idl_short_float)atof(optarg);
           break;
       case 's':
           in_type = 3;
           in_value = malloc(sizeof(EchoUnion));
-          in_value->str = optarg;
+          in_value->str = (unsigned_char_p_t)optarg;
           printf("in_value is string @ %p\n", (void*) optarg);
           break;
       default:
@@ -222,15 +218,15 @@ main(argc, argv)
  *==========================================================================*/
 
 static int
-get_client_rpc_binding(binding_handle, hostname, interface_spec, protocol)
-     rpc_binding_handle_t * binding_handle;
-     char * hostname;
-     rpc_if_handle_t interface_spec;
-     char * protocol;
+get_client_rpc_binding(
+     rpc_binding_handle_t * binding_handle,
+     const char * hostname,
+     rpc_if_handle_t interface_spec,
+     const char * protocol)
 {
   char * resolved_binding;
   char * printable_uuid ATTRIBUTE_UNUSED;
-  char * protocol_family;
+  const char * protocol_family;
   char partial_string_binding[128];
   rpc_if_id_t interface ATTRIBUTE_UNUSED;
   idl_uuid_t ifc_uuid ATTRIBUTE_UNUSED;

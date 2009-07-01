@@ -94,7 +94,7 @@ static int permute_argv_once()
 }
 
 
-int getopt(int argc, char** argv, char* optstr)
+int getopt(int argc, char* const argv[], const char* optstr)
 {
 	int c = 0;
 

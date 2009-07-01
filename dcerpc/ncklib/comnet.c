@@ -2921,7 +2921,6 @@ unsigned32 *status;
     rpc_socket_t            rpc_sock;
     rpc_socket_error_t	    serr;
 
-    rpc_addr_vector_p_t     rpc_addr_vec;
 
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();

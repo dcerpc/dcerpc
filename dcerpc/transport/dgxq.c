@@ -117,7 +117,8 @@ unsigned32 com_timeout_knob;
     {
         RPC_DBG_GPRINTF(
             ("(rpc__dg_xmitq_awaiting_ack_tmo) timeout (timestamp=%lu, wait_time=%lu, now=%lu) [%s]\n", 
-            timestamp, wait_time, rpc__clock_stamp(),
+            (unsigned long)timestamp, (unsigned long)wait_time,
+	    (unsigned long)rpc__clock_stamp(),
             rpc__dg_act_seq_string(&xq->hdr)));
         return (true);
     }
@@ -262,7 +263,7 @@ boolean32 block;
     if (RPC_DG_SOCK_IS_DISABLED(call->sock_ref))
     {                        
         RPC_DBG_PRINTF(rpc_e_dbg_xmit, 5, 
-            ("(rpc__dg_xmitq_elt_xmit) socket %d has been disabled\n", 
+            ("(rpc__dg_xmitq_elt_xmit) socket %p has been disabled\n", 
             call->sock_ref->sock));
         rpc__dg_call_signal_failure(call, rpc_s_socket_failure);
         return;
@@ -390,8 +391,8 @@ boolean32 block;
     RPC_DBG_PRINTF(rpc_e_dbg_xmit, 5, 
         ("(rpc__dg_xmitq_elt_xmit) %s %lu.%u.%u len=%lu %s\n", 
         rpc__dg_pkt_name(RPC_DG_HDR_INQ_PTYPE(&call->xq.hdr)), 
-        call->xq.hdr.seq, xqe->fragnum, 
-        xqe->serial_num, xq->hdr.len, 
+        (unsigned long)call->xq.hdr.seq, xqe->fragnum, 
+        xqe->serial_num, (unsigned long)xq->hdr.len, 
         RPC_DG_HDR_FLAG_IS_SET(&xq->hdr, RPC_C_DG_PF_NO_FACK) ? "" : "frq"));
 
 #ifdef MISPACKED_HDR
@@ -435,7 +436,7 @@ boolean32 block;
         sendcc += overhead;
     }
     RPC_DBG_PRINTF(rpc_e_dbg_xmit, 5,
-        ("(rpc__dg_xmitq_elt_xmit) iovlen %lu, sendcc %lu\n",
+        ("(rpc__dg_xmitq_elt_xmit) iovlen %d, sendcc %d\n",
          iovlen, sendcc));
     
     /*

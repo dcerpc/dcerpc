@@ -10,19 +10,16 @@
 #include <config.h>
 #endif
 
-#define getopt getopt_system
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <compat/dcerpc.h>
 #include "echo.h"
-#include <misc.h>
+#include "misc.h"
 
-#undef getopt
-
-#ifdef HAVE_GETOPT_H
-#include <getopt.h>
+#ifndef HAVE_GETOPT_H
+#include "getopt.h"
 #endif
 
 #define MAX_USER_INPUT 128
@@ -42,16 +39,16 @@ static int
 get_client_rpc_binding(
     rpc_binding_handle_t * binding_handle,
     rpc_if_handle_t interface_spec,
-    char * hostname,
-    char * protocol,
-    char * endpoint
+    const char * hostname,
+    const char * protocol,
+    const char * endpoint
     );
 
 /*
  * usage()
  */
 
-static void usage()
+static void usage(void)
 {
     printf("usage: echo_client [-h hostname] [-e endpoint] [-n] [-u] [-t]\n");
     printf("         -h:  specify host of RPC server (default is localhost)\n");
@@ -64,6 +61,12 @@ static void usage()
     printf("\n");
     exit(1);
 }
+
+/* XXX this needs a home in the public headers ... */
+extern void rpc__dbg_set_switches(
+        const char      * /*s*/,
+        unsigned32      * /*st*/
+    );
 
 int
 main(
@@ -80,9 +83,9 @@ main(
     extern int optind, opterr, optopt;
     int c;
 
-    char * rpc_host = "127.0.0.1";
-    char * protocol = PROTOCOL_TCP;
-    char * endpoint = NULL;
+    const char * rpc_host = "127.0.0.1";
+    const char * protocol = PROTOCOL_TCP;
+    const char * endpoint = NULL;
 
     char buf[MAX_LINE+1];
 
@@ -217,7 +220,7 @@ main(
     {
         printf ("got response from server. results: \n");
         for (i=0; i<outargs->argc; i++)
-            printf("\t[%ld]: %s\n", i, outargs->argv[i]);
+            printf("\t[%d]: %s\n", i, outargs->argv[i]);
         printf("\n===================================\n");
 
     }
@@ -256,12 +259,12 @@ static int
 get_client_rpc_binding(
     rpc_binding_handle_t * binding_handle,
     rpc_if_handle_t interface_spec,
-    char * hostname,
-    char * protocol,
-    char * endpoint
+    const char * hostname,
+    const char * protocol,
+    const char * endpoint
     )
 {
-    char * string_binding = NULL;
+    unsigned_char_p_t string_binding = NULL;
     error_status_t status;
 
     /*
@@ -271,16 +274,16 @@ get_client_rpc_binding(
      */
 
     rpc_string_binding_compose(NULL,
-			       protocol,
-			       hostname,
-			       endpoint,
+			       (unsigned_char_p_t)protocol,
+			       (unsigned_char_p_t)hostname,
+			       (unsigned_char_p_t)endpoint,
 			       NULL,
 			       &string_binding,
 			       &status);
     chk_dce_err(status, "rpc_string_binding_compose()", "get_client_rpc_binding", 1);
 
 
-    rpc_binding_from_string_binding((unsigned char *)string_binding,
+    rpc_binding_from_string_binding(string_binding,
                                     binding_handle,
                                     &status);
     chk_dce_err(status, "rpc_binding_from_string_binding()", "get_client_rpc_binding", 1);

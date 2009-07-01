@@ -66,7 +66,7 @@ typedef rpc_auth_identity_handle_t RPC_AUTH_IDENTITY_HANDLE;
 #define RpcExceptionCode RpcCompatReturnLater(RpcCompatExceptionToCode(DCETHREAD_EXC_CURRENT))
 
 RPC_STATUS RpcCompatExceptionToCode(dcethread_exc *exc);
-typedef RPC_STATUS (*RpcCompatReturnCodeFuncPtr)();
+typedef RPC_STATUS (*RpcCompatReturnCodeFuncPtr)(void);
 RpcCompatReturnCodeFuncPtr RpcCompatReturnLater(RPC_STATUS value);
 
 //User programs put this inside of their type

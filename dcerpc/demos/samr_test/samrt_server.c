@@ -23,7 +23,7 @@
 #include "misc.h"
 
 #ifndef _WIN32
-static void wait_for_signals();
+static void wait_for_signals(void);
 #endif
 
 /*
@@ -59,7 +59,8 @@ int main(int ac ATTRIBUTE_UNUSED, char *av[] ATTRIBUTE_UNUSED)
 
       printf("registered.\nPreparing binding handle...\n");
       
-      rpc_server_use_protseq("ncacn_ip_tcp", rpc_c_protseq_max_calls_default, &status);
+      rpc_server_use_protseq((unsigned_char_p_t)"ncacn_ip_tcp",
+	      rpc_c_protseq_max_calls_default, &status);
 	
       chk_dce_err(status, "rpc_server_use_all_protseqs()", "", 1);
       rpc_server_inq_bindings(&server_binding, &status);
@@ -165,11 +166,11 @@ int main(int ac ATTRIBUTE_UNUSED, char *av[] ATTRIBUTE_UNUSED)
  *=========================================================================*/
 
 unsigned32
-samrt_Connect(h, system_name, access_mask, handle)
-     handle_t h;
-     unsigned16 *system_name;
-     unsigned32 access_mask;
-     void **handle;
+samrt_Connect(
+     handle_t h,
+     unsigned16 *system_name ATTRIBUTE_UNUSED,
+     unsigned32 access_mask,
+     void **handle)
 {
 
   char * binding_info;
@@ -192,7 +193,7 @@ samrt_Connect(h, system_name, access_mask, handle)
 
   printf("\n\nFunction samrt_Connect() -- input argments\n");
   
-  printf("\taccess_mask = %ld\n", access_mask);
+  printf("\taccess_mask = %d\n", access_mask);
 
   printf ("\n=========================================\n");
 
@@ -219,7 +220,7 @@ samrt_Connect(h, system_name, access_mask, handle)
  *=========================================================================*/
 
 void
-wait_for_signals()
+wait_for_signals(void)
 {
     sigset_t signals;
 

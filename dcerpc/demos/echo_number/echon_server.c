@@ -22,7 +22,7 @@
 #include "misc.h"
 
 #ifndef _WIN32
-static void wait_for_signals();
+static void wait_for_signals(void);
 #endif
 
 /*
@@ -58,7 +58,8 @@ int main(int ac ATTRIBUTE_UNUSED, char *av[] ATTRIBUTE_UNUSED)
 
       printf("registered.\nPreparing binding handle...\n");
       
-      rpc_server_use_protseq("ncacn_ip_tcp", rpc_c_protseq_max_calls_default, &status);
+      rpc_server_use_protseq((unsigned_char_p_t)"ncacn_ip_tcp",
+	      rpc_c_protseq_max_calls_default, &status);
 	
       chk_dce_err(status, "rpc_server_use_all_protseqs()", "", 1);
       rpc_server_inq_bindings(&server_binding, &status);
@@ -186,7 +187,7 @@ ReplyBack(h, in_num, out_num, status)
 
   printf("\n\nFunction ReplyBack() -- input argments\n");
   
-  printf("\tin_num = %ld\n", in_num);
+  printf("\tin_num = %ld\n", (long)in_num);
 
   printf ("\n=========================================\n");
   
@@ -216,7 +217,7 @@ ReplyBack(h, in_num, out_num, status)
 
 
 void
-wait_for_signals()
+wait_for_signals(void)
 {
     sigset_t signals;
 

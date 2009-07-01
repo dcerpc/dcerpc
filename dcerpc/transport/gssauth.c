@@ -203,7 +203,7 @@ INTERNAL void rpc__gssauth_bnd_set_auth
 		gss_buffer_desc input_name;
 		/* GSS_KRB5_NT_PRINCIPAL_NAME */
 		gss_OID_desc nt_principal =
-		{10, "\x2a\x86\x48\x86\xf7\x12\x01\x02\x02\x01"};
+		{10, (void *)"\x2a\x86\x48\x86\xf7\x12\x01\x02\x02\x01"};
 		int gss_rc;
 		OM_uint32 minor_status = 0;
 
@@ -291,7 +291,7 @@ INTERNAL void rpc__gssauth_bnd_set_auth
 	}
 
 	RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_GENERAL,
-		("(rpc__gssauth_bnd_set_auth) %x created (now %d active)\n",
+		("(rpc__gssauth_bnd_set_auth) %p created (now %d active)\n",
 		gssauth_info, rpc_g_gssauth_alloc_count - rpc_g_gssauth_free_count));
 
 	gssauth_info->auth_info.server_princ_name = str_server_name;
@@ -386,8 +386,15 @@ INTERNAL void rpc__gssauth_mskrb_bnd_set_auth
 				  stp);
 }
 
-INTERNAL void rpc__gssauth_negotiate_init();
-INTERNAL void rpc__gssauth_mskrb_init();
+INTERNAL void rpc__gssauth_mskrb_init _DCE_PROTOTYPE_((
+	rpc_auth_epv_p_t *,
+	rpc_auth_rpc_prot_epv_tbl_t *,
+	unsigned32 *));
+
+INTERNAL void rpc__gssauth_negotiate_init _DCE_PROTOTYPE_((
+	rpc_auth_epv_p_t *,
+	rpc_auth_rpc_prot_epv_tbl_t *,
+	unsigned32 *));
 
 void rpc__module_init_func(void)
 {

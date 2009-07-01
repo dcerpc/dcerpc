@@ -13,23 +13,21 @@
 #define _POSIX_PTHREAD_SEMANTICS 1
 #endif
 
-#define getopt getopt_system
-
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <signal.h>
+#include <unistd.h>
 #include <compat/dcerpc.h>
 #include "echo.h"
 #include "misc.h"
 
-#undef getopt
-
-#ifdef HAVE_GETOPT_H
-#include <getopt.h>
+#ifndef HAVE_GETOPT_H
+#include "getopt.h"
 #endif
 
 #ifndef _WIN32
-static void wait_for_signals();
+static void wait_for_signals(void);
 #endif
 
 /*
@@ -47,12 +45,11 @@ static void wait_for_signals();
 static void
 bind_server(
     rpc_binding_vector_p_t * server_binding,
-    rpc_if_handle_t interface_spec,
-    char * protocol,
-    char * endpoint
-    )
+    rpc_if_handle_t interface_spec ATTRIBUTE_UNUSED,
+    const char * protocol,
+    const char * endpoint)
 {
-    char * function = "n/a";
+    const char * function = "n/a";
     unsigned32 status;
 
     /*
@@ -75,13 +72,15 @@ bind_server(
         else
         {
             function = "rpc_server_use_protseq()";
-            rpc_server_use_protseq(protocol, rpc_c_protseq_max_calls_default, &status);
+            rpc_server_use_protseq((unsigned_char_p_t)protocol,
+		    rpc_c_protseq_max_calls_default, &status);
         }
     }
     else
     {
         function = "rpc_server_use_protseq_ep()";
-        rpc_server_use_protseq_ep(protocol, rpc_c_protseq_max_calls_default, endpoint, &status);
+        rpc_server_use_protseq_ep((unsigned_char_p_t)protocol,
+		rpc_c_protseq_max_calls_default, (unsigned_char_p_t)endpoint, &status);
     }
 #endif
 
@@ -90,7 +89,7 @@ bind_server(
     chk_dce_err(status, "rpc_server_inq_bindings()", "", 1);
 }
 
-static void usage()
+static void usage(void)
 {
     printf("usage: echo_server [-e endpoint] [-n] [-u] [-t]\n");
     printf("         -e:  specify endpoint\n");
@@ -107,10 +106,9 @@ int main(int argc, char *argv[])
     rpc_binding_vector_p_t server_binding;
     char * string_binding;
     unsigned32 i;
-    char * protocol = NULL;
-    char * endpoint = NULL;
+    const char * protocol = NULL;
+    const char * endpoint = NULL;
     int c;
-    char * function = NULL;
 
     /*
      * Process the cmd line args
@@ -278,9 +276,12 @@ ReverseIt(
     unsigned32 i,j,l;
     rpc_transport_info_handle_t transport_info = NULL;
     unsigned32 rpcstatus = 0;
+
+#if 0
     unsigned char* sesskey = NULL;
     unsigned32 sesskey_len = 0;
     unsigned char* principal_name = NULL;
+#endif
 
     /*
      * Get some info about the client binding
@@ -296,7 +297,7 @@ ReverseIt(
 
     printf("SMB transport session calls temporarily disabled -- jpeach\n");
 
-/*
+#if 0
     if (transport_info)
     {
         rpc_smb_transport_info_inq_peer_principal_name(transport_info, &principal_name);
@@ -313,7 +314,7 @@ ReverseIt(
         printf ("\n");
     }
 
-*/
+#endif /* 0 */
 
     if (in_text == NULL) return 0;
 
@@ -324,7 +325,7 @@ ReverseIt(
     printf("\n\nFunction ReverseIt() -- input argments\n");
 
     for (i=0; i<in_text->argc; i++)
-        printf("\t[arg %ld]: %s\n", i, in_text->argv[i]);
+        printf("\t[arg %d]: %s\n", i, in_text->argv[i]);
 
     printf ("\n=========================================\n");
 
@@ -341,7 +342,7 @@ ReverseIt(
     for (i=0; i < in_text->argc; i++)
     {
         result->argv[i] =
-            (string_t)rpc_ss_allocate(strlen(in_text->argv[i]) + 1);
+            (string_t)rpc_ss_allocate(strlen((const char *)in_text->argv[i]) + 1);
     }
 
     /*
@@ -350,7 +351,7 @@ ReverseIt(
 
     for (i=0; i < in_text->argc; i++)
     {
-        l = strlen(in_text->argv[i]);
+        l = strlen((const char *)in_text->argv[i]);
         for (j=0; j<l; j++)
         {
             result->argv[i][j] = in_text->argv[i][l-j-1];
@@ -382,7 +383,7 @@ ReverseIt(
  *=========================================================================*/
 
 void
-wait_for_signals()
+wait_for_signals(void)
 {
     sigset_t signals;
 

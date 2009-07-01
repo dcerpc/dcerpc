@@ -282,9 +282,6 @@ unsigned32                      *st;
     RPC_DBG_PRINTF (rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_ROUTINE_TRACE,
                     ("(rpc__schnauth_cn_context_valid)\n"));
 
-    RPC_DBG_PRINTF (rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_GENERAL,
-                    ("(rpc__schnauth_cn_context_valid) time->%x\n", time));
-
     RPC_DBG_PRINTF (rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_PKT,
                     ("(rpc__schnauth_cn_context_valid) prot->%x level->%x key_id->%x\n",
                     rpc_c_authn_dce_dummy,

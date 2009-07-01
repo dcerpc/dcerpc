@@ -465,7 +465,7 @@ INTERNAL void lthread_loop (void)
                 if (status != rpc_s_ok)
                 {
                     RPC_DBG_GPRINTF
-                    (("(lthread) select dispatch failed: desc=%d *status=%d\n",
+                    (("(lthread) select dispatch failed: desc=%p *status=%d\n",
                         lsock->desc, status));
 
                     /*

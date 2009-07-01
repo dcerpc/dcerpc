@@ -301,9 +301,6 @@ INTERNAL boolean32 rpc__gssauth_cn_context_valid
 	RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_ROUTINE_TRACE,
 		("(rpc__gssauth_cn_context_valid)\n"));
 
-	RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_GENERAL,
-		("(rpc__gssauth_cn_context_valid) time->%x\n", time));
-
 	RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_PKT,
 		("(rpc__gssauth_cn_context_valid) prot->%x level->%x key_id->%x\n",
 		sec->sec_info->authn_protocol,
@@ -750,10 +747,13 @@ PRIVATE const char *rpc__gssauth_error_map
 
 #define	__SPNEGO_OID_LENGTH 6
 #define	__SPNEGO_OID "\053\006\001\005\005\002"
-	static const gss_OID_desc rpc__gssauth_spnego_oid = {__SPNEGO_OID_LENGTH, __SPNEGO_OID};
+INTERNAL const gss_OID_desc rpc__gssauth_spnego_oid =
+    {__SPNEGO_OID_LENGTH, (void *)__SPNEGO_OID};
+
 #define __GSS_MECH_KRB5_OID_LENGTH 9
 #define __GSS_MECH_KRB5_OID "\052\206\110\206\367\022\001\002\002"
-	static const gss_OID_desc rpc__gssauth_krb5_oid = {__GSS_MECH_KRB5_OID_LENGTH, __GSS_MECH_KRB5_OID};
+INTERNAL const gss_OID_desc rpc__gssauth_krb5_oid =
+    {__GSS_MECH_KRB5_OID_LENGTH, (void *)__GSS_MECH_KRB5_OID};
 
 INTERNAL int rpc__gssauth_select_mech
 #ifdef _DCE_PROTO_
@@ -1649,7 +1649,7 @@ INTERNAL void rpc__gssauth_cn_wrap_packet
 	wrap_len -= (RPC__GSSAUTH_CN_AUTH_MAX_LEN - auth_len);
 
 	memcpy(&wrap_base[header_size],
-	       output_token.value + auth_len,
+	       (uint8_t *)output_token.value + auth_len,
 	       output_token.length - auth_len);
 
 	tlr = (rpc_cn_auth_tlr_p_t)&wrap_base[wrap_idx];
@@ -2180,7 +2180,7 @@ INTERNAL void rpc__gssauth_cn_unwrap_packet
 		gss_release_buffer(&min_stat, &output_token);
 		RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_GENERAL,
 			("(rpc__gssauth_cn_unwrap_packet): %s: out.length[%u] != pay+pad[%u]\n",
-			comment, output_token.length, (unsigned int)(pay_len + pad_len)));
+			comment, (unsigned)output_token.length, (unsigned int)(pay_len + pad_len)));
 		*st = rpc_s_auth_bad_integrity;
 		return;
 	}

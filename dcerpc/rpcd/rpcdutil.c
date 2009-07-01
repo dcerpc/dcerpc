@@ -55,10 +55,10 @@
 
 #ifdef DEBUG
 
-void print_bad_tower(tower, file, line)
-twr_p_t         tower;
-char            *file;
-int             line;
+static void print_bad_tower(
+	twr_p_t         tower,
+	const char      *file,
+	int             line)
 {
     unsigned32 i;
 

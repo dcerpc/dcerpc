@@ -25,7 +25,7 @@
 #include "echou.h"
 #include "misc.h"
 
-static void wait_for_signals();
+static void wait_for_signals(void);
 
 /*
  *
@@ -60,7 +60,8 @@ int main(int ac ATTRIBUTE_UNUSED, char *av[] ATTRIBUTE_UNUSED)
 
       printf("registered.\nPreparing binding handle...\n");
       
-      rpc_server_use_protseq("ncacn_ip_tcp", rpc_c_protseq_max_calls_default, &status);
+      rpc_server_use_protseq((unsigned_char_p_t)"ncacn_ip_tcp",
+	      rpc_c_protseq_max_calls_default, &status);
 	
       chk_dce_err(status, "rpc_server_use_all_protseqs()", "", 1);
       rpc_server_inq_bindings(&server_binding, &status);
@@ -204,7 +205,7 @@ ReplyBack(h, in_type, in_value, out_value, status)
   {
       int i, len;
       printf("in_value = [string] %s\n", (char*) in_value->str);
-      len = strlen(in_value->str);
+      len = strlen((const char *)in_value->str);
       (*out_value)->str = rpc_ss_allocate(sizeof(*in_value->str) * (len+1));
       
       for (i = 0; i < len; i++)
@@ -241,7 +242,7 @@ ReplyBack(h, in_type, in_value, out_value, status)
 
 
 void
-wait_for_signals()
+wait_for_signals(void)
 {
     sigset_t signals;
 

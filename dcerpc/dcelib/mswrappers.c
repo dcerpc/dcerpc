@@ -74,13 +74,13 @@ RPC_STATUS MultiByteToWideChar16(idl_char *input, PWSTR *output)
 RPC_STATUS RpcCompatExceptionToCode(dcethread_exc *exc)
 {
     RPC_STATUS status;
-    if((status = dcethread_exc_getstatus(exc)) == -1)
+    if((status = dcethread_exc_getstatus(exc)) == (RPC_STATUS)-1)
         return rpc_m_unexpected_exc;
     return status;
 }
 
 RPC_STATUS g_lastcode = 0;
-RPC_STATUS RpcCompatReturnLastCode()
+RPC_STATUS RpcCompatReturnLastCode(void)
 {
     return g_lastcode;
 }
@@ -186,7 +186,7 @@ RPC_STATUS RpcBindingSetAuthInfoA(
     RPC_STATUS status;
     rpc_binding_set_auth_info(
             binding_h,
-            server_princ_name,
+            (unsigned_char_p_t)server_princ_name,
             authn_level,
             authn_protocol,
             auth_identity,
@@ -259,7 +259,7 @@ RPC_STATUS RpcServerUseProtseqEpA(
     /* [in] */ PUCHAR protseq,
     /* [in] */ unsigned int max_call_requests,
     /* [in] */ PUCHAR endpoint,
-    void *security /*not used*/
+    void *security ATTRIBUTE_UNUSED
 )
 {
     RPC_STATUS status = rpc_s_ok;
@@ -271,7 +271,7 @@ RPC_STATUS RpcServerUseProtseqEpW(
     /* [in] */ PWSTR protseq,
     /* [in] */ unsigned int max_call_requests,
     /* [in] */ PWSTR endpoint,
-    void *security /*not used*/
+    void *security ATTRIBUTE_UNUSED
 )
 {
     RPC_STATUS status = rpc_s_ok;
@@ -304,9 +304,9 @@ RPC_STATUS RpcServerRegisterIf(
 }
 
 RPC_STATUS RpcServerListen(
-    unsigned32 minimum_call_threads, /*not used*/
+    unsigned32 minimum_call_threads ATTRIBUTE_UNUSED,
     /* [in] */ unsigned32 max_calls_exec,
-    unsigned32 dont_wait /*not used*/
+    unsigned32 dont_wait  ATTRIBUTE_UNUSED
 )
 {
     RPC_STATUS status = rpc_s_ok;

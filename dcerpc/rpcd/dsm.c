@@ -978,9 +978,9 @@ EXIT:   /* problem
     summary of each block (and doing some error checks on alignment etc.).
 */
 
-public void dsm_print_map(dsx,st)
-dsm_handle_t   dsx ATTRIBUTE_UNUSED;
-error_status_t *st;
+public void dsm_print_map(
+	dsm_handle_t   dsx ATTRIBUTE_UNUSED,
+	error_status_t *st)
 {
 #ifndef DSM_DEBUG
     printf("dsm_print_map unavailable.\n");
@@ -1074,7 +1074,7 @@ error_status_t *st;
     unsigned long       grow_pages,grow_bytes;  /* number of pages, bytes to grow */
     block_t            *p = NULL;               /* new header */
     file_map_t         *map = NULL;             /* file map entry */
-    long                flen;                   /* file length/offset of new chunk */
+    off_t                flen;                   /* file length/offset of new chunk */
 
     CLEANUP {
         if (p != NULL) free(p);                 /* free allocated memory if any */
@@ -1100,8 +1100,15 @@ error_status_t *st;
         if (flen < 0) SIGNAL(dsm_err_file_io_error);
     }
 
+    /* XXX file_map_t should be updated to contain an off_t so that we can
+     * always handle large files. However I'm scared of breaking code, and
+     * in practice I don't have a need for very large registration databases.
+     *	    -- jpeach
+     */
+    assert(flen < ULONG_MAX);
+
     map->link = NULL;                       /* this'll be the last link */
-    map->loc = p->loc = flen;               /* location of chunk and first block */
+    map->loc = p->loc = (unsigned long)flen;/* location of chunk and first block */
     map->size = grow_bytes;                 /* size in bytes */
     map->ptr = p;                           /* where the memory copy is */
     p->size = grow_bytes-PREHEADER;         /* first/only block is everything but one preheader */
