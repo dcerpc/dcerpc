@@ -127,9 +127,9 @@
 
 static void dce_get_msg(
 	unsigned long           status_to_convert,
-	unsigned char           *error_text,
-	unsigned char           *fname,
-	unsigned char           *cname,
+	char			*error_text,
+	char			*fname,
+	char			*cname,
 	int                     *status)
 {
     unsigned short  facility_code;
@@ -139,7 +139,7 @@ static void dce_get_msg(
     nl_catd     catd;
 #endif
     char        component_name[4];
-    char        *facility_name;
+    const char  *facility_name;
     char        filename_prefix[7];
     char        nls_filename[MAXPATHLEN];
     char        alt_filename[MAXPATHLEN];
@@ -292,7 +292,7 @@ int                     *status
         return;
     }
 
-    dce_get_msg (status_to_convert, error_text, fname, cname, status);
+    dce_get_msg (status_to_convert, (char *)error_text, fname, cname, status);
     strcat ((char*) error_text, " (");
     strcat ((char*) error_text, fname);
     strcat ((char*) error_text, " / ");

@@ -660,7 +660,7 @@ unsigned32              *st;
     call_rep = (rpc_cn_call_rep_p_t) call_r;
 
     RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                    ("CN: call_rep->%x call transmit...\n",
+                    ("CN: call_rep->%p call transmit...\n",
                      call_rep));
 
     if (RPC_DBG2 (rpc_e_dbg_cn_pkt, RPC_C_CN_DBG_PKT))
@@ -694,7 +694,7 @@ unsigned32              *st;
     if (call_rep->cn_call_status == rpc_s_call_orphaned)
     {
         RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                        ("CN: call_rep->%x call orphaned...\n",
+                        ("CN: call_rep->%p call orphaned...\n",
                          call_rep));
         
         iov_elt_p = call_args->elt;
@@ -765,7 +765,7 @@ unsigned32              *st;
 
 		fault_code = RPC_CN_PKT_STATUS(header_p);
 		RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-				("CN: call_rep->%x fault packet received st=%x\n",
+				("CN: call_rep->%p fault packet received st=%x\n",
 				  call_rep, fault_code));
 		if (fault_code)
 		{
@@ -926,7 +926,7 @@ unsigned32              *st;
     out_call_args->data_len = 0;
 
     RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                    ("CN: call_rep->%x call transceive...\n",
+                    ("CN: call_rep->%p call transceive...\n",
                      call_rep));
 
     if (RPC_DBG2 (rpc_e_dbg_cn_pkt, RPC_C_CN_DBG_PKT))
@@ -959,7 +959,7 @@ unsigned32              *st;
     if (call_rep->cn_call_status == rpc_s_call_orphaned)
     {
         RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                        ("CN: call_rep->%x call orphaned...\n",
+                        ("CN: call_rep->%p call orphaned...\n",
                          call_rep));
         
         out_call_args->buff_dealloc = NULL;
@@ -1097,7 +1097,7 @@ unsigned32              *st;
                      */
                     fault_code = RPC_CN_PKT_STATUS(header_p);
                     RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                                    ("CN: call_rep->%x fault packet received st = %x\n",
+                                    ("CN: call_rep->%p fault packet received st = %x\n",
                                      call_rep,
                                      fault_code));
                     if (fault_code)
@@ -1269,7 +1269,7 @@ unsigned32              *st;
     call_rep = (rpc_cn_call_rep_p_t) call_r;
 
     RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                    ("CN: call_rep->%x call receive...\n",
+                    ("CN: call_rep->%p call receive...\n",
                      call_rep));
 
     /*
@@ -1284,7 +1284,7 @@ unsigned32              *st;
     if (call_rep->cn_call_status == rpc_s_call_orphaned)
     {
         RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                        ("CN: call_rep->%x call orphaned...\n",
+                        ("CN: call_rep->%p call orphaned...\n",
                          call_rep));
         
         call_args->buff_dealloc = NULL;
@@ -1562,7 +1562,7 @@ unsigned32              *st;
     call_rep = (rpc_cn_call_rep_p_t) call_r;
 
     RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                    ("CN: call_rep->%x call block until free...\n",
+                    ("CN: call_rep->%p call block until free...\n",
                      call_rep));
 
     /*
@@ -1645,7 +1645,7 @@ unsigned32              *st;
     call_rep = (rpc_cn_call_rep_p_t) call_r;
 
     RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                    ("CN: call_rep->%x call cancel...\n",
+                    ("CN: call_rep->%p call cancel...\n",
                      call_rep));
 
     /*
@@ -1736,7 +1736,7 @@ unsigned32              *st;
     call_rep = (rpc_cn_call_rep_p_t) *call_r;
 
     RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                    ("CN: call_rep->%x call end\n",
+                    ("CN: call_rep->%p call end\n",
                      call_rep));
 
     RPC_DBG_PRINTF (rpc_e_dbg_cn_pkt, RPC_C_CN_DBG_PKT,
@@ -1799,7 +1799,7 @@ unsigned32              *st;
                 (call_rep->u.client.cancel.local_count > 0))
             {
                 RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                               ("(rpc__cn_call_end) call_rep->%x reposting cancel\n", call_rep));
+                               ("(rpc__cn_call_end) call_rep->%p reposting cancel\n", call_rep));
                 dcethread_interrupt_throw (dcethread_self());
             }
             
@@ -1926,7 +1926,7 @@ unsigned32              *st;
     call_rep = (rpc_cn_call_rep_p_t) call_r;
 
     RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                    ("CN: call_rep->%x call transmit fault\n",
+                    ("CN: call_rep->%p call transmit fault\n",
                      call_rep));
 
     /*
@@ -1942,7 +1942,7 @@ unsigned32              *st;
     if (call_rep->cn_call_status == rpc_s_call_orphaned)
     {
         RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                        ("CN: call_rep->%x call orphaned...\n",
+                        ("CN: call_rep->%p call orphaned...\n",
                          call_rep));
         
         iov_elt_p = call_fault_info->elt;
@@ -2036,7 +2036,7 @@ unsigned32              l_st;
     RPC_CN_LOCK_ASSERT ();
 
     RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                    ("CN: call_rep->%x call rejected - reason = %x\n",
+                    ("CN: call_rep->%p call rejected - reason = %x\n",
                      call_rep, l_st));
 
 
@@ -2129,7 +2129,7 @@ unsigned32              *st;
     CODING_ERROR (st);
 
     RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                    ("CN: call_rep->%x call receive fault\n",
+                    ("CN: call_rep->%p call receive fault\n",
                      call_r));
 
     /*
@@ -2391,7 +2391,7 @@ unsigned32              l_st;
         case rpc_s_invalid_checksum:            return (nca_s_invalid_checksum);
         case rpc_s_invalid_crc:                 return (nca_s_invalid_crc);
         default:
-            RPC_DBG_GPRINTF(("(rpc__cn_call_cvt_to_nca_st) unknown status; st=%08lx\n", l_st));
+            RPC_DBG_GPRINTF(("(rpc__cn_call_cvt_to_nca_st) unknown status; st=%08x\n", l_st));
             return (nca_s_unspec_reject);
     }
 }
@@ -2442,7 +2442,7 @@ rpc_cn_call_rep_p_t     call_rep;
     RPC_CN_DBG_RTN_PRINTF(rpc__cn_call_no_conn_ind);
 
     RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                    ("CN: call_rep->%x call no connection indication\n",
+                    ("CN: call_rep->%p call no connection indication\n",
                      call_rep));
 
     /*
@@ -2642,7 +2642,7 @@ unsigned32              *status;
     CODING_ERROR (status);
 
     RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                   ("(rpc__cn_call_local_cancel) call_rep->%x local cancel caught\n", 
+                   ("(rpc__cn_call_local_cancel) call_rep->%p local cancel caught\n", 
                     call_rep));
     /*
      * If the call rep is NULL, this is the server side of a
@@ -2746,7 +2746,7 @@ rpc_cn_call_rep_p_t     call_rep;
         DCETHREAD_CATCH (dcethread_interrupt_e) 
         { 
             RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                            ("(rpc__cn_call_check_for_cancel) call_rep->%x local cancel detected\n", call_rep));
+                            ("(rpc__cn_call_check_for_cancel) call_rep->%p local cancel detected\n", call_rep));
             (call_rep)->u.client.cancel.local_count++; 
         } 
         DCETHREAD_ENDTRY
@@ -2814,7 +2814,7 @@ unsigned32              *status;
              call_rep->u.client.cancel.local_count--)
         {
             RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                           ("(rpc__cn_call_forward_cancel) call_rep-> %x forwarding cancel\n", call_rep));
+                           ("(rpc__cn_call_forward_cancel) call_rep->%p forwarding cancel\n", call_rep));
             RPC_CN_CALL_EVAL_EVENT (RPC_C_CALL_LOCAL_ALERT,
                                     NULL, 
                                     call_rep, 
@@ -2824,7 +2824,7 @@ unsigned32              *status;
     else
     {
         RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                       ("(rpc__cn_call_forward_cancel) call_rep->%x haven't sent first frag yet\n", call_rep));
+                       ("(rpc__cn_call_forward_cancel) call_rep->%p haven't sent first frag yet\n", call_rep));
     }
     *status = call_rep->cn_call_status;
 }
@@ -2940,7 +2940,7 @@ unsigned32              *st;
              * (if appropriate).
              */
             RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                           ("(rpc__cn_call_binding_serialize) binding_rep->%x cancel detected\n", binding_r));
+                           ("(rpc__cn_call_binding_serialize) binding_rep->%p cancel detected\n", binding_r));
             if (delta.tv_sec == 0)
             {
                 has_timed_out = true;
@@ -2961,8 +2961,8 @@ unsigned32              *st;
                     if (is_awaiting_timeout == false)
                     {
                         RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                                       ("(rpc__cn_call_binding_serialize) binding_rep->%x %d sec cancel timeout setup\n",
-                                        binding_r, delta.tv_sec));
+                                       ("(rpc__cn_call_binding_serialize) binding_rep->%p %lu sec cancel timeout setup\n",
+                                        binding_r, (unsigned long)delta.tv_sec));
                         
                         dcethread_get_expiration ((struct timespec *) (&delta), 
                                                   (struct timespec *) (&abstime));
@@ -2983,13 +2983,13 @@ unsigned32              *st;
     if (has_timed_out)
     {
         RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                       ("(rpc__cn_call_binding_serialize) binding_rep->%x cancel timeout\n", binding_r));
+                       ("(rpc__cn_call_binding_serialize) binding_rep->%p cancel timeout\n", binding_r));
         *st = rpc_s_cancel_timeout;
     }
     else if (binding_r->addr_has_endpoint == false)
     {
         RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                       ("(rpc__cn_call_binding_serialize) binding_rep->%x endpoint not found\n", binding_r));
+                       ("(rpc__cn_call_binding_serialize) binding_rep->%p endpoint not found\n", binding_r));
         *st = rpc_s_endpoint_not_found;
     }
 }
@@ -3059,7 +3059,7 @@ unsigned32              *st;
             (call_r->u.client.cancel.timeout_time != (typeof(call_r->u.client.cancel.timeout_time))(rpc_c_cancel_infinite_timeout)))
         {
             RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                           ("(rpc__cn_call_start_cancel_timer) call_rep->%x starting cancel timer - %d seconds\n", 
+                           ("(rpc__cn_call_start_cancel_timer) call_rep->%p starting cancel timer - %d seconds\n", 
                             call_r, call_r->u.client.cancel.timeout_time));
             call_r->u.client.cancel.timer_running = true;
             call_r->u.client.cancel.thread_h = dcethread_self ();
@@ -3072,7 +3072,7 @@ unsigned32              *st;
     else
     {
         RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                       ("(rpc__cn_call_start_cancel_timer) call_rep->%x timer expired ... returning rpc_s_cancel_timeout\n", 
+                       ("(rpc__cn_call_start_cancel_timer) call_rep->%p timer expired ... returning rpc_s_cancel_timeout\n", 
                         call_r));
     }
 }
@@ -3127,7 +3127,7 @@ rpc_cn_call_rep_p_t     call_r;
     if (call_r->u.client.cancel.timer_running)
     {
         RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                       ("(rpc__cn_call_stop_cancel_timer) call_rep->%x cancel timer stopped\n", call_r));
+                       ("(rpc__cn_call_stop_cancel_timer) call_rep->%p cancel timer stopped\n", call_r));
         rpc__timer_clear (&call_r->u.client.cancel.timer);
     }
 }
@@ -3183,7 +3183,7 @@ rpc_cn_call_rep_p_t     call_r;
     RPC_CN_DBG_RTN_PRINTF(rpc__cn_call_cancel_timer);
 
     RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                   ("(rpc__cn_call_cancel_timer) call_rep->%x cancel timer expired\n", call_r));
+                   ("(rpc__cn_call_cancel_timer) call_rep->%p cancel timer expired\n", call_r));
     RPC_CN_LOCK ();
     call_r->cn_call_status = rpc_s_cancel_timeout;
     dcethread_interrupt_throw (call_r->u.client.cancel.thread_h);

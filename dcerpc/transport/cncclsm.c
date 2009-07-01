@@ -56,7 +56,7 @@
  * Global Definitions
  */
 #ifdef DEBUG
-GLOBAL char     *rpc_g_cn_call_client_events [] =
+GLOBAL const char     *rpc_g_cn_call_client_events [] =
 {
     "TRANSMIT_REQ     ",
     "CONFIRM          ",
@@ -72,7 +72,7 @@ GLOBAL char     *rpc_g_cn_call_client_events [] =
     "ALERT_TIMEOUT    "
 };
 
-GLOBAL char     *rpc_g_cn_call_client_states [] =
+GLOBAL const char     *rpc_g_cn_call_client_states [] =
 {
     "INIT             ",
     "ASSOC_ALLOC_WAIT ",
@@ -1198,12 +1198,12 @@ pointer_t       sm;
             if (RPC_CN_PKT_FLAGS (header_p) & RPC_C_CN_FLAGS_ALERT_PENDING)
             {
                 RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                                ("(handle_recv_frag_action_rtn) call_rep->%x alert pending flag is set in header\n", call_rep));
+                                ("(handle_recv_frag_action_rtn) call_rep->%p alert pending flag is set in header\n", call_rep));
             }
             else
             {
                 RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                ("(handle_recv_frag_action_rtn) call_rep->%x number alerts forwarded (%d) > alert count in header (%d)\n", 
+                ("(handle_recv_frag_action_rtn) call_rep->%p number alerts forwarded (%d) > alert count in header (%d)\n", 
                  call_rep,
                  call_rep->u.client.cancel.server_count,
                  RPC_CN_PKT_ALERT_COUNT (header_p)));
@@ -1365,12 +1365,12 @@ pointer_t       sm;
             if (RPC_CN_PKT_FLAGS (header_p) & RPC_C_CN_FLAGS_ALERT_PENDING)
             {
                 RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                               ("(raise_fault_action_rtn) call_rep->%x alert pending flag is set in header\n", call_rep));
+                               ("(raise_fault_action_rtn) call_rep->%p alert pending flag is set in header\n", call_rep));
             }
             else
             {
                 RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                               ("(raise_fault_action_rtn) call_rep->%x number alerts forwarded (%d) > alert count in header (%d)\n",
+                               ("(raise_fault_action_rtn) call_rep->%p number alerts forwarded (%d) > alert count in header (%d)\n",
                                 call_rep,
                                 call_rep->u.client.cancel.server_count,
                                 RPC_CN_PKT_ALERT_COUNT (header_p)));
@@ -1548,7 +1548,7 @@ pointer_t       sm;
      */
     call_rep->u.client.cancel.server_count++;
     RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                ("(forward_alert_action_rtn) call_rep->%x forwarding cancel total so far = %d\n", 
+                ("(forward_alert_action_rtn) call_rep->%p forwarding cancel total so far = %d\n", 
                  call_rep,
                  call_rep->u.client.cancel.server_count));
 
@@ -1655,7 +1655,7 @@ pointer_t       sm;
     RPC_CN_PKT_PTYPE (header_p) = RPC_C_CN_PKT_ORPHANED;
     RPC_CN_PKT_FLAGS (header_p) |= RPC_C_CN_FLAGS_LAST_FRAG;
     RPC_DBG_PRINTF (rpc_e_dbg_orphan, RPC_C_CN_DBG_ORPHAN,
-                    ("(abort_send_action_rtn) call_rep->%x sending orphan packet ... call id = %x\n", 
+                    ("(abort_send_action_rtn) call_rep->%p sending orphan packet ... call id = %x\n", 
                      call_rep,
                      RPC_CN_PKT_CALL_ID (header_p)));
 

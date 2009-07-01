@@ -60,7 +60,7 @@
 /*
  * Global Definitions
  */
-GLOBAL char     *rpc_g_cn_assoc_client_events [] =
+GLOBAL const char     *rpc_g_cn_assoc_client_events [] =
 {
     "REQ",
     "ABORT_REQ",
@@ -79,7 +79,7 @@ GLOBAL char     *rpc_g_cn_assoc_client_events [] =
     "SHUTDOWN_IND"
 };
 
-GLOBAL char     *rpc_g_cn_assoc_client_states [] =
+GLOBAL const char     *rpc_g_cn_assoc_client_states [] =
 {
     "CLOSED",
     "CONNECT_WAIT",
@@ -1712,7 +1712,7 @@ pointer_t       sm;
                                    &dbg_status);
 
         RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-            ("CN: call_rep->%x assoc->%x desc->%x connection request initiated to %s[%s]\n",
+            ("CN: call_rep->%p assoc->%p desc->%p connection request initiated to %s[%s]\n",
              assoc->call_rep,
              assoc,
              assoc->cn_ctlblk.cn_sock,
@@ -1745,7 +1745,7 @@ pointer_t       sm;
              */
             event.event_id = RPC_C_ASSOC_REQUEST_CONN_ACK;
             RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                            ("CN: call_rep->%x assoc->%x desc->%x connection established\n",
+                            ("CN: call_rep->%p assoc->%p desc->%p connection established\n",
                              assoc->call_rep,
                              assoc,
                              assoc->cn_ctlblk.cn_sock));
@@ -1763,7 +1763,7 @@ pointer_t       sm;
                  * specification rep contained in the call rep.
                  */
                 RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                                ("CN: call_rep->%x assoc->%x desc->%x connection request failed st = %x\n",
+                                ("CN: call_rep->%p assoc->%p desc->%p connection request failed st = %x\n",
                                  assoc->call_rep,
                                  assoc,
                                  assoc->cn_ctlblk.cn_sock,
@@ -3276,7 +3276,7 @@ pointer_t       sm;
             if (sec_context->sec_status != rpc_s_ok)
             {
                 RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_SECURITY_ERRORS,
-                                ("CN: call_rep->%x assoc->%x desc->%x server verification failed security_context->%x auth_type->%x auth_level->%x auth_len->%x st->%x\n",
+                                ("CN: call_rep->%p assoc->%p desc->%p server verification failed security_context->%p auth_type->%x auth_level->%x auth_len->%x st->%x\n",
                                 assoc->call_rep,
                                 assoc,
                                 assoc->cn_ctlblk.cn_sock,
@@ -3352,7 +3352,7 @@ pointer_t       sm;
         if (assoc->security.auth_buffer_info.auth_buffer != NULL)
         {
             RPC_DBG_PRINTF (rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_BIG_PAC,
-                 ("(mark_syntax_and_sec_action_rtn) Free'd auth_buffer: %x\n",
+                 ("(mark_syntax_and_sec_action_rtn) Free'd auth_buffer: %p\n",
                  assoc->security.auth_buffer_info.auth_buffer));
 
             RPC_MEM_FREE(assoc->security.auth_buffer_info.auth_buffer, 
@@ -3389,7 +3389,7 @@ pointer_t       sm;
                     if (sec_context->sec_status != rpc_s_ok)
                     {
                         RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_SECURITY_ERRORS,
-                                ("CN: call_rep->%x assoc->%x desc->%x server verification failed security_context->%x auth_len->%x st->%x\n",
+                                ("CN: call_rep->%p assoc->%p desc->%p server verification failed security_context->%p auth_len->%x st->%x\n",
                                 assoc->call_rep,
                                 assoc,
                                 assoc->cn_ctlblk.cn_sock,
@@ -3413,7 +3413,7 @@ pointer_t       sm;
                 {
                         RPC_DBG_PRINTF (rpc_e_dbg_general,
                                         RPC_C_CN_DBG_GENERAL,
-                                ("CN: auth_info %x\n", assoc->call_rep->binding_rep->auth_info));
+                                ("CN: auth_info %p\n", assoc->call_rep->binding_rep->auth_info));
                         RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
                                 ("CN: should not continue further with this PDU\n"));
                         assoc->assoc_status = rpc_s_authn_level_mismatch;
@@ -4416,7 +4416,7 @@ pointer_t       sm;
                       RPC_C_MEM_WAITOK);
 
         RPC_DBG_PRINTF (rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_BIG_PAC,
-  ("(process_frag_action_rtn) Alloc'd auth_buffer: %x, auth_buffer_max = %d\n",
+  ("(process_frag_action_rtn) Alloc'd auth_buffer: %p, auth_buffer_max = %d\n",
                         auth_buffer,
                         auth_buffer_max));
     }
@@ -4431,7 +4431,7 @@ pointer_t       sm;
                         RPC_C_MEM_WAITOK);
 
         RPC_DBG_PRINTF (rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_BIG_PAC,
-("(process_frag_action_rtn) Realloc'd auth_buffer: %x, auth_buffer_max = %d\n",
+("(process_frag_action_rtn) Realloc'd auth_buffer: %p, auth_buffer_max = %d\n",
                         auth_buffer,
                         auth_buffer_max));
     }
@@ -4468,7 +4468,7 @@ pointer_t       sm;
     }
 
     RPC_DBG_PRINTF (rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_BIG_PAC,
-    ("(process_frag_action_rtn) Copied to auth_buffer: %x, auth_buffer_len=%d, auth_value_len=%d, auth_buffer_max=%d\n", 
+    ("(process_frag_action_rtn) Copied to auth_buffer: %p, auth_buffer_len=%d, auth_value_len=%d, auth_buffer_max=%d\n", 
     auth_buffer, auth_buffer_len, auth_value_len, auth_buffer_max));
 
     auth_buffer_len += auth_value_len;
@@ -4588,7 +4588,7 @@ pointer_t       sm;
     }
 
     RPC_DBG_PRINTF(rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                   ("CN: assoc->%x Falling back to version 5.0 protocol\n",
+                   ("CN: assoc->%p Falling back to version 5.0 protocol\n",
                    assoc));
 
     /*
@@ -4893,7 +4893,7 @@ unsigned32              *st;
                             &abstract, 
                             &st);
             RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                            ("CN: call_rep->%x assoc->%x desc->%x negotiating for abstract syntax->%s,%x context_id->%x call_id->%x\n",
+                            ("CN: call_rep->%p assoc->%p desc->%p negotiating for abstract syntax->%s,%x context_id->%x call_id->%x\n",
                              assoc->call_rep,
                              assoc,
                              assoc->cn_ctlblk.cn_sock,
@@ -4922,7 +4922,7 @@ unsigned32              *st;
                                 &transfer, 
                                 &st);
                 RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                                ("CN: call_rep->%x assoc->%x desc->%x transfer_syntax[%x]->%s,%x\n",
+                                ("CN: call_rep->%p assoc->%p desc->%p transfer_syntax[%x]->%s,%x\n",
                                  assoc->call_rep,
                                  assoc,
                                  assoc->cn_ctlblk.cn_sock,

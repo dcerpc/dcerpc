@@ -1675,7 +1675,7 @@ PRIVATE void rpc__server_decr_clients _DCE_PROTOTYPE_ ((void));
 
 PRIVATE unsigned32 rpc__strcspn _DCE_PROTOTYPE_ ((
         unsigned_char_p_t           /* string */,
-        char                        * /* term_set */
+        const char                  * /* term_set */
     ));
 
 PRIVATE size_t rpc__get_token(

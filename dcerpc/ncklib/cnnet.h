@@ -81,7 +81,7 @@
         if ((iovp)->iov_len > _bytes_to_adjust) \
         { \
             (iovp)->iov_len -= _bytes_to_adjust; \
-            (iovp)->iov_base += _bytes_to_adjust; \
+            (iovp)->iov_base = (unsigned8 *)(iovp)->iov_base + _bytes_to_adjust; \
             break; \
         } \
         _bytes_to_adjust -= (iovp)->iov_len; \

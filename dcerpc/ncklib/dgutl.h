@@ -117,11 +117,11 @@ PRIVATE void rpc__dg_xmit_error_body_pkt _DCE_PROTOTYPE_((
         unsigned32  /*errst*/
     ));
 
-PRIVATE char *rpc__dg_act_seq_string _DCE_PROTOTYPE_((
+PRIVATE const char *rpc__dg_act_seq_string _DCE_PROTOTYPE_((
         rpc_dg_pkt_hdr_p_t  /*hdrp*/
     ));
 
-PRIVATE char *rpc__dg_pkt_name _DCE_PROTOTYPE_((
+PRIVATE const char *rpc__dg_pkt_name _DCE_PROTOTYPE_((
         rpc_dg_ptype_t  /*ptype*/
     ));
 

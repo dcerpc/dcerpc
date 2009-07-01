@@ -951,25 +951,25 @@ PRIVATE void rpc__cn_stats_print (void)
     RPC_DBG_PRINTF(rpc_e_dbg_stats, 1,
 	("--------------------------------------------------------"));
     RPC_DBG_PRINTF(rpc_e_dbg_stats, 1,
-	("Calls sent:            %9lu", rpc_g_cn_mgmt.calls_sent));
+	("Calls sent:            %9u", rpc_g_cn_mgmt.calls_sent));
     RPC_DBG_PRINTF(rpc_e_dbg_stats, 1,
-	("Calls rcvd:            %9lu", rpc_g_cn_mgmt.calls_rcvd));
+	("Calls rcvd:            %9u", rpc_g_cn_mgmt.calls_rcvd));
     RPC_DBG_PRINTF(rpc_e_dbg_stats, 1,
-	("Pkts sent:             %9lu", rpc_g_cn_mgmt.pkts_sent));
+	("Pkts sent:             %9u", rpc_g_cn_mgmt.pkts_sent));
     RPC_DBG_PRINTF(rpc_e_dbg_stats, 1,
-	("Pkts rcvd:             %9lu", rpc_g_cn_mgmt.pkts_rcvd));
+	("Pkts rcvd:             %9u", rpc_g_cn_mgmt.pkts_rcvd));
     RPC_DBG_PRINTF(rpc_e_dbg_stats, 1,
-	("Connects established:  %9lu", rpc_g_cn_mgmt.connections));
+	("Connects established:  %9u", rpc_g_cn_mgmt.connections));
     RPC_DBG_PRINTF(rpc_e_dbg_stats, 1,
-	("Connects broken:       %9lu", rpc_g_cn_mgmt.closed_connections));
+	("Connects broken:       %9u", rpc_g_cn_mgmt.closed_connections));
     RPC_DBG_PRINTF(rpc_e_dbg_stats, 1,
-	("Associations alloced:  %9lu", rpc_g_cn_mgmt.alloced_assocs));
+	("Associations alloced:  %9u", rpc_g_cn_mgmt.alloced_assocs));
     RPC_DBG_PRINTF(rpc_e_dbg_stats, 1,
-	("Associations dealloced:%9lu", rpc_g_cn_mgmt.dealloced_assocs));
+	("Associations dealloced:%9u", rpc_g_cn_mgmt.dealloced_assocs));
     RPC_DBG_PRINTF(rpc_e_dbg_stats, 1,
-	("Associations aborted:  %9lu", rpc_g_cn_mgmt.aborted_assocs));
+	("Associations aborted:  %9u", rpc_g_cn_mgmt.aborted_assocs));
     RPC_DBG_PRINTF(rpc_e_dbg_stats, 1,
-	("Association groups:    %9lu", rpc_g_cn_mgmt.assoc_grps));
+	("Association groups:    %9u", rpc_g_cn_mgmt.assoc_grps));
 
     RPC_DBG_PRINTF(rpc_e_dbg_stats, 1,
 	("Breakdown by packet type               sent                 rcvd"));
@@ -979,7 +979,7 @@ PRIVATE void rpc__cn_stats_print (void)
     for (i = 0; i <= RPC_C_CN_PKT_MAX_TYPE; i++)
     {
         RPC_DBG_PRINTF(rpc_e_dbg_stats, 1,
-	    ("(%02u) %-10s             %9lu             %9lu",
+	    ("(%02u) %-10s             %9u             %9u",
                 i, rpc__cn_pkt_name(i),
                 rpc_g_cn_mgmt.pstats[i].sent, 
                 rpc_g_cn_mgmt.pstats[i].rcvd));
@@ -1018,7 +1018,7 @@ PRIVATE void rpc__cn_stats_print (void)
 **--
 **/
 
-PRIVATE char *rpc__cn_pkt_name
+PRIVATE const char *rpc__cn_pkt_name
 #ifdef _DCE_PROTO_
 (
   unsigned32      ptype ATTRIBUTE_UNUSED
@@ -1034,7 +1034,7 @@ unsigned32      ptype;
 
 #else
 
-    static char *names[RPC_C_CN_PKT_MAX_TYPE + 1] = 
+    static const char *names[RPC_C_CN_PKT_MAX_TYPE + 1] = 
     {
         "REQUEST      ",
         "PING         ",

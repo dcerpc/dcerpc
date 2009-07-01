@@ -59,7 +59,7 @@
  * Global Definitions
  */
 #ifdef DEBUG
-GLOBAL char     *rpc_g_cn_call_server_events [] =
+GLOBAL const char     *rpc_g_cn_call_server_events [] =
 {
     "RESPONSE         ",
     "INDICATION       ",
@@ -71,7 +71,7 @@ GLOBAL char     *rpc_g_cn_call_server_events [] =
     "ORPHANED         "
 };
 
-GLOBAL char     *rpc_g_cn_call_server_states [] =
+GLOBAL const char     *rpc_g_cn_call_server_states [] =
 {
     "INIT             ",
     "REQUEST          ",
@@ -1534,7 +1534,7 @@ pointer_t       sm;
     if (RPC_CN_PKT_FLAGS (request_header_p) & RPC_C_CN_FLAGS_ALERT_PENDING)
     {
         RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                       ("(handle_first_frag_action_rtn) call_rep->%x alert pending bit set in header calling rpc__cthread_cancel()\n", call_rep));
+                       ("(handle_first_frag_action_rtn) call_rep->%p alert pending bit set in header calling rpc__cthread_cancel()\n", call_rep));
         RPC_CALL_LOCK (((rpc_call_rep_t *) call_rep));
         rpc__cthread_cancel ((rpc_call_rep_t *) call_rep);
         RPC_CALL_UNLOCK (((rpc_call_rep_t *) call_rep));
@@ -2044,7 +2044,7 @@ pointer_t       sm;
      * forwarded cancels.
      */
     RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                    ("(send_call_fault_action_rtn) call_rep->%x setting alert count (%d) in packet header\n", 
+                    ("(send_call_fault_action_rtn) call_rep->%p setting alert count (%d) in packet header\n", 
                      call_rep,
                      call_rep->u.server.cancel.local_count));
     RPC_CN_PKT_ALERT_COUNT (header_p) = call_rep->u.server.cancel.local_count;
@@ -2052,7 +2052,7 @@ pointer_t       sm;
     if (call_rep->common.u.server.cancel.had_pending)
     {
         RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                        ("(send_call_fault_action_rtn) call_rep->%x setting alert pending bit in packet header\n", call_rep));
+                        ("(send_call_fault_action_rtn) call_rep->%p setting alert pending bit in packet header\n", call_rep));
         RPC_CN_PKT_FLAGS (header_p) |= RPC_C_CN_FLAGS_ALERT_PENDING;
     }
     RPC_CALL_UNLOCK (((rpc_call_rep_t *) call_rep));
@@ -2133,7 +2133,7 @@ pointer_t       sm;
     call_rep->u.server.cancel.local_count++;
 
     RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                   ("(process_alert_msg_action_rtn) call_rep->%x received remote alert packet total = %d\n", 
+                   ("(process_alert_msg_action_rtn) call_rep->%p received remote alert packet total = %d\n", 
                     call_rep,
                     call_rep->u.server.cancel.local_count));
 
@@ -2497,7 +2497,7 @@ pointer_t       sm;
      * forwarded cancels.
      */
     RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                    ("(send_call_fault_action_rtn) call_rep->%x setting alert count (%d) in packet header\n", 
+                    ("(send_call_fault_action_rtn) call_rep->%p setting alert count (%d) in packet header\n", 
                      call_rep,
                      call_rep->u.server.cancel.local_count));
     RPC_CN_PKT_ALERT_COUNT (header_p) = call_rep->u.server.cancel.local_count;
@@ -2505,7 +2505,7 @@ pointer_t       sm;
     if (call_rep->common.u.server.cancel.had_pending)
     {
         RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                        ("(send_call_fault_action_rtn) call_rep->%x setting alert pending bit in packet header\n", call_rep));
+                        ("(send_call_fault_action_rtn) call_rep->%p setting alert pending bit in packet header\n", call_rep));
         RPC_CN_PKT_FLAGS (header_p) |= RPC_C_CN_FLAGS_ALERT_PENDING;
     }
     RPC_CALL_UNLOCK (((rpc_call_rep_t *) call_rep));
@@ -2603,7 +2603,7 @@ pointer_t       sm;
     if (rpc__cthread_dequeue((rpc_call_rep_t *) call_rep))
     {
         RPC_DBG_PRINTF(rpc_e_dbg_orphan, RPC_C_CN_DBG_ORPHAN,
-                       ("(stop_orphan_action_rtn) call_rep->%x queued call ... dequeued call id = %x\n", 
+                       ("(stop_orphan_action_rtn) call_rep->%p queued call ... dequeued call id = %x\n", 
                         call_rep,
                         RPC_CN_PKT_CALL_ID ((rpc_cn_packet_p_t) RPC_CN_CREP_SEND_HDR(call_rep))));
         binding_r = (rpc_binding_rep_t *) call_rep->binding_rep;
@@ -2622,7 +2622,7 @@ pointer_t       sm;
          * and needs to be woken up.
          */
         RPC_DBG_PRINTF(rpc_e_dbg_orphan, RPC_C_CN_DBG_ORPHAN,
-                       ("(stop_orphan_action_rtn) call_rep->%x running call ... cancelling and waking up call id = %x\n", 
+                       ("(stop_orphan_action_rtn) call_rep->%p running call ... cancelling and waking up call id = %x\n", 
                         call_rep,
                         RPC_CN_PKT_CALL_ID ((rpc_cn_packet_p_t) RPC_CN_CREP_SEND_HDR(call_rep))));
 
@@ -2854,7 +2854,7 @@ pointer_t       sm;
          * forwarded cancels.
          */
         RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                        ("(call_end_action_rtn) call_rep->%x setting alert count (%d) in packet header\n", 
+                        ("(call_end_action_rtn) call_rep->%p setting alert count (%d) in packet header\n", 
                          call_rep,
                          call_rep->u.server.cancel.local_count));
         RPC_CN_PKT_ALERT_COUNT (header_p) = call_rep->u.server.cancel.local_count;
@@ -2862,7 +2862,7 @@ pointer_t       sm;
         if (call_rep->common.u.server.cancel.had_pending)
         {
             RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                           ("(call_end_action_rtn) call_rep->%x setting alert pending bit in packet header\n", call_rep));
+                           ("(call_end_action_rtn) call_rep->%p setting alert pending bit in packet header\n", call_rep));
             RPC_CN_PKT_FLAGS (header_p) |= RPC_C_CN_FLAGS_ALERT_PENDING;
         }
 

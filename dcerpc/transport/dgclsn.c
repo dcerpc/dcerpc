@@ -258,7 +258,7 @@ rpc_dg_ccall_p_t ccall;
                                             ccall->c.xq.max_frag_size,
                                             ccall->c.rq.window_size);
             RPC_DBG_PRINTF(rpc_e_dbg_recv, 7,
-          ("(rpc__dg_do_common_response) Set ws %lu, rcvbuf %lu, max fs %lu\n",
+          ("(rpc__dg_do_common_response) Set ws %d, rcvbuf %u, max fs %u\n",
               ccall->c.rq.window_size, sp->rcvbuf, ccall->c.xq.max_frag_size));
         }
     }                
@@ -574,7 +574,8 @@ rpc_dg_recvq_elt_p_t rqe;
 
     RPC_DBG_PRINTF(rpc_e_dbg_general, 3, 
         ("(stop_pinging) Next ping at: now = %lu, interval = %lu [%s]\n", 
-        now, interval, rpc__dg_act_seq_string(rqe->hdrp)));
+        (unsigned long)now, (unsigned long)interval,
+	rpc__dg_act_seq_string(rqe->hdrp)));
 }
 
 
@@ -785,7 +786,7 @@ rpc_dg_ccall_p_t ccall;
     rpc__dg_xmitq_restart(&ccall->c);
     
     RPC_DBG_PRINTF(rpc_e_dbg_general, 3, 
-        ("(rpc__dg_do_nocall) Retransmitting %lu frags [%s]\n", 
+        ("(rpc__dg_do_nocall) Retransmitting %d frags [%s]\n", 
         xq->blast_size, rpc__dg_act_seq_string(rqe->hdrp)));
     
     return (RPC_C_DG_RDF_FREE_RQE);

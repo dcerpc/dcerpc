@@ -1506,7 +1506,7 @@ typedef struct rpc_dg_call_t {
 
 #define RPC_DG_CALL_SET_STATE(call, s) { \
     if ((call)->state != (s)) { \
-        RPC_DBG_PRINTF(rpc_e_dbg_dg_state, 2, ("(RPC_DG_CALL_SET_STATE) " #call "=%08x, old state=%u, new state=%u\n", \
+        RPC_DBG_PRINTF(rpc_e_dbg_dg_state, 2, ("(RPC_DG_CALL_SET_STATE) " #call "=%p, old state=%u, new state=%u\n", \
                         (call), (int) (call)->state, (int) (s))); \
         (call)->state = (s); \
         (call)->state_timestamp = rpc__clock_stamp(); \

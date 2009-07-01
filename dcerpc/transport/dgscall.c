@@ -722,7 +722,7 @@ rpc_dg_recvq_elt_p_t rqe;
          */
         RPC_DG_CALL_SET_MAX_FRAG_SIZE(&scall->c, &st);
         RPC_DBG_PRINTF(rpc_e_dbg_recv, 7,
-                       ("(rpc__dg_scall_reinit) Set max fs %lu\n",
+                       ("(rpc__dg_scall_reinit) Set max fs %u\n",
                         scall->c.xq.max_frag_size));
     }
     else
@@ -768,7 +768,7 @@ rpc_dg_recvq_elt_p_t rqe;
                                        scall->c.sock_ref->sndbuf);
 
         RPC_DBG_PRINTF(rpc_e_dbg_recv, 7,
-                    ("(rpc__dg_scall_reinit) Set rcv tsdu %lu, snd tsdu %lu\n",
+                    ("(rpc__dg_scall_reinit) Set rcv tsdu %u, snd tsdu %u\n",
                         scall->c.xq.max_rcv_tsdu, scall->c.xq.max_snd_tsdu));
 
         /*
@@ -779,7 +779,7 @@ rpc_dg_recvq_elt_p_t rqe;
                                         scall->c.xq.max_frag_size,
                                         scall->c.rq.window_size);
         RPC_DBG_PRINTF(rpc_e_dbg_recv, 7,
-                ("(rpc__dg_scall_reinit) Set ws %lu, rcvbuf %lu, max fs %lu\n",
+                ("(rpc__dg_scall_reinit) Set ws %u, rcvbuf %u, max fs %u\n",
               scall->c.rq.window_size, sp->rcvbuf, scall->c.xq.max_frag_size));
     }
 
@@ -808,7 +808,7 @@ rpc_dg_recvq_elt_p_t rqe;
     }
 
     RPC_DBG_PRINTF(rpc_e_dbg_xmit, 6,
-                   ("(rpc__dg_scall_reinit) Set snd fs %lu, high rcv fs %lu\n",
+                   ("(rpc__dg_scall_reinit) Set snd fs %u, high rcv fs %u\n",
                     scall->c.xq.snd_frag_size, scall->c.rq.high_rcv_frag_size));
 
     /*

@@ -346,7 +346,7 @@ PRIVATE unsigned32 rpc__strcspn
 #ifdef _DCE_PROTO_
 (
     unsigned_char_p_t       string,
-    char                    *term_set
+    const char              *term_set
 )
 #else
 (string, term_set)

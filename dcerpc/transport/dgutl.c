@@ -258,7 +258,7 @@ PRIVATE void rpc__dg_plog_dump(void)
  * No lock requirements.
  */
 
-PRIVATE char *rpc__dg_act_seq_string
+PRIVATE const char *rpc__dg_act_seq_string
 #ifdef _DCE_PROTO_
 (
     rpc_dg_pkt_hdr_p_t hdrp ATTRIBUTE_UNUSED
@@ -291,7 +291,7 @@ rpc_dg_pkt_hdr_p_t hdrp;
  * No lock requirements.
  */
 
-PRIVATE char *rpc__dg_pkt_name
+PRIVATE const char *rpc__dg_pkt_name
 #ifdef _DCE_PROTO_
 (
     rpc_dg_ptype_t ptype ATTRIBUTE_UNUSED
@@ -307,7 +307,7 @@ rpc_dg_ptype_t ptype;
 
 #else
 
-    static char *names[RPC_C_DG_PT_MAX_TYPE + 1] = {
+    static const char *names[RPC_C_DG_PT_MAX_TYPE + 1] = {
         "request",
         "ping",
         "response",
@@ -595,21 +595,21 @@ PRIVATE void rpc__dg_stats_print(void)
     RPC_DBG_PRINTF(rpc_e_dbg_stats, 1,
 	("--------------------------------------------------------\n") );
     RPC_DBG_PRINTF(rpc_e_dbg_stats, 1,
-	("Calls sent:            %9lu\n", rpc_g_dg_stats.calls_sent) );
+	("Calls sent:            %9u\n", rpc_g_dg_stats.calls_sent) );
     RPC_DBG_PRINTF(rpc_e_dbg_stats, 1,
-	("Calls rcvd:            %9lu\n", rpc_g_dg_stats.calls_rcvd) );
+	("Calls rcvd:            %9u\n", rpc_g_dg_stats.calls_rcvd) );
     RPC_DBG_PRINTF(rpc_e_dbg_stats, 1,
-	("Pkts sent:             %9lu\n", rpc_g_dg_stats.pkts_sent) );
+	("Pkts sent:             %9u\n", rpc_g_dg_stats.pkts_sent) );
     RPC_DBG_PRINTF(rpc_e_dbg_stats, 1,
-	("Pkts rcvd:             %9lu\n", rpc_g_dg_stats.pkts_rcvd) );
+	("Pkts rcvd:             %9u\n", rpc_g_dg_stats.pkts_rcvd) );
     RPC_DBG_PRINTF(rpc_e_dbg_stats, 1,
-	("Broadcasts sent:       %9lu\n", rpc_g_dg_stats.brds_sent) );
+	("Broadcasts sent:       %9u\n", rpc_g_dg_stats.brds_sent) );
     RPC_DBG_PRINTF(rpc_e_dbg_stats, 1,
-	("Dups sent:             %9lu\n", rpc_g_dg_stats.dups_sent) );
+	("Dups sent:             %9u\n", rpc_g_dg_stats.dups_sent) );
     RPC_DBG_PRINTF(rpc_e_dbg_stats, 1,
-	("Dups rcvd:             %9lu\n", rpc_g_dg_stats.dups_rcvd) );
+	("Dups rcvd:             %9u\n", rpc_g_dg_stats.dups_rcvd) );
     RPC_DBG_PRINTF(rpc_e_dbg_stats, 1,
-	("Out of orders rcvd:    %9lu\n", rpc_g_dg_stats.oo_rcvd) );
+	("Out of orders rcvd:    %9u\n", rpc_g_dg_stats.oo_rcvd) );
 
     RPC_DBG_PRINTF(rpc_e_dbg_stats, 1,
 	("\nBreakdown by packet type               sent            rcvd\n") );
@@ -619,7 +619,7 @@ PRIVATE void rpc__dg_stats_print(void)
     for (i = 0; i <= RPC_C_DG_PT_MAX_TYPE; i++)
     {
         RPC_DBG_PRINTF(rpc_e_dbg_stats, 1,
-	    ("(%02u) %-10s                   %9lu             %9lu\n",
+	    ("(%02u) %-10s                   %9u             %9u\n",
                 i, rpc__dg_pkt_name(i),
                 rpc_g_dg_stats.pstats[i].sent, 
                 rpc_g_dg_stats.pstats[i].rcvd) );

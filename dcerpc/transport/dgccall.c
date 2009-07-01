@@ -440,7 +440,7 @@ unsigned32 *st;
     }
 
     RPC_DBG_PRINTF(rpc_e_dbg_xmit, 6,
-                   ("(ccall_common_init) Set snd fs %lu, high rcv fs %lu\n",
+                   ("(ccall_common_init) Set snd fs %u, high rcv fs %u\n",
                    ccall->c.xq.snd_frag_size, ccall->c.rq.high_rcv_frag_size));
 
     *st = rpc_s_ok;
@@ -630,7 +630,7 @@ unsigned32 *st;
                                        ccall->c.sock_ref->sndbuf);
 
         RPC_DBG_PRINTF(rpc_e_dbg_xmit, 6,
-                       ("(ccall_alloc) Set rcv tsdu %lu, snd tsdu %lu\n",
+                       ("(ccall_alloc) Set rcv tsdu %u, snd tsdu %u\n",
                         ccall->c.xq.max_rcv_tsdu, ccall->c.xq.max_snd_tsdu));
     }
 
@@ -650,7 +650,7 @@ unsigned32 *st;
         {
             RPC_DG_CALL_SET_MAX_FRAG_SIZE(&ccall->c, st);
             RPC_DBG_PRINTF(rpc_e_dbg_xmit, 6,
-                           ("(ccall_alloc) Set max fs %lu\n",
+                           ("(ccall_alloc) Set max fs %d\n",
                            ccall->c.xq.max_frag_size));
     }
     }
@@ -662,7 +662,7 @@ unsigned32 *st;
                                         ccall->c.xq.max_frag_size,
                                         ccall->c.rq.window_size);
         RPC_DBG_PRINTF(rpc_e_dbg_xmit, 6,
-                   ("(ccall_alloc) Set ws %lu, rcvbuf %lu, max fs %lu\n",
+                   ("(ccall_alloc) Set ws %d, rcvbuf %u, max fs %u\n",
               ccall->c.rq.window_size, sp->rcvbuf, ccall->c.xq.max_frag_size));
     }
 
@@ -900,7 +900,7 @@ unsigned32 *st;
                 {
                     RPC_DBG_PRINTF(rpc_e_dbg_cancel, 5,
                     ("(ccall_binding_serialize) %d sec cancel timeout setup\n",
-                            delta.tv_sec));
+                            (int)delta.tv_sec));
 
                     dcethread_get_expiration(&delta, &abstime);
                     *cancel_timeout_time = rpc__clock_stamp() + 

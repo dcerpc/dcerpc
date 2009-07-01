@@ -763,7 +763,7 @@ rpc_dg_scall_p_t scall;
         rpc__dg_xmit_hdr_only_pkt(sp->sock, (rpc_addr_p_t) &rqe->from, rqe->hdrp, 
             RPC_C_DG_PT_NOCALL);
         RPC_DBG_PRINTF(rpc_e_dbg_recv, 1, 
-            ("(rpc__dg_do_ping) No call (higher numbered ping), previous=%lu [%s]\n",
+            ("(rpc__dg_do_ping) No call (higher numbered ping), previous=%u [%s]\n",
             scall_seq, rpc__dg_act_seq_string(hdrp)));
     }                            
 
@@ -972,7 +972,7 @@ rpc_dg_recvq_elt_p_t rqe;
              */
 
             RPC_DBG_GPRINTF(
-                ("(do_request_common) Higher seq pkt killing call, current=%lu state=%s [%s]\n",
+                ("(do_request_common) Higher seq pkt killing call, current=%u state=%s [%s]\n",
                 cur_call_seq, rpc__dg_call_state_name(cur_call_state), 
                 rpc__dg_act_seq_string(hdrp)));
 
@@ -1022,7 +1022,7 @@ rpc_dg_recvq_elt_p_t rqe;
     if (maybe)
     {
         RPC_DBG_PRINTF(rpc_e_dbg_general, 3,
-            ("(do_request_common) Running old maybe, previous=%lu [%s]\n",
+            ("(do_request_common) Running old maybe, previous=%u [%s]\n",
             cur_call_seq, rpc__dg_act_seq_string(hdrp)));
  
         return (do_req_e_new_call);
@@ -1030,7 +1030,7 @@ rpc_dg_recvq_elt_p_t rqe;
     else
     {
         RPC_DBG_PRINTF(rpc_e_dbg_general, 3,
-            ("(do_request_common) Old sequence, previous=%lu [%s]\n",
+            ("(do_request_common) Old sequence, previous=%u [%s]\n",
             cur_call_seq, rpc__dg_act_seq_string(hdrp)));
 
         return (do_req_e_old);

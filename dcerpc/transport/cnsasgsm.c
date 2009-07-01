@@ -54,7 +54,7 @@
  * Global Definitions
  */
 #ifdef DEBUG
-GLOBAL char     *rpc_g_cn_grp_server_events [] =
+GLOBAL const char     *rpc_g_cn_grp_server_events [] =
 {
     "NEW              ",
     "ADD_ASSOC        ",
@@ -62,7 +62,7 @@ GLOBAL char     *rpc_g_cn_grp_server_events [] =
     "NO_CALLS_IND     "
 };
 
-GLOBAL char     *rpc_g_cn_grp_server_states [] =
+GLOBAL const char     *rpc_g_cn_grp_server_states [] =
 {
     "CLOSED           ",
     "OPEN             ",

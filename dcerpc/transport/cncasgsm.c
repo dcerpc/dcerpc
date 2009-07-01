@@ -54,14 +54,14 @@
  * Global Definitions
  */
 #ifdef DEBUG
-GLOBAL char     *rpc_g_cn_grp_client_events [] =
+GLOBAL const char     *rpc_g_cn_grp_client_events [] =
 {
     "NEW              ",
     "ADD_ASSOC        ",
     "REM_ASSOC        "
 };
 
-GLOBAL char     *rpc_g_cn_grp_client_states [] =
+GLOBAL const char     *rpc_g_cn_grp_client_states [] =
 {
     "CLOSED           ",
     "OPEN             ",

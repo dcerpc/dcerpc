@@ -228,7 +228,7 @@ PRIVATE void rpc__cn_network_use_socket
 #ifdef _DCE_PROTO_
 (
     rpc_socket_t    rpc_sock,
-    unsigned32	    max_calls,
+    unsigned32	    max_calls ATTRIBUTE_UNUSED,
     unsigned32	    *status
 )
 #else
@@ -785,16 +785,16 @@ unsigned32              *status;
     if (RPC_SOCKET_IS_ERR (serr))
     {
         RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
-                        ("(rpc__cn_network_init_desc) desc->%x Can't set socket bufs, error=%d\n",
+                        ("(rpc__cn_network_init_desc) desc->%p Can't set socket bufs, error=%d\n",
                          *desc,
                          RPC_SOCKET_ETOI (serr)));
     }
 
     RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_BUFFS,
-                    ("(rpc__cn_network_init_desc) desc->%x desired_sndbuf %u, desired_rcvbuf %u\n",
+                    ("(rpc__cn_network_init_desc) desc->%p desired_sndbuf %u, desired_rcvbuf %u\n",
                      *desc, rpc_g_cn_socket_read_buffer, rpc_g_cn_socket_write_buffer));
     RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_BUFFS,
-                    ("(rpc__cn_network_init_desc) desc->%x actual sndbuf %lu, actual rcvbuf %lu\n",
+                    ("(rpc__cn_network_init_desc) desc->%p actual sndbuf %u, actual rcvbuf %u\n",
                      *desc, ssize, rsize));
 
     if (rsize < RPC_C_ASSOC_MUST_RECV_FRAG_SIZE)
@@ -844,7 +844,7 @@ unsigned32              *status;
     if (RPC_SOCKET_IS_ERR(serr))
     {
         RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
-                        ("(rpc__cn_network_init_desc) desc->%x rpc__socket_listen failed, error = %d\n", 
+                        ("(rpc__cn_network_init_desc) desc->%p rpc__socket_listen failed, error = %d\n", 
                          *desc, RPC_SOCKET_ETOI(serr)));
         rpc_string_free (&endpoint, &temp_status);
         *status = rpc_s_cant_listen_sock;
@@ -985,7 +985,7 @@ unsigned32              *st;
     CODING_ERROR(st);
     
     RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                    ("CN: desc->%x connection request received\n", desc));
+                    ("CN: desc->%p connection request received\n", desc));
     
     /*
      * We have been called by the network listener thread because a
@@ -998,7 +998,7 @@ unsigned32              *st;
     if (RPC_SOCKET_IS_ERR(serr))
     {
         RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
-                        ("(rpc__cn_network_select_dispatch) desc->%x rpc__socket_accept failed, error = %d\n",
+                        ("(rpc__cn_network_select_dispatch) desc->%p rpc__socket_accept failed, error = %d\n",
                          desc, RPC_SOCKET_ETOI(serr)));
         
         *st = rpc_s_cannot_accept;
@@ -1040,7 +1040,7 @@ unsigned32              *st;
             if (rpc_addr != NULL)
                 rpc__naf_addr_free (&rpc_addr, &dbg_status);
             RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                ("CN: desc->%x connection request accepted/new connection on desc->%x from %s[%s]\n",
+                ("CN: desc->%p connection request accepted/new connection on desc->%p from %s[%s]\n",
                  desc,
                  newdesc,
                  (netaddr != NULL) ? (char *)netaddr : "(null)",
@@ -1059,7 +1059,7 @@ unsigned32              *st;
              * connection.
              */
             RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                            ("CN: desc->%x socket not active ... being closed\n", newdesc));
+                            ("CN: desc->%p socket not active ... being closed\n", newdesc));
             serr = RPC_SOCKET_CLOSE (newdesc);
         }
         else
@@ -1081,7 +1081,7 @@ unsigned32              *st;
                  * The set option failed. We'll continue anyway.
                  */
                 RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
-                                ("(rpc__cn_network_select_dispatch) desc->%x rpc__naf_set_pkt_nodelay failed, error = %d\n",
+                                ("(rpc__cn_network_select_dispatch) desc->%p rpc__naf_set_pkt_nodelay failed, error = %d\n",
                                  newdesc, *st));
             }
 #endif
@@ -1096,7 +1096,7 @@ unsigned32              *st;
                  * The socket set keepalive option failed.
                  */
                 RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
-                                ("(RPC_C_CN_DBG_ERRORS) desc->%x rpc__socket_set_keepalive failed failed, error = %d\n",
+                                ("(RPC_C_CN_DBG_ERRORS) desc->%p rpc__socket_set_keepalive failed failed, error = %d\n",
                                  newdesc, serr));
             }
 
@@ -1110,7 +1110,7 @@ unsigned32              *st;
                 if (RPC_SOCKET_IS_ERR(serr))
                 {
                     RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
-                                    ("(RPC_C_CN_DBG_ERRORS) desc->%x rpc__socket_set_rcvtimeo failed failed, error = %d\n",
+                                    ("(RPC_C_CN_DBG_ERRORS) desc->%p rpc__socket_set_rcvtimeo failed failed, error = %d\n",
                                      newdesc, serr));
                 }
             }
@@ -1231,7 +1231,7 @@ unsigned32              *st;
     if (RPC_SOCKET_IS_ERR(serr))
     {
         RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
-                        ("(rpc__cn_network_req_connect) call_rep->%x assoc->%x desc->%x rpc__socket_open failed, error = %d\n",
+                        ("(rpc__cn_network_req_connect) call_rep->%p assoc->%p desc->%p rpc__socket_open failed, error = %d\n",
                          assoc->call_rep,
                          assoc,
                          assoc->cn_ctlblk.cn_sock,
@@ -1252,7 +1252,7 @@ unsigned32              *st;
         if (RPC_SOCKET_IS_ERR (serr))
         {
             RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
-                            ("(rpc__cn_network_req_connect) call_rep->%x assoc->%x desc->%x Can't set socket bufs, error=%d\n",
+                            ("(rpc__cn_network_req_connect) call_rep->%p assoc->%p desc->%p Can't set socket bufs, error=%d\n",
                              assoc->call_rep,
                              assoc,
                              assoc->cn_ctlblk.cn_sock, 
@@ -1260,10 +1260,10 @@ unsigned32              *st;
         }
         
         RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_BUFFS,
-                        ("(rpc__cn_network_req_connect) desc->%x desired_sndbuf %u, desired_rcvbuf %u\n",
+                        ("(rpc__cn_network_req_connect) desc->%p desired_sndbuf %u, desired_rcvbuf %u\n",
                          assoc->cn_ctlblk.cn_sock, rpc_g_cn_socket_read_buffer, rpc_g_cn_socket_write_buffer));
         RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_BUFFS,
-                       ("(rpc__cn_network_req_connect) desc->%x actual sndbuf %lu, actual rcvbuf %lu\n",
+                       ("(rpc__cn_network_req_connect) desc->%p actual sndbuf %u, actual rcvbuf %u\n",
                         assoc->cn_ctlblk.cn_sock, ssize, rsize));
         
         if (rsize < RPC_C_ASSOC_MUST_RECV_FRAG_SIZE)
@@ -1307,7 +1307,7 @@ unsigned32              *st;
                  * The socket close failed.
                  */
                 RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
-                                ("(rpc__cn_network_req_connect) desc->%x RPC_SOCKET_CLOSE failed, error = %d\n",
+                                ("(rpc__cn_network_req_connect) desc->%p RPC_SOCKET_CLOSE failed, error = %d\n",
                                  assoc->cn_ctlblk.cn_sock, 
                                  RPC_SOCKET_ETOI(serr)));
             }
@@ -1322,7 +1322,7 @@ unsigned32              *st;
         if (RPC_SOCKET_IS_ERR (serr))
         {
             RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
-                            ("(rpc__cn_network_req_connect) desc->%x rpc__socket_bind failed, error = %d\n",
+                            ("(rpc__cn_network_req_connect) desc->%p rpc__socket_bind failed, error = %d\n",
                              assoc->cn_ctlblk.cn_sock, 
                              RPC_SOCKET_ETOI(serr)));
             *st = rpc_s_cant_bind_sock;
@@ -1338,7 +1338,7 @@ unsigned32              *st;
                  * The socket close failed.
                  */
                 RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
-                                ("(rpc__cn_network_req_connect) desc->%x RPC_SOCKET_CLOSE failed, error = %d\n",
+                                ("(rpc__cn_network_req_connect) desc->%p RPC_SOCKET_CLOSE failed, error = %d\n",
                                  assoc->cn_ctlblk.cn_sock, 
                                  RPC_SOCKET_ETOI(serr)));
             }
@@ -1414,7 +1414,7 @@ unsigned32              *st;
                                            &retry_op,
                                            st);
                 RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                                ("(rpc__cn_network_req_connect) call_rep->%x assoc->%x desc->%x cancel caught before association setup\n", 
+                                ("(rpc__cn_network_req_connect) call_rep->%p assoc->%p desc->%p cancel caught before association setup\n", 
                                  assoc->call_rep,
                                  assoc,
                                  assoc->cn_ctlblk.cn_sock));
@@ -1448,7 +1448,7 @@ unsigned32              *st;
         if (RPC_SOCKET_IS_ERR(serr))
         {
             RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
-                            ("(rpc__cn_network_req_connect) desc->%x rpc__socket_connect failed, error = %d\n",
+                            ("(rpc__cn_network_req_connect) desc->%p rpc__socket_connect failed, error = %d\n",
                              assoc->cn_ctlblk.cn_sock, 
                              RPC_SOCKET_ETOI(serr)));
             
@@ -1465,7 +1465,7 @@ unsigned32              *st;
                  * The socket close failed.
                  */
                 RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
-                                ("(rpc__cn_network_req_connect) desc->%x RPC_SOCKET_CLOSE failed, error = %d\n",
+                                ("(rpc__cn_network_req_connect) desc->%p RPC_SOCKET_CLOSE failed, error = %d\n",
                                  assoc->cn_ctlblk.cn_sock, 
                                  RPC_SOCKET_ETOI(serr)));
             }
@@ -1485,7 +1485,7 @@ unsigned32              *st;
                  * The set option failed. We'll continue anyway.
                  */
                 RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
-                                ("(rpc__cn_network_req_connect) desc->%x rpc__naf_set_pkt_nodelay failed, error = %d\n",
+                                ("(rpc__cn_network_req_connect) desc->%p rpc__naf_set_pkt_nodelay failed, error = %d\n",
                                  assoc->cn_ctlblk.cn_sock, 
                                  *st));
             }
@@ -1498,7 +1498,7 @@ unsigned32              *st;
             if (RPC_SOCKET_IS_ERR(serr))
             {
                 RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
-                                ("(rpc__cn_network_req_connect) desc->%x rpc__socket_inq_transport_info failed, error = %d\n",
+                                ("(rpc__cn_network_req_connect) desc->%p rpc__socket_inq_transport_info failed, error = %d\n",
                                  assoc->cn_ctlblk.cn_sock,
                                  serr));
             }
@@ -1536,7 +1536,7 @@ unsigned32              *st;
                  * find this out in the normal manner.
                  */
                 RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
-                                ("(rpc__cn_network_req_connect) desc->%x rpc__socket_set_keepalive failed failed, error = %d\n",
+                                ("(rpc__cn_network_req_connect) desc->%p rpc__socket_set_keepalive failed failed, error = %d\n",
                                  assoc->cn_ctlblk.cn_sock, serr));
             }
 
@@ -1550,7 +1550,7 @@ unsigned32              *st;
                 if (RPC_SOCKET_IS_ERR(serr))
                 {
                     RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
-                                    ("(rpc__cn_network_req_connect) desc->%x rpc__socket_set_rcvtimeo failed failed, error = %d\n",
+                                    ("(rpc__cn_network_req_connect) desc->%p rpc__socket_set_rcvtimeo failed failed, error = %d\n",
                                      assoc->cn_ctlblk.cn_sock, serr));
                 }
             }

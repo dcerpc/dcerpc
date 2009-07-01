@@ -107,8 +107,8 @@ EXTERNAL rpc_cn_sm_state_entry_p_t rpc_g_cn_client_call_sm [];
 EXTERNAL rpc_cn_sm_action_fn_t rpc_g_cn_client_call_action_tbl [];
 
 #ifdef DEBUG
-EXTERNAL char   *rpc_g_cn_call_client_events [];
-EXTERNAL char   *rpc_g_cn_call_client_states [];
+EXTERNAL const char   *rpc_g_cn_call_client_events [];
+EXTERNAL const char   *rpc_g_cn_call_client_states [];
 #endif
 
 /***********************************************************************/
@@ -129,8 +129,8 @@ EXTERNAL rpc_cn_sm_state_entry_p_t rpc_g_cn_server_call_sm [];
 EXTERNAL rpc_cn_sm_action_fn_t     rpc_g_cn_server_call_action_tbl [];
 
 #ifdef DEBUG
-EXTERNAL char   *rpc_g_cn_call_server_events [];
-EXTERNAL char   *rpc_g_cn_call_server_states [];
+EXTERNAL const char   *rpc_g_cn_call_server_events [];
+EXTERNAL const char   *rpc_g_cn_call_server_states [];
 #endif
 
 /*

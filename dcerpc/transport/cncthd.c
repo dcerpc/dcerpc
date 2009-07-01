@@ -102,7 +102,7 @@ boolean32               call_was_queued;
     RPC_LOG_CN_CTHD_NTR;
 
     RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                   ("CN: call_rep->%x call executor running ... %s queued\n", arg, (call_was_queued ? "WAS" : "WAS NOT")));
+                   ("CN: call_rep->%p call executor running ... %s queued\n", arg, (call_was_queued ? "WAS" : "WAS NOT")));
 
     /*
      * The arg passed in is really a call rep.
@@ -199,7 +199,7 @@ boolean32               call_was_queued;
      * This will also post any queued cancels.
      */
     RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                   ("(rpc__cn_call_executor) call_rep->%x enabling posting of cancels and posting any queued cancels\n", call_r));
+                   ("(rpc__cn_call_executor) call_rep->%p enabling posting of cancels and posting any queued cancels\n", call_r));
     RPC_CALL_LOCK ((rpc_call_rep_t *) call_r);
     rpc__cthread_cancel_enable_post ((rpc_call_rep_p_t) call_r);
     RPC_CALL_UNLOCK ((rpc_call_rep_t *) call_r);

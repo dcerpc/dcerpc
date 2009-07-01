@@ -56,7 +56,7 @@
 
 #ifdef DEBUG
 
-PRIVATE char *rpc__dg_call_state_name
+PRIVATE const char *rpc__dg_call_state_name
 #ifdef _DCE_PROTO_
 (
     rpc_dg_call_state_t state
@@ -66,7 +66,7 @@ PRIVATE char *rpc__dg_call_state_name
 rpc_dg_call_state_t state;
 #endif
 {
-    static char *names[] = {
+    static const char *names[] = {
         "init",
         "xmit",
         "recv",
@@ -390,7 +390,7 @@ boolean32 is_nocall;
     rpc__dg_xmit_pkt(call->sock_ref->sock, call->addr, iov, num_elements > 1 ? 3 : 2, &b);
 
     RPC_DBG_PRINTF(rpc_e_dbg_xmit, 5, 
-        ("(rpc__dg_call_xmit_fack) %lu.%u ws %lu, tsdu %lu, fs %lu, mask [0x%x]\n",
+        ("(rpc__dg_call_xmit_fack) %d.%u ws %d, tsdu %u, fs %u, mask [0x%x]\n",
         hdr.fragnum, body.serial_num, body.window_size, 
         body.max_tsdu, body.max_frag_size,
         num_elements > 1 ? *maskp : body.selack[0]));
@@ -677,7 +677,7 @@ rpc_dg_call_p_t call;
     xq->blast_size = 1;
     
     RPC_DBG_PRINTF(rpc_e_dbg_xmit, 4, (
-        "(rpc__dg_call_xmitq_timer) re-xmit'ing %lu.%u [%s]\n", 
+        "(rpc__dg_call_xmitq_timer) re-xmit'ing %u.%u [%s]\n", 
         xq->hdr.seq, xqe->fragnum, rpc__dg_act_seq_string(&xq->hdr)));
 
     RPC_DG_START_XMIT(call);
@@ -1220,7 +1220,7 @@ boolean *wake_thread;
 
     if (rqe->frag_len > rq->high_rcv_frag_size) {
         RPC_DBG_PRINTF(rpc_e_dbg_recv, 7,
-                ("(rpc__dg_call_recvq_insert) Set high_rcv_frag %lu was %lu\n",
+                ("(rpc__dg_call_recvq_insert) Set high_rcv_frag %u was %u\n",
                         rqe->frag_len, rq->high_rcv_frag_size));
         rq->high_rcv_frag_size = rqe->frag_len;
 
@@ -1260,7 +1260,7 @@ boolean *wake_thread;
             {
                 rq->max_queue_len = max_queue_len;
                 RPC_DBG_PRINTF(rpc_e_dbg_recv, 7,
-                       ("(rpc__dg_call_recvq_insert) Set max_queue_len %lu\n",
+                       ("(rpc__dg_call_recvq_insert) Set max_queue_len %u\n",
                                 rq->max_queue_len));
             }
         }
@@ -1320,7 +1320,7 @@ boolean *wake_thread;
                                        (! rq->is_way_validated && fragnum != 0)))
         {
             RPC_DBG_PRINTF(rpc_e_dbg_pkt_quotas, 1, 
-                ("(rpc__dg_call_recvq_insert) rationing, not 'next' pkt, fc %lu pkt %lu [%s]\n",
+                ("(rpc__dg_call_recvq_insert) rationing, not 'next' pkt, fc %u pkt %u [%s]\n",
                 rpc_g_dg_pkt_pool.free_count, rpc_g_dg_pkt_pool.pkt_count, 
                 rpc__dg_act_seq_string(&call->xq.hdr)));
 
@@ -1381,7 +1381,7 @@ boolean *wake_thread;
     else
     {      
         RPC_DBG_PRINTF(rpc_e_dbg_recv, 6, (
-            "(rpc__dg_call_recvq_insert) recv out of order %lu.%u, next_fragnum = .%u\n", 
+            "(rpc__dg_call_recvq_insert) recv out of order %u.%u, next_fragnum = .%u\n", 
             rqe->hdrp->seq, fragnum, next_fragnum));
 
         RPC_DG_STATS_INCR(oo_rcvd);
@@ -1398,7 +1398,7 @@ boolean *wake_thread;
         if (rpc__dg_pkt_is_rationing(NULL))
         {
             RPC_DBG_PRINTF(rpc_e_dbg_pkt_quotas, 1, 
-                ("(rpc__dg_call_recvq_insert) rationing, oo pkt, fc %lu pkt %lu [%s]\n",
+                ("(rpc__dg_call_recvq_insert) rationing, oo pkt, fc %u pkt %u [%s]\n",
                 rpc_g_dg_pkt_pool.free_count, rpc_g_dg_pkt_pool.pkt_count, 
                 rpc__dg_act_seq_string(&call->xq.hdr)));
 
@@ -1527,7 +1527,7 @@ boolean *wake_thread;
     }
 
     RPC_DBG_PRINTF(rpc_e_dbg_recv, 7, 
-        ("(rpc__dg_call_recvq_insert) recv %s %lu.%u.%u len=%lu %s\n",
+        ("(rpc__dg_call_recvq_insert) recv %s %u.%u.%u len=%d %s\n",
         rpc__dg_pkt_name(RPC_DG_HDR_INQ_PTYPE(rqe->hdrp)),
         rqe->hdrp->seq, 
         fragnum, (rqe->hdrp->serial_hi << 8) | rqe->hdrp->serial_lo,
@@ -1536,7 +1536,7 @@ boolean *wake_thread;
             ! RPC_DG_HDR_FLAG_IS_SET(rqe->hdrp, RPC_C_DG_PF_NO_FACK)) ? 
                 "frq" : ""));
     RPC_DBG_PRINTF(rpc_e_dbg_recv, 7,
-        ("(rpc__dg_call_recvq_insert) recv frag_len %lu\n", rqe->frag_len));
+        ("(rpc__dg_call_recvq_insert) recv frag_len %u\n", rqe->frag_len));
 
     /*
      * If we've got a fragmented receive stream consider sending a fack.
@@ -1550,7 +1550,7 @@ boolean *wake_thread;
             ! RPC_DG_HDR_FLAG_IS_SET(rqe->hdrp, RPC_C_DG_PF_NO_FACK)))
     {       
         RPC_DBG_PRINTF(rpc_e_dbg_recv, 6, (
-            "(rpc__dg_call_recvq_insert) recv data %lu.%u frq, fack --> .%u\n", 
+            "(rpc__dg_call_recvq_insert) recv data %u.%u frq, fack --> .%u\n", 
             rqe->hdrp->seq, fragnum, rq->next_fragnum - 1));
         rpc__dg_call_xmit_fack(call, rqe, false);
     }

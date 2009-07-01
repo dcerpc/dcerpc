@@ -1478,7 +1478,9 @@ ifconf_again:
      */
     n_ifs = ifc.ifc_len / sizeof (struct ifreq);
     RPC_DBG_PRINTF(rpc_e_dbg_general, 10,
-        ("%d bytes of ifreqs, ifreq is %d bytes\n", ifc.ifc_len, sizeof(struct ifreq)));
+        ("%lu bytes of ifreqs, ifreq is %lu bytes\n",
+         (unsigned long)ifc.ifc_len, 
+         (unsigned long)sizeof(struct ifreq)));
 
 #ifdef MAX_DEBUG
     if (RPC_DBG2(rpc_e_dbg_general, 15))

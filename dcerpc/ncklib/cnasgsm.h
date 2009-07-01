@@ -51,7 +51,7 @@
     if ((assoc_grp)->grp_flags & RPC_C_CN_ASSOC_GRP_CLIENT)\
     {\
         RPC_DBG_PRINTF (rpc_e_dbg_cn_state, RPC_C_CN_DBG_ASSOC_GRP_SM_TRACE, \
-                        ("STATE CLIENT GRP:    %x state->%s event->%s\n",\
+                        ("STATE CLIENT GRP:    %p state->%s event->%s\n",\
                          assoc_grp,\
                          rpc_g_cn_grp_client_states[(assoc_grp)->grp_state.cur_state-RPC_C_CN_STATEBASE],\
                          rpc_g_cn_grp_client_events[event_id-RPC_C_CN_STATEBASE]));\
@@ -59,7 +59,7 @@
     else\
     {\
         RPC_DBG_PRINTF (rpc_e_dbg_cn_state, RPC_C_CN_DBG_ASSOC_GRP_SM_TRACE, \
-                        ("STATE SERVER GRP:    %x state->%s event->%s\n",\
+                        ("STATE SERVER GRP:    %p state->%s event->%s\n",\
                          assoc_grp,\
                          rpc_g_cn_grp_server_states[(assoc_grp)->grp_state.cur_state-RPC_C_CN_STATEBASE],\
                          rpc_g_cn_grp_server_events[event_id-RPC_C_CN_STATEBASE]));\
@@ -80,14 +80,14 @@
     if ((assoc_grp)->grp_flags & RPC_C_CN_ASSOC_GRP_CLIENT)\
     {\
         RPC_DBG_PRINTF (rpc_e_dbg_cn_state, RPC_C_CN_DBG_ASSOC_GRP_SM_TRACE, \
-                        ("STATE CLIENT GRP:    %x new state->%s\n",\
+                        ("STATE CLIENT GRP:    %lx new state->%s\n",\
                          assoc_grp->grp_remid.all,\
                          rpc_g_cn_grp_client_states[(assoc_grp)->grp_state.cur_state-RPC_C_CN_STATEBASE])); \
     }\
     else\
     {\
         RPC_DBG_PRINTF (rpc_e_dbg_cn_state, RPC_C_CN_DBG_ASSOC_GRP_SM_TRACE, \
-                        ("STATE SERVER GRP:    %x new state->%s\n",\
+                        ("STATE SERVER GRP:    %lx new state->%s\n",\
                          assoc_grp->grp_id.all,\
                          rpc_g_cn_grp_server_states[(assoc_grp)->grp_state.cur_state-RPC_C_CN_STATEBASE])); \
     }\
@@ -183,8 +183,8 @@ EXTERNAL rpc_cn_sm_state_entry_p_t rpc_g_cn_client_grp_sm [];
 EXTERNAL rpc_cn_sm_action_fn_t     rpc_g_cn_client_grp_action_tbl [];
 
 #if DEBUG
-EXTERNAL char   *rpc_g_cn_grp_client_events [];
-EXTERNAL char   *rpc_g_cn_grp_client_states [];
+EXTERNAL const char   *rpc_g_cn_grp_client_events [];
+EXTERNAL const char   *rpc_g_cn_grp_client_states [];
 #endif
 
 /***********************************************************************/
@@ -203,7 +203,7 @@ EXTERNAL rpc_cn_sm_state_entry_p_t rpc_g_cn_server_grp_sm [];
 EXTERNAL rpc_cn_sm_action_fn_t     rpc_g_cn_server_grp_action_tbl [];
 
 #if DEBUG
-EXTERNAL char   *rpc_g_cn_grp_server_events [];
-EXTERNAL char   *rpc_g_cn_grp_server_states [];
+EXTERNAL const char   *rpc_g_cn_grp_server_events [];
+EXTERNAL const char   *rpc_g_cn_grp_server_states [];
 #endif
 #endif /* _CNASGSM_H */

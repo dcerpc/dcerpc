@@ -157,7 +157,7 @@ extern "C" {
 
 #ifdef DEBUG
 
-PRIVATE char *rpc__dg_call_state_name _DCE_PROTOTYPE_((
+PRIVATE const char *rpc__dg_call_state_name _DCE_PROTOTYPE_((
         rpc_dg_call_state_t state
     ));
 

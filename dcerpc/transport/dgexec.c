@@ -641,7 +641,7 @@ boolean32 call_was_queued;
             if (scall->c.call_seq != scall->scte->high_seq)
             {
                 RPC_DBG_PRINTF(rpc_e_dbg_general, 2, 
-                    ("(execute_call) Old sequence, previous=%lu [%s]\n",
+                    ("(execute_call) Old sequence, previous=%u [%s]\n",
                     scall->scte->high_seq, rpc__dg_act_seq_string(hdrp)));
                 goto END_OF_CALL;
             }
@@ -700,7 +700,7 @@ boolean32 call_was_queued;
                 if (scall->c.call_seq != scall->scte->high_seq)
                 {
                     RPC_DBG_PRINTF(rpc_e_dbg_general, 2, 
-                        ("(rpc__dg_execute_call) Old sequence, previous=%lu [%s]\n",
+                        ("(rpc__dg_execute_call) Old sequence, previous=%u [%s]\n",
                         scall->scte->high_seq, rpc__dg_act_seq_string(hdrp)));
                     goto END_OF_CALL;
                 }
@@ -774,7 +774,7 @@ boolean32 call_was_queued;
                 if (st != rpc_s_ok) 
                 {
                     RPC_DBG_PRINTF(rpc_e_dbg_general, 2,
-                        ("(rpc__dg_execute_call) pkt didn't verify -- %lx\n", st));
+                        ("(rpc__dg_execute_call) pkt didn't verify -- %x\n", st));
                     reject_st = rpc_s_who_are_you_failed;
                     goto AFTER_CALL_TO_STUB;
                 }

@@ -570,7 +570,7 @@ INTERNAL rpc_dg_pkt_pool_elt_p_t pkt_alloc(void)
     }           
 
     RPC_DBG_PRINTF(rpc_e_dbg_pkt_quotas, 5, 
-            ("(pkt_alloc) pkts %lu\n",
+            ("(pkt_alloc) pkts %u\n",
             pool->free_count + pool->pkt_count)); 
 
     pkt->is_on_free_list = false;
@@ -667,7 +667,7 @@ unsigned32 *st;
         pool->blocked_alloc_xqe++;
 
         RPC_DBG_PRINTF(rpc_e_dbg_pkt_quotas, 3, 
-            ("(alloc_xqe) rationing, blocking call, fc %lu pkt %lu [%s]\n",
+            ("(alloc_xqe) rationing, blocking call, fc %u pkt %u [%s]\n",
             pool->free_count, pool->pkt_count, 
             rpc__dg_act_seq_string(&call->xq.hdr)));
             
@@ -712,7 +712,7 @@ unsigned32 *st;
         }
 
         RPC_DBG_PRINTF(rpc_e_dbg_pkt_quotas, 3, 
-            ("(alloc_xqe) call signalled, fc %lu pkt %lu [%s]\n",
+            ("(alloc_xqe) call signalled, fc %u pkt %u [%s]\n",
             pool->free_count, pool->pkt_count, 
             rpc__dg_act_seq_string(&call->xq.hdr)));
     } 
@@ -925,7 +925,7 @@ rpc_dg_call_p_t call;
             if (next_pkt == pkt)
             {
                 RPC_DBG_PRINTF(rpc_e_dbg_mem, 20,
-                           ("(pkt_free) pkt already on free_list %#08x (%d)\n",
+                           ("(pkt_free) pkt already on free_list %p (%d)\n",
                                 pkt, count));
 		/*
 		 * rpc_m_dgpkt_pool_corrupt
@@ -941,7 +941,7 @@ rpc_dg_call_p_t call;
             if (!next_pkt->is_on_free_list)
             {
                 RPC_DBG_PRINTF(rpc_e_dbg_mem, 20,
-                 ("(pkt_free) free'ed pkt(%#08x) is not marked as free (%d)\n",
+                 ("(pkt_free) free'ed pkt(%p) is not marked as free (%d)\n",
                                 next_pkt, count));
 		/*
 		 * rpc_m_dgpkt_pool_corrupt
@@ -976,7 +976,7 @@ rpc_dg_call_p_t call;
         if (pkt->is_on_free_list)
         {
             RPC_DBG_PRINTF(rpc_e_dbg_mem, 20,
-                           ("(pkt_free) double free'ing pkt(%#08x)\n", pkt));
+                           ("(pkt_free) double free'ing pkt(%p)\n", pkt));
 	    /*
 	     * rpc_m_dgpkt_bad_free
 	     * "(%s) Attempt to free already-freed DG packet"
@@ -1015,7 +1015,7 @@ rpc_dg_call_p_t call;
     pool->free_count++;
     
     RPC_DBG_PRINTF(rpc_e_dbg_pkt_quotas, 5, 
-            ("(pkt_free) pkts %lu\n",
+            ("(pkt_free) pkts %u\n",
             pool->free_count + pool->pkt_count));
     /*
      * Giving up this packet may have taken the system out of a rationing
@@ -1269,7 +1269,7 @@ boolean32 block;
             call->n_resvs = ((rpc_dg_scall_p_t) call)->cbk_ccall->c.n_resvs;
 
         RPC_DBG_PRINTF(rpc_e_dbg_pkt_quotas, 2, 
-   ("(rpc__dg_pkt_adjust_reservation) for callback inherited %lu(%lu) resvs\n",
+   ("(rpc__dg_pkt_adjust_reservation) for callback inherited %u(%u) resvs\n",
                         call->n_resvs, nreq));
         /*
          * Fall through.
@@ -1286,7 +1286,7 @@ boolean32 block;
          */
         call->n_resvs = ((rpc_dg_ccall_p_t) call)->h->is_WAY_binding;
         RPC_DBG_PRINTF(rpc_e_dbg_pkt_quotas, 2, 
-             ("(rpc__dg_pkt_adjust_reservation) for WAY/WAY2 %lu(%lu) resvs\n",
+             ("(rpc__dg_pkt_adjust_reservation) for WAY/WAY2 %u(%u) resvs\n",
                         call->n_resvs, nreq));
 
         return (call->n_resvs >= nreq);
@@ -1299,7 +1299,7 @@ boolean32 block;
     if (nreq <= call->n_resvs)
     {
         RPC_DBG_PRINTF(rpc_e_dbg_pkt_quotas, 2, 
-              ("(rpc__dg_pkt_adjust_reservation) already has %lu(%lu) resvs\n",
+              ("(rpc__dg_pkt_adjust_reservation) already has %u(%u) resvs\n",
                         call->n_resvs, nreq));
         return true;
     }
@@ -1336,7 +1336,7 @@ boolean32 block;
             got_it = true;
 
             RPC_DBG_PRINTF(rpc_e_dbg_pkt_quotas, 2, 
- ("(rpc__dg_pkt_adjust_reservation) available %lu(%lu), current reservations %lu\n",
+ ("(rpc__dg_pkt_adjust_reservation) available %u(%u), current reservations %u\n",
                             call->n_resvs, nreq, pool->reservations));
             break;
         }
@@ -1353,14 +1353,14 @@ boolean32 block;
             && pool->max_resv_pkt+1 >= (unsigned32)how_many)
         {
             RPC_DBG_PRINTF(rpc_e_dbg_pkt_quotas,2,
-       ("(rpc__dg_pkt_adjust_reservation) using server-only reservation %lu\n",
+       ("(rpc__dg_pkt_adjust_reservation) using server-only reservation %u\n",
                             pool->srv_resv_avail));
             call->n_resvs = pool->max_resv_pkt;
             pool->srv_resv_avail--;
             got_it = true;
 
             RPC_DBG_PRINTF(rpc_e_dbg_pkt_quotas, 2, 
- ("(rpc__dg_pkt_adjust_reservation) available %lu(%lu), current reservations %lu\n",
+ ("(rpc__dg_pkt_adjust_reservation) available %u(%u), current reservations %u\n",
                             call->n_resvs, nreq, pool->reservations));
             break;
         }
@@ -1372,7 +1372,7 @@ boolean32 block;
         if (!block)
         {
             RPC_DBG_PRINTF(rpc_e_dbg_pkt_quotas, 2, 
-    ("(rpc__dg_pkt_adjust_reservation) not available %lu(%lu), not blocking\n",
+    ("(rpc__dg_pkt_adjust_reservation) not available %u(%u), not blocking\n",
                             call->n_resvs, nreq));
 
             RPC_DG_PKT_POOL_UNLOCK(0);  
@@ -1380,7 +1380,7 @@ boolean32 block;
         }
 
         RPC_DBG_PRINTF(rpc_e_dbg_pkt_quotas, 2, 
-("(pkt_rpc__dg_pkt_adjust_reservation) blocking call %lu(%lu), pkts %lu [%s]\n",
+("(pkt_rpc__dg_pkt_adjust_reservation) blocking call %u(%u), pkts %u [%s]\n",
             call->n_resvs, nreq,
             pool->free_count + pool->pkt_count, 
             rpc__dg_act_seq_string(&call->xq.hdr)));
@@ -1428,7 +1428,7 @@ boolean32 block;
         RPC_DG_PKT_POOL_LOCK(0);
 
         RPC_DBG_PRINTF(rpc_e_dbg_pkt_quotas, 2, 
-       ("(pkt_rpc__dg_pkt_adjust_reservation) call signalled, pkts %lu [%s]\n",
+       ("(pkt_rpc__dg_pkt_adjust_reservation) call signalled, pkts %u [%s]\n",
             pool->free_count + pool->pkt_count, 
             rpc__dg_act_seq_string(&call->xq.hdr)));
     } 
@@ -1464,7 +1464,7 @@ boolean32 block;
             ((rpc_dg_scall_p_t) call)->cbk_ccall->c.n_resvs = call->n_resvs;
         }
         RPC_DBG_PRINTF(rpc_e_dbg_pkt_quotas, 2, 
-("(rpc__dg_pkt_adjust_reservation) for callback updated the original scall/ccall %lu(%lu) resvs\n",
+("(rpc__dg_pkt_adjust_reservation) for callback updated the original scall/ccall %u(%u) resvs\n",
                         call->n_resvs, nreq));
     }
     return got_it;
@@ -1548,7 +1548,7 @@ rpc_dg_call_p_t call;
     }
                                                                            
     RPC_DBG_PRINTF(rpc_e_dbg_pkt_quotas, 2, 
-            ("(rpc__dg_pkt_cancel_reservation) %lu reservations left\n", pool->reservations));
+            ("(rpc__dg_pkt_cancel_reservation) %u reservations left\n", pool->reservations));
 
     /*
      * Now that we've made another reservation/packets available to the system, see if 

@@ -66,7 +66,7 @@
     for (acc_ = 0, k_ = 0; k_ < (iov)->num_elt; k_++)\
     {\
          RPC_DBG_PRINTF (rpc_e_dbg_cn_pkt, RPC_C_CN_DBG_PKT_DUMP,\
-                         ("PACKET: fragment->#%d addr->%x\n", k_, (iov)->elt[k_].data_addr));\
+                         ("PACKET: fragment->#%d addr->%p\n", k_, (iov)->elt[k_].data_addr));\
          RPC_CN_MEM_DUMP ((iov)->elt[k_].data_addr, (iov)->elt[k_].data_len, acc_);\
     }\
 }
@@ -107,7 +107,7 @@
                 (acc) += 2;\
             }\
             sprintf(p_, "\n");\
-            RPC_DBG_PRINTF(rpc_e_dbg_cn_pkt, RPC_C_CN_DBG_PKT_DUMP, (buff_));\
+            RPC_DBG_PRINTF(rpc_e_dbg_cn_pkt, RPC_C_CN_DBG_PKT_DUMP, ("%s", buff_));\
         }\
     }\
 }
@@ -1064,7 +1064,7 @@ PRIVATE void rpc__cn_stats_print _DCE_PROTOTYPE_ ((void ));
 /*
  * R P C _ C N _ P K T _ N A M E
  */
-PRIVATE char *rpc__cn_pkt_name _DCE_PROTOTYPE_ (( unsigned32));
+PRIVATE const char *rpc__cn_pkt_name _DCE_PROTOTYPE_ (( unsigned32));
 
 
 /*

@@ -87,7 +87,7 @@ rpc_dg_sock_pool_elt_p_t *sp;
     if (RPC_SOCKET_IS_ERR(serr))
     {
         RPC_DBG_GPRINTF((
-            "(sock_free) Error closing socket %d, error=%d\n",
+            "(sock_free) Error closing socket %p, error=%d\n",
             (*sp)->sock, RPC_SOCKET_ETOI(serr)));
     }
 
@@ -335,7 +335,7 @@ unsigned32 *st;
         "(use_protseq) desired_sndbuf %u, desired_rcvbuf %u\n",
         desired_sndbuf, desired_rcvbuf));
     RPC_DBG_PRINTF(rpc_e_dbg_general, 3, (
-        "(use_protseq) actual sndbuf %lu, actual rcvbuf %lu\n",
+        "(use_protseq) actual sndbuf %u, actual rcvbuf %u\n",
         sndbuf, rcvbuf));
       
     /*
@@ -583,7 +583,7 @@ rpc_dg_sock_pool_elt_p_t sp;
         return;
     }
        
-    RPC_DBG_GPRINTF(("(rpc__dg_network_disable_desc) Disabing socket, error=%d\n",
+    RPC_DBG_GPRINTF(("(rpc__dg_network_disable_desc) Disabing socket %p\n",
         sp->sock));
 
     sp->is_disabled = true;
