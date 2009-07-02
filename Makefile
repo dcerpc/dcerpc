@@ -80,6 +80,7 @@ autogen:
 # Remove all the default stuff that the DCERPC build installs, but that we
 # don't really want in the OS install.
 clean-dstroot:
+	$(_v)$(RM) -r $(DSTROOT)$(VARDIR)/run
 	$(_v)$(RM) -r -f $(DSTROOT)$(Install_Prefix)/bin/idl
 	$(_v)$(RM) -r -f $(DSTROOT)$(Install_Prefix)/bin/uuid
 	$(_v)$(RM) -r -f $(DSTROOT)$(Install_Prefix)/bin/demo
