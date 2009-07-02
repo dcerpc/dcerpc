@@ -163,7 +163,7 @@ static void BE_server_binding_analyze
 /*
  * CSPELL_zero_initializer
  *
- * Emit a type-specifi zero-initializer for a parameter that has been declared
+ * Emit a type-specific zero-initializer for a parameter that has been declared
  * on the stack of a server stub routine.
  */
 static void CSPELL_zero_initializer
@@ -201,13 +201,15 @@ static void CSPELL_zero_initializer
 		fprintf(fid, " = 0");
 		break;
 	    case AST_hyper_integer_k:
+		fprintf(fid, " = 0ULL");
+		break;
 	    case AST_hyper_unsigned_k:
-		fprintf(fid, " = 0L");
+		fprintf(fid, " = 0LL");
 		break;
 	    case AST_array_k:
 	    case AST_structure_k:
 	    case AST_disc_union_k:
-		fprintf(fid, " = { 0 }");
+		fprintf(fid, " = {}");
 		break;
 	    default:
 		fprintf(fid, " /* no initializer for kind %d */", type->kind);
@@ -941,7 +943,7 @@ void BE_gen_sstub
     /*
      * Emit a #pragma nostandard to suppress warnings on non-standard C usage
      */
-    fprintf(fid, "#ifdef VMS\n#pragma nostandard\n#endif\n");
+    CSPELL_suppress_stub_warnings(fid);
 
     /*
      * Emit #defines and #includes
@@ -1016,5 +1018,5 @@ void BE_gen_sstub
     /*
      * Emit a closing #pragma standard to match the nostandard pragma above
      */
-    fprintf(fid, "#ifdef VMS\n#pragma standard\n#endif\n");
+    CSPELL_restore_stub_warnings(fid);
 }

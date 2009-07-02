@@ -128,6 +128,20 @@ void CSPELL_midl_compatibility_allocators
 #endif
 );
 
+void CSPELL_restore_stub_warnings
+(
+#ifdef PROTO
+ FILE *fid
+#endif
+);
+
+void CSPELL_restore_stub_warnings
+(
+#ifdef PROTO
+ FILE *fid
+#endif
+);
+
 void DDBE_spell_manager_param_cast
 (
 #ifdef PROTO

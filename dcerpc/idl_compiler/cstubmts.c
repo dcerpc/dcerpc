@@ -642,12 +642,13 @@ void DDBE_gen_cstub
     int num_extern_exceptions;
     boolean midl_mode = cmd_opt[opt_midl];
 
-	the_interface = p_interface;
+    the_interface = p_interface;
     NAMETABLE_id_to_string(p_interface->name, &p_interface_name);
+
     /*
      * Emit a #pragma nostandard to suppress warnings on non-standard C usage
      */
-    fprintf(fid, "#ifdef VMS\n#pragma nostandard\n#endif\n");
+    CSPELL_suppress_stub_warnings(fid);
 
     /*
      * Emit #defines and #includes
@@ -768,6 +769,7 @@ void DDBE_gen_cstub
      * Emit a closing #pragma standard to match the nostandard pragma above
      */
     fprintf(fid, "#ifdef VMS\n#pragma standard\n#endif\n");
+    CSPELL_restore_stub_warnings(fid);
 
-	 the_interface = NULL;
+    the_interface = NULL;
 }

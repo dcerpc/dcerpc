@@ -3,9 +3,10 @@
  * (c) Copyright 1993 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1993 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1993 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2009 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
-*                 permission to use, copy, modify, and distribute this
+ *                 permission to use, copy, modify, and distribute this
  * file for any purpose is hereby granted without fee, provided that
  * the above copyright notices and this notice appears in all source
  * code copies, and that none of the names of Open Software
@@ -1120,3 +1121,42 @@ void CSPELL_midl_compatibility_allocators
 	    "    midl_user_free(ptr);\n"
 	    "}\n\n");
 }
+
+/*
+ * CSPELL_suppress_stub_warnings
+ *
+ * Emit a #pragma nostandard to suppress warnings on non-standard C usage and
+ * warnings on legitimate C that is flagged by compilers using high warning
+ * levels.
+ */
+void CSPELL_suppress_stub_warnings
+#ifdef PROTO
+(
+ FILE *fid
+)
+#else
+(fid)
+	FILE   *fid;
+#endif
+{
+    fprintf(fid, "#if __GNUC__\n");
+    fprintf(fid, "#pragma GCC diagnostic ignored \"-Wmissing-field-initializers\"\n");
+    fprintf(fid, "#pragma GCC diagnostic ignored \"-Wmissing-braces\"\n");
+    fprintf(fid, "#endif\n");
+
+    fprintf(fid, "#ifdef VMS\n#pragma nostandard\n#endif\n");
+}
+
+void CSPELL_restore_stub_warnings
+#ifdef PROTO
+(
+ FILE *fid
+)
+#else
+(fid)
+	FILE   *fid;
+#endif
+{
+    fprintf(fid, "#ifdef VMS\n#pragma standard\n#endif\n");
+}
+
