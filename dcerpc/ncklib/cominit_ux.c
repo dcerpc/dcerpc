@@ -212,7 +212,34 @@ PRIVATE void rpc__register_naf_id(rpc_naf_id_elt_p_t naf, int number)
         }
 }
 
+void rpc__cn_init_func(void);
+void rpc__dg_init_func(void);
+void rpc__ip_naf_init_func(void);
+void rpc__np_naf_init_func(void);
+void rpc__gssauth_init_func(void);
+void rpc__schnauth_init_func(void);
 
+static void (*rpc__g_static_modules[])(void) =
+{
+#ifdef ENABLE_PROT_NCACN
+    rpc__cn_init_func,
+#endif
+#ifdef ENABLE_PROT_NCADG
+    rpc__dg_init_func,
+#endif
+#ifdef ENABLE_NAF_IP
+    rpc__ip_naf_init_func,
+#endif
+#ifdef ENABLE_NAF_NP
+    rpc__np_naf_init_func,
+#endif
+#ifdef ENABLE_AUTH_GSS_NEGOTIATE
+    rpc__gssauth_init_func,
+#endif
+#ifdef ENABLE_AUTH_SCHANNEL
+    rpc__schnauth_init_func
+#endif
+};
 
 PRIVATE void rpc__load_modules(void)
 {
@@ -229,6 +256,12 @@ PRIVATE void rpc__load_modules(void)
         rpc_g_authn_protocol_id[rpc_c_authn_none].authn_protocol_id = rpc_c_authn_none;
         rpc_g_authn_protocol_id[rpc_c_authn_none].dce_rpc_authn_protocol_id = dce_c_rpc_authn_protocol_none;
         
+        /* Load static modules */
+        for (i = 0; i < sizeof(rpc__g_static_modules) / sizeof(rpc__g_static_modules[0]); i++)
+        {
+            rpc__g_static_modules[i]();
+        }
+
         n = scandir(IMAGE_DIR, &namelist, (void*) select_module, (void*) sort_modules);
         for (i = 0; i < n; i++)
         {

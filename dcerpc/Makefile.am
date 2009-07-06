@@ -2,7 +2,7 @@
 ACLOCAL_AMFLAGS = -I m4
 include $(top_srcdir)/include.mk
 
-SUBDIRS=libdcethread idl_compiler include idl_lib uuid ncklib dcelib transport rpcd demos perf tools
+SUBDIRS=libdcethread idl_compiler include idl_lib uuid ncklib dcelib rpcd demos perf tools
 
 EXTRA_DIST=include.mk buildconf
 

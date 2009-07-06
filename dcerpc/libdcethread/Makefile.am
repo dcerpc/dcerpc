@@ -3,7 +3,7 @@
 # Makefile for the dcethreads library and tools
 include $(top_srcdir)/include.mk
 
-lib_LTLIBRARIES = libdcethread.la 
+noinst_LTLIBRARIES = libdcethread.la
 
 COMMON_FILES = \
 	dcethread_create.c \
@@ -91,7 +91,7 @@ libdcethread_la_LDFLAGS += -no-undefined
 endif
 
 if HAVE_MOONUNIT
-lib_LTLIBRARIES += dcethread_mu.la
+lib_LTLIBRARIES = dcethread_mu.la
 dcethread_mu_la_SOURCES = $(TEST_FILES) test_stub.c
 dcethread_mu_la_LIBADD = libdcethread.la $(LIB_moonunit)
 dcethread_mu_la_LDFLAGS = -module -avoid-version -export-dynamic

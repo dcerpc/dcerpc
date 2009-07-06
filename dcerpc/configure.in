@@ -405,9 +405,17 @@ AC_SUBST(NAF_NP_LDFLAGS)
 AC_SUBST(NAF_NP_LIBS)
 
 RPC_ARG_DEFINE(ncacn, PROT_NCACN, yes,Support connection based transports)
+if test x"$rpc_arg_ncacn" = xyes
+then
+	AC_DEFINE([ENABLE_PROT_NCACN], [], [Enable NCACN protocol sequence])
+fi
 AM_CONDITIONAL(PROT_NCACN, test x${rpc_arg_ncacn} = xyes)
 
 RPC_ARG_DEFINE(ncadg, PROT_NCADG, yes,Support connectionless transports)
+if test x"$rpc_arg_ncadg" = xyes
+then
+	AC_DEFINE([ENABLE_PROT_NCADG], [], [Enable NCADG protocol sequence])
+fi
 AM_CONDITIONAL(PROT_NCADG, test x${rpc_arg_ncadg} = xyes)
 
 RPC_ARG_DEFINE(dummyauth, AUTH_DUMMY, no,Include the DCE dummy auth service)
@@ -421,11 +429,19 @@ if test "x${rpc_arg_dummyauth}" = "xyes" ; then
 fi
 
 RPC_ARG_DEFINE(gss_negotiate, AUTH_GSS_NEGOTIATE, yes, Include the DCE gss_negotiate auth service)
+if test x"$rpc_arg_gss_negotiate" = xyes
+then
+	AC_DEFINE([ENABLE_AUTH_GSS_NEGOTIATE], [], [Enable GSS negotiate auth mechanism])
+fi
 AM_CONDITIONAL(AUTH_GSS_NEGOTIATE, test x${rpc_arg_gss_negotiate} = xyes)
 
 # If we found libschannel, build it by default, otherwise disable it by
 # default.
 RPC_ARG_DEFINE(schannel, AUTH_SCHANNEL, ${ac_cv_lib_schannel_schn_wrap}, Include the schannel auth service)
+if test x"$rpc_arg_schannel" = xyes
+then
+	AC_DEFINE([ENABLE_AUTH_SCHANNEL], [], [Enable schannel auth mechanism])
+fi
 AM_CONDITIONAL(AUTH_SCHANNEL, test x${rpc_arg_schannel} = xyes)
 
 # Make sure that we actually have libschannel if it was force-enabled.
@@ -442,9 +458,18 @@ AM_CONDITIONAL(BUILD_RPC_NS_LDAP, test x${rpc_arg_rpc_ns_ldap} = xyes)
 AC_CHECK_FUNCS(scandir)
 
 RPC_ARG_DEFINE(afip, NAF_IP, yes,IP network address family support)
+if test x"$rpc_arg_afip" = xyes
+then
+	AC_DEFINE([ENABLE_NAF_IP], [], [Enable IP address family support])
+fi
 AM_CONDITIONAL(NAF_IP, test x${rpc_arg_afip} = xyes)
 
 RPC_ARG_DEFINE(afnp, NAF_NP,yes,Named Pipes network address family support)
+if test x"$rpc_arg_afnp" = xyes
+then
+	AC_DEFINE([ENABLE_NAF_NP], [], [Enable named pipe address family support])
+fi
+
 AM_CONDITIONAL(NAF_NP, test x${rpc_arg_afnp} = xyes)
 
 if test "x${rpc_arg_afnp}" = "xyes" -a \
@@ -551,7 +576,6 @@ ncklib/include/solaris2.10/Makefile
 ncklib/include/darwin/Makefile
 ncklib/include/hpux11.11/Makefile
 ncklib/include/Makefile
-transport/Makefile
 dcelib/Makefile
 rpcd/Makefile
 demos/Makefile

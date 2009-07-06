@@ -94,7 +94,6 @@ noinst_HEADERS+= \
 	sec_id_pickle.h		\
 	uxdnaf.h
 
-
 ######################################################################
 ## COMPONENT: com - comprises of libcom and libstubs convenience libs
 
@@ -213,5 +212,94 @@ mgmt_cstub.c mgmt_sstub.c mgmt.h: $(IDL_INCLUDE_DIR)/mgmt.idl
 
 ######################################################################
 ## Dist stuff
+
+######################################################################
+## COMPONENT: transport/cn - comprises of libprot_ncacn shared lib
+
+# code for connection orientated transports
+if PROT_NCACN
+
+noinst_LTLIBRARIES+=libprot_ncacn.la
+libnck_la_LIBADD+=libprot_ncacn.la
+
+libprot_ncacn_la_LDFLAGS = $(DCERPC_LDFLAGS)
+libprot_ncacn_la_SOURCES = cnassoc.c cnbind.c cncall.c cncasgsm.c \
+ cncassm.c cncclsm.c cncthd.c cnfbuf.c cnid.c cninit.c cnmgmt.c \
+ cnnet.c cnp.c cnpkt.c cnrcvr.c cnsasgsm.c cnsassm.c cnsclsm.c \
+ cnsm.c cnxfer.c
+
+endif
+
+######################################################################
+## COMPONENT: transport/dg - comprises of libprot_ncadg shared lib
+
+if PROT_NCADG
+noinst_LTLIBRARIES+=libprot_ncadg.la
+noinst_LTLIBRARIES+=libprot_ncadg_stubs.la
+libnck_la_LIBADD+=libprot_ncadg.la
+
+libprot_ncadg_stubs_la_SOURCES=conv_cstub.c convc_cstub.c convc_sstub.c
+libprot_ncadg_stubs_la_CPPFLAGS=-I. $(BASE_CPPFLAGS) $(IDL_CPPFLAGS)
+libprot_ncadg_stubs_la_CFLAGS=$(BASE_CFLAGS)
+
+noinst_HEADERS+=conv.h convc.h
+
+conv.h conv_cstub.c: $(IDL_INCLUDE_DIR)/conv.idl
+	$(IDL) $(NCK_IDL_FLAGS) -cepv -server none $<
+
+convc.h convc_cstub.c convc_sstub.c: $(IDL_INCLUDE_DIR)/convc.idl
+	$(IDL) $(NCK_IDL_FLAGS) -cepv $<
+
+libprot_ncadg_la_SOURCES=conv.c dg.c dgcall.c dgccall.c \
+ dgccallt.c dgcct.c dgclive.c dgclsn.c dgexec.c dgfwd.c \
+ dgglob.c dghnd.c dginit.c dglossy.c dglsn.c dgpkt.c dgrq.c \
+ dgscall.c dgsct.c dgslive.c dgslsn.c dgsoc.c dgutl.c dgxq.c
+
+libprot_ncadg_la_LIBADD=libprot_ncadg_stubs.la
+
+endif
+
+######################################################################
+## COMPONENT: naf - comprises of libnaf_{np,ip,uxd} shared libs
+
+if NAF_IP
+noinst_LTLIBRARIES+=libnaf_ip.la
+libnck_la_LIBADD+=libnaf_ip.la
+libnaf_ip_la_SOURCES=ipnaf.c ipnaf_linux.c twr_ip.c
+endif
+
+if NAF_NP
+noinst_LTLIBRARIES+=libnaf_np.la
+libnck_la_LIBADD+=libnaf_np.la
+libnaf_np_la_SOURCES=npnaf.c npnaf_linux.c twr_np.c twr_uxd.c
+endif
+
+if NAF_UXD
+noinst_LTLIBRARIES+=libnaf_uxd.la
+libnck_la_LIBADD+=libnaf_uxd.la
+libnaf_uxd_la_SOURCES=uxdnaf.c uxdnaf_linux.c twr_uxd.c
+endif
+
+# Unused: twr_dnet.c
+
+if AUTH_GSS_NEGOTIATE
+noinst_LTLIBRARIES += libauth_gss_negotiate.la
+libnck_la_LIBADD+=libauth_gss_negotiate.la
+
+libauth_gss_negotiate_la_SOURCES = gssauth.c gssauthcn.c
+libauth_gss_negotiate_la_CFLAGS = @GSSAPI_INCLUDES@
+libauth_gss_negotiate_la_LDFLAGS = @GSSAPI_LDFLAGS@
+libauth_gss_negotiate_la_LIBADD = @GSSAPI_LIBS@
+endif
+
+if AUTH_SCHANNEL
+noinst_LTLIBRARIES += libauth_schannel.la
+libnck_la_LIBADD+=libauth_schannel.la
+
+libauth_schannel_la_SOURCES = schnauth.c schnauthcn.c
+libauth_schannel_la_CFLAGS = @SCHANNEL_INCLUDES@
+libauth_schannel_la_LDFLAGS = @SCHANNEL_LDFLAGS@
+libauth_schannel_la_LIBADD = @SCHANNEL_LIBS@
+endif
 
 EXTRA_DIST=ncklib.mk include
