@@ -1,5 +1,6 @@
 /* ex: set shiftwidth=4 softtabstop=4 expandtab: */
 #include "compat/mswrappers.h"
+#include "compat/winerror.h"
 #include <stdlib.h>
 #include <errno.h>
 
@@ -75,8 +76,8 @@ RPC_STATUS RpcCompatExceptionToCode(dcethread_exc *exc)
 {
     RPC_STATUS status;
     if((status = dcethread_exc_getstatus(exc)) == (RPC_STATUS)-1)
-        return rpc_m_unexpected_exc;
-    return status;
+        return RPC_S_INTERNAL_ERROR;
+    return LwMapDCEStatusToWinerror(status);
 }
 
 RPC_STATUS g_lastcode = 0;
@@ -102,7 +103,7 @@ RPC_STATUS RpcStringBindingComposeA(
 {
     RPC_STATUS status;
     rpc_string_binding_compose((idl_char *)string_object_uuid, (idl_char *)string_protseq, (idl_char *)string_netaddr, (idl_char *)string_endpoint, (idl_char *)string_options, (idl_char **)string_binding, &status);
-    return status;
+    return LwMapDCEStatusToWinerror(status);
 }
 
 RPC_STATUS RpcStringBindingComposeW(
@@ -140,7 +141,7 @@ RPC_STATUS RpcStringBindingComposeW(
     FREE_INPUTSTR(string_options);
     CONVERT_OUTPUTSTR(string_binding);
 
-    return status;
+    return LwMapDCEStatusToWinerror(status);
 }
 
 RPC_STATUS RpcBindingFromStringBindingA(
@@ -150,7 +151,7 @@ RPC_STATUS RpcBindingFromStringBindingA(
 {
     RPC_STATUS status;
     rpc_binding_from_string_binding((idl_char *)string_binding, binding_handle, &status);
-    return status;
+    return LwMapDCEStatusToWinerror(status);
 }
 
 RPC_STATUS RpcBindingFromStringBindingW(
@@ -171,7 +172,7 @@ RPC_STATUS RpcBindingFromStringBindingW(
 
     FREE_INPUTSTR(string_binding);
 
-    return status;
+    return LwMapDCEStatusToWinerror(status);
 }
 
 RPC_STATUS RpcBindingSetAuthInfoA(
@@ -192,7 +193,7 @@ RPC_STATUS RpcBindingSetAuthInfoA(
             auth_identity,
             authz_protocol,
             &status);
-    return status;
+    return LwMapDCEStatusToWinerror(status);
 }
 
 RPC_STATUS RpcBindingSetAuthInfoW(
@@ -221,7 +222,7 @@ RPC_STATUS RpcBindingSetAuthInfoW(
 
     FREE_INPUTSTR(server_princ_name);
 
-    return status;
+    return LwMapDCEStatusToWinerror(status);
 }
 
 RPC_STATUS RpcStringFreeA(
@@ -230,7 +231,7 @@ RPC_STATUS RpcStringFreeA(
 {
     RPC_STATUS status = rpc_s_ok;
     rpc_string_free((idl_char **)string, &status);
-    return status;
+    return LwMapDCEStatusToWinerror(status);
 }
 
 RPC_STATUS RpcStringFreeW(
@@ -243,7 +244,7 @@ RPC_STATUS RpcStringFreeW(
         free(*string);
         *string = NULL;
     }
-    return rpc_s_ok;
+    return ERROR_SUCCESS;
 }
 
 RPC_STATUS RpcBindingFree(
@@ -252,7 +253,7 @@ RPC_STATUS RpcBindingFree(
 {
     RPC_STATUS status = rpc_s_ok;
     rpc_binding_free(binding_handle, &status);
-    return status;
+    return LwMapDCEStatusToWinerror(status);
 }
 
 RPC_STATUS RpcServerUseProtseqEpA(
@@ -264,7 +265,7 @@ RPC_STATUS RpcServerUseProtseqEpA(
 {
     RPC_STATUS status = rpc_s_ok;
     rpc_server_use_protseq_ep((idl_char *)protseq, max_call_requests, (idl_char *)endpoint, &status);
-    return status;
+    return LwMapDCEStatusToWinerror(status);
 }
 
 RPC_STATUS RpcServerUseProtseqEpW(
@@ -289,7 +290,7 @@ RPC_STATUS RpcServerUseProtseqEpW(
     FREE_INPUTSTR(protseq);
     FREE_INPUTSTR(endpoint);
 
-    return status;
+    return LwMapDCEStatusToWinerror(status);
 }
 
 RPC_STATUS RpcServerRegisterIf(
@@ -300,7 +301,7 @@ RPC_STATUS RpcServerRegisterIf(
 {
     RPC_STATUS status = rpc_s_ok;
     rpc_server_register_if(if_spec, mgr_type_uuid, mgr_epv, &status);
-    return status;
+    return LwMapDCEStatusToWinerror(status);
 }
 
 RPC_STATUS RpcServerListen(
@@ -311,7 +312,217 @@ RPC_STATUS RpcServerListen(
 {
     RPC_STATUS status = rpc_s_ok;
     rpc_server_listen(max_calls_exec, &status);
-    return status;
+    return LwMapDCEStatusToWinerror(status);
+}
+
+RPC_STATUS LwMapDCEStatusToWinerror(
+    RPC_STATUS dceStatus
+)
+{
+    switch(dceStatus)
+    {
+        case rpc_s_ok:
+            return RPC_S_OK;
+        case rpc_s_op_rng_error:
+            return RPC_S_PROCNUM_OUT_OF_RANGE;
+        case rpc_s_not_in_call:
+            return RPC_S_NO_CALL_ACTIVE;
+        case rpc_s_no_port:
+            return RPC_S_OUT_OF_RESOURCES;
+        case rpc_s_invalid_string_binding:
+            return RPC_S_INVALID_STRING_BINDING;
+        case rpc_s_wrong_kind_of_binding:
+            return RPC_S_WRONG_KIND_OF_BINDING;
+        case rpc_s_invalid_binding:
+            return RPC_S_INVALID_BINDING;
+        case rpc_s_protseq_not_supported:
+            return RPC_S_PROTSEQ_NOT_SUPPORTED;
+        case rpc_s_invalid_rpc_protseq:
+            return RPC_S_INVALID_RPC_PROTSEQ;
+        case uuid_s_invalid_string_uuid:
+            return RPC_S_INVALID_STRING_UUID;
+        case rpc_s_invalid_endpoint_format:
+            return RPC_S_INVALID_ENDPOINT_FORMAT;
+        case rpc_s_inval_net_addr:
+            return RPC_S_INVALID_NET_ADDR;
+        case rpc_s_endpoint_not_found:
+            return RPC_S_NO_ENDPOINT_FOUND;
+        case rpc_s_invalid_timeout:
+            return RPC_S_INVALID_TIMEOUT;
+        case rpc_s_object_not_found:
+            return RPC_S_OBJECT_NOT_FOUND;
+        case rpc_s_already_registered:
+            return RPC_S_ALREADY_REGISTERED;
+        case rpc_s_type_already_registered:
+            return RPC_S_TYPE_ALREADY_REGISTERED;
+        case rpc_s_already_listening:
+            return RPC_S_ALREADY_LISTENING;
+        case rpc_s_no_protseqs_registered:
+            return RPC_S_NO_PROTSEQS_REGISTERED;
+        case rpc_s_not_listening:
+            return RPC_S_NOT_LISTENING;
+        case rpc_s_unknown_mgr_type:
+            return RPC_S_UNKNOWN_MGR_TYPE;
+        case rpc_s_unknown_if:
+            return RPC_S_UNKNOWN_IF;
+        case rpc_s_no_bindings:
+            return RPC_S_NO_BINDINGS;
+        case rpc_s_no_protseqs:
+            return RPC_S_NO_PROTSEQS;
+        case rpc_s_no_rem_endpoint:
+            return RPC_S_CANT_CREATE_ENDPOINT;
+        case rpc_s_connect_no_resources:
+            return RPC_S_OUT_OF_RESOURCES;
+        case ept_s_server_unavailable:
+            return RPC_S_SERVER_UNAVAILABLE;
+        case rpc_s_server_too_busy:
+            return RPC_S_SERVER_TOO_BUSY;
+        case rpc_s_invalid_call_opt:
+            return RPC_S_INVALID_NETWORK_OPTIONS;
+        case rpc_s_call_failed:
+            return RPC_S_CALL_FAILED;
+        case rpc_s_call_faulted:
+            return RPC_S_CALL_FAILED_DNE;
+        case rpc_s_protocol_error:
+            return RPC_S_PROTOCOL_ERROR;
+        case rpc_s_tsyntaxes_unsupported:
+            return RPC_S_UNSUPPORTED_TRANS_SYN;
+        case rpc_s_unsupported_type:
+            return RPC_S_UNSUPPORTED_TYPE;
+        case rpc_s_fault_invalid_tag:
+            return RPC_S_INVALID_TAG;
+        case rpc_s_fault_invalid_bound:
+            return RPC_S_INVALID_BOUND;
+        case rpc_s_no_entry_name:
+            return RPC_S_NO_ENTRY_NAME;
+        case rpc_s_invalid_name_syntax:
+            return RPC_S_INVALID_NAME_SYNTAX;
+        case rpc_s_unsupported_name_syntax:
+            return RPC_S_UNSUPPORTED_NAME_SYNTAX;
+        case uuid_s_no_address:
+            return RPC_S_UUID_NO_ADDRESS;
+        case ept_s_cant_access:
+            return RPC_S_DUPLICATE_ENDPOINT;
+        case rpc_s_unsupported_auth_subtype:
+            return RPC_S_UNKNOWN_AUTHN_TYPE;
+        case rpc_s_max_calls_too_small:
+            return RPC_S_MAX_CALLS_TOO_SMALL;
+        case rpc_s_string_too_long:
+            return RPC_S_STRING_TOO_LONG;
+        case rpc_s_binding_has_no_auth:
+            return RPC_S_BINDING_HAS_NO_AUTH;
+        case rpc_s_unknown_authn_service:
+            return RPC_S_UNKNOWN_AUTHN_SERVICE;
+        case rpc_s_authn_authz_mismatch:
+            return RPC_S_UNKNOWN_AUTHZ_SERVICE;
+        case rpc_s_nothing_to_export:
+            return RPC_S_NOTHING_TO_EXPORT;
+        case rpc_s_incomplete_name:
+            return RPC_S_INCOMPLETE_NAME;
+        case rpc_s_invalid_vers_option:
+            return RPC_S_INVALID_VERS_OPTION;
+        case rpc_s_no_more_members:
+            return RPC_S_NO_MORE_MEMBERS;
+        case rpc_s_not_all_objs_unexported:
+            return RPC_S_NOT_ALL_OBJS_UNEXPORTED;
+        case rpc_s_interface_not_found:
+            return RPC_S_INTERFACE_NOT_FOUND;
+        case rpc_s_entry_already_exists:
+            return RPC_S_ENTRY_ALREADY_EXISTS;
+        case rpc_s_entry_not_found:
+            return RPC_S_ENTRY_NOT_FOUND;
+        case rpc_s_name_service_unavailable:
+            return RPC_S_NAME_SERVICE_UNAVAILABLE;
+        case rpc_s_invalid_naf_id:
+            return RPC_S_INVALID_NAF_ID;
+        case rpc_s_not_supported:
+            return RPC_S_CANNOT_SUPPORT;
+        case rpc_s_context_id_not_found:
+            return RPC_S_NO_CONTEXT_AVAILABLE;
+        case uuid_s_internal_error:
+            return RPC_S_INTERNAL_ERROR;
+        case rpc_s_fault_int_div_by_zero:
+            return RPC_S_ZERO_DIVIDE;
+        case rpc_s_cant_bind_socket:
+            return RPC_S_ADDRESS_ERROR;
+        case rpc_s_fault_fp_div_by_zero:
+            return RPC_S_FP_DIV_ZERO;
+        case rpc_s_fault_fp_underflow:
+            return RPC_S_FP_UNDERFLOW;
+        case rpc_s_fault_fp_overflow:
+            return RPC_S_FP_OVERFLOW;
+        case rpc_s_call_queued:
+            return RPC_S_CALL_IN_PROGRESS;
+        case rpc_s_no_more_bindings:
+            return RPC_S_NO_MORE_BINDINGS;
+        case rpc_s_no_interfaces:
+            return RPC_S_NO_INTERFACES;
+        case rpc_s_call_cancelled:
+            return RPC_S_CALL_CANCELLED;
+        case rpc_s_binding_incomplete:
+            return RPC_S_BINDING_INCOMPLETE;
+        case rpc_s_comm_failure:
+            return RPC_S_COMM_FAILURE;
+        case rpc_s_auth_method:
+            return RPC_S_INVALID_AUTH_IDENTITY;
+        case rpc_s_unsupported_authn_level:
+            return RPC_S_UNSUPPORTED_AUTHN_LEVEL;
+        case rpc_s_invalid_credentials:
+            return RPC_S_NO_PRINC_NAME;
+        case rpc_s_unknown_error:
+            return RPC_S_NOT_RPC_ERROR;
+        case rpc_m_cant_create_uuid:
+            return RPC_S_UUID_LOCAL_ONLY;
+        case rpc_s_cancel_timeout:
+            return RPC_S_NOT_CANCELLED;
+        case rpc_s_group_member_not_found:
+            return RPC_S_GROUP_MEMBER_NOT_FOUND;
+        case rpc_s_invalid_object:
+            return RPC_S_INVALID_OBJECT;
+        case rpc_s_wrong_pickle_type:
+            return RPC_S_ENTRY_TYPE_MISMATCH;
+        case rpc_s_no_interfaces_exported:
+            return RPC_S_INTERFACE_NOT_EXPORTED;
+        case rpc_s_profile_not_found:
+            return RPC_S_PROFILE_NOT_ADDED;
+
+        case ept_s_invalid_entry:
+            return EPT_S_INVALID_ENTRY;
+        case ept_s_cant_perform_op:
+            return EPT_S_CANT_PERFORM_OP;
+        case ept_s_not_registered:
+            return EPT_S_NOT_REGISTERED;
+        case ept_s_cant_create:
+            return EPT_S_CANT_CREATE;
+
+        case uuid_s_no_memory:
+        case rpc_s_no_memory:
+        case ept_s_no_memory:
+        case dce_cs_c_cannot_allocate_memory:
+            return ERROR_OUTOFMEMORY;
+
+        case rpc_s_rpcd_comm_failure:
+        case rpc_s_cannot_connect:
+            return ERROR_CONNECTION_REFUSED;
+        case rpc_s_connection_aborted:
+            return ERROR_CONNECTION_ABORTED;
+        case rpc_s_connection_closed:
+            return ERROR_GRACEFUL_DISCONNECT;
+        case rpc_s_connect_timed_out:
+            return WSAETIMEDOUT;
+        case rpc_s_connect_rejected:
+            return ERROR_CONNECTION_REFUSED;
+        case rpc_s_connect_closed_by_rem:
+            return WSAEDISCON;
+        case rpc_s_cant_create_socket:
+            return ERROR_CANNOT_MAKE;
+
+        case rpc_s_invalid_arg:
+            return RPC_S_INVALID_ARG;
+
+        default:
+            return RPC_S_INTERNAL_ERROR;
+    }
 }
 
 #ifdef __cplusplus

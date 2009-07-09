@@ -155,14 +155,16 @@ RPC_STATUS RpcServerListen(
     unsigned32 dont_wait /*not used*/
 );
 
+RPC_STATUS LwMapDCEStatusToWinerror(
+    RPC_STATUS dceStatus
+);
+
 #define RpcStringBindingCompose RpcStringBindingComposeA
 #define RpcServerUseProtseqEp RpcServerUseProtseqEpA
 #define RpcBindingFromStringBinding RpcBindingFromStringBindingA
 #define RpcStringFree RpcStringFreeA
 #define RpcBindingSetAuthInfo RpcBindingSetAuthInfoA
 #define RpcSsDestroyClientContext(x) rpc_ss_destroy_client_context((rpc_ss_context_t *)x)
-
-#define RPC_S_INVALID_NET_ADDR rpc_s_inval_net_addr
 
 #define RPC_C_AUTHN_LEVEL_PKT_PRIVACY rpc_c_protect_level_pkt_privacy
 
