@@ -1528,6 +1528,11 @@ ifflags_again:
     ifaddr_again:
         if (ioctl(desc, SIOCGIFADDR, &ifreq) < 0)
         {
+            /*
+             * UP but no ip address, skip it
+             */
+            if (errno == EADDRNOTAVAIL) continue;
+
             RPC_DBG_PRINTF(rpc_e_dbg_general, 10,
                            ("SIOCGIFADDR returned errno %d\n", errno));
             if (errno == EINTR)
@@ -1722,30 +1727,33 @@ FREE_IT:
         RPC_MEM_FREE (broadcast_addr, RPC_C_MEM_RPC_ADDR);
     }
 
-    if (rpc_addr_vec != NULL)
+    if (rpc_addr_vec != NULL && *rpc_addr_vec != NULL)
     {
         for (i = 0; i < (*rpc_addr_vec)->len; i++)
         {
             RPC_MEM_FREE ((*rpc_addr_vec)->addrs[i], RPC_C_MEM_RPC_ADDR);
         }
         RPC_MEM_FREE (*rpc_addr_vec, RPC_C_MEM_RPC_ADDR_VEC);
+        *rpc_addr_vec = NULL;
     }
-    if (netmask_addr_vec != NULL)
+    if (netmask_addr_vec != NULL && *netmask_addr_vec != NULL)
     {
         for (i = 0; i < (*netmask_addr_vec)->len; i++)
         {
             RPC_MEM_FREE ((*netmask_addr_vec)->addrs[i], RPC_C_MEM_RPC_ADDR);
         }
         RPC_MEM_FREE (*netmask_addr_vec, RPC_C_MEM_RPC_ADDR_VEC);
+        *netmask_addr_vec = NULL;
     }
-    if (broadcast_addr_vec != NULL)
+    if (broadcast_addr_vec != NULL && *broadcast_addr_vec != NULL)
     {
-        assert(netmask_addr_vec != NULL);
-        for (i = 0; i < (*netmask_addr_vec)->len; i++)
+        assert(broadcast_addr_vec != NULL);
+        for (i = 0; i < (*broadcast_addr_vec)->len; i++)
         {
-            RPC_MEM_FREE ((*netmask_addr_vec)->addrs[i], RPC_C_MEM_RPC_ADDR);
+            RPC_MEM_FREE ((*broadcast_addr_vec)->addrs[i], RPC_C_MEM_RPC_ADDR);
         }
-        RPC_MEM_FREE (*netmask_addr_vec, RPC_C_MEM_RPC_ADDR_VEC);
+        RPC_MEM_FREE (*broadcast_addr_vec, RPC_C_MEM_RPC_ADDR_VEC);
+        *broadcast_addr_vec = NULL;
     }
 
     goto done;
