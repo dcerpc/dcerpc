@@ -12,17 +12,6 @@
 		DD3DB2DD100408FD0080B762 /* exports in Resources */ = {isa = PBXBuildFile; fileRef = DD3DAF85100408FC0080B762 /* exports */; };
 		DD3DB2DE100408FD0080B762 /* Makefile.am in Resources */ = {isa = PBXBuildFile; fileRef = DD3DAF86100408FC0080B762 /* Makefile.am */; };
 		DD3DB2DF100408FD0080B762 /* mswrappers.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAF87100408FC0080B762 /* mswrappers.c */; };
-		DD3DB2E0100408FD0080B762 /* categories.pbxbtree in Resources */ = {isa = PBXBuildFile; fileRef = DD3DAF8C100408FC0080B762 /* categories.pbxbtree */; };
-		DD3DB2E1100408FD0080B762 /* cdecls.pbxbtree in Resources */ = {isa = PBXBuildFile; fileRef = DD3DAF8D100408FC0080B762 /* cdecls.pbxbtree */; };
-		DD3DB2E2100408FD0080B762 /* decls.pbxbtree in Resources */ = {isa = PBXBuildFile; fileRef = DD3DAF8E100408FC0080B762 /* decls.pbxbtree */; };
-		DD3DB2E3100408FD0080B762 /* files.pbxbtree in Resources */ = {isa = PBXBuildFile; fileRef = DD3DAF8F100408FC0080B762 /* files.pbxbtree */; };
-		DD3DB2E4100408FD0080B762 /* imports.pbxbtree in Resources */ = {isa = PBXBuildFile; fileRef = DD3DAF90100408FC0080B762 /* imports.pbxbtree */; };
-		DD3DB2E5100408FD0080B762 /* pbxindex.header in Resources */ = {isa = PBXBuildFile; fileRef = DD3DAF91100408FC0080B762 /* pbxindex.header */; };
-		DD3DB2E6100408FD0080B762 /* protocols.pbxbtree in Resources */ = {isa = PBXBuildFile; fileRef = DD3DAF92100408FC0080B762 /* protocols.pbxbtree */; };
-		DD3DB2E7100408FD0080B762 /* refs.pbxbtree in Resources */ = {isa = PBXBuildFile; fileRef = DD3DAF93100408FC0080B762 /* refs.pbxbtree */; };
-		DD3DB2E8100408FD0080B762 /* control in Resources */ = {isa = PBXBuildFile; fileRef = DD3DAF95100408FC0080B762 /* control */; };
-		DD3DB2E9100408FD0080B762 /* strings in Resources */ = {isa = PBXBuildFile; fileRef = DD3DAF96100408FC0080B762 /* strings */; };
-		DD3DB2EA100408FD0080B762 /* subclasses.pbxbtree in Resources */ = {isa = PBXBuildFile; fileRef = DD3DAF97100408FC0080B762 /* subclasses.pbxbtree */; };
 		DD3DB2EB100408FD0080B762 /* echon.acf in Resources */ = {isa = PBXBuildFile; fileRef = DD3DAF9A100408FC0080B762 /* echon.acf */; };
 		DD3DB2EC100408FD0080B762 /* echon.idl in Resources */ = {isa = PBXBuildFile; fileRef = DD3DAF9B100408FC0080B762 /* echon.idl */; };
 		DD3DB2ED100408FD0080B762 /* echon_client.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAF9C100408FC0080B762 /* echon_client.c */; };
@@ -806,17 +795,6 @@
 		DD3DAF85100408FC0080B762 /* exports */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = exports; sourceTree = "<group>"; };
 		DD3DAF86100408FC0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DAF87100408FC0080B762 /* mswrappers.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mswrappers.c; sourceTree = "<group>"; };
-		DD3DAF8C100408FC0080B762 /* categories.pbxbtree */ = {isa = PBXFileReference; lastKnownFileType = file; path = categories.pbxbtree; sourceTree = "<group>"; };
-		DD3DAF8D100408FC0080B762 /* cdecls.pbxbtree */ = {isa = PBXFileReference; lastKnownFileType = file; path = cdecls.pbxbtree; sourceTree = "<group>"; };
-		DD3DAF8E100408FC0080B762 /* decls.pbxbtree */ = {isa = PBXFileReference; lastKnownFileType = file; path = decls.pbxbtree; sourceTree = "<group>"; };
-		DD3DAF8F100408FC0080B762 /* files.pbxbtree */ = {isa = PBXFileReference; lastKnownFileType = file; path = files.pbxbtree; sourceTree = "<group>"; };
-		DD3DAF90100408FC0080B762 /* imports.pbxbtree */ = {isa = PBXFileReference; lastKnownFileType = file; path = imports.pbxbtree; sourceTree = "<group>"; };
-		DD3DAF91100408FC0080B762 /* pbxindex.header */ = {isa = PBXFileReference; lastKnownFileType = file; path = pbxindex.header; sourceTree = "<group>"; };
-		DD3DAF92100408FC0080B762 /* protocols.pbxbtree */ = {isa = PBXFileReference; lastKnownFileType = file; path = protocols.pbxbtree; sourceTree = "<group>"; };
-		DD3DAF93100408FC0080B762 /* refs.pbxbtree */ = {isa = PBXFileReference; lastKnownFileType = file; path = refs.pbxbtree; sourceTree = "<group>"; };
-		DD3DAF95100408FC0080B762 /* control */ = {isa = PBXFileReference; lastKnownFileType = text; path = control; sourceTree = "<group>"; };
-		DD3DAF96100408FC0080B762 /* strings */ = {isa = PBXFileReference; lastKnownFileType = text; path = strings; sourceTree = "<group>"; };
-		DD3DAF97100408FC0080B762 /* subclasses.pbxbtree */ = {isa = PBXFileReference; lastKnownFileType = file; path = subclasses.pbxbtree; sourceTree = "<group>"; };
 		DD3DAF9A100408FC0080B762 /* echon.acf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = echon.acf; sourceTree = "<group>"; };
 		DD3DAF9B100408FC0080B762 /* echon.idl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = echon.idl; sourceTree = "<group>"; };
 		DD3DAF9C100408FC0080B762 /* echon_client.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = echon_client.c; sourceTree = "<group>"; };
@@ -1626,7 +1604,6 @@
 			children = (
 				DD3DB0D1100408FD0080B762 /* include */,
 				DD3DAF81100408FC0080B762 /* dcelib */,
-				DD3DAF88100408FC0080B762 /* dcerpc */,
 				DD3DAFC4100408FC0080B762 /* flex-2.5.4 */,
 				DD3DB027100408FC0080B762 /* idl_compiler */,
 				DD3DB080100408FC0080B762 /* idl_lib */,
@@ -1661,56 +1638,6 @@
 				DD3DAF83100408FC0080B762 /* wc16str.c */,
 			);
 			path = darwin;
-			sourceTree = "<group>";
-		};
-		DD3DAF88100408FC0080B762 /* dcerpc */ = {
-			isa = PBXGroup;
-			children = (
-				DD3DAF89100408FC0080B762 /* build */,
-			);
-			path = dcerpc;
-			sourceTree = "<group>";
-		};
-		DD3DAF89100408FC0080B762 /* build */ = {
-			isa = PBXGroup;
-			children = (
-				DD3DAF8A100408FC0080B762 /* dcerpc.build */,
-			);
-			path = build;
-			sourceTree = "<group>";
-		};
-		DD3DAF8A100408FC0080B762 /* dcerpc.build */ = {
-			isa = PBXGroup;
-			children = (
-				DD3DAF8B100408FC0080B762 /* dcerpc.pbxindex */,
-			);
-			path = dcerpc.build;
-			sourceTree = "<group>";
-		};
-		DD3DAF8B100408FC0080B762 /* dcerpc.pbxindex */ = {
-			isa = PBXGroup;
-			children = (
-				DD3DAF8C100408FC0080B762 /* categories.pbxbtree */,
-				DD3DAF8D100408FC0080B762 /* cdecls.pbxbtree */,
-				DD3DAF8E100408FC0080B762 /* decls.pbxbtree */,
-				DD3DAF8F100408FC0080B762 /* files.pbxbtree */,
-				DD3DAF90100408FC0080B762 /* imports.pbxbtree */,
-				DD3DAF91100408FC0080B762 /* pbxindex.header */,
-				DD3DAF92100408FC0080B762 /* protocols.pbxbtree */,
-				DD3DAF93100408FC0080B762 /* refs.pbxbtree */,
-				DD3DAF94100408FC0080B762 /* strings.pbxstrings */,
-				DD3DAF97100408FC0080B762 /* subclasses.pbxbtree */,
-			);
-			path = dcerpc.pbxindex;
-			sourceTree = "<group>";
-		};
-		DD3DAF94100408FC0080B762 /* strings.pbxstrings */ = {
-			isa = PBXGroup;
-			children = (
-				DD3DAF95100408FC0080B762 /* control */,
-				DD3DAF96100408FC0080B762 /* strings */,
-			);
-			path = strings.pbxstrings;
 			sourceTree = "<group>";
 		};
 		DD3DAF98100408FC0080B762 /* demos */ = {
@@ -3276,17 +3203,6 @@
 			files = (
 				DD3DB2DD100408FD0080B762 /* exports in Resources */,
 				DD3DB2DE100408FD0080B762 /* Makefile.am in Resources */,
-				DD3DB2E0100408FD0080B762 /* categories.pbxbtree in Resources */,
-				DD3DB2E1100408FD0080B762 /* cdecls.pbxbtree in Resources */,
-				DD3DB2E2100408FD0080B762 /* decls.pbxbtree in Resources */,
-				DD3DB2E3100408FD0080B762 /* files.pbxbtree in Resources */,
-				DD3DB2E4100408FD0080B762 /* imports.pbxbtree in Resources */,
-				DD3DB2E5100408FD0080B762 /* pbxindex.header in Resources */,
-				DD3DB2E6100408FD0080B762 /* protocols.pbxbtree in Resources */,
-				DD3DB2E7100408FD0080B762 /* refs.pbxbtree in Resources */,
-				DD3DB2E8100408FD0080B762 /* control in Resources */,
-				DD3DB2E9100408FD0080B762 /* strings in Resources */,
-				DD3DB2EA100408FD0080B762 /* subclasses.pbxbtree in Resources */,
 				DD3DB2EB100408FD0080B762 /* echon.acf in Resources */,
 				DD3DB2EC100408FD0080B762 /* echon.idl in Resources */,
 				DD3DB2F1100408FD0080B762 /* Makefile.am in Resources */,

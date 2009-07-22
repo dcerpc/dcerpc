@@ -45,11 +45,6 @@
 
 #define IDL_ERROR_LIST_SIZE 5
 
-/*
- *  The following error and warning routines are NOT function prototyped
- *  since they are designed, a la printf, to accept a variable number of
- *  arguments without using the varargs nonsense.
- */
 void error
 (
 	long msg_id,

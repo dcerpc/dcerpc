@@ -166,8 +166,6 @@ static void dump_attributes(char *, char const *, acf_attrib_t *);
 **
 **  Issues an error message, and bumps the error count.
 **
-**  Note:       This function is not prototyped since the way we use it allows
-**              it to be called with 1 to 6 arguments.
 */
 static void acf_error(long msgid, ...)
 {
@@ -185,8 +183,6 @@ static void acf_error(long msgid, ...)
 **
 **  Issues a warning message.
 **
-**  Note:       This function is not prototyped since the way we use it allows
-**              it to be called with 1 to 6 arguments.
 */
 static void acf_warning(long msgid, ...)
 {

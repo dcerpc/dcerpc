@@ -6586,11 +6586,6 @@ boolean CHECKER_main            /* Returns TRUE on success */
 **  line number of the error from the AST node; passes this information and
 **  its remaining parameters onto the error logging routine.
 **
-**  Note:   This function is intentionally NOT prototyped.  This allows us a
-**          poor man's way of passing a variable number of arguments to the
-**          function.  This technique is only viable since the msgid argument
-**          completely determines how many additional arguments are accessed,
-**          a la printf.
 */
 void CHECKER_error
 (
@@ -6618,11 +6613,6 @@ void CHECKER_error
 **  line number of the warning from the AST node; passes this information and
 **  its remaining parameters onto the warning logging routine.
 **
-**  Note:   This function is intentionally NOT prototyped.  This allows us a
-**          poor man's way of passing a variable number of arguments to the
-**          function.  This technique is only viable since the msgid argument
-**          completely determines how many additional arguments are accessed,
-**          a la printf.
 */
 void CHECKER_warning
 (
@@ -6650,11 +6640,6 @@ void CHECKER_warning
 **  the source file and line number of the error from the AST node; passes this
 **  information and its remaining parameters onto the error logging routine.
 **
-**  Note:   This function is intentionally NOT prototyped.  This allows us a
-**          poor man's way of passing a variable number of arguments to the
-**          function.  This technique is only viable since the msgid argument
-**          completely determines how many additional arguments are accessed,
-**          a la printf.
 */
 void CHECKER_acf_error
 (
@@ -6687,11 +6672,6 @@ void CHECKER_acf_error
 **  the source file and line number of warning from the AST node; passes this
 **  information and its remaining parameters onto the warning logging routine.
 **
-**  Note:   This function is intentionally NOT prototyped.  This allows us a
-**          poor man's way of passing a variable number of arguments to the
-**          function.  This technique is only viable since the msgid argument
-**          completely determines how many additional arguments are accessed,
-**          a la printf.
 */
 void CHECKER_acf_warning
 (

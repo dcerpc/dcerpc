@@ -62,8 +62,8 @@ void dce_get_802_addr(dce_802_addr_t *addr, error_status_t *st)
 #ifdef AF_LINK
 	struct sockaddr_dl *sdl;
 #endif
-#ifdef HAVE_NET_IF_ARP_H
-	//struct arpreq arpreq;
+#if defined(SIOCGARP)
+	struct arpreq arpreq;
 #endif
 	struct ifreq ifreq;
 
