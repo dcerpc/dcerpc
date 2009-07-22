@@ -295,7 +295,7 @@ void getflags
                     {
                         if (ac == 1 || (ac > 1 && *av[1] == '-'))
                         {
-                            *pstring = "";
+                            *pstring = (char*) "";
                             goto nextf;
                         }
                     }

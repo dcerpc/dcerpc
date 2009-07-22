@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1993 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1993 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1993 DIGITAL EQUIPMENT CORPORATION
@@ -108,7 +108,7 @@
 ** Declare an array to hold the default messages.  The text of the messages is
 ** read from a file generated from the message catalog.
 */
-char *default_messages[] = {
+const char *default_messages[] = {
 "Internal idl compiler error: Invalid message number",
 #include <default_msg.h>
 };
@@ -120,7 +120,6 @@ static long max_message_number		/* Compute number of messages. */
 
 #include <message.h>
 static char     msg_prefix[PATH_MAX+3];
-
 
 
 /*
@@ -250,6 +249,40 @@ void message_close
  *              SYS$ERROR/SYS$OUTPUT following the VAX/VMS conventions.
  */
 
+void vmessage_print
+(long msgid, va_list arglist)
+
+{   /* non-VMS message_print() */
+    char format[MAX_FMT_TEXT];     /* Format string */
+
+#ifdef HAVE_NL_TYPES_H
+    /*
+     * Output message prefix on all errors that identify the input file,
+     * or on every line for UUIDGEN
+     */
+    format[0]='\0';
+    switch (msgid)
+    {
+#ifndef UUIDGEN
+        case NIDL_EOF:
+        case NIDL_EOFNEAR:
+        case NIDL_SYNTAXNEAR:
+        case NIDL_FILESOURCE:
+        case NIDL_LINEFILE:
+#else
+        default:
+#endif
+            strcpy(format, msg_prefix);
+    }
+
+    strcat(format,catgets(cat_handle, CAT_SET, msgid, def_message(msgid)));
+    strcat(format,"\n");
+#else
+    snprintf(format, sizeof(format), "%s%s\n", msg_prefix, def_message(msgid));
+#endif /* HAVE_NL_TYPES_H */
+    NL_VFPRINTF(stderr, format, arglist);
+}
+
 void message_print
 #ifdef VMS
 (
@@ -290,39 +323,12 @@ void message_print
 #else
 {   /* non-VMS message_print() */
     va_list arglist;
-    char            format[MAX_FMT_TEXT];     /* Format string */
+
     VA_START(arglist, msgid, long);
-
-#ifdef HAVE_NL_TYPES_H
-    /*
-     * Output message prefix on all errors that identify the input file,
-     * or on every line for UUIDGEN
-     */
-    format[0]='\0';
-    switch (msgid)
-    {
-#ifndef UUIDGEN
-        case NIDL_EOF:
-        case NIDL_EOFNEAR:
-        case NIDL_SYNTAXNEAR:
-        case NIDL_FILESOURCE:
-        case NIDL_LINEFILE:
-#else
-        default:
-#endif
-            strcpy(format, msg_prefix);
-    }
-
-    strcat(format,catgets(cat_handle, CAT_SET, msgid, def_message(msgid)));
-    strcat(format,"\n");
-#else
-    snprintf(format, sizeof(format), "%s%s\n", msg_prefix, def_message(msgid));
-#endif /* HAVE_NL_TYPES_H */
-    NL_VFPRINTF(stderr, format, arglist);
+	vmessage_print (msgid, arglist);
     va_end(arglist);
 }
 #endif
-
 
 
 #ifndef UUIDGEN

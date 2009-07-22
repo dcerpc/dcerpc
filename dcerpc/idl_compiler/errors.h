@@ -43,17 +43,32 @@
 #include <nidl.h>
 #include <nametbl.h>
 
-
 #define IDL_ERROR_LIST_SIZE 5
-
 
 /*
  *  The following error and warning routines are NOT function prototyped
  *  since they are designed, a la printf, to accept a variable number of
  *  arguments without using the varargs nonsense.
  */
-void error();
-void warning();
+void error
+(
+	long msg_id,
+	...
+);
+
+void warning
+(
+	long msg_id,
+	...
+);
+
+void vlog_source_error
+(
+ STRTAB_str_t filename,
+ int lineno,
+ long msg_id,
+ va_list ap
+);
 
 void log_source_error
 (
@@ -64,6 +79,14 @@ void log_source_error
 	... /* 0..5 args terminated by NULL if less than five */
 );
 
+void vlog_source_warning
+(
+ STRTAB_str_t filename,
+ int lineno,
+ long msg_id,
+ va_list ap
+ );
+
 void log_source_warning
 (
 	/* it is not a nonsense */
@@ -71,6 +94,14 @@ void log_source_warning
 	int lineno,
 	long msg_id,
 	... /* 0..5 args terminated by NULL if less than five */
+);
+
+void vlog_error
+(
+ /* it is not a nonsense */
+ int lineno, /* Source line number */
+ long msg_id, /* Message ID */
+ va_list ap
 );
 
 void log_error
@@ -81,6 +112,14 @@ void log_error
 	... /* 0..5 args terminated by NULL if less than five */
 );
 
+void vlog_warning
+(
+ /* it is not a nonsense */
+ int lineno, /* Source line number */
+ long msg_id, /* Message ID */
+ va_list ap
+);
+
 void log_warning
 (
 	/* it is not a nonsense */
@@ -88,7 +127,6 @@ void log_warning
 	long msg_id, /* Message ID */
 	... /* 0..5 args terminated by NULL if less than five */
 );
-
 
 typedef struct {
     long msg_id;
@@ -125,7 +163,6 @@ void yyerror
 );
 
 void yywhere(void);
-
 
 /*
  *  The following global variables are used by error reporting routines, most

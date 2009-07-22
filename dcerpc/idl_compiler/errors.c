@@ -36,7 +36,6 @@
 **
 */
 
-
 #include <nidl.h>
 #include <errors.h>
 #include <nametbl.h>
@@ -76,8 +75,6 @@ typedef struct error_log_rec_t
     struct  error_log_rec_t *last_this_line;    /* last addtl msg this line */
 } error_log_rec_t;
 
-
-
 /* Pointers to IDL parser or ACF parser global variables. */
 
 FILE    **yyin_p;           /* Points to yyin or acf_yyin */
@@ -96,7 +93,6 @@ static  int     last_error_line = 0;        /* Line of last error */
 static
 #endif
 char const *current_file   = NULL;     /* Current source file name */
-
 
 error_log_rec_t  *errors = NULL;    /* Tree root for error nodes */
 int     error_count     = 0;        /* Error count */
@@ -145,7 +141,6 @@ void yywhere
 		}
 	/*	printf("wherebuf is %s, yytext has %s\n", wherebuf, *yytext_p); */
 	}
-
 
 	/*
 	 * If there is some text to show, put it in the string table
@@ -226,14 +221,12 @@ void yyerror
  *
  */
 
-void nidl_yyerror(m)
- char * m;
+void nidl_yyerror(char *m)
 {
   yyerror(m);
 }
 
-void acf_yyerror(m)
- char * m;
+void acf_yyerror(char *m)
 {
   yyerror(m);
 }
@@ -320,7 +313,6 @@ static void free_log_rec
         free_log_rec(log_rec_p->links.asBinTree.right);
         log_rec_p->links.asBinTree.right = NULL;
     }
-
 
     /*
      * Free all errors logged for this line number
@@ -481,6 +473,17 @@ static void log_source_va
  *
  */
 
+void vlog_source_error
+(
+ STRTAB_str_t filename,
+ int lineno,
+ long msg_id,
+ va_list ap
+ )
+{
+    log_source_va(&error_count, filename, lineno, msg_id, ap);
+}
+
 void log_source_error
 (
     STRTAB_str_t filename,
@@ -493,7 +496,7 @@ void log_source_error
 
     va_start(ap, msg_id);
 
-    log_source_va(&error_count, filename, lineno, msg_id, ap);
+    vlog_source_error(filename, lineno, msg_id, ap);
 
     va_end(ap);
 }
@@ -515,6 +518,20 @@ void log_source_error
  *  Outputs:    An error log record is inserted in the error tree.
  *
  */
+void vlog_source_warning
+(
+ STRTAB_str_t filename,
+ int lineno,
+ long msg_id,
+ va_list ap
+)
+{
+    /* Return if warnings are suppressed. */
+    if (ERR_no_warnings)
+		return;
+
+    log_source_va(&warnings, filename, lineno, msg_id, ap);
+}
 
 void log_source_warning
 (
@@ -532,7 +549,7 @@ void log_source_warning
 
     va_start(ap, msg_id);
 
-    log_source_va(&warnings, filename, lineno, msg_id, ap);
+    vlog_source_warning(filename, lineno, msg_id, ap);
 
     va_end(ap);
 }
@@ -553,6 +570,15 @@ void log_source_warning
  *  Outputs:    An error log record is inserted in the error tree.
  *
  */
+void vlog_error
+(
+ int lineno,
+ long msg_id,
+ va_list ap
+)
+{
+    log_source_va(&error_count, error_file_name_id, lineno, msg_id, ap);
+}
 
 void log_error
 (
@@ -565,7 +591,7 @@ void log_error
 
     va_start(ap, msg_id);
 
-    log_source_va(&error_count, error_file_name_id, lineno, msg_id, ap);
+    vlog_error(lineno, msg_id, ap);
 
     va_end(ap);
 }
@@ -587,6 +613,18 @@ void log_error
  *  Outputs:    An error log record is inserted in the error tree.
  *
  */
+void vlog_warning
+(
+ int lineno,
+ long msg_id,
+ va_list ap
+)
+{
+    if (ERR_no_warnings)
+		return;
+
+    log_source_va(&warnings, error_file_name_id, lineno, msg_id, ap);
+}
 
 void log_warning
 (
@@ -601,7 +639,7 @@ void log_warning
 	return;
     va_start(ap, msg_id);
 
-    log_source_va(&warnings, error_file_name_id, lineno, msg_id, ap);
+    vlog_warning(lineno, msg_id, ap);
 
     va_end(ap);
 }
@@ -675,7 +713,6 @@ void print_errors_for_line
     boolean         source_printed = false;
     error_log_rec_t *erp;
 
-
     /* Print the error only if it in this file */
     if (source_id == log_rec_ptr->filename)
     {
@@ -693,7 +730,6 @@ void print_errors_for_line
 	    log_rec_ptr->msgs.arg[4]
         );
     }
-
 
     for (erp = log_rec_ptr->first_this_line; erp; erp=erp->links.asList.next)
     {
@@ -779,7 +815,6 @@ boolean print_errors
      */
      if (errors == NULL) return 0;
 
-
     /*
      * Copy the root of the error tree and null it out so that
      * it looks like all the errors have been printed if we get
@@ -806,7 +841,6 @@ boolean print_errors
     free_log_rec(error_root);
     error_file_count = 0;
 
-
     /*
      * Return true if we found any errors.
      */
@@ -828,16 +862,17 @@ boolean print_errors
 void error
 (
     long msg_id,
-    char *arg1,
-    char *arg2,
-    char *arg3,
-    char *arg4,
-    char *arg5
+    ...
 )
 {
+	va_list arglist;
+
     if (current_file)
         message_print(NIDL_LINEFILE, current_file, *yylineno_p);
-    message_print(msg_id, arg1, arg2, arg3, arg4, arg5);
+
+	va_start (arglist, msg_id);
+	vmessage_print (msg_id, arglist);
+	va_end (arglist);
 
 #ifndef HASPOPEN
     sysdep_cleanup_temp();
@@ -906,21 +941,22 @@ void error_list
 
 void warning
 (
-    long msg_id,
-    char *arg1,
-    char *arg2,
-    char *arg3,
-    char *arg4,
-    char *arg5
+ long msg_id,
+ ...
 )
 {
+	va_list arglist;
+
     /* Return if warnings are suppressed. */
     if (ERR_no_warnings)
         return;
 
     if (current_file)
         message_print(NIDL_LINEFILE, current_file, *yylineno_p);
-    message_print(msg_id, arg1, arg2, arg3, arg4, arg5);
+
+	va_start (arglist, msg_id);
+	vmessage_print (msg_id, arglist);
+	va_end (arglist);
 
     if (++warnings > MAX_WARNINGS)
     {
@@ -951,7 +987,6 @@ void set_name_for_errors
     }
     else current_file = NULL;
 }
-
 
 /*
  *  i n q _ n a m e _ f o r _ e r r o r s

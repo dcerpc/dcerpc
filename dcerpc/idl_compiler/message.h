@@ -36,6 +36,10 @@
 **
 */
 
+void vmessage_print(
+	long msgid, va_list arglist
+);
+
 void message_print(
 #ifdef __STDC__
     long msgid, ...

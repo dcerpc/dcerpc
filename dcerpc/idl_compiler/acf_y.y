@@ -52,6 +52,7 @@ This grammar file needs to be built with GNU Bison V1.25 or later.
 #endif
 
 /* Declarations in this section are copied from yacc source to y_tab.c. */
+#include <stdarg.h>
 
 #include <nidl.h>               /* IDL compiler-wide defs */
 #include <acf.h>                /* ACF include file - keep first! */
@@ -108,7 +109,6 @@ typedef struct acf_param_t      /* ACF parameter info structure */
     NAMETABLE_id_t  param_id;                   /* Parameter name */
 }   acf_param_t;
 
-
 static acf_attrib_t interface_attr,     /* Interface attributes */
                     type_attr,          /* Type attributes */
                     operation_attr,     /* Operation attributes */
@@ -140,14 +140,14 @@ static void         **cmd_val;      /* Array of command option values */
  */
 
 void acf_init(boolean *, void **, char *);
-void acf_cleanup();
+void acf_cleanup(void);
 static boolean lookup_exception(NAMETABLE_id_t, boolean, AST_exception_n_t **);
 static boolean lookup_type(char const *, boolean, NAMETABLE_id_t *, AST_type_n_t **);
 static boolean lookup_operation(char const *, boolean, NAMETABLE_id_t *, AST_operation_n_t **);
 static boolean lookup_parameter(AST_operation_n_t *, char const *, boolean, NAMETABLE_id_t *, AST_parameter_n_t **);
 static boolean lookup_rep_as_name(AST_type_p_n_t *, NAMETABLE_id_t, AST_type_n_t **, char const **);
 static boolean lookup_cs_char_name(AST_type_p_n_t *, NAMETABLE_id_t, AST_type_n_t **, char const * *);
-static acf_param_t * alloc_param();
+static acf_param_t * alloc_param(void);
 static void free_param(acf_param_t *);
 static void free_param_list(acf_param_t **);
 void add_param_to_list(acf_param_t *, acf_param_t **);
@@ -169,20 +169,16 @@ static void dump_attributes(char *, char const *, acf_attrib_t *);
 **  Note:       This function is not prototyped since the way we use it allows
 **              it to be called with 1 to 6 arguments.
 */
-
-/* FIXME TODO change param list to va_list */
-static void acf_error(msgid, arg1, arg2, arg3, arg4, arg5)
-    long    msgid;              /* [in] Message id */
-    char    *arg1;              /* [in] 0 to 5 arguments to fill in message */
-    char    *arg2;              /*      directives */
-    char    *arg3;
-    char    *arg4;
-    char    *arg5;
-
+static void acf_error(long msgid, ...)
 {
-    log_error(acf_yylineno, msgid, arg1, arg2, arg3, arg4, arg5);
-}
+    va_list ap;
 
+    va_start(ap, msgid);
+
+    vlog_error(acf_yylineno, msgid, ap);
+
+    va_end(ap);
+}
 
 /*
 **  a c f _ w a r n i n g
@@ -192,20 +188,16 @@ static void acf_error(msgid, arg1, arg2, arg3, arg4, arg5)
 **  Note:       This function is not prototyped since the way we use it allows
 **              it to be called with 1 to 6 arguments.
 */
-
-/* FIXME TODO change param list to va_list */
-static void acf_warning(msgid, arg1, arg2, arg3, arg4, arg5)
-    long    msgid;              /* [in] Message id */
-    char    *arg1;              /* [in] 0 to 5 arguments to fill in message */
-    char    *arg2;              /*      directives */
-    char    *arg3;
-    char    *arg4;
-    char    *arg5;
-
+static void acf_warning(long msgid, ...)
 {
-    log_warning(acf_yylineno, msgid, arg1, arg2, arg3, arg4, arg5);
-}
+    va_list ap;
 
+    va_start(ap, msgid);
+
+    vlog_warning(acf_yylineno, msgid, ap);
+
+    va_end(ap);
+}
 
 %}
 
@@ -363,7 +355,7 @@ acf_interface_header:
             {
                 /* Store the [implicit_handle] variable name in nametbl. */
                 impl_name_id = NAMETABLE_add_id(impl_name);
-		
+
 					 ASTP_set_implicit_handle(the_interface,
 					 	named_type ? NAMETABLE_add_id(type_name) : NAMETABLE_NIL_ID,
 						impl_name_id);
@@ -1263,7 +1255,6 @@ void acf_cleanup()
 }
 
 
-
 
 /*
 **  l o o k u p _ e x c e p t i o n
@@ -1587,7 +1578,6 @@ static void free_param
     p->next                 = parameter_free_list;
     parameter_free_list     = p;
 }
-
 
 /*
  *  a c f _ f r e e _ p a r a m _ l i s t
@@ -2058,7 +2048,6 @@ static void dump_attributes
             strcat(attr_text, "), ");
         }
 
-
         /* Overwrite trailing ", " with "]" */
 
         pos = strlen(attr_text) - strlen(", ");
@@ -2085,14 +2074,14 @@ static void dump_attributes
  *
  *
  *****************************************************************/
- 
+
 /*****************************************************************
  *
  * Data structure to store the state of a BISON lexxer context
  *
  *****************************************************************/
 
-struct acf_bisonparser_state 
+struct acf_bisonparser_state
   {
 
     /*
@@ -2107,21 +2096,20 @@ struct acf_bisonparser_state
 
   };
 
-
 typedef struct acf_bisonparser_state acf_bisonparser_activation_record;
- 
+
 /*****************************************************************
  *
  * Basic constructors/destructors for FLEX activation states
  *
  *****************************************************************/
- 
+
 void *
 new_acf_bisonparser_activation_record()
   {
     return (malloc(sizeof(acf_bisonparser_activation_record)));
   }
- 
+
 void
 delete_acf_bisonparser_activation_record(void * p)
 {
@@ -2164,11 +2152,9 @@ set_current_acf_bisonparser_activation(void * ptr)
 
     /* restore the statics */
 
-
      yychar = p->yychar;
      yynerrs = p->yynerrs;
      yylval = p->yylval;
-
 
   }
 

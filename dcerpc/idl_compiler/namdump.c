@@ -214,7 +214,7 @@ static void NAMETABLE_dump_nodes
  *
  */
 
-void NAMETABLE_dump_temp_node_list ()
+void NAMETABLE_dump_temp_node_list (void)
 {
 NAMETABLE_temp_name_t * tb;
 
@@ -247,7 +247,7 @@ NAMETABLE_temp_name_t * tb;
  *
  */
 
-void NAMETABLE_dump_tab ()
+void NAMETABLE_dump_tab (void)
 {
     NAMETABLE_dump_nodes( NAMETABLE_root );
     NAMETABLE_dump_temp_node_list();

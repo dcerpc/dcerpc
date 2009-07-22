@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
@@ -16,7 +16,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
 **
@@ -41,7 +41,6 @@
 
 #include <ast.h>                /* Abstract Syntax Tree defs */
 
-
 /*
 **  m i s c   m a c r o s
 **
@@ -64,7 +63,6 @@
     (((struct_p)->fields->last == NULL) ? \
         (struct_p)->fields : (struct_p)->fields->last)
 
-
 /*
 **  p r o p e r t y   m a c r o s
 **
@@ -83,7 +81,6 @@
     &&  (uuid_p)->node[3]                   == 0 \
     &&  (uuid_p)->node[4]                   == 0 \
     &&  (uuid_p)->node[5]                   == 0)
-
 
 /*
 **  t y p e   m a c r o s
@@ -171,7 +168,6 @@
         &&  (type_p)->type_structure.array->index_count == 1) \
     ||  ((type_p)->kind == AST_pointer_k && AST_STRING_SET(type_p)))
 
-
 #define type_is_anonymous(type_p) \
     ((type_p)->name == NAMETABLE_NIL_ID \
     &&  !type_is_base(type_p))
@@ -180,7 +176,6 @@
     ((type_p)->kind == AST_pointer_k \
     &&  (type_p)->type_structure.pointer->pointee_type->kind \
         == AST_function_k)
-
 
 /*
 **  i n s t a n c e   m a c r o s
@@ -214,7 +209,6 @@
          || (inst_p)->field_attrs->last_is_vec != NULL \
          || (inst_p)->field_attrs->length_is_vec != NULL))
 
-
 /*
 **  c o n s t a n t   m a c r o s
 **
@@ -229,8 +223,6 @@
         ((const_p)->kind == AST_int_const_k \
         &&  (const_p)->fe_info->type_specific.const_kind == fe_enum_const_k)
 
-
-
 /*
 **  C H K _ s t r u c t _ i s _ a l l _ b y t e _ f i e l d s
 **
@@ -242,7 +234,6 @@ extern boolean CHK_struct_is_all_byte_fields(
     AST_structure_n_t   *struct_p       /* [in] Ptr to AST structure node */
 #endif
 );
-
 
 /*
 **  p a r a m _ f o l l o w _ r e f _ p t r
@@ -292,7 +283,6 @@ extern AST_type_n_t * param_follow_ref_ptr( /* Returns ptr to type node */
 #endif
 );
 
-
 /*
 **  t y p e _ i s _ b a s e
 **
@@ -304,7 +294,6 @@ extern boolean type_is_base(
     AST_type_n_t *type_p    /* [in] Ptr to AST type node */
 #endif
 );
-
 
 /*
 **  C H E C K E R _ m a i n
@@ -322,9 +311,32 @@ extern boolean CHECKER_main(    /* Returns true on success */
 #endif
 );
 
-extern void CHECKER_error();    /* Intentionally not function prototyped */
-extern void CHECKER_warning();  /* See below */
-extern void CHECKER_acf_error();
-extern void CHECKER_acf_warning();
+extern void CHECKER_error
+(
+	void *in_node_p,
+	long msg_id,
+	...
+);
+
+extern void CHECKER_warning
+(
+ void *in_node_p,
+ long msg_id,
+ ...
+);
+
+extern void CHECKER_acf_error
+(
+ void *in_node_p,
+ long msg_id,
+ ...
+);
+
+extern void CHECKER_acf_warning
+(
+ void *in_node_p,
+ long msg_id,
+ ...
+);
 
 #endif

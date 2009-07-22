@@ -79,16 +79,16 @@ char *mapchar
 
     switch (c)
     {
-        case AUDIBLE_BELL: return AUDIBLE_BELL_CSTR;
-        case '\b': return "\\b";
-        case '\f': return "\\f";
-        case '\n': return "\\n";
-        case '\r': return "\\r";
-        case '\t': return "\\t";
-        case '\v': return "\\v";
-        case '\\': return "\\\\";
-        case '\'': return "\\\'";
-        case '\"': return "\\\"";
+        case AUDIBLE_BELL: return (char *) AUDIBLE_BELL_CSTR;
+        case '\b': return ((char *) "\\b");
+        case '\f': return ((char *) "\\f");
+        case '\n': return ((char *) "\\n");
+        case '\r': return ((char *) "\\r");
+        case '\t': return ((char *) "\\t");
+        case '\v': return ((char *) "\\v");
+        case '\\': return ((char *) "\\\\");
+        case '\'': return ((char *) "\\\'");
+        case '\"': return ((char *) "\\\"");
         default:
             if (c >= ' ' && c <= '~')
                 sprintf(buf, "%c", c);
@@ -299,7 +299,7 @@ static void CSPELL_exports
                 free((void*)str);
                 break;
             case AST_constant_k:
-                CSPELL_constant_def (fid, ep->thing_p.exported_constant, "");
+                CSPELL_constant_def (fid, ep->thing_p.exported_constant, (char *) "");
                 break;
             case AST_operation_k:
 					 /* skip the op for now; we will pick it up in the epv */

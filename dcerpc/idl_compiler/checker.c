@@ -35,6 +35,8 @@
 **  VERSION: DCE 1.0
 */
 
+#include <stdarg.h>
+
 #include <nidl.h>       /* Standard IDL defs */
 #include <checker.h>    /* Type and constant macros */
 #include <chkichar.h>   /* Protos for I-char checking */
@@ -156,7 +158,6 @@ static boolean type_is_string
     return FALSE;
 }
 
-
 /*
 **  t y p e _ i s _ v 1 _ s t r i n g
 **
@@ -200,7 +201,6 @@ static boolean type_is_v1_string
 
     return FALSE;
 }
-
 
 /*
 **  t y p e _ x m i t _ t y p e
@@ -267,7 +267,6 @@ static boolean array_is_conformant_upper
     return FALSE;
 }
 
-
 /*
 **  a r r a y _ i s _ l a r g e
 **
@@ -326,7 +325,6 @@ static boolean array_is_large
 
     return FALSE;
 }
-
 
 /*
 **  a r r a y _ h a s _ o p e n _ l b
@@ -435,7 +433,6 @@ AST_type_n_t * param_follow_ref_ptr     /* Returns ptr to type node */
 
     return ptee_type_p;
 }
-
 
 /*
 **  d e f a u l t _ t o _ a u t o _ h a n d l e
@@ -775,7 +772,6 @@ static void fattr_check_size
         CHECKER_error(fattr_p, NIDL_RANGEATTR);
 }
 
-
 /*
 **  f a t t r _ f i r s t _ i s
 **
@@ -868,7 +864,6 @@ static void fattr_first_is
         CHECKER_error(fattr_p, NIDL_SIZEPRMPTR, id_name);
     }
 }
-
 
 /*
 **  f a t t r _ l a s t _ i s
@@ -963,7 +958,6 @@ static void fattr_last_is
     }
 }
 
-
 /*
 **  f a t t r _ l e n g t h _ i s
 **
@@ -1056,7 +1050,6 @@ static void fattr_length_is
         CHECKER_error(fattr_p, NIDL_SIZEPRMPTR, id_name);
     }
 }
-
 
 /*
 **  f a t t r _ m i n _ i s
@@ -1195,7 +1188,6 @@ static void fattr_min_is
     }
 }
 
-
 /*
 **  f a t t r _ m a x _ i s
 **
@@ -1321,7 +1313,6 @@ static void fattr_max_is
     }
 }
 
-
 /*
 **  f a t t r _ s i z e _ i s
 **
@@ -1401,9 +1392,9 @@ static void fattr_size_is
                 &&  fattr_p->size_is_vec[dim].valid
                 &&  AST_FIXED_UPPER_SET(index_p))))
         CHECKER_error(fattr_p, NIDL_SIZECFMTYPE, dim+1);
-  
+
     /* Constants are excused from further checks */
- 
+
     if (fattr_p->size_is_vec != NULL
         &&  fattr_p->size_is_vec[dim].valid
         &&  fattr_p->size_is_vec[dim].constant == true)
@@ -1446,7 +1437,6 @@ static void fattr_size_is
         CHECKER_error(fattr_p, NIDL_SIZEPRMPTR, id_name);
     }
 }
-
 
 /*
 **  f a t t r _ p a r a m _ c o n f o r m a n t
@@ -1507,7 +1497,6 @@ static void fattr_param_conformant
         CHECKER_error(fattr_p, NIDL_SIZEINATTR);
 }
 
-
 /*
 **  f a t t r _ p a r a m _ v a r y i n g
 **
@@ -1567,7 +1556,6 @@ static void fattr_param_varying
         CHECKER_error(fattr_p, NIDL_LENINATTR);
 }
 
-
 /*
 **  f a t t r _ p a r a m _ c h e c k
 **
@@ -1615,7 +1603,6 @@ static void fattr_param_check
         fattr_param_varying(fattr_p, param_p, int_p, dim);
     }
 }
-
 
 /*
 **  f a t t r _ c h e c k
@@ -1701,7 +1688,6 @@ static void index_const_type
         CHECKER_error(index_p, NIDL_INVARRIND);
 }
 
-
 /*
 **  i n d e x _ b o u n d s
 **
@@ -1734,7 +1720,6 @@ static void index_bounds
         && (*(int *)cmd_val[opt_standard] <= opt_standard_dce_1_0) )
         CHECKER_warning(index_p, NIDL_NOPORTNZLB, OPT_STD_EXTENDED);
 }
-
 
 /*
 **  i n d e x _ c h e c k
@@ -1853,7 +1838,6 @@ static void array_element_type
 		CHECKER_error(node_p, NIDL_IGNARRELEM);
 }
 
-
 /*
 **  a r r a y _ c h e c k
 **
@@ -1908,7 +1892,7 @@ static void array_check
 		 NAMETABLE_id_to_string(type_p->name, &id_name);
 		 CHECKER_error(arr_type_p, NIDL_INTREFNOTALO, id_name);
 	 }
-	 
+
     /*
      * If the array is represented in array (as opposed to pointer) syntax,
      * then check the indices of each dimension of the array.
@@ -1985,7 +1969,6 @@ static void param_type
         &&  param_p != param_p->uplink->result) /* Not the result param */
         CHECKER_error(param_p, NIDL_VOIDOPPTR);
 
-	 
     /* void * must be used in conjunction with the [context_handle] attr */
 
     if (!AST_LOCAL_SET(int_p)
@@ -2026,7 +2009,6 @@ static void param_type
         && param_p == param_p->uplink->result)
         CHECKER_error(param_p, NIDL_ARRFUNRES);
 }
-
 
 /*
 **  p a r a m _ s i z e
@@ -2199,7 +2181,6 @@ static void param_size
         CHECKER_error(param_p, NIDL_OUTCFMTARR);
 }
 
-
 /*
 **  p a r a m _ s t r u c t
 **
@@ -2227,7 +2208,6 @@ static void param_struct
         &&  AST_CONFORMANT_SET(type_p))
         CHECKER_error(param_p, NIDL_CFMTARRREF);
 }
-
 
 /*
 **  p a r a m _ p i p e
@@ -2264,7 +2244,6 @@ static void param_pipe
         &&  type_p->kind == AST_pipe_k)
         CHECKER_error(param_p, NIDL_OPRESPIPE);
 }
-
 
 /*
 **  p a r a m _ i n _ l i n e
@@ -2307,7 +2286,6 @@ static void param_in_line
                           type_p->fe_info->source_line);
     }
 }
-
 
 /*
 **  p a r a m _ s t r i n g
@@ -2384,7 +2362,6 @@ static void param_string
         &&  !type_is_string(param_p->type))
         CHECKER_error(param_p, NIDL_STRCHARBYTE);
 }
-
 
 /*
 **  p a r a m _ p o i n t e r
@@ -2483,7 +2460,7 @@ static void param_pointer
 			 && (AST_UNIQUE_SET(param_p) || AST_PTR_SET(param_p)))
 		 CHECKER_warning(param_p, NIDL_PTRATTBIGN);
 #endif
-	 
+
     /*
      * If the parameter is a pointer, and it is not a pointer to an array,
      * and it has any of the array attributes, then it is an arrayified
@@ -2506,7 +2483,6 @@ static void param_pointer
                     true);
     }
 }
-
 
 /*
 **  p a r a m _ s m a l l
@@ -2581,7 +2557,6 @@ static void param_small
         CHECKER_error(param_p, NIDL_SMALLMINFIRST);
 }
 
-
 /*
 **  p a r a m _ c o n t e x t
 **
@@ -2644,7 +2619,6 @@ static void param_context
         CHECKER_error(param_p, NIDL_PTRCTXHAN);
 }
 
-
 /*
 **  p a r a m _ v a r y i n g
 **
@@ -2685,7 +2659,6 @@ static void param_varying
         &&  (*(int *)cmd_val[opt_standard] <= opt_standard_dce_1_0))
         CHECKER_warning(param_p, NIDL_NOPORTVARY, OPT_STD_EXTENDED);
 }
-
 
 /*
 **  p a r a m _ d i r e c t i o n
@@ -2793,7 +2766,6 @@ static void param_direction
 
 }
 
-
 /*
 **  p a r a m _ c o m m _ s t a t u s
 **
@@ -2894,7 +2866,6 @@ static void param_switch_is
             ||  param_p->field_attrs->switch_is == NULL))
         CHECKER_error(param_p, NIDL_NEUSWATTR);
 }
-
 
 /*
 **  p a r a m _ f i r s t _ h a n d l e
@@ -3012,7 +2983,6 @@ static void param_first_handle
     }
 }
 
-
 /*
 **  p a r a m _ c h e c k _ f i r s t
 **
@@ -3035,7 +3005,6 @@ static void param_check_first
 {
     param_first_handle(param_p, int_p);
 }
-
 
 /*
 **  p a r a m _ c h e c k _ n o n _ h a n d l e
@@ -3075,7 +3044,6 @@ static void param_check_non_handle
         CHECKER_error(param_p, NIDL_HANFIRSTPRM);
 }
 
-
 /*
 **  p a r a m _ c h e c k
 **
@@ -3099,7 +3067,7 @@ static void param_check
     AST_type_n_t        *top_type_p;    /* Top-level parameter type */
     AST_type_n_t        *type_p;        /* Param type (deref'd if necess.) */
     AST_type_n_t        *deref_type_p;  /* Param type (deref'd if necess.) */
-	
+
     /*
      * If the parameter type has a top-level '*' which indicates passing
      * mechanism only, follow the pointer to the data of interest.
@@ -3128,7 +3096,7 @@ static void param_check
 		 NAMETABLE_id_to_string(type_p->name, &id_name);
 		 CHECKER_error(param_p, NIDL_INTREFNOTALO, id_name);
 	 }
-	 
+
     param_size(param_p, top_type_p, type_p, int_p);
     param_struct(param_p, top_type_p, type_p);
     param_pipe(param_p, top_type_p, deref_type_p);
@@ -3175,7 +3143,6 @@ static void op_handle
         &&  op_p->parameters == NULL)
         default_to_auto_handle(op_p, NIDL_DEFAUTOHAN);
 }
-
 
 /*
 **  o p _ c o m m _ s t a t u s
@@ -3227,7 +3194,6 @@ static void op_comm_status
             acf_keyword_lookup(FAULT_STATUS_KW));
 }
 
-
 /*
 **  o p _ b r o a d c a s t
 **
@@ -3252,7 +3218,6 @@ static void op_broadcast
         CHECKER_error(op_p, NIDL_BROADPIPE);
 }
 
-
 /*
 **  o p _ m a y b e
 **
@@ -3276,7 +3241,6 @@ static void op_maybe
         &&  (AST_HAS_OUTS_SET(op_p) || AST_HAS_OUT_PIPES_SET(op_p)))
         CHECKER_error(op_p, NIDL_MAYBEOUTPRM);
 }
-
 
 /*
 **  o p _ c o d e
@@ -3309,7 +3273,6 @@ static void op_code
         CHECKER_acf_warning(op_p, NIDL_SRVNOCODE);
 }
 
-
 /*
 **  o p _ i d e m p o t e n t
 **
@@ -3334,7 +3297,6 @@ static void op_idempotent
         &&  (AST_HAS_IN_PIPES_SET(op_p) || AST_HAS_OUT_PIPES_SET(op_p)))
         CHECKER_error(op_p, NIDL_IDEMPIPE);
 }
-
 
 /*
 **  o p _ e n c o d e
@@ -3483,7 +3445,6 @@ static void op_encode
         && (*(int *)cmd_val[opt_standard] < opt_standard_dce_1_1))
         CHECKER_acf_warning(op_p, NIDL_NOPORTATTR, "decode", OPT_STD_EXTENDED);
 }
-
 
 /*
 **  o p e r a t i o n _ c h e c k
@@ -3640,7 +3601,7 @@ static void field_type
 		 NAMETABLE_id_to_string(type_p->name, &id_name);
 		 CHECKER_error(field_p, NIDL_INTREFNOTALO, id_name);
 	 }
-	 
+
     /* Context handles not valid as structure fields */
 
     if (AST_CONTEXT_RD_SET(type_p)
@@ -3688,7 +3649,6 @@ static void field_type
                 &&  FE_TEST(type_p->fe_info->flags, FE_HAS_V2_ATTR) ))
         CHECKER_warning(field_p, NIDL_INCOMPATV1);
 }
-
 
 /*
 **  f i e l d _ s i z e
@@ -3872,7 +3832,6 @@ static void field_in_line
     }
 }
 
-
 /*
 **  f i e l d _ s t r i n g
 **
@@ -3950,7 +3909,6 @@ static void field_string
         &&  !type_is_string(type_p))
         CHECKER_error(field_p, NIDL_STRCHARBYTE);
 }
-
 
 /*
 **  f i e l d _ p o i n t e r
@@ -4036,7 +3994,6 @@ static void field_pointer
     }
 }
 
-
 /*
 **  f i e l d _ s m a l l
 **
@@ -4108,7 +4065,6 @@ static void field_small
         CHECKER_error(field_p, NIDL_SMALLMINFIRST);
 }
 
-
 /*
 **  f i e l d _ c o n t e x t
 **
@@ -4154,7 +4110,6 @@ static void field_context
         CHECKER_error(field_p, NIDL_PTRCTXHAN);
 }
 
-
 /*
 **  f i e l d _ v a r y i n g
 **
@@ -4197,7 +4152,6 @@ static void field_varying
         &&  (*(int *)cmd_val[opt_standard] <= opt_standard_dce_1_0))
         CHECKER_warning(field_p, NIDL_NOPORTVARY, OPT_STD_EXTENDED);
 }
-
 
 /*
 **  f i e l d _ i g n o r e
@@ -4253,7 +4207,6 @@ static void field_switch_is
             ||  field_p->field_attrs->switch_is == NULL))
         CHECKER_error(field_p, NIDL_NEUSWATTR);
 }
-
 
 /*
 **  f i e l d _ c h e c k
@@ -4366,7 +4319,6 @@ static void fp_param_handle
 #endif
 }
 
-
 /*
 **  f p _ p a r a m _ c h e c k
 **
@@ -4424,7 +4376,6 @@ static void fp_param_check
 
     fp_param_handle(param_p, type_p, int_p);
 }
-
 
 /*
 **  f u n c t i o n _ p t r _ c h e c k
@@ -4557,7 +4508,6 @@ static void ptr_pointee_type
         function_ptr_check(type_p->type_structure.function, ptr_type_p, int_p);
 }
 
-
 /*
 **  p t r _ c h e c k
 **
@@ -4643,8 +4593,6 @@ static void pipe_base_type
 	if (type_p->kind == AST_pointer_k && type_p->type_structure.pointer->pointee_type->kind == AST_interface_k)
 		 CHECKER_error(pipe_p, NIDL_PIPECTYPE, "interface reference");
 
-	 
-	 
     /* Base type of a pipe can't be or contain a pointer */
 
     if (!type_is_function(type_p)
@@ -4673,7 +4621,6 @@ static void pipe_base_type
 
     CHK_pipe_base_type_cs(pipe_p, int_p);
 }
-
 
 /*
 **  p i p e _ c h e c k
@@ -4821,7 +4768,6 @@ static void clabel_value
     }
 }
 
-
 /*
 **  c l a b e l _ c h e c k
 **
@@ -4902,7 +4848,7 @@ static void arm_type
 		 NAMETABLE_id_to_string(type_p->name, &id_name);
 		 CHECKER_error(arm_p, NIDL_INTREFNOTALO, id_name);
 	 }
-	 
+
     /* Pipes not valid as members of unions */
 
     if (type_p->kind == AST_pipe_k)
@@ -4959,7 +4905,6 @@ static void arm_type
                 &&  FE_TEST(type_p->fe_info->flags, FE_HAS_V2_ATTR) ))
         CHECKER_warning(arm_p, NIDL_INCOMPATV1);
 }
-
 
 /*
 **  a r m _ s t r i n g
@@ -5025,7 +4970,6 @@ static void arm_string
             KEYWORDS_lookup_text(AST_attribute_to_token(&attr2)));
     }
 }
-
 
 /*
 **  a r m _ p o i n t e r
@@ -5121,7 +5065,6 @@ static void arm_pointer
      */
 }
 
-
 /*
 **  a r m _ s m a l l
 **
@@ -5158,7 +5101,6 @@ static void arm_small
         &&  array_is_large(array_p))
         CHECKER_error(arm_p, NIDL_SMALLINV);
 }
-
 
 /*
 **  a r m _ c o n t e x t
@@ -5206,7 +5148,6 @@ static void arm_context
         &&  AST_CONTEXT_RD_SET(type_p->type_structure.pointer->pointee_type))
         CHECKER_error(arm_p, NIDL_PTRCTXHAN);
 }
-
 
 /*
 **  a r m _ c h e c k
@@ -5279,7 +5220,6 @@ static void union_discrim_type
         &&  type_p->kind != AST_character_k)
         CHECKER_error(union_p, NIDL_UNIDISCTYP);
 }
-
 
 /*
 **  u n i o n _ c a s e _ l a b e l s
@@ -5388,7 +5328,6 @@ static void union_case_labels
         arm_p = arm_p->next;
     }   /* while (arm_p != NULL) */
 }
-
 
 /*
 **  u n i o n _ c h e c k
@@ -5556,7 +5495,6 @@ static void type_name_len
         CHECKER_error(type_p, NIDL_MAXIDTYPOOL, max_len);
 }
 
-
 /*
 **  t y p e _ i n _ l i n e
 **
@@ -5596,7 +5534,6 @@ static void type_in_line
                           type_p->fe_info->source_line);
     }
 }
-
 
 /*
 **  t y p e _ s t r i n g
@@ -5645,7 +5582,6 @@ static void type_string
             KEYWORDS_lookup_text(AST_attribute_to_token(&attr2)));
     }
 }
-
 
 /*
 **  t y p e _ p o i n t e r
@@ -5718,7 +5654,6 @@ static void type_pointer
 #endif
 }
 
-
 /*
 **  t y p e _ s m a l l
 **
@@ -5773,7 +5708,6 @@ static void type_small
         &&  array_has_open_lb(array_p))
         CHECKER_error(type_p, NIDL_SMALLOPENLB);
 }
-
 
 /*
 **  t y p e _ c o n t e x t
@@ -5849,7 +5783,6 @@ static void type_context
     }
 }
 
-
 /*
 **  t y p e _ c o n f o r m a n t
 **
@@ -5887,7 +5820,6 @@ static void type_conformant
         CHECKER_warning(type_p, NIDL_NOPORTCFMT, OPT_STD_EXTENDED);
 }
 
-
 /*
 **  t y p e _ i g n o r e
 **
@@ -5911,7 +5843,6 @@ static void type_ignore
         &&  type_p->kind != AST_pointer_k)
         CHECKER_error(type_p, NIDL_IGNATTRPTR);
 }
-
 
 /*
 **  t y p e _ s w i t c h _ t y p e
@@ -5937,7 +5868,6 @@ static void type_switch_type
         &&  type_p->type_structure.disc_union->discrim_type == NULL)
         CHECKER_error(type_p, NIDL_NEUSWTYPE);
 }
-
 
 /*
 **  t y p e _ t r a n s m i t _ a s
@@ -5982,7 +5912,6 @@ static void type_transmit_as
         &&  !AST_STRING_SET(top_type_p->xmit_as_type)
         &&  type_is_array(top_type_p->xmit_as_type))
         CHECKER_error(top_type_p, NIDL_XMITCFMTARR);
-
 
     /* Presented type can't be conformant */
 
@@ -6134,7 +6063,6 @@ static void type_represent_as
         CHECKER_acf_error(type_p, NIDL_NEUREPTYPE);
 }
 
-
 /*
 **  t y p e _ c h e c k
 **
@@ -6245,7 +6173,7 @@ static void type_check
 		  NAMETABLE_id_to_string(type_p->name, &id_name);
 		  CHECKER_error(type_p, NIDL_INTREFNOTALO, id_name);
 		  break;
-		  
+
     default:
         error(NIDL_INTERNAL_ERROR, __FILE__, __LINE__);
     }
@@ -6341,7 +6269,6 @@ static void int_name_len
         CHECKER_error(int_p, NIDL_MAXIDINTF, max_len);
 }
 
-
 /*
 **  i n t _ i n _ l i n e
 **
@@ -6365,7 +6292,6 @@ static void int_in_line
         &&  AST_OUT_OF_LINE_SET(int_p))
         CHECKER_acf_error(int_p, NIDL_INTLINEATTR);
 }
-
 
 /*
 **  i n t _ c o d e
@@ -6422,7 +6348,6 @@ static void int_code
     }
 }
 
-
 /*
 **  i n t _ h a n d l e
 **
@@ -6455,7 +6380,6 @@ static void int_handle
         &&  !type_is_handle(int_p->implicit_handle_type))
         CHECKER_acf_error(int_p, NIDL_IMPHANVAR);
 }
-
 
 /*
 **  i n t _ l o c a l
@@ -6511,7 +6435,6 @@ static void int_local
         CHECKER_error(int_p, NIDL_IMPORTLOCAL);
 }
 
-
 /* Checks an interface node's inheritance attributes */
 static void int_inherit(AST_interface_n_t * int_p)
 {
@@ -6547,8 +6470,7 @@ static void interface_check
 
 {
     AST_export_n_t      *export_p;      /* Ptr to export node */
-    AST_import_n_t      *import_p;      /* Ptr to import node */ 
-
+    AST_import_n_t      *import_p;      /* Ptr to import node */
 
     int_name_len(int_p);
 
@@ -6557,7 +6479,6 @@ static void interface_check
     int_handle(int_p);
     int_local(int_p, parent_int_p);
     int_inherit(int_p);
-   	
 
     /* Check any interfaces that this interface imports. */
 
@@ -6671,23 +6592,24 @@ boolean CHECKER_main            /* Returns TRUE on success */
 **          completely determines how many additional arguments are accessed,
 **          a la printf.
 */
-
-/* FIXME TODO change param list to va_list */
 void CHECKER_error
-(node_p, msgid, arg1, arg2, arg3, arg4, arg5)
-    ASTP_node_t         *node_p;        /* [in] Ptr to an AST node */
-    long                msgid;          /* [in] Message ID */
-    char                *arg1;          /* [in] 0 to 5 message arguments */
-    char                *arg2;
-    char                *arg3;
-    char                *arg4;
-    char                *arg5;
+(
+    void                *in_node_p,
+    long                msgid,
+	...
+)
 {
-    log_source_error(node_p->fe_info->file,
-                     node_p->fe_info->source_line,
-                     msgid, arg1, arg2, arg3, arg4, arg5);
-}
+    ASTP_node_t *node_p = in_node_p;
+	va_list arglist;
 
+	va_start (arglist, msgid);
+
+    vlog_source_error(node_p->fe_info->file,
+                     node_p->fe_info->source_line,
+                     msgid, arglist);
+
+	va_end (arglist);
+}
 
 /*
 **  C H E C K E R _ w a r n i n g
@@ -6702,21 +6624,23 @@ void CHECKER_error
 **          completely determines how many additional arguments are accessed,
 **          a la printf.
 */
-
-/* FIXME TODO change param list to va_list */
 void CHECKER_warning
-(node_p, msgid, arg1, arg2, arg3, arg4, arg5)
-    ASTP_node_t         *node_p;        /* [in] Ptr to an AST node */
-    long                msgid;          /* [in] Message ID */
-    char                *arg1;          /* [in] 0 to 5 message arguments */
-    char                *arg2;
-    char                *arg3;
-    char                *arg4;
-    char                *arg5;
+(
+	void                *in_node_p,
+	long                msgid,
+	...
+)
 {
-    log_source_warning(node_p->fe_info->file,
-                       node_p->fe_info->source_line,
-                       msgid, arg1, arg2, arg3, arg4, arg5);
+    ASTP_node_t *node_p = in_node_p;
+	va_list arglist;
+
+	va_start (arglist, msgid);
+
+    vlog_source_warning(node_p->fe_info->file,
+					  node_p->fe_info->source_line,
+					  msgid, arglist);
+
+	va_end (arglist);
 }
 
 /*
@@ -6732,28 +6656,29 @@ void CHECKER_warning
 **          completely determines how many additional arguments are accessed,
 **          a la printf.
 */
-
-/* FIXME TODO change param list to va_list */
 void CHECKER_acf_error
-(node_p, msgid, arg1, arg2, arg3, arg4, arg5)
-    ASTP_node_t         *node_p;        /* [in] Ptr to an AST node */
-    long                msgid;          /* [in] Message ID */
-    char                *arg1;          /* [in] 0 to 5 message arguments */
-    char                *arg2;
-    char                *arg3;
-    char                *arg4;
-    char                *arg5;
+(
+	void                *in_node_p,
+	long                msgid,
+	...
+)
 {
-    if (node_p->fe_info->acf_file != (STRTAB_str_t)0)
-        log_source_error(node_p->fe_info->acf_file,
-                         node_p->fe_info->acf_source_line,
-                         msgid, arg1, arg2, arg3, arg4, arg5);
-    else
-        log_source_error(node_p->fe_info->file,
-                         node_p->fe_info->source_line,
-                         msgid, arg1, arg2, arg3, arg4, arg5);
-}
+    ASTP_node_t *node_p = in_node_p;
+	va_list arglist;
 
+	va_start (arglist, msgid);
+
+    if (node_p->fe_info->acf_file != (STRTAB_str_t)0)
+        vlog_source_error(node_p->fe_info->acf_file,
+                         node_p->fe_info->acf_source_line,
+                         msgid, arglist);
+    else
+        vlog_source_error(node_p->fe_info->file,
+                         node_p->fe_info->source_line,
+                         msgid, arglist);
+
+	va_end (arglist);
+}
 
 /*
 **  C H E C K E R _ a c f _ w a r n i n g
@@ -6768,29 +6693,29 @@ void CHECKER_acf_error
 **          completely determines how many additional arguments are accessed,
 **          a la printf.
 */
-
-/* FIXME TODO change param list to va_list */
 void CHECKER_acf_warning
-(node_p, msgid, arg1, arg2, arg3, arg4, arg5)
-    ASTP_node_t         *node_p;        /* [in] Ptr to an AST node */
-    long                msgid;          /* [in] Message ID */
-    char                *arg1;          /* [in] 0 to 5 message arguments */
-    char                *arg2;
-    char                *arg3;
-    char                *arg4;
-    char                *arg5;
+(
+	void                *in_node_p,
+	long                msgid,
+	...
+)
 {
+    ASTP_node_t *node_p = in_node_p;
+	va_list arglist;
+
+	va_start (arglist, msgid);
+
     if (node_p->fe_info->acf_file != (STRTAB_str_t)0)
-        log_source_warning(node_p->fe_info->acf_file,
+        vlog_source_warning(node_p->fe_info->acf_file,
                            node_p->fe_info->acf_source_line,
-                           msgid, arg1, arg2, arg3, arg4, arg5);
+                           msgid, arglist);
     else
-        log_source_warning(node_p->fe_info->file,
+        vlog_source_warning(node_p->fe_info->file,
                            node_p->fe_info->source_line,
-                           msgid, arg1, arg2, arg3, arg4, arg5);
+                           msgid, arglist);
+
+	va_end (arglist);
 }
-
-
 
 /*
 **  t y p e _ i s _ b a s e

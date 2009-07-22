@@ -128,6 +128,13 @@ void CSPELL_midl_compatibility_allocators
 #endif
 );
 
+void CSPELL_suppress_stub_warnings
+(
+#ifdef PROTO
+ FILE *fid
+#endif
+);
+
 void CSPELL_restore_stub_warnings
 (
 #ifdef PROTO

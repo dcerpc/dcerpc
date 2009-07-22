@@ -100,7 +100,7 @@ void
 ** an error in the compiler.  The print_errors routine, which we call is coded
 ** such that we cannot get into an infinite loop.
 */
-static long attempt_to_print_errors()
+static long attempt_to_print_errors(void)
 {
 #if !defined(vms)
 #ifndef _MSDOS
