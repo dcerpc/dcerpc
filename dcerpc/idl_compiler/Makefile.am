@@ -67,6 +67,6 @@ CLEANFILES=acf_y.c acf_l.c acf_y.h nidl_y.c nidl_l.c nidl_y.h
 # TODO-dalmeida-2008/01/22-This DESTDIR/install-exec-local stuff looks suspicious
 DESTDIR = /
 
-install-exec-local:
+install-exec-hook:
 	test -f $(DESTDIR)/$(bindir)/idl || $(LN_S) dceidl $(DESTDIR)/$(bindir)/idl
 
