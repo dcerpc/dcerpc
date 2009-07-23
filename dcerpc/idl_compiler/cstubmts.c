@@ -463,7 +463,7 @@ void DDBE_spell_pickling_stub
 )
 {
     boolean encode_decode;  /* True if operation has [encode] and [decode] */
-    char *action_type;
+    const char *action_type;
     BE_stat_info_t comm_stat_info;
     BE_stat_info_t fault_stat_info;
     BE_cs_info_t cs_info;           /* I-char machinery description */
@@ -546,11 +546,11 @@ void DDBE_spell_pickling_stub
         fprintf(fid, "IDL_msp->IDL_h=NULL;\n");
 
     if (encode_decode)
-        action_type = (char *) "IDL_both_k";
+        action_type = "IDL_both_k";
     else if (AST_ENCODE_SET(p_operation))
-        action_type = (char *) "IDL_encoding_k";
+        action_type = "IDL_encoding_k";
     else
-        action_type = (char *) "IDL_decoding_k";
+        action_type = "IDL_decoding_k";
     fprintf(fid, 
 "idl_es_before_interp_call(%c%s,(rpc_if_handle_t)&IDL_ifspec,\n",
                 BE_handle_info.deref_assoc, BE_handle_info.assoc_name);

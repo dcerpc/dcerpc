@@ -54,7 +54,7 @@ void CSPELL_type_def
 #endif
 );
 
-char *mapchar
+const char *mapchar
 (
 #ifdef PROTO
     AST_constant_n_t *cp,   /* Constant node with kind == AST_char_const_k */

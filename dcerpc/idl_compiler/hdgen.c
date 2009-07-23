@@ -62,7 +62,7 @@ extern AST_cpp_quote_n_t * global_cppquotes_post;
  *
  * Maps a single character into a string suitable for emission
  */
-char *mapchar
+const char *mapchar
 #ifdef PROTO
 (
     AST_constant_n_t *cp,   /* Constant node with kind == AST_char_const_k */
@@ -79,16 +79,16 @@ char *mapchar
 
     switch (c)
     {
-        case AUDIBLE_BELL: return (char *) AUDIBLE_BELL_CSTR;
-        case '\b': return ((char *) "\\b");
-        case '\f': return ((char *) "\\f");
-        case '\n': return ((char *) "\\n");
-        case '\r': return ((char *) "\\r");
-        case '\t': return ((char *) "\\t");
-        case '\v': return ((char *) "\\v");
-        case '\\': return ((char *) "\\\\");
-        case '\'': return ((char *) "\\\'");
-        case '\"': return ((char *) "\\\"");
+        case AUDIBLE_BELL: return AUDIBLE_BELL_CSTR;
+        case '\b': return "\\b";
+        case '\f': return "\\f";
+        case '\n': return "\\n";
+        case '\r': return "\\r";
+        case '\t': return "\\t";
+        case '\v': return "\\v";
+        case '\\': return "\\\\";
+        case '\'': return "\\\'";
+        case '\"': return "\\\"";
         default:
             if (c >= ' ' && c <= '~')
                 sprintf(buf, "%c", c);
