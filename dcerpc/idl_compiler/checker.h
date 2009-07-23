@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2009 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -311,32 +312,36 @@ extern boolean CHECKER_main(    /* Returns true on success */
 #endif
 );
 
-extern void CHECKER_error
-(
+extern void CHECKER_error(
+#ifdef PROTO
 	void *in_node_p,
 	long msg_id,
 	...
+#endif
 );
 
-extern void CHECKER_warning
-(
+extern void CHECKER_warning(
+#ifdef PROTO
  void *in_node_p,
  long msg_id,
  ...
+#endif
 );
 
-extern void CHECKER_acf_error
-(
+extern void CHECKER_acf_error(
+#ifdef PROTO
  void *in_node_p,
  long msg_id,
  ...
+#endif
 );
 
-extern void CHECKER_acf_warning
-(
+extern void CHECKER_acf_warning(
+#ifdef PROTO
  void *in_node_p,
  long msg_id,
  ...
+#endif
 );
 
 #endif
