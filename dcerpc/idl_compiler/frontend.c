@@ -179,7 +179,7 @@ idir_list, cpp_output)
 
     /* Put together beginning of command. */
 
-    strcpy(cmd, cpp_cmd);
+    strlcpy(cmd, cpp_cmd, sizeof (cmd));
     strcat(cmd, " ");
 #ifdef VMS
     strcat(cmd, "/PREPROCESS=");
@@ -192,7 +192,7 @@ idir_list, cpp_output)
     strcat(cmd, file_name);
 #else
     /* On VMS, hack so source filespec in U*ix format still works. */
-    FILE_parse(file_name, dir, name, type);
+    FILE_parse(file_name, dir, sizeof(dir), name, sizeof(name), type, sizeof(type));
     FILE_form_filespec(name, dir, type, (char *)NULL, expanded_file_name);
     strcat(cmd, expanded_file_name);
 #endif
@@ -391,7 +391,7 @@ static boolean parse_acf        /* Returns true on success */
 #ifdef VMS
         char temp_file_name[max_string_len];
         ASSERTION(max_string_len > L_tmpnam);
-        FILE_parse(acf_file, (char *)NULL, temp_file_name, (char *)NULL);
+        FILE_parse(acf_file, (char *)NULL, 0, temp_file_name, sizeof(temp_file_name), (char *)NULL, 0);
         FILE_form_filespec(temp_file_name, "sys$scratch:", ".acf$tmp",
                            (char *)NULL, temp_path_name);
 #else
@@ -482,14 +482,14 @@ static boolean already_imported
      * Note that a lookup failure will not report a failure here;
      * That will be reported when we actually try to import it.
      */
-    if (!FILE_lookup(file_name, idir_list, &stat_buf, new_import_full_fn))
+    if (!FILE_lookup(file_name, idir_list, &stat_buf, new_import_full_fn, sizeof (new_import_full_fn)))
         return false;
     new_import_full_fn_id = STRTAB_add_string(new_import_full_fn);
 
     /*
      * Make sure there is no partial path information.
      */
-    if (!FILE_parse(new_import_full_fn, NULL, base_file_name, base_file_ext))
+    if (!FILE_parse(new_import_full_fn, NULL, 0, base_file_name, sizeof(base_file_name), base_file_ext, sizeof(base_file_ext)))
         return false;
 
     strncat(base_file_name, base_file_ext, max_string_len);
@@ -591,7 +591,7 @@ static boolean parse
     else
     {
         STRTAB_str_to_string(idl_sid, &sf);
-        if  (!FILE_lookup(sf, idir_list, &stat_buf, full_path_name))
+        if  (!FILE_lookup(sf, idir_list, &stat_buf, full_path_name, sizeof (full_path_name)))
         {
             error(NIDL_FILENOTFND, sf);
             return false;
@@ -607,7 +607,7 @@ static boolean parse
 #ifdef VMS
         char temp_file_name[max_string_len];
         ASSERTION(max_string_len > L_tmpnam);
-        FILE_parse(full_path_name, (char *)NULL, temp_file_name, (char *)NULL);
+        FILE_parse(full_path_name, (char *)NULL, 0, temp_file_name, sizeof(temp_file_name), (char *)NULL, 0);
         FILE_form_filespec(temp_file_name, "sys$scratch:", ".idl$tmp",
                            (char *)NULL, temp_path_name);
 #else
@@ -699,7 +699,7 @@ static boolean parse
      * The ACF name is constructed from the IDL file name.  The ACF file can
      * be in any of the -I directories.
      */
-    if (!FILE_parse(full_path_name, file_dir, file_name, (char *)NULL))
+    if (!FILE_parse(full_path_name, file_dir, sizeof(file_dir), file_name, sizeof(file_name), (char *)NULL, 0))
         return false;
 
     if (!FILE_form_filespec(file_name, (char *)NULL, CONFIG_SUFFIX,
@@ -731,7 +731,7 @@ static boolean parse
         idir_list[i+1] = NULL;
     }
 
-    acf_exists = FILE_lookup(acf_file, idir_list, &stat_buf, full_acf_name);
+    acf_exists = FILE_lookup(acf_file, idir_list, &stat_buf, full_acf_name, sizeof (full_acf_name));
 #ifdef VMS
     if (!acf_exists)
     {
@@ -744,7 +744,7 @@ static boolean parse
                                 full_path_name, acf_file))
             return false;
         acf_exists = FILE_lookup(acf_file, (char **)NULL, &stat_buf,
-                                 full_acf_name);
+                                 full_acf_name, sizeof (full_acf_name));
     }
 #endif
 
@@ -855,7 +855,7 @@ AST_interface_n_t *FE_parse_import
 	 /* save the AST state */
 
 	 saved_ASTP_parsing_main_idl = ASTP_parsing_main_idl;
-	 inq_name_for_errors(saved_current_file);
+	 inq_name_for_errors(saved_current_file, sizeof (saved_current_file));
 	 saved_error_file_name_id = error_file_name_id;
 
 	 /*
@@ -1032,7 +1032,7 @@ static boolean parse_idl        /* Returns true on success */
          * This preserves idempotency in case the main IDL is also imported.
          */
         STRTAB_str_to_string(idl_sid, &file_name);
-        FILE_parse(file_name, NULL, file_name_part, file_type_part);
+        FILE_parse(file_name, NULL, 0, file_name_part, sizeof(file_name_part), file_type_part, sizeof(file_type_part));
         strcat(file_name_part, file_type_part);
 
         /*
@@ -1057,7 +1057,7 @@ static boolean parse_idl        /* Returns true on success */
          * Note that a lookup failure will not report a failure here;
          * That will be reported when we actually try to parse it.
          */
-        if (FILE_lookup(file_name, NULL, &stat_buf, imported_fn))
+        if (FILE_lookup(file_name, NULL, &stat_buf, imported_fn, sizeof (imported_fn)))
         {
             imported_file = NEW (FE_import_file_n_t);
             imported_file->imported_fn_id = STRTAB_add_string(file_name_part);

@@ -176,7 +176,7 @@ void message_open
 #ifdef HAVE_NL_TYPES_H
     char cat_name[PATH_MAX] = CATALOG_DIR "idl.cat";
 
-    strcpy(msg_prefix, "idl: ");
+    strlcpy(msg_prefix, "idl: ", sizeof (msg_prefix));
 
     /*
      * Open the message catalog using the image name.
@@ -273,7 +273,7 @@ void vmessage_print
 #else
         default:
 #endif
-            strcpy(format, msg_prefix);
+            strlcpy(format, msg_prefix, sizeof (format));
     }
 
     strcat(format,catgets(cat_handle, CAT_SET, msgid, def_message(msgid)));
@@ -349,6 +349,7 @@ void message_sprint
 #ifdef PROTO
 (
     char *str,
+	size_t str_len,
     long msgid,
     char *arg1,
     char *arg2,
@@ -359,6 +360,7 @@ void message_sprint
 #else
 (str, msgid, arg1, arg2, arg3, arg4, arg5)
     char    *str;                   /* Formatted return string */
+	size_t	str_len;				/* length of str */
     long    msgid;                  /* Message id */
     char    *arg1, *arg2,           /* 0-5 directive arguments */
             *arg3, *arg4, *arg5;
@@ -418,7 +420,7 @@ void message_sprint
         case NIDL_SYNTAXNEAR:
         case NIDL_FILESOURCE:
         case NIDL_LINEFILE:
-            strcpy(str,msg_prefix);         /* Add prefix to messages */
+            strlcpy(str,msg_prefix,str_len);         /* Add prefix to messages */
             str +=  strlen(msg_prefix);
             break;
     }

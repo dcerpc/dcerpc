@@ -174,7 +174,7 @@ other           .
 \"[^\"\n]*\" {  /* Quoted string: Strip off quotes, add to string table. */
                 char    stripped_string[max_string_len];
 
-                strcpy(stripped_string, (char *)&yytext[1]);
+                strlcpy(stripped_string, (char *)&yytext[1], sizeof (stripped_string));
                 stripped_string[strlen((char *)yytext)-2] = '\0';
                 acf_yylval.y_string = STRTAB_add_string(stripped_string);
                 return(STRING);
@@ -240,7 +240,7 @@ static void acf_yymark()
         char    file_name[max_string_len];
 
         /* Strip the quotes. */
-        strcpy(file_name, &source[1]);
+        strlcpy(file_name, &source[1], sizeof (file_name));
         file_name[strlen(file_name)-1] = '\0';
 
         set_name_for_errors(file_name);

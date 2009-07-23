@@ -476,7 +476,7 @@ static void yymark()
         char    file_name[max_string_len];
 
         /* Strip the quotes. */
-        strcpy(file_name, &source[1]);
+        strlcpy(file_name, &source[1], sizeof (file_name));
         file_name[strlen(file_name)-1] = '\0';
 
         set_name_for_errors(file_name);

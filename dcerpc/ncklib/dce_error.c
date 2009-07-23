@@ -126,11 +126,12 @@
 **/
 
 static void dce_get_msg(
-	unsigned long           status_to_convert,
+	unsigned long   status_to_convert,
 	char			*error_text,
+	size_t			error_text_len,
 	char			*fname,
 	char			*cname,
-	int                     *status)
+	int             *status)
 {
     unsigned short  facility_code;
     unsigned short  component_code;
@@ -167,7 +168,7 @@ static void dce_get_msg(
         {
             *status = 0;
         }
-        strcpy ((char *)error_text, "successful completion");
+        strlcpy ((char *)error_text, "successful completion", error_text_len);
         return;
     }
 
@@ -273,6 +274,7 @@ static void dce_get_msg(
 void dce_error_inq_text (
 unsigned long           status_to_convert,
 unsigned char           *error_text,
+size_t					error_text_len,
 int                     *status
 )
 {
@@ -288,11 +290,11 @@ int                     *status
         {
             *status = 0;
         }
-        strcpy ((char *)error_text, "successful completion");
+        strlcpy ((char *)error_text, "successful completion", error_text_len);
         return;
     }
 
-    dce_get_msg (status_to_convert, (char *)error_text, fname, cname, status);
+    dce_get_msg (status_to_convert, (char *)error_text, error_text_len, fname, cname, status);
     strcat ((char*) error_text, " (");
     strcat ((char*) error_text, fname);
     strcat ((char*) error_text, " / ");
@@ -307,7 +309,7 @@ int dce_fprintf(FILE *f, unsigned long index, ...)
     int i;
     char format[1024];
 
-    dce_get_msg(index, format, NULL, NULL, &st);
+    dce_get_msg(index, format, sizeof (format), NULL, NULL, &st);
     if (st != 0) return EOF;
 
     va_start(ap, index);
@@ -322,7 +324,7 @@ int dce_printf(unsigned long index, ...)
     int i;
     char format[1024];
 
-    dce_get_msg(index, format, NULL, NULL, &st);
+    dce_get_msg(index, format, sizeof (format), NULL, NULL, &st);
     if (st != 0) return EOF;
 
     va_start(ap, index);
@@ -349,7 +351,7 @@ main(int argc, char **argv)
                 sscanf(argv[i], "%x", &code);
         else
                 sscanf(argv[i], "%d", &code);
-        dce_error_inq_text(code, message, &_);
+        dce_error_inq_text(code, message, sizeof(message), &_);
         printf("%d (decimal), %x (hex): %s\n", code, code, message);
     }
 }

@@ -1000,11 +1000,12 @@ void set_name_for_errors
 
 void inq_name_for_errors
 (
-    char *name
+    char *name,
+	size_t name_len
 )
 {
     if (current_file)
-        strcpy(name, current_file);
+        strlcpy(name, current_file, name_len);
     else
         *name = '\0';
 }

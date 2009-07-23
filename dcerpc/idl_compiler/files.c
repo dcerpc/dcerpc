@@ -140,7 +140,8 @@ boolean FILE_lookup             /* Returns TRUE on success */
     char const  * const *idir_list,    /* [in] Array of directories to search */
                                 /*      NULL => just use filespec */
     struct stat *stat_buf,      /*[out] Stat buffer - see stat.h */
-    char        *lookup_spec    /*[out] Filespec of found file (on success) */
+    char        *lookup_spec,   /*[out] Filespec of found file (on success) */
+	size_t lookup_spec_len		/* [in] len of lookup_spec */
 )
 {
 #ifdef HASDIRTREE
@@ -152,7 +153,7 @@ boolean FILE_lookup             /* Returns TRUE on success */
     if (stat(filespec, stat_buf) != -1)
     {
 #ifndef VMS
-        strcpy(lookup_spec, filespec);
+        strlcpy(lookup_spec, filespec, lookup_spec_len);
 #else
         /*
          * This code is for the special case where foo.idl is the source file
@@ -164,7 +165,7 @@ boolean FILE_lookup             /* Returns TRUE on success */
             for (cp = cwd; *cp != '\0'; cp++) *cp = tolower(*cp);
         if (!FILE_form_filespec(filespec, cwd, (char *)NULL, (char *)NULL,
                                 lookup_spec))
-            strcpy(lookup_spec, filespec);
+            strlcpy(lookup_spec, filespec, lookup_spec_len);
         if (cwd != NULL) free(cwd);
 #endif
         return TRUE;
@@ -265,7 +266,7 @@ boolean FILE_form_filespec      /* Returns TRUE on success */
         else if (type)
             FILE_def_filespec = type;
 
-        if (!FILE_parse(in_filespec, in_dir, in_name, in_type))
+        if (!FILE_parse(in_filespec, in_dir, sizeof (in_dir), in_name, sizeof(in_name), in_type, sizeof(in_type)))
 #ifndef VMS
             return FALSE;
 #else
@@ -317,10 +318,10 @@ boolean FILE_form_filespec      /* Returns TRUE on success */
             /*
             ** Concatenate U*ix dir spec with input filespec.
             */
-            strcpy(tmp_filespec, dir);
+            strlcpy(tmp_filespec, dir, sizeof (tmp_filespec));
             strcat(tmp_filespec, "/");
             strcat(tmp_filespec, in_filespec);
-            if (!FILE_parse(tmp_filespec, in_dir, in_name, in_type))
+            if (!FILE_parse(tmp_filespec, in_dir, sizeof(in_dir), in_name, sizeof(in_name), in_type, sizeof(in_type)))
                 return FALSE;
         }
 #endif  /* VMS */
@@ -332,7 +333,7 @@ boolean FILE_form_filespec      /* Returns TRUE on success */
     /* Parse rel_filespec into its components. */
     if (rel_filespec != NULL && rel_filespec[0] != '\0')
 #ifndef VMS
-        if (!FILE_parse(rel_filespec, rel_dir, rel_name, rel_type))
+        if (!FILE_parse(rel_filespec, rel_dir, sizeof(rel_dir), rel_name, sizeof(rel_name), rel_type, sizeof(rel_type)))
             return FALSE;
 #else
         if (    (in_filespec != NULL && in_filespec[0] != '\0')
@@ -344,7 +345,7 @@ boolean FILE_form_filespec      /* Returns TRUE on success */
              */
             if (type)
                 FILE_def_filespec = type;
-            if (!FILE_parse(rel_filespec, rel_dir, rel_name, rel_type))
+            if (!FILE_parse(rel_filespec, rel_dir, sizeof(rel_dir), rel_name, sizeof(rel_name), rel_type, sizeof(rel_type)))
                 return FALSE;
         }
         else
@@ -362,7 +363,7 @@ boolean FILE_form_filespec      /* Returns TRUE on success */
                 len = cp - rel_filespec;
             strncpy(rel_name, rel_filespec, len);
             rel_name[len] = '\0';
-            strcpy(rel_type, &rel_filespec[len]);
+            strlcpy(rel_type, &rel_filespec[len], sizeof (rel_type));
         }
 #endif  /* VMS */
 
@@ -407,7 +408,7 @@ boolean FILE_form_filespec      /* Returns TRUE on success */
         char upcase_dir[PATH_MAX];
         char *cp;
 
-        strcpy(upcase_dir, res_dir);
+        strlcpy(upcase_dir, res_dir, sizeof (upcase_dir));
         for (cp = upcase_dir; *cp; cp++)
             if (isalpha(*cp))
                 *cp = toupper(*cp);
@@ -458,7 +459,7 @@ static int process_vms_filespec
 #endif
 
 {
-    strcpy(vms_filespec, filespec);
+    strlcpy(vms_filespec, filespec, sizeof (vms_filespec));
 
     /* Return zero to prevent further translation of wildcards. */
     return 0;
@@ -484,11 +485,16 @@ boolean FILE_parse              /* Returns TRUE on success */
 (
     char const  *filespec,      /* [in] Filespec */
     char        *dir,           /*[i,o] Directory portion; NULL =>don't want */
+	size_t		dir_len,		/*[i] len of dir */
     char        *name,          /*[i,o] Filename portion;  NULL =>don't want */
-    char        *type           /*[i,o] File type (ext);   NULL =>don't want */
+	size_t		name_len,		/*[i] len of name */
+    char        *type,          /*[i,o] File type (ext);   NULL =>don't want */
+	size_t		type_len		/*[i] len of type */
 )
 #ifndef VMS     /* This code works partially on VMS; better version below */
 {
+#pragma unused (name_len)
+
 #if defined(HASDIRTREE)
     FILE_k_t    filekind;       /* File kind */
     char const  *pn;
@@ -520,7 +526,7 @@ boolean FILE_parse              /* Returns TRUE on success */
         &&  FILE_kind(filespec, &filekind)
         &&  filekind == file_dir)
     {
-        strcpy(dir, filespec);
+        strlcpy(dir, filespec, dir_len);
         return TRUE;
     }
 
@@ -608,7 +614,7 @@ boolean FILE_parse              /* Returns TRUE on success */
         else
         {
         if (type)
-            strcpy(type, &pn[ext_start]);
+            strlcpy(type, &pn[ext_start], type_len);
         }
     }
 
@@ -636,7 +642,7 @@ boolean FILE_parse              /* Returns TRUE on success */
     if (FILE_def_filespec == NULL)
         defspec[0] = '\0';
     else
-        strcpy(defspec, FILE_def_filespec);
+        strlcpy(defspec, FILE_def_filespec, sizeof (defspec));
     FILE_def_filespec = NULL;
     fab.fab$l_dna   = defspec;
     fab.fab$b_dns   = strlen(defspec);
@@ -666,7 +672,7 @@ boolean FILE_parse              /* Returns TRUE on success */
              */
             char inspec[NAM$C_MAXRSS];
             inspec[0] = '/';
-            strcpy(&inspec[1], filespec);
+            strlcpy(&inspec[1], filespec, sizeof (inspec) - 1);
             if (shell$to_vms(inspec, process_vms_filespec, 1) != 1)
                 return FALSE;
         }
@@ -760,7 +766,7 @@ boolean FILE_has_dir_info
 {
     char    dir[PATH_MAX];      /* Directory part of filespec */
 
-    if (!FILE_parse(filespec, dir, (char *)NULL, (char *)NULL))
+    if (!FILE_parse(filespec, dir, sizeof(dir), (char *)NULL, 0, (char *)NULL, 0))
         return FALSE;
 
     return (dir[0] != '\0');

@@ -157,7 +157,7 @@ error_status_t *st;         /* (output) status */
     }
     else {
         dsh->fname = (char *) malloc(ustrlen(fname)+1);  /* and filename */
-        ustrcpy(dsh->fname,fname);
+        ustrlcpy(dsh->fname, fname, ustrlen(fname)+1);
     }
     dsh->freelist = NULL;                   /* no free memory */
     dsh->map = NULL;                        /* therefore no file mapping */
@@ -223,7 +223,7 @@ error_status_t *st;         /* (output) status */
 
     dsh->fd = fd;                   /* remember fd */
     dsh->fname = (char *) malloc(ustrlen(fname)+1);  
-    ustrcpy(dsh->fname,fname);      /* and filename */
+    ustrlcpy(dsh->fname, fname, ustrlen(fname)+1);      /* and filename */
     dsh->freelist = NULL;           /* no free list yet */
     dsh->map = NULL;                /* no memory mapping yet */
     dsh->pages = (fd < 0) ? 0 : fhdr.pages; /* number of valid pages */

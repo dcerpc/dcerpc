@@ -213,7 +213,7 @@ static char rcsid[] =
         return ( CHAR );
  
 #define RETURNNAME \
-        (void) strcpy( nmstr, (char *) yytext ); \
+        (void) strlcpy( nmstr, (char *) yytext, sizeof (nmstr) ); \
         return ( NAME );
  
 #define PUT_BACK_STRING(str, start) \
@@ -1465,7 +1465,7 @@ synerr( "unrecognized '%' directive" );
 case 15:
 # line 152 "<stdin>"
 {
-                        (void) strcpy( nmstr, (char *) yytext );
+                        (void) strlcpy( nmstr, (char *) yytext, sizeof (nmstr) );
                         didadef = false;
                         BEGIN(PICKUPDEF);
                         }
@@ -1538,7 +1538,7 @@ case 30:
 case 31:
 # line 185 "<stdin>"
 {
-                        (void) strcpy( (char *) nmdef, (char *) yytext );
+                        (void) strlcpy( (char *) nmdef, (char *) yytext, sizeof (nmdef) );
  
                         for ( i = strlen( (char *) nmdef ) - 1;
                               i >= 0 &&
@@ -1756,7 +1756,7 @@ case 64:
 {
                         int cclval;
  
-                        (void) strcpy( nmstr, (char *) yytext );
+                        (void) strlcpy( nmstr, (char *) yytext, sizeof (nmstr) );
  
                         /* check to see if we've already encountered this ccl */
                         if ( (cclval = ccllookp( (Char *) nmstr )) )
@@ -1788,7 +1788,7 @@ case 65:
                         register Char *nmdefptr;
                         Char *ndlookup();
  
-                        (void) strcpy( nmstr, (char *) yytext );
+                        (void) strlcpy( nmstr, (char *) yytext, sizeof (nmstr) );
                         nmstr[yyleng - 1] = '\0';  /* chop trailing brace */
  
                         /* lookup from "nmstr + 1" to chop leading brace */

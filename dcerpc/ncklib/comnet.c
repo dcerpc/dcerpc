@@ -1236,7 +1236,7 @@ unsigned32              *status;
     for (psid = 0; psid < psv->count; psid++)
     {
         pvp->protseq[psid] = ps;
-        strcpy ((char *) ps, (char *) psv->protseq[psid]);
+        strlcpy ((char *) ps, (char *) psv->protseq[psid], psv_str_size);
         ps += strlen ((char *) ps) + 1;
     }
 

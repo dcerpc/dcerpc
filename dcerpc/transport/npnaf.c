@@ -965,11 +965,11 @@ unsigned32              *status;
         {
             if (strncmp(sun_path, RPC_C_NP_DIR, RPC_C_NP_DIR_LEN) != 0)
             {
-                strcpy((char*) *endpoint, sun_path);
+                strlcpy((char*) *endpoint, sun_path, RPC_C_ENDPOINT_NP_MAX);
             }
             else
             {
-                strcpy((char*) *endpoint, &sun_path[RPC_C_NP_DIR_LEN + 1]);
+                strlcpy((char*) *endpoint, &sun_path[RPC_C_NP_DIR_LEN + 1], RPC_C_ENDPOINT_NP_MAX);
             }
         }
     }

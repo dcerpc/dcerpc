@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1990 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1990 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1990 DIGITAL EQUIPMENT CORPORATION
@@ -16,7 +16,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
  */
@@ -37,10 +37,17 @@
 **  VERSION: DCE 1.0
 **
 */
+
+#include <string.h>
+/* _POSIX_C_SOURCE is defined and _DARWIN_C_SOURCE is not defined for this file,
+ so string.h wont have the strlcpy.  Just prototype it here */
+#if defined(_POSIX_C_SOURCE) && !defined(_DARWIN_C_SOURCE)
+size_t	 strlcpy(char *, const char *, size_t);
+#endif
+
 #if HAVE_CONFIG_H
 #include <config.h>
 #endif
-
 
 /* The ordering of the following 3 includes should NOT be changed! */
 #include <dce/rpc.h>
@@ -121,7 +128,6 @@ globaldef rpc_trans_tab_t ndr_g_def_ebcdic_to_ascii = {
      0x38, 0x39, 0x1A, 0x1A, 0x1A, 0x1A, 0x1A, 0xFF  /* 0xF8 - 0xFF */
 };
 
-
 /*
  * N D R _ C V T _ S T R I N G
  *
@@ -135,24 +141,26 @@ void ndr_cvt_string
 ndr_format_t src_drep,
 ndr_format_t dst_drep,
 char_p_t src,
-char_p_t dst
+char_p_t dst,
+size_t dst_len
 )
 #else
-(src_drep, dst_drep, src, dst)
+(src_drep, dst_drep, src, dst, dst_len)
 ndr_format_t src_drep;
 ndr_format_t dst_drep;
 char_p_t src;
 char_p_t dst;
+size_t dst_len;
+
 #endif
 {
     if (src_drep.char_rep == dst_drep.char_rep)
-        strcpy((char *) dst, (char *) src);
+        strlcpy((char *) dst, (char *) src, dst_len);
     else if (dst_drep.char_rep == ndr_c_char_ascii)
         while ((*dst++ = ndr_g_def_ebcdic_to_ascii[*src++]));
     else
         while ((*dst++ = ndr_g_def_ascii_to_ebcdic[*src++]));
 }
-
 
 /*
  *  r p c _ s s _ s t r s i z

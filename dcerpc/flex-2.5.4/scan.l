@@ -49,7 +49,7 @@
 	return CHAR;
 
 #define RETURNNAME \
-	strcpy( nmstr, yytext ); \
+	strlcpy( nmstr, yytext, sizeof (nmstr) ); \
 	return NAME;
 
 #define PUT_BACK_STRING(str, start) \
@@ -136,7 +136,7 @@ LEXOPT		[aceknopr]
 	^"%"[^sxaceknopr{}].*	synerr( _( "unrecognized '%' directive" ) );
 
 	^{NAME}		{
-			strcpy( nmstr, yytext );
+			strlcpy( nmstr, yytext, sizeof (nmstr) );
 			didadef = false;
 			BEGIN(PICKUPDEF);
 			}
@@ -184,7 +184,7 @@ LEXOPT		[aceknopr]
 	{WS}		/* separates name and definition */
 
 	{NOT_WS}.*	{
-			strcpy( (char *) nmdef, yytext );
+			strlcpy( (char *) nmdef, yytext, sizeof (nmdef) );
 
 			/* Skip trailing whitespace. */
 			for ( i = strlen( (char *) nmdef ) - 1;
@@ -277,7 +277,7 @@ LEXOPT		[aceknopr]
 	yyclass		return OPT_YYCLASS;
 
 	\"[^"\n]*\"	{
-			strcpy( nmstr, yytext + 1 );
+			strlcpy( nmstr, yytext + 1, sizeof (nmstr) );
 			nmstr[strlen( nmstr ) - 1] = '\0';
 			return NAME;
 			}
@@ -401,7 +401,7 @@ LEXOPT		[aceknopr]
 	"["({FIRST_CCL_CHAR}|{CCL_EXPR})({CCL_CHAR}|{CCL_EXPR})*	{
 			int cclval;
 
-			strcpy( nmstr, yytext );
+			strlcpy( nmstr, yytext, sizeof (nmstr) );
 
 			/* Check to see if we've already encountered this
 			 * ccl.
@@ -436,7 +436,7 @@ LEXOPT		[aceknopr]
 			register Char *nmdefptr;
 			Char *ndlookup();
 
-			strcpy( nmstr, yytext + 1 );
+			strlcpy( nmstr, yytext + 1, sizeof (nmstr) );
 			nmstr[yyleng - 2] = '\0';  /* chop trailing brace */
 
 			if ( (nmdefptr = ndlookup( nmstr )) == 0 )

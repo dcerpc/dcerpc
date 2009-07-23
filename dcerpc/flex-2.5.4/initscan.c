@@ -1292,7 +1292,7 @@ char *yytext;
 	return CHAR;
 
 #define RETURNNAME \
-	strcpy( nmstr, yytext ); \
+	strlcpy( nmstr, yytext, sizeof (nmstr) ); \
 	return NAME;
 
 #define PUT_BACK_STRING(str, start) \
@@ -1665,7 +1665,7 @@ case 15:
 YY_RULE_SETUP
 #line 138 "scan.l"
 {
-			strcpy( nmstr, yytext );
+			strlcpy( nmstr, yytext, sizeof (nmstr) );
 			didadef = false;
 			BEGIN(PICKUPDEF);
 			}
@@ -1766,7 +1766,7 @@ case 31:
 YY_RULE_SETUP
 #line 186 "scan.l"
 {
-			strcpy( (char *) nmdef, yytext );
+			strlcpy( (char *) nmdef, yytext, sizeof (nmdef) );
 
 			/* Skip trailing whitespace. */
 			for ( i = strlen( (char *) nmdef ) - 1;
@@ -2044,7 +2044,7 @@ case 80:
 YY_RULE_SETUP
 #line 279 "scan.l"
 {
-			strcpy( nmstr, yytext + 1 );
+			strlcpy( nmstr, yytext + 1, sizeof (nmstr) );
 			nmstr[strlen( nmstr ) - 1] = '\0';
 			return NAME;
 			}
@@ -2255,7 +2255,7 @@ YY_RULE_SETUP
 {
 			int cclval;
 
-			strcpy( nmstr, yytext );
+			strlcpy( nmstr, yytext, sizeof (nmstr) );
 
 			/* Check to see if we've already encountered this
 			 * ccl.
@@ -2293,7 +2293,7 @@ YY_RULE_SETUP
 			register Char *nmdefptr;
 			Char *ndlookup();
 
-			strcpy( nmstr, yytext + 1 );
+			strlcpy( nmstr, yytext + 1, sizeof (nmstr) );
 			nmstr[yyleng - 2] = '\0';  /* chop trailing brace */
 
 			if ( (nmdefptr = ndlookup( nmstr )) == 0 )

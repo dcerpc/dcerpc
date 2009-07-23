@@ -70,7 +70,7 @@ char *sysdep_save_temp
         char *new_name_ptr;
         sprintf(new_name,"IDL%02d.TMP", temp_count);
         new_name_ptr = temp_names[temp_count] = NEW_VEC (char, strlen(new_name) + 1);
-        strcpy(temp_names[temp_count++], new_name);
+        strlcpy(temp_names[temp_count++], new_name, strlen(new_name) + 1);
         unlink(new_name);
         if(rename(old_name, new_name))
         {
@@ -323,7 +323,7 @@ int output_line
         }
     }
 
-    strcpy(&new_format[new_len], pcp);  /* Copy rest of format string */
+    strlcpy(&new_format[new_len], pcp, sizeof (new_format) - new_len);  /* Copy rest of format string */
     buff_len += vsprintf (&buff[buff_len], new_format, args);
 
     j = 0;  /* Counts quote characters in logic below */

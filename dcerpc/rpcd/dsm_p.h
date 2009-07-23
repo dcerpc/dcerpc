@@ -119,6 +119,7 @@
 #define NEW(type)   (type *)malloc(sizeof(type))
 
 #define ustrcpy(a,b)    strcpy((char *)(a),(char *)(b))
+#define ustrlcpy(a,b,c)    strlcpy((char *)(a),(char *)(b),c)
 #define ustrcat(a,b)    strcat((char *)(a),(char *)(b))
 #define ustrlen(a)      strlen((char *)(a))
 #define ustrcmp(a,b)    strcmp((char *)(a),(char *)(b))

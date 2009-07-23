@@ -828,7 +828,7 @@ rpc_cn_assoc_p_t        assoc;
                             dce_error_string_t error_text;
                             int temp_status;
 
-                            dce_error_inq_text(auth_st, (unsigned char*) error_text, &temp_status);
+                            dce_error_inq_text(auth_st, (unsigned char*) error_text, sizeof(error_text), &temp_status);
                             /*
 			     * rpc_m_call_failed_s
 			     * "%s on server failed: %s"

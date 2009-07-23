@@ -98,7 +98,7 @@ status_message(
 
     va_list args;
 
-    dce_error_inq_text(status, (unsigned char *)&message,
+    dce_error_inq_text(status, (unsigned char *)&message, sizeof(message),
                        (int *)&error_status);
     if (error_status != rpc_s_ok)
     {

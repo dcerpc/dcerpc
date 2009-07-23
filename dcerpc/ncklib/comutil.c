@@ -648,7 +648,7 @@ unsigned_char_p_t       string;
         RPC_C_MEM_STRING,
         RPC_C_MEM_WAITOK);
 
-    strcpy ((char *) cstring, (char *) string);
+    strlcpy ((char *) cstring, (char *) string, strlen ((char *) string) + 1);
 
     return (cstring);
 }

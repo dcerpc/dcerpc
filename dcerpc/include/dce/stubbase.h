@@ -1654,7 +1654,8 @@ void ndr_cvt_string   _DCE_PROTOTYPE_ ((
         ndr_format_t ,
         ndr_format_t ,
         char_p_t ,
-        char_p_t 
+        char_p_t ,
+		size_t
 ));
 
 void ndr_cvt_short_float   _DCE_PROTOTYPE_ ((

@@ -612,8 +612,8 @@ int worry_about_NULs;
 		}
 
 	else
-		strcpy( char_map, useecs ?
-			"yy_ec[YY_SC_TO_UI(*yy_cp)]" : "YY_SC_TO_UI(*yy_cp)" );
+		strlcpy( char_map, useecs ?
+			"yy_ec[YY_SC_TO_UI(*yy_cp)]" : "YY_SC_TO_UI(*yy_cp)", sizeof (char_map));
 
 	if ( worry_about_NULs && nultrans )
 		{

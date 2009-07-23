@@ -1519,7 +1519,7 @@ static void DDBE_properties_byte
     char properties[DDBE_MAX_EXPR]; /* Symbolic expression for properties */
     STRTAB_str_t    prop_expr;
 
-    strcpy(properties, "0");
+    strlcpy(properties, "0", sizeof(properties));
 
     /* Set flags for any data rep dependencies */
     if (FE_TEST(type_p->fe_info->flags, FE_HAS_CHAR))

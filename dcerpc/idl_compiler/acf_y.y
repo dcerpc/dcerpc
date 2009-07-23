@@ -597,8 +597,8 @@ acf_include_name:
              * Log warning if include name contains a file extension.
              * Tack on the correct extension based on the -lang option.
              */
-            FILE_parse(parsed_include_file, (char *)NULL, (char *)NULL,
-                       include_type);
+            FILE_parse(parsed_include_file, (char *)NULL, 0, (char *)NULL, 0,
+                       include_type, sizeof (include_type));
             if (include_type[0] != '\0')
                 acf_warning(NIDL_INCLUDEXT);
 
@@ -1964,7 +1964,7 @@ static void dump_attributes
     else
     {
         printf(" attributes: ");
-        strcpy(attr_text, "[");
+        strlcpy(attr_text, "[", sizeof (attr_text));
 
         if (node_attr.bit.auto_handle)
             strcat(attr_text, "auto_handle, ");

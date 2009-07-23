@@ -196,7 +196,7 @@ unsigned32      st;
     static dce_error_string_t error_string;
     int inq_st;
 
-    dce_error_inq_text (st, error_string, &inq_st);
+    dce_error_inq_text (st, error_string, sizeof(error_string), &inq_st);
     return ((char *) error_string);
 }
 

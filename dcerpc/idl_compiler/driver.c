@@ -381,7 +381,7 @@ static int stub_compile
 
     compile_opt[0] = '\0';
 
-    FILE_parse((char *)cmd_val[opt_file], filespec, (char *)NULL, (char *)NULL);
+    FILE_parse((char *)cmd_val[opt_file], filespec, sizeof (filespec), (char *)NULL, 0, (char *)NULL, 0);
     if (!FILE_is_cwd(filespec))
 #ifdef CC_OPT_OBJECT
         /*
@@ -592,7 +592,7 @@ boolean DRIVER_main
             /* Prune the header filespec for BE so only the leafname remains. */
             if (cmd_val[opt_header] != NULL)
             {
-                FILE_parse((char *)cmd_val[opt_header], NULL, filename, filetype);
+                FILE_parse((char *)cmd_val[opt_header], NULL, 0, filename, sizeof (filename), filetype, sizeof (filetype));
                 strcat(filename, filetype);
             }
             else

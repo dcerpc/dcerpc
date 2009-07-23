@@ -224,7 +224,7 @@ PRIVATE void show_st(
     dce_error_string_t estr;
     int             tmp_st;
 
-    dce_error_inq_text(*st, (unsigned char*) estr, &tmp_st);
+    dce_error_inq_text(*st, (unsigned char*) estr, sizeof(estr), &tmp_st);
     fprintf(stderr, "(rpcd) %s: (0x%lx) %s\n", str, (unsigned long) *st, estr);
     syslog(LOG_ERR, "%s: (0x%lx) %s\n", str, (unsigned long) *st, estr);
 }

@@ -500,7 +500,7 @@ static char *alloc_and_copy     /* Returns address of new string */
 
     new_str = NEW_VEC (char, strlen(orig_str) + 1);
 
-    strcpy(new_str, orig_str);
+    strlcpy(new_str, orig_str, strlen(orig_str) + 1);
 
     return new_str;
 }
@@ -566,11 +566,13 @@ boolean add_def_string
 static boolean get_src_filespec
 #ifdef PROTO
 (
-    char    *src_filespec       /* [out] Source filespec */
+    char    *src_filespec,       /* [out] Source filespec */
+	size_t	src_filespec_len
 )
 #else
-(src_filespec)
-    char    *src_filespec;      /* [out] Source filespec */
+(src_filespec, src_filespec_len)
+	char    *src_filespec;      /* [out] Source filespec */
+	size_t	src_filespec_len;
 #endif
 
 {
@@ -607,7 +609,7 @@ static boolean get_src_filespec
         }
         else
         {
-            strcpy(src_filespec, flags_other(0));
+            strlcpy(src_filespec, flags_other(0), src_filespec_len);
             return TRUE;
         }
     }
@@ -643,7 +645,7 @@ static boolean get_src_filespec
         return FALSE;
     }
 
-    strcpy(src_filespec, last_string);
+    strlcpy(src_filespec, last_string, src_filespec_len);
     last_string[0] = '\0';
     return TRUE;
 }
@@ -1057,7 +1059,7 @@ boolean CMD_parse_args          /* Returns TRUE on success */
      * Make sure we have a source filespec before we use it to construct
      * other names.
      */
-    if (!get_src_filespec(src_filespec))
+    if (!get_src_filespec(src_filespec, sizeof (src_filespec)))
         exit(pgm_error);
 
     if (src_filespec[0] == '\0')    /* -stdin */
@@ -1068,7 +1070,7 @@ boolean CMD_parse_args          /* Returns TRUE on success */
     }
     else                            /* file */
     {
-        if (!FILE_parse(src_filespec, (char *)NULL, src_filename, (char *)NULL))
+        if (!FILE_parse(src_filespec, (char *)NULL, 0, src_filename, sizeof (src_filename), (char *)NULL, 0))
         {
             /* Not a valid filespec so probably a bogus option. */
             error(NIDL_UNKFLAG, src_filespec);
@@ -1160,13 +1162,13 @@ boolean CMD_parse_args          /* Returns TRUE on success */
         char odir[PATH_MAX];
         char oname[PATH_MAX];
         char otype[PATH_MAX];
-        if (FILE_parse(out_dir, odir, oname, otype))
+        if (FILE_parse(out_dir, odir, sizeof (odir), oname, sizeof (oname), otype, sizeof (otype)))
             if (oname[0] != '\0' || otype[0] != '\0')
                 error(NIDL_FILENOTDIR, out_dir);
             else
             {
 		out_dir = NEW_VEC (char, strlen(odir) + 1);
-                strcpy(out_dir, odir);
+                strlcpy(out_dir, odir, strlen(odir) + 1);
             }
         else
             error(NIDL_FILENOTFND, out_dir);

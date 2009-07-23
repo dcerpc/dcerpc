@@ -140,7 +140,8 @@ void error_list
 
 void inq_name_for_errors
 (
-    char *name
+    char *name,
+	size_t name_len
 );
 
 void set_name_for_errors

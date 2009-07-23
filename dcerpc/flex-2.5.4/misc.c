@@ -70,7 +70,7 @@ char *new_text;
 			reallocate_character_array( action_array, action_size );
 		}
 
-	strcpy( &action_array[action_index], new_text );
+	strlcpy( &action_array[action_index], new_text, action_size );
 
 	action_index += len;
 	}

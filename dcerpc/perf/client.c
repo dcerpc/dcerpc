@@ -2503,7 +2503,7 @@ static void parse_auth_option()
         exit(1);
     }
 
-    strcpy(tmp, optarg);
+    strlcpy(tmp, optarg, strlen(optarg)+1));
 
     /*
      * We can't free tmp, so we will loose some memory after each fork.
@@ -2640,7 +2640,7 @@ fork_test_replay:
                     exit(1);
                 }
 
-                strcpy(tmp, optarg);
+                strlcpy(tmp, optarg, strlen(optarg)+1));
 
                 /*
                  * We can't free tmp, so we will loose some memory after each fork.

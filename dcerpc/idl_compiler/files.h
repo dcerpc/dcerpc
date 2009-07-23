@@ -77,7 +77,8 @@ extern boolean FILE_lookup(
     char const  *filespec,
     char const  * const *idir_list,
     struct stat *stat_buf,
-    char        *lookup_spec
+    char        *lookup_spec,
+	size_t		lookup_spec_len
 );
 
 extern boolean FILE_form_filespec(
@@ -98,8 +99,11 @@ extern char *FILE_def_filespec;
 extern boolean FILE_parse(
     char const *filespec,
     char       *dir,
+	size_t		dir_len,
     char       *name,
-    char       *type
+	size_t		name_len,
+    char       *type,
+	size_t		type_len
 );
 
 extern boolean FILE_has_dir_info(

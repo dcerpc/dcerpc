@@ -487,7 +487,7 @@ NAMETABLE_id_t NAMETABLE_add_id
     cp = (char *) ++np;
 
     /* Copy the string into the buffer. */
-    strcpy (cp, id);
+    strlcpy (cp, id, strlen (id) + 1);
 
     /* Initialize the nametable node. */
     This -> left = NULL;
@@ -921,7 +921,7 @@ STRTAB_str_t STRTAB_add_string
 #ifdef MSDOS
     int     string_handle;
 
-    strcpy (&STRTAB[STRTAB_index], string);
+    strlcpy (&STRTAB[STRTAB_index], string, STRTAB_SIZE - STRTAB_index);
     string_handle = STRTAB_index;
     STRTAB_index += strlen (string) + 1;
     return string_handle;
