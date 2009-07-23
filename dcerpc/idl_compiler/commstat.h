@@ -76,10 +76,10 @@ void CSPELL_return_status
     FILE *fid,
     BE_stat_info_t *p_comm_stat_info,
     BE_stat_info_t *p_fault_stat_info,
-    char *status_var_name,
-    char *result_param_name,
+    const char *status_var_name,
+    const char *result_param_name,
     int num_user_exceptions,
-    char *IDL_msp_name
+    const char *IDL_msp_name
 #endif
 );
 

@@ -142,10 +142,10 @@ void CSPELL_return_status
     FILE *fid,
     BE_stat_info_t *p_comm_stat_info,
     BE_stat_info_t *p_fault_stat_info,
-    char *status_var_name,
-    char *result_param_name,
+    const char *status_var_name,
+    const char *result_param_name,
     int num_user_exceptions,
-    char *IDL_msp_name     /* Lexical form of pointer to IDL_ms_t state block */
+    const char *IDL_msp_name     /* Lexical form of pointer to IDL_ms_t state block */
 )
 #else
 ( fid, p_comm_stat_info, p_fault_stat_info, status_var_name, result_param_name,

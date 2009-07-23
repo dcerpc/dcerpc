@@ -103,13 +103,13 @@ static void CSPELL_constant_def
 (
     FILE *fid,
     AST_constant_n_t *cp,
-    char *cast
+    const char *cast
 )
 #else
 (fid, cp, cast)
     FILE *fid;
     AST_constant_n_t *cp;
-    char *cast;
+    const char *cast;
 #endif
 {
     char const *s;
@@ -299,7 +299,7 @@ static void CSPELL_exports
                 free((void*)str);
                 break;
             case AST_constant_k:
-                CSPELL_constant_def (fid, ep->thing_p.exported_constant, (char *) "");
+                CSPELL_constant_def (fid, ep->thing_p.exported_constant, "");
                 break;
             case AST_operation_k:
 					 /* skip the op for now; we will pick it up in the epv */

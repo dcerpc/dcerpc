@@ -744,7 +744,7 @@ static void CSPELL_server_stub_routine
     fprintf(fid, ";\n");
 
     /* Does operation use I-char machinery? If so, set up needed state */
-    BE_spell_cs_state(fid, (char *) "IDL_ms.", BE_server_side, &cs_info);
+    BE_spell_cs_state(fid, "IDL_ms.", BE_server_side, &cs_info);
     if (cs_info.cs_machinery)
         fprintf(fid, "IDL_ms.IDL_h=%s;\n", handle_info.assoc_name);
 
@@ -803,7 +803,7 @@ static void CSPELL_server_stub_routine
                                 "&IDL_ms", BE_server_side, BE_unmarshalling_k );
 
     /* If there is I-char machinery,  call the [cs_tag_rtn] if there is one */
-    BE_spell_cs_tag_rtn_call(fid, (char *) "IDL_ms.", p_operation, BE_server_side,
+    BE_spell_cs_tag_rtn_call(fid, "IDL_ms.", p_operation, BE_server_side,
                              &handle_info, &cs_info, false);
 
     CSPELL_manager_call(fid, p_interface, p_operation,

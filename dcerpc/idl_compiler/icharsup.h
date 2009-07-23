@@ -64,7 +64,7 @@ void BE_spell_cs_state
 (
 #ifdef PROTO
     FILE *fid,                      /* [in] Handle for emitted C text */
-    char *state_access,             /* [in] "IDL_ms." or "IDL_msp->" */
+    const char *state_access,       /* [in] "IDL_ms." or "IDL_msp->" */
     BE_side_t side,                 /* [in] client or server */
     BE_cs_info_t *p_cs_info         /* [in] Description of I-char machinery */
 #endif
@@ -74,7 +74,7 @@ void BE_spell_cs_tag_rtn_call
 (
 #ifdef PROTO
     FILE *fid,                      /* [in] Handle for emitted C text */
-    char *state_access,             /* [in] "IDL_ms." or "IDL_msp->" */
+    const char *state_access,       /* [in] "IDL_ms." or "IDL_msp->" */
     AST_operation_n_t *p_operation, /* [in] Pointer to AST operation node */
     BE_side_t side,                 /* [in] client or server */
     BE_handle_info_t *p_handle_info,/* [in] How to spell binding handle name */

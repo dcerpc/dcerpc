@@ -308,9 +308,9 @@ static void CSPELL_client_stub_routine
     }
 
     /* Does operation use I-char machinery? If so, set up needed state */
-    BE_spell_cs_state(fid, (char *) "IDL_ms.", BE_client_side, &cs_info);
+    BE_spell_cs_state(fid, "IDL_ms.", BE_client_side, &cs_info);
     /*          And call the [cs_tag_rtn] if there is one */
-    BE_spell_cs_tag_rtn_call(fid, (char *) "IDL_ms.", p_operation, BE_client_side,
+    BE_spell_cs_tag_rtn_call(fid, "IDL_ms.", p_operation, BE_client_side,
                              &BE_handle_info, &cs_info, false);
 
 /* WEZ:setup the handle here ? */
@@ -423,11 +423,11 @@ static void CSPELL_client_stub_routine
 
     /* Give status information to client, or raise the appropriate exception */
     CSPELL_return_status( fid, &comm_stat_info, &fault_stat_info,
-        (char *) "IDL_ms.IDL_status",
+        "IDL_ms.IDL_status",
         ( (comm_stat_info.type == BE_stat_result_k)
             || (fault_stat_info.type == BE_stat_result_k) )
-                ? (char *) "IDL_function_result" : (char *)NULL,
-        num_declared_exceptions + num_extern_exceptions, (char *) "&IDL_ms" );
+                ? "IDL_function_result" : (char *)NULL,
+        num_declared_exceptions + num_extern_exceptions, "&IDL_ms" );
 
     fprintf(fid, "RPC_SS_THREADS_RESTORE_ASYNC(IDL_async_cancel_state);\n");
     if ((BE_handle_info.handle_type == BE_parm_user_handle_k)
@@ -541,7 +541,7 @@ void DDBE_spell_pickling_stub
     }
 
     /* Does operation use I-char machinery? If so, set up needed state */
-    BE_spell_cs_state(fid, (char *) "IDL_msp->", BE_client_side, &cs_info);
+    BE_spell_cs_state(fid, "IDL_msp->", BE_client_side, &cs_info);
     if (cs_info.cs_machinery)
         fprintf(fid, "IDL_msp->IDL_h=NULL;\n");
 
@@ -559,7 +559,7 @@ void DDBE_spell_pickling_stub
                 p_operation->op_number, action_type);
 
     /* If there is I-char machinery,  call the [cs_tag_rtn] if there is one */
-    BE_spell_cs_tag_rtn_call(fid, (char *) "IDL_msp->", p_operation, BE_client_side,
+    BE_spell_cs_tag_rtn_call(fid, "IDL_msp->", p_operation, BE_client_side,
                              &BE_handle_info, &cs_info, true);
 
         if (encode_decode)
@@ -588,11 +588,11 @@ void DDBE_spell_pickling_stub
 
     /* Give status information to client, or raise the appropriate exception */
     CSPELL_return_status( fid, &comm_stat_info, &fault_stat_info,
-        (char *) "IDL_msp->IDL_status",
+        "IDL_msp->IDL_status",
         ( (comm_stat_info.type == BE_stat_result_k)
             || (fault_stat_info.type == BE_stat_result_k) )
-                ? (char *) "IDL_function_result" : (char *)NULL,
-        0, (char *) "(IDL_msp_t)IDL_msp" );
+                ? "IDL_function_result" : (char *)NULL,
+        0, "(IDL_msp_t)IDL_msp" );
     fprintf(fid, "RPC_SS_THREADS_RESTORE_ASYNC(IDL_async_cancel_state);\n");
 
     fprintf(fid, "DCETHREAD_ENDTRY\n");
