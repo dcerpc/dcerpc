@@ -815,8 +815,8 @@ void BE_gen_c_header
     for (impp = ifp->imports; impp; impp=impp->next) {
         STRTAB_str_to_string (impp->file_name, &fn_str);
         FILE_form_filespec((char *)NULL, (char *)NULL,
-                                                        HEADER_SUFFIX,
-                             fn_str, include_var_name);
+							HEADER_SUFFIX,
+							fn_str, include_var_name, sizeof(include_var_name));
         if (impp->interface != NULL)
             fprintf (fid, "#ifndef %s_v%ld_%ld_included\n",
                     BE_get_name(impp->interface->name),

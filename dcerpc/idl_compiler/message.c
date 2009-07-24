@@ -156,7 +156,7 @@ void message_open
     ctrstr.dsc$a_pointer    = version_text;         /* Point at local buffer */
 
     strncpy(msg_prefix,image_name,PATH_MAX);
-    strcat(msg_prefix,": ");
+    strlcat(msg_prefix,": ", sizeof(msg_prefix));
 
 #ifdef DUMPERS
     status = SYS$GETMSG(MESSAGE_VERSION, &ctrstr.dsc$w_length, &ctrstr, 1, 0);
@@ -276,8 +276,8 @@ void vmessage_print
             strlcpy(format, msg_prefix, sizeof (format));
     }
 
-    strcat(format,catgets(cat_handle, CAT_SET, msgid, def_message(msgid)));
-    strcat(format,"\n");
+    strlcat(format,catgets(cat_handle, CAT_SET, msgid, def_message(msgid)), sizeof(format));
+    strlcat(format,"\n", sizeof(format));
 #else
     snprintf(format, sizeof(format), "%s%s\n", msg_prefix, def_message(msgid));
 #endif /* HAVE_NL_TYPES_H */

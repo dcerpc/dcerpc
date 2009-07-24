@@ -603,8 +603,8 @@ acf_include_name:
                 acf_warning(NIDL_INCLUDEXT);
 
             FILE_form_filespec(parsed_include_file, (char *)NULL,
-			       ".h",
-                               (char *)NULL, include_file);
+							   ".h",
+                               (char *)NULL, include_file, sizeof(include_file));
 
             /* Create an include node. */
             include_file_id = STRTAB_add_string(include_file);
@@ -1967,28 +1967,28 @@ static void dump_attributes
         strlcpy(attr_text, "[", sizeof (attr_text));
 
         if (node_attr.bit.auto_handle)
-            strcat(attr_text, "auto_handle, ");
+            strlcat(attr_text, "auto_handle, ", sizeof(attr_text));
         if (node_attr.bit.code)
-            strcat(attr_text, "code, ");
+            strlcat(attr_text, "code, ", sizeof(attr_text));
         if (node_attr.bit.nocode)
-            strcat(attr_text, "nocode, ");
+            strlcat(attr_text, "nocode, ", sizeof(attr_text));
         if (node_attr.bit.comm_status)
-            strcat(attr_text, "comm_status, ");
+            strlcat(attr_text, "comm_status, ", sizeof(attr_text));
         if (node_attr.bit.decode)
-            strcat(attr_text, "decode, ");
+            strlcat(attr_text, "decode, ", sizeof(attr_text));
         if (node_attr.bit.enable_allocate)
-            strcat(attr_text, "enable_allocate, ");
+            strlcat(attr_text, "enable_allocate, ", sizeof(attr_text));
         if (node_attr.bit.encode)
-            strcat(attr_text, "encode, ");
+            strlcat(attr_text, "encode, ", sizeof(attr_text));
         if (node_attr.bit.explicit_handle)
-            strcat(attr_text, "explicit_handle, ");
+            strlcat(attr_text, "explicit_handle, ", sizeof(attr_text));
         if (node_attr.bit.nocancel)
-            strcat(attr_text, "nocancel, ");
+            strlcat(attr_text, "nocancel, ", sizeof(attr_text));
         if (node_attr.bit.extern_exceps && ASTP_parsing_main_idl)
         {
             AST_exception_n_t   *excep_p;
             char const               *name;
-            strcat(attr_text, "extern_exceptions(");
+            strlcat(attr_text, "extern_exceptions(", sizeof(attr_text));
             for (excep_p = the_interface->exceptions;
                  excep_p != NULL;
                  excep_p = excep_p->next)
@@ -1996,52 +1996,52 @@ static void dump_attributes
                 if (AST_EXTERN_SET(excep_p))
                 {
                     NAMETABLE_id_to_string(excep_p->name, &name);
-                    strcat(attr_text, name);
-                    strcat(attr_text, ",");
+                    strlcat(attr_text, name, sizeof(attr_text));
+                    strlcat(attr_text, ",", sizeof(attr_text));
                 }
             }
             attr_text[strlen(attr_text)-1] = '\0';  /* overwrite trailing ',' */
-            strcat(attr_text, "), ");
+            strlcat(attr_text, "), ", sizeof(attr_text));
         }
         if (node_attr.bit.fault_status)
-            strcat(attr_text, "fault_status, ");
+            strlcat(attr_text, "fault_status, ", sizeof(attr_text));
         if (node_attr.bit.heap)
-            strcat(attr_text, "heap, ");
+            strlcat(attr_text, "heap, ", sizeof(attr_text));
         if (node_attr.bit.implicit_handle)
-            strcat(attr_text, "implicit_handle, ");
+            strlcat(attr_text, "implicit_handle, ", sizeof(attr_text));
         if (node_attr.bit.in_line)
-            strcat(attr_text, "in_line, ");
+            strlcat(attr_text, "in_line, ", sizeof(attr_text));
         if (node_attr.bit.out_of_line)
-            strcat(attr_text, "out_of_line, ");
+            strlcat(attr_text, "out_of_line, ", sizeof(attr_text));
         if (node_attr.bit.cs_stag)
-            strcat(attr_text, "cs_stag, ");
+            strlcat(attr_text, "cs_stag, ", sizeof(attr_text));
         if (node_attr.bit.cs_drtag)
-            strcat(attr_text, "cs_drtag, ");
+            strlcat(attr_text, "cs_drtag, ", sizeof(attr_text));
         if (node_attr.bit.cs_rtag)
-            strcat(attr_text, "cs_rtag, ");
+            strlcat(attr_text, "cs_rtag, ", sizeof(attr_text));
         if (node_attr.bit.represent_as)
         {
-            strcat(attr_text, "represent_as(");
-            strcat(attr_text, repr_type_name);
-            strcat(attr_text, "), ");
+            strlcat(attr_text, "represent_as(", sizeof(attr_text));
+            strlcat(attr_text, repr_type_name, sizeof(attr_text));
+            strlcat(attr_text, "), ", sizeof(attr_text));
         }
         if (node_attr.bit.cs_char)
         {
-            strcat(attr_text, "cs_char(");
-            strcat(attr_text, cs_char_type_name);
-            strcat(attr_text, "), ");
+            strlcat(attr_text, "cs_char(", sizeof(attr_text));
+            strlcat(attr_text, cs_char_type_name, sizeof(attr_text));
+            strlcat(attr_text, "), ", sizeof(attr_text));
         }
         if (node_attr.bit.cs_tag_rtn)
         {
-            strcat(attr_text, "cs_tag_rtn(");
-            strcat(attr_text, cs_tag_rtn_name);
-            strcat(attr_text, "), ");
+            strlcat(attr_text, "cs_tag_rtn(", sizeof(attr_text));
+            strlcat(attr_text, cs_tag_rtn_name, sizeof(attr_text));
+            strlcat(attr_text, "), ", sizeof(attr_text));
         }
         if (node_attr.bit.binding_callout)
         {
-            strcat(attr_text, "binding_callout(");
-            strcat(attr_text, binding_callout_name);
-            strcat(attr_text, "), ");
+            strlcat(attr_text, "binding_callout(", sizeof(attr_text));
+            strlcat(attr_text, binding_callout_name, sizeof(attr_text));
+            strlcat(attr_text, "), ", sizeof(attr_text));
         }
 
         /* Overwrite trailing ", " with "]" */

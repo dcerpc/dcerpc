@@ -164,7 +164,7 @@ boolean FILE_lookup             /* Returns TRUE on success */
         if (cwd != NULL)
             for (cp = cwd; *cp != '\0'; cp++) *cp = tolower(*cp);
         if (!FILE_form_filespec(filespec, cwd, (char *)NULL, (char *)NULL,
-                                lookup_spec))
+                                lookup_spec, lookup_spec_len))
             strlcpy(lookup_spec, filespec, lookup_spec_len);
         if (cwd != NULL) free(cwd);
 #endif
@@ -183,7 +183,7 @@ boolean FILE_lookup             /* Returns TRUE on success */
     for (i = 0; idir_list[i]; i++)
     {
         if (FILE_form_filespec(filespec, idir_list[i], (char *)NULL,
-                               (char *)NULL, lookup_spec)
+                               (char *)NULL, lookup_spec, lookup_spec_len)
             &&  stat(lookup_spec, stat_buf) != -1)
             return TRUE;
     }
@@ -230,7 +230,8 @@ boolean FILE_form_filespec      /* Returns TRUE on success */
     char const  *rel_filespec,  /* [in] Related filespec; fields are used to */
                                 /*      fill in missing components after */
                                 /*      applying in_filespec, dir, type */
-    char        *out_filespec   /*[out] Full filespec formed */
+    char        *out_filespec,   /*[out] Full filespec formed */
+	size_t		out_filespec_len /* [in] len of out_filespec */
 )
 {
     char const *dir = NULL;        /* Directory specified */
@@ -319,8 +320,8 @@ boolean FILE_form_filespec      /* Returns TRUE on success */
             ** Concatenate U*ix dir spec with input filespec.
             */
             strlcpy(tmp_filespec, dir, sizeof (tmp_filespec));
-            strcat(tmp_filespec, "/");
-            strcat(tmp_filespec, in_filespec);
+            strlcat(tmp_filespec, "/", sizeof(tmp_filespec));
+            strlcat(tmp_filespec, in_filespec, sizeof(tmp_filespec));
             if (!FILE_parse(tmp_filespec, in_dir, sizeof(in_dir), in_name, sizeof(in_name), in_type, sizeof(in_type)))
                 return FALSE;
         }
@@ -399,9 +400,9 @@ boolean FILE_form_filespec      /* Returns TRUE on success */
 
     if (res_dir[0] != '\0')
     {
-        strcat(out_filespec, res_dir);
+        strlcat(out_filespec, res_dir, out_filespec_len);
 #ifndef VMS
-        strcat(out_filespec, BRANCHSTRING);
+        strlcat(out_filespec, BRANCHSTRING, out_filespec_len);
 #else
         {
         /* If the directory spec is a logical name, append a colon. */
@@ -412,16 +413,16 @@ boolean FILE_form_filespec      /* Returns TRUE on success */
         for (cp = upcase_dir; *cp; cp++)
             if (isalpha(*cp))
                 *cp = toupper(*cp);
-        if (getenv(upcase_dir) != NULL) strcat(out_filespec, ":");
+        if (getenv(upcase_dir) != NULL) strlcat(out_filespec, ":", out_filespec_len);
         }
 #endif
     }
 
     if (res_name[0] != '\0')
-        strcat(out_filespec, res_name);
+        strlcat(out_filespec, res_name, out_filespec_len);
 
     if (res_type[0] != '\0')
-        strcat(out_filespec, res_type); /* The '.' is part of the filetype */
+        strlcat(out_filespec, res_type, out_filespec_len); /* The '.' is part of the filetype */
 
     return TRUE;
 
@@ -926,15 +927,17 @@ int FILE_execute_cmd
 {
     char    *cmd;       /* Command derived from inputs */
     int     status;
+	size_t	cmd_len = 0;
 
     /* Alloc space and create command string */
-    cmd = NEW_VEC (char, strlen(cmd_string) + strlen(p1) + strlen(p2) + 3);
+	cmd_len = strlen(cmd_string) + strlen(p1) + strlen(p2) + 3;
+    cmd = NEW_VEC (char, cmd_len);
     cmd[0] = '\0';
-    strcat(cmd,cmd_string);
-    strcat(cmd," ");
-    strcat(cmd,p1);
-    strcat(cmd," ");
-    strcat(cmd,p2);
+    strlcat(cmd, cmd_string, cmd_len);
+    strlcat(cmd, " ", cmd_len);
+    strlcat(cmd, p1, cmd_len);
+    strlcat(cmd, " ", cmd_len);
+    strlcat(cmd, p2, cmd_len);
 
     /* Output a message, if msg_id specified is non-zero */
     if (msg_id != 0)

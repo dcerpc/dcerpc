@@ -703,13 +703,13 @@ static void DDBE_scalar_vec_entry
     if (type_p->name != NAMETABLE_NIL_ID)
     {
         NAMETABLE_id_to_string(type_p->name, &type_name);
-        strcat(comment_buf, type_name);
+        strlcat(comment_buf, type_name, sizeof(comment_buf));
         if (inst_expr != NULL)
-            strcat(comment_buf, " ");
+            strlcat(comment_buf, " ", sizeof(comment_buf));
     }
 
     if (inst_expr != NULL)
-        strcat(comment_buf, inst_expr);
+        strlcat(comment_buf, inst_expr, sizeof(comment_buf));
     else
         inst_expr = "byte or char data"; /* set generic expr for msg below */
 
@@ -1523,21 +1523,21 @@ static void DDBE_properties_byte
 
     /* Set flags for any data rep dependencies */
     if (FE_TEST(type_p->fe_info->flags, FE_HAS_CHAR))
-        strcat(properties, "|IDL_PROP_DEP_CHAR");
+        strlcat(properties, "|IDL_PROP_DEP_CHAR", sizeof(properties));
     if (FE_TEST(type_p->fe_info->flags, FE_HAS_FLOAT))
-        strcat(properties, "|IDL_PROP_DEP_FLOAT");
+        strlcat(properties, "|IDL_PROP_DEP_FLOAT", sizeof(properties));
     if (FE_TEST(type_p->fe_info->flags, FE_HAS_INT))
-        strcat(properties, "|IDL_PROP_DEP_INT");
+        strlcat(properties, "|IDL_PROP_DEP_INT", sizeof(properties));
 
     /* Set flag if type is possibly NDR aligned */
     if (FE_TEST(type_p->fe_info->flags, FE_MAYBE_WIRE_ALIGNED))
-        strcat(properties, "|IDL_PROP_MAYBE_WIRE_ALIGNED");
+        strlcat(properties, "|IDL_PROP_MAYBE_WIRE_ALIGNED", sizeof(properties));
 
     /* Set flag if transmissible type is a pointer or contains pointers */
     if (type_p->xmit_as_type != NULL)
         type_p = type_p->xmit_as_type;
     if (FE_TEST(type_p->fe_info->flags, FE_HAS_PTR))
-        strcat(properties, "|IDL_PROP_HAS_PTRS");
+        strlcat(properties, "|IDL_PROP_HAS_PTRS", sizeof(properties));
 
     prop_expr = STRTAB_add_string(properties);
     DDBE_expr_vec_entry(p_vec_p, DDBE_vec_expr_byte_k, prop_expr, "properties");

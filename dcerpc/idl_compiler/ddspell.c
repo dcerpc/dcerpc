@@ -331,8 +331,8 @@ static void DDBE_last_field
             *p_field_p = field_p;
             NAMETABLE_id_to_string(field_p->name, &field_name);
             if (nested)
-                strcat(expr, ".");
-            strcat(expr, field_name);
+                strlcat(expr, ".", sizeof(expr));
+            strlcat(expr, field_name, sizeof(expr));
 
             if (field_p->type->kind == AST_structure_k)
             {

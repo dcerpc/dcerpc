@@ -1080,7 +1080,7 @@ boolean CMD_parse_args          /* Returns TRUE on success */
         else
             /* Default file type to .idl on VMS */
             FILE_form_filespec(src_filespec, (char *)NULL, ".idl", (char *)NULL,
-                               src_filespec);
+                               src_filespec, sizeof(src_filespec));
 #endif
         src_file_str = STRTAB_add_string(src_filespec);
     }
@@ -1182,7 +1182,7 @@ boolean CMD_parse_args          /* Returns TRUE on success */
     {
         sprintf(filespec, "%s%s", src_filename, cstub_suffix);
         if (!FILE_form_filespec(cstub_file, out_dir, (char *)NULL, filespec,
-                                l_cstub_file))
+                                l_cstub_file, sizeof(l_cstub_file)))
         {
             message_print(NIDL_INVFILESPEC, cstub_file);
             return FALSE;
@@ -1197,7 +1197,7 @@ boolean CMD_parse_args          /* Returns TRUE on success */
     {
         sprintf(filespec, "%s%s", src_filename, sstub_suffix);
         if (!FILE_form_filespec(sstub_file, out_dir, (char *)NULL, filespec,
-                                l_sstub_file))
+                                l_sstub_file, sizeof(l_sstub_file)))
         {
             message_print(NIDL_INVFILESPEC, sstub_file);
             return FALSE;
@@ -1210,7 +1210,7 @@ boolean CMD_parse_args          /* Returns TRUE on success */
      */
     sprintf(filespec, "%s%s", src_filename, header_suffix);     /* =tbl */
     if (!FILE_form_filespec(header_file, out_dir, (char *)NULL, /* =tbl */
-                            filespec, l_header_file))           /* =tbl */
+                            filespec, l_header_file, sizeof(l_header_file)))           /* =tbl */
     {
         message_print(NIDL_INVFILESPEC, header_file);
         return FALSE;
@@ -1224,7 +1224,7 @@ boolean CMD_parse_args          /* Returns TRUE on success */
     {
         sprintf(filespec, "%s%s", src_filename, caux_suffix);
         if (!FILE_form_filespec(caux_file, out_dir, (char *)NULL, filespec,
-                                l_caux_file))
+                                l_caux_file, sizeof(l_caux_file)))
         {
             message_print(NIDL_INVFILESPEC, caux_file);
             return FALSE;
@@ -1239,7 +1239,7 @@ boolean CMD_parse_args          /* Returns TRUE on success */
     {
         sprintf(filespec, "%s%s", src_filename, saux_suffix);
         if (!FILE_form_filespec(saux_file, out_dir, (char *)NULL, filespec,
-                                l_saux_file))
+                                l_saux_file, sizeof(l_saux_file)))
         {
             message_print(NIDL_INVFILESPEC, saux_file);
             return FALSE;

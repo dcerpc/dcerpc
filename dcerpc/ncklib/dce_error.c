@@ -295,11 +295,11 @@ int                     *status
     }
 
     dce_get_msg (status_to_convert, (char *)error_text, error_text_len, fname, cname, status);
-    strcat ((char*) error_text, " (");
-    strcat ((char*) error_text, fname);
-    strcat ((char*) error_text, " / ");
-    strcat ((char*) error_text, cname);
-    strcat ((char*) error_text, ")");
+    strlcat ((char*) error_text, " (", error_text_len);
+    strlcat ((char*) error_text, fname, error_text_len);
+    strlcat ((char*) error_text, " / ", error_text_len);
+    strlcat ((char*) error_text, cname, error_text_len);
+    strlcat ((char*) error_text, ")", error_text_len);
 }
 
 int dce_fprintf(FILE *f, unsigned long index, ...)

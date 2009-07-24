@@ -86,7 +86,8 @@ extern boolean FILE_form_filespec(
     char const *dir,
     char const *type,
     char const *rel_filespec,
-    char       *out_filespec
+    char       *out_filespec,
+	size_t     out_filespec_len
 );
 
 #ifdef VMS

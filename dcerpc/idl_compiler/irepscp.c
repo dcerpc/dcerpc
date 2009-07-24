@@ -575,10 +575,10 @@ STRTAB_str_t IR_field_expr              /* Returns field expression */
     {
         inst_p = ctx_p->scope_a[level].inst_p;
         NAMETABLE_id_to_string(inst_p->name, &inst_name);
-        strcat(expr, inst_name);
-        strcat(expr, ".");
+        strlcat(expr, inst_name, sizeof(expr));
+        strlcat(expr, ".", sizeof(expr));
     }
 
-    strcat(expr, field_name);
+    strlcat(expr, field_name, sizeof(expr));
     return STRTAB_add_string(expr);
 }

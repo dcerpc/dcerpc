@@ -394,7 +394,7 @@ static int stub_compile
         if (strcmp((char *)cmd_val[opt_cc_cmd], CC_DEF_CMD) == 0)
         {
             FILE_form_filespec((char *)NULL, (char *)NULL, OBJ_FILETYPE,
-                               (char *)cmd_val[opt_file], filespec);
+                               (char *)cmd_val[opt_file], filespec, sizeof(filespec));
 
             sprintf(compile_opt, "%s%s", CC_OPT_OBJECT, filespec);
         }
@@ -593,7 +593,7 @@ boolean DRIVER_main
             if (cmd_val[opt_header] != NULL)
             {
                 FILE_parse((char *)cmd_val[opt_header], NULL, 0, filename, sizeof (filename), filetype, sizeof (filetype));
-                strcat(filename, filetype);
+                strlcat(filename, filetype, sizeof(filename));
             }
             else
                 filename[0] = '\0';
@@ -645,7 +645,7 @@ boolean DRIVER_main
         if (*idir_list || cmd_opt[opt_out])
         {
             paren_flag = TRUE;
-            strcat(idir_opt, " /INCLUDE_DIRECTORY=(");
+            strlcat(idir_opt, " /INCLUDE_DIRECTORY=(", sizeof(idir_opt));
         }
         else
             paren_flag = FALSE;
@@ -655,30 +655,30 @@ boolean DRIVER_main
         if (cmd_opt[opt_out])
         {
 #ifdef UNIX
-            strcat(idir_opt, " -I");
+            strlcat(idir_opt, " -I", sizeof(idir_opt));
 #endif
-            strcat(idir_opt, (char *)cmd_val[opt_out]);
+            strlcat(idir_opt, (char *)cmd_val[opt_out], sizeof(idir_opt));
 #ifdef VMS
-            strcat(idir_opt, ",");
+            strlcat(idir_opt, ",", sizeof(idir_opt));
 #endif
         }
 
         while (*idir_list)
         {
 #ifdef UNIX
-            strcat(idir_opt, " -I");
+            strlcat(idir_opt, " -I", sizeof(idir_opt));
 #endif
             /*
              * If this include dir is the system IDL dir, then replace it
              * with the system H dir, which might be different.
              */
             if (strcmp(*idir_list, DEFAULT_IDIR) == 0)
-                strcat(idir_opt, DEFAULT_H_IDIR);
+                strlcat(idir_opt, DEFAULT_H_IDIR, sizeof(idir_opt));
             else
-                strcat(idir_opt, *idir_list);
+                strlcat(idir_opt, *idir_list, sizeof(idir_opt));
             idir_list++;
 #ifdef VMS
-            strcat(idir_opt, ",");
+            strlcat(idir_opt, ",", sizeof(idir_opt));
 #endif
         }
 

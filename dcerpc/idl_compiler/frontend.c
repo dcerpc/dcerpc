@@ -179,22 +179,22 @@ idir_list, cpp_output)
 
     /* Put together beginning of command. */
 
-    strlcpy(cmd, cpp_cmd, sizeof (cmd));
-    strcat(cmd, " ");
+    strlcpy(cmd, cpp_cmd, sizeof(cmd));
+    strlcat(cmd, " ", sizeof(cmd));
 #ifdef VMS
-    strcat(cmd, "/PREPROCESS=");
-    strcat(cmd, dst_file_name);
-    strcat(cmd, " ");
+    strlcat(cmd, "/PREPROCESS=", sizeof(cmd));
+    strlcat(cmd, dst_file_name, sizeof(cmd));
+    strlcat(cmd, " ", sizeof(cmd));
 #endif
-    strcat(cmd, cpp_opt);
-    strcat(cmd, " ");
+    strlcat(cmd, cpp_opt, sizeof(cmd));
+    strlcat(cmd, " ", sizeof(cmd));
 #ifndef VMS
-    strcat(cmd, file_name);
+    strlcat(cmd, file_name, sizeof(cmd));
 #else
     /* On VMS, hack so source filespec in U*ix format still works. */
     FILE_parse(file_name, dir, sizeof(dir), name, sizeof(name), type, sizeof(type));
-    FILE_form_filespec(name, dir, type, (char *)NULL, expanded_file_name);
-    strcat(cmd, expanded_file_name);
+    FILE_form_filespec(name, dir, type, (char *)NULL, expanded_file_name, sizeof(expanded_file_name));
+    strlcat(cmd, expanded_file_name, sizeof(cmd));
 #endif
 
     /* Append the -D strings. */
@@ -203,7 +203,7 @@ idir_list, cpp_output)
     if (*def_strings)
     {
         paren_flag = TRUE;
-        strcat(cmd, " /DEFINE=(");
+        strlcat(cmd, " /DEFINE=(", sizeof(cmd));
     }
     else
         paren_flag = FALSE;
@@ -212,11 +212,11 @@ idir_list, cpp_output)
     while (*def_strings)
     {
 #ifndef VMS
-        strcat(cmd, " -D");
+        strlcat(cmd, " -D", sizeof(cmd));
 #endif
-        strcat(cmd, *def_strings++);
+        strlcat(cmd, *def_strings++, sizeof(cmd));
 #ifdef VMS
-        strcat(cmd, ",");
+        strlcat(cmd, ",", sizeof(cmd));
 #endif
     }
 
@@ -232,7 +232,7 @@ idir_list, cpp_output)
     if (*undef_strings)
     {
         paren_flag = TRUE;
-        strcat(cmd, " /UNDEFINE=(");
+        strlcat(cmd, " /UNDEFINE=(", sizeof(cmd));
     }
     else
         paren_flag = FALSE;
@@ -241,11 +241,11 @@ idir_list, cpp_output)
     while (*undef_strings)
     {
 #ifndef VMS
-        strcat(cmd, " -U");
+        strlcat(cmd, " -U", sizeof(cmd));
 #endif
-        strcat(cmd, *undef_strings++);
+        strlcat(cmd, *undef_strings++, sizeof(cmd));
 #ifdef VMS
-        strcat(cmd, ",");
+        strlcat(cmd, ",", sizeof(cmd));
 #endif
     }
 
@@ -263,7 +263,7 @@ idir_list, cpp_output)
         if (*idir_list)
         {
             paren_flag = TRUE;
-            strcat(cmd, " /INCLUDE_DIRECTORY=(");
+            strlcat(cmd, " /INCLUDE_DIRECTORY=(", sizeof(cmd));
         }
         else
             paren_flag = FALSE;
@@ -272,11 +272,11 @@ idir_list, cpp_output)
         while (*idir_list)
         {
 #ifndef VMS
-            strcat(cmd, " -I");
+            strlcat(cmd, " -I", sizeof(cmd));
 #endif
-            strcat(cmd, *idir_list++);
+            strlcat(cmd, *idir_list++, sizeof(cmd));
 #ifdef VMS
-            strcat(cmd, ",");
+            strlcat(cmd, ",", sizeof(cmd));
 #endif
         }
 
@@ -393,7 +393,7 @@ static boolean parse_acf        /* Returns true on success */
         ASSERTION(max_string_len > L_tmpnam);
         FILE_parse(acf_file, (char *)NULL, 0, temp_file_name, sizeof(temp_file_name), (char *)NULL, 0);
         FILE_form_filespec(temp_file_name, "sys$scratch:", ".acf$tmp",
-                           (char *)NULL, temp_path_name);
+                           (char *)NULL, temp_path_name, sizeof(temp_path_name));
 #else
         temp_path_name[0] = '\0';
 #endif
@@ -609,7 +609,7 @@ static boolean parse
         ASSERTION(max_string_len > L_tmpnam);
         FILE_parse(full_path_name, (char *)NULL, 0, temp_file_name, sizeof(temp_file_name), (char *)NULL, 0);
         FILE_form_filespec(temp_file_name, "sys$scratch:", ".idl$tmp",
-                           (char *)NULL, temp_path_name);
+                           (char *)NULL, temp_path_name, sizeof(temp_path_name));
 #else
         temp_path_name[0] = '\0';
 #endif
@@ -703,7 +703,7 @@ static boolean parse
         return false;
 
     if (!FILE_form_filespec(file_name, (char *)NULL, CONFIG_SUFFIX,
-                            (char *)NULL, acf_file))
+                            (char *)NULL, acf_file, sizeof(acf_file)))
         return false;
 #ifdef UNIX
     /*
@@ -712,7 +712,7 @@ static boolean parse
      * this special case, append the ACF suffix to the filespec.
      */
     if (strcmp(file_name, acf_file) == 0)
-        strcat(acf_file, CONFIG_SUFFIX);
+        strlcat(acf_file, CONFIG_SUFFIX, sizeof(acf_file));
 #endif
 
     /*
@@ -741,7 +741,7 @@ static boolean parse
          * isn't translated.
          */
         if (!FILE_form_filespec((char *)NULL, (char *)NULL, CONFIG_SUFFIX,
-                                full_path_name, acf_file))
+                                full_path_name, acf_file, sizeof(acf_file)))
             return false;
         acf_exists = FILE_lookup(acf_file, (char **)NULL, &stat_buf,
                                  full_acf_name, sizeof (full_acf_name));
@@ -1033,7 +1033,7 @@ static boolean parse_idl        /* Returns true on success */
          */
         STRTAB_str_to_string(idl_sid, &file_name);
         FILE_parse(file_name, NULL, 0, file_name_part, sizeof(file_name_part), file_type_part, sizeof(file_type_part));
-        strcat(file_name_part, file_type_part);
+        strlcat(file_name_part, file_type_part, sizeof(file_name_part));
 
         /*
          * Issue a warning on any system IDL files a user might
