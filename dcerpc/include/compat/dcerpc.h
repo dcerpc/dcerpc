@@ -96,6 +96,6 @@ typedef boolean idl_boolean;
 #define rpc_s_ok RPC_S_OK
 
 typedef TCHAR dce_error_string_t[1024];
-#define dce_error_inq_text(error_code, error_string, error_string_len, status) (*(status) = DceErrorInqText(error_code, error_string, error_string_len))
+#define dce_error_inq_text(error_code, error_string, status) (*(status) = DceErrorInqText(error_code, error_string))
 
 #endif

@@ -344,6 +344,7 @@ scandir(dirname, namelist, selectfn, dcomp)
         struct stat stb;
         unsigned long arraysz;
         DIR *dirp;
+        size_t len;
 
         if ((dirp = opendir(dirname)) == NULL)
                 return(-1);
@@ -366,13 +367,14 @@ scandir(dirname, namelist, selectfn, dcomp)
                 /*
                  * Make a minimum size copy of the data
                  */
-                p = (struct dirent *)malloc(sizeof(*p) + strlen(d->d_name));
+                len = strlen(d->d_name) + 1); /* +1 for terminating null */
+                p = (struct dirent *)malloc(sizeof(*p) + len);
                 if (p == NULL)
                         goto fail;
                 p->d_ino = d->d_ino;
                 p->d_off = d->d_off;
                 p->d_reclen = d->d_reclen;
-                strlcpy(p->d_name, d->d_name, strlen(d->d_name));
+                strlcpy(p->d_name, d->d_name, len);
                 /*
                  * Check to make sure the array has space left and
                  * realloc the maximum size.

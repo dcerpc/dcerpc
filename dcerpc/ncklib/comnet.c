@@ -1194,6 +1194,8 @@ unsigned32              *status;
     unsigned32              psid;       /* loop index into protseq id table */
     unsigned_char_p_t       ps;         /* pointer to protseq string        */
     rpc_protseq_vector_p_t  pvp;        /* local pointer to protseq vector  */
+    size_t                  len;
+    size_t                  len_left;
 
 
     CODING_ERROR (status);
@@ -1233,11 +1235,14 @@ unsigned32              *status;
      *   - copy each protseq string to the return vector string space
      *   - bump the string space pointer
      */
+    len_left = psv_str_size;
     for (psid = 0; psid < psv->count; psid++)
     {
         pvp->protseq[psid] = ps;
-        strlcpy ((char *) ps, (char *) psv->protseq[psid], psv_str_size);
-        ps += strlen ((char *) ps) + 1;
+        strlcpy ((char *) ps, (char *) psv->protseq[psid], len_left);
+        len = strlen ((char *) ps) + 1; /* includes the terminating NULL */
+        len_left -= len;
+        ps += len;
     }
 
     *status = rpc_s_ok;

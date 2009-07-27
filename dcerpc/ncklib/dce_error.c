@@ -54,6 +54,8 @@
 #warning Message catalog support disabled
 #endif /* HAVE_NL_TYPES_H */
 
+#include <dce/dce_error.h>
+
 #define FACILITY_CODE_MASK          0xF0000000
 #define FACILITY_CODE_SHIFT         28
 
@@ -273,8 +275,7 @@ static void dce_get_msg(
 }        
 void dce_error_inq_text (
 unsigned long           status_to_convert,
-unsigned char           *error_text,
-size_t					error_text_len,
+dce_error_string_t      error_text,
 int                     *status
 )
 {
@@ -290,16 +291,16 @@ int                     *status
         {
             *status = 0;
         }
-        strlcpy ((char *)error_text, "successful completion", error_text_len);
+        strlcpy ((char *)error_text, "successful completion", dce_c_error_string_len);
         return;
     }
 
-    dce_get_msg (status_to_convert, (char *)error_text, error_text_len, fname, cname, status);
-    strlcat ((char*) error_text, " (", error_text_len);
-    strlcat ((char*) error_text, fname, error_text_len);
-    strlcat ((char*) error_text, " / ", error_text_len);
-    strlcat ((char*) error_text, cname, error_text_len);
-    strlcat ((char*) error_text, ")", error_text_len);
+    dce_get_msg (status_to_convert, (char *)error_text, dce_c_error_string_len, fname, cname, status);
+    strlcat ((char*) error_text, " (", dce_c_error_string_len);
+    strlcat ((char*) error_text, fname, dce_c_error_string_len);
+    strlcat ((char*) error_text, " / ", dce_c_error_string_len);
+    strlcat ((char*) error_text, cname, dce_c_error_string_len);
+    strlcat ((char*) error_text, ")", dce_c_error_string_len);
 }
 
 int dce_fprintf(FILE *f, unsigned long index, ...)
@@ -339,7 +340,7 @@ main(int argc, char **argv)
     long code;
     int i;
     int _;
-    char message[1024];
+    dce_error_string_t message;
 
     if (argc <= 1) {
         printf("Usage:  stcode {0x<hex status code> | <decimal status code>}\n");
@@ -351,7 +352,7 @@ main(int argc, char **argv)
                 sscanf(argv[i], "%x", &code);
         else
                 sscanf(argv[i], "%d", &code);
-        dce_error_inq_text(code, message, sizeof(message), &_);
+        dce_error_inq_text(code, message, &_);
         printf("%d (decimal), %x (hex): %s\n", code, code, message);
     }
 }

@@ -1844,30 +1844,22 @@ unsigned32                  *status;
 
         if (pseq_id == protseq_id)
         {
+            size_t len;
             /*
              * Allocate enough space so we can place brackets around the
              * string before attempting to filter it.  We need 3 extra
              * bytes, for '[', ']', and '\0'.
              */
+            len = strlen ((char *) ifspec->endpoint_vector.endpoint_vector_elt[ctr].endpoint) + 3;
             RPC_MEM_ALLOC (
                 scratch_endpoint,
                 unsigned_char_p_t,
-                (strlen ((char *)
-                    ifspec->endpoint_vector.endpoint_vector_elt[ctr].endpoint)
-                    +3),
+                len,
                 RPC_C_MEM_STRING,
                 RPC_C_MEM_WAITOK);
 
-            scratch_endpoint[0] = '[';
-            strlcpy ((char *) &scratch_endpoint[1], (char *)
-					(ifspec->endpoint_vector.endpoint_vector_elt[ctr].endpoint),
-					(strlen ((char *) ifspec->endpoint_vector.endpoint_vector_elt[ctr].endpoint)));
-            scratch_endpoint[strlen((char *)
-                ifspec->endpoint_vector.endpoint_vector_elt[ctr].endpoint)+1] =
-                ']';
-            scratch_endpoint[strlen((char *)
-                ifspec->endpoint_vector.endpoint_vector_elt[ctr].endpoint)+2] =
-                '\0';
+            snprintf (scratch_endpoint, len, "[%s]",
+                      (char *) (ifspec->endpoint_vector.endpoint_vector_elt[ctr].endpoint));
 
             /*
              * Extract just the endpoint portion.

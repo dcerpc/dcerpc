@@ -1459,7 +1459,7 @@ pointer_t       sm;
                 dce_error_string_t error_text;
                 int temp_status;
 
-                dce_error_inq_text(status, (unsigned char*) error_text, sizeof(error_text), &temp_status);
+                dce_error_inq_text(status, error_text, &temp_status);
 
 		/*
 		 * "%s on server failed: %s"

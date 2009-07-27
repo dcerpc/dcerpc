@@ -38,6 +38,7 @@
 **
 */
 
+#include <config.h>
 #include <string.h>
 /* _POSIX_C_SOURCE is defined and _DARWIN_C_SOURCE is not defined for this file,
  so string.h wont have the strlcpy.  Just prototype it here */

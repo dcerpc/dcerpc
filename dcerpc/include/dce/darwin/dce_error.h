@@ -29,7 +29,7 @@ extern "C" {
 
 typedef char dce_error_string_t[dce_c_error_string_len];
 void dce_error_inq_text (unsigned long status_to_convert,
-		unsigned char* error_text, size_t error_text_len, int* status);
+		dce_error_string_t error_text, int* status);
 
 #ifdef __cplusplus
 }

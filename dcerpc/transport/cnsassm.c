@@ -2129,7 +2129,7 @@ pointer_t       sm;
                 (rpc_g_cn_large_frag_size - header_size + 2))
             {
                 strlcpy ((char *)(sec_addr->s),
-                        (char *)assoc->cn_ctlblk.cn_listening_endpoint, sizeof (sec_addr->s));
+                        (char *)assoc->cn_ctlblk.cn_listening_endpoint, sec_addr->length);
                 
                 /*
                  * To format the balance of the rpc_bind_ack PDU fields we're
@@ -3871,7 +3871,7 @@ unsigned32              *st;
         dce_error_string_t error_text;
         int temp_status;
 
-        dce_error_inq_text(*st, (unsigned char*) error_text, sizeof(error_text), &temp_status);
+        dce_error_inq_text(*st, error_text, &temp_status);
 
 	/*
          * "%s failed: %s"
@@ -4042,7 +4042,7 @@ unsigned32              *st;
         dce_error_string_t error_text;
         int temp_status;
 
-        dce_error_inq_text(sec->sec_status, (unsigned char*) error_text, sizeof(error_text), &temp_status);
+        dce_error_inq_text(sec->sec_status, error_text, &temp_status);
 
         /*
 	 * "%s on server failed: %s"
