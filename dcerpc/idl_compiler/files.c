@@ -488,14 +488,12 @@ boolean FILE_parse              /* Returns TRUE on success */
     char        *dir,           /*[i,o] Directory portion; NULL =>don't want */
 	size_t		dir_len,		/*[i] len of dir */
     char        *name,          /*[i,o] Filename portion;  NULL =>don't want */
-	size_t		name_len,		/*[i] len of name */
+	size_t		name_len ATTRIBUTE_UNUSED,		/*[i] len of name */
     char        *type,          /*[i,o] File type (ext);   NULL =>don't want */
 	size_t		type_len		/*[i] len of type */
 )
 #ifndef VMS     /* This code works partially on VMS; better version below */
 {
-#pragma unused (name_len)
-
 #if defined(HASDIRTREE)
     FILE_k_t    filekind;       /* File kind */
     char const  *pn;

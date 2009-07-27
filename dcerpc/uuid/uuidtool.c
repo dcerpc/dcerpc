@@ -39,11 +39,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <config.h>
 
-int main(int argc, char *argv[])
+int main(int argc ATTRIBUTE_UNUSED, char *argv[])
 {
-#pragma unused (argc)
-
 	idl_uuid_t uuid;
 	unsigned32 st;
 	unsigned_char_p_t uuid_string;
