@@ -1598,6 +1598,8 @@
 			);
 			name = dcerpc;
 			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 0;
 		};
 		08FB77AEFE84172EC02AAC07 /* Sources */ = {
 			isa = PBXGroup;
