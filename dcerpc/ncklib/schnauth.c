@@ -253,6 +253,16 @@ PRIVATE void rpc__schnauth_free_info
 
     (*info)->u.s.privs = 0;
 
+    if (schnauth_info->sec_ctx.machine_name)
+    {
+	rpc_string_free(&schnauth_info->sec_ctx.machine_name, &tst);
+    }
+
+    if (schnauth_info->sec_ctx.domain_name)
+    {
+	rpc_string_free(&schnauth_info->sec_ctx.domain_name, &tst);
+    }
+
     memset(schnauth_info, 0x69, sizeof(*schnauth_info));
     RPC_MEM_FREE(schnauth_info, RPC_C_MEM_UTIL);
     rpc_g_schnauth_free_count++;
