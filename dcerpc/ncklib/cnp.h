@@ -814,7 +814,7 @@ EXTERNAL rpc_list_desc_t        rpc_g_cn_assoc_lookaside_list;
  * R P C _ G _ C N _ C A L L _ R E P _ L O O K A S I D E _ L I S T
  */
 
-#define RPC_C_CN_CALL_LOOKASIDE_MAX             16
+#define RPC_C_CN_CALL_LOOKASIDE_MAX             0
 EXTERNAL rpc_list_desc_t        rpc_g_cn_call_lookaside_list;
 
 /*
@@ -829,7 +829,7 @@ EXTERNAL rpc_list_desc_t          rpc_g_cn_binding_lookaside_list;
  * R P C _ G _ C N _ [ L G , S M ] _ F R A G B U F _ L I S T
  */
 
-#define RPC_C_CN_FRAGBUF_LOOKASIDE_MAX          8
+#define RPC_C_CN_FRAGBUF_LOOKASIDE_MAX          0
 EXTERNAL rpc_list_desc_t          rpc_g_cn_lg_fbuf_lookaside_list;
 EXTERNAL rpc_list_desc_t          rpc_g_cn_sm_fbuf_lookaside_list;
 
