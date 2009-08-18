@@ -59,9 +59,9 @@ idl_void_p_t rpc_ss_allocate
     idl_size_t size
 )
 {
-    rpc_ss_thread_support_ptrs_t *p_support_ptrs;
-    rpc_void_p_t                 p_new_node;
-    error_status_t               status;
+    rpc_ss_thread_support_ptrs_t *p_support_ptrs = NULL;
+    rpc_void_p_t                 p_new_node = NULL;
+    error_status_t               status = rpc_s_ok;
 
 #ifdef PERFMON
     RPC_SS_ALLOCATE_N;
@@ -92,7 +92,7 @@ void rpc_ss_free
     idl_void_p_t node_to_free
 )
 {
-    rpc_ss_thread_support_ptrs_t *p_support_ptrs;
+    rpc_ss_thread_support_ptrs_t *p_support_ptrs = NULL;
 
 #ifdef PERFMON
     RPC_SS_FREE_N;
