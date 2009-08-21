@@ -16,6 +16,6 @@ libidl_la_SOURCES = alfrsupp.c allocate.c autohndl.c bindcall.c ctxeecli.c \
 	sscmaset.c sscmasrv.c
 
 noinst_HEADERS= ctxeertl.h cvt.h cvt_pvt.h lapollo.h lsysdep.h ndrmi.h \
-	ndrui.h upkcray.c upkibml.c upkibms.c upkieees.c upkieeet.c upkvaxf.c \
-	upkvaxg.c pkcray.c pkibml.c pkibms.c pkieees.c pkieeet.c pkvaxf.c \
-	pkvaxg.c round.c
+	ndrui.h upkcray.c.h upkibml.c.h upkibms.c.h upkieees.c.h upkieeet.c.h upkvaxf.c.h \
+	upkvaxg.c.h pkcray.c.h pkibml.c.h pkibms.c.h pkieees.c.h pkieeet.c.h pkvaxf.c.h \
+	pkvaxg.c.h round.c.h

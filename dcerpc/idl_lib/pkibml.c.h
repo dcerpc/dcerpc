@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
@@ -16,13 +16,13 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
 **
 **  NAME:
 **
-**      pkibml.c
+**      pkibml.c.h
 **
 **  FACILITY:
 **
@@ -116,7 +116,7 @@ if (r[U_R_FLAGS] & U_R_UNUSUAL) {
         else
                 round_bit_position = 56;
 
-#include "round.c"
+#include "round.c.h"
 
         if (r[U_R_EXP] < (U_R_BIAS - 255)) {
 

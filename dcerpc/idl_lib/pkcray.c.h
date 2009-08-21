@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
@@ -16,13 +16,13 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
 **
 **  NAME:
 **
-**      pkcray.c
+**      pkcray.c.h
 **
 **  FACILITY:
 **
@@ -110,7 +110,7 @@ if (r[U_R_FLAGS] & U_R_UNUSUAL) {
 
         round_bit_position = 48;
 
-#include "round.c"
+#include "round.c.h"
 
         if (r[U_R_EXP] < (U_R_BIAS - 8192)) {
 
@@ -181,11 +181,11 @@ if (r[U_R_FLAGS] & U_R_UNUSUAL) {
 		} else {
 
 	                r[0]  = ((r[1] << 24) | (r[1] >> 24));
-        	        r[0] |= ((r[1] << 8) & 0x00FF0000L);
-                	r[0] |= ((r[1] >> 8) & 0x0000FF00L);
+		        r[0] |= ((r[1] << 8) & 0x00FF0000L);
+			r[0] |= ((r[1] >> 8) & 0x0000FF00L);
 	                r[1]  = ((r[2] << 24) | (r[2] >> 24));
-        	        r[1] |= ((r[2] << 8) & 0x00FF0000L);
-                	r[1] |= ((r[2] >> 8) & 0x0000FF00L);
+		        r[1] |= ((r[2] << 8) & 0x00FF0000L);
+			r[1] |= ((r[2] >> 8) & 0x0000FF00L);
 
 		}
 #else

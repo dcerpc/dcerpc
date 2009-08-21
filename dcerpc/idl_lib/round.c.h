@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
@@ -16,7 +16,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 #if HAVE_CONFIG_H
 #include <config.h>
@@ -27,7 +27,7 @@
 **
 **  NAME:
 **
-**      round.c
+**      round.c.h
 **
 **  FACILITY:
 **
@@ -200,7 +200,7 @@
 
                /* Propagate any carry */
 
-       	 while ( ! r[i] )
+	 while ( ! r[i] )
            r[--i] += 1;
 
                /* If carry reaches exponent MSB gets zeroed and must be reset */

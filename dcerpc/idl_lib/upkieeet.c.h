@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
@@ -16,13 +16,13 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
 **
 **  NAME:
 **
-**      upkieeet.c
+**      upkieeet.c.h
 **
 **  FACILITY:
 **
@@ -105,7 +105,7 @@
 #endif
 
 	/* Initialize FLAGS and perhaps set NEGATIVE bit */
-	
+
 	r[U_R_FLAGS] = (r[1] >> 31);
 
 	/* Extract biased exponent */

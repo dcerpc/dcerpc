@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
@@ -16,13 +16,13 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
 **
 **  NAME:
 **
-**      pkvaxf.c
+**      pkvaxg.c.h
 **
 **  FACILITY:
 **
@@ -31,7 +31,7 @@
 **  ABSTRACT:
 **
 **      This module contains code to extract information from an
-**      UNPACKED_REAL structure and to create a VAX f_floating number
+**      UNPACKED_REAL structure and to create a VAX g_floating number
 **      with those bits.
 **
 **              This module is meant to be used as an include file.
@@ -49,16 +49,18 @@
 **  Functional Description:
 **
 **  This module contains code to extract information from an
-**  UNPACKED_REAL structure and to create a VAX f_floating number
+**  UNPACKED_REAL structure and to create a VAX g_floating number
 **  with those bits.
 **
 **  See the header files for a description of the UNPACKED_REAL
 **  structure.
 **
-**  A VAX f_floating number in (16 bit words) looks like:
+**  A VAX g_floating number in (16 bit words) looks like:
 **
-**      [0]: Sign bit, 8 exp bits (bias 128), 7 fraction bits
+**      [0]: Sign bit, 11 exp bits (bias 1024), 4 fraction bits
 **      [1]: 16 more fraction bits
+**      [2]: 16 more fraction bits
+**      [3]: 16 more fraction bits
 **
 **      0.5 <= fraction < 1.0, MSB implicit
 **
@@ -80,11 +82,11 @@ if (r[U_R_FLAGS] & U_R_UNUSUAL) {
 
         if (r[U_R_FLAGS] & U_R_ZERO)
 
-                memcpy(output_value, VAX_F_ZERO, 4);
+                memcpy(output_value, VAX_G_ZERO, 8);
 
         else if (r[U_R_FLAGS] & U_R_INFINITY) {
 
-                memcpy(output_value, VAX_F_INVALID, 4);
+                memcpy(output_value, VAX_G_INVALID, 8);
                 if (r[U_R_FLAGS] & U_R_NEGATIVE) {
                         DCETHREAD_RAISE(dcethread_aritherr_e);    /* Negative infinity */
                 } else {
@@ -93,50 +95,50 @@ if (r[U_R_FLAGS] & U_R_UNUSUAL) {
 
         } else if (r[U_R_FLAGS] & U_R_INVALID) {
 
-                memcpy(output_value, VAX_F_INVALID, 4);
+                memcpy(output_value, VAX_G_INVALID, 8);
                 DCETHREAD_RAISE(dcethread_aritherr_e);    /* Invalid value */
 
         }
 
 } else {
 
-        round_bit_position = 24;
+        round_bit_position = 53;
 
-#include "round.c"
+#include "round.c.h"
 
-        if (r[U_R_EXP] < (U_R_BIAS - 127)) {
+        if (r[U_R_EXP] < (U_R_BIAS - 1023)) {
 
                 /* Underflow */
 
-                memcpy(output_value, VAX_F_ZERO, 4);
+                memcpy(output_value, VAX_G_ZERO, 8);
                 if (options & CVT_C_ERR_UNDERFLOW) {
                         DCETHREAD_RAISE(dcethread_fltund_e);  /* Underflow */
                 }
 
-        } else if (r[U_R_EXP] > (U_R_BIAS + 127)) {
+        } else if (r[U_R_EXP] > (U_R_BIAS + 1023)) {
 
                 /* Overflow */
 
                 if (options & CVT_C_TRUNCATE) {
 
                         if (r[U_R_FLAGS] & U_R_NEGATIVE)
-                                memcpy(output_value, VAX_F_NEG_HUGE, 4);
+                                memcpy(output_value, VAX_G_NEG_HUGE, 8);
                         else
-                                memcpy(output_value, VAX_F_POS_HUGE, 4);
+                                memcpy(output_value, VAX_G_POS_HUGE, 8);
 
                 } else if ((options & CVT_C_ROUND_TO_POS)
                                         && (r[U_R_FLAGS] & U_R_NEGATIVE)) {
 
-                                memcpy(output_value, VAX_F_NEG_HUGE, 4);
+                                memcpy(output_value, VAX_G_NEG_HUGE, 8);
 
                 } else if ((options & CVT_C_ROUND_TO_NEG)
                                         && !(r[U_R_FLAGS] & U_R_NEGATIVE)) {
 
-                                memcpy(output_value, VAX_F_POS_HUGE, 4);
+                                memcpy(output_value, VAX_G_POS_HUGE, 8);
 
                 } else {
 
-                        memcpy(output_value, VAX_F_INVALID, 4);
+                        memcpy(output_value, VAX_G_INVALID, 8);
 
                 }
 
@@ -146,26 +148,29 @@ if (r[U_R_FLAGS] & U_R_UNUSUAL) {
 
                 /* Adjust bias of exponent */
 
-                r[U_R_EXP] -= (U_R_BIAS - 128);
+                r[U_R_EXP] -= (U_R_BIAS - 1024);
 
                 /* Make room for exponent and sign bit */
 
-                r[1] >>= 8;
+                r[2] >>= 11;
+                r[2] |= (r[1] << 21);
+                r[1] >>= 11;
 
                 /* Clear implicit bit */
 
-                r[1] &= 0x007FFFFFL;
+                r[1] &= 0x000FFFFFL;
 
                 /* OR in exponent and sign bit */
 
-                r[1] |= (r[U_R_EXP] << 23);
+                r[1] |= (r[U_R_EXP] << 20);
                 r[1] |= (r[U_R_FLAGS] << 31);
 
                 /* Adjust for VAX 16 bit floating format */
 
                 r[1] = ((r[1] << 16) | (r[1] >> 16));
+                r[2] = ((r[2] << 16) | (r[2] >> 16));
 
-                memcpy(output_value, &r[1], 4);
+                memcpy(output_value, &r[1], 8);
 
         }
 

@@ -496,9 +496,9 @@ INTERNAL void cvt_vax_f_to_ieee_single
         default : DCETHREAD_RAISE(dcethread_aritherr_e);
     }
 
-#include <upkvaxf.c>
+#include <upkvaxf.c.h>
 
-#include <pkieees.c>
+#include <pkieees.c.h>
 
 }
 #endif
@@ -566,9 +566,9 @@ INTERNAL void cvt_vax_g_to_ieee_double
         default : DCETHREAD_RAISE(dcethread_aritherr_e);
     }
 
-#include <upkvaxg.c>
+#include <upkvaxg.c.h>
 
-#include <pkieeet.c>
+#include <pkieeet.c.h>
 
 }
 #endif
@@ -636,9 +636,9 @@ INTERNAL void cvt_cray_to_ieee_single
         default : DCETHREAD_RAISE(dcethread_aritherr_e);
     }
 
-#include <upkcray.c>
+#include <upkcray.c.h>
 
-#include <pkieees.c>
+#include <pkieees.c.h>
 
 }
 
@@ -734,9 +734,9 @@ INTERNAL void cvt_cray_to_ieee_double
         default : DCETHREAD_RAISE(dcethread_aritherr_e);
     }
 
-#include <upkcray.c>
+#include <upkcray.c.h>
 
-#include <pkieeet.c>
+#include <pkieeet.c.h>
 
 }
 #endif
@@ -804,9 +804,9 @@ INTERNAL void cvt_ibm_short_to_ieee_single
         default : DCETHREAD_RAISE(dcethread_aritherr_e);
     }
 
-#include <upkibms.c>
+#include <upkibms.c.h>
 
-#include <pkieees.c>
+#include <pkieees.c.h>
 
 }
 #endif
@@ -877,9 +877,9 @@ INTERNAL void cvt_ibm_long_to_ieee_double
         default : DCETHREAD_RAISE(dcethread_aritherr_e);
     }
 
-#include <upkibml.c>
+#include <upkibml.c.h>
 
-#include <pkieeet.c>
+#include <pkieeet.c.h>
 
 }
 #endif
@@ -945,9 +945,9 @@ INTERNAL void cvt_ieee_single_to_vax_f
         default : DCETHREAD_RAISE(dcethread_aritherr_e);
     }
 
-#include <upkieees.c>
+#include <upkieees.c.h>
 
-#include <pkvaxf.c>
+#include <pkvaxf.c.h>
 
 }
 #endif
@@ -1009,9 +1009,9 @@ INTERNAL void cvt_ieee_double_to_vax_g
         default : DCETHREAD_RAISE(dcethread_aritherr_e);
     }
 
-#include <upkieeet.c>
+#include <upkieeet.c.h>
 
-#include <pkvaxg.c>
+#include <pkvaxg.c.h>
 
 }
 #endif
@@ -1078,9 +1078,9 @@ INTERNAL void cvt_cray_to_vax_f
         default : DCETHREAD_RAISE(dcethread_aritherr_e);
     }
 
-#include <upkcray.c>
+#include <upkcray.c.h>
 
-#include <pkvaxf.c>
+#include <pkvaxf.c.h>
 
 }
 #endif
@@ -1141,9 +1141,9 @@ INTERNAL void cvt_cray_to_vax_g
         default : DCETHREAD_RAISE(dcethread_aritherr_e);
     }
 
-#include <upkcray.c>
+#include <upkcray.c.h>
 
-#include <pkvaxg.c>
+#include <pkvaxg.c.h>
 
 }
 #endif
@@ -1204,9 +1204,9 @@ INTERNAL void cvt_ibm_short_to_vax_f
         default : DCETHREAD_RAISE(dcethread_aritherr_e);
     }
 
-#include <upkibms.c>
+#include <upkibms.c.h>
 
-#include <pkvaxf.c>
+#include <pkvaxf.c.h>
 
 }
 #endif
@@ -1276,9 +1276,9 @@ INTERNAL void cvt_ibm_long_to_vax_g
         default : DCETHREAD_RAISE(dcethread_aritherr_e);
     }
 
-#include <upkibml.c>
+#include <upkibml.c.h>
 
-#include <pkvaxg.c>
+#include <pkvaxg.c.h>
 
 }
 #endif
@@ -1344,9 +1344,9 @@ INTERNAL void cvt_ieee_single_to_cray
         default : DCETHREAD_RAISE(dcethread_aritherr_e);
     }
 
-#include <upkieees.c>
+#include <upkieees.c.h>
 
-#include <pkcray.c>
+#include <pkcray.c.h>
 
 }
 
@@ -1443,9 +1443,9 @@ INTERNAL void cvt_ieee_double_to_cray
         default : DCETHREAD_RAISE(dcethread_aritherr_e);
     }
 
-#include <upkieeet.c>
+#include <upkieeet.c.h>
 
-#include <pkcray.c>
+#include <pkcray.c.h>
 
 }
 #endif
@@ -1506,9 +1506,9 @@ INTERNAL void cvt_vax_f_to_cray
         default : DCETHREAD_RAISE(dcethread_aritherr_e);
     }
 
-#include <upkvaxf.c>
+#include <upkvaxf.c.h>
 
-#include <pkcray.c>
+#include <pkcray.c.h>
 
 }
 #endif
@@ -1579,9 +1579,9 @@ INTERNAL void cvt_vax_g_to_cray
         default : DCETHREAD_RAISE(dcethread_aritherr_e);
     }
 
-#include <upkvaxg.c>
+#include <upkvaxg.c.h>
 
-#include <pkcray.c>
+#include <pkcray.c.h>
 
 }
 #endif
@@ -1637,9 +1637,9 @@ INTERNAL void cvt_ibm_short_to_cray
         default : DCETHREAD_RAISE(dcethread_aritherr_e);
     }
 
-#include <upkibms.c>
+#include <upkibms.c.h>
 
-#include <pkcray.c>
+#include <pkcray.c.h>
 
 }
 #endif
@@ -1695,9 +1695,9 @@ INTERNAL void cvt_ibm_long_to_cray
         default : DCETHREAD_RAISE(dcethread_aritherr_e);
     }
 
-#include <upkibml.c>
+#include <upkibml.c.h>
 
-#include <pkcray.c>
+#include <pkcray.c.h>
 
 }
 #endif
@@ -1772,9 +1772,9 @@ INTERNAL void cvt_ieee_single_to_ibm_short
         default : DCETHREAD_RAISE(dcethread_aritherr_e);
     }
 
-#include <upkieees.c>
+#include <upkieees.c.h>
 
-#include <pkibms.c>
+#include <pkibms.c.h>
 
 }
 #endif
@@ -1836,9 +1836,9 @@ INTERNAL void cvt_ieee_double_to_ibm_long
         default : DCETHREAD_RAISE(dcethread_aritherr_e);
     }
 
-#include <upkieeet.c>
+#include <upkieeet.c.h>
 
-#include <pkibml.c>
+#include <pkibml.c.h>
 
 }
 #endif
@@ -1908,9 +1908,9 @@ INTERNAL void cvt_vax_f_to_ibm_short
         default : DCETHREAD_RAISE(dcethread_aritherr_e);
     }
 
-#include <upkvaxf.c>
+#include <upkvaxf.c.h>
 
-#include <pkibms.c>
+#include <pkibms.c.h>
 
 }
 #endif
@@ -1971,9 +1971,9 @@ INTERNAL void cvt_vax_g_to_ibm_long
         default : DCETHREAD_RAISE(dcethread_aritherr_e);
     }
 
-#include <upkvaxg.c>
+#include <upkvaxg.c.h>
 
-#include <pkibml.c>
+#include <pkibml.c.h>
 
 }
 #endif
@@ -2028,9 +2028,9 @@ INTERNAL void cvt_cray_to_ibm_short
         default : DCETHREAD_RAISE(dcethread_aritherr_e);
     }
 
-#include <upkcray.c>
+#include <upkcray.c.h>
 
-#include <pkibms.c>
+#include <pkibms.c.h>
 
 }
 #endif
@@ -2085,9 +2085,9 @@ INTERNAL void cvt_cray_to_ibm_long
         default : DCETHREAD_RAISE(dcethread_aritherr_e);
     }
 
-#include <upkcray.c>
+#include <upkcray.c.h>
 
-#include <pkibml.c>
+#include <pkibml.c.h>
 
 }
 #endif

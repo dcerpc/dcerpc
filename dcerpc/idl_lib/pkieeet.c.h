@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
@@ -16,13 +16,13 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
 **
 **  NAME:
 **
-**      pkieeet.c
+**      pkieeet.c.h
 **
 **  FACILITY:
 **
@@ -115,7 +115,7 @@ if (r[U_R_FLAGS] & U_R_UNUSUAL) {
         else if (round_bit_position > 53)
                 round_bit_position = 53;
 
-#include "round.c"
+#include "round.c.h"
 
         if (r[U_R_EXP] < (U_R_BIAS - 1021)) {
 
@@ -164,7 +164,7 @@ if (r[U_R_FLAGS] & U_R_UNUSUAL) {
 				r[0] = r[2];
 
                         }
- 
+
 #else
                         if (options & CVT_C_BIG_ENDIAN) {
 
@@ -180,7 +180,7 @@ if (r[U_R_FLAGS] & U_R_UNUSUAL) {
                                 r[0] = r[2];
 
                         }
-#endif 
+#endif
                         memcpy(output_value, r, 8);
                 }
 

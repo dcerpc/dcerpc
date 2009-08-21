@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
@@ -16,13 +16,13 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
 **
 **  NAME:
 **
-**      upkcray.c
+**      upkibms.c.h
 **
 **  FACILITY:
 **
@@ -30,8 +30,8 @@
 **
 **  ABSTRACT:
 **
-**      This module contains code to extract information from a cray
-**      floating number and to initialize an UNPACKED_REAL structure
+**      This module contains code to extract information from an IBM
+**      single floating number and to initialize an UNPACKED_REAL structure
 **      with those bits.
 **
 **		This module is meant to be used as an include file.
@@ -48,23 +48,19 @@
 **++
 **  Functional Description:
 **
-**  This module contains code to extract information from a cray
-**  floating number and to initialize an UNPACKED_REAL structure
+**  This module contains code to extract information from an IBM
+**  single floating number and to initialize an UNPACKED_REAL structure
 **  with those bits.
 **
 **  See the header files for a description of the UNPACKED_REAL
 **  structure.
 **
-**  A normalized CRAY floating number looks like:
+**  A normalized IBM short floating number looks like:
 **
-**      [0]: Sign bit, 15 exp bits (bias 16384), 16 fraction bits
-**      [1]: 32 low order fraction bits
+**      Sign bit, 7 exp bits (bias 64), 24 fraction bits
 **
-**      0.5 <= fraction < 1.0, MSB explicit
-**      Since CRAY has no hidden bits the MSB must always be set.
-**
-**  Some of the CRAY exponent range is not used.
-**  Exponents < 0x2000 and >= 0x6000 are invalid.
+**      0.0625 <= fraction < 1.0, from 0 to 3 leading zeros
+**      to compensate for the hexadecimal exponent.
 **
 **
 **  Implicit parameters:
@@ -79,29 +75,19 @@
 */
 
 
+#if (NDR_LOCAL_INT_REP == ndr_c_int_big_endian)
 
-	memcpy(r, input_value, 8);
+        memcpy(&r[1], input_value, 4);
+
+#else
+	memcpy(r, input_value, 4);
 
 	/* Shuffle bytes to little endian format */
-#if (NDR_LOCAL_INT_REP == ndr_c_int_big_endian)
-	if (options & CVT_C_BIG_ENDIAN) {
-        
-                r[2] = r[1];
-                r[1] = r[0];
-        
-        } else {
-        
-		r[2] = r[0];
-		r[1] = r[1];
 
-	}
-#else
-	r[2]  = ((r[1] << 24) | (r[1] >> 24));
-	r[2] |= ((r[1] << 8) & 0x00FF0000L);
-	r[2] |= ((r[1] >> 8) & 0x0000FF00L);
 	r[1]  = ((r[0] << 24) | (r[0] >> 24));
 	r[1] |= ((r[0] << 8) & 0x00FF0000L);
 	r[1] |= ((r[0] >> 8) & 0x0000FF00L);
+
 #endif
 
 	/* Initialize FLAGS and perhaps set NEGATIVE bit */
@@ -112,35 +98,45 @@
 
 	r[1] &= 0x7FFFFFFFL;
 
-	/* Extract CRAY biased exponent */
-
-	r[U_R_EXP] = r[1] >> 16;
-
-	if ((r[1] == 0) && (r[2] == 0)) {
+	if (r[1] == 0) {
 
 		r[U_R_FLAGS] |= U_R_ZERO;
 
-	} else if (    (r[U_R_EXP] <  0x2000)
-				|| (r[U_R_EXP] >= 0x6000)
-				|| (!(r[1] & 0x00008000L)) ) {
-
-		r[U_R_FLAGS] |= U_R_INVALID;
-
 	} else {
 
-		/* Adjust bias */
+		/* Get unbiased hexadecimal exponent and convert it to binary */
 
-		r[U_R_EXP] += (U_R_BIAS - 16384);
+		r[U_R_EXP] = U_R_BIAS + (((r[1] >> 24) - 64) * 4);
 
-		/* Left justify fraction bits */
+		/* Count leading zeros */
 
-		r[1] <<= 16;
-		r[1] |= (r[2] >> 16);
-		r[2] <<= 16;
+		i = 0;
+		while (!(r[1] & 0x00800000L)) {
+			i += 1;
+			if (i > 3)
+				break;
+			r[1] <<= 1;
+		}
 
-		/* Clear uninitialized part of unpacked real */
+		if (i > 3) {
 
-		r[3] = 0;
-		r[4] = 0;
+			r[U_R_FLAGS] |= U_R_INVALID;
+
+		} else {
+
+			/* Adjust exponent to compensate for leading zeros */
+
+			r[U_R_EXP] -= i;
+
+			/* Left justify fraction bits */
+
+			r[1] <<= 8;
+
+			/* Clear uninitialized part of unpacked real */
+
+			r[2] = 0;
+			r[3] = 0;
+			r[4] = 0;
+		}
 
 	}
