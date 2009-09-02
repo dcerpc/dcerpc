@@ -2077,6 +2077,7 @@ pointer_t       sm;
                 if (RPC_DBG_EXACT(rpc_es_dbg_cn_errors,
                                   RPC_C_CN_DBG_GRP_MAX_EXCEEDED))
                 {
+                    assert(assoc_grp != NULL);
                     assoc_grp->grp_cur_assoc = assoc_grp->grp_max_assoc;
                 }
 #endif
@@ -2084,6 +2085,7 @@ pointer_t       sm;
                  * The association group was found. Determine whether it can
                  * support another association.
                  */
+                assert(assoc_grp != NULL);
                 if (assoc_grp->grp_cur_assoc == assoc_grp->grp_max_assoc)
                 {
                     /*
@@ -2113,6 +2115,7 @@ pointer_t       sm;
              * Return the appropriate group ID for the client to use on
              * the next association request.
              */
+            assert(assoc_grp != NULL);
             RPC_CN_PKT_ASSOC_GROUP_ID (resp_header) = assoc_grp->grp_id.all;
 
             /*

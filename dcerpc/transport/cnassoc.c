@@ -578,6 +578,7 @@ unsigned32              *st;
                         rpc__cn_call_local_cancel (call_r,
                                                    &retry_op, 
                                                    st);
+                        assert(assoc != NULL);
                         RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
                                         ("(rpc__cn_assoc_request) call_rep->%p assoc->%p desc->%p cancel caught before association setup\n",
                                          call_r,
@@ -870,6 +871,7 @@ unsigned32              *st;
         else
         {
             assoc_grp = RPC_CN_ASSOC_GRP (grp_id);
+            assert(assoc_grp != NULL);
             rpc__cn_assoc_reclaim (assoc_grp->grp_id,
                                    RPC_C_CN_ASSOC_GRP_CLIENT,
 				   true);
@@ -3427,6 +3429,7 @@ INTERNAL void rpc__cn_assoc_open
         rpc__cn_assoc_syntax_free (&pres_context);
         if (RPC_CN_AUTH_REQUIRED (auth_info))
         {
+            assert(sec_context != NULL);
             RPC_LIST_REMOVE (assoc->security.context_list, sec_context);
             rpc__cn_assoc_sec_free (&sec_context);
         }
@@ -3437,6 +3440,7 @@ INTERNAL void rpc__cn_assoc_open
      * Wait for both presentation and optional security context
      * negotiations to complete either successfully or with an error.
      */
+    assert(sec_context != NULL);
     while (!(pres_context->syntax_valid) 
            ||
            (RPC_CN_AUTH_REQUIRED (auth_info) && (sec_context->sec_state != RPC_C_SEC_STATE_COMPLETE)))
@@ -3456,6 +3460,7 @@ INTERNAL void rpc__cn_assoc_open
             *st = pres_context->syntax_status;
             return;
         }
+        assert(sec_context != NULL);
         if (RPC_CN_AUTH_REQUIRED (auth_info) && (sec_context->sec_status != rpc_s_ok))
         {
             *st = sec_context->sec_status;
@@ -3768,6 +3773,7 @@ unsigned32              *st;
 
             if (RPC_CN_AUTH_REQUIRED (info) && (!sec_context_setup))
             {
+                assert (sec_context != NULL);
                 RPC_LIST_REMOVE (assoc->security.context_list, sec_context);
                 rpc__cn_assoc_sec_free (&sec_context);
             }
@@ -3780,6 +3786,7 @@ unsigned32              *st;
      * Wait for both presentation and optional security context
      * negotiations to complete either successfully or with an error.
      */
+    assert (sec_context != NULL);
     while (!(pres_context->syntax_valid) 
            ||
            (RPC_CN_AUTH_REQUIRED (info) && (sec_context->sec_state != RPC_C_SEC_STATE_COMPLETE)))
@@ -3798,6 +3805,7 @@ unsigned32              *st;
             *st = pres_context->syntax_status;
             return;
         }
+        assert(sec_context != NULL);
         if (RPC_CN_AUTH_REQUIRED (info) && (sec_context->sec_status != rpc_s_ok))
         {
             *st = sec_context->sec_status;
@@ -5181,6 +5189,7 @@ unsigned32              *st;
     if (rpc_addr != NULL)
     {
         rpc__naf_addr_copy (rpc_addr, &assoc_grp->grp_address, st);
+        assert(assoc_grp != NULL);
         assoc_grp->grp_secaddr = NULL;
         if (*st != rpc_s_ok)
         {
@@ -5189,6 +5198,7 @@ unsigned32              *st;
         }
     }
 
+    assert(assoc_grp != NULL);
     assoc_grp->grp_transport_info = transport_info;
 
     if (transport_info)
@@ -5304,6 +5314,7 @@ rpc_cn_local_id_t       grp_id;
      * Check whether a primary RPC address exists on the group.
      */
     assoc_grp = RPC_CN_ASSOC_GRP (grp_id);
+    assert(assoc_grp != NULL);
     if ((rpc_addr = assoc_grp->grp_address) != NULL)
     {
         /*
@@ -5417,6 +5428,7 @@ rpc_cn_assoc_p_t        assoc;
      * association to group event through the group state machine.
      */
     assoc_grp = RPC_CN_ASSOC_GRP (grp_id);
+    assert(assoc_grp != NULL);
     RPC_CN_ASSOC_GRP_EVAL_EVENT (assoc_grp,
                                  RPC_C_ASSOC_GRP_ADD_ASSOC,
                                  assoc,
@@ -5491,6 +5503,7 @@ rpc_cn_assoc_p_t        assoc;
          * association from group event through the group state machine.
          */
         assoc_grp = RPC_CN_ASSOC_GRP (grp_id);
+        assert(assoc_grp != NULL);
         RPC_CN_ASSOC_GRP_EVAL_EVENT (assoc_grp, 
                                      RPC_C_ASSOC_GRP_REM_ASSOC,
                                      assoc,
@@ -5843,6 +5856,7 @@ PRIVATE rpc_cn_local_id_t rpc__cn_assoc_grp_lkup_by_id
          * To use this association group the entire group id must match
          * and must be the right type.
          */
+        assert(assoc_grp != NULL);
         if (RPC_CN_LOCAL_ID_EQUAL (assoc_grp->grp_id, grp_id) &&
             (assoc_grp->grp_flags & type) &&
             (assoc_grp->grp_state.cur_state == RPC_C_ASSOC_GRP_ACTIVE) &&

@@ -73,7 +73,6 @@ dcethread_delay(struct timespec* interval)
     rqtp.tv_sec = interval->tv_sec;
     rqtp.tv_nsec = interval->tv_nsec;
     
-    ret = -1;
     do {
 	ret = nanosleep(&rqtp, &rmtp);
 	rqtp.tv_sec = rmtp.tv_sec;

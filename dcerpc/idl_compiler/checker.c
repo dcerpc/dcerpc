@@ -832,6 +832,7 @@ static void fattr_first_is
 
     if (fattr_p->first_is_vec != NULL
         &&  fattr_p->first_is_vec[dim].valid
+        &&  deref_type_p != NULL
         &&  (!type_is_index(deref_type_p)
             ||  deref_type_p->fe_info->pointer_count
                 != fattr_p->first_is_vec[dim].fe_info->pointer_count))
@@ -841,6 +842,7 @@ static void fattr_first_is
 
     if (fattr_p->first_is_vec != NULL
         &&  fattr_p->first_is_vec[dim].valid
+        &&  deref_type_p != NULL
         &&  deref_type_p->rep_as_type != NULL)
         CHECKER_error(fattr_p, NIDL_SIZEVARREPAS);
 
@@ -848,6 +850,7 @@ static void fattr_first_is
 
     if (fattr_p->first_is_vec != NULL
         &&  fattr_p->first_is_vec[dim].valid
+        &&  deref_type_p != NULL
         &&  deref_type_p->xmit_as_type != NULL)
         CHECKER_error(fattr_p, NIDL_SIZEVARXMITAS);
 
@@ -855,6 +858,7 @@ static void fattr_first_is
 
     if (fattr_p->first_is_vec != NULL
         &&  fattr_p->first_is_vec[dim].valid
+        &&  deref_type_p != NULL
         &&  deref_type_p->fe_info->pointer_count > 0
         &&  !is_ref_ptr)
     {
@@ -925,6 +929,7 @@ static void fattr_last_is
 
     if (fattr_p->last_is_vec != NULL
         &&  fattr_p->last_is_vec[dim].valid
+        &&  deref_type_p != NULL
         &&  (!type_is_index(deref_type_p)
             ||  deref_type_p->fe_info->pointer_count
                 != fattr_p->last_is_vec[dim].fe_info->pointer_count))
@@ -934,6 +939,7 @@ static void fattr_last_is
 
     if (fattr_p->last_is_vec != NULL
         &&  fattr_p->last_is_vec[dim].valid
+        &&  deref_type_p != NULL
         &&  deref_type_p->rep_as_type != NULL)
         CHECKER_error(fattr_p, NIDL_SIZEVARREPAS);
 
@@ -941,6 +947,7 @@ static void fattr_last_is
 
     if (fattr_p->last_is_vec != NULL
         &&  fattr_p->last_is_vec[dim].valid
+        &&  deref_type_p != NULL
         &&  deref_type_p->xmit_as_type != NULL)
         CHECKER_error(fattr_p, NIDL_SIZEVARXMITAS);
 
@@ -948,6 +955,7 @@ static void fattr_last_is
 
     if (fattr_p->last_is_vec != NULL
         &&  fattr_p->last_is_vec[dim].valid
+        &&  deref_type_p != NULL
         &&  deref_type_p->fe_info->pointer_count > 0
         &&  !is_ref_ptr)
     {
@@ -1018,6 +1026,7 @@ static void fattr_length_is
 
     if (fattr_p->length_is_vec != NULL
         &&  fattr_p->length_is_vec[dim].valid
+        &&  deref_type_p != NULL
         &&  (!type_is_index(deref_type_p)
             ||  deref_type_p->fe_info->pointer_count
                 != fattr_p->length_is_vec[dim].fe_info->pointer_count))
@@ -1027,6 +1036,7 @@ static void fattr_length_is
 
     if (fattr_p->length_is_vec != NULL
         &&  fattr_p->length_is_vec[dim].valid
+        &&  deref_type_p != NULL
         &&  deref_type_p->rep_as_type != NULL)
         CHECKER_error(fattr_p, NIDL_SIZEVARREPAS);
 
@@ -1034,6 +1044,7 @@ static void fattr_length_is
 
     if (fattr_p->length_is_vec != NULL
         &&  fattr_p->length_is_vec[dim].valid
+        &&  deref_type_p != NULL
         &&  deref_type_p->xmit_as_type != NULL)
         CHECKER_error(fattr_p, NIDL_SIZEVARXMITAS);
 
@@ -1041,6 +1052,7 @@ static void fattr_length_is
 
     if (fattr_p->length_is_vec != NULL
         &&  fattr_p->length_is_vec[dim].valid
+        &&  deref_type_p != NULL
         &&  deref_type_p->fe_info->pointer_count > 0
         &&  !is_ref_ptr)
     {
@@ -1155,6 +1167,7 @@ static void fattr_min_is
 
     if (fattr_p->min_is_vec != NULL
         &&  fattr_p->min_is_vec[dim].valid
+        &&  deref_type_p != NULL
         &&  (!type_is_index(deref_type_p)
             ||  deref_type_p->fe_info->pointer_count
                 != fattr_p->min_is_vec[dim].fe_info->pointer_count))
@@ -1164,6 +1177,7 @@ static void fattr_min_is
 
     if (fattr_p->min_is_vec != NULL
         &&  fattr_p->min_is_vec[dim].valid
+        &&  deref_type_p != NULL
         &&  deref_type_p->rep_as_type != NULL)
         CHECKER_error(fattr_p, NIDL_SIZEVARREPAS);
 
@@ -1171,6 +1185,7 @@ static void fattr_min_is
 
     if (fattr_p->min_is_vec != NULL
         &&  fattr_p->min_is_vec[dim].valid
+        &&  deref_type_p != NULL
         &&  deref_type_p->xmit_as_type != NULL)
         CHECKER_error(fattr_p, NIDL_SIZEVARXMITAS);
 
@@ -1178,6 +1193,7 @@ static void fattr_min_is
 
     if (fattr_p->min_is_vec != NULL
         &&  fattr_p->min_is_vec[dim].valid
+        &&  deref_type_p != NULL
         &&  deref_type_p->fe_info->pointer_count > 0
         &&  !is_ref_ptr)
     {
@@ -1280,6 +1296,7 @@ static void fattr_max_is
 
     if (fattr_p->max_is_vec != NULL
         &&  fattr_p->max_is_vec[dim].valid
+        &&  deref_type_p != NULL
         &&  (!type_is_index(deref_type_p)
             ||  deref_type_p->fe_info->pointer_count
                 != fattr_p->max_is_vec[dim].fe_info->pointer_count))
@@ -1289,6 +1306,7 @@ static void fattr_max_is
 
     if (fattr_p->max_is_vec != NULL
         &&  fattr_p->max_is_vec[dim].valid
+        &&  deref_type_p != NULL
         &&  deref_type_p->rep_as_type != NULL)
         CHECKER_error(fattr_p, NIDL_SIZEVARREPAS);
 
@@ -1296,6 +1314,7 @@ static void fattr_max_is
 
     if (fattr_p->max_is_vec != NULL
         &&  fattr_p->max_is_vec[dim].valid
+        &&  deref_type_p != NULL
         &&  deref_type_p->xmit_as_type != NULL)
         CHECKER_error(fattr_p, NIDL_SIZEVARXMITAS);
 
@@ -1303,6 +1322,7 @@ static void fattr_max_is
 
     if (fattr_p->max_is_vec != NULL
         &&  fattr_p->max_is_vec[dim].valid
+        &&  deref_type_p != NULL
         &&  deref_type_p->fe_info->pointer_count > 0
         &&  !is_ref_ptr)
     {
@@ -1405,6 +1425,7 @@ static void fattr_size_is
 
     if (fattr_p->size_is_vec != NULL
         &&  fattr_p->size_is_vec[dim].valid
+        &&  deref_type_p != NULL
         &&  (!type_is_index(deref_type_p)
             ||  deref_type_p->fe_info->pointer_count
                 != fattr_p->size_is_vec[dim].fe_info->pointer_count))
@@ -1414,6 +1435,7 @@ static void fattr_size_is
 
     if (fattr_p->size_is_vec != NULL
         &&  fattr_p->size_is_vec[dim].valid
+        &&  deref_type_p != NULL
         &&  deref_type_p->rep_as_type != NULL)
         CHECKER_error(fattr_p, NIDL_SIZEVARREPAS);
 
@@ -1421,6 +1443,7 @@ static void fattr_size_is
 
     if (fattr_p->size_is_vec != NULL
         &&  fattr_p->size_is_vec[dim].valid
+        &&  deref_type_p != NULL
         &&  deref_type_p->xmit_as_type != NULL)
         CHECKER_error(fattr_p, NIDL_SIZEVARXMITAS);
 
@@ -1428,6 +1451,7 @@ static void fattr_size_is
 
     if (fattr_p->size_is_vec != NULL
         &&  fattr_p->size_is_vec[dim].valid
+        &&  deref_type_p != NULL
         &&  deref_type_p->fe_info->pointer_count > 0
         &&  !is_ref_ptr)
     {
@@ -1934,6 +1958,7 @@ static void param_type
 #endif
 
 {
+#if 0
     AST_type_n_t        *btype_p;       /* Base type */
 
     /*
@@ -1945,7 +1970,6 @@ static void param_type
 
     btype_p = ASTP_chase_ptr_to_kind(top_type_p, AST_disc_union_k);
 
-#if 0
     if (btype_p != NULL
         &&  btype_p->kind == AST_disc_union_k
         &&  btype_p->type_structure.disc_union->discrim_name == NAMETABLE_NIL_ID
@@ -2889,7 +2913,6 @@ static void param_first_handle
 
 {
     AST_operation_n_t   *op_p;          /* Operation containing the parameter */
-    AST_type_n_t        *top_type_p;    /* Top-level parameter type */
     AST_type_n_t        *type_p;        /* Param type (deref'd if necess.) */
 
     op_p = param_p->uplink;
@@ -2900,7 +2923,6 @@ static void param_first_handle
      *      top_type_p  = top-level parameter type
      *      type_p      = possibly dereferenced parameter type
      */
-    top_type_p = param_p->type;
     type_p = param_follow_ref_ptr(param_p, CHK_follow_any);
 
     /* No binding handle parameter for 'operation' - auto_handle assumed. */

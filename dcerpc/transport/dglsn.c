@@ -2051,6 +2051,7 @@ unsigned32 serial_cnt;
                 }
                 else
                 {
+                    assert((xq != NULL) && (xq_prev != NULL));
                     xq_prev->next = xq_next;
                 }
                 if (xq_curr == xq->tail)
@@ -2094,8 +2095,10 @@ unsigned32 serial_cnt;
                     (*rexmit_cnt)++;        
                     if (xq->rexmitq == NULL)
                         xq->rexmitq = xq_curr;
-                    else
+                    else {
+                        assert(rexmitq_tail != NULL);
                         rexmitq_tail->next_rexmit = xq_curr;
+                    }
     
                     xq_curr->next_rexmit = NULL;
                     rexmitq_tail = xq_curr;        
@@ -2134,6 +2137,7 @@ unsigned32 serial_cnt;
 
     for ( ; xq_curr != xq->first_unsent; xq_curr = xq_curr->next)
     {       
+        assert(xq_curr != NULL);
         if (! RPC_DG_SERIAL_IS_LTE(xq_curr->serial_num, xq->last_fack_serial))
             continue;
 
@@ -2155,8 +2159,10 @@ unsigned32 serial_cnt;
         (*rexmit_cnt)++;        
         if (xq->rexmitq == NULL)
             xq->rexmitq = xq_curr;
-        else
+        else {
+            assert(rexmitq_tail != NULL);
             rexmitq_tail->next_rexmit = xq_curr;
+        }
 
         xq_curr->next_rexmit = NULL;
         rexmitq_tail = xq_curr;        

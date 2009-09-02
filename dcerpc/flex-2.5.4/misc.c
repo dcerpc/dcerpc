@@ -2,6 +2,7 @@
 
 /*-
  * Copyright (c) 1990 The Regents of the University of California.
+ * Portions Copyright (c) 2009 Apple Inc. All rights reserved.
  * All rights reserved.
  *
  * This code is derived from software contributed to Berkeley by
@@ -220,17 +221,15 @@ register const char *str;
 Char *copy_unsigned_string( str )
 register Char *str;
 	{
-	register Char *c;
 	Char *copy;
+	unsigned int size;
 
 	/* find length */
-	for ( c = str; *c; ++c )
-		;
+	size = strlen((char *) str) + 1;
 
-	copy = allocate_Character_array( c - str + 1 );
+	copy = allocate_Character_array( size );
 
-	for ( c = copy; (*c++ = *str++) != 0; )
-		;
+	strlcpy ((char *) copy, (char*) str, size);
 
 	return copy;
 	}

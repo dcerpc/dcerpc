@@ -50,7 +50,7 @@
 #define DDBE_SPELL_INDEX(_fid, _index) \
     fprintf(_fid, "/* %s */ ", DDBE_spell_long(_index))
 #else
-#define DDBE_SPELL_INDEX(_fid, _index) 
+#define DDBE_SPELL_INDEX(_fid, _index)
 #endif
 
 /*
@@ -64,7 +64,7 @@
         fprintf(_fid, _comment_fmt, _comment_buf); \
     }
 #else
-#define DDBE_SPELL_COMMENT(_fid, _comment_id, _comment_fmt, _comment_buf) 
+#define DDBE_SPELL_COMMENT(_fid, _comment_id, _comment_fmt, _comment_buf)
 #endif
 
 /*
@@ -80,9 +80,9 @@
 #define DDBE_SPELL_TEXT_2ARG(_fid, _fmt, _arg1, _arg2) \
     fprintf(_fid, _fmt, _arg1, _arg2)
 #else
-#define DDBE_SPELL_TEXT(_fid, _string) 
-#define DDBE_SPELL_TEXT_1ARG(_fid, _fmt, _arg) 
-#define DDBE_SPELL_TEXT_2ARG(_fid, _fmt, _arg1, _arg2) 
+#define DDBE_SPELL_TEXT(_fid, _string)
+#define DDBE_SPELL_TEXT_1ARG(_fid, _fmt, _arg)
+#define DDBE_SPELL_TEXT_2ARG(_fid, _fmt, _arg1, _arg2)
 #endif
 
 /**************************************/
@@ -141,7 +141,6 @@ static char *DDBE_spell_long_nf
     return DDBE_long_buf;
 }
 
-
 /*
  *  D D B E _ s p e l l _ l o n g _ v a l
  *
@@ -181,7 +180,6 @@ static void DDBE_spell_long_val
     fprintf(fid, "\n");
 }
 
-
 /*
  *  D D B E _ s p e l l _ s h o r t _ b y t e s
  *
@@ -211,7 +209,6 @@ static void DDBE_spell_short_bytes
 	fprintf(fid, "0x%02x,", bp[i]);
 }
 
-
 /*
  *  D D B E _ s p e l l _ l o n g _ b y t e s
  *
@@ -240,7 +237,6 @@ static void DDBE_spell_long_bytes
     for (i = 0; i < 4 /*sizeof(idl_long_int)*/; i++)
 	fprintf(fid, "0x%02x,", bp[i]);
 }
-
 
 /*
  *  D D B E _ s p e l l _ l o n g _ b o o l _ v a l
@@ -288,7 +284,6 @@ static void DDBE_spell_long_bool_val
 #endif
     fprintf(fid, "\n");
 }
-
 
 /*
  *  D D B E _ l a s t _ f i e l d
@@ -347,7 +342,6 @@ static void DDBE_last_field
     *field_expr = STRTAB_add_string(expr);
 }
 
-
 /*
  *  D D B E _ s i z e o f _ e x p r
  *
@@ -403,7 +397,6 @@ static void DDBE_sizeof_expr
 
     DDBE_SPELL_COMMENT(fid, comment_id, "\t/* %s */", comment);
 }
-
 
 /*
  *  D D B E _ s i z e o f _ e x p r _ u s e _ i n s t
@@ -563,7 +556,6 @@ void DDBE_spell_offset_instances
     fflush(fid);
 }
 
-
 /*
  *  D D B E _ s p e l l _ o f f s e t _ v e c
  *
@@ -666,6 +658,8 @@ void DDBE_spell_offset_vec
 
         case DDBE_vec_offset_end_k:
             /* Restore node addresses that were saved above */
+            assert(type_p != NULL);
+
             type_p->rep_as_type = rep_p;
             type_p->cs_char_type = ichar_p;
             break;
@@ -708,7 +702,6 @@ void DDBE_spell_offset_vec
     DDBE_SPELL_TEXT(fid, "\t/* sentinel */");
     fprintf(fid, "\n};\n\n");
 }
-
 
 /*
  *  D D B E _ s p e l l _ o f f s e t _ v e c _ u s e _ i n s t
@@ -826,7 +819,6 @@ void DDBE_spell_offset_vec_use_inst
     DDBE_SPELL_TEXT(fid, "\t/* sentinel */");
     fprintf(fid, "\n};\n\n");
 }
-
 
 /*
  *  D D B E _ i n i t _ o f f s e t _ v e c
@@ -958,7 +950,6 @@ void DDBE_init_offset_vec
     fprintf(fid, "\n}\n\n");
 }
 
-
 /*
  *  D D B E _ s p e l l _ r t n _ v e c
  *
@@ -1009,7 +1000,6 @@ void DDBE_spell_rtn_vec
     DDBE_SPELL_TEXT(fid, "\t/* sentinel */");
     fprintf(fid, "\n};\n\n");
 }
-
 
 /*
  *  D D B E _ s p e l l _ t y p e _ v e c _ p r e a m b l e
@@ -1226,7 +1216,7 @@ void DDBE_spell_type_vec_preamble
                                  oper_name, longint);
             fprintf(fid, "\n");
             index += 4; /* 4 = sizeof(idl_long) */
-                
+
             if (oper_p->be_info.dd_oper->ins_type_vec_p == NULL)
             {
                 DDBE_SPELL_INDEX(fid, index);
@@ -1250,7 +1240,7 @@ void DDBE_spell_type_vec_preamble
                                  oper_name, longint);
             fprintf(fid, "\n");
             index += 4; /* 4 = sizeof(idl_long) */
-                
+
             if (oper_p->be_info.dd_oper->outs_type_vec_p == NULL)
             {
                 DDBE_SPELL_INDEX(fid, index);
@@ -1269,7 +1259,6 @@ void DDBE_spell_type_vec_preamble
         }
     }
 }
-
 
 /*
  *  D D B E _ s p e l l _ t y p e _ v e c _ a d d e n d a
@@ -1406,7 +1395,6 @@ void DDBE_spell_type_vec_addenda
     vip->type_vec_size = size;
 }
 
-
 /*
  *  D D B E _ s p e l l _ t y p e _ v e c
  *
@@ -1535,7 +1523,6 @@ void DDBE_spell_type_vec
     fprintf(fid, "\n};\n\n");
 }
 
-
 /*
  *  D D B E _ s p e l l _ p a r a m _ v e c _ d e f
  *
@@ -1588,7 +1575,6 @@ void DDBE_spell_param_vec_def
         }
     }
 }
-
 
 /*
  *  D D B E _ s p e l l _ p a r a m _ v e c _ i n i t
@@ -1688,7 +1674,6 @@ void DDBE_spell_param_vec_init
         INTERNAL_ERROR("Param count does not match param vec allocation");
     }
 }
-
 
 /*
  *  D D B E _ s p e l l _ m a r s h _ o r _ u n m a r

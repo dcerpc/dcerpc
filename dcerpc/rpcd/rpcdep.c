@@ -277,6 +277,7 @@ PRIVATE void ept_insert(
 #ifndef REMOTE_ENDPOINT_ACCESS
     if ( is_remote_handle(h,&tmp_st) )
     {
+        assert(status != NULL);
         *status = ept_s_cant_perform_op;
         return;
     }
@@ -325,6 +326,7 @@ PRIVATE void ept_delete(
 #ifndef REMOTE_ENDPOINT_ACCESS
     if ( is_remote_handle(h,&tmp_st) )
     {
+        assert(status != NULL);
         *status = ept_s_cant_perform_op;
         return;
     }
@@ -457,6 +459,7 @@ PRIVATE void ept_mgmt_delete(
 #ifndef REMOTE_ENDPOINT_ACCESS
     if ( is_remote_handle(h,&tmp_st) )
     {
+        assert(status != NULL);
         *status = ept_s_cant_perform_op;
         return;
     }

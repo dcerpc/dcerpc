@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
@@ -16,7 +16,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
  **
@@ -35,14 +35,13 @@
  **  %a%private_begin
  **
  **
- **  %a%private_end  
+ **  %a%private_end
  */
 
 #include <nidl.h>       /* Standard IDL defs */
 #include <ast.h>        /* Abstract Syntax Tree defs */
 #include <astp.h>       /* AST processing package */
 #include <irep.h>       /* Intermediate Rep defs */
-
 
 /* Necessary forward function declarations */
 
@@ -52,7 +51,6 @@ static void IR_gen_type_rep(
 		AST_instance_n_t    *inst_p,    /* [in] Ptr to AST instance node */
 		IR_flags_t          flags       /* [in] IREP flags */
 		);
-
 
 /*
 *  I R _ I N I T _ I N F O
@@ -64,7 +62,6 @@ static void IR_gen_type_rep(
 	/* Create an IREP information node */\
 		node_p->ir_info = NEW (IR_info_n_t);\
 }
-
 
 /*
 *  I R _ I N I T _ N O D E
@@ -87,7 +84,6 @@ static void IR_gen_type_rep(
 		/* Save pointer to tuple in IREP info node */\
 		node_p->ir_info->cur_tup_p = node_p->data_tups;\
 }
-
 
 /*
 *  I R _ c u r _ t u p _ p
@@ -117,7 +113,6 @@ static IR_tup_n_t *IR_cur_tup_p
 	return type_s_p->type_p->ir_info->cur_tup_p;
 }
 
-
 /*
 *  I R _ i n s e r t _ i r e p _ t u p
  *
@@ -140,7 +135,6 @@ static void IR_insert_irep_tup
 	(*p_insert_p)->next = tup_p;
 	*p_insert_p = tup_p;
 }
-
 
 /*
 *  I R _ g e n _ i r e p _ t u p
@@ -183,7 +177,6 @@ static IR_tup_n_t *IR_gen_irep_tup  /* Returns ptr to generated tuple */
 				ir_info->cur_tup_p);
 	return tup_p;
 }
-
 
 /*
 *  I R _ f r e e _ i r e p _ t u p
@@ -250,7 +243,6 @@ static void IR_free_irep_tup
 	FREE(tup_p);
 }
 
-
 /*
 *  I R _ g e n _ a l i g n m e n t
 *  Generates an alignment tuple if the passed alignment value is more than 1.
@@ -279,7 +271,6 @@ static IR_tup_n_t *IR_gen_alignment /* Returns tuple ptr or NULL */
 	}
 	return tup_p;
 }
-
 
 /*
 *  I R _ p a r a m _ n u m
@@ -317,7 +308,6 @@ static unsigned long IR_param_num   /* Returns parameter number */
 	INTERNAL_ERROR("Parameter not found in operation parameter list");
 	return 0;
 }
-
 
 /*
 *  I R _ f i e l d _ n u m
@@ -368,7 +358,6 @@ static unsigned long IR_field_num   /* Returns field number */
 	 */
 	return lookup_p->ir_info->id_num;
 }
-
 
 /*
 *  I R _ g e n _ s t r u c t _ t y p e _ r e p
@@ -442,7 +431,7 @@ static void IR_gen_struct_type_rep
 	 * the structure definition can be referenced at any alignment.
 	 */
 	if (!AST_UNALIGN_SET(type_p) && IR_in_struct(ctx_p) == 1)
-		tup_p = IR_gen_alignment(ctx_p, type_p->alignment_size);
+		IR_gen_alignment(ctx_p, type_p->alignment_size);
 
 	/*
 	 * Process each structure field.
@@ -482,7 +471,7 @@ static void IR_gen_struct_type_rep
 		{
 			/* First generate alignment for nested struct if needed */
 			if (!AST_UNALIGN_SET(field_p->type))
-				tup_p = IR_gen_alignment(ctx_p, field_p->type->alignment_size);
+				IR_gen_alignment(ctx_p, field_p->type->alignment_size);
 
 			/* Recurse to generate nested struct tuples */
 			IR_gen_struct_type_rep(ctx_p, field_p->type,
@@ -495,9 +484,13 @@ static void IR_gen_struct_type_rep
 	 */
 	if (AST_CONFORMANT_SET(type_p) && IR_in_struct(ctx_p) == 1)
 	{
-		while (last_tup_p->opcode != IR_op_conformant_array_k
+		while (last_tup_p != NULL
+               && last_tup_p->opcode != IR_op_conformant_array_k
 				&& last_tup_p->opcode != IR_op_open_array_k)
 			last_tup_p = last_tup_p->next;
+
+        assert(last_tup_p != NULL);
+
 		/*
 		 * If array of array skip to next conformant or open array tuple so
 		 * that 'conformance info' tuple points at the flat, not full, rep.
@@ -505,12 +498,16 @@ static void IR_gen_struct_type_rep
 		if (last_field_p->type->type_structure.array->element_type->kind
 				== AST_array_k)
 		{
-			last_tup_p = last_tup_p->next;
-			while (last_tup_p->opcode != IR_op_conformant_array_k
+            last_tup_p = last_tup_p->next;
+			while (last_tup_p != NULL
+                    && last_tup_p->opcode != IR_op_conformant_array_k
 					&& last_tup_p->opcode != IR_op_open_array_k)
 				last_tup_p = last_tup_p->next;
+
+            assert(last_tup_p != NULL);
 		}
-		info_tup_p->arg[IR_ARG_TUP].tup = last_tup_p;
+        assert (info_tup_p != NULL);
+        info_tup_p->arg[IR_ARG_TUP].tup = last_tup_p;
 	}
 
 	/*
@@ -523,9 +520,10 @@ static void IR_gen_struct_type_rep
 	{
 		if (*has_nf_cs_array)
 		{
-			cs_tup_p->opcode = IR_op_codeset_shadow_k;
-			cs_tup_p->arg[IR_ARG_INT].int_val = *field_num_p;
-			tup_p = IR_gen_irep_tup(ctx_p, IR_op_release_shadow_k);
+            assert (cs_tup_p != NULL);
+            cs_tup_p->opcode = IR_op_codeset_shadow_k;
+            cs_tup_p->arg[IR_ARG_INT].int_val = *field_num_p;
+			IR_gen_irep_tup(ctx_p, IR_op_release_shadow_k);
 		}
 		else
 			IR_free_irep_tup(ctx_p, cs_tup_p, pred_tup_p);
@@ -540,7 +538,6 @@ static void IR_gen_struct_type_rep
 	tup_p->arg[IR_ARG_INST].inst = inst_p;
 	IR_process_tup(ctx_p, tup_p);
 }
-
 
 /*
 *  I R _ g e n _ s t r u c t _ r e p
@@ -617,7 +614,6 @@ static void IR_gen_struct_rep
 		ctx_p->param_p->ir_info->allocate_ref = TRUE;
 }
 
-
 /*
 *  I R _ c a s e _ i n f o _ c o m p a r e
  *
@@ -645,7 +641,6 @@ static int IR_case_info_compare
 	else
 		return 1;
 }
-
 
 /*
 *  I R _ g e n _ u n i o n _ t y p e _ r e p
@@ -816,7 +811,6 @@ static void IR_gen_union_type_rep
 	tup_p->flags = beg_tup_p->flags;
 	IR_process_tup(ctx_p, tup_p);
 }
-
 
 /*
 *  I R _ g e n _ d i s c _ u n i o n _ r e p
@@ -1009,7 +1003,6 @@ static IR_tup_n_t *IR_gen_ptr_tup   /* Returns ptr to generated tuple */
 	return tup_p;
 }
 
-
 /*
 *  I R _ g e n _ a r r a y _ t u p
  *
@@ -1096,7 +1089,7 @@ static boolean IR_bound_early
 		pf_index = IR_param_num((AST_parameter_n_t *)inst_p);
 	}
 
-	return (attribute_index < pf_index);	
+	return (attribute_index < pf_index);
 }
 
 /*
@@ -1254,7 +1247,7 @@ static IR_tup_n_t *IR_gen_bound_tups    /* Returns ptr to last tuple gen'd */
 					tup_p->arg[IR_ARG_FIELD].field = fattr_p->size_is_vec[i].ref.f_ref;
 					tup_p->arg[IR_ARG_PFNUM].int_val = IR_field_num(ctx_p,
 							(AST_field_n_t *)inst_p, tup_p->arg[IR_ARG_FIELD].field);
-					
+
 				}
 				else
 				{
@@ -1304,7 +1297,6 @@ static IR_tup_n_t *IR_gen_bound_tups    /* Returns ptr to last tuple gen'd */
 	}
 	return tup_p;
 }
-
 
 /*
 *  I R _ g e n _ l i m i t _ t u p s
@@ -1539,7 +1531,9 @@ static IR_tup_n_t *IR_gen_limit_tups    /* Returns ptr to last tuple gen'd */
 			}
 
 		}
-		else if (const_p == NULL && fattr_p->max_is_vec != NULL
+		else if (const_p == NULL
+                && fattr_p != NULL
+                && fattr_p->max_is_vec != NULL
 				&& fattr_p->max_is_vec[i].valid)
 		{
 			if (fattr_p->max_is_vec[i].constant)
@@ -1571,7 +1565,7 @@ static IR_tup_n_t *IR_gen_limit_tups    /* Returns ptr to last tuple gen'd */
 					tup_p->flags |= IR_CF_EARLY;
 			}
 		}
-		else if (const_p == NULL && fattr_p->size_is_vec != NULL
+		else if (const_p == NULL && fattr_p != NULL && fattr_p->size_is_vec != NULL
 				&& fattr_p->size_is_vec[i].valid)
 		{
 			/*
@@ -1583,13 +1577,14 @@ static IR_tup_n_t *IR_gen_limit_tups    /* Returns ptr to last tuple gen'd */
 		else
 		{
 			/* Fixed upper data limit */
-			tup_p->arg[IR_ARG_LIMIT].limit_k = IR_lim_fixed_k;
-			tup_p->arg[IR_ARG_INT].int_val   = const_p->value.int_val;
+            assert (tup_p != NULL);
+            assert (const_p != NULL);
+            tup_p->arg[IR_ARG_LIMIT].limit_k = IR_lim_fixed_k;
+            tup_p->arg[IR_ARG_INT].int_val   = const_p->value.int_val;
 		}
 	}
 	return tup_p;
 }
-
 
 /*
 *  I R _ g e n _ f l a t _ a r r a y _ r e p
@@ -1704,7 +1699,6 @@ static void IR_gen_flat_array_rep
 	tup_p->arg[IR_ARG_TYPE].type = type_p;
 	IR_process_tup(ctx_p, tup_p);
 }
-
 
 /*
 *  I R _ g e n _ a r r a y _ r e p
@@ -1840,7 +1834,6 @@ static void IR_gen_array_rep
 	}
 }
 
-
 /*
 *  I R _ g e n _ m u l t i d _ a o s
  *
@@ -1925,7 +1918,6 @@ static void IR_gen_multid_aos
 	IR_gen_type_rep(ctx_p, new_type_p, inst_p, 0);
 }
 
-
 /*
 *  I R _ g e n _ p o i n t e r _ r e p
  *
@@ -1960,7 +1952,7 @@ static void IR_gen_pointer_rep
 	/*
 	 * Generate IR_op_*_ptr_k and maintain scope context.
 	 */
-    
+
     /*
      * Centeris change:
      *   We need to pass inst_p recursively down the
@@ -1981,7 +1973,6 @@ static void IR_gen_pointer_rep
      *
      *   -- Brian
      */
-     
 
     if (inst_p && inst_p->type == type_p)
         tup_p = IR_gen_ptr_tup(ctx_p, type_p, inst_p);
@@ -2030,7 +2021,7 @@ static void IR_gen_pointer_rep
      invariant everywhere else.
 */
              ||
-             (ptee_type_p->kind == AST_pointer_k && 
+             (ptee_type_p->kind == AST_pointer_k &&
               ptee_type_p->type_structure.pointer->pointee_type->kind ==
               AST_disc_union_k)
 #endif
@@ -2054,7 +2045,6 @@ static void IR_gen_pointer_rep
 	tup_p->arg[IR_ARG_TYPE].type = type_p;
 	IR_process_tup(ctx_p, tup_p);
 }
-
 
 /*
 *  I R _ g e n _ x m i t _ a s _ t y p e _ r e p
@@ -2113,7 +2103,6 @@ static void IR_gen_xmit_as_type_rep
 	IR_process_tup(ctx_p, tup_p);
 }
 
-
 /*
 *  I R _ g e n _ x m i t _ a s _ r e p
  *
@@ -2171,7 +2160,6 @@ static void IR_gen_xmit_as_rep
 	}
 }
 
-
 /*
 *  I R _ g e n _ r e p r _ a s _ t y p e _ r e p
  *
@@ -2228,7 +2216,6 @@ static void IR_gen_repr_as_type_rep
 
 	IR_process_tup(ctx_p, tup_p);
 }
-
 
 /*
 *  I R _ g e n _ r e p r _ a s _ r e p
@@ -2291,7 +2278,6 @@ static void IR_gen_repr_as_rep
 	}
 }
 
-
 /*
 *  I R _ g e n _ c s _ c h a r _ t y p e _ r e p
  *
@@ -2338,7 +2324,6 @@ static void IR_gen_cs_char_type_rep
 
 	IR_process_tup(ctx_p, tup_p);
 }
-
 
 /*
 *  I R _ g e n _ c s _ c h a r _ r e p
@@ -2397,7 +2382,6 @@ static void IR_gen_cs_char_rep
 	}
 }
 
-
 /*
 *  I R _ g e n _ p i p e _ t y p e _ r e p
  *
@@ -2443,7 +2427,6 @@ static void IR_gen_pipe_type_rep
 	tup_p->arg[IR_ARG_TYPE2].type = pipe_p->base_type;  /* pipe base type */
 	IR_process_tup(ctx_p, tup_p);
 }
-
 
 /*
 *  I R _ g e n _ p i p e _ r e p
@@ -2498,7 +2481,6 @@ static void IR_gen_pipe_rep
 	}
 }
 
-
 /*
 *  I R _ g e n _ c o n t e x t _ r e p
  *
@@ -2528,7 +2510,6 @@ static void IR_gen_context_rep
 	tup_p->arg[IR_ARG_TYPE].type = type_p;
 	tup_p->arg[IR_ARG_PARAM].param = param_p;
 }
-
 
 /*
 *  I R _ g e n _ s c a l a r _ r e p
@@ -2582,7 +2563,6 @@ static void IR_gen_scalar_rep
 	tup_p->arg[IR_ARG_TYPE].type = type_p;
 	tup_p->arg[IR_ARG_INST].inst = inst_p;
 }
-
 
 /*
 *  I R _ g e n _ t y p e _ r e p
@@ -2730,7 +2710,6 @@ static void IR_gen_type_rep
 	}
 }
 
-
 /*
 *  I R _ g e n _ p a r a m _ r e p
  *
@@ -2792,7 +2771,6 @@ void IR_gen_param_rep
 	/* Cleanup scope context */
 	IR_finish_scope(ctx_p);
 }
-
 
 /*
 *  I R _ g e n _ i r e p

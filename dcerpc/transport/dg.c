@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
@@ -16,7 +16,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
  */
@@ -28,7 +28,7 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
@@ -75,7 +75,6 @@
 #    define CANCEL_CHECK(fnum, call)  {}
 #endif
 
-
 /* =================================================================== */
 
 /*
@@ -85,7 +84,7 @@
  * must flush the posted cancel.  Of course, if general cancel delivery
  * is disabled, then we aren't required (and in fact don't want) to detect
  * one.
- * 
+ *
  * For ccalls, Once a cancel timeout has been established there's really
  * no need for us to continue to check;  a cancel has been forwarded
  * and either the call will complete before the timeout occurs or not.
@@ -122,18 +121,17 @@ rpc_dg_call_p_t call;
 }
 #endif
 
-
 /*
  * R P C _ _ D G _ C A L L _ T R A N S M I T _ I N T
  *
  * Send part of RPC call request/response and return.
  *
- * Note: a 0 length transmit request is legitimate and typically causes an 
- * empty request fragment to get created and queued.  This is how RPCs with 
- * 0 ins get a request fragment created.  We don't special case this 
- * processing, it happens naturally given the way this code is written 
- * (which also means that we don't bother ensuring that this is the only 
- * situation where a 0 length request fragment can be generated - that's 
+ * Note: a 0 length transmit request is legitimate and typically causes an
+ * empty request fragment to get created and queued.  This is how RPCs with
+ * 0 ins get a request fragment created.  We don't special case this
+ * processing, it happens naturally given the way this code is written
+ * (which also means that we don't bother ensuring that this is the only
+ * situation where a 0 length request fragment can be generated - that's
  * the stub's responsibility).
  *
  * Since a sender may have the good fortune to virtually never block,
@@ -173,7 +171,7 @@ unsigned32 *st;
 
     if (call->state == rpc_e_dg_cs_orphan)
     {
-        if (xq->head != NULL) 
+        if (xq->head != NULL)
             rpc__dg_xmitq_free(xq, call);
         *st = rpc_s_call_orphaned;
         return;
@@ -226,19 +224,19 @@ unsigned32 *st;
     if (xq->part_xqe != NULL)
     {
         body_size = MIN(xq->snd_frag_size, RPC_C_DG_MAX_PKT_BODY_SIZE);
-        
+
         xqe = xq->part_xqe;
         frag_length = xqe->body_len + RPC_C_DG_RAW_PKT_HDR_SIZE;
         while (xqe->more_data)
         {
             xqe = xqe->more_data;
             frag_length += xqe->body_len;
-        }            
+        }
 
-        if (auth_epv != NULL) 
+        if (auth_epv != NULL)
             frag_length += (auth_epv->overhead);
     }
-    
+
     do
     {
         /*
@@ -262,24 +260,25 @@ unsigned32 *st;
          * If the call has an error associated with it, we're done.
          */
 
-        if (xq->part_xqe == NULL) 
+        if (xq->part_xqe == NULL)
         {
             frag_length = RPC_C_DG_RAW_PKT_HDR_SIZE;
             alloc_pkt = true;
-            if (auth_epv != NULL) 
+            if (auth_epv != NULL)
                 frag_length += (auth_epv->overhead);
         }
         else
-        {                      
-            alloc_pkt = (xqe->body_len == body_size) && 
+        {
+            assert(xqe != NULL);
+            alloc_pkt = (xqe->body_len == body_size) &&
                         (frag_length < xq->snd_frag_size);
         }
 
         if (alloc_pkt)
-        {                      
+        {
             rpc_dg_xmitq_elt_p_t tmp;
             /*
-             * Sleep until 
+             * Sleep until
              *    1) a fack comes in and
              *          a) opens window space
              *          b) packets need to be rexmitted
@@ -290,7 +289,7 @@ unsigned32 *st;
              * Either way, call call_xmit to handle the new queue state.
              */
             while ((xq->first_unsent != NULL &&
-                    RPC_DG_FRAGNUM_IS_LTE(xq->first_unsent->fragnum + 
+                    RPC_DG_FRAGNUM_IS_LTE(xq->first_unsent->fragnum +
                         xq->max_blast_size, xq->next_fragnum))
                    || (xq->next_fragnum == 1 &&
                        xq->first_fack_seen == false &&
@@ -307,8 +306,9 @@ unsigned32 *st;
 
             if (xq->part_xqe == NULL)
                 xqe = xq->part_xqe = tmp;
-            else                     
+            else
             {
+                assert(xqe != NULL);
                 xqe->more_data = tmp;
                 xqe = tmp;
             }
@@ -330,12 +330,12 @@ unsigned32 *st;
                 unsigned32 data_left = iove->data_len - data_used;
 
                 if (room_left <= data_left) {
-                    memcpy(((char *)xqe->body)+xqe->body_len, &iove->data_addr[data_used], 
+                    memcpy(((char *)xqe->body)+xqe->body_len, &iove->data_addr[data_used],
                           room_left);
                     data_used += room_left;
                     xqe->body_len += room_left;
                     frag_length += room_left;
-                    room_left = 0;                      
+                    room_left = 0;
 
                     /*
                      * If we copied the full data buffer, and it's the last one,
@@ -352,14 +352,14 @@ unsigned32 *st;
                     break;
                 }
                 else {
-                    memcpy(((char *)xqe->body)+xqe->body_len, &iove->data_addr[data_used], 
+                    memcpy(((char *)xqe->body)+xqe->body_len, &iove->data_addr[data_used],
                           data_left);
                     room_left -= data_left;
                     xqe->body_len += data_left;
                     frag_length += data_left;
                     if (iove->buff_dealloc != NULL)
                         RPC_FREE_IOVE_BUFFER(iove);
-                    
+
                     /*
                      * We copied the full data buffer;  if it's the last one,
                      * set end of data flag.
@@ -368,7 +368,7 @@ unsigned32 *st;
                     if (++elt_num == data->num_elt)
                     {
                         end_of_data = true;
-                        break;             
+                        break;
                     }
                     iove = &data->elt[elt_num];
                     data_used = 0;
@@ -377,18 +377,18 @@ unsigned32 *st;
         }
 
         RPC_DG_CALL_SET_STATE(call, rpc_e_dg_cs_xmit);
-                                               
+
         /*
          * The transmit/windowing routines assume that anything on the
          * queue is ready to be sent, so we need to worry that we don't
          * put the last packet on the queue here (or the last_frag bit
          * won't get set).  If we have run out of new data, leave the
-         * partial packet as it is (possibly full), and return. 
+         * partial packet as it is (possibly full), and return.
          */
-           
+
         if (end_of_data)
             return;
-                          
+
         /*
          * Add newly-filled pkt to xmit queue.
          */
@@ -409,7 +409,7 @@ unsigned32 *st;
              */
 
             if (xq->freqs_out == 0)
-            {       
+            {
                 if (call->n_resvs < 2)
                 {
                     xq->blast_size = 1;
@@ -420,7 +420,7 @@ unsigned32 *st;
                     xq->blast_size = 2;
                     rpc__dg_call_xmit(call, true);
                 }
-            }                 
+            }
 
             /*
              * periodically check for a local posted cancel...
@@ -431,13 +431,12 @@ unsigned32 *st;
     while (elt_num < data->num_elt);
 }
 
-
 /*
  * R P C _ _ D G _ C A L L _ R E C E I V E _ I N T
  *
  * Return the next, and possibly last part of the RPC call
  * request/response.
- * 
+ *
  * Note well that this routine differs from "rpc__dg_call_receive" in
  * that this routine might return an I/O vector element whose data length
  * is zero but whose dealloc routine pointer is non-NULL.  Callers of
@@ -456,7 +455,6 @@ unsigned32 *st;
     rpc_dg_recvq_p_t rq = &call->rq;
     rpc_dg_recvq_elt_p_t rqe;
     rpc_key_info_p_t key_info = call->key_info;
-    
 
     RPC_DG_CALL_LOCK_ASSERT(call);
 
@@ -474,8 +472,8 @@ unsigned32 *st;
         return;
 
     if (call->state == rpc_e_dg_cs_orphan)
-    {                     
-        if (rq->head != NULL) 
+    {
+        if (rq->head != NULL)
             rpc__dg_recvq_free(rq);
         *st = rpc_s_call_orphaned;
         return;
@@ -495,7 +493,7 @@ unsigned32 *st;
      */
 
     while (rq->last_inorder == NULL)
-    {                     
+    {
         rpc__dg_call_wait(call, rpc_e_dg_wait_on_network_event, st);
 
         if (*st != rpc_s_ok)
@@ -503,14 +501,14 @@ unsigned32 *st;
     }
 
     rqe = rq->head;
-    
+
     /*
      * Check authentication iff the head of the fragment.
      */
     if (key_info != NULL && rqe->hdrp != NULL)
     {
         rpc_dg_auth_epv_p_t auth_epv = call->auth_epv;
-        
+
         unsigned32 blocksize = auth_epv->blocksize;
         char *cksum;
         unsigned long raw_bodysize;
@@ -683,15 +681,15 @@ unsigned32 *st;
         rq->inorder_len--;
         rq->queue_len--;
     }
-        
+
     /*
      * If the queue was completely full, the sender will have been sent
      * a "0 window size" fack to stop it from sending.  Send a fack now
      * to let it know it can begin sending again.
      */
     if (rq->queue_len == rq->max_queue_len - 1)
-    {  
-        RPC_DBG_PRINTF(rpc_e_dbg_recv, 1, 
+    {
+        RPC_DBG_PRINTF(rpc_e_dbg_recv, 1,
             ("(rpc__dg_call_receive_int) sending fack to prod peer\n"));
         rpc__dg_call_xmit_fack(call, rqe, false);
     }
@@ -715,7 +713,6 @@ unsigned32 *st;
     RPC_DG_RECVQ_IOVECTOR_SETUP(data, rqe);
 }
 
-
 /*
  * R P C _ _ D G _ C A L L _ T R A N S M I T
  *
@@ -733,7 +730,7 @@ unsigned32 *st;
     if (RPC_DG_CALL_IS_CLIENT(call)) {
         assert(call->state == rpc_e_dg_cs_init || call->state == rpc_e_dg_cs_xmit);
     }
-    else 
+    else
     {
         assert(call->state == rpc_e_dg_cs_recv || call->state == rpc_e_dg_cs_xmit || call->state == rpc_e_dg_cs_orphan);
     }
@@ -742,7 +739,6 @@ unsigned32 *st;
     rpc__dg_call_transmit_int(call, data, st);
     RPC_DG_CALL_UNLOCK(call);
 }
-
 
 /*
  * R P C _ _ D G _ C A L L _ R E C E I V E
@@ -766,13 +762,12 @@ unsigned32 *st;
 
     if (*st == rpc_s_ok)
     {
-        if (data->data_len == 0 && data->buff_dealloc != NULL) 
+        if (data->data_len == 0 && data->buff_dealloc != NULL)
             RPC_FREE_IOVE_BUFFER(data);
     }
 
     RPC_DG_CALL_UNLOCK(call);
 }
-
 
 /*
  * R P C _ _ D G _ C A L L _ T R A N S C E I V E
@@ -840,7 +835,7 @@ unsigned32 *st;
     {
         RPC_DG_PING_INFO_INIT(&ccall->ping);
         RPC_DG_CALL_SET_STATE(&ccall->c, rpc_e_dg_cs_recv);
-        
+
         rpc__dg_call_receive_int(&ccall->c, recv_data, st);
 
         if (*st == rpc_s_ok)
@@ -853,7 +848,7 @@ unsigned32 *st;
             assert(rqe->hdrp != NULL);
             RPC_DG_HDR_INQ_DREP(ndr_format, rqe->hdrp);
 
-            if (recv_data->data_len == 0 && recv_data->buff_dealloc != NULL) 
+            if (recv_data->data_len == 0 && recv_data->buff_dealloc != NULL)
                 RPC_FREE_IOVE_BUFFER(recv_data);
         }
 
@@ -883,7 +878,7 @@ unsigned32 *st;
             rpc__naf_addr_overcopy(ccall->c.addr, &h->c.c.rpc_addr, &tst);
             h->c.c.addr_has_endpoint = true;
             h->c.c.bound_server_instance = true;
-            RPC_DBG_PRINTF(rpc_e_dbg_general, 5, 
+            RPC_DBG_PRINTF(rpc_e_dbg_general, 5,
                 ("(rpc__dg_call_transceive) unblocking serialized waiters...\n"));
             RPC_BINDING_COND_BROADCAST(0);
 
@@ -893,7 +888,6 @@ unsigned32 *st;
 
     RPC_DG_CALL_UNLOCK(&ccall->c);
 }
-
 
 /*
  * R P C _ _ D G _ C A L L _ B L O C K _ U N T I L _ F R E E
@@ -914,7 +908,6 @@ unsigned32 *st;
      * data provided to us by the stub.
      */
 }
-
 
 /*
  * R P C _ _ D G _ C A L L _ A L E R T
@@ -938,7 +931,6 @@ unsigned32 *st;
 	rpc_m_unimp_call,
 	"rpc__dg_call_alert" ));
 }
-
 
 /*
  * R P C _ _ D G _ C A L L _ R E C E I V E _ F A U L T
@@ -1130,7 +1122,6 @@ unsigned32 *st;
     RPC_DG_CALL_UNLOCK(&ccall->c);
 }
 
-
 /*
  * R P C _ _ D G _ C A L L _ F A U L T
  *
@@ -1171,14 +1162,14 @@ unsigned32 *st;
      * generating a new one while the server still thinks the call is
      * not complete (thinking it must have dropped an ack,...).  The
      * fault is really just a special response pkt.
-     * 
+     *
      * This routine is called by the sstub (the thread executing the
      * call) so there's no need to signal the call.  We don't actually
      * want the call's status to be set to a error value; the server
      * runtime wants to still complete processing the call which involves
      * sending the fault response to the client (instead of any further
      * data response).
-     * 
+     *
      * Subsequent fault response retransmissions will occur just as if
      * this were a "normal" call response as well as in reply to a ping.
      * Of course, faults for idempotent calls don't get remembered or
@@ -1195,7 +1186,6 @@ unsigned32 *st;
 
     RPC_DG_CALL_UNLOCK(&scall->c);
 }
-
 
 /*
  * R P C _ _ D G _ C A L L _ D I D _ M G R _ E X E C U T E
@@ -1220,7 +1210,7 @@ unsigned32 *st;
      * If we don't know the boot time of the server and the call was not
      * idempotent, then the server CAN'T have executed the call.
      */
-    if (ccall->c.call_server_boot == 0 && 
+    if (ccall->c.call_server_boot == 0 &&
         ! RPC_DG_FLAG_IS_SET(xq->base_flags, RPC_C_DG_PF_IDEMPOTENT))
     {
         r = false;
@@ -1247,16 +1237,16 @@ unsigned32 *st;
         case nca_s_unk_if:
         case nca_s_unsupported_type:
         case nca_s_manager_not_entered:
-        case nca_s_op_rng_error:    
+        case nca_s_op_rng_error:
         case nca_s_who_are_you_failed:
-        case nca_s_wrong_boot_time: 
+        case nca_s_wrong_boot_time:
             r = false;
             goto DONE;
 
         /*
          * Unknown reject status.  Assume the worst.
          */
-        default:        
+        default:
             r = true;
             goto DONE;
     }
@@ -1266,7 +1256,6 @@ DONE:
     RPC_DG_CALL_UNLOCK(&ccall->c);
     return (r);
 }
-
 
 /*
  * R P C _ _ D G _ N E T W O R K _ I N Q _ P R O T _ V E R S

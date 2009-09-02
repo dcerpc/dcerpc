@@ -564,6 +564,7 @@ unsigned32                  *status;
             }
 
             ovp->count = curr_obj;
+            assert(object_uuid_vec != NULL);
             for (j = 0; j < curr_obj; j++)
                 ovp->uuid[j] = object_uuid_vec->uuid[j];
 
@@ -1804,6 +1805,8 @@ unsigned32            *status;
 {
     rpc_binding_rep_p_t     binding_rep = (rpc_binding_rep_p_t) binding_h;
     
+    assert(binding_rep != NULL);
+
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
     RPC_BINDING_VALIDATE_CLIENT (binding_rep, status);
@@ -2266,6 +2269,7 @@ unsigned32              *st;
          */
         tower_to_use = RPC_RANDOM_GET (0, num_towers - 1);
 
+        assert (&towers[tower_to_use] != NULL);
         rpc__naf_tower_flrs_to_addr (
             &(towers[tower_to_use]->tower_octet_string[0]),
             &tower_rpc_addr,

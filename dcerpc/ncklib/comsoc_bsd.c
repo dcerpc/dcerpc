@@ -1558,6 +1558,7 @@ ifconf_again:
     /*
      * Go through the interfaces and get the info associated with them.
      */
+    assert(rpc_addr_vec != NULL);
     (*rpc_addr_vec)->len = 0;
     last_ifr = (struct ifreq *) (ifc.ifc_buf + ifc.ifc_len);
 
@@ -1852,6 +1853,7 @@ FREE_IT:
     }
     if (broadcast_addr_vec != NULL)
     {
+        assert(netmask_addr_vec != NULL);
         for (i = 0; i < (*netmask_addr_vec)->len; i++)
         {
             RPC_MEM_FREE ((*netmask_addr_vec)->addrs[i], RPC_C_MEM_RPC_ADDR);

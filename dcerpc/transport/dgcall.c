@@ -1479,8 +1479,10 @@ boolean *wake_thread;
                         rq->head = rqe;
                         rq->head_fragnum = fragnum;
                     }
-                    else
+                    else {
+                        assert(prev_scan_rqe != NULL);
                         prev_scan_rqe->next = rqe;
+                    }
                 }
             }
         }

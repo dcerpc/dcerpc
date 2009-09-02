@@ -253,8 +253,10 @@ dcethread__init_self(dcethread* thread)
 static void
 dcethread__sanity(dcethread* thread)
 {
-    if (!thread)
+    if (!thread) {
         DCETHREAD_ERROR("NULL thread encountered");
+        return;
+    }
     if ((long)thread->refs < 0)
         DCETHREAD_ERROR("Thread %p: ref count < 0", thread);
     if (!thread->flag.locked)

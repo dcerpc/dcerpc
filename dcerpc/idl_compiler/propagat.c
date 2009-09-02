@@ -4318,8 +4318,8 @@ boolean PROP_main               /* Returns TRUE on success */
 
     /* Propagate attributes throughout the interface. */
 
-    if (int_p != NULL)
-        interface_prop(int_p, NULL);
+    assert(int_p != NULL);
+    interface_prop(int_p, NULL);
 
     /* Update the sp types list to get all contained pa types into aux file */
     PROP_contained_pa_to_sp_list(&int_p->sp_types,&int_p->sp_types);

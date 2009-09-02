@@ -254,6 +254,7 @@ unsigned32              *status;
 {
     rpc_binding_rep_p_t     binding_rep = (rpc_binding_rep_p_t) *binding_h;
 
+    assert(binding_rep != NULL);
 
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
@@ -423,6 +424,7 @@ unsigned32              *status;
 {
     rpc_binding_rep_p_t     binding_rep = (rpc_binding_rep_p_t) binding_h;
 
+    assert(binding_rep != NULL);
 
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
@@ -508,6 +510,8 @@ unsigned32              *status;
 {
     rpc_binding_rep_p_t binding_rep = (rpc_binding_rep_p_t) binding_h;
 
+    assert(binding_rep != NULL);
+
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
     
@@ -577,6 +581,7 @@ unsigned32              *status;
 {
     rpc_binding_rep_p_t     binding_rep = (rpc_binding_rep_p_t) binding_h;
 
+    assert(binding_rep != NULL);
 
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
@@ -696,6 +701,7 @@ unsigned32              *status;
     rpc_cs_tags_eval_p_t    tags_s_p;
     rpc_cs_tags_eval_p_t    tags_d_p;
 
+    assert(src_binding_rep != NULL);
 
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
@@ -919,6 +925,7 @@ unsigned32              *status;
     unsigned_char_p_t       network_options = NULL;
     unsigned32              temp_status;
     
+    assert(binding_rep != NULL);
 
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
@@ -2220,6 +2227,8 @@ unsigned32              *status;
 {
     rpc_binding_rep_p_t binding_rep = (rpc_binding_rep_p_t) binding_h;
 
+    assert(binding_rep != NULL);
+
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
 
@@ -2297,6 +2306,8 @@ unsigned32              *status;
     rpc_binding_rep_p_t     *dst_binding_rep = 
                                 (rpc_binding_rep_p_t *) destination_binding;
 
+
+    assert(src_binding_rep != NULL);
 
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
@@ -2526,6 +2537,7 @@ unsigned32              *status;
     unsigned32              tmp_status;
     boolean                 have_addr = false;
 
+    assert(src_binding_rep != NULL);
 
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();

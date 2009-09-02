@@ -1420,7 +1420,7 @@ unsigned32              *status;
     c1 = c1 + c0;
     c0 = c0 + *next_uuid++;
     c1 = c1 + c0;
-    c0 = c0 + *next_uuid++;
+    c0 = c0 + *next_uuid;
     c1 = c1 + c0;
 
     /*
@@ -1632,7 +1632,7 @@ static void true_random_init (void)
     seed ^= *seedp++;
     seed ^= *seedp++;
     seed ^= *seedp++;
-    seed ^= *seedp++;
+    seed ^= *seedp;
     rand_irand += seed + uuid__get_os_pid();
 }
 

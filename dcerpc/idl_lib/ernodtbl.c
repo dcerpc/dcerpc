@@ -1354,7 +1354,7 @@ void rpc_ss_ndr_unmar_deletes
     IDL_msp_t IDL_msp;
 #endif
 {
-    idl_ulong_int delete_count;
+    idl_ulong_int delete_count = 0;
     idl_ulong_int *delete_list;
     unsigned32 i;
     rpc_void_p_t node_to_delete;

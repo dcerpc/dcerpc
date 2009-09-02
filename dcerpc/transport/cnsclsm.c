@@ -2019,6 +2019,7 @@ pointer_t       sm;
         /*
          * Chain the fault data onto the buffered output.
          */
+        assert(stub_data_p != NULL);
         for (i = 0, iov_elt_p = stub_data_p->elt;
              i < stub_data_p->num_elt;
              i++, iov_elt_p++)
@@ -2472,6 +2473,7 @@ pointer_t       sm;
         /*
          * Chain the fault data onto the buffered output.
          */
+        assert(stub_data_p != NULL);
         for (i = 0, iov_elt_p = stub_data_p->elt;
              i < stub_data_p->num_elt;
              i++, iov_elt_p++)

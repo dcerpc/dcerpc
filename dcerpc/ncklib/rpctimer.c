@@ -373,6 +373,7 @@ rpc_clock_t             freq;
             }
             else
             {
+                assert(prev_ptr != NULL);
                 prev_ptr->next = t;
                 t->next = list_ptr;
             }

@@ -72,6 +72,7 @@ static void print_bad_tower(
 }
 
 #define CHECK_TOWER_STATUS(tower, status) \
+    assert(status != NULL); \
     if (dflag && *(status) != rpc_s_ok) \
         print_bad_tower((tower), __FILE__, __LINE__);
 
@@ -98,6 +99,7 @@ error_status_t  *status;
 
     if (tref->count < (unsigned16)(RPC_C_NUM_RPC_FLOORS + 1))
     {
+        assert(status != NULL);
         SET_STATUS(status, ept_s_invalid_entry);
     }
 
@@ -145,6 +147,7 @@ error_status_t  *status;
 
     if (tref->count < (unsigned16)RPC_C_NUM_RPC_FLOORS)
     {
+        assert(status != NULL);
         SET_STATUS(status, ept_s_invalid_entry);
         goto DONE;
     }

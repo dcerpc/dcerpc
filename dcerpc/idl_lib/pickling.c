@@ -35,6 +35,7 @@
 #include <config.h>
 #endif
 
+#include <assert.h>
 
 #include <dce/idlddefs.h>
 #include <ndrmi.h>
@@ -1181,6 +1182,7 @@ void idl_es_before_interp_call
             p_es_state->IDL_pickle_header_read = idl_false;
         }
         DCETHREAD_CATCH_ALL(exc)
+        assert(p_es_state != NULL);
         if ( (p_es_state->IDL_action == IDL_encoding_k)
             && (p_es_state->IDL_style == IDL_dynamic_k)
             && (*(p_es_state->IDL_p_buff_addr) != NULL) )

@@ -91,7 +91,6 @@ extern void acf_init(
     char        *acf_file       /* [in] ACF file name */
 );
 
-
 /* Globals */
 extern int acf_yylineno;
 extern int nidl_yylineno;
@@ -346,7 +345,6 @@ static boolean parse_acf        /* Returns true on success */
 {
     extern int acf_yyparse( void);
 
-
     extern FILE *acf_yyin;
     extern int  acf_yynerrs;
     extern char * acf_yytext;
@@ -570,7 +568,6 @@ static boolean parse
     struct stat stat_buf;                       /* File lookup stats */
     int         i=0;
 
-
     /* One-time saving of command array addresses to static storage. */
     if (saved_cmd_opt == NULL)
         saved_cmd_opt = cmd_opt;
@@ -663,7 +660,7 @@ static boolean parse
 		  nidl_yydebug = 1;
 	 }
 #endif
-	 
+
     if (nidl_yyparse() != 0 && error_count == 0)
         log_error(nidl_yylineno, NIDL_COMPABORT, NULL);
     *int_p = the_interface;
@@ -828,7 +825,9 @@ AST_interface_n_t *FE_parse_import
 
 	 /* Saved interface attributes */
 	 AST_interface_n_t *saved_interface;
-	 int saved_op_count;
+#if 0
+    int saved_op_count;
+#endif
 
 	 /*
 	  * Return now, if the file is already imported.
@@ -836,14 +835,12 @@ AST_interface_n_t *FE_parse_import
 	 if (already_imported (new_input))
 		  return (AST_interface_n_t *)NULL;
 
-
 	 /*
 	  * SAVE THE CURRENT FLEXXER STATE
 	  */
 
 	 saved_nidl_flexxer_state = get_current_nidl_flexxer_activation();
 	 saved_acf_flexxer_state = get_current_acf_flexxer_activation();
-
 
 	 /*
 	  * SAVE THE CURRENT BISON STATE
@@ -863,14 +860,15 @@ AST_interface_n_t *FE_parse_import
 	  */
 
 	 saved_interface = the_interface;
-	 saved_op_count = the_interface ? the_interface->op_count : 0;
+#if 0
+    saved_op_count = the_interface ? the_interface->op_count : 0;
+#endif
 
 	 /*
 	  * Initialize interface attributes
 	  */
 
 	 the_interface = NULL;
-
 
 	 /*
 	  * We have now saved away all the state of the current parse.
@@ -888,28 +886,27 @@ AST_interface_n_t *FE_parse_import
 
 	 /* Make a new NIDL Flex token analyzer state-machine */
 
-	 new_nidl_flexxer_state = new_nidl_flexxer_activation_record(); 
-	 set_current_nidl_flexxer_activation(new_nidl_flexxer_state); 
+	 new_nidl_flexxer_state = new_nidl_flexxer_activation_record();
+	 set_current_nidl_flexxer_activation(new_nidl_flexxer_state);
 	 init_new_nidl_flexxer_activation();
 
 	 /* Make a new NIDL Bison parser state-machine */
 
-	 new_nidl_bisonparser_state = new_nidl_bisonparser_activation_record(); 
-	 set_current_nidl_bisonparser_activation(new_nidl_bisonparser_state); 
+	 new_nidl_bisonparser_state = new_nidl_bisonparser_activation_record();
+	 set_current_nidl_bisonparser_activation(new_nidl_bisonparser_state);
 	 init_new_nidl_bisonparser_activation();
 
 	 /* Make a new ACF Flex token analyzer state-machine */
 
-	 new_acf_flexxer_state = new_acf_flexxer_activation_record(); 
-	 set_current_acf_flexxer_activation(new_acf_flexxer_state); 
+	 new_acf_flexxer_state = new_acf_flexxer_activation_record();
+	 set_current_acf_flexxer_activation(new_acf_flexxer_state);
 	 init_new_acf_flexxer_activation();
 
 	 /* Make a new ACF Bison parser state-machine */
 
-	 new_acf_bisonparser_state = new_acf_bisonparser_activation_record(); 
-	 set_current_acf_bisonparser_activation(new_acf_bisonparser_state); 
+	 new_acf_bisonparser_state = new_acf_bisonparser_activation_record();
+	 set_current_acf_bisonparser_activation(new_acf_bisonparser_state);
 	 init_new_acf_bisonparser_activation();
-
 
 	 /* Now we can parse the import file....
 	  * Parse the file.  Routine parse normally returns a AST_interface_n_t,
@@ -963,21 +960,20 @@ AST_interface_n_t *FE_parse_import
 	  * to parse the imported file.
 	  */
 
-	 delete_nidl_flexxer_activation_record(new_nidl_flexxer_state); 
-	 delete_acf_flexxer_activation_record(new_acf_flexxer_state); 
-	 delete_nidl_bisonparser_activation_record(new_nidl_bisonparser_state); 
-	 delete_acf_bisonparser_activation_record(new_acf_bisonparser_state); 
+	 delete_nidl_flexxer_activation_record(new_nidl_flexxer_state);
+	 delete_acf_flexxer_activation_record(new_acf_flexxer_state);
+	 delete_nidl_bisonparser_activation_record(new_nidl_bisonparser_state);
+	 delete_acf_bisonparser_activation_record(new_acf_bisonparser_state);
 
 	 /*
 	  * Restore the previous Bison and Flexer state-machines so
 	  * that we can continue where we left off.
 	  */
 
-	 set_current_nidl_flexxer_activation(saved_nidl_flexxer_state); 
-	 set_current_acf_flexxer_activation(saved_acf_flexxer_state); 
-	 set_current_nidl_bisonparser_activation(saved_nidl_bisonparser_state); 
-	 set_current_acf_bisonparser_activation(saved_acf_bisonparser_state); 
-
+	 set_current_nidl_flexxer_activation(saved_nidl_flexxer_state);
+	 set_current_acf_flexxer_activation(saved_acf_flexxer_state);
+	 set_current_nidl_bisonparser_activation(saved_nidl_bisonparser_state);
+	 set_current_acf_bisonparser_activation(saved_acf_bisonparser_state);
 
 	 /*
 	  * Restore information used by error reporting routines.

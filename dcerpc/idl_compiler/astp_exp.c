@@ -355,8 +355,15 @@ boolean ASTP_evaluate_expr(AST_exp_n_t * exp, boolean constant_only)
 			break;
 		case AST_EXP_TERNARY_OP:
 			/* we want to preserve the type for this, so we short-circuit the return */
-			*exp = ASTP_expr_integer_value(op1) ? *op2 : *op3;
-			return true;
+            if (ASTP_expr_integer_value(op1)) {
+                assert(op2 != NULL);
+                *exp = *op2;
+            }
+            else {
+                assert(op3 != NULL);
+                *exp = *op3;
+            }
+            return true;
 		default:
 			/* NOTREACHED (hopefully!) */
 			break;

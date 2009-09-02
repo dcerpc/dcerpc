@@ -926,6 +926,7 @@ pointer_t       event_param;
      * on the group.
      */
     assoc_grp = RPC_CN_ASSOC_GRP (((rpc_cn_assoc_t *)spc_struct)->assoc_grp_id);
+    assert(assoc_grp != NULL);
     if ((assoc_grp->grp_refcnt == 0) ||
         (assoc_grp->grp_cur_assoc > 1))
     {
@@ -1003,6 +1004,7 @@ pointer_t       event_param;
 {\
     RPC_CN_DBG_RTN_PRINTF(CLIENT shutdown_allowed_pred_macro);\
     assoc_grp = RPC_CN_ASSOC_GRP (((rpc_cn_assoc_t *)spc_struct)->assoc_grp_id);\
+    assert(assoc_grp != NULL); \
     if ((assoc_grp->grp_refcnt == 0) ||\
         (assoc_grp->grp_cur_assoc > 1))\
     {\
@@ -2208,6 +2210,7 @@ pointer_t       sm;
      * server. 
      */
     assoc_grp = RPC_CN_ASSOC_GRP (assoc->assoc_grp_id);
+    assert(assoc_grp != NULL);
     if (assoc_grp->grp_cur_assoc == 1)
     {
         /*

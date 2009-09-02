@@ -150,7 +150,7 @@ static void find_first_set
     if ((m = n & 0X00FF00FF)) {tp = tp -  8; n = m;}
     if ((m = n & 0X0F0F0F0F)) {tp = tp -  4; n = m;}
     if ((m = n & 0X33333333)) {tp = tp -  2; n = m;}
-    if ((m = n & 0X55555555)) {tp = tp -  1;}
+    if ((n & 0X55555555)) {tp = tp -  1;}
 
     *position = tp;
 }
@@ -497,6 +497,7 @@ NAMETABLE_id_t NAMETABLE_add_id
     This -> tagBinding = NULL;
 
     /* Link it into the nametable. */
+    assert(insert_point != NULL);
     *insert_point = This;
     This->parent = parent;
 

@@ -1724,6 +1724,7 @@ unsigned32              *st;
          * in it and bump the reference count.
          */
         assoc_grp = RPC_CN_ASSOC_GRP (grp_id);
+        assert(assoc_grp != NULL);
         assoc_grp->grp_liveness_mntr = rundown;
         assoc_grp->grp_refcnt++;
         *st = rpc_s_ok;
@@ -1810,6 +1811,7 @@ unsigned32              *st;
          * Now we have the association group. Decrement the reference count.
          */
         assoc_grp = RPC_CN_ASSOC_GRP (grp_id);
+        assert(assoc_grp != NULL);
         assoc_grp->grp_refcnt--;
         *st = rpc_s_ok;
     }
@@ -1895,6 +1897,7 @@ unsigned32              *st;
          * looking for. Increment the reference count.
          */
         assoc_grp = RPC_CN_ASSOC_GRP (grp_id);
+        assert(assoc_grp != NULL);
         assoc_grp->grp_refcnt++;
         *st = rpc_s_ok;
     }
@@ -1977,6 +1980,7 @@ unsigned32              *st;
          * looking for. Decrement the reference count.
          */
         assoc_grp = RPC_CN_ASSOC_GRP (grp_id);
+        assert(assoc_grp != NULL);
         assoc_grp->grp_refcnt--;
         *st = rpc_s_ok;
     }

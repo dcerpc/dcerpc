@@ -106,8 +106,6 @@ void ASTP_add_name_binding
         /* Add the name to nametable and bind it to the specified node */
         issue_error = !NAMETABLE_add_binding (name, AST_node);
 
-
-
     /*
      * If the name binding failed, output the error message.
      */
@@ -546,7 +544,6 @@ ASTP_node_t *ASTP_lookup_binding
                     break;
             }
 
-
             /* State where the name was previously declared, if known */
             if ((bound_node->fe_info->source_line != 0) &&
                 (bound_node->fe_info->file != STRTAB_NULL_STR))
@@ -566,7 +563,6 @@ ASTP_node_t *ASTP_lookup_binding
 }
 
 /*-----------------------------------------------------------------------*/
-
 
 /*
  *  A S T _ p o i n t e r _ n o d e
@@ -715,7 +711,6 @@ AST_type_p_n_t *AST_declarators_to_types
         type_p_list = (AST_type_p_n_t *)AST_concat_element (
                         (ASTP_node_t *)type_p_list, (ASTP_node_t *)type_p_ptr);
 
-
         /*
          *  If we are processing a generated declarator, ignore all pointer
          *  attributes
@@ -734,7 +729,6 @@ AST_type_p_n_t *AST_declarators_to_types
         if (type_p_ptr->type->fe_info->tag_ptr != NULL)
             AST_set_type_attrs(type_p_ptr->type->fe_info->tag_ptr, &local_attributes);
      }
-
 
     /*
      * For each of the declarators create a new type as described by the
@@ -769,18 +763,13 @@ AST_type_p_n_t *AST_declarators_to_types
             AST_set_type_attrs(type_p_ptr->type->fe_info->tag_ptr, attributes);
     }
 
-
     /* Free temporary declarators list */
     ASTP_free_declarators(declarators_ptr);
-
 
     return type_p_list;
 }
 
 /*---------------------------------------------------------------------*/
-
-
-
 
 /*
  *
@@ -816,7 +805,6 @@ static AST_array_n_t *AST_propagate_array_type
     AST_array_index_n_t  *array_index_node;
     unsigned short       index_count;
     boolean              is_conformant = FALSE;
-
 
     /* Create the array node, creating linking in a element type node */
     array_node_ptr = AST_array_node(element_type_node_ptr);
@@ -875,7 +863,6 @@ static AST_array_n_t *AST_propagate_array_type
         AST_SET_CONFORMANT(type_node_ptr);
     }
 
-
     return array_node_ptr;
 }
 
@@ -921,7 +908,6 @@ static AST_type_n_t *AST_propagate_type_attrs
     AST_type_n_t *return_type;          /* type node to return */
     ASTP_attr_flag_t ptr_attrs = 0;
 
-
     return_type = type_node_ptr;
 
     /*
@@ -931,10 +917,9 @@ static AST_type_n_t *AST_propagate_type_attrs
      */
     if (attributes != NULL)
     {
-		  /* Copy the iid_is name */
-		 	return_type->iid_is_name = attributes->iid_is_name; 
+        /* Copy the iid_is name */
+        return_type->iid_is_name = attributes->iid_is_name;
 
-		  
         /*
          *  If any pointer attrs are set, make sure only one of them is
          *  specified.
@@ -993,7 +978,6 @@ static AST_type_n_t *AST_propagate_type_attrs
             ASTP_CLR_ATTR(attributes,ASTP_UNALIGN|ASTP_SMALL|ASTP_STRING0|ASTP_V1_ENUM);
         }
     }
-
 
     /*
      * Do type attributes for parameter nodes
@@ -1062,7 +1046,6 @@ static AST_type_n_t *AST_propagate_type_attrs
             }
         } /* End pointer attributes processing */
 
-
         /*
          * Propagate small, string, and string0 attributes to the parameter node
          */
@@ -1076,7 +1059,6 @@ static AST_type_n_t *AST_propagate_type_attrs
             AST_SET_STRING0((AST_parameter_n_t *)parent_node);
 
     }  /* End if parameter node */
-
 
     /*
      * Do the type attributes for field and arm nodes
@@ -1124,7 +1106,6 @@ static AST_type_n_t *AST_propagate_type_attrs
                     log_error(nidl_yylineno,NIDL_UNIQATTRPTR, NULL);
             }
         }  /* End pointer attributes processing */
-
 
         /*
          * Propagate small, string and string0 to the arm and field nodes.
@@ -1344,7 +1325,6 @@ static AST_type_n_t *AST_propagate_typedef
                     break;
             }
 
-
             /*
              * Do processing for possibly forward referenced tags.
              * 1) Propagate the incomplete and tag_ptr fields of the fe_info.
@@ -1362,7 +1342,6 @@ static AST_type_n_t *AST_propagate_typedef
             }
         }
     }
-
 
     /* Set the type node name to the declarator's name */
     return_type->name = declarator_ptr->name;
@@ -1411,7 +1390,6 @@ AST_type_n_t *AST_propagate_type
         simple_type,
         complex_type
     } last_op_kind;             /* New type is either simple or complex type */
-
 
     return_type = type_node_ptr;
     last_op_kind = simple_type; /* If no declarator_ops, then simple_type */
@@ -1535,7 +1513,6 @@ AST_type_n_t *AST_propagate_type
 
 /*---------------------------------------------------------------------*/
 
-
 /*
  * A S T P _ s a v e _ f i e l d _ r e f _ c o n t e x t
  * =====================================================
@@ -1584,7 +1561,6 @@ static void ASTP_save_field_ref_context
 
     return;
 }
-
 
 /*--------------------------------------------------------------------*/
 
@@ -1659,7 +1635,7 @@ void ASTP_set_array_rep_type
          * support varying instances.
          */
         if (is_varying)
-        { 
+        {
             AST_SET_VARYING(type_node_ptr->type_structure.pointer->pointee_type->array_rep_type);
 
             /*
@@ -1867,7 +1843,6 @@ AST_field_attr_n_t *AST_set_field_attrs
         }
     }
 
-
     /*
      * We now know we either have an array or a top level pointer used an
      * array.  If we found an array node, we can directly access it.
@@ -1883,7 +1858,6 @@ AST_field_attr_n_t *AST_set_field_attrs
 		  tp = type_node;
 		  while(tp->type_structure.pointer->pointee_type->kind == AST_pointer_k && tp->kind != AST_interface_k)
 				tp = tp->type_structure.pointer->pointee_type;
-
 
 		  dimension = 1;
 		  pointer_as_array = TRUE;
@@ -2042,6 +2016,8 @@ AST_field_attr_n_t *AST_set_field_attrs
         index_count = 0;
         do
         {
+            assert(field_ref_vector != NULL);
+
             if (index_count >= dimension)
             {
                 log_error(nidl_yylineno, NIDL_SIZEMISMATCH, NULL);
@@ -2133,7 +2109,7 @@ AST_field_attr_n_t *AST_set_field_attrs
 								}
 								break;
 						}
-						if (exp->exp_type != AST_EXP_CONSTANT) 
+						if (exp->exp_type != AST_EXP_CONSTANT)
 						{
 							log_error(nidl_yylineno, NIDL_ONLYSIMPLEEXP, NULL);
 							return NULL;
@@ -2238,8 +2214,6 @@ AST_field_attr_n_t *AST_set_field_attrs
 
     } /* end for processing all attributes in attributes->bounds */
 
-
-
     return field_attr_node;
 
 }
@@ -2288,7 +2262,6 @@ AST_type_n_t *AST_set_type_attrs
             TRUE);
     }
 
-
     /* Check the transmit_as attribute */
     if (ASTP_TEST_ATTR(attributes,ASTP_TRANSMIT_AS))
     {
@@ -2335,7 +2308,6 @@ AST_type_n_t *AST_set_type_attrs
 
 /*---------------------------------------------------------------------*/
 
-
 /*
  *  A S T P _ f r e e _ d e c l a r a t o r s
  *  ==========================================
@@ -2369,7 +2341,6 @@ void ASTP_free_declarators
         *index_node,                /* For freeing array index nodes */
         *next_index;                /* "" */
 
-
     /* Free temporary declarators list */
     for (dp = declarators_ptr, next_dp = declarators_ptr;
             next_dp != (ASTP_declarator_n_t *) NULL;
@@ -2394,14 +2365,12 @@ void ASTP_free_declarators
                 }
             }
 
-
             next_dop = dop->next_op;
             FREE(dop);
         }
 
         FREE(dp);
     }
-
 
     return;
 }
@@ -2437,7 +2406,6 @@ void ASTP_free_simple_list
         next_lp = lp->next;
         FREE(lp);
     }
-
 
     return;
 }
@@ -2512,7 +2480,6 @@ void ASTP_patch_field_reference
 }
 
 /*---------------------------------------------------------------------*/
-
 
 /*
  *  A S T P _ s e t _ f e _ i n f o
@@ -2706,7 +2673,6 @@ void AST_set_flags
             break;
     }
 
-
     /*
      * Loop through all possible attributes and either set the
      * attribute on the target node, or issue a message that it
@@ -2740,7 +2706,7 @@ void AST_set_flags
 
 					  case ASTP_LOCAL:
 							 *flags |= AST_LOCAL; break;
-							 
+
                  case ASTP_IN:
                       *flags |= AST_IN; break;
 
@@ -2822,8 +2788,6 @@ void AST_set_flags
                     break;
                  }
 
-
-
                   /* process type node with [context_handle] attribute */
                   case ASTP_CONTEXT:
                   {
@@ -2860,7 +2824,6 @@ void AST_set_flags
         }
     }
 
-
     /*
      * Issue errors on the bounds attributes if the are illegal here
      */
@@ -2885,7 +2848,6 @@ void AST_set_flags
 }
 
 /*---------------------------------------------------------------------*/
-
 
 /*
  *  A S T _ a t t r i b u t e _ t o _ t o k e n
@@ -2945,8 +2907,6 @@ long AST_attribute_to_token
 }
 
 /*---------------------------------------------------------------------*/
-
-
 
 /*
  *  A S T _ g e n e r a t e _ n a m e

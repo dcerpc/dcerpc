@@ -1347,6 +1347,7 @@ rpc_dg_recvq_elt_p_t rqe;
 
     RPC_DG_CALL_LOCK_ASSERT(&scall->c);
 
+    assert(scall != NULL);
     scall->c.last_rcv_timestamp = rpc__clock_stamp();
     scall->client_needs_sboot = client_needs_sboot;
 

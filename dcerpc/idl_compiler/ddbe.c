@@ -168,7 +168,6 @@ static void DDBE_func_code_vec_entry(
 	byte func_code /* function code */
 	);
 
-
 /*
  * Macro to add a string to the stringtable and store the resulting strtab ID.
  * If DUMPERS not defined comments are not processed, so store null strtab ID.
@@ -198,7 +197,6 @@ static void DDBE_func_code_vec_entry(
     *(p_defn_p) = new_p;\
 }
 
-
 /*
  * Allocate and initialize a sentinel entry in a vector list.
  * Using sentinels simplifies the list manipulation.
@@ -209,7 +207,6 @@ static void DDBE_func_code_vec_entry(
     (vec_rep_p)->kind = DDBE_vec_noop_k; \
     (vec_rep_p)->next = NULL; \
 }
-
 
 /*
  * Initialize the vector information for a new parameter.  Note that not all
@@ -272,7 +269,6 @@ boolean DDBE_param_is_array_of_kind
 
     return FALSE;
 }
-
 
 /*
  *  D D B E _ s p e l l _ t y p e _ k i n d
@@ -718,7 +714,7 @@ static void DDBE_scalar_vec_entry
     /* Generate scalar type kind tag */
     DDBE_NEW_ENTRY(new_p, p_defn_p, comment);
     new_p->kind       = DDBE_vec_type_kind_k;
-    new_p->val.type_p = type_p; 
+    new_p->val.type_p = type_p;
 }
 
 /*
@@ -868,7 +864,6 @@ static unsigned long DDBE_compute_vec_offsets
             offset += 2;
             break;
 
-
         case DDBE_vec_expr_arr_k:
         case DDBE_vec_expr_k:
         case DDBE_vec_expr_long_k:
@@ -937,7 +932,6 @@ static unsigned long DDBE_compute_vec_offsets
     return offset;
 }
 
-
 /*
  *  D D B E _ p a t c h _ v e c _ r e f s
  *
@@ -973,10 +967,14 @@ static void DDBE_patch_vec_refs
              * If referenced entry is a pad, actual reference is the entry that
              * follows the pad.  Turn entry into an integer index value.
              */
-            while (ref_vec_p->kind == DDBE_vec_pad_k
+            while (ref_vec_p != NULL
+                   && (ref_vec_p->kind == DDBE_vec_pad_k
                    || ref_vec_p->kind == DDBE_vec_noop_k
-                   || ref_vec_p->kind == DDBE_vec_comment_k)
+                   || ref_vec_p->kind == DDBE_vec_comment_k)) {
                 ref_vec_p = ref_vec_p->next;
+            }
+            assert(ref_vec_p != NULL);
+
             vec_p->kind = DDBE_vec_long_k;
             vec_p->val.long_val = ref_vec_p->index;
         }
@@ -984,7 +982,6 @@ static void DDBE_patch_vec_refs
         vec_p = vec_p->next;
     }
 }
-
 
 /*
  *  D D B E _ p a t c h _ o p e r _ i n f o
@@ -1085,7 +1082,6 @@ static void DDBE_init_vectors
     DDBE_VEC_INIT(vip);
 }
 
-
 /*
  *  D D B E _ i n i t _ t a g s
  *
@@ -1176,7 +1172,6 @@ static void DDBE_init_tags
     DDBE_dt_void                = NAMETABLE_add_id("IDL_DT_VOID");
 }
 
-
 /*
  *  D D B E _ s k i p _ t o _ t u p
  *
@@ -1218,7 +1213,6 @@ static void DDBE_skip_to_tup
 
     *p_tup_p = tup_p;
 }
-
 
 /*
  *  D D B E _ p u s h _ i n d i r e c t i o n _ s c o p e
@@ -1317,7 +1311,6 @@ static void DDBE_pop_indirection_scope
     FREE(top_p);
 }
 
-
 /*
  *  D D B E _ o p e r a t i o n _ i n f o
  *
@@ -1343,7 +1336,6 @@ static void DDBE_operation_info
         param_p->be_info.dd_param = NEW (DDBE_param_i_t);
     oper_p->result->be_info.dd_param = NEW (DDBE_param_i_t);
 }
-
 
 /*
  *  D D B E _ t y p e _ i n f o
@@ -1381,7 +1373,6 @@ static void DDBE_type_info
     else
         type_p->be_info.dd_type = type_i_p;
 }
-
 
 /*
  *  D D B E _ o p _ t y p e _ i n d i r e c t
@@ -1455,7 +1446,6 @@ static void DDBE_op_type_indirect
     vip->update_tup = FALSE;
 }
 
-
 /*
  *  D D B E _ t y p e _ i n d i r e c t _ e n d
  *
@@ -1497,7 +1487,6 @@ static void DDBE_type_indirect_end
      */
     DDBE_pop_indirection_scope(vip);
 }
-
 
 /*
  *  D D B E _ p r o p e r t i e s _ b y t e
@@ -1542,7 +1531,6 @@ static void DDBE_properties_byte
     prop_expr = STRTAB_add_string(properties);
     DDBE_expr_vec_entry(p_vec_p, DDBE_vec_expr_byte_k, prop_expr, "properties");
 }
-
 
 /*
  *  D D B E _ o p _ m a r s h a l l
@@ -1607,7 +1595,6 @@ static void DDBE_op_marshall
         DDBE_pad_vec_entry(vip->p_cur_p, DDBE_ARM_SIZE - vip->arm_byte_cnt);
     }
 }
-
 
 /*
  *  D D B E _ o p _ s t r u c t _ b e g i n
@@ -1712,7 +1699,7 @@ static void DDBE_op_struct_begin
         conformant = ((tup_p->flags & IR_CONFORMANT) != 0);
 
         DDBE_tag_vec_entry(&vip->ind_sp->ind_p,
-            (conformant) ? 
+            (conformant) ?
                 ((AST_UNALIGN_SET(type_p)) ? DDBE_dt_v1_conf_struct
                                            : DDBE_dt_conf_struct)
                               : DDBE_dt_fixed_struct);
@@ -1766,7 +1753,6 @@ static void DDBE_op_struct_begin
      */
     IR_process_tup(vip->ir_ctx_p, tup_p);
 }
-
 
 /*
  *  D D B E _ o p _ s t r u c t _ e n d
@@ -1831,7 +1817,6 @@ static void DDBE_op_struct_end
         DDBE_tag_vec_entry(&vip->defn_p, DDBE_dt_end_nested_struct);
     }
 }
-
 
 /*
  *  D D B E _ o p _ d i s c _ u n i o n _ b e g i n
@@ -2026,7 +2011,6 @@ static void DDBE_op_disc_union_begin
     }
 }
 
-
 /*
  *  D D B E _ o p _ d i s c _ u n i o n _ e n d
  *
@@ -2060,7 +2044,6 @@ static void DDBE_op_disc_union_end
     type_p->be_info.dd_type->defn_done = TRUE;
     vip->in_default_arm = FALSE;
 }
-
 
 /*
  *  D D B E _ o p _ p i p e _ b e g i n
@@ -2137,7 +2120,6 @@ static void DDBE_op_pipe_begin
     }
 }
 
-
 /*
  *  D D B E _ o p _ p i p e _ e n d
  *
@@ -2170,7 +2152,6 @@ static void DDBE_op_pipe_end
     /* Mark pipe definition as having been done */
     type_p->be_info.dd_type->defn_done = TRUE;
 }
-
 
 /*
  *  D D B E _ o p _ a r r a y
@@ -2270,7 +2251,6 @@ static void DDBE_op_array
             "flat conformant array index");
 }
 
-
 /*
  *  D D B E _ o p _ a r r a y _ b o u n d s
  *
@@ -2347,7 +2327,6 @@ static void DDBE_func_code_vec_entry(
     name_id = STRTAB_add_string(name);
     DDBE_expr_vec_entry(p_defn_p, DDBE_vec_expr_byte_k, name_id, "bound info");
 }
-
 
 /*
  *  D D B E _ o p _ b o u n d
@@ -2486,7 +2465,6 @@ static void DDBE_op_bound
     sprintf(ref_expr, "%s number of %s reference", ref_text, bound_text);
     DDBE_long_vec_entry(&vip->defn_p, DDBE_vec_long_k, ref_index, ref_expr);
 }
-
 
 /*
  *  D D B E _ o p _ l i m i t
@@ -2638,7 +2616,6 @@ static void DDBE_op_limit
     DDBE_long_vec_entry(&vip->defn_p, DDBE_vec_long_k, ref_index, ref_expr);
 }
 
-
 /*
  *  D D B E _ o p _ a r r a y _ e n d
  *
@@ -2681,7 +2658,6 @@ static void DDBE_op_array_end
         DDBE_pop_indirection_scope(vip);  /* matches op_array push */
     }
 }
-
 
 /*
  *  D D B E _ o p _ c o n f o r m a n t _ i n f o
@@ -2753,7 +2729,6 @@ static void DDBE_op_conformant_info
         vip->update_tup = FALSE;
     }
 }
-
 
 /*
  *  D D B E _ o p _ p o i n t e r
@@ -2852,7 +2827,6 @@ static void DDBE_op_pointer
     }
 }
 
-
 /*
  *  D D B E _ o p _ p o i n t e e _ e n d
  *
@@ -2882,7 +2856,6 @@ static void DDBE_op_pointee_end
         || IR_cur_scope(vip->ir_ctx_p) == IR_SCP_UNION)
         DDBE_pop_indirection_scope(vip);
 }
-
 
 /*
  *  D D B E _ o p _ t r a n s m i t _ a s
@@ -3078,7 +3051,6 @@ static void DDBE_op_transmit_as
      * data scope is IR_SCP_XMIT_AS and we are in a separate indirection scope.
      */
 }
-
 
 /*
  *  D D B E _ o p _ r e p r e s e n t _ a s
@@ -3279,7 +3251,6 @@ static void DDBE_op_represent_as
      * data scope is IR_SCP_REP_AS and we are in a separate indirection scope.
      */
 }
-
 
 /*
  *  D D B E _ o p _ c s _ c h a r
@@ -3598,10 +3569,7 @@ static void DDBE_op_range
     DDBE_vectors_t  *vip;           /* [io] vector information */
 #endif
 {
-    AST_type_n_t    *type_p;        /* Ptr to AST struct type node */
     char comment[DDBE_MAX_COMMENT]; /* Comment buffer */
-
-    type_p = tup_p->arg[IR_ARG_TYPE].type;  /* -> array type node */
 
     sprintf(comment, "range(%lu,%lu)",
             tup_p->arg[IR_ARG_INT].int_val,
@@ -3649,7 +3617,6 @@ static DDBE_vec_rep_t *DDBE_gen_param_reps
     char const      *name;          /* Variable name */
     char const      *oper_name;     /* Operation name */
     IR_tup_n_t      *tup_p;         /* Intermediate rep tuple pointer */
-    IR_tup_n_t      *prev_tup_p;    /* Previous tuple pointer */
     DDBE_vec_rep_t  *first_entry;   /* Ptr to first type vec entry for param */
     char comment[DDBE_MAX_COMMENT]; /* Comment buffer */
 
@@ -3658,7 +3625,6 @@ static DDBE_vec_rep_t *DDBE_gen_param_reps
      * being the type vector.
      */
     tup_p       = param_p->data_tups;
-    prev_tup_p  = NULL;
 
     /*
      * No vector representation for these cases:
@@ -3937,7 +3903,7 @@ static DDBE_vec_rep_t *DDBE_gen_param_reps
 		  case IR_op_interface_k:
 				DDBE_op_interface(tup_p, vip);
 				break;
-				
+
         case IR_op_limit_k:
             DDBE_op_limit(tup_p, vip);
             break;
@@ -4151,7 +4117,6 @@ static DDBE_vec_rep_t *DDBE_gen_param_reps
         /* On to next intermediate rep tuple */
         if (vip->update_tup)
         {
-            prev_tup_p = tup_p;
             tup_p = tup_p->next;
         }
     }
@@ -4165,7 +4130,6 @@ static DDBE_vec_rep_t *DDBE_gen_param_reps
     param_p->be_info.dd_param->type_vec_p = first_entry;
     return first_entry;
 }
-
 
 /*
  *  D D B E _ o p e r _ i n _ o u t _ o p t
@@ -4342,7 +4306,6 @@ static boolean DDBE_oper_in_out_opt
     return FALSE;
 }
 
-
 /*
  *  D D B E _ g e n _ v e c t o r _ r e p s
  *
@@ -4494,7 +4457,7 @@ static void DDBE_gen_vector_reps
 
                 IR_finish_scope(vip->ir_ctx_p);
             }
-            oper_p->be_info.dd_oper->num_srv_ins = 
+            oper_p->be_info.dd_oper->num_srv_ins =
                 oper_p->be_info.dd_oper->num_ins;
 
             /*
@@ -4769,7 +4732,6 @@ static void DDBE_gen_vector_reps
     DDBE_patch_vec_refs(vip->type_p);
     DDBE_patch_oper_info(int_p);
 }
-
 
 /*
  *  D D B E _ m a i n

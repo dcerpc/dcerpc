@@ -426,6 +426,7 @@ error_status_t  *status;
 {
     error_status_t  tmp_st;
 
+    assert (status != NULL);
     if (uuid_is_nil(&tfp->interface.uuid, &tmp_st) ||
         uuid_is_nil(&tfp->data_rep.id, &tmp_st) ||
         (! RPC_PROTSEQ_INQ_SUPPORTED(tfp->protseq)) )
@@ -632,6 +633,7 @@ error_status_t  *status;
         if (epdb_is_replace_candidate(entp, object, tfp, addr) &&
             entp->interface.vers_minor > tfp->interface.vers_minor)
         {
+            assert(status != NULL);
             SET_STATUS(status, ept_s_invalid_entry);
             goto DONE;
         }
@@ -671,6 +673,7 @@ error_status_t  *status;
         }
     }
 
+    assert(status != NULL);
     SET_STATUS_OK(status);
 
 DONE:
@@ -729,6 +732,7 @@ error_status_t      *status;
         }
     }
 
+    assert(status != NULL);
     if (ndelete > 0)
         SET_STATUS_OK(status);
     else
@@ -1149,6 +1153,7 @@ error_status_t      *status;
                 break;
 
             default:
+                assert(status != NULL);
                 *status = rpc_s_invalid_inquiry_type;
                 return;
 
@@ -1195,6 +1200,7 @@ error_status_t      *status;
                         break;
 
                     default:
+                        assert(status != NULL);
                         *status = rpc_s_invalid_vers_option;
                         return;
                 }
@@ -1404,6 +1410,7 @@ unsigned32          *status;
     {
         if (db_entries != NULL) free(db_entries);
         db_delete_context(h, map_handle);
+        assert(status != NULL);
         SET_STATUS(status, ept_s_cant_perform_op);
         db_unlock(h);
         return;
@@ -1734,6 +1741,7 @@ unsigned32              *status;
 
     if (*n_ents == 0) 
     {
+        assert(status != NULL);
         SET_STATUS(status, ept_s_not_registered);
     }
 }        

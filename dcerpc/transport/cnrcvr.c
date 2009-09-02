@@ -593,6 +593,7 @@ rpc_cn_assoc_p_t        assoc;
         /*
          * Point to the packet header.
          */
+        assert(fragbuf_p != NULL);
         pktp = (rpc_cn_packet_p_t) fragbuf_p->data_p;
 
         /*
@@ -819,6 +820,7 @@ rpc_cn_assoc_p_t        assoc;
                         if (assoc->assoc_flags & RPC_C_CN_ASSOC_CLIENT)
                         {
                             (*fragbuf_p->fragbuf_dealloc)(fragbuf_p);
+                            assert(sec_context != NULL);
                             sec_context->sec_status = auth_st;
                             RPC_CN_ASSOC_WAKEUP (assoc);
                             continue;

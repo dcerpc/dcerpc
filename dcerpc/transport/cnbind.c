@@ -518,6 +518,7 @@ unsigned32              *st;
          * contains an RPC address.
          */
         assoc_grp = RPC_CN_ASSOC_GRP (grp_id);
+        assert(assoc_grp != NULL);
         if (assoc_grp->grp_address != NULL)
         {
             /*

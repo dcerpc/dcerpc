@@ -156,6 +156,7 @@ unsigned32              *status;
     /*
      * dispatch to the appropriate protocol service to get a call handle
      */
+    assert(binding_rep != NULL);
     call_rep = (*rpc_g_protocol_id[binding_rep->protocol_id].call_epv
         ->call_start)
             (binding_rep, flags, (rpc_if_rep_p_t) ifspec_h,

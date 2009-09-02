@@ -1431,6 +1431,8 @@ unsigned32              *status;
     rpc_prot_network_epv_p_t net_epv;
     rpc_binding_rep_p_t     binding_rep = (rpc_binding_rep_p_t) binding_h;
 
+    assert(binding_rep != NULL);
+
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
 
@@ -1503,6 +1505,8 @@ unsigned32                  *status;
     rpc_prot_network_epv_p_t net_epv;
     rpc_binding_rep_p_t     binding_rep = (rpc_binding_rep_p_t) binding_h;
 
+    assert(binding_rep != NULL);
+
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
 
@@ -1569,6 +1573,8 @@ unsigned32              *status;
     rpc_protocol_id_t       protid;
     rpc_prot_network_epv_p_t net_epv;
     rpc_binding_rep_p_t     binding_rep = (rpc_binding_rep_p_t) binding_h;
+
+    assert(binding_rep != NULL);
 
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
@@ -1642,6 +1648,8 @@ unsigned32              *status;
     rpc_prot_network_epv_p_t net_epv;
     rpc_binding_rep_p_t     binding_rep = (rpc_binding_rep_p_t) binding_h;
 
+    assert(binding_rep != NULL);
+
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
 
@@ -1714,6 +1722,8 @@ unsigned32              *status;
     rpc_protocol_id_t       protid;
     rpc_prot_network_epv_p_t net_epv;
     rpc_binding_rep_p_t     binding_rep = (rpc_binding_rep_p_t) binding_h;
+
+    assert(binding_rep != NULL);
 
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();

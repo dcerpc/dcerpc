@@ -1056,6 +1056,7 @@ typedef struct
 \
     if (*status == rpc_s_ok) \
     { \
+        assert(_thread_context != NULL); \
         _thread_context->cancel_timeout = value; \
     } \
 }    
@@ -1069,6 +1070,7 @@ typedef struct
 \
     if (*status == rpc_s_ok) \
     { \
+        assert(_thread_context != NULL); \
         value = _thread_context->cancel_timeout; \
     } \
 }    

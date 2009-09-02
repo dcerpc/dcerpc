@@ -240,6 +240,7 @@ unsigned32              *status;
 {
     rpc_binding_rep_p_t     binding_rep = (rpc_binding_rep_p_t) binding_handle;
     
+    assert(binding_rep != NULL);
 
     RPC_VERIFY_INIT ();
     
@@ -954,6 +955,8 @@ unsigned32              *status;
 {
     rpc_binding_rep_p_t binding_rep = (rpc_binding_rep_p_t) binding_h; 
 
+    assert(binding_rep != NULL);
+
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
 
@@ -1036,6 +1039,7 @@ unsigned32              *status;
 {
     rpc_binding_rep_p_t     binding_rep = (rpc_binding_rep_p_t) binding_h;
 
+    assert(binding_rep != NULL);
 
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
@@ -2145,6 +2149,7 @@ unsigned32              *status;
 {
     rpc_binding_rep_p_t binding_rep = (rpc_binding_rep_p_t) binding_h;
 
+    assert(binding_rep != NULL);
 
     RPC_BINDING_VALIDATE_CLIENT (binding_rep, status);
     if (*status != rpc_s_ok)
