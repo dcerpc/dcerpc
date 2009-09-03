@@ -3349,6 +3349,7 @@ INTERNAL void rpc__cn_assoc_open
          * list. Also, put a pointer to it in the state machine work structure.
          */
         sec_context = rpc__cn_assoc_sec_alloc (auth_info, st);
+        assert(sec_context != NULL);
         if (*st != rpc_s_ok)
         {
             RPC_LIST_REMOVE (assoc->syntax_list, pres_context);
@@ -3429,7 +3430,6 @@ INTERNAL void rpc__cn_assoc_open
         rpc__cn_assoc_syntax_free (&pres_context);
         if (RPC_CN_AUTH_REQUIRED (auth_info))
         {
-            assert(sec_context != NULL);
             RPC_LIST_REMOVE (assoc->security.context_list, sec_context);
             rpc__cn_assoc_sec_free (&sec_context);
         }
@@ -3440,7 +3440,6 @@ INTERNAL void rpc__cn_assoc_open
      * Wait for both presentation and optional security context
      * negotiations to complete either successfully or with an error.
      */
-    assert(sec_context != NULL);
     while (!(pres_context->syntax_valid) 
            ||
            (RPC_CN_AUTH_REQUIRED (auth_info) && (sec_context->sec_state != RPC_C_SEC_STATE_COMPLETE)))
@@ -3460,7 +3459,6 @@ INTERNAL void rpc__cn_assoc_open
             *st = pres_context->syntax_status;
             return;
         }
-        assert(sec_context != NULL);
         if (RPC_CN_AUTH_REQUIRED (auth_info) && (sec_context->sec_status != rpc_s_ok))
         {
             *st = sec_context->sec_status;
