@@ -826,47 +826,36 @@ static void fattr_first_is
          * to the number of dereferences needed to get to the base type.
          */
         deref_type_p = ASTP_chase_ptr_to_type(ref_type_p);
-    }
+        assert(deref_type_p != NULL);
 
-    /* [first_is] variable must be of type integer */
+        /* [first_is] variable must be of type integer */
 
-    if (fattr_p->first_is_vec != NULL
-        &&  fattr_p->first_is_vec[dim].valid
-        &&  deref_type_p != NULL
-        &&  (!type_is_index(deref_type_p)
-            ||  deref_type_p->fe_info->pointer_count
-                != fattr_p->first_is_vec[dim].fe_info->pointer_count))
-        CHECKER_error(fattr_p, NIDL_FIRSTYPEINT);
+        if (!type_is_index(deref_type_p)
+                 ||  deref_type_p->fe_info->pointer_count
+                 != fattr_p->first_is_vec[dim].fe_info->pointer_count)
+            CHECKER_error(fattr_p, NIDL_FIRSTYPEINT);
 
-    /* A size attribute variable must not have a represent_as type */
+        /* A size attribute variable must not have a represent_as type */
 
-    if (fattr_p->first_is_vec != NULL
-        &&  fattr_p->first_is_vec[dim].valid
-        &&  deref_type_p != NULL
-        &&  deref_type_p->rep_as_type != NULL)
-        CHECKER_error(fattr_p, NIDL_SIZEVARREPAS);
+        if (deref_type_p->rep_as_type != NULL)
+            CHECKER_error(fattr_p, NIDL_SIZEVARREPAS);
 
-    /* A size attribute variable must not have a transmit_as type */
+        /* A size attribute variable must not have a transmit_as type */
 
-    if (fattr_p->first_is_vec != NULL
-        &&  fattr_p->first_is_vec[dim].valid
-        &&  deref_type_p != NULL
-        &&  deref_type_p->xmit_as_type != NULL)
-        CHECKER_error(fattr_p, NIDL_SIZEVARXMITAS);
+        if (deref_type_p->xmit_as_type != NULL)
+            CHECKER_error(fattr_p, NIDL_SIZEVARXMITAS);
 
-    /* The array size attr var 'name' can not have [ptr] or [unique] attr */
+        /* The array size attr var 'name' can not have [ptr] or [unique] attr */
 
-    if (fattr_p->first_is_vec != NULL
-        &&  fattr_p->first_is_vec[dim].valid
-        &&  deref_type_p != NULL
-        &&  deref_type_p->fe_info->pointer_count > 0
-        &&  !is_ref_ptr)
-    {
-        char const *id_name;       /* [first_is] variable name */
+        if (deref_type_p->fe_info->pointer_count > 0
+            &&  !is_ref_ptr)
+        {
+            char const *id_name;       /* [first_is] variable name */
 
-        NAMETABLE_id_to_string(ref_name, &id_name);
+            NAMETABLE_id_to_string(ref_name, &id_name);
 
-        CHECKER_error(fattr_p, NIDL_SIZEPRMPTR, id_name);
+            CHECKER_error(fattr_p, NIDL_SIZEPRMPTR, id_name);
+        }
     }
 }
 
@@ -923,47 +912,36 @@ static void fattr_last_is
          * to the number of dereferences needed to get to the base type.
          */
         deref_type_p = ASTP_chase_ptr_to_type(ref_type_p);
-    }
+        assert(deref_type_p != NULL);
 
-    /* [last_is] variable must be of type integer */
+        /* [last_is] variable must be of type integer */
 
-    if (fattr_p->last_is_vec != NULL
-        &&  fattr_p->last_is_vec[dim].valid
-        &&  deref_type_p != NULL
-        &&  (!type_is_index(deref_type_p)
-            ||  deref_type_p->fe_info->pointer_count
-                != fattr_p->last_is_vec[dim].fe_info->pointer_count))
-        CHECKER_error(fattr_p, NIDL_LASTYPEINT);
+        if (!type_is_index(deref_type_p)
+                 ||  deref_type_p->fe_info->pointer_count
+                 != fattr_p->last_is_vec[dim].fe_info->pointer_count)
+            CHECKER_error(fattr_p, NIDL_LASTYPEINT);
 
-    /* A size attribute variable must not have a represent_as type */
+        /* A size attribute variable must not have a represent_as type */
 
-    if (fattr_p->last_is_vec != NULL
-        &&  fattr_p->last_is_vec[dim].valid
-        &&  deref_type_p != NULL
-        &&  deref_type_p->rep_as_type != NULL)
-        CHECKER_error(fattr_p, NIDL_SIZEVARREPAS);
+        if (deref_type_p->rep_as_type != NULL)
+            CHECKER_error(fattr_p, NIDL_SIZEVARREPAS);
 
-    /* A size attribute variable must not have a transmit_as type */
+        /* A size attribute variable must not have a transmit_as type */
 
-    if (fattr_p->last_is_vec != NULL
-        &&  fattr_p->last_is_vec[dim].valid
-        &&  deref_type_p != NULL
-        &&  deref_type_p->xmit_as_type != NULL)
-        CHECKER_error(fattr_p, NIDL_SIZEVARXMITAS);
+        if (deref_type_p->xmit_as_type != NULL)
+            CHECKER_error(fattr_p, NIDL_SIZEVARXMITAS);
 
-    /* The array size attr var 'name' can not have [ptr] or [unique] attr */
+        /* The array size attr var 'name' can not have [ptr] or [unique] attr */
 
-    if (fattr_p->last_is_vec != NULL
-        &&  fattr_p->last_is_vec[dim].valid
-        &&  deref_type_p != NULL
-        &&  deref_type_p->fe_info->pointer_count > 0
-        &&  !is_ref_ptr)
-    {
-        char const *id_name;       /* [last_is] variable name */
+        if (deref_type_p->fe_info->pointer_count > 0
+            &&  !is_ref_ptr)
+        {
+            char const *id_name;       /* [last_is] variable name */
 
-        NAMETABLE_id_to_string(ref_name, &id_name);
+            NAMETABLE_id_to_string(ref_name, &id_name);
 
-        CHECKER_error(fattr_p, NIDL_SIZEPRMPTR, id_name);
+            CHECKER_error(fattr_p, NIDL_SIZEPRMPTR, id_name);
+        }
     }
 }
 
@@ -1020,47 +998,36 @@ static void fattr_length_is
          * to the number of dereferences needed to get to the base type.
          */
         deref_type_p = ASTP_chase_ptr_to_type(ref_type_p);
-    }
+        assert(deref_type_p != NULL);
 
-    /* [length_is] variable must be of type integer */
+        /* [length_is] variable must be of type integer */
 
-    if (fattr_p->length_is_vec != NULL
-        &&  fattr_p->length_is_vec[dim].valid
-        &&  deref_type_p != NULL
-        &&  (!type_is_index(deref_type_p)
-            ||  deref_type_p->fe_info->pointer_count
-                != fattr_p->length_is_vec[dim].fe_info->pointer_count))
-        CHECKER_error(fattr_p, NIDL_LENTYPEINT);
+        if (!type_is_index(deref_type_p)
+                 ||  deref_type_p->fe_info->pointer_count
+                 != fattr_p->length_is_vec[dim].fe_info->pointer_count)
+            CHECKER_error(fattr_p, NIDL_LENTYPEINT);
 
-    /* A size attribute variable must not have a represent_as type */
+        /* A size attribute variable must not have a represent_as type */
 
-    if (fattr_p->length_is_vec != NULL
-        &&  fattr_p->length_is_vec[dim].valid
-        &&  deref_type_p != NULL
-        &&  deref_type_p->rep_as_type != NULL)
-        CHECKER_error(fattr_p, NIDL_SIZEVARREPAS);
+        if (deref_type_p->rep_as_type != NULL)
+            CHECKER_error(fattr_p, NIDL_SIZEVARREPAS);
 
-    /* A size attribute variable must not have a transmit_as type */
+        /* A size attribute variable must not have a transmit_as type */
 
-    if (fattr_p->length_is_vec != NULL
-        &&  fattr_p->length_is_vec[dim].valid
-        &&  deref_type_p != NULL
-        &&  deref_type_p->xmit_as_type != NULL)
-        CHECKER_error(fattr_p, NIDL_SIZEVARXMITAS);
+        if (deref_type_p->xmit_as_type != NULL)
+            CHECKER_error(fattr_p, NIDL_SIZEVARXMITAS);
 
-    /* The array size attr var 'name' can not have [ptr] or [unique] attr */
+        /* The array size attr var 'name' can not have [ptr] or [unique] attr */
 
-    if (fattr_p->length_is_vec != NULL
-        &&  fattr_p->length_is_vec[dim].valid
-        &&  deref_type_p != NULL
-        &&  deref_type_p->fe_info->pointer_count > 0
-        &&  !is_ref_ptr)
-    {
-        char const *id_name;       /* [length_is] variable name */
+        if (deref_type_p->fe_info->pointer_count > 0
+            &&  !is_ref_ptr)
+        {
+            char const *id_name;       /* [length_is] variable name */
 
-        NAMETABLE_id_to_string(ref_name, &id_name);
+            NAMETABLE_id_to_string(ref_name, &id_name);
 
-        CHECKER_error(fattr_p, NIDL_SIZEPRMPTR, id_name);
+            CHECKER_error(fattr_p, NIDL_SIZEPRMPTR, id_name);
+        }
     }
 }
 
@@ -1166,42 +1133,36 @@ static void fattr_min_is
     /* [min_is] variable must be of type integer */
 
     if (fattr_p->min_is_vec != NULL
-        &&  fattr_p->min_is_vec[dim].valid
-        &&  deref_type_p != NULL
-        &&  (!type_is_index(deref_type_p)
-            ||  deref_type_p->fe_info->pointer_count
-                != fattr_p->min_is_vec[dim].fe_info->pointer_count))
-        CHECKER_error(fattr_p, NIDL_MINTYPEINT);
+        &&  fattr_p->min_is_vec[dim].valid) {
 
-    /* A size attribute variable must not have a represent_as type */
+        assert(deref_type_p != NULL);
 
-    if (fattr_p->min_is_vec != NULL
-        &&  fattr_p->min_is_vec[dim].valid
-        &&  deref_type_p != NULL
-        &&  deref_type_p->rep_as_type != NULL)
-        CHECKER_error(fattr_p, NIDL_SIZEVARREPAS);
+        if (!type_is_index(deref_type_p)
+                ||  deref_type_p->fe_info->pointer_count
+                    != fattr_p->min_is_vec[dim].fe_info->pointer_count)
+            CHECKER_error(fattr_p, NIDL_MINTYPEINT);
 
-    /* A size attribute variable must not have a transmit_as type */
+        /* A size attribute variable must not have a represent_as type */
 
-    if (fattr_p->min_is_vec != NULL
-        &&  fattr_p->min_is_vec[dim].valid
-        &&  deref_type_p != NULL
-        &&  deref_type_p->xmit_as_type != NULL)
-        CHECKER_error(fattr_p, NIDL_SIZEVARXMITAS);
+        if (deref_type_p->rep_as_type != NULL)
+            CHECKER_error(fattr_p, NIDL_SIZEVARREPAS);
 
-    /* The array size attr var 'name' can not have [ptr] or [unique] attr */
+        /* A size attribute variable must not have a transmit_as type */
 
-    if (fattr_p->min_is_vec != NULL
-        &&  fattr_p->min_is_vec[dim].valid
-        &&  deref_type_p != NULL
-        &&  deref_type_p->fe_info->pointer_count > 0
-        &&  !is_ref_ptr)
-    {
-        char const *id_name;       /* [min_is] variable name */
+        if (deref_type_p->xmit_as_type != NULL)
+            CHECKER_error(fattr_p, NIDL_SIZEVARXMITAS);
 
-        NAMETABLE_id_to_string(ref_name, &id_name);
+        /* The array size attr var 'name' can not have [ptr] or [unique] attr */
 
-        CHECKER_error(fattr_p, NIDL_SIZEPRMPTR, id_name);
+        if (deref_type_p->fe_info->pointer_count > 0
+            &&  !is_ref_ptr)
+        {
+            char const *id_name;       /* [min_is] variable name */
+
+            NAMETABLE_id_to_string(ref_name, &id_name);
+
+            CHECKER_error(fattr_p, NIDL_SIZEPRMPTR, id_name);
+        }
     }
 }
 
@@ -1295,42 +1256,36 @@ static void fattr_max_is
     /* [max_is] variable must be of type integer */
 
     if (fattr_p->max_is_vec != NULL
-        &&  fattr_p->max_is_vec[dim].valid
-        &&  deref_type_p != NULL
-        &&  (!type_is_index(deref_type_p)
-            ||  deref_type_p->fe_info->pointer_count
-                != fattr_p->max_is_vec[dim].fe_info->pointer_count))
-        CHECKER_error(fattr_p, NIDL_MAXTYPEINT);
+        &&  fattr_p->max_is_vec[dim].valid) {
 
-    /* A size attribute variable must not have a represent_as type */
+        assert(deref_type_p != NULL);
 
-    if (fattr_p->max_is_vec != NULL
-        &&  fattr_p->max_is_vec[dim].valid
-        &&  deref_type_p != NULL
-        &&  deref_type_p->rep_as_type != NULL)
-        CHECKER_error(fattr_p, NIDL_SIZEVARREPAS);
+        if (!type_is_index(deref_type_p)
+                ||  deref_type_p->fe_info->pointer_count
+                    != fattr_p->max_is_vec[dim].fe_info->pointer_count)
+            CHECKER_error(fattr_p, NIDL_MAXTYPEINT);
 
-    /* A size attribute variable must not have a transmit_as type */
+        /* A size attribute variable must not have a represent_as type */
 
-    if (fattr_p->max_is_vec != NULL
-        &&  fattr_p->max_is_vec[dim].valid
-        &&  deref_type_p != NULL
-        &&  deref_type_p->xmit_as_type != NULL)
-        CHECKER_error(fattr_p, NIDL_SIZEVARXMITAS);
+        if (deref_type_p->rep_as_type != NULL)
+            CHECKER_error(fattr_p, NIDL_SIZEVARREPAS);
 
-    /* The array size attr var 'name' can not have [ptr] or [unique] attr */
+        /* A size attribute variable must not have a transmit_as type */
 
-    if (fattr_p->max_is_vec != NULL
-        &&  fattr_p->max_is_vec[dim].valid
-        &&  deref_type_p != NULL
-        &&  deref_type_p->fe_info->pointer_count > 0
-        &&  !is_ref_ptr)
-    {
-        char const *id_name;       /* [max_is] variable name */
+        if (deref_type_p->xmit_as_type != NULL)
+            CHECKER_error(fattr_p, NIDL_SIZEVARXMITAS);
 
-        NAMETABLE_id_to_string(ref_name, &id_name);
+        /* The array size attr var 'name' can not have [ptr] or [unique] attr */
 
-        CHECKER_error(fattr_p, NIDL_SIZEPRMPTR, id_name);
+        if (deref_type_p->fe_info->pointer_count > 0
+            &&  !is_ref_ptr)
+        {
+            char const *id_name;       /* [max_is] variable name */
+
+            NAMETABLE_id_to_string(ref_name, &id_name);
+
+            CHECKER_error(fattr_p, NIDL_SIZEPRMPTR, id_name);
+        }
     }
 }
 
@@ -1424,42 +1379,36 @@ static void fattr_size_is
     /* [size_is] variable must be of type integer */
 
     if (fattr_p->size_is_vec != NULL
-        &&  fattr_p->size_is_vec[dim].valid
-        &&  deref_type_p != NULL
-        &&  (!type_is_index(deref_type_p)
-            ||  deref_type_p->fe_info->pointer_count
-                != fattr_p->size_is_vec[dim].fe_info->pointer_count))
-        CHECKER_error(fattr_p, NIDL_SIZETYPEINT);
+        &&  fattr_p->size_is_vec[dim].valid) {
 
-    /* A size attribute variable must not have a represent_as type */
+        assert(deref_type_p != NULL);
 
-    if (fattr_p->size_is_vec != NULL
-        &&  fattr_p->size_is_vec[dim].valid
-        &&  deref_type_p != NULL
-        &&  deref_type_p->rep_as_type != NULL)
-        CHECKER_error(fattr_p, NIDL_SIZEVARREPAS);
+        if (!type_is_index(deref_type_p)
+                ||  deref_type_p->fe_info->pointer_count
+                    != fattr_p->size_is_vec[dim].fe_info->pointer_count)
+            CHECKER_error(fattr_p, NIDL_SIZETYPEINT);
 
-    /* A size attribute variable must not have a transmit_as type */
+        /* A size attribute variable must not have a represent_as type */
 
-    if (fattr_p->size_is_vec != NULL
-        &&  fattr_p->size_is_vec[dim].valid
-        &&  deref_type_p != NULL
-        &&  deref_type_p->xmit_as_type != NULL)
-        CHECKER_error(fattr_p, NIDL_SIZEVARXMITAS);
+        if (deref_type_p->rep_as_type != NULL)
+            CHECKER_error(fattr_p, NIDL_SIZEVARREPAS);
 
-    /* The array size attr var 'name' can not have [ptr] or [unique] attr */
+        /* A size attribute variable must not have a transmit_as type */
 
-    if (fattr_p->size_is_vec != NULL
-        &&  fattr_p->size_is_vec[dim].valid
-        &&  deref_type_p != NULL
-        &&  deref_type_p->fe_info->pointer_count > 0
-        &&  !is_ref_ptr)
-    {
-        char const *id_name;       /* [size_is] variable name */
+        if (deref_type_p->xmit_as_type != NULL)
+            CHECKER_error(fattr_p, NIDL_SIZEVARXMITAS);
 
-        NAMETABLE_id_to_string(ref_name, &id_name);
+        /* The array size attr var 'name' can not have [ptr] or [unique] attr */
 
-        CHECKER_error(fattr_p, NIDL_SIZEPRMPTR, id_name);
+        if (deref_type_p->fe_info->pointer_count > 0
+            &&  !is_ref_ptr)
+        {
+            char const *id_name;       /* [size_is] variable name */
+
+            NAMETABLE_id_to_string(ref_name, &id_name);
+
+            CHECKER_error(fattr_p, NIDL_SIZEPRMPTR, id_name);
+        }
     }
 }
 
