@@ -13,8 +13,7 @@
 #include <npnaf.h>
 #include <stddef.h>
 
-#include <lwio/lwio.h>
-#include <lw/base.h>
+#include <smbclient.h>
 
 #define SMB_SOCKET_LOCK(sock) (rpc__smb_socket_lock(sock))
 #define SMB_SOCKET_UNLOCK(sock) (rpc__smb_socket_unlock(sock))
@@ -27,7 +26,8 @@ typedef struct rpc_smb_transport_info_s
         unsigned16 length;
         unsigned char* data;
     } session_key;
-    PIO_ACCESS_TOKEN access_token;
+    //PIO_ACCESS_TOKEN access_token;
+    unsigned32 *access_token;
     boolean schannel;
 } rpc_smb_transport_info_t, *rpc_smb_transport_info_p_t;
 
@@ -53,13 +53,17 @@ typedef struct rpc_smb_socket_s
     rpc_np_addr_t peeraddr;
     rpc_np_addr_t localaddr;
     rpc_smb_transport_info_t info;
-    PIO_CONTEXT context;
-    IO_FILE_HANDLE np;
+    SMBHANDLE handle;
+    //PIO_CONTEXT context;
+    //IO_FILE_HANDLE np;
+    unsigned32 *context;
+    unsigned32 *np;
     rpc_smb_buffer_t sendbuffer;
     rpc_smb_buffer_t recvbuffer;
     struct
     {
-        IO_FILE_HANDLE* queue;
+        //IO_FILE_HANDLE* queue;
+        unsigned32* queue;
         size_t capacity;
         size_t length;
         int selectfd[2];
@@ -87,11 +91,13 @@ rpc_smb_transport_info_from_lwio_token(
         goto error;
     }
 
+#if 0
     if (LwIoCopyAccessToken(access_token, &smb_info->access_token) != 0)
     {
         *st = rpc_s_no_memory;
         goto error;
     }
+#endif
 
     smb_info->schannel = schannel;
 
@@ -117,7 +123,7 @@ rpc__smb_transport_info_destroy(
 {
     if (smb_info->access_token)
     {
-        LwIoDeleteAccessToken(smb_info->access_token);
+        //LwIoDeleteAccessToken(smb_info->access_token);
     }
 
     if (smb_info->session_key.data)
@@ -136,6 +142,7 @@ rpc_smb_transport_info_free(
     rpc_transport_info_handle_t info
     )
 {
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc_smb_transport_info_free called\n"));
     rpc__smb_transport_info_destroy((rpc_smb_transport_info_p_t) info);
     free(info);
 }
@@ -184,10 +191,18 @@ rpc__smb_transport_info_equal(
     rpc_smb_transport_info_p_t smb_info1 = (rpc_smb_transport_info_p_t) info1;
     rpc_smb_transport_info_p_t smb_info2 = (rpc_smb_transport_info_p_t) info2;
 
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_transport_info_equal called\n"));
+
+#if 0
     return (smb_info1->schannel == smb_info2->schannel &&
             ((smb_info1->access_token == NULL && smb_info2->access_token == NULL) ||
              (smb_info1->access_token != NULL && smb_info2->access_token != NULL &&
               LwIoCompareAccessTokens(smb_info1->access_token, smb_info2->access_token))));
+#else
+    return (smb_info1->schannel == smb_info2->schannel &&
+            ((smb_info1->access_token == NULL && smb_info2->access_token == NULL) ||
+             (smb_info1->access_token != NULL && smb_info2->access_token != NULL )));
+#endif
 }
 
 INTERNAL
@@ -418,11 +433,13 @@ rpc__smb_socket_create(
     dcethread_mutex_init_throw(&sock->lock, NULL);
     dcethread_cond_init_throw(&sock->event, NULL);
 
+#if 0
     err = LwNtStatusToUnixErrno(LwIoOpenContextShared(&sock->context));
     if (err)
     {
         goto error;
     }
+#endif
 
     *out = sock;
 
@@ -434,10 +451,12 @@ error:
 
     if (sock)
     {
+#if 0
         if (sock->context)
         {
             LwIoCloseContext(sock->context);
         }
+#endif
 
         dcethread_mutex_destroy_throw(&sock->lock);
         dcethread_cond_destroy_throw(&sock->event);
@@ -462,7 +481,7 @@ rpc__smb_socket_destroy(
             {
                 if (sock->accept_backlog.queue[i])
                 {
-                    NtCtxCloseFile(sock->context, sock->accept_backlog.queue[i]);
+                    //NtCtxCloseFile(sock->context, sock->accept_backlog.queue[i]);
                 }
             }
 
@@ -474,12 +493,12 @@ rpc__smb_socket_destroy(
 
         if (sock->np && sock->context)
         {
-            NtCtxCloseFile(sock->context, sock->np);
+            //NtCtxCloseFile(sock->context, sock->np);
         }
 
         if (sock->context)
         {
-            LwIoCloseContext(sock->context);
+            //LwIoCloseContext(sock->context);
         }
 
         if (sock->sendbuffer.base)
@@ -492,7 +511,7 @@ rpc__smb_socket_destroy(
             free(sock->recvbuffer.base);
         }
 
-        rpc__smb_transport_info_destroy(&sock->info);
+        //rpc__smb_transport_info_destroy(&sock->info);
 
         dcethread_mutex_destroy_throw(&sock->lock);
         dcethread_cond_destroy_throw(&sock->event);
@@ -566,6 +585,8 @@ rpc__smb_socket_construct(
     rpc_smb_socket_p_t smb_sock = NULL;
     rpc_smb_transport_info_p_t smb_info = (rpc_smb_transport_info_p_t) info;
 
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_construct called\n"));
+
     serr = rpc__smb_socket_create(&smb_sock);
 
     if (serr)
@@ -577,11 +598,13 @@ rpc__smb_socket_construct(
     {
         if (smb_info->access_token)
         {
+#if 0
             serr = NtStatusToUnixErrno(LwIoCopyAccessToken(smb_info->access_token, &smb_sock->info.access_token));
             if (serr)
             {
                 goto error;
             }
+#endif
         }
     }
 
@@ -608,6 +631,15 @@ rpc__smb_socket_destruct(
     )
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
+    rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
+
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_destruct called\n"));
+
+    if (smb->handle != NULL) {
+        RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_destruct - closing SMB handle\n"));
+        SMBReleaseServer(smb->handle);
+        smb->handle = NULL;
+    }
 
     rpc__smb_socket_destroy((rpc_smb_socket_p_t) sock->data.pointer);
 
@@ -627,7 +659,53 @@ rpc__smb_socket_bind(
 
     smb->localaddr = *npaddr;
 
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_bind called: protseq_id %d, len %d, remote_host <%s>\n", npaddr->rpc_protseq_id, npaddr->len, npaddr->remote_host));
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_bind called: sun_len %d, sun_family %d, sun_path <%s>\n", npaddr->sa.sun_len, npaddr->sa.sun_family, npaddr->sa.sun_path));
+
     return serr;
+}
+
+static void cat_file(SMBHANDLE handle, const char * path)
+{
+    SMBFID hFile;
+    NTSTATUS status;
+
+    off_t current = 0;
+    void * buffer = malloc(getpagesize());
+
+    status = SMBCreateFile(handle, path,
+                           0x0001, /* dwDesiredAccess: FILE_READ_DATA */
+                           0x0007, /* dwShareMode: FILE_SHARE_ALL */
+                           NULL,   /* lpSecurityAttributes */
+                           0x0001, /* dwCreateDisposition: OPEN_EXISTING */
+                           0x0000, /* dwFlagsAndAttributes */
+                           &hFile);
+    if (!NT_SUCCESS(status)) {
+        RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_connect - SMBCreateFile failed 0x%x\n", status));
+        goto done;
+    }
+
+    do {
+        off_t count = 0;
+
+        status = SMBReadFile(handle, hFile,
+                             buffer, current, getpagesize(), &count);
+        if (!NT_SUCCESS(status)) {
+            break;
+        }
+
+        if (count == 0) {
+            break;
+        }
+
+        printf("%*.*s", (int)count, (int)count, (char *)buffer);
+        current += count;
+    } while (NT_SUCCESS(status));
+
+    SMBCloseFile(handle, hFile);
+
+done:
+    free(buffer);
 }
 
 INTERNAL
@@ -644,11 +722,14 @@ rpc__smb_socket_connect(
     char *endpoint = NULL;
     char *pipename = NULL;
     unsigned32 dbg_status = 0;
-    PSTR smbpath = NULL;
-    PBYTE sesskey = NULL;
-    USHORT sesskeylen = 0;
-    IO_FILE_NAME filename = { 0 };
-    IO_STATUS_BLOCK io_status = { 0 };
+    //PSTR smbpath = NULL;
+    //PBYTE sesskey = NULL;
+    //USHORT sesskeylen = 0;
+    //IO_FILE_NAME filename = { 0 };
+    //IO_STATUS_BLOCK io_status = { 0 };
+    NTSTATUS status;
+
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_connect called\n"));
 
     SMB_SOCKET_LOCK(smb);
 
@@ -659,6 +740,9 @@ rpc__smb_socket_connect(
     rpc__naf_addr_inq_endpoint (addr,
                                 (unsigned_char_t**) &endpoint,
                                 &dbg_status);
+
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_connect - netaddr %s\n", netaddr));
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_connect - ep %s\n", endpoint));
 
     if (!strncmp(endpoint, "\\pipe\\", sizeof("\\pipe\\") - 1) ||
         !strncmp(endpoint, "\\PIPE\\", sizeof("\\PIPE\\") - 1))
@@ -671,6 +755,20 @@ rpc__smb_socket_connect(
         goto error;
     }
 
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_connect - pipename %s\n", pipename));
+
+    /* %%% <bms> I only have the server address and share name, but no username/password */
+    status = SMBOpenServer("smb://bsuinn:apple@192.168.0.10/OpenSpace", &smb->handle);
+    if (!NT_SUCCESS(status)) {
+        RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_connect - SMBOpenServer failed 0x%x\n", status));
+        //serr = LwNtStatusToUnixErrno(status); /* %%% <bms> still need to implement or copy */
+        serr = EINVAL;
+        goto error;
+    }
+
+    cat_file(smb->handle, "fd.c");
+
+#if 0
     serr = NtStatusToUnixErrno(
         LwRtlCStringAllocatePrintf(
             &smbpath,
@@ -735,6 +833,7 @@ rpc__smb_socket_connect(
         goto error;
     }
     memcpy(smb->info.session_key.data, sesskey, sesskeylen);
+#endif
 
     /* Save address for future inquiries on this socket */
     memcpy(&smb->peeraddr, addr, sizeof(smb->peeraddr));
@@ -744,6 +843,7 @@ rpc__smb_socket_connect(
 
 done:
 
+#if 0
     if (sesskey)
     {
         RtlMemoryFree(sesskey);
@@ -758,6 +858,7 @@ done:
     {
         RtlMemoryFree(smbpath);
     }
+#endif
 
     SMB_SOCKET_UNLOCK(smb);
 
@@ -781,6 +882,9 @@ rpc__smb_socket_accept(
     )
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
+
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_accept called\n"));
+#if 0
     rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
     rpc_socket_t npsock = NULL;
     rpc_smb_socket_p_t npsmb = NULL;
@@ -873,7 +977,6 @@ rpc__smb_socket_accept(
         goto error;
     }
 
-
     serr = NtStatusToUnixErrno(
         LwIoCtxGetSessionKey(
             npsmb->context,
@@ -895,10 +998,12 @@ error:
     }
 
     SMB_SOCKET_UNLOCK(smb);
+#endif
 
     return serr;
 }
 
+#if 0
 INTERNAL
 void*
 rpc__smb_socket_listen_thread(void* data)
@@ -1059,7 +1164,7 @@ error:
 
     return NULL;
 }
-
+#endif
 
 INTERNAL
 rpc_socket_error_t
@@ -1069,6 +1174,8 @@ rpc__smb_socket_listen(
     )
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_listen called\n"));
+#if 0
     rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
 
     SMB_SOCKET_LOCK(smb);
@@ -1096,10 +1203,11 @@ rpc__smb_socket_listen(
 error:
 
     SMB_SOCKET_UNLOCK(smb);
-
+#endif
     return serr;
 }
 
+#if 0
 INTERNAL
 rpc_socket_error_t
 rpc__smb_socket_do_send(
@@ -1202,6 +1310,7 @@ error:
 
     return serr;
 }
+#endif
 
 INTERNAL
 rpc_socket_error_t
@@ -1214,6 +1323,9 @@ rpc__smb_socket_sendmsg(
     )
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_sendmsg called\n"));
+    return -1;
+#if 0
     rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
     int i;
     size_t pending = 0;
@@ -1270,6 +1382,7 @@ error:
     rpc__smb_socket_change_state(smb, SMB_STATE_ERROR);
 
     goto cleanup;
+#endif
 }
 
 INTERNAL
@@ -1285,6 +1398,7 @@ rpc__smb_socket_recvfrom(
     rpc_socket_error_t serr = ENOTSUP;
 
     fprintf(stderr, "WARNING: unsupported smb socket function %s\n", __FUNCTION__);
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_recvfrom called\n"));
 
     return serr;
 }
@@ -1300,6 +1414,9 @@ rpc__smb_socket_recvmsg(
 )
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_recvmsg called\n"));
+    return serr;
+#if 0
     rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
     int i;
     size_t pending;
@@ -1378,6 +1495,7 @@ error:
     rpc__smb_socket_change_state(smb, SMB_STATE_ERROR);
 
     goto cleanup;
+#endif
 }
 
 INTERNAL
@@ -1387,6 +1505,8 @@ rpc__smb_socket_inq_endpoint(
     rpc_addr_p_t addr
 )
 {
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_inq_endpoint called\n"));
+
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
     rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
 
@@ -1407,6 +1527,8 @@ rpc__smb_socket_set_broadcast(
     rpc_socket_t sock ATTRIBUTE_UNUSED
 )
 {
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_set_broadcast called\n"));
+
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
 
     return serr;
@@ -1422,6 +1544,7 @@ rpc__smb_socket_set_bufs(
     unsigned32 *nrxsize ATTRIBUTE_UNUSED
 )
 {
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_set_bufs called\n"));
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
 
     return serr;
@@ -1435,6 +1558,7 @@ rpc__smb_socket_set_nbio(
 {
     rpc_socket_error_t serr = ENOTSUP;
 
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_set_nbio called\n"));
     fprintf(stderr, "WARNING: unsupported smb socket function %s\n", __FUNCTION__);
 
     return serr;
@@ -1446,6 +1570,7 @@ rpc__smb_socket_set_close_on_exec(
     rpc_socket_t sock ATTRIBUTE_UNUSED
     )
 {
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_set_close_on_exec called\n"));
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
 
     return serr;
@@ -1461,6 +1586,7 @@ rpc__smb_socket_getpeername(
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
     rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
 
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_getpeername called\n"));
     SMB_SOCKET_LOCK(smb);
 
     if (!smb->np)
@@ -1487,6 +1613,7 @@ rpc__smb_socket_get_if_id(
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
 
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_get_if_id called\n"));
     *network_if_id = SOCK_STREAM;
 
     return serr;
@@ -1498,6 +1625,7 @@ rpc__smb_socket_set_keepalive(
     rpc_socket_t sock ATTRIBUTE_UNUSED
     )
 {
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_set_keepalive called\n"));
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
 
     return serr;
@@ -1512,6 +1640,7 @@ rpc__smb_socket_nowriteblock_wait(
 {
     rpc_socket_error_t serr = ENOTSUP;
 
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_nowriteblock_wait called\n"));
     fprintf(stderr, "WARNING: unsupported smb socket function %s\n", __FUNCTION__);
 
     return serr;
@@ -1525,6 +1654,7 @@ rpc__smb_socket_set_rcvtimeo(
     )
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_set_rcvtimeo called\n"));
 
     return serr;
 }
@@ -1539,6 +1669,7 @@ rpc__smb_socket_getpeereid(
 {
     rpc_socket_error_t serr = ENOTSUP;
 
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_getpeereid called\n"));
     fprintf(stderr, "WARNING: unsupported smb socket function %s\n", __FUNCTION__);
 
     return serr;
@@ -1550,7 +1681,8 @@ rpc__smb_socket_get_select_desc(
     rpc_socket_t sock
     )
 {
-    rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_get_select_desc called\n"));
+   rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
     return smb->accept_backlog.selectfd[0];
 }
 
@@ -1566,6 +1698,7 @@ rpc__smb_socket_enum_ifaces(
 {
     rpc_socket_error_t serr = ENOTSUP;
 
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_enum_ifaces called\n"));
     fprintf(stderr, "WARNING: unsupported smb socket function %s\n", __FUNCTION__);
 
     return serr;
@@ -1582,6 +1715,8 @@ rpc__smb_socket_inq_transport_info(
     rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
     rpc_smb_transport_info_p_t smb_info = NULL;
 
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_inq_transport_info called\n"));
+#if 0
     smb_info = calloc(1, sizeof(*smb_info));
 
     if (!smb_info)
@@ -1637,7 +1772,7 @@ error:
             rpc_smb_transport_info_free((rpc_transport_info_handle_t) smb_info);
         }
     }
-
+#endif
     return serr;
 }
 
