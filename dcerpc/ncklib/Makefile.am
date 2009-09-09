@@ -144,12 +144,9 @@ dcerpc.cat: dcerpc.m
 noinst_LTLIBRARIES+=libtrans.la
 
 libtrans_la_CPPFLAGS = $(AM_CPPFLAGS)
-libtrans_la_SOURCES = comsoc.c comsoc_bsd.c
+libtrans_la_CFLAGS=$(BASE_CFLAGS) -I/AppleInternal/Library/Frameworks/SMBClient.framework/Headers
+libtrans_la_SOURCES = comsoc.c comsoc_bsd.c comsoc_smb.c
 libtrans_la_LIBADD = $(NAF_NP_LIBS)
-
-if HAVE_LIKEWISE_LWIO
-libtrans_la_SOURCES += comsoc_smb.c
-endif
 
 ######################################################################
 ## COMPONENT: auth - comprises of libauth_none shared lib
