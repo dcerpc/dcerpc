@@ -3781,10 +3781,16 @@ unsigned32              *st;
     }        
 
     /*
+     * If we need authentication, then we must have a security context by now.
+     */
+    if (RPC_CN_AUTH_REQUIRED (info)) {
+        assert (RPC_CN_AUTH_REQUIRED (info) && sec_context != NULL);
+    }
+
+    /*
      * Wait for both presentation and optional security context
      * negotiations to complete either successfully or with an error.
      */
-    assert (sec_context != NULL);
     while (!(pres_context->syntax_valid) 
            ||
            (RPC_CN_AUTH_REQUIRED (info) && (sec_context->sec_state != RPC_C_SEC_STATE_COMPLETE)))
@@ -3803,7 +3809,6 @@ unsigned32              *st;
             *st = pres_context->syntax_status;
             return;
         }
-        assert(sec_context != NULL);
         if (RPC_CN_AUTH_REQUIRED (info) && (sec_context->sec_status != rpc_s_ok))
         {
             *st = sec_context->sec_status;
