@@ -19,6 +19,9 @@ libs=$(top_builddir)/dcelib/libdcerpc.la $(top_builddir)/uuid/libuuid.la
 demo_echo_server_LDADD=$(libs)
 demo_echo_client_LDADD=$(libs)
 
+demo_echo_server_LDFLAGS=$(AM_LDFLAGS) $(NAF_NP_LDFLAGS)
+demo_echo_client_LDFLAGS=$(AM_LDFLAGS) $(NAF_NP_LDFLAGS)
+
 BUILT_SOURCES=echo.h echo_sstub.c echo_cstub.c
 
 echo.h echo_sstub.c echo_cstub.c: echo.idl

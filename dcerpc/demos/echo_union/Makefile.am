@@ -19,6 +19,9 @@ libs=$(top_builddir)/dcelib/libdcerpc.la $(top_builddir)/uuid/libuuid.la
 demo_echou_server_LDADD=$(libs)
 demo_echou_client_LDADD=$(libs)
 
+demo_echou_server_LDFLAGS=$(AM_LDFLAGS) $(NAF_NP_LDFLAGS)
+demo_echou_client_LDFLAGS=$(AM_LDFLAGS) $(NAF_NP_LDFLAGS)
+
 BUILT_SOURCES=echou.h echou_sstub.c echou_cstub.c
 
 echou.h echou_sstub.c echou_cstub.c: echou.idl

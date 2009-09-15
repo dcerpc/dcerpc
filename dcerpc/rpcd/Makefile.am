@@ -11,10 +11,10 @@ sbin_PROGRAMS=dcerpcd
 
 dcerpcd_SOURCES=dsm.c dsm_unix.c rpcd.c rpcddb.c rpcdep.c rpcdepdb.c rpcdsliv.c rpcdutil.c ep_sstub.c $(rpcd_dcom_sources)
 
-noinst_HEADERS=dsm_p.h rpcddb.h rpcdepdb.h rpcdepdbp.h rpcdp.h rpcdutil.h dsm.idl 
+noinst_HEADERS=dsm_p.h rpcddb.h rpcdepdb.h rpcdepdbp.h rpcdp.h rpcdutil.h dsm.idl
 
 dcerpcd_LDADD=../dcelib/libdcerpc.la ../uuid/libuuid.la ../libdcethread/libdcethread.la
-dcerpcd_LDFLAGS=@LTLDFLAGS@
+dcerpcd_LDFLAGS=@LTLDFLAGS@ $(NAF_NP_LDFLAGS)
 
 BUILT_SOURCES=ep_sstub.c dsm.h
 CLEANFILES=objex.h object_sstub.c ep_sstub.c dsm.h

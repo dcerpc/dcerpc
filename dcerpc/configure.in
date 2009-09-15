@@ -94,7 +94,7 @@ case "$target_os" in
 		# merge them during fat builds.
 		target_cpu=generic
 		;;
-     *freebsd*) 
+     *freebsd*)
 		FEATURETEST_CFLAGS="-D_SOCKADDR_LEN"
 		IDL_CFLAGS="$IDL_CFLAGS -D_SOCKADDR_LEN"
 		;;
@@ -153,7 +153,6 @@ AC_CHECK_TYPES([uint8, uint16, uint32, uint64])
 
 AC_CHECK_SIZEOF([long long int])
 AC_CHECK_SIZEOF([long int])
-
 
 dnl Checks for library functions.
 AC_PROG_GCC_TRADITIONAL
@@ -303,7 +302,7 @@ AC_SUBST(IDL_CC)
 ## gss_negotiate
 
 AC_ARG_WITH(
-	gssapi-dir, 
+	gssapi-dir,
 	[  --with-gssapi-dir=<prefix>      look for gssapi libraries in <prefix>],
 	[
 	    GSSAPI_INCLUDES="-I$withval/include"
@@ -312,7 +311,7 @@ AC_ARG_WITH(
 )
 
 AC_ARG_WITH(
-	gssapi-libdir, 
+	gssapi-libdir,
 	[  --with-gssapi-libdir=<libdir>   look for gssapi libraries in <libdir>],
 	[
 	    GSSAPI_LDFLAGS="-L$withval"
@@ -332,7 +331,7 @@ LDFLAGS="$tmp_LDFLAGS"
 ## schannel
 
 AC_ARG_WITH(
-	schannel-dir, 
+	schannel-dir,
 	[  --with-schannel-dir=<prefix>    look for libschannel in <prefix>],
 	[
 	    SCHANNEL_INCLUDES="-I$withval/include"
@@ -341,7 +340,7 @@ AC_ARG_WITH(
 )
 
 AC_ARG_WITH(
-	schannel-libdir, 
+	schannel-libdir,
 	[  --with-schannel-libdir=<libdir> look for libschannel libraries in <libdir>],
 	[
 	    SCHANNEL_LDFLAGS="-L$withval"
@@ -360,12 +359,32 @@ LDFLAGS="$tmp_LDFLAGS"
 #####################################################################
 ## COMPONENT: ncklib
 
+# Keep track of whether we have a library that will provide a ncacn_np
+# transport.
+rpc_have_np_transport=no
+
+#
+# Check to see whether SMBClient framework is available or not
+#
+rpc_have_smbclient_framework=yes
+RPC_SMBCLIENT_FRAMEWORK(NAF_NP_CPPFLAGS, NAF_NP_LDFLAGS, NAF_NP_LIBS,
+	smbclient_framework=no)
+
+AM_CONDITIONAL(HAVE_SMBCLIENT_FRAMEWORK,
+	test x${rpc_have_smbclient_framework} = xyes)
+if test x${rpc_have_smbclient_framework} = xyes ; then
+    rpc_have_np_transport=yes
+    AC_DEFINE(HAVE_SMBCLIENT_FRAMEWORK, 1,
+	    [whether the SMBClient.framework API is available])
+fi
+
 # Check whether the Likewise SMB named pipe client library is available. If so,
 # we need to link it for named pipe support.
 AC_CHECK_LIB(lwioclient, LwNtCtxCreateNamedPipeFile,
 	[
 	    NAF_NP_LIBS="-llwioclient"
 	    rpc_have_likewise_lwio=yes
+	    rpc_have_np_transport=yes
 	    AC_DEFINE(HAVE_LIKEWISE_LWIO, 1,
 		    [whether the Likewise lwioclient API is available])
 	],
@@ -374,6 +393,9 @@ AC_CHECK_LIB(lwioclient, LwNtCtxCreateNamedPipeFile,
 	])
 
 AM_CONDITIONAL(HAVE_LIKEWISE_LWIO, test x${rpc_have_likewise_lwio} = xyes)
+
+AC_SUBST(NAF_NP_CPPFLAGS)
+AC_SUBST(NAF_NP_LDFLAGS)
 AC_SUBST(NAF_NP_LIBS)
 
 RPC_ARG_DEFINE(ncacn, PROT_NCACN, yes,Support connection based transports)
@@ -420,15 +442,14 @@ RPC_ARG_DEFINE(afnp, NAF_NP,yes,Named Pipes network address family support)
 AM_CONDITIONAL(NAF_NP, test x${rpc_arg_afnp} = xyes)
 
 if test "x${rpc_arg_afnp}" = "xyes" -a \
-	"x${rpc_have_likewise_lwio}" != "xyes" ; then
-    AC_MSG_WARN(Enabling the named pipe transport without SMB support)
+	"x${rpc_have_np_transport}" != "xyes" ; then
+    AC_MSG_WARN(Enabling the named pipe transport without SMB pipe support)
 fi
 
 RPC_ARG_DEFINE(afuxd, NAF_UXD,no,AF_LOCAL network address family support (untested))
 AM_CONDITIONAL(NAF_UXD, test x${rpc_arg_afuxd} = xyes)
 
 RPC_ARG_DEFINE(ifloopback, USE_LOOPBACK, yes,Include loopback interface support)
-
 
 #####################################################################
 ## COMPONENT: dcelib

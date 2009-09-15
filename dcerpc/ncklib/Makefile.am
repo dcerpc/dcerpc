@@ -141,11 +141,19 @@ dcerpc.cat: dcerpc.m
 ######################################################################
 ## COMPONENT: transport - comprises of libtrans convenience lib
 
-noinst_LTLIBRARIES+=libtrans.la
+noinst_LTLIBRARIES += libtrans.la
 
-libtrans_la_CPPFLAGS = $(AM_CPPFLAGS)
-libtrans_la_CFLAGS=$(BASE_CFLAGS) -I/AppleInternal/Library/Frameworks/SMBClient.framework/Headers
-libtrans_la_SOURCES = comsoc.c comsoc_bsd.c comsoc_smb.c
+libtrans_la_SOURCES = comsoc.c comsoc_bsd.c
+if HAVE_LIKEWISE_LWIO
+libtrans_la_SOURCES += comsoc_smb.c
+endif
+
+if HAVE_SMBCLIENT_FRAMEWORK
+libtrans_la_SOURCES += comsoc_smb.c
+endif
+
+libtrans_la_CPPFLAGS = $(AM_CPPFLAGS) $(NAF_NP_CPPFLAGS)
+libtrans_la_CFLAGS = $(BASE_CFLAGS)
 libtrans_la_LIBADD = $(NAF_NP_LIBS)
 
 ######################################################################

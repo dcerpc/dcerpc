@@ -20,6 +20,9 @@ libs=$(top_builddir)/dcelib/libdcerpc.la \
 demo_samrt_server_LDADD=$(libs)
 demo_samrt_client_LDADD=$(libs)
 
+demo_samrt_server_LDFLAGS=$(AM_LDFLAGS) $(NAF_NP_LDFLAGS)
+demo_samrt_client_LDFLAGS=$(AM_LDFLAGS) $(NAF_NP_LDFLAGS)
+
 samrt_server.c: samrt.h
 samrt_client.c: samrt.h
 

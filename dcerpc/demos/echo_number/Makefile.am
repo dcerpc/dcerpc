@@ -19,6 +19,9 @@ libs=$(top_builddir)/dcelib/libdcerpc.la $(top_builddir)/uuid/libuuid.la
 demo_echon_server_LDADD=$(libs)
 demo_echon_client_LDADD=$(libs)
 
+demo_echon_server_LDFLAGS=$(AM_LDFLAGS) $(NAF_NP_LDFLAGS)
+demo_echon_client_LDFLAGS=$(AM_LDFLAGS) $(NAF_NP_LDFLAGS)
+
 echon_server.c: echon.h
 echon_client.c: echon.h
 
