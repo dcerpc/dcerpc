@@ -660,11 +660,22 @@ rpc__smb_socket_destruct(
 
     RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_destruct called\n"));
 
+#if HAVE_SMBCLIENT_FRAMEWORK
     if (smb->handle != NULL) {
-        RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_destruct - closing SMB handle\n"));
+        if (smb->hFile != 0) {
+            SMBCloseFile(smb->handle, smb->hFile);
+        }
+        else {
+            RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_destruct - error file handle is 0\n"));
+        }
+
         SMBReleaseServer(smb->handle);
         smb->handle = NULL;
     }
+    else {
+        RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_destruct - error smb handle is NULL\n"));
+    }
+#endif
 
     rpc__smb_socket_destroy((rpc_smb_socket_p_t) sock->data.pointer);
 
@@ -688,49 +699,6 @@ rpc__smb_socket_bind(
     RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_bind called: sun_len %d, sun_family %d, sun_path <%s>\n", npaddr->sa.sun_len, npaddr->sa.sun_family, npaddr->sa.sun_path));
 
     return serr;
-}
-
-static void cat_file(SMBHANDLE handle, const char * path)
-{
-    SMBFID hFile;
-    NTSTATUS status;
-
-    off_t current = 0;
-    void * buffer = malloc(getpagesize());
-
-    status = SMBCreateFile(handle, path,
-                           0x0001, /* dwDesiredAccess: FILE_READ_DATA */
-                           0x0007, /* dwShareMode: FILE_SHARE_ALL */
-                           NULL,   /* lpSecurityAttributes */
-                           0x0001, /* dwCreateDisposition: OPEN_EXISTING */
-                           0x0000, /* dwFlagsAndAttributes */
-                           &hFile);
-    if (!NT_SUCCESS(status)) {
-        RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_connect - SMBCreateFile failed 0x%x\n", status));
-        goto done;
-    }
-
-    do {
-        off_t count = 0;
-
-        status = SMBReadFile(handle, hFile,
-                             buffer, current, getpagesize(), &count);
-        if (!NT_SUCCESS(status)) {
-            break;
-        }
-
-        if (count == 0) {
-            break;
-        }
-
-        printf("%*.*s", (int)count, (int)count, (char *)buffer);
-        current += count;
-    } while (NT_SUCCESS(status));
-
-    SMBCloseFile(handle, hFile);
-
-done:
-    free(buffer);
 }
 
 INTERNAL
