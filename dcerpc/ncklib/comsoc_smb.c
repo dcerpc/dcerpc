@@ -93,7 +93,7 @@ typedef struct rpc_smb_socket_s
 } rpc_smb_socket_t, *rpc_smb_socket_p_t;
 
 #if HAVE_SMBCLIENT_FRAMEWORK
-int
+rpc_socket_error_t
 rpc_smb_ntstatus_to_rpc_error(
     NTSTATUS status
     )
@@ -132,7 +132,7 @@ rpc_smb_ntstatus_to_rpc_error(
 
         default:
             RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc_smb_ntstatus_to_rpc_error - unmapped ntstatus 0x%x\n", status));
-            return (-1);
+            return (RPC_C_SOCKET_EIO);
     }
 }
 
