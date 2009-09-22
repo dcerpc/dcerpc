@@ -21,7 +21,6 @@
 #include <lw/base.h>
 #elif HAVE_SMBCLIENT_FRAMEWORK
 #include <SMBClient/smbclient.h>
-#include <winbase.h>
 #include <nttypes.h>
 #endif
 
@@ -38,8 +37,9 @@ typedef struct rpc_smb_transport_info_s
     } session_key;
 #if HAVE_LIKEWISE_LWIO
     PIO_ACCESS_TOKEN access_token;
-#endif
+#elif HAVE_SMBCLIENT_FRAMEWORK
     unsigned32 *access_token;
+#endif
     boolean schannel;
 } rpc_smb_transport_info_t, *rpc_smb_transport_info_p_t;
 
@@ -67,20 +67,22 @@ typedef struct rpc_smb_socket_s
     rpc_smb_transport_info_t info;
 #if HAVE_LIKEWISE_LWIO
     PIO_CONTEXT context;
+    IO_FILE_HANDLE np;
 #elif HAVE_SMBCLIENT_FRAMEWORK
     SMBHANDLE handle;
-#endif
     SMBFID hFile;
     unsigned32 *context;
     unsigned32 *np;
+#endif
     rpc_smb_buffer_t sendbuffer;
     rpc_smb_buffer_t recvbuffer;
     struct
     {
 #if HAVE_LIKEWISE_LWIO
         IO_FILE_HANDLE* queue;
-#endif
+#elif HAVE_SMBCLIENT_FRAMEWORK
         unsigned32* queue;
+#endif
         size_t capacity;
         size_t length;
         int selectfd[2];
@@ -89,6 +91,52 @@ typedef struct rpc_smb_socket_s
     dcethread_mutex lock;
     dcethread_cond event;
 } rpc_smb_socket_t, *rpc_smb_socket_p_t;
+
+#if HAVE_SMBCLIENT_FRAMEWORK
+int
+rpc_smb_ntstatus_to_rpc_error(
+    NTSTATUS status
+    )
+{
+    switch (status) {
+
+        case STATUS_SUCCESS:
+            return RPC_C_SOCKET_OK;
+
+        case STATUS_UNEXPECTED_IO_ERROR:
+            return RPC_C_SOCKET_EIO;
+
+        case STATUS_CONNECTION_REFUSED:
+            return RPC_C_SOCKET_ECONNREFUSED;
+
+        case STATUS_NO_SUCH_DEVICE:
+            return RPC_C_SOCKET_ENETUNREACH;
+
+        case STATUS_BUFFER_OVERFLOW:
+            return RPC_C_SOCKET_ENOSPC;
+
+        case STATUS_NO_MEMORY:
+            return RPC_C_SOCKET_ENOMEM;
+
+        case STATUS_OBJECT_PATH_SYNTAX_BAD:
+        case STATUS_INVALID_HANDLE:
+        case STATUS_INVALID_PARAMETER:
+        case STATUS_UNSUCCESSFUL:
+            return RPC_C_SOCKET_EINVAL;
+
+        case STATUS_LOGON_FAILURE:
+            return RPC_C_SOCKET_EAUTH;
+
+        case STATUS_BAD_NETWORK_NAME:
+            return RPC_C_SOCKET_ENOENT;
+
+        default:
+            RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc_smb_ntstatus_to_rpc_error - unmapped ntstatus 0x%x\n", status));
+            return (-1);
+    }
+}
+
+#endif
 
 void
 rpc_smb_transport_info_from_lwio_token(
@@ -656,23 +704,27 @@ rpc__smb_socket_destruct(
     )
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
+#if HAVE_SMBCLIENT_FRAMEWORK
     rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
 
     RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_destruct called\n"));
 
-#if HAVE_SMBCLIENT_FRAMEWORK
-    if (smb->handle != NULL) {
-        if (smb->hFile != 0) {
+    if (smb->handle != NULL)
+    {
+        if (smb->hFile != 0)
+        {
             SMBCloseFile(smb->handle, smb->hFile);
         }
-        else {
+        else
+        {
             RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_destruct - error file handle is 0\n"));
         }
 
         SMBReleaseServer(smb->handle);
         smb->handle = NULL;
     }
-    else {
+    else
+    {
         RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_destruct - error smb handle is NULL\n"));
     }
 #endif
@@ -695,9 +747,6 @@ rpc__smb_socket_bind(
 
     smb->localaddr = *npaddr;
 
-    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_bind called: protseq_id %d, len %d, remote_host <%s>\n", npaddr->rpc_protseq_id, npaddr->len, npaddr->remote_host));
-    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_bind called: sun_len %d, sun_family %d, sun_path <%s>\n", npaddr->sa.sun_len, npaddr->sa.sun_family, npaddr->sa.sun_path));
-
     return serr;
 }
 
@@ -715,13 +764,17 @@ rpc__smb_socket_connect(
     char *endpoint = NULL;
     char *pipename = NULL;
     unsigned32 dbg_status = 0;
+#if HAVE_LIKEWISE_LWIO
+    PSTR smbpath = NULL;
+    PBYTE sesskey = NULL;
+    USHORT sesskeylen = 0;
+    IO_FILE_NAME filename = { 0 };
+    IO_STATUS_BLOCK io_status = { 0 };
+#elif HAVE_SMBCLIENT_FRAMEWORK
     size_t len;
     char* smbpath = NULL;
-    //PBYTE sesskey = NULL;
-    //USHORT sesskeylen = 0;
-    //IO_FILE_NAME filename = { 0 };
-    //IO_STATUS_BLOCK io_status = { 0 };
     NTSTATUS status;
+#endif
 
     RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_connect called\n"));
 
@@ -763,7 +816,8 @@ rpc__smb_socket_connect(
 #elif HAVE_SMBCLIENT_FRAMEWORK
     len = strlen(netaddr) + strlen(pipename) + strlen("smb:///IPC$/") + 1;
     smbpath = malloc(len);
-    if (smbpath == NULL) {
+    if (smbpath == NULL)
+    {
         RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_connect - smbpath malloc failed\n"));
         serr = RPC_C_SOCKET_ENOMEM;
         goto error;
@@ -781,10 +835,10 @@ rpc__smb_socket_connect(
      authenticated session, or log in as guest, or fail. Never prompt for a
      username or password so always set kSMBOptionNoPrompt */
     status = SMBOpenServerEx(smbpath, &smb->handle, kSMBOptionNoPrompt);
-    if (!NT_SUCCESS(status)) {
+    if (!NT_SUCCESS(status))
+    {
         RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_connect - SMBOpenServerEx failed 0x%x\n", status));
-        //serr = LwNtStatusToUnixErrno(status); /* %%% <bms> still need to implement or copy */
-        serr = RPC_C_SOCKET_ECONNREFUSED;
+        serr = rpc_smb_ntstatus_to_rpc_error (status);
         goto error;
     }
 
@@ -795,10 +849,10 @@ rpc__smb_socket_connect(
                            FILE_OPEN,                           /* dwCreateDisposition: OPEN_EXISTING */
                            0x0000,                              /* dwFlagsAndAttributes */
                            &smb->hFile);
-    if (!NT_SUCCESS(status)) {
-        RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
-		("rpc__smb_socket_connect - SMBCreateFile failed 0x%x\n", status));
-        serr = RPC_C_SOCKET_EACCESS;
+    if (!NT_SUCCESS(status))
+    {
+        RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_connect - SMBCreateFile failed 0x%x\n", status));
+        serr = rpc_smb_ntstatus_to_rpc_error (status);
         goto error;
     }
 
@@ -891,7 +945,8 @@ done:
 
 #endif
 
-    if (smbpath) {
+    if (smbpath)
+    {
         free(smbpath);
     }
 
@@ -1257,12 +1312,14 @@ rpc__smb_socket_do_send(
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
     rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
-    //off_t bytes_read = 0;
-    off_t bytes_written = 0;
     unsigned char* cursor = smb->sendbuffer.base;
-    //IO_STATUS_BLOCK io_status = { 0 };
+#if HAVE_LIKEWISE_LWIO
+    DWORD bytes_written = 0;
+    IO_STATUS_BLOCK io_status = { 0 };
+#elif HAVE_SMBCLIENT_FRAMEWORK
+    off_t bytes_written = 0;
     NTSTATUS status;
-    char junk[1000];
+#endif
 
     do
     {
@@ -1276,23 +1333,10 @@ rpc__smb_socket_do_send(
 			smb->sendbuffer.start_cursor - cursor,
 			&bytes_written);
 
-#if 0 // NOTYET
-
-        bytes_written = smb->sendbuffer.start_cursor - cursor;
-        status = SMBTransactNamedPipe(smb->handle,
-			smb->hFile,
-			smb->sendbuffer.base,
-			smb->sendbuffer.start_cursor - cursor,
-			junk,
-			sizeof(junk),
-			&bytes_read);
-
-#endif
-
-        if (!NT_SUCCESS(status)) {
+        if (!NT_SUCCESS(status))
+        {
             RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_do_send - SMBWriteFile failed 0x%x\n", status));
-            //serr = LwNtStatusToUnixErrno(status); /* %%% <bms> still need to implement or copy */
-            serr = RPC_C_SOCKET_EPIPE;
+            serr = rpc_smb_ntstatus_to_rpc_error (status);
         }
 
 #elif HAVE_LIKEWISE_LWIO
@@ -1317,6 +1361,10 @@ rpc__smb_socket_do_send(
         {
             goto error;
         }
+
+#if HAVE_LIKEWISE_LWIO
+        bytes_written = io_status.BytesTransferred;
+#endif
         cursor += bytes_written;
     } while (cursor < smb->sendbuffer.start_cursor);
 
@@ -1339,12 +1387,15 @@ rpc__smb_socket_do_recv(
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
     rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
+#if HAVE_LIKEWISE_LWIO
+    DWORD bytes_requested = 0;
+    DWORD bytes_read = 0;
+    IO_STATUS_BLOCK io_status = { 0 };
+#elif HAVE_SMBCLIENT_FRAMEWORK
     off_t bytes_requested = 0;
     off_t bytes_read = 0;
-#if HAVE_LIKEWISE_LWIO
-    IO_STATUS_BLOCK io_status = { 0 };
-#endif
     NTSTATUS status = NT_STATUS_SUCCESS;
+#endif
 
     *count = 0;
 
@@ -1368,10 +1419,10 @@ rpc__smb_socket_do_recv(
 			bytes_requested,
 			&bytes_read);
 
-        if (!NT_SUCCESS(status)) {
+        if (!NT_SUCCESS(status))
+        {
             RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_do_recv - SMBReadFile failed 0x%x\n", status));
-            //serr = LwNtStatusToUnixErrno(status); /* %%% <bms> still need to implement or copy */
-            serr = RPC_C_SOCKET_EPIPE;
+            serr = rpc_smb_ntstatus_to_rpc_error (status);
         }
 
 #elif HAVE_LIKEWISE_LWIO
