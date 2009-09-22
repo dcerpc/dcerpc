@@ -3814,7 +3814,7 @@ INTERNAL void rpc__cn_assoc_process_auth_tlr
     *header_size = ((*header_size + 3) & ~0x3);
     resp_auth_tlr = (rpc_cn_auth_tlr_t *)
                     ((unsigned8 *)(resp_header) + *header_size);
-    (void) memset(resp_auth_tlr, (rpc_g_cn_large_frag_size - *header_size), 0);
+    (void) memset(resp_auth_tlr, 0, (rpc_g_cn_large_frag_size - *header_size));
     resp_auth_tlr->auth_type = req_auth_tlr->auth_type;
     resp_auth_tlr->auth_level = req_auth_tlr->auth_level;
     resp_auth_tlr->stub_pad_length = 0;
@@ -4033,7 +4033,7 @@ rpc_cn_packet_p_t       header;
             /*
              * Zero out old cred info and put in next segment
              */
-            (void) memset(auth_value->credentials, cred_len, 0);
+            (void) memset(auth_value->credentials, 0, cred_len);
 
             /*
              * If the rest of the creditials will all fit, put it in,

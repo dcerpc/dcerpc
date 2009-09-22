@@ -4853,7 +4853,7 @@ INTERNAL void send_pdu
             first_frag = false;
         }
 
-        (void) memset(auth_tlr->auth_value, auth_len, 0);
+        (void) memset(auth_tlr->auth_value, 0, auth_len);
 
         RPC_CN_AUTH_FMT_CLIENT_REQ (&assoc->security,
                                     sec_context,
