@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DD38F1AC106976B200EEF3A7 /* SMBClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD38F1AB106976B200EEF3A7 /* SMBClient.framework */; };
 		DD3DB2DB100408FD0080B762 /* wc16str.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAF83100408FC0080B762 /* wc16str.c */; };
 		DD3DB2DC100408FD0080B762 /* dummyfuncs.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAF84100408FC0080B762 /* dummyfuncs.c */; };
 		DD3DB2DD100408FD0080B762 /* exports in Resources */ = {isa = PBXBuildFile; fileRef = DD3DAF85100408FC0080B762 /* exports */; };
@@ -790,6 +791,7 @@
 
 /* Begin PBXFileReference section */
 		8DC2EF5B0486A6940098B216 /* dcerpc.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = dcerpc.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD38F1AB106976B200EEF3A7 /* SMBClient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SMBClient.framework; path = /AppleInternal/Library/Frameworks/SMBClient.framework; sourceTree = "<absolute>"; };
 		DD3DAF83100408FC0080B762 /* wc16str.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = wc16str.c; sourceTree = "<group>"; };
 		DD3DAF84100408FC0080B762 /* dummyfuncs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dummyfuncs.c; sourceTree = "<group>"; };
 		DD3DAF85100408FC0080B762 /* exports */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = exports; sourceTree = "<group>"; };
@@ -1576,6 +1578,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DD38F1AC106976B200EEF3A7 /* SMBClient.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1618,6 +1621,7 @@
 				DD3DB29B100408FD0080B762 /* transport */,
 				DD3DB2D4100408FD0080B762 /* uuid */,
 				DD3DAF98100408FC0080B762 /* demos */,
+				DD38F1AB106976B200EEF3A7 /* SMBClient.framework */,
 			);
 			name = Sources;
 			sourceTree = "<group>";
@@ -3748,6 +3752,10 @@
 				COPY_PHASE_STRIP = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(APPLE_INTERNAL_DIR)/Library/Frameworks\"",
+				);
 				FRAMEWORK_VERSION = A;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -3769,6 +3777,10 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(APPLE_INTERNAL_DIR)/Library/Frameworks\"",
+				);
 				FRAMEWORK_VERSION = A;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
