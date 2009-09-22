@@ -368,7 +368,7 @@ rpc_have_np_transport=no
 #
 rpc_have_smbclient_framework=yes
 RPC_SMBCLIENT_FRAMEWORK(NAF_NP_CPPFLAGS, NAF_NP_LDFLAGS, NAF_NP_LIBS,
-	smbclient_framework=no)
+	rpc_have_smbclient_framework=no)
 
 AM_CONDITIONAL(HAVE_SMBCLIENT_FRAMEWORK,
 	test x${rpc_have_smbclient_framework} = xyes)
