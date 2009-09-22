@@ -773,6 +773,9 @@ rpc__transport_info_equal(
 #define RPC_C_SOCKET_ENOTSUP      ENOTSUP       /* operation not supported */
 #define RPC_C_SOCKET_ENOMEM       ENOMEM	/* out of memory */
 #define RPC_C_SOCKET_EINVAL       EINVAL	/* invalid parameter */
+#define RPC_C_SOCKET_EAUTH        EAUTH     /* authentication error */
+#define RPC_C_SOCKET_ENOENT       ENOENT    /* no such file or directory */
+
 #ifdef ETIME
 #define RPC_C_SOCKET_ETIME        ETIME         /* A time skew occurred */
 #else
