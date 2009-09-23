@@ -143,25 +143,25 @@ extern const char *dceshared_path;
 typedef idl_byte        byte;
 typedef idl_boolean     boolean;
 typedef struct unsigned64_s_t {
-    unsigned long hi;
-    unsigned long lo;
+    uint32_t hi;
+    uint32_t lo;
 } unsigned64;
 
 typedef struct signed64_s_t {
-    unsigned long hi;
-    unsigned long lo;
+    uint32_t hi;
+    uint32_t lo;
 } signed64;
 
 typedef struct unsigned48_s_t {
-    unsigned long  int  lo;             /* least significant 32 bits */
-	unsigned short int  hi;             /* most significant 16 bits */
+    uint32_t  lo;             /* least significant 32 bits */
+	uint16_t  hi;             /* most significant 16 bits */
 } unsigned48;
 
 typedef struct unsigned128_s_t {
-    unsigned long lolo;
-    unsigned long lohi;
-    unsigned long hilo;
-    unsigned long hihi;
+    uint32_t lolo;
+    uint32_t lohi;
+    uint32_t hilo;
+    uint32_t hihi;
 } unsigned128;
 
 /* 
