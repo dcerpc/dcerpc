@@ -6,6 +6,48 @@
 #ifndef _NTTYPES_H
 #define _NTTYPES_H
 
+/* for now until 7245052 gets fixed */
+#if !defined(STATUS_SUCCESS)
+#define STATUS_SUCCESS                  0x00000000
+#endif
+#if !defined(STATUS_UNEXPECTED_IO_ERROR)
+#define STATUS_UNEXPECTED_IO_ERROR      0xC00000E9
+#endif
+#if !defined(STATUS_CONNECTION_REFUSED)
+#define STATUS_CONNECTION_REFUSED       0xC0000236
+#endif
+#if !defined(STATUS_NO_SUCH_DEVICE)
+#define STATUS_NO_SUCH_DEVICE           0xC000000E
+#endif
+#if !defined(STATUS_BUFFER_OVERFLOW)
+#define STATUS_BUFFER_OVERFLOW          0x80000005
+#endif
+#if !defined(STATUS_NO_MEMORY)
+#define STATUS_NO_MEMORY                0xC0000017
+#endif
+#if !defined(STATUS_OBJECT_PATH_SYNTAX_BAD)
+#define STATUS_OBJECT_PATH_SYNTAX_BAD   0xC000003B
+#endif
+#if !defined(STATUS_INVALID_HANDLE)
+#define STATUS_INVALID_HANDLE           0xC0000008
+#endif
+#if !defined(STATUS_INVALID_PARAMETER)
+#define STATUS_INVALID_PARAMETER        0xC000000D
+#endif
+#if !defined(STATUS_UNSUCCESSFUL)
+#define STATUS_UNSUCCESSFUL             0xC0000001
+#endif
+#if !defined(STATUS_LOGON_FAILURE)
+#define STATUS_LOGON_FAILURE            0xC000006D
+#endif
+#if !defined(STATUS_BAD_NETWORK_NAME)
+#define STATUS_BAD_NETWORK_NAME         0xC00000CC
+#endif
+#if !defined(STATUS_END_OF_FILE)
+#define STATUS_END_OF_FILE              0xC0000011
+#endif
+
+
 typedef enum _CREATE_DISPOSITION
 {
     FILE_SUPERSEDE      = 0,
