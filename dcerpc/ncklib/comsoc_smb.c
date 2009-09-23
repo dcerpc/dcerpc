@@ -1326,6 +1326,8 @@ rpc__smb_socket_do_send(
 
 #if HAVE_SMBCLIENT_FRAMEWORK
 
+#if SMB_NP_NO_TRANSACTIONS
+        /* <bms> Write the data out without using transactions */
         status = SMBWriteFile(smb->handle,
 			smb->hFile,
 			smb->sendbuffer.base,
@@ -1338,6 +1340,14 @@ rpc__smb_socket_do_send(
             RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_do_send - SMBWriteFile failed 0x%x\n", status));
             serr = rpc_smb_ntstatus_to_rpc_error (status);
         }
+
+#else
+        /* <bms> for transactions, do nothing here.  Later in the
+         receive, we will do the send and receive in a single
+         transaction. */
+        serr = RPC_C_SOCKET_OK;
+        goto error;
+#endif
 
 #elif HAVE_LIKEWISE_LWIO
 
@@ -1395,6 +1405,9 @@ rpc__smb_socket_do_recv(
     off_t bytes_requested = 0;
     off_t bytes_read = 0;
     NTSTATUS status = NT_STATUS_SUCCESS;
+#if !SMB_NP_NO_TRANSACTIONS
+    unsigned char* cursor = smb->sendbuffer.base;
+#endif
 #endif
 
     *count = 0;
@@ -1412,6 +1425,9 @@ rpc__smb_socket_do_recv(
         bytes_requested = rpc__smb_buffer_available(&smb->recvbuffer);
 
 #if HAVE_SMBCLIENT_FRAMEWORK
+
+#if SMB_NP_NO_TRANSACTIONS
+        /* <bms> Read the data in without using transactions */
         status = SMBReadFile(smb->handle,
 			smb->hFile,
 			smb->recvbuffer.end_cursor,
@@ -1424,6 +1440,27 @@ rpc__smb_socket_do_recv(
             RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_do_recv - SMBReadFile failed 0x%x\n", status));
             serr = rpc_smb_ntstatus_to_rpc_error (status);
         }
+
+#else
+        /* <bms> for transactions, do the send and receive in a
+         single transaction. */
+        status = SMBTransactNamedPipe(smb->handle,
+            smb->hFile,
+            smb->sendbuffer.base,
+            smb->sendbuffer.start_cursor - cursor,
+            smb->recvbuffer.end_cursor,
+            bytes_requested,
+            &bytes_read);
+
+        /* assume all the data got sent */
+        rpc__smb_buffer_settle(&smb->sendbuffer);
+
+        if (!NT_SUCCESS(status))
+        {
+            RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_do_recv - SMBTransactNamedPipe failed 0x%x\n", status));
+            serr = rpc_smb_ntstatus_to_rpc_error (status);
+        }
+#endif
 
 #elif HAVE_LIKEWISE_LWIO
         status = NtCtxReadFile(
