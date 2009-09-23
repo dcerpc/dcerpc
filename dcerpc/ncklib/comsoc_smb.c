@@ -1441,7 +1441,7 @@ rpc__smb_socket_do_recv(
 	goto error;
 #endif
 
-        if (status == 0xC0000011 /* STATUS_END_OF_FILE */)
+        if (status == STATUS_END_OF_FILE)
         {
             serr = RPC_C_SOCKET_OK;
             bytes_read = 0;
