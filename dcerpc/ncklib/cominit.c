@@ -269,7 +269,7 @@ INTERNAL void init_once(void)
 	*  operands.  The following assert will also have to be changed
 	*  to use the new scalar data type.
 	*/
-	assert(sizeof(unsigned long) == sizeof(unsigned8 *));
+	assert(sizeof(uintptr_t) == sizeof(unsigned8 *));
 
 #ifdef APOLLO_GLOBAL_LIBRARY
 	apollo_global_lib_init();
