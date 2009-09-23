@@ -421,7 +421,7 @@ int output_line
         ** Restore the saved character, update length and pointers, try again.
         */
         *cp = temp;
-        buff_len = buff_len - ((long)cp - (long)buff);
+        buff_len = buff_len - ((uintptr_t)cp - (uintptr_t)buff);
         buff = cp;
     }
 
