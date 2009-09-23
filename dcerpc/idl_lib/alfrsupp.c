@@ -339,7 +339,7 @@ static void rpc_ss_client_get_thread_ctx
         }
 
         p_support_ptrs->p_mem_h = (rpc_ss_mem_handle *)
-                            malloc(sizeof(rpc_ss_mem_handle));
+                            calloc(1, sizeof(rpc_ss_mem_handle));
         if (p_support_ptrs->p_mem_h == NULL)
         {
             DCETHREAD_RAISE( rpc_x_no_memory );
