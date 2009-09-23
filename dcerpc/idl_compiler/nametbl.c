@@ -37,6 +37,7 @@
 */
 
 
+#include <stdint.h>
 #include <nidl.h>
 #include <ctype.h>
 #include <nidlmsg.h>
@@ -123,7 +124,7 @@ static long NAMETABLE_names_are_temporary;
 
 
 /*
- * Function:  Find the first set bit in a longword.
+ * Function:  Find the first set bit in a longword (4 byte longword).
  *
  * Inputs:    A long, whose least-significant bit is to be found.
  *
@@ -137,8 +138,8 @@ static long NAMETABLE_names_are_temporary;
 
 static void find_first_set
 (
-    long n_arg,
-    long * position
+    uint32_t n_arg,
+    uint32_t * position
 )
 {
     long n, m, tp;
@@ -182,7 +183,7 @@ static void NAMETABLE_balance_tree (void)
                     back,
                     arr [balance_arr_size];
 
-    long            i,
+    uint32_t      i,
                     n;
 
 
