@@ -5,5 +5,5 @@
 //  Created by Brad Suinn on 9/29/09.
 //  Copyright 2009 Apple Inc. All rights reserved.
 //
-HEADER_SEARCH_PATHS = "$(SRCROOT)/include" "$(SRCROOT)/ncklib/include/darwin" "$(SRCROOT)/rpcd" "$(SRCROOT)/ncklib"
+HEADER_SEARCH_PATHS = "$(SRCROOT)/include" "$(SRCROOT)/ncklib/include/darwin" "$(SRCROOT)/rpcd" "$(SRCROOT)/ncklib" "$(SHARED_DERIVED_FILE_DIR)"
 GCC_PREPROCESSOR_DEFINITIONS = rpcd_c_database_name_prefix1=\"/usr/local/var/run/\" HAVE_CONFIG_H DCETHREAD_ENFORCE_AP _FORTIFY_SOURCE=2 _SOCKADDR_LEN

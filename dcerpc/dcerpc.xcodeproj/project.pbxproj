@@ -13,7 +13,9 @@
 			buildPhases = (
 			);
 			dependencies = (
+				DDFA60521074FA7E006A660C /* PBXTargetDependency */,
 				DD0FE8541074D8D5004AB68C /* PBXTargetDependency */,
+				DDEA1B511074FF5400C89B95 /* PBXTargetDependency */,
 				DD0FE8561074D8DE004AB68C /* PBXTargetDependency */,
 				DD0FE8581074D8F9004AB68C /* PBXTargetDependency */,
 				DD0FE86A1074D92C004AB68C /* PBXTargetDependency */,
@@ -106,6 +108,10 @@
 		DD7FBDE31074084F00B63C2A /* npnaf_linux.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2CE100408FD0080B762 /* npnaf_linux.c */; };
 		DD7FBDE41074084F00B63C2A /* twr_np.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2D2100408FD0080B762 /* twr_np.c */; };
 		DD7FBDE51074084F00B63C2A /* twr_uxd.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2D3100408FD0080B762 /* twr_uxd.c */; };
+		DD95AA7410756C3800683E5B /* acf_y.y in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB02A100408FC0080B762 /* acf_y.y */; };
+		DD95AA7510756C3800683E5B /* acf_l.l in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB029100408FC0080B762 /* acf_l.l */; };
+		DD95AA7610756C3800683E5B /* nidl_y.y in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB075100408FC0080B762 /* nidl_y.y */; };
+		DD95AA7710756C3800683E5B /* nidl_l.l in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB074100408FC0080B762 /* nidl_l.l */; };
 		DDCC000310740D490007183F /* libdcethread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DDDF3132106AE68900E6A9C2 /* libdcethread.dylib */; };
 		DDCC001210740EBE0007183F /* libdcerpc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE7054610711E1800563825 /* libdcerpc.dylib */; };
 		DDCC001310740F400007183F /* gssauth.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2C8100408FD0080B762 /* gssauth.c */; };
@@ -163,6 +169,13 @@
 		DDD41B4B107274920002C71D /* initscan.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAFCF100408FC0080B762 /* initscan.c */; };
 		DDD41C3B1072A7FD0002C71D /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAFD4100408FC0080B762 /* main.c */; };
 		DDD41D2C1072C4EF0002C71D /* parse.y in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB01F100408FC0080B762 /* parse.y */; };
+		DDD80A24107562FF00956CF0 /* dsm.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB286100408FD0080B762 /* dsm.idl */; };
+		DDD80A4D1075660B00956CF0 /* ep.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0F7100408FD0080B762 /* ep.idl */; };
+		DDD80A521075664800956CF0 /* libdcerpdc_stubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDD80A20107562E300956CF0 /* libdcerpdc_stubs.a */; };
+		DDD80A531075665000956CF0 /* ep.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0F7100408FD0080B762 /* ep.idl */; };
+		DDD80AB910756A2D00956CF0 /* echo.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAFA6100408FC0080B762 /* echo.idl */; };
+		DDD80ABE10756AAA00956CF0 /* libecho_stubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDD80AB610756A0D00956CF0 /* libecho_stubs.a */; };
+		DDD80ACF10756AF500956CF0 /* libecho_stubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDD80AB610756A0D00956CF0 /* libecho_stubs.a */; };
 		DDDF304D106ADA8100E6A9C2 /* ccl.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAFC5100408FC0080B762 /* ccl.c */; };
 		DDDF304E106ADA9C00E6A9C2 /* dfa.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAFC8100408FC0080B762 /* dfa.c */; };
 		DDDF304F106ADA9C00E6A9C2 /* ecs.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAFC9100408FC0080B762 /* ecs.c */; };
@@ -248,10 +261,6 @@
 		DDDF31D9106AEB8100E6A9C2 /* dcethread_signal_to_interrupt.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1B7100408FD0080B762 /* dcethread_signal_to_interrupt.c */; };
 		DDDF31DA106AEB8100E6A9C2 /* dcethread_unlock_global.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1B8100408FD0080B762 /* dcethread_unlock_global.c */; };
 		DDDF31DB106AEB8100E6A9C2 /* dcethread_yield.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1BA100408FD0080B762 /* dcethread_yield.c */; };
-		DDDF325C106BD4AE00E6A9C2 /* acf_l.l in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB029100408FC0080B762 /* acf_l.l */; };
-		DDDF325D106BD4AE00E6A9C2 /* acf_y.y in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB02A100408FC0080B762 /* acf_y.y */; };
-		DDDF325E106BD4AE00E6A9C2 /* nidl_l.l in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB074100408FC0080B762 /* nidl_l.l */; };
-		DDDF325F106BD4AE00E6A9C2 /* nidl_y.y in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB075100408FC0080B762 /* nidl_y.y */; };
 		DDDF3260106BD56500E6A9C2 /* astp_com.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB02D100408FC0080B762 /* astp_com.c */; };
 		DDDF3261106BD56500E6A9C2 /* astp_cpx.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB02E100408FC0080B762 /* astp_cpx.c */; };
 		DDDF3262106BD56500E6A9C2 /* astp_dmp.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB02F100408FC0080B762 /* astp_dmp.c */; };
@@ -357,13 +366,10 @@
 		DDE7047910710FB500563825 /* rpcdepdb.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB291100408FD0080B762 /* rpcdepdb.c */; };
 		DDE7047A10710FB500563825 /* rpcdsliv.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB295100408FD0080B762 /* rpcdsliv.c */; };
 		DDE7047B10710FB500563825 /* rpcdutil.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB296100408FD0080B762 /* rpcdutil.c */; };
-		DDE7047C10710FE000563825 /* dsm.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB286100408FD0080B762 /* dsm.idl */; };
-		DDE704871071103700563825 /* ep.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0F7100408FD0080B762 /* ep.idl */; };
 		DDE704B61071140300563825 /* libuuid.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE017DE106C334200A5E41A /* libuuid.a */; };
 		DDE704B71071140800563825 /* libdcethread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DDDF3132106AE68900E6A9C2 /* libdcethread.dylib */; };
 		DDE704EB1071199C00563825 /* echo_server.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAFA8100408FC0080B762 /* echo_server.c */; };
 		DDE704EC1071199C00563825 /* misc.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAFAD100408FC0080B762 /* misc.c */; };
-		DDE704ED107119AA00563825 /* echo.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAFA6100408FC0080B762 /* echo.idl */; };
 		DDE7051810711B8800563825 /* libuuid.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE017DE106C334200A5E41A /* libuuid.a */; };
 		DDE7054A10711E4F00563825 /* dummyfuncs.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAF84100408FC0080B762 /* dummyfuncs.c */; };
 		DDE7054B10711E5200563825 /* mswrappers.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAF87100408FC0080B762 /* mswrappers.c */; };
@@ -417,10 +423,10 @@
 			fileType = pattern.proxy;
 			isEditable = 1;
 			outputFiles = (
-				"${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}_cstub.c",
-				"${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}.h",
+				"${SHARED_DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_cstub.c",
+				"${SHARED_DERIVED_FILE_DIR}/${INPUT_FILE_BASE}.h",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/include -keep c_source -no_cpp -v -no_mepv -cepv -server none out ${DERIVED_FILES_DIR} ${INPUT_FILE_PATH}";
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/include -keep c_source -no_cpp -v -no_mepv -cepv -server none out ${SHARED_DERIVED_FILE_DIR} ${INPUT_FILE_PATH}";
 		};
 		DD10F5F7106D3629005F1EF3 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -463,10 +469,10 @@
 			fileType = pattern.proxy;
 			isEditable = 1;
 			outputFiles = (
-				"${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}_cstub.c",
-				"${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}.h",
+				"${SHARED_DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_cstub.c",
+				"${SHARED_DERIVED_FILE_DIR}/${INPUT_FILE_BASE}.h",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/include -keep c_source -no_cpp -v -no_mepv -server none out ${DERIVED_FILES_DIR} ${INPUT_FILE_PATH}";
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/include -keep c_source -no_cpp -v -no_mepv -server none out ${SHARED_DERIVED_FILE_DIR} ${INPUT_FILE_PATH}";
 		};
 		DDD41B6A1072768F0002C71D /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -480,6 +486,41 @@
 			);
 			script = "/usr/bin/bison -o ${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}.c -y -d ${INPUT_FILE_PATH}";
 		};
+		DDD80A261075636F00956CF0 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*m.idl";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(SHARED_DERIVED_FILE_DIR)/$(INPUT_FILE_BASE).h",
+			);
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -D_IDL -I ${SOURCE_ROOT}/include -keep c_source -v -no_mepv -cepv -client none -server none out ${SHARED_DERIVED_FILE_DIR} ${INPUT_FILE_PATH}";
+		};
+		DDD80A581075669300956CF0 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*p.idl";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(SHARED_DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_sstub.c",
+			);
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -D_IDL -I ${SOURCE_ROOT}/include -keep c_source -v -no_mepv -cepv -client none out ${SHARED_DERIVED_FILE_DIR} ${INPUT_FILE_PATH}";
+		};
+		DDD80ABA10756A9D00956CF0 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.idl";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(SHARED_DERIVED_FILE_DIR)/$(INPUT_FILE_BASE).h",
+				"$(SHARED_DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_cstub.c",
+				"$(SHARED_DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_sstub.c",
+			);
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/include -keep c_source out ${SHARED_DERIVED_FILE_DIR} ${INPUT_FILE_PATH}";
+		};
 		DDDF32A2106BDBB500E6A9C2 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
 			compilerSpec = com.apple.compilers.proxy.script;
@@ -487,8 +528,8 @@
 			fileType = pattern.proxy;
 			isEditable = 1;
 			outputFiles = (
+				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h",
 				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).c",
-				"${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}.h",
 			);
 			script = "/usr/bin/bison -v -p ${INPUT_FILE_BASE}y -o ${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}.c -d ${INPUT_FILE_PATH}";
 		};
@@ -499,10 +540,10 @@
 			fileType = pattern.proxy;
 			isEditable = 1;
 			outputFiles = (
-				"${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}.c",
-				"${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}.h",
+				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h",
+				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).c",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/flex -Pacf_yy -o${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}.c ${INPUT_FILE_PATH}";
+			script = "${BUILT_PRODUCTS_DIR}/flex -Pacf_yy -o${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}.c ${INPUT_FILE_PATH}\nsleep 1";
 		};
 		DDDF3330106BE50A00E6A9C2 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -511,19 +552,10 @@
 			fileType = pattern.proxy;
 			isEditable = 1;
 			outputFiles = (
-				"${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}.c",
-				"${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}.h",
+				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h",
+				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).c",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/flex -Pnidl_yy -o${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}.c ${INPUT_FILE_PATH}";
-		};
-		DDDF3368106C0D3500E6A9C2 /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.proxy.script;
-			fileType = sourcecode.lex;
-			isEditable = 1;
-			outputFiles = (
-			);
-			script = "";
+			script = "${BUILT_PRODUCTS_DIR}/flex -Pnidl_yy -o${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}.c ${INPUT_FILE_PATH}\nsleep 1";
 		};
 		DDE70489107110AB00563825 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -545,7 +577,7 @@
 			outputFiles = (
 				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -D_IDL -I ${SOURCE_ROOT}/include -keep c_source -v -no_mepv -cepv -client none -server none out ${INPUT_FILE_DIR} ${INPUT_FILE_PATH}";
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -D_IDL -I ${SOURCE_ROOT}/include -keep c_source -v -no_mepv -cepv -client none -server none out ${DERIVED_FILES_DIR} ${INPUT_FILE_PATH}";
 		};
 		DDE704F5107119E200563825 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -554,10 +586,10 @@
 			fileType = pattern.proxy;
 			isEditable = 1;
 			outputFiles = (
-				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE)_sstub.c",
-				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h",
+				"$(SHARED_DERIVED_FILE_DIR)/$(INPUT_FILE_BASE).h",
+				"$(SHARED_DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_sstub.c",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/include -keep c_source out ${DERIVED_FILES_DIR} ${INPUT_FILE_PATH}";
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/include -keep c_source out ${SHARED_DERIVED_FILE_DIR} ${INPUT_FILE_PATH}";
 		};
 		DDFD948010723CAB008E776F /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -812,6 +844,27 @@
 			remoteGlobalIDString = DDDF3256106BD43400E6A9C2;
 			remoteInfo = dceidl;
 		};
+		DDD80A501075663800956CF0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DDD80A1F107562E300956CF0;
+			remoteInfo = dcerpdc_stubs;
+		};
+		DDD80ABC10756AA200956CF0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DDD80AB510756A0D00956CF0;
+			remoteInfo = echo_stubs;
+		};
+		DDD80ACD10756AEF00956CF0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DDD80AB510756A0D00956CF0;
+			remoteInfo = echo_stubs;
+		};
 		DDE704B1107113E900563825 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
@@ -881,6 +934,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = DDDF3131106AE68900E6A9C2;
 			remoteInfo = dcethread;
+		};
+		DDEA1B501074FF5400C89B95 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DDDF3256106BD43400E6A9C2;
+			remoteInfo = dceidl;
+		};
+		DDFA60511074FA7E006A660C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DDDF303C106ADA4D00E6A9C2;
+			remoteInfo = flex;
 		};
 		DDFD948510723CF7008E776F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1710,7 +1777,7 @@
 		DD3DB2D8100408FD0080B762 /* uuid_i.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uuid_i.h; sourceTree = "<group>"; };
 		DD3DB2D9100408FD0080B762 /* uuidsys.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = uuidsys.c; sourceTree = "<group>"; };
 		DD3DB2DA100408FD0080B762 /* uuidtool.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = uuidtool.c; sourceTree = "<group>"; };
-		DD501C071073C24800473324 /* stubs.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = stubs.xcconfig; sourceTree = "<group>"; };
+		DD501C071073C24800473324 /* stubs.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = stubs.xcconfig; path = dcerpc.xc.configurations/stubs.xcconfig; sourceTree = "<group>"; };
 		DD7FBDA41074061400B63C2A /* libnaf_ip.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libnaf_ip.so; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD7FBDD8107407D200B63C2A /* libnaf_np.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libnaf_np.so; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD8828071073058D00FBF62B /* flex.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = flex.xcconfig; path = dcerpc.xc.configurations/flex.xcconfig; sourceTree = "<group>"; };
@@ -1727,6 +1794,8 @@
 		DDCC000D10740EA40007183F /* libauth_gss_negotiate.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libauth_gss_negotiate.so; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDCCFFA810740B3A0007183F /* libprot_ncacn.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libprot_ncacn.so; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDCCFFDD10740CD50007183F /* libprot_ncadg.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libprot_ncadg.so; sourceTree = BUILT_PRODUCTS_DIR; };
+		DDD80A20107562E300956CF0 /* libdcerpdc_stubs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdcerpdc_stubs.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		DDD80AB610756A0D00956CF0 /* libecho_stubs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libecho_stubs.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDDF303D106ADA4D00E6A9C2 /* flex */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = flex; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDDF30E9106AE4AD00E6A9C2 /* libfl.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libfl.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDDF3132106AE68900E6A9C2 /* libdcethread.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libdcethread.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1848,6 +1917,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DDD80A1E107562E300956CF0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DDD80AB410756A0D00956CF0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DDDF303B106ADA4D00E6A9C2 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1898,6 +1981,7 @@
 				DDE704B61071140300563825 /* libuuid.a in Frameworks */,
 				DDE704B71071140800563825 /* libdcethread.dylib in Frameworks */,
 				DDE7062B107163C500563825 /* libdcerpc.dylib in Frameworks */,
+				DDD80A521075664800956CF0 /* libdcerpdc_stubs.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1908,6 +1992,7 @@
 				DDE7051810711B8800563825 /* libuuid.a in Frameworks */,
 				DDE70630107163DD00563825 /* libdcerpc.dylib in Frameworks */,
 				DDE7063A1071643E00563825 /* libdcethread.dylib in Frameworks */,
+				DDD80ABE10756AAA00956CF0 /* libecho_stubs.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1931,6 +2016,7 @@
 				DDFD948B10723D0D008E776F /* libdcerpc.dylib in Frameworks */,
 				DDFD948C10723D0D008E776F /* libdcethread.dylib in Frameworks */,
 				DDFD948D10723D0D008E776F /* libuuid.a in Frameworks */,
+				DDD80ACF10756AF500956CF0 /* libecho_stubs.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1973,6 +2059,8 @@
 				DDCCFFA810740B3A0007183F /* libprot_ncacn.so */,
 				DDCCFFDD10740CD50007183F /* libprot_ncadg.so */,
 				DDCC000D10740EA40007183F /* libauth_gss_negotiate.so */,
+				DDD80A20107562E300956CF0 /* libdcerpdc_stubs.a */,
+				DDD80AB610756A0D00956CF0 /* libecho_stubs.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3397,6 +3485,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DDD80A1C107562E300956CF0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DDD80AB210756A0D00956CF0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DDDF30E5106AE4AD00E6A9C2 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -3679,6 +3781,43 @@
 			productReference = DDCCFFDD10740CD50007183F /* libprot_ncadg.so */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
+		DDD80A1F107562E300956CF0 /* dcerpdc_stubs */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DDD80A271075636F00956CF0 /* Build configuration list for PBXNativeTarget "dcerpdc_stubs" */;
+			buildPhases = (
+				DDD80A1C107562E300956CF0 /* Headers */,
+				DDD80A1D107562E300956CF0 /* Sources */,
+				DDD80A1E107562E300956CF0 /* Frameworks */,
+			);
+			buildRules = (
+				DDD80A581075669300956CF0 /* PBXBuildRule */,
+				DDD80A261075636F00956CF0 /* PBXBuildRule */,
+			);
+			dependencies = (
+			);
+			name = dcerpdc_stubs;
+			productName = dcerpdc_stubs;
+			productReference = DDD80A20107562E300956CF0 /* libdcerpdc_stubs.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		DDD80AB510756A0D00956CF0 /* echo_stubs */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DDD80ABB10756A9D00956CF0 /* Build configuration list for PBXNativeTarget "echo_stubs" */;
+			buildPhases = (
+				DDD80AB210756A0D00956CF0 /* Headers */,
+				DDD80AB310756A0D00956CF0 /* Sources */,
+				DDD80AB410756A0D00956CF0 /* Frameworks */,
+			);
+			buildRules = (
+				DDD80ABA10756A9D00956CF0 /* PBXBuildRule */,
+			);
+			dependencies = (
+			);
+			name = echo_stubs;
+			productName = echo_stubs;
+			productReference = DDD80AB610756A0D00956CF0 /* libecho_stubs.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		DDDF303C106ADA4D00E6A9C2 /* flex */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DDDF3046106ADA5F00E6A9C2 /* Build configuration list for PBXNativeTarget "flex" */;
@@ -3740,10 +3879,9 @@
 				DDDF3255106BD43400E6A9C2 /* Frameworks */,
 			);
 			buildRules = (
+				DDDF32A2106BDBB500E6A9C2 /* PBXBuildRule */,
 				DDDF3330106BE50A00E6A9C2 /* PBXBuildRule */,
 				DDDF331F106BE2DA00E6A9C2 /* PBXBuildRule */,
-				DDDF32A2106BDBB500E6A9C2 /* PBXBuildRule */,
-				DDDF3368106C0D3500E6A9C2 /* PBXBuildRule */,
 			);
 			dependencies = (
 				DD10F66F106D633D005F1EF3 /* PBXTargetDependency */,
@@ -3803,6 +3941,7 @@
 				DDE704B4107113F300563825 /* PBXTargetDependency */,
 				DDE7062A107163B800563825 /* PBXTargetDependency */,
 				DDD41A59107264820002C71D /* PBXTargetDependency */,
+				DDD80A511075663800956CF0 /* PBXTargetDependency */,
 			);
 			name = dcerpcd;
 			productName = dcerpcd;
@@ -3824,6 +3963,7 @@
 				DDE7062F107163D700563825 /* PBXTargetDependency */,
 				DDE706391071643800563825 /* PBXTargetDependency */,
 				DDD41A5B107264950002C71D /* PBXTargetDependency */,
+				DDD80ABD10756AA200956CF0 /* PBXTargetDependency */,
 			);
 			name = echo_server;
 			productName = echo_server;
@@ -3866,6 +4006,7 @@
 				DDFD948810723CF7008E776F /* PBXTargetDependency */,
 				DDFD948A10723CF7008E776F /* PBXTargetDependency */,
 				DDD41A5D1072649E0002C71D /* PBXTargetDependency */,
+				DDD80ACE10756AEF00956CF0 /* PBXTargetDependency */,
 			);
 			name = echo_client;
 			productName = echo_client;
@@ -3924,7 +4065,9 @@
 				DD7FBDA31074061400B63C2A /* naf_ip */,
 				DD7FBDD7107407D200B63C2A /* naf_np */,
 				DDCC000C10740EA40007183F /* auth_gss_negotiate */,
+				DDD80A1F107562E300956CF0 /* dcerpdc_stubs */,
 				DDE7046210710F5100563825 /* dcerpcd */,
+				DDD80AB510756A0D00956CF0 /* echo_stubs */,
 				DDE704E41071196F00563825 /* echo_server */,
 				DDFD946E10723BEB008E776F /* echo_client */,
 				DDFD949810723EB5008E776F /* epstatus */,
@@ -4153,6 +4296,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DDD80A1D107562E300956CF0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DDD80A531075665000956CF0 /* ep.idl in Sources */,
+				DDD80A24107562FF00956CF0 /* dsm.idl in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DDD80AB310756A0D00956CF0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DDD80AB910756A2D00956CF0 /* echo.idl in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DDDF303A106ADA4D00E6A9C2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4266,10 +4426,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DDDF325D106BD4AE00E6A9C2 /* acf_y.y in Sources */,
-				DDDF325C106BD4AE00E6A9C2 /* acf_l.l in Sources */,
-				DDDF325F106BD4AE00E6A9C2 /* nidl_y.y in Sources */,
-				DDDF325E106BD4AE00E6A9C2 /* nidl_l.l in Sources */,
+				DD95AA7410756C3800683E5B /* acf_y.y in Sources */,
+				DD95AA7510756C3800683E5B /* acf_l.l in Sources */,
+				DD95AA7610756C3800683E5B /* nidl_y.y in Sources */,
+				DD95AA7710756C3800683E5B /* nidl_l.l in Sources */,
 				DDDF3260106BD56500E6A9C2 /* astp_com.c in Sources */,
 				DDDF3261106BD56500E6A9C2 /* astp_cpx.c in Sources */,
 				DDDF3262106BD56500E6A9C2 /* astp_dmp.c in Sources */,
@@ -4388,8 +4548,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DDE7047C10710FE000563825 /* dsm.idl in Sources */,
-				DDE704871071103700563825 /* ep.idl in Sources */,
+				DDD80A4D1075660B00956CF0 /* ep.idl in Sources */,
 				DDE7047410710FB500563825 /* dsm.c in Sources */,
 				DDE7047510710FB500563825 /* dsm_unix.c in Sources */,
 				DDE7047610710FB500563825 /* rpcd.c in Sources */,
@@ -4405,7 +4564,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DDE704ED107119AA00563825 /* echo.idl in Sources */,
 				DDE704EB1071199C00563825 /* echo_server.c in Sources */,
 				DDE704EC1071199C00563825 /* misc.c in Sources */,
 			);
@@ -4614,6 +4772,21 @@
 			target = DDDF3256106BD43400E6A9C2 /* dceidl */;
 			targetProxy = DDD41A5C1072649E0002C71D /* PBXContainerItemProxy */;
 		};
+		DDD80A511075663800956CF0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DDD80A1F107562E300956CF0 /* dcerpdc_stubs */;
+			targetProxy = DDD80A501075663800956CF0 /* PBXContainerItemProxy */;
+		};
+		DDD80ABD10756AA200956CF0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DDD80AB510756A0D00956CF0 /* echo_stubs */;
+			targetProxy = DDD80ABC10756AA200956CF0 /* PBXContainerItemProxy */;
+		};
+		DDD80ACE10756AEF00956CF0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DDD80AB510756A0D00956CF0 /* echo_stubs */;
+			targetProxy = DDD80ACD10756AEF00956CF0 /* PBXContainerItemProxy */;
+		};
 		DDE704B2107113E900563825 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DDE017DD106C334200A5E41A /* uuid */;
@@ -4664,6 +4837,16 @@
 			target = DDDF3131106AE68900E6A9C2 /* dcethread */;
 			targetProxy = DDE706381071643800563825 /* PBXContainerItemProxy */;
 		};
+		DDEA1B511074FF5400C89B95 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DDDF3256106BD43400E6A9C2 /* dceidl */;
+			targetProxy = DDEA1B501074FF5400C89B95 /* PBXContainerItemProxy */;
+		};
+		DDFA60521074FA7E006A660C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DDDF303C106ADA4D00E6A9C2 /* flex */;
+			targetProxy = DDFA60511074FA7E006A660C /* PBXContainerItemProxy */;
+		};
 		DDFD948610723CF7008E776F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DDDF3131106AE68900E6A9C2 /* dcethread */;
@@ -4695,6 +4878,7 @@
 		1DEB91B208733DA50010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -4703,6 +4887,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				SDKROOT = "";
+				USE_HEADERMAP = NO;
 				VALID_ARCHS = "i386 x86_64";
 			};
 			name = Debug;
@@ -4710,12 +4895,14 @@
 		1DEB91B308733DA50010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
 				SDKROOT = "";
+				USE_HEADERMAP = NO;
 				VALID_ARCHS = "i386 x86_64";
 			};
 			name = Release;
@@ -5146,6 +5333,70 @@
 			};
 			name = Release;
 		};
+		DDD80A21107562E400956CF0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD501C071073C24800473324 /* stubs.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = /usr/local/lib;
+				PREBINDING = NO;
+				PRODUCT_NAME = dcerpdc_stubs;
+			};
+			name = Debug;
+		};
+		DDD80A22107562E400956CF0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD501C071073C24800473324 /* stubs.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/lib;
+				PREBINDING = NO;
+				PRODUCT_NAME = dcerpdc_stubs;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		DDD80AB710756A0E00956CF0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD501C071073C24800473324 /* stubs.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = /usr/local/lib;
+				PREBINDING = NO;
+				PRODUCT_NAME = echo_stubs;
+			};
+			name = Debug;
+		};
+		DDD80AB810756A0E00956CF0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD501C071073C24800473324 /* stubs.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/lib;
+				PREBINDING = NO;
+				PRODUCT_NAME = echo_stubs;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
 		DDDF303F106ADA4E00E6A9C2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DD8828071073058D00FBF62B /* flex.xcconfig */;
@@ -5284,7 +5535,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DD88282810730DF600FBF62B /* dceidl.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -5293,7 +5543,6 @@
 				INSTALL_PATH = /usr/local/bin;
 				PREBINDING = NO;
 				PRODUCT_NAME = dceidl;
-				SDKROOT = "";
 			};
 			name = Debug;
 		};
@@ -5301,7 +5550,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DD88282810730DF600FBF62B /* dceidl.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -5309,7 +5557,6 @@
 				INSTALL_PATH = /usr/local/bin;
 				PREBINDING = NO;
 				PRODUCT_NAME = dceidl;
-				SDKROOT = "";
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -5425,6 +5672,7 @@
 					HAVE_CONFIG_H,
 				);
 				HEADER_SEARCH_PATHS = (
+					"\"$(SHARED_DERIVED_FILE_DIR)\"",
 					"\"$(SRCROOT)/include\"",
 					"\"$(SRCROOT)/demos/echo_server\"",
 				);
@@ -5448,6 +5696,7 @@
 					HAVE_CONFIG_H,
 				);
 				HEADER_SEARCH_PATHS = (
+					"\"$(SHARED_DERIVED_FILE_DIR)\"",
 					"\"$(SRCROOT)/include\"",
 					"\"$(SRCROOT)/demos/echo_server\"",
 				);
@@ -5523,6 +5772,7 @@
 					HAVE_CONFIG_H,
 				);
 				HEADER_SEARCH_PATHS = (
+					"\"$(SHARED_DERIVED_FILE_DIR)\"",
 					"\"$(SRCROOT)/include\"",
 					"\"$(SRCROOT)/demos/echo_server\"",
 				);
@@ -5546,6 +5796,7 @@
 					HAVE_CONFIG_H,
 				);
 				HEADER_SEARCH_PATHS = (
+					"\"$(SHARED_DERIVED_FILE_DIR)\"",
 					"\"$(SRCROOT)/include\"",
 					"\"$(SRCROOT)/demos/echo_server\"",
 				);
@@ -5723,6 +5974,24 @@
 			buildConfigurations = (
 				DDCCFFA910740B3A0007183F /* Debug */,
 				DDCCFFAA10740B3A0007183F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DDD80A271075636F00956CF0 /* Build configuration list for PBXNativeTarget "dcerpdc_stubs" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DDD80A21107562E400956CF0 /* Debug */,
+				DDD80A22107562E400956CF0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DDD80ABB10756A9D00956CF0 /* Build configuration list for PBXNativeTarget "echo_stubs" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DDD80AB710756A0E00956CF0 /* Debug */,
+				DDD80AB810756A0E00956CF0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

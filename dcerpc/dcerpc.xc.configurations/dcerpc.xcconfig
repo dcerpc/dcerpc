@@ -9,5 +9,5 @@
 // Get the RPC_C_UXD_DIR, RPC_C_NP_DIR, and IMAGE_DIR paths
 #include "rpc_paths"
 
-HEADER_SEARCH_PATHS = "$(SRCROOT)/ncklib/include/darwin" "$(SRCROOT)/include" "$(SRCROOT)/ncklib" "$(CONFIGURATION_TEMP_DIR)/stubs.build/DerivedSources"
+HEADER_SEARCH_PATHS = "$(SRCROOT)/ncklib/include/darwin" "$(SRCROOT)/include" "$(SRCROOT)/ncklib" "$(SHARED_DERIVED_FILE_DIR)"
 FRAMEWORK_SEARCH_PATHS = $(inherited) "$(APPLE_INTERNAL_DIR)/Library/Frameworks" /System/Library/Frameworks
