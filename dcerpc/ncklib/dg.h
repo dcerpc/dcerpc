@@ -2212,7 +2212,7 @@ PRIVATE rpc_socket_error_t rpc__dg_lossy_socket_sendmsg _DCE_PROTOTYPE_((
  */
 
 #ifndef RPC_DG_ALIGN_8
-#  define RPC_DG_ALIGN_8(p) (((unsigned long)((unsigned8 *) (p)) + 7) & ~7)
+#  define RPC_DG_ALIGN_8(p) (((uintptr_t)((unsigned8 *) (p)) + 7) & ~7)
 #endif
 
 /* ========================================================================= */

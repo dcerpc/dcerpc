@@ -769,7 +769,7 @@ id,st)
 /* ??? */
 
 #define RPC_CN_ALIGN_PTR(ptr, boundary) \
-    ((unsigned long) ((unsigned8 *)(ptr) + ((boundary)-1)) & ~((boundary)-1))
+    ((uintptr_t) ((unsigned8 *)(ptr) + ((boundary)-1)) & ~((boundary)-1))
 
 /*
  * R P C _ C N _ A U T H _ R E Q U I R E D
