@@ -1,0 +1,11 @@
+//
+//  stubs.xcconfig
+//  dcerpc
+//
+//  Created by Brad Suinn on 9/30/09.
+//  Copyright 2009 Apple Inc. All rights reserved.
+//
+
+FRAMEWORK_SEARCH_PATHS = $(inherited) "$(APPLE_INTERNAL_DIR)/Library/Frameworks" /System/Library/Frameworks
+HEADER_SEARCH_PATHS = "$(SRCROOT)/include"
+GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H _SOCKADDR_LEN _GNU_SOURCE _REENTRANT _POSIX_C_SOURCE=3 _FORTIFY_SOURCE=2
