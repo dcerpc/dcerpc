@@ -1,0 +1,9 @@
+//
+//  idl.xcconfig
+//  dcerpc
+//
+//  Created by Brad Suinn on 9/29/09.
+//  Copyright 2009 Apple Inc. All rights reserved.
+//
+HEADER_SEARCH_PATHS = "$(SRCROOT)/include" "$(SRCROOT)/ncklib" "$(SRCROOT)/idl_lib"
+GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H MIA _POSIX_C_SOURCE DCETHREAD_ENFORCE_API _FORTIFY_SOURCE=2 _SOCKADDR_LEN

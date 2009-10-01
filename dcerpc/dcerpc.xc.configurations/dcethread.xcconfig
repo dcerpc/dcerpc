@@ -1,0 +1,10 @@
+//
+//  dcethread.xcconfig
+//  dcerpc
+//
+//  Created by Brad Suinn on 9/29/09.
+//  Copyright 2009 Apple Inc. All rights reserved.
+//
+
+HEADER_SEARCH_PATHS = $(SRCROOT)/include
+GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H API _FORTIFY_SOURCE=2 _SOCKADDR_LEN
