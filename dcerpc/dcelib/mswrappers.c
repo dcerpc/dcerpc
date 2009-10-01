@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <errno.h>
 
-#include "config.h"
+#include <config.h>
 
 #if HAVE_WC16STR_H
 #include <wc16str.h>

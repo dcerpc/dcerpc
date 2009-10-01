@@ -58,9 +58,11 @@
 globaldef {"NDR_G_ASCII_TO_EBCDIC"} rpc_trans_tab_p_t ndr_g_ascii_to_ebcdic;
 globaldef {"NDR_G_EBCDIC_TO_ASCII"} rpc_trans_tab_p_t ndr_g_ebcdic_to_ascii;
 #else
-globaldef rpc_trans_tab_p_t ndr_g_ascii_to_ebcdic;
-globaldef rpc_trans_tab_p_t ndr_g_ebcdic_to_ascii;
+globaldef rpc_trans_tab_p_t ndr_g_ascii_to_ebcdic = "NDR_G_ASCII_TO_EBCDIC";
+globaldef rpc_trans_tab_p_t ndr_g_ebcdic_to_ascii ="NDR_G_EBCDIC_TO_ASCII";
 #endif
+
+
 
 /* 
 ** For alpha/VMS we need to export the globals to match the externs in
