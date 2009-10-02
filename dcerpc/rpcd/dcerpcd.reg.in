@@ -1,0 +1,8 @@
+[HKEY_LIKEWISE\Services]
+
+[HKEY_LIKEWISE\Services\dcerpc]
+"Description"="Likewise DCE/RPC Endpoint Mapper"
+"Path"="@SBINDIR@/dcerpcd"
+"Arguments"="dcerpcd -f"
+"Dependencies"=""
+"Type"=dword:00000000

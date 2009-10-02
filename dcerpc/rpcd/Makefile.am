@@ -33,3 +33,6 @@ dsm.h:	dsm.idl
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(localstatedir)/rpc
 	$(mkinstalldirs) $(DESTDIR)$(localstatedir)/run
+
+regdir = $(sysconfdir)
+reg_DATA = dcerpcd.reg

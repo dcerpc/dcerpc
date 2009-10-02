@@ -495,6 +495,8 @@ AC_SUBST(LIB_unistr)
 #####################################################################
 ## COMPONENT: rpcd
 
+AS_AC_EXPAND(SBINDIR, ["${sbindir}"])
+
 AC_CHECK_FUNCS(setpgrp)
 if test "$ac_cv_func_setpgrp" = "yes"; then
 	AC_CACHE_CHECK(whether setpgrp() takes 2 arguments, rpcd_cv_setpgrp_args, [
@@ -578,6 +580,7 @@ ncklib/include/hpux11.11/Makefile
 ncklib/include/Makefile
 dcelib/Makefile
 rpcd/Makefile
+rpcd/dcerpcd.reg
 demos/Makefile
 demos/echo_server/Makefile
 demos/echo_number/Makefile
