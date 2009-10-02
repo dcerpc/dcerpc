@@ -34,6 +34,95 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		DD0435211076A0D60010E492 /* libidl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE0178F106C2FFD00A5E41A /* libidl.a */; };
+		DD0435221076A0D60010E492 /* libnck.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F5D6106D341E005F1EF3 /* libnck.a */; };
+		DD0435231076A0D60010E492 /* libuuid.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE017DE106C334200A5E41A /* libuuid.a */; };
+		DD0435731076A0F20010E492 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F7EC106D6DA7005F1EF3 /* CoreFoundation.framework */; };
+		DD0435741076A0F20010E492 /* SMBClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD38F1AB106976B200EEF3A7 /* SMBClient.framework */; };
+		DD0435751076A10E0010E492 /* dcethread_atfork.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB176100408FD0080B762 /* dcethread_atfork.c */; };
+		DD0435761076A10E0010E492 /* dcethread_checkinterrupt.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB181100408FD0080B762 /* dcethread_checkinterrupt.c */; };
+		DD0435771076A10E0010E492 /* dcethread_cond_broadcast.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB182100408FD0080B762 /* dcethread_cond_broadcast.c */; };
+		DD0435781076A10E0010E492 /* dcethread_cond_wait.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB187100408FD0080B762 /* dcethread_cond_wait.c */; };
+		DD0435791076A10E0010E492 /* dcethread_create.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB18A100408FD0080B762 /* dcethread_create.c */; };
+		DD04357A1076A10E0010E492 /* dcethread_detach.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB18C100408FD0080B762 /* dcethread_detach.c */; };
+		DD04357B1076A10E0010E492 /* dcethread_exit.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB195100408FD0080B762 /* dcethread_exit.c */; };
+		DD04357C1076A10E0010E492 /* dcethread_interrupt.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB19B100408FD0080B762 /* dcethread_interrupt.c */; };
+		DD04357D1076A10E0010E492 /* dcethread_join.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB19D100408FD0080B762 /* dcethread_join.c */; };
+		DD04357E1076A10E0010E492 /* dcethread_kill.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB19F100408FD0080B762 /* dcethread_kill.c */; };
+		DD04357F1076A10E0010E492 /* dcethread_pause.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1AB100408FD0080B762 /* dcethread_pause.c */; };
+		DD0435801076A10E0010E492 /* dcethread_read.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1AC100408FD0080B762 /* dcethread_read.c */; };
+		DD0435811076A10E0010E492 /* dcethread_recv.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1AD100408FD0080B762 /* dcethread_recv.c */; };
+		DD0435821076A10E0010E492 /* dcethread_recvfrom.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1AE100408FD0080B762 /* dcethread_recvfrom.c */; };
+		DD0435831076A10E0010E492 /* dcethread_recvmsg.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1AF100408FD0080B762 /* dcethread_recvmsg.c */; };
+		DD0435841076A10E0010E492 /* dcethread_select.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1B0100408FD0080B762 /* dcethread_select.c */; };
+		DD0435851076A10E0010E492 /* dcethread_send.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1B2100408FD0080B762 /* dcethread_send.c */; };
+		DD0435861076A10E0010E492 /* dcethread_sendmsg.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1B3100408FD0080B762 /* dcethread_sendmsg.c */; };
+		DD0435871076A10E0010E492 /* dcethread_sendto.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1B4100408FD0080B762 /* dcethread_sendto.c */; };
+		DD0435881076A10E0010E492 /* dcethread_write.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1B9100408FD0080B762 /* dcethread_write.c */; };
+		DD0435891076A10E0010E492 /* dcethread-debug.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB16C100408FD0080B762 /* dcethread-debug.c */; };
+		DD04358A1076A10E0010E492 /* dcethread-exception.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB16E100408FD0080B762 /* dcethread-exception.c */; };
+		DD04358B1076A10E0010E492 /* dcethread-private.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB170100408FD0080B762 /* dcethread-private.c */; };
+		DD04358C1076A10E0010E492 /* dcethread-util.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB174100408FD0080B762 /* dcethread-util.c */; };
+		DD04358D1076A10E0010E492 /* dcethread_attr_create.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB177100408FD0080B762 /* dcethread_attr_create.c */; };
+		DD04358E1076A10E0010E492 /* dcethread_attr_delete.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB178100408FD0080B762 /* dcethread_attr_delete.c */; };
+		DD04358F1076A10E0010E492 /* dcethread_attr_getinheritsched.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB179100408FD0080B762 /* dcethread_attr_getinheritsched.c */; };
+		DD0435901076A10E0010E492 /* dcethread_attr_getprio.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB17A100408FD0080B762 /* dcethread_attr_getprio.c */; };
+		DD0435911076A10E0010E492 /* dcethread_attr_getsched.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB17B100408FD0080B762 /* dcethread_attr_getsched.c */; };
+		DD0435921076A10E0010E492 /* dcethread_attr_getstacksize.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB17C100408FD0080B762 /* dcethread_attr_getstacksize.c */; };
+		DD0435931076A10E0010E492 /* dcethread_attr_setinheritsched.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB17D100408FD0080B762 /* dcethread_attr_setinheritsched.c */; };
+		DD0435941076A10E0010E492 /* dcethread_attr_setprio.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB17E100408FD0080B762 /* dcethread_attr_setprio.c */; };
+		DD0435951076A10E0010E492 /* dcethread_attr_setsched.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB17F100408FD0080B762 /* dcethread_attr_setsched.c */; };
+		DD0435961076A10E0010E492 /* dcethread_attr_setstacksize.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB180100408FD0080B762 /* dcethread_attr_setstacksize.c */; };
+		DD0435971076A10E0010E492 /* dcethread_cond_destroy.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB183100408FD0080B762 /* dcethread_cond_destroy.c */; };
+		DD0435981076A10E0010E492 /* dcethread_cond_init.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB184100408FD0080B762 /* dcethread_cond_init.c */; };
+		DD0435991076A10E0010E492 /* dcethread_cond_signal.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB185100408FD0080B762 /* dcethread_cond_signal.c */; };
+		DD04359A1076A10E0010E492 /* dcethread_cond_timedwait.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB186100408FD0080B762 /* dcethread_cond_timedwait.c */; };
+		DD04359B1076A10E0010E492 /* dcethread_condattr_create.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB188100408FD0080B762 /* dcethread_condattr_create.c */; };
+		DD04359C1076A10E0010E492 /* dcethread_condattr_delete.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB189100408FD0080B762 /* dcethread_condattr_delete.c */; };
+		DD04359D1076A10E0010E492 /* dcethread_delay.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB18B100408FD0080B762 /* dcethread_delay.c */; };
+		DD04359E1076A10E0010E492 /* dcethread_enableasync.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB18D100408FD0080B762 /* dcethread_enableasync.c */; };
+		DD04359F1076A10E0010E492 /* dcethread_enableinterrupt.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB18E100408FD0080B762 /* dcethread_enableinterrupt.c */; };
+		DD0435A01076A10E0010E492 /* dcethread_equal.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB18F100408FD0080B762 /* dcethread_equal.c */; };
+		DD0435A11076A10E0010E492 /* dcethread_exc_getstatus.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB190100408FD0080B762 /* dcethread_exc_getstatus.c */; };
+		DD0435A21076A10E0010E492 /* dcethread_exc_init.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB191100408FD0080B762 /* dcethread_exc_init.c */; };
+		DD0435A31076A10E0010E492 /* dcethread_exc_matches.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB192100408FD0080B762 /* dcethread_exc_matches.c */; };
+		DD0435A41076A10E0010E492 /* dcethread_exc_raise.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB193100408FD0080B762 /* dcethread_exc_raise.c */; };
+		DD0435A51076A10E0010E492 /* dcethread_exc_setstatus.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB194100408FD0080B762 /* dcethread_exc_setstatus.c */; };
+		DD0435A61076A10E0010E492 /* dcethread_frame_pop.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB196100408FD0080B762 /* dcethread_frame_pop.c */; };
+		DD0435A71076A10E0010E492 /* dcethread_frame_push.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB197100408FD0080B762 /* dcethread_frame_push.c */; };
+		DD0435A81076A10E0010E492 /* dcethread_get_expiration.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB198100408FD0080B762 /* dcethread_get_expiration.c */; };
+		DD0435A91076A10E0010E492 /* dcethread_getprio.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB199100408FD0080B762 /* dcethread_getprio.c */; };
+		DD0435AA1076A10E0010E492 /* dcethread_getspecific.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB19A100408FD0080B762 /* dcethread_getspecific.c */; };
+		DD0435AB1076A10E0010E492 /* dcethread_ismultithreaded.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB19C100408FD0080B762 /* dcethread_ismultithreaded.c */; };
+		DD0435AC1076A10E0010E492 /* dcethread_keycreate.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB19E100408FD0080B762 /* dcethread_keycreate.c */; };
+		DD0435AD1076A10E0010E492 /* dcethread_lock_global.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1A0100408FD0080B762 /* dcethread_lock_global.c */; };
+		DD0435AE1076A10E0010E492 /* dcethread_mutex_destroy.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1A1100408FD0080B762 /* dcethread_mutex_destroy.c */; };
+		DD0435AF1076A10E0010E492 /* dcethread_mutex_init.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1A2100408FD0080B762 /* dcethread_mutex_init.c */; };
+		DD0435B01076A10E0010E492 /* dcethread_mutex_lock.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1A3100408FD0080B762 /* dcethread_mutex_lock.c */; };
+		DD0435B11076A10E0010E492 /* dcethread_mutex_trylock.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1A4100408FD0080B762 /* dcethread_mutex_trylock.c */; };
+		DD0435B21076A10E0010E492 /* dcethread_mutex_unlock.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1A5100408FD0080B762 /* dcethread_mutex_unlock.c */; };
+		DD0435B31076A10E0010E492 /* dcethread_mutexattr_create.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1A6100408FD0080B762 /* dcethread_mutexattr_create.c */; };
+		DD0435B41076A10E0010E492 /* dcethread_mutexattr_delete.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1A7100408FD0080B762 /* dcethread_mutexattr_delete.c */; };
+		DD0435B51076A10E0010E492 /* dcethread_mutexattr_getkind.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1A8100408FD0080B762 /* dcethread_mutexattr_getkind.c */; };
+		DD0435B61076A10E0010E492 /* dcethread_mutexattr_setkind.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1A9100408FD0080B762 /* dcethread_mutexattr_setkind.c */; };
+		DD0435B71076A10E0010E492 /* dcethread_once.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1AA100408FD0080B762 /* dcethread_once.c */; };
+		DD0435B81076A10E0010E492 /* dcethread_self.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1B1100408FD0080B762 /* dcethread_self.c */; };
+		DD0435B91076A10E0010E492 /* dcethread_setprio.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1B5100408FD0080B762 /* dcethread_setprio.c */; };
+		DD0435BA1076A10E0010E492 /* dcethread_setspecific.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1B6100408FD0080B762 /* dcethread_setspecific.c */; };
+		DD0435BB1076A10E0010E492 /* dcethread_signal_to_interrupt.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1B7100408FD0080B762 /* dcethread_signal_to_interrupt.c */; };
+		DD0435BC1076A10E0010E492 /* dcethread_unlock_global.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1B8100408FD0080B762 /* dcethread_unlock_global.c */; };
+		DD0435BD1076A10E0010E492 /* dcethread_yield.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1BA100408FD0080B762 /* dcethread_yield.c */; };
+		DD0435BE1076A12A0010E492 /* comsoc_smb.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1F2100408FD0080B762 /* comsoc_smb.c */; };
+		DD0435BF1076A12A0010E492 /* comep.c in Sources */ = {isa = PBXBuildFile; fileRef = DDFD941E1072371E008E776F /* comep.c */; };
+		DD0435C01076A12A0010E492 /* dummyfuncs.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAF84100408FC0080B762 /* dummyfuncs.c */; };
+		DD0435C11076A12A0010E492 /* mswrappers.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAF87100408FC0080B762 /* mswrappers.c */; };
+		DD0435C21076A12A0010E492 /* wc16str.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAF83100408FC0080B762 /* wc16str.c */; };
+		DD0435C31076A14E0010E492 /* dcerpc.h in Headers */ = {isa = PBXBuildFile; fileRef = DD3DB0D5100408FD0080B762 /* dcerpc.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DD0435DE1076A19C0010E492 /* libnaf_ip.so in Resources */ = {isa = PBXBuildFile; fileRef = DD7FBDA41074061400B63C2A /* libnaf_ip.so */; };
+		DD0435DF1076A19C0010E492 /* libnaf_np.so in Resources */ = {isa = PBXBuildFile; fileRef = DD7FBDD8107407D200B63C2A /* libnaf_np.so */; };
+		DD0435E01076A19C0010E492 /* libprot_ncacn.so in Resources */ = {isa = PBXBuildFile; fileRef = DDCCFFA810740B3A0007183F /* libprot_ncacn.so */; };
+		DD0435E11076A19C0010E492 /* libprot_ncadg.so in Resources */ = {isa = PBXBuildFile; fileRef = DDCCFFDD10740CD50007183F /* libprot_ncadg.so */; };
+		DD0435E21076A19C0010E492 /* libauth_gss_negotiate.so in Resources */ = {isa = PBXBuildFile; fileRef = DDCC000D10740EA40007183F /* libauth_gss_negotiate.so */; };
 		DD081622106C1A250007E433 /* codesets.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0E7100408FD0080B762 /* codesets.idl */; };
 		DD081623106C1A250007E433 /* conv.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0E9100408FD0080B762 /* conv.idl */; };
 		DD081624106C1A250007E433 /* convc.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0EA100408FD0080B762 /* convc.idl */; };
@@ -606,6 +695,62 @@
 /* End PBXBuildRule section */
 
 /* Begin PBXContainerItemProxy section */
+		DD0435111076A0A30010E492 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD10F5D5106D341E005F1EF3 /* nck */;
+			remoteInfo = nck;
+		};
+		DD0435131076A0A90010E492 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DDE0178E106C2FFD00A5E41A /* idl */;
+			remoteInfo = idl;
+		};
+		DD0435151076A0AC0010E492 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DDE017DD106C334200A5E41A /* uuid */;
+			remoteInfo = uuid;
+		};
+		DD0435171076A0C40010E492 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DDCCFFA710740B3A0007183F /* prot_ncacn */;
+			remoteInfo = prot_ncacn;
+		};
+		DD0435191076A0C40010E492 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DDCCFFDC10740CD50007183F /* prot_ncadg */;
+			remoteInfo = prot_ncadg;
+		};
+		DD04351B1076A0C40010E492 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD7FBDA31074061400B63C2A /* naf_ip */;
+			remoteInfo = naf_ip;
+		};
+		DD04351D1076A0C40010E492 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD7FBDD7107407D200B63C2A /* naf_np */;
+			remoteInfo = naf_np;
+		};
+		DD04351F1076A0C40010E492 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DDCC000C10740EA40007183F /* auth_gss_negotiate */;
+			remoteInfo = auth_gss_negotiate;
+		};
 		DD0FE8531074D8D5004AB68C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
@@ -987,6 +1132,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DD04350210769FDA0010E492 /* DCERPC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DCERPC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD04350310769FDA0010E492 /* DCERPC-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "DCERPC-Info.plist"; sourceTree = "<group>"; };
+		DD04350B10769FF80010E492 /* dcerpc_framework.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = dcerpc_framework.xcconfig; sourceTree = "<group>"; };
 		DD08161B106C19580007E433 /* dce */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = dce; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD0FE804107411EB004AB68C /* Kerberos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Kerberos.framework; path = /System/Library/Frameworks/Kerberos.framework; sourceTree = "<absolute>"; };
 		DD0FE87D1074F526004AB68C /* buildconf_configure */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = buildconf_configure; path = dcerpc.xc.configurations/buildconf_configure; sourceTree = "<group>"; };
@@ -1811,6 +1959,18 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		DD04350010769FDA0010E492 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DD0435731076A0F20010E492 /* CoreFoundation.framework in Frameworks */,
+				DD0435741076A0F20010E492 /* SMBClient.framework in Frameworks */,
+				DD0435211076A0D60010E492 /* libidl.a in Frameworks */,
+				DD0435221076A0D60010E492 /* libnck.a in Frameworks */,
+				DD0435231076A0D60010E492 /* libuuid.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DD081619106C19580007E433 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -2061,6 +2221,7 @@
 				DDCC000D10740EA40007183F /* libauth_gss_negotiate.so */,
 				DDD80A20107562E300956CF0 /* libdcerpdc_stubs.a */,
 				DDD80AB610756A0D00956CF0 /* libecho_stubs.a */,
+				DD04350210769FDA0010E492 /* DCERPC.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2072,6 +2233,7 @@
 				DD8828671073178F00FBF62B /* ConfigurationFiles */,
 				DD8828B9107319F600FBF62B /* External Frameworks and Libraries */,
 				034768DFFF38A50411DB9C8B /* Products */,
+				DD04350310769FDA0010E492 /* DCERPC-Info.plist */,
 			);
 			name = dcerpc;
 			sourceTree = "<group>";
@@ -3384,6 +3546,7 @@
 				DD88285A1073147C00FBF62B /* transports.xcconfig */,
 				DD88285F1073160C00FBF62B /* auth_gss_negotiate.xcconfig */,
 				DD8828621073163F00FBF62B /* dcerpcd.xcconfig */,
+				DD04350B10769FF80010E492 /* dcerpc_framework.xcconfig */,
 			);
 			name = ConfigurationFiles;
 			sourceTree = "<group>";
@@ -3401,6 +3564,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		DD0434FD10769FDA0010E492 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DD0435C31076A14E0010E492 /* dcerpc.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DD10F496106D2182005F1EF3 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -3537,6 +3708,32 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		DD04350110769FDA0010E492 /* DCERPC */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DD04350810769FDA0010E492 /* Build configuration list for PBXNativeTarget "DCERPC" */;
+			buildPhases = (
+				DD0434FD10769FDA0010E492 /* Headers */,
+				DD0434FE10769FDA0010E492 /* Resources */,
+				DD0434FF10769FDA0010E492 /* Sources */,
+				DD04350010769FDA0010E492 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DD0435121076A0A30010E492 /* PBXTargetDependency */,
+				DD0435141076A0A90010E492 /* PBXTargetDependency */,
+				DD0435161076A0AC0010E492 /* PBXTargetDependency */,
+				DD0435181076A0C40010E492 /* PBXTargetDependency */,
+				DD04351A1076A0C40010E492 /* PBXTargetDependency */,
+				DD04351C1076A0C40010E492 /* PBXTargetDependency */,
+				DD04351E1076A0C40010E492 /* PBXTargetDependency */,
+				DD0435201076A0C40010E492 /* PBXTargetDependency */,
+			);
+			name = DCERPC;
+			productName = DCERPC;
+			productReference = DD04350210769FDA0010E492 /* DCERPC.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		DD08161A106C19580007E433 /* dce */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DD08161F106C19770007E433 /* Build configuration list for PBXNativeTarget "dce" */;
@@ -4071,9 +4268,25 @@
 				DDE704E41071196F00563825 /* echo_server */,
 				DDFD946E10723BEB008E776F /* echo_client */,
 				DDFD949810723EB5008E776F /* epstatus */,
+				DD04350110769FDA0010E492 /* DCERPC */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		DD0434FE10769FDA0010E492 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DD0435DE1076A19C0010E492 /* libnaf_ip.so in Resources */,
+				DD0435DF1076A19C0010E492 /* libnaf_np.so in Resources */,
+				DD0435E01076A19C0010E492 /* libprot_ncacn.so in Resources */,
+				DD0435E11076A19C0010E492 /* libprot_ncadg.so in Resources */,
+				DD0435E21076A19C0010E492 /* libauth_gss_negotiate.so in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
 		DDD41A8D107267E70002C71D /* Run buildconf and configure */ = {
@@ -4093,6 +4306,91 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		DD0434FF10769FDA0010E492 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DD0435BE1076A12A0010E492 /* comsoc_smb.c in Sources */,
+				DD0435BF1076A12A0010E492 /* comep.c in Sources */,
+				DD0435C01076A12A0010E492 /* dummyfuncs.c in Sources */,
+				DD0435C11076A12A0010E492 /* mswrappers.c in Sources */,
+				DD0435C21076A12A0010E492 /* wc16str.c in Sources */,
+				DD0435751076A10E0010E492 /* dcethread_atfork.c in Sources */,
+				DD0435761076A10E0010E492 /* dcethread_checkinterrupt.c in Sources */,
+				DD0435771076A10E0010E492 /* dcethread_cond_broadcast.c in Sources */,
+				DD0435781076A10E0010E492 /* dcethread_cond_wait.c in Sources */,
+				DD0435791076A10E0010E492 /* dcethread_create.c in Sources */,
+				DD04357A1076A10E0010E492 /* dcethread_detach.c in Sources */,
+				DD04357B1076A10E0010E492 /* dcethread_exit.c in Sources */,
+				DD04357C1076A10E0010E492 /* dcethread_interrupt.c in Sources */,
+				DD04357D1076A10E0010E492 /* dcethread_join.c in Sources */,
+				DD04357E1076A10E0010E492 /* dcethread_kill.c in Sources */,
+				DD04357F1076A10E0010E492 /* dcethread_pause.c in Sources */,
+				DD0435801076A10E0010E492 /* dcethread_read.c in Sources */,
+				DD0435811076A10E0010E492 /* dcethread_recv.c in Sources */,
+				DD0435821076A10E0010E492 /* dcethread_recvfrom.c in Sources */,
+				DD0435831076A10E0010E492 /* dcethread_recvmsg.c in Sources */,
+				DD0435841076A10E0010E492 /* dcethread_select.c in Sources */,
+				DD0435851076A10E0010E492 /* dcethread_send.c in Sources */,
+				DD0435861076A10E0010E492 /* dcethread_sendmsg.c in Sources */,
+				DD0435871076A10E0010E492 /* dcethread_sendto.c in Sources */,
+				DD0435881076A10E0010E492 /* dcethread_write.c in Sources */,
+				DD0435891076A10E0010E492 /* dcethread-debug.c in Sources */,
+				DD04358A1076A10E0010E492 /* dcethread-exception.c in Sources */,
+				DD04358B1076A10E0010E492 /* dcethread-private.c in Sources */,
+				DD04358C1076A10E0010E492 /* dcethread-util.c in Sources */,
+				DD04358D1076A10E0010E492 /* dcethread_attr_create.c in Sources */,
+				DD04358E1076A10E0010E492 /* dcethread_attr_delete.c in Sources */,
+				DD04358F1076A10E0010E492 /* dcethread_attr_getinheritsched.c in Sources */,
+				DD0435901076A10E0010E492 /* dcethread_attr_getprio.c in Sources */,
+				DD0435911076A10E0010E492 /* dcethread_attr_getsched.c in Sources */,
+				DD0435921076A10E0010E492 /* dcethread_attr_getstacksize.c in Sources */,
+				DD0435931076A10E0010E492 /* dcethread_attr_setinheritsched.c in Sources */,
+				DD0435941076A10E0010E492 /* dcethread_attr_setprio.c in Sources */,
+				DD0435951076A10E0010E492 /* dcethread_attr_setsched.c in Sources */,
+				DD0435961076A10E0010E492 /* dcethread_attr_setstacksize.c in Sources */,
+				DD0435971076A10E0010E492 /* dcethread_cond_destroy.c in Sources */,
+				DD0435981076A10E0010E492 /* dcethread_cond_init.c in Sources */,
+				DD0435991076A10E0010E492 /* dcethread_cond_signal.c in Sources */,
+				DD04359A1076A10E0010E492 /* dcethread_cond_timedwait.c in Sources */,
+				DD04359B1076A10E0010E492 /* dcethread_condattr_create.c in Sources */,
+				DD04359C1076A10E0010E492 /* dcethread_condattr_delete.c in Sources */,
+				DD04359D1076A10E0010E492 /* dcethread_delay.c in Sources */,
+				DD04359E1076A10E0010E492 /* dcethread_enableasync.c in Sources */,
+				DD04359F1076A10E0010E492 /* dcethread_enableinterrupt.c in Sources */,
+				DD0435A01076A10E0010E492 /* dcethread_equal.c in Sources */,
+				DD0435A11076A10E0010E492 /* dcethread_exc_getstatus.c in Sources */,
+				DD0435A21076A10E0010E492 /* dcethread_exc_init.c in Sources */,
+				DD0435A31076A10E0010E492 /* dcethread_exc_matches.c in Sources */,
+				DD0435A41076A10E0010E492 /* dcethread_exc_raise.c in Sources */,
+				DD0435A51076A10E0010E492 /* dcethread_exc_setstatus.c in Sources */,
+				DD0435A61076A10E0010E492 /* dcethread_frame_pop.c in Sources */,
+				DD0435A71076A10E0010E492 /* dcethread_frame_push.c in Sources */,
+				DD0435A81076A10E0010E492 /* dcethread_get_expiration.c in Sources */,
+				DD0435A91076A10E0010E492 /* dcethread_getprio.c in Sources */,
+				DD0435AA1076A10E0010E492 /* dcethread_getspecific.c in Sources */,
+				DD0435AB1076A10E0010E492 /* dcethread_ismultithreaded.c in Sources */,
+				DD0435AC1076A10E0010E492 /* dcethread_keycreate.c in Sources */,
+				DD0435AD1076A10E0010E492 /* dcethread_lock_global.c in Sources */,
+				DD0435AE1076A10E0010E492 /* dcethread_mutex_destroy.c in Sources */,
+				DD0435AF1076A10E0010E492 /* dcethread_mutex_init.c in Sources */,
+				DD0435B01076A10E0010E492 /* dcethread_mutex_lock.c in Sources */,
+				DD0435B11076A10E0010E492 /* dcethread_mutex_trylock.c in Sources */,
+				DD0435B21076A10E0010E492 /* dcethread_mutex_unlock.c in Sources */,
+				DD0435B31076A10E0010E492 /* dcethread_mutexattr_create.c in Sources */,
+				DD0435B41076A10E0010E492 /* dcethread_mutexattr_delete.c in Sources */,
+				DD0435B51076A10E0010E492 /* dcethread_mutexattr_getkind.c in Sources */,
+				DD0435B61076A10E0010E492 /* dcethread_mutexattr_setkind.c in Sources */,
+				DD0435B71076A10E0010E492 /* dcethread_once.c in Sources */,
+				DD0435B81076A10E0010E492 /* dcethread_self.c in Sources */,
+				DD0435B91076A10E0010E492 /* dcethread_setprio.c in Sources */,
+				DD0435BA1076A10E0010E492 /* dcethread_setspecific.c in Sources */,
+				DD0435BB1076A10E0010E492 /* dcethread_signal_to_interrupt.c in Sources */,
+				DD0435BC1076A10E0010E492 /* dcethread_unlock_global.c in Sources */,
+				DD0435BD1076A10E0010E492 /* dcethread_yield.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DD081618106C19580007E433 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4602,6 +4900,46 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		DD0435121076A0A30010E492 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD10F5D5106D341E005F1EF3 /* nck */;
+			targetProxy = DD0435111076A0A30010E492 /* PBXContainerItemProxy */;
+		};
+		DD0435141076A0A90010E492 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DDE0178E106C2FFD00A5E41A /* idl */;
+			targetProxy = DD0435131076A0A90010E492 /* PBXContainerItemProxy */;
+		};
+		DD0435161076A0AC0010E492 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DDE017DD106C334200A5E41A /* uuid */;
+			targetProxy = DD0435151076A0AC0010E492 /* PBXContainerItemProxy */;
+		};
+		DD0435181076A0C40010E492 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DDCCFFA710740B3A0007183F /* prot_ncacn */;
+			targetProxy = DD0435171076A0C40010E492 /* PBXContainerItemProxy */;
+		};
+		DD04351A1076A0C40010E492 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DDCCFFDC10740CD50007183F /* prot_ncadg */;
+			targetProxy = DD0435191076A0C40010E492 /* PBXContainerItemProxy */;
+		};
+		DD04351C1076A0C40010E492 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD7FBDA31074061400B63C2A /* naf_ip */;
+			targetProxy = DD04351B1076A0C40010E492 /* PBXContainerItemProxy */;
+		};
+		DD04351E1076A0C40010E492 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD7FBDD7107407D200B63C2A /* naf_np */;
+			targetProxy = DD04351D1076A0C40010E492 /* PBXContainerItemProxy */;
+		};
+		DD0435201076A0C40010E492 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DDCC000C10740EA40007183F /* auth_gss_negotiate */;
+			targetProxy = DD04351F1076A0C40010E492 /* PBXContainerItemProxy */;
+		};
 		DD0FE8541074D8D5004AB68C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DDDF3131106AE68900E6A9C2 /* dcethread */;
@@ -4904,6 +5242,56 @@
 				SDKROOT = "";
 				USE_HEADERMAP = NO;
 				VALID_ARCHS = "i386 x86_64";
+			};
+			name = Release;
+		};
+		DD04350610769FDA0010E492 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD04350B10769FF80010E492 /* dcerpc_framework.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(APPLE_INTERNAL_DIR)/Library/Frameworks\"",
+				);
+				FRAMEWORK_VERSION = A;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INFOPLIST_FILE = "DCERPC-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				OTHER_LDFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = DCERPC;
+			};
+			name = Debug;
+		};
+		DD04350710769FDA0010E492 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD04350B10769FF80010E492 /* dcerpc_framework.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(APPLE_INTERNAL_DIR)/Library/Frameworks\"",
+				);
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				INFOPLIST_FILE = "DCERPC-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				OTHER_LDFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = DCERPC;
+				ZERO_LINK = NO;
 			};
 			name = Release;
 		};
@@ -5857,6 +6245,15 @@
 			buildConfigurations = (
 				1DEB91B208733DA50010E9CD /* Debug */,
 				1DEB91B308733DA50010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DD04350810769FDA0010E492 /* Build configuration list for PBXNativeTarget "DCERPC" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DD04350610769FDA0010E492 /* Debug */,
+				DD04350710769FDA0010E492 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
