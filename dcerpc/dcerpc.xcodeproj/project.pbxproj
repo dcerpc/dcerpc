@@ -118,11 +118,10 @@
 		DD0435C11076A12A0010E492 /* mswrappers.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAF87100408FC0080B762 /* mswrappers.c */; };
 		DD0435C21076A12A0010E492 /* wc16str.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAF83100408FC0080B762 /* wc16str.c */; };
 		DD0435C31076A14E0010E492 /* dcerpc.h in Headers */ = {isa = PBXBuildFile; fileRef = DD3DB0D5100408FD0080B762 /* dcerpc.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		DD0435DE1076A19C0010E492 /* libnaf_ip.so in Resources */ = {isa = PBXBuildFile; fileRef = DD7FBDA41074061400B63C2A /* libnaf_ip.so */; };
-		DD0435DF1076A19C0010E492 /* libnaf_np.so in Resources */ = {isa = PBXBuildFile; fileRef = DD7FBDD8107407D200B63C2A /* libnaf_np.so */; };
-		DD0435E01076A19C0010E492 /* libprot_ncacn.so in Resources */ = {isa = PBXBuildFile; fileRef = DDCCFFA810740B3A0007183F /* libprot_ncacn.so */; };
-		DD0435E11076A19C0010E492 /* libprot_ncadg.so in Resources */ = {isa = PBXBuildFile; fileRef = DDCCFFDD10740CD50007183F /* libprot_ncadg.so */; };
-		DD0435E21076A19C0010E492 /* libauth_gss_negotiate.so in Resources */ = {isa = PBXBuildFile; fileRef = DDCC000D10740EA40007183F /* libauth_gss_negotiate.so */; };
+		DD0435DE1076A19C0010E492 /* libnaf_ip.so in CopyFiles */ = {isa = PBXBuildFile; fileRef = DD7FBDA41074061400B63C2A /* libnaf_ip.so */; };
+		DD0435E01076A19C0010E492 /* libprot_ncacn.so in CopyFiles */ = {isa = PBXBuildFile; fileRef = DDCCFFA810740B3A0007183F /* libprot_ncacn.so */; };
+		DD0435E11076A19C0010E492 /* libprot_ncadg.so in CopyFiles */ = {isa = PBXBuildFile; fileRef = DDCCFFDD10740CD50007183F /* libprot_ncadg.so */; };
+		DD0435E21076A19C0010E492 /* libauth_gss_negotiate.so in CopyFiles */ = {isa = PBXBuildFile; fileRef = DDCC000D10740EA40007183F /* libauth_gss_negotiate.so */; };
 		DD081622106C1A250007E433 /* codesets.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0E7100408FD0080B762 /* codesets.idl */; };
 		DD081623106C1A250007E433 /* conv.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0E9100408FD0080B762 /* conv.idl */; };
 		DD081624106C1A250007E433 /* convc.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0EA100408FD0080B762 /* convc.idl */; };
@@ -699,56 +698,56 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DD10F5D5106D341E005F1EF3 /* nck */;
+			remoteGlobalIDString = DD10F5D5106D341E005F1EF3;
 			remoteInfo = nck;
 		};
 		DD0435131076A0A90010E492 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DDE0178E106C2FFD00A5E41A /* idl */;
+			remoteGlobalIDString = DDE0178E106C2FFD00A5E41A;
 			remoteInfo = idl;
 		};
 		DD0435151076A0AC0010E492 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DDE017DD106C334200A5E41A /* uuid */;
+			remoteGlobalIDString = DDE017DD106C334200A5E41A;
 			remoteInfo = uuid;
 		};
 		DD0435171076A0C40010E492 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DDCCFFA710740B3A0007183F /* prot_ncacn */;
+			remoteGlobalIDString = DDCCFFA710740B3A0007183F;
 			remoteInfo = prot_ncacn;
 		};
 		DD0435191076A0C40010E492 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DDCCFFDC10740CD50007183F /* prot_ncadg */;
+			remoteGlobalIDString = DDCCFFDC10740CD50007183F;
 			remoteInfo = prot_ncadg;
 		};
 		DD04351B1076A0C40010E492 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DD7FBDA31074061400B63C2A /* naf_ip */;
+			remoteGlobalIDString = DD7FBDA31074061400B63C2A;
 			remoteInfo = naf_ip;
 		};
 		DD04351D1076A0C40010E492 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DD7FBDD7107407D200B63C2A /* naf_np */;
+			remoteGlobalIDString = DD7FBDD7107407D200B63C2A;
 			remoteInfo = naf_np;
 		};
 		DD04351F1076A0C40010E492 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DDCC000C10740EA40007183F /* auth_gss_negotiate */;
+			remoteGlobalIDString = DDCC000C10740EA40007183F;
 			remoteInfo = auth_gss_negotiate;
 		};
 		DD0FE8531074D8D5004AB68C /* PBXContainerItemProxy */ = {
@@ -1130,6 +1129,22 @@
 			remoteInfo = dcerpc;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		DD04362C1076A32D0010E492 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Transports;
+			dstSubfolderSpec = 7;
+			files = (
+				DD0435DE1076A19C0010E492 /* libnaf_ip.so in CopyFiles */,
+				DD0435E01076A19C0010E492 /* libprot_ncacn.so in CopyFiles */,
+				DD0435E11076A19C0010E492 /* libprot_ncadg.so in CopyFiles */,
+				DD0435E21076A19C0010E492 /* libauth_gss_negotiate.so in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		DD04350210769FDA0010E492 /* DCERPC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DCERPC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3714,6 +3729,7 @@
 			buildPhases = (
 				DD0434FD10769FDA0010E492 /* Headers */,
 				DD0434FE10769FDA0010E492 /* Resources */,
+				DD04362C1076A32D0010E492 /* CopyFiles */,
 				DD0434FF10769FDA0010E492 /* Sources */,
 				DD04350010769FDA0010E492 /* Frameworks */,
 			);
@@ -4278,11 +4294,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD0435DE1076A19C0010E492 /* libnaf_ip.so in Resources */,
-				DD0435DF1076A19C0010E492 /* libnaf_np.so in Resources */,
-				DD0435E01076A19C0010E492 /* libprot_ncacn.so in Resources */,
-				DD0435E11076A19C0010E492 /* libprot_ncadg.so in Resources */,
-				DD0435E21076A19C0010E492 /* libauth_gss_negotiate.so in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
