@@ -140,7 +140,11 @@ rpc_smb_ntstatus_to_rpc_error(
 
 void
 rpc_smb_transport_info_from_lwio_token(
+#if HAVE_LIKEWISE_LWIO
     void* access_token,
+#else
+    void* access_token ATTRIBUTE_UNUSED,
+#endif
     boolean schannel,
     rpc_transport_info_handle_t* info,
     unsigned32* st
@@ -514,22 +518,22 @@ done:
 
     return err;
 
+#if HAVE_LIKEWISE_LWIO
 error:
 
     if (sock)
     {
-#if HAVE_LIKEWISE_LWIO
         if (sock->context)
         {
             LwIoCloseContext(sock->context);
         }
-#endif
 
         dcethread_mutex_destroy_throw(&sock->lock);
         dcethread_cond_destroy_throw(&sock->event);
     }
 
     goto done;
+#endif
 }
 
 INTERNAL
@@ -966,9 +970,15 @@ error:
 INTERNAL
 rpc_socket_error_t
 rpc__smb_socket_accept(
+#if HAVE_LIKEWISE_LWIO
     rpc_socket_t sock,
     rpc_addr_p_t addr,
     rpc_socket_t *newsock
+#else
+   rpc_socket_t sock ATTRIBUTE_UNUSED,
+   rpc_addr_p_t addr ATTRIBUTE_UNUSED,
+   rpc_socket_t *newsock ATTRIBUTE_UNUSED
+#endif
     )
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
@@ -1262,8 +1272,13 @@ error:
 INTERNAL
 rpc_socket_error_t
 rpc__smb_socket_listen(
-    rpc_socket_t sock,
-    int backlog
+#if HAVE_LIKEWISE_LWIO
+   rpc_socket_t sock,
+   int backlog
+#else
+    rpc_socket_t sock ATTRIBUTE_UNUSED,
+    int backlog ATTRIBUTE_UNUSED
+#endif
     )
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
@@ -1304,43 +1319,37 @@ error:
     return serr;
 }
 
+#if HAVE_SMBCLIENT_FRAMEWORK
 INTERNAL
 rpc_socket_error_t
-rpc__smb_socket_do_send(
+smb_data_send(
     rpc_socket_t sock
     )
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
     rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
     unsigned char* cursor = smb->sendbuffer.base;
-#if HAVE_LIKEWISE_LWIO
-    DWORD bytes_written = 0;
-    IO_STATUS_BLOCK io_status = { 0 };
-#elif HAVE_SMBCLIENT_FRAMEWORK
     off_t bytes_written = 0;
+#if SMB_NP_NO_TRANSACTIONS
     NTSTATUS status;
 #endif
 
     do
     {
-
-#if HAVE_SMBCLIENT_FRAMEWORK
-
 #if SMB_NP_NO_TRANSACTIONS
         /* <bms> Write the data out without using transactions */
         status = SMBWriteFile(smb->handle,
-			smb->hFile,
-			smb->sendbuffer.base,
-			0,
-			smb->sendbuffer.start_cursor - cursor,
-			&bytes_written);
+                              smb->hFile,
+                              smb->sendbuffer.base,
+                              0,
+                              smb->sendbuffer.start_cursor - cursor,
+                              &bytes_written);
 
         if (!NT_SUCCESS(status))
         {
             RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_do_send - SMBWriteFile failed 0x%x\n", status));
             serr = rpc_smb_ntstatus_to_rpc_error (status);
         }
-
 #else
         /* <bms> for transactions, do nothing here.  Later in the
          receive, we will do the send and receive in a single
@@ -1349,38 +1358,17 @@ rpc__smb_socket_do_send(
         goto error;
 #endif
 
-#elif HAVE_LIKEWISE_LWIO
-
-        serr = NtStatusToUnixErrno(
-            NtCtxWriteFile(
-                smb->context,                          /* IO context */
-                smb->np,                               /* File handle */
-                NULL,                                  /* Async control block */
-                &io_status,                            /* IO status block */
-                smb->sendbuffer.base,                  /* Buffer */
-                smb->sendbuffer.start_cursor - cursor, /* Length */
-                NULL,                                  /* Byte offset */
-                NULL                                   /* Key */
-                ));
-#else
-	serr = RPC_C_SOCKET_ENOTSUP;
-	goto error;
-#endif
-
         if (serr)
         {
             goto error;
         }
 
-#if HAVE_LIKEWISE_LWIO
-        bytes_written = io_status.BytesTransferred;
-#endif
         cursor += bytes_written;
     } while (cursor < smb->sendbuffer.start_cursor);
 
     /* Settle the remaining data (which hopefully should be zero if
-       the runtime calls us with complete packets) to the start of
-       the send buffer */
+     the runtime calls us with complete packets) to the start of
+     the send buffer */
     rpc__smb_buffer_settle(&smb->sendbuffer);
 
 error:
@@ -1390,24 +1378,18 @@ error:
 
 INTERNAL
 rpc_socket_error_t
-rpc__smb_socket_do_recv(
+smb_data_do_recv(
     rpc_socket_t sock,
     size_t* count
-    )
+)
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
     rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
-#if HAVE_LIKEWISE_LWIO
-    DWORD bytes_requested = 0;
-    DWORD bytes_read = 0;
-    IO_STATUS_BLOCK io_status = { 0 };
-#elif HAVE_SMBCLIENT_FRAMEWORK
     off_t bytes_requested = 0;
     off_t bytes_read = 0;
     NTSTATUS status = NT_STATUS_SUCCESS;
 #if !SMB_NP_NO_TRANSACTIONS
     unsigned char* cursor = smb->sendbuffer.base;
-#endif
 #endif
 
     *count = 0;
@@ -1423,34 +1405,30 @@ rpc__smb_socket_do_recv(
 
         bytes_read = 0;
         bytes_requested = rpc__smb_buffer_available(&smb->recvbuffer);
-
-#if HAVE_SMBCLIENT_FRAMEWORK
-
 #if SMB_NP_NO_TRANSACTIONS
         /* <bms> Read the data in without using transactions */
         status = SMBReadFile(smb->handle,
-			smb->hFile,
-			smb->recvbuffer.end_cursor,
-			0,
-			bytes_requested,
-			&bytes_read);
+                             smb->hFile,
+                             smb->recvbuffer.end_cursor,
+                             0,
+                             bytes_requested,
+                             &bytes_read);
 
         if (!NT_SUCCESS(status))
         {
             RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_do_recv - SMBReadFile failed 0x%x\n", status));
             serr = rpc_smb_ntstatus_to_rpc_error (status);
         }
-
 #else
         /* <bms> for transactions, do the send and receive in a
          single transaction. */
         status = SMBTransactNamedPipe(smb->handle,
-            smb->hFile,
-            smb->sendbuffer.base,
-            smb->sendbuffer.start_cursor - cursor,
-            smb->recvbuffer.end_cursor,
-            bytes_requested,
-            &bytes_read);
+                                      smb->hFile,
+                                      smb->sendbuffer.base,
+                                      smb->sendbuffer.start_cursor - cursor,
+                                      smb->recvbuffer.end_cursor,
+                                      bytes_requested,
+                                      &bytes_read);
 
         /* assume all the data got sent */
         rpc__smb_buffer_settle(&smb->sendbuffer);
@@ -1462,7 +1440,113 @@ rpc__smb_socket_do_recv(
         }
 #endif
 
+        if (status == STATUS_END_OF_FILE)
+        {
+            serr = RPC_C_SOCKET_OK;
+            bytes_read = 0;
+        }
+        else
+        {
+            smb->recvbuffer.end_cursor += bytes_read;
+        }
+
+        if (((off_t)*count + bytes_read) > SIZE_T_MAX ||
+            ((off_t)*count + bytes_read) < (off_t)*count) {
+            serr = RPC_C_SOCKET_ENOSPC;
+            goto error;
+        }
+
+        *count += (size_t)bytes_read;
+    } while (NT_SUCCESS(status) && bytes_read == bytes_requested);
+
+error:
+
+    return serr;
+}
+#endif
+
+INTERNAL
+rpc_socket_error_t
+rpc__smb_socket_do_send(
+    rpc_socket_t sock
+    )
+{
+#if HAVE_SMBCLIENT_FRAMEWORK
+    return (smb_data_send (sock));
 #elif HAVE_LIKEWISE_LWIO
+    rpc_socket_error_t serr = RPC_C_SOCKET_OK;
+    rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
+    unsigned char* cursor = smb->sendbuffer.base;
+    DWORD bytes_written = 0;
+    IO_STATUS_BLOCK io_status = { 0 };
+
+    do
+    {
+        serr = NtStatusToUnixErrno(
+            NtCtxWriteFile(
+                smb->context,                          /* IO context */
+                smb->np,                               /* File handle */
+                NULL,                                  /* Async control block */
+                &io_status,                            /* IO status block */
+                smb->sendbuffer.base,                  /* Buffer */
+                smb->sendbuffer.start_cursor - cursor, /* Length */
+                NULL,                                  /* Byte offset */
+                NULL                                   /* Key */
+                ));
+
+        if (serr)
+        {
+            goto error;
+        }
+
+        bytes_written = io_status.BytesTransferred;
+        cursor += bytes_written;
+    } while (cursor < smb->sendbuffer.start_cursor);
+
+    /* Settle the remaining data (which hopefully should be zero if
+       the runtime calls us with complete packets) to the start of
+       the send buffer */
+    rpc__smb_buffer_settle(&smb->sendbuffer);
+
+error:
+
+    return serr;
+#else
+    return RPC_C_SOCKET_ENOTSUP;
+#endif
+}
+
+INTERNAL
+rpc_socket_error_t
+rpc__smb_socket_do_recv(
+    rpc_socket_t sock,
+    size_t* count
+    )
+{
+#if HAVE_SMBCLIENT_FRAMEWORK
+    return (smb_data_do_recv (sock, count));
+#elif HAVE_LIKEWISE_LWIO
+    rpc_socket_error_t serr = RPC_C_SOCKET_OK;
+    rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
+    DWORD bytes_requested = 0;
+    DWORD bytes_read = 0;
+    IO_STATUS_BLOCK io_status = { 0 };
+    NTSTATUS status = STATUS_SUCCESS;
+
+    *count = 0;
+
+    do
+    {
+        /* FIXME: magic number */
+        serr = rpc__smb_buffer_ensure_available(&smb->recvbuffer, 8192);
+        if (serr)
+        {
+            goto error;
+        }
+
+        bytes_read = 0;
+        bytes_requested = rpc__smb_buffer_available(&smb->recvbuffer);
+
         status = NtCtxReadFile(
             smb->context,                 /* IO context */
             smb->np,                      /* File handle */
@@ -1473,37 +1557,34 @@ rpc__smb_socket_do_recv(
             NULL,                         /* Byte offset */
             NULL                          /* Key */
             );
-#else
-	serr = RPC_C_SOCKET_ENOTSUP;
-	goto error;
-#endif
-
         if (status == STATUS_END_OF_FILE)
         {
-            serr = RPC_C_SOCKET_OK;
+            serr = 0;
             bytes_read = 0;
         }
         else
         {
-#if HAVE_LIKEWISE_LWIO
             serr = NtStatusToUnixErrno(status);
             bytes_read = io_status.BytesTransferred;
-#endif
             smb->recvbuffer.end_cursor += bytes_read;
         }
 
-	if (((off_t)count + bytes_read) > SIZE_T_MAX ||
-		((off_t)count + bytes_read) < (off_t)count) {
-	    serr = RPC_C_SOCKET_ENOSPC;
-	    goto error;
-	}
+        if (((off_t)*count + bytes_read) > SIZE_T_MAX ||
+            ((off_t)*count + bytes_read) < (off_t)*count) {
+            serr = RPC_C_SOCKET_ENOSPC;
+            goto error;
+        }
 
-        *count += (size_t)bytes_read;
+        *count += bytes_read;
     } while (NT_SUCCESS(status) && bytes_read == bytes_requested);
 
 error:
 
     return serr;
+#else
+	return RPC_C_SOCKET_ENOTSUP;
+#endif
+
 }
 
 INTERNAL
@@ -1897,12 +1978,18 @@ rpc__smb_socket_enum_ifaces(
 INTERNAL
 rpc_socket_error_t
 rpc__smb_socket_inq_transport_info(
+#if HAVE_LIKEWISE_LWIO
     rpc_socket_t sock,
+#else
+    rpc_socket_t sock ATTRIBUTE_UNUSED,
+#endif
     rpc_transport_info_handle_t* info
     )
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
+#if HAVE_LIKEWISE_LWIO
     rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
+#endif
     rpc_smb_transport_info_p_t smb_info = NULL;
 
     RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_inq_transport_info called\n"));
