@@ -924,6 +924,10 @@ int main(int argc, char *argv[])
 {
     error_status_t  status;
     int uid ;
+    int ret;
+    const char* sm_notify = NULL;
+    int notify_fd = -1;
+    int notify_code = 0;
 
     /* begin */
 
@@ -976,6 +980,24 @@ int main(int argc, char *argv[])
     rpc__server_register_fwd_map(fwd_map, &status);
     if (check_st_bad("Unable to rpc_server_register_fwd_map", &status))
         exit(1);
+
+    if ((sm_notify = getenv("LIKEWISE_SM_NOTIFY")) != NULL)
+    {
+        notify_fd = atoi(sm_notify);
+
+        do
+        {
+            ret = dcethread_write(notify_fd, &notify_code, sizeof(notify_code));
+        } while(ret != sizeof(notify_code) && errno == EINTR);
+
+        if (ret < 0)
+        {
+            printf("(rpcd) Could not notify service manager: %s (%i)", strerror(errno), errno);
+            exit(1);
+        }
+
+        close(notify_fd);
+    }
 
     rpc_server_listen(5, &status);
     if (check_st_bad("Unable to rpc_server_listen", &status))
