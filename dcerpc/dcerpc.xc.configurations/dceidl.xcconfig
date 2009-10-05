@@ -5,5 +5,8 @@
 //  Created by Brad Suinn on 9/29/09.
 //  Copyright 2009 Apple Inc. All rights reserved.
 //
-HEADER_SEARCH_PATHS = $(SRCROOT)/idl_compiler $(SRCROOT)/include
-GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H _FORTIFY_SOURCE=2 SOCKADDR_LEN MIA DEFAULT_IDIR=\"/usr/local/include\" CATALOG_DIR=\"/usr/local/share/dcerpc\" YYERROR_VERBOSE=1 YYDEBUG=1
+
+#include "base_config"
+
+HEADER_SEARCH_PATHS = $(HEADER_SEARCH_PATHS_BASE) $(SRCROOT)/idl_compiler
+GCC_PREPROCESSOR_DEFINITIONS = $(GCC_PREPROCESSOR_DEFINITIONS_BASE2) MIA DEFAULT_IDIR=\"/usr/local/include\" CATALOG_DIR=\"/usr/share/dcerpc\" YYERROR_VERBOSE=1 YYDEBUG=1

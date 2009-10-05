@@ -1,12 +1,10 @@
 //
-//  dcerpc.xcconfig
+//  dcerpc_framework.xcconfig
 //  dcerpc
 //
-//  Created by Brad Suinn on 9/29/09.
+//  Created by Brad Suinn on 10/2/09.
 //  Copyright 2009 Apple Inc. All rights reserved.
 //
-
-// Get the RPC_C_UXD_DIR, RPC_C_NP_DIR, and IMAGE_DIR paths
 
 #include "base_config"
 #include "rpc_paths"
