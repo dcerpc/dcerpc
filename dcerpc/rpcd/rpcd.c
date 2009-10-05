@@ -928,6 +928,10 @@ int main(int argc, char *argv[])
     const char* sm_notify = NULL;
     int notify_fd = -1;
     int notify_code = 0;
+    int try = 0;
+    static const int try_interval = 5;
+    static const int max_tries = (60 / 5);
+
 
     /* begin */
 
@@ -967,7 +971,18 @@ int main(int argc, char *argv[])
     register_ifs(&status);
     if (! STATUS_OK(&status)) exit(1);
 
-    use_protseqs(&status);
+    for (try = 0; try < max_tries; try++)
+    {
+        use_protseqs(&status);
+
+        if (STATUS_OK(&status))
+        {
+            break;
+        }
+
+        sleep(try_interval);
+    }
+
     if (! STATUS_OK(&status)) exit(1);
 
     /*
