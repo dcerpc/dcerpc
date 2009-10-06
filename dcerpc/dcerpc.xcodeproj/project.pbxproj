@@ -27,6 +27,7 @@
 				DD0FE85E1074D92C004AB68C /* PBXTargetDependency */,
 				DD0FE85C1074D92C004AB68C /* PBXTargetDependency */,
 				DD0FE85A1074D92C004AB68C /* PBXTargetDependency */,
+				DD9B505F107BF2B40074C2F5 /* PBXTargetDependency */,
 			);
 			name = Aggregrate;
 			productName = Aggregrate;
@@ -200,6 +201,13 @@
 		DD95AA7510756C3800683E5B /* acf_l.l in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB029100408FC0080B762 /* acf_l.l */; };
 		DD95AA7610756C3800683E5B /* nidl_y.y in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB075100408FC0080B762 /* nidl_y.y */; };
 		DD95AA7710756C3800683E5B /* nidl_l.l in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB074100408FC0080B762 /* nidl_l.l */; };
+		DD9B4FF1107BF06B0074C2F5 /* baserpc.h in Copy compat headers */ = {isa = PBXBuildFile; fileRef = DD3DB0D3100408FD0080B762 /* baserpc.h */; };
+		DD9B4FF2107BF06B0074C2F5 /* dce2msrpc.h in Copy compat headers */ = {isa = PBXBuildFile; fileRef = DD3DB0D4100408FD0080B762 /* dce2msrpc.h */; };
+		DD9B4FF3107BF06B0074C2F5 /* dcerpc.h in Copy compat headers */ = {isa = PBXBuildFile; fileRef = DD3DB0D5100408FD0080B762 /* dcerpc.h */; };
+		DD9B4FF4107BF06B0074C2F5 /* dcerpc.idl.include in Copy compat headers */ = {isa = PBXBuildFile; fileRef = DD3DB0D6100408FD0080B762 /* dcerpc.idl.include */; };
+		DD9B4FF5107BF06B0074C2F5 /* mswrappers.h in Copy compat headers */ = {isa = PBXBuildFile; fileRef = DD3DB0D8100408FD0080B762 /* mswrappers.h */; };
+		DD9B4FF6107BF06B0074C2F5 /* rpcfields.h in Copy compat headers */ = {isa = PBXBuildFile; fileRef = DD3DB0D9100408FD0080B762 /* rpcfields.h */; };
+		DD9B4FF7107BF06B0074C2F5 /* rpcstatus.h in Copy compat headers */ = {isa = PBXBuildFile; fileRef = DD3DB0DA100408FD0080B762 /* rpcstatus.h */; };
 		DDC99904107AA36600330A72 /* dceidl in Resources */ = {isa = PBXBuildFile; fileRef = DDDF3257106BD43400E6A9C2 /* dceidl */; };
 		DDC99930107AAD5600330A72 /* codesets.idl in Create dce header folder */ = {isa = PBXBuildFile; fileRef = DD3DB0E7100408FD0080B762 /* codesets.idl */; };
 		DDC99945107AB5E100330A72 /* dce.h in Copy darwin headers */ = {isa = PBXBuildFile; fileRef = DD3DB0EC100408FD0080B762 /* dce.h */; };
@@ -904,6 +912,13 @@
 			remoteGlobalIDString = DDE7054510711E1800563825;
 			remoteInfo = dcerpc;
 		};
+		DD9B505E107BF2B40074C2F5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD04350110769FDA0010E492 /* DCERPC */;
+			remoteInfo = DCERPC;
+		};
 		DDC99980107AB91A00330A72 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
@@ -1136,6 +1151,23 @@
 				DD0435E21076A19C0010E492 /* libauth_gss_negotiate.so in Copy Transports */,
 			);
 			name = "Copy Transports";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DD9B4FF0107BF0630074C2F5 /* Copy compat headers */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = DCERPC.framework/Versions/A/Headers/compat;
+			dstSubfolderSpec = 16;
+			files = (
+				DD9B4FF1107BF06B0074C2F5 /* baserpc.h in Copy compat headers */,
+				DD9B4FF2107BF06B0074C2F5 /* dce2msrpc.h in Copy compat headers */,
+				DD9B4FF3107BF06B0074C2F5 /* dcerpc.h in Copy compat headers */,
+				DD9B4FF4107BF06B0074C2F5 /* dcerpc.idl.include in Copy compat headers */,
+				DD9B4FF5107BF06B0074C2F5 /* mswrappers.h in Copy compat headers */,
+				DD9B4FF6107BF06B0074C2F5 /* rpcfields.h in Copy compat headers */,
+				DD9B4FF7107BF06B0074C2F5 /* rpcstatus.h in Copy compat headers */,
+			);
+			name = "Copy compat headers";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		DDC99924107AACB500330A72 /* Create dce header folder */ = {
@@ -3770,6 +3802,7 @@
 				DDC9990E107AA3FA00330A72 /* Copy dce headers */,
 				DDC99943107AB4F600330A72 /* Copy darwin headers */,
 				DDC99955107AB67800330A72 /* Copy generic headers */,
+				DD9B4FF0107BF0630074C2F5 /* Copy compat headers */,
 			);
 			buildRules = (
 			);
@@ -5122,6 +5155,11 @@
 			target = DDE7054510711E1800563825 /* dcerpc */;
 			targetProxy = DD7FBDDB107407EF00B63C2A /* PBXContainerItemProxy */;
 		};
+		DD9B505F107BF2B40074C2F5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD04350110769FDA0010E492 /* DCERPC */;
+			targetProxy = DD9B505E107BF2B40074C2F5 /* PBXContainerItemProxy */;
+		};
 		DDC99981107AB91A00330A72 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DD08161A106C19580007E433 /* dce */;
@@ -5333,6 +5371,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = "DCERPC-Info.plist";
 				INSTALL_PATH = /System/Library/Frameworks;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = DCERPC;
@@ -6280,7 +6319,11 @@
 					"_FORTIFY_SOURCE=2",
 					HAVE_CONFIG_H,
 				);
-				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/include\"";
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/include\"",
+					"\"$(SHARED_DERIVED_FILE_DIR)\"",
+					"\"$(SHARED_DERIVED_FILE_DIR)/dce\"",
+				);
 				INSTALL_PATH = /usr/local/bin;
 				PREBINDING = NO;
 				PRODUCT_NAME = epstatus;
