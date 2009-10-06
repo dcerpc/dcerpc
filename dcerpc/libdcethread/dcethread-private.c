@@ -434,9 +434,10 @@ dcethread__interrupt(dcethread* thread)
     int count = 0;
     int old_state = thread->state;
     
-    if (old_state == DCETHREAD_STATE_INTERRUPT)
+    if (old_state == DCETHREAD_STATE_INTERRUPT ||
+        old_state == DCETHREAD_STATE_DEAD)
     {
-        /* Don't bother re-interrupting a thread */
+        /* Don't bother */
         return;
     }
 
