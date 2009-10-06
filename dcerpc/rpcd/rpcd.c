@@ -971,6 +971,15 @@ int main(int argc, char *argv[])
     register_ifs(&status);
     if (! STATUS_OK(&status)) exit(1);
 
+    /*
+     * Ensure permissions on /var/rpc directory
+     */
+    if (chmod("/var/rpc", S_IRUSR | S_IWUSR | S_IXUSR) != 0)
+    {
+        printf("(rpcd) could not change permissions on /var/rpc directory...\n");
+        exit(1);
+    }
+
     for (try = 0; try < max_tries; try++)
     {
         use_protseqs(&status);
