@@ -916,7 +916,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DD04350110769FDA0010E492 /* DCERPC */;
+			remoteGlobalIDString = DD04350110769FDA0010E492;
 			remoteInfo = DCERPC;
 		};
 		DDC99980107AB91A00330A72 /* PBXContainerItemProxy */ = {
@@ -5371,7 +5371,6 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = "DCERPC-Info.plist";
 				INSTALL_PATH = /System/Library/Frameworks;
-				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = DCERPC;
@@ -5398,6 +5397,7 @@
 				GCC_MODEL_TUNING = G5;
 				INFOPLIST_FILE = "DCERPC-Info.plist";
 				INSTALL_PATH = /System/Library/Frameworks;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = DCERPC;
@@ -5932,7 +5932,7 @@
 				INSTALL_PATH = /usr/local/bin;
 				OTHER_CFLAGS = "";
 				PREBINDING = NO;
-				PRODUCT_NAME = "flex-2.5.4";
+				PRODUCT_NAME = flex;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -6250,7 +6250,6 @@
 				PREBINDING = NO;
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = NO;
 				PRODUCT_NAME = dcerpc;
-				UNEXPORTED_SYMBOLS_FILE = /Volumes/Boot/bsuinn/Sandbox/dcerpc/trunk/dcerpc.git/dcerpc/dcelib/dcerpc.exp;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -6343,7 +6342,11 @@
 					"_FORTIFY_SOURCE=2",
 					HAVE_CONFIG_H,
 				);
-				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/include\"";
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/include\"",
+					"\"$(SHARED_DERIVED_FILE_DIR)\"",
+					"\"$(SHARED_DERIVED_FILE_DIR)/dce\"",
+				);
 				INSTALL_PATH = /usr/local/bin;
 				PREBINDING = NO;
 				PRODUCT_NAME = epstatus;
