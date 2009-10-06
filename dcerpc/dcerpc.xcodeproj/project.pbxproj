@@ -500,9 +500,9 @@
 			fileType = pattern.proxy;
 			isEditable = 1;
 			outputFiles = (
-				"${SHARED_DERIVED_FILE_DIR}/${INPUT_FILE_BASE}.h",
+				"${SHARED_DERIVED_FILE_DIR}/dce/${INPUT_FILE_BASE}.h",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/include -cepv -client none -server none -no_mepv out ${SHARED_DERIVED_FILE_DIR} ${INPUT_FILE_PATH}";
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/include -cepv -client none -server none -no_mepv out ${SHARED_DERIVED_FILE_DIR}/dce ${INPUT_FILE_PATH}";
 		};
 		DD0FE81A10741335004AB68C /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -519,10 +519,10 @@
 			fileType = pattern.proxy;
 			isEditable = 1;
 			outputFiles = (
-				"${SHARED_DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_cstub.c",
-				"${SHARED_DERIVED_FILE_DIR}/${INPUT_FILE_BASE}.h",
+				"${SHARED_DERIVED_FILE_DIR}/dce/${INPUT_FILE_BASE}_cstub.c",
+				"${SHARED_DERIVED_FILE_DIR}/dce/${INPUT_FILE_BASE}.h",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/include -keep c_source -no_cpp -v -no_mepv -cepv -server none out ${SHARED_DERIVED_FILE_DIR} ${INPUT_FILE_PATH}";
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/include -keep c_source -no_cpp -v -no_mepv -cepv -server none out ${SHARED_DERIVED_FILE_DIR}/dce ${INPUT_FILE_PATH}";
 		};
 		DD10F5F7106D3629005F1EF3 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -531,10 +531,10 @@
 			fileType = pattern.proxy;
 			isEditable = 1;
 			outputFiles = (
-				"$(SHARED_DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_cstub.c",
-				"$(SHARED_DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_sstub.c",
+				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE)_cstub.c",
+				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE)_sstub.c",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/include -keep c_source -no_cpp -v -no_mepv -cepv out ${SHARED_DERIVED_FILE_DIR} ${INPUT_FILE_PATH}";
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/include -keep c_source -no_cpp -v -no_mepv -cepv out ${SHARED_DERIVED_FILE_DIR}/dce ${INPUT_FILE_PATH}";
 		};
 		DD10F8D0106D7461005F1EF3 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -543,9 +543,9 @@
 			fileType = pattern.proxy;
 			isEditable = 1;
 			outputFiles = (
-				"$(SHARED_DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_cstub.c",
+				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE)_cstub.c",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/include -keep c_source -no_cpp -v -no_mepv -server none -cepv out ${SHARED_DERIVED_FILE_DIR} ${INPUT_FILE_PATH}";
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/include -keep c_source -no_cpp -v -no_mepv -server none -cepv out ${SHARED_DERIVED_FILE_DIR}/dce ${INPUT_FILE_PATH}";
 		};
 		DD10F8D1106D754F005F1EF3 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -554,9 +554,9 @@
 			fileType = pattern.proxy;
 			isEditable = 1;
 			outputFiles = (
-				"$(SHARED_DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_cstub.c",
+				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE)_cstub.c",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/include -keep c_source -no_cpp -v -no_mepv -cepv out ${SHARED_DERIVED_FILE_DIR} ${INPUT_FILE_PATH}";
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/include -keep c_source -no_cpp -v -no_mepv -cepv out ${SHARED_DERIVED_FILE_DIR}/dce ${INPUT_FILE_PATH}";
 		};
 		DDD41A42107261620002C71D /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -565,10 +565,10 @@
 			fileType = pattern.proxy;
 			isEditable = 1;
 			outputFiles = (
-				"${SHARED_DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_cstub.c",
-				"${SHARED_DERIVED_FILE_DIR}/${INPUT_FILE_BASE}.h",
+				"${SHARED_DERIVED_FILE_DIR}/dce/${INPUT_FILE_BASE}_cstub.c",
+				"${SHARED_DERIVED_FILE_DIR}/dce/${INPUT_FILE_BASE}.h",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/include -keep c_source -no_cpp -v -no_mepv -server none out ${SHARED_DERIVED_FILE_DIR} ${INPUT_FILE_PATH}";
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/include -keep c_source -no_cpp -v -no_mepv -server none out ${SHARED_DERIVED_FILE_DIR}/dce ${INPUT_FILE_PATH}";
 		};
 		DDD41B6A1072768F0002C71D /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -589,9 +589,9 @@
 			fileType = pattern.proxy;
 			isEditable = 1;
 			outputFiles = (
-				"$(SHARED_DERIVED_FILE_DIR)/$(INPUT_FILE_BASE).h",
+				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE).h",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -D_IDL -I ${SOURCE_ROOT}/include -keep c_source -v -no_mepv -cepv -client none -server none out ${SHARED_DERIVED_FILE_DIR} ${INPUT_FILE_PATH}";
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -D_IDL -I ${SOURCE_ROOT}/include -keep c_source -v -no_mepv -cepv -client none -server none out ${SHARED_DERIVED_FILE_DIR}/dce ${INPUT_FILE_PATH}";
 		};
 		DDD80A581075669300956CF0 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -600,9 +600,9 @@
 			fileType = pattern.proxy;
 			isEditable = 1;
 			outputFiles = (
-				"$(SHARED_DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_sstub.c",
+				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE)_sstub.c",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -D_IDL -I ${SOURCE_ROOT}/include -keep c_source -v -no_mepv -cepv -client none out ${SHARED_DERIVED_FILE_DIR} ${INPUT_FILE_PATH}";
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -D_IDL -I ${SOURCE_ROOT}/include -keep c_source -v -no_mepv -cepv -client none out ${SHARED_DERIVED_FILE_DIR}/dce ${INPUT_FILE_PATH}";
 		};
 		DDD80ABA10756A9D00956CF0 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -1986,6 +1986,7 @@
 		DD88285F1073160C00FBF62B /* auth_gss_negotiate.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = auth_gss_negotiate.xcconfig; path = dcerpc.xc.configurations/auth_gss_negotiate.xcconfig; sourceTree = "<group>"; };
 		DD8828621073163F00FBF62B /* dcerpcd.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = dcerpcd.xcconfig; path = dcerpc.xc.configurations/dcerpcd.xcconfig; sourceTree = "<group>"; };
 		DD88286A1073189700FBF62B /* rpc_paths.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = rpc_paths.xcconfig; path = dcerpc.xc.configurations/rpc_paths.xcconfig; sourceTree = "<group>"; };
+		DDB66DA2107BE3310095CBC1 /* base_config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = base_config.xcconfig; path = dcerpc.xc.configurations/base_config.xcconfig; sourceTree = "<group>"; };
 		DDCC000D10740EA40007183F /* libauth_gss_negotiate.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libauth_gss_negotiate.so; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDCCFFA810740B3A0007183F /* libprot_ncacn.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libprot_ncacn.so; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDCCFFDD10740CD50007183F /* libprot_ncadg.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libprot_ncadg.so; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3581,6 +3582,8 @@
 			isa = PBXGroup;
 			children = (
 				DD0FE87D1074F526004AB68C /* buildconf_configure */,
+				DDB66DA2107BE3310095CBC1 /* base_config.xcconfig */,
+				DD88286A1073189700FBF62B /* rpc_paths.xcconfig */,
 				DD8828071073058D00FBF62B /* flex.xcconfig */,
 				DD8828241073077F00FBF62B /* dcethread.xcconfig */,
 				DD88282810730DF600FBF62B /* dceidl.xcconfig */,
@@ -3588,7 +3591,6 @@
 				DD88282E10730E8F00FBF62B /* idl.xcconfig */,
 				DD88283910730EF100FBF62B /* uuid.xcconfig */,
 				DD501C071073C24800473324 /* stubs.xcconfig */,
-				DD88286A1073189700FBF62B /* rpc_paths.xcconfig */,
 				DD88284010730F3E00FBF62B /* dcerpc.xcconfig */,
 				DD88285A1073147C00FBF62B /* transports.xcconfig */,
 				DD88285F1073160C00FBF62B /* auth_gss_negotiate.xcconfig */,
@@ -5314,6 +5316,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DD04350B10769FF80010E492 /* dcerpc_framework.xcconfig */;
 			buildSettings = {
+				ALTERNATE_GROUP = wheel;
+				ALTERNATE_OWNER = root;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -5328,7 +5332,7 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = "DCERPC-Info.plist";
-				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				INSTALL_PATH = /System/Library/Frameworks;
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = DCERPC;
@@ -5339,6 +5343,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DD04350B10769FF80010E492 /* dcerpc_framework.xcconfig */;
 			buildSettings = {
+				ALTERNATE_GROUP = wheel;
+				ALTERNATE_OWNER = root;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -5352,7 +5358,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_MODEL_TUNING = G5;
 				INFOPLIST_FILE = "DCERPC-Info.plist";
-				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				INSTALL_PATH = /System/Library/Frameworks;
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = DCERPC;

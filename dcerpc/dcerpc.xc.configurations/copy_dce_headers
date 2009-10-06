@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cp -X ${SHARED_DERIVED_FILE_DIR}/*.h ${CODESIGNING_FOLDER_PATH}/Headers/dce/
+cp -X ${SHARED_DERIVED_FILE_DIR}/dce/*.h ${CODESIGNING_FOLDER_PATH}/Headers/dce/
 
 cp -X ${SRCROOT}/include/dce/*.h ${CODESIGNING_FOLDER_PATH}/Headers/dce/
 cp -X ${SRCROOT}/include/dce/*.idl ${CODESIGNING_FOLDER_PATH}/Headers/dce/
