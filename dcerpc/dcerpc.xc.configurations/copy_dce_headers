@@ -1,9 +1,9 @@
 #!/bin/sh
 
-cp ${SHARED_DERIVED_FILE_DIR}/*.h ${CODESIGNING_FOLDER_PATH}/Headers/dce/
+cp -X ${SHARED_DERIVED_FILE_DIR}/*.h ${CODESIGNING_FOLDER_PATH}/Headers/dce/
 
-cp ${SRCROOT}/include/dce/*.h ${CODESIGNING_FOLDER_PATH}/Headers/dce/
-cp ${SRCROOT}/include/dce/*.idl ${CODESIGNING_FOLDER_PATH}/Headers/dce/
+cp -X ${SRCROOT}/include/dce/*.h ${CODESIGNING_FOLDER_PATH}/Headers/dce/
+cp -X ${SRCROOT}/include/dce/*.idl ${CODESIGNING_FOLDER_PATH}/Headers/dce/
 
 rm ${CODESIGNING_FOLDER_PATH}/Headers/dce/pickle.h
 rm ${CODESIGNING_FOLDER_PATH}/Headers/dce/schannel.idl
