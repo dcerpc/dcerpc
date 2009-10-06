@@ -290,7 +290,7 @@ INTERNAL void ep_register
 {
     ept_entry_t                 *ept_entry;
     rpc_if_rep_p_t              if_rep = (rpc_if_rep_p_t) ifspec;
-    rpc_binding_handle_t        ep_binding;
+    rpc_binding_handle_t        ep_binding = NULL;
     unsigned32                  i, j;
     unsigned32                  curr_hand = 0, curr_tower = 0, curr_obj = 0; 
     unsigned32                  st;
@@ -311,71 +311,94 @@ INTERNAL void ep_register
         return;
     }          
 
+#ifndef __hpux__
     /*
-     * Spin through the binding vector array looking for a non-NULL pointer
-     * to a binding handle.  If one is found set curr_hand to its offset in 
-     * the binding vector.
-     * Also check for a binding handle with no endpoint; if one is found
-     * return an error.
-     */                                      
+     * First attempt to contact the local endpoint mapper with ncalrpc.
+     * This should work even if the network has not yet come up
+     */
+    rpc_binding_from_string_binding(
+        (unsigned_char_t*) "ncalrpc:[epmapper]",
+        &ep_binding,
+        status);
 
-    curr_hand = binding_vec->count;
-    for (i = 0; i < binding_vec->count; i++) 
+    if (*status == rpc_s_ok)
     {
-        if (binding_vec->binding_h[i] != NULL) 
-        {   
-            rpc_binding_rep_p_t binding_rep = (rpc_binding_rep_p_t) binding_vec->binding_h[i];
-            if (binding_rep->addr_has_endpoint == false)
-            {
-                *status = rpc_s_invalid_binding;
-                return;
-            }
-
-#ifdef __hpux__
-            if (binding_rep->rpc_addr && binding_rep->rpc_addr->sa.family == RPC_C_NAF_ID_IP)
-            {
-                struct sockaddr_in* addr = (struct sockaddr_in*) &binding_rep->rpc_addr->sa;
-                unsigned char* addr_bytes = (unsigned char*) &addr->sin_addr.s_addr;
-             
-                /* Don't attempt to connect on the loopback interface on HP-UX
-                   because the ep mapper incorrectly rejects attempts to register
-                   mappings through it */
-                if (addr_bytes[0] == 127)
-                {
-                    continue;
-                }
-            }
-
-            if (binding_rep->rpc_addr && binding_rep->rpc_addr->rpc_protseq_id == RPC_C_PROTSEQ_ID_NCALRPC)
-            {
-                /* Don't attempt to connect over ncalrpc on HP-UX because its native DCE
-                   implementation does not understand it */
-                continue;
-            }
-#endif
-
-            curr_hand = i;
-            break;
+        if (!rpc_mgmt_is_server_listening(ep_binding, status))
+        {
+            rpc_binding_free(&ep_binding, status);
+            ep_binding = NULL;
         }
     }
+#endif
 
-    /*
-     * If all the handles were NULL'd out, return an error.
-     */
-
-    if (curr_hand >= binding_vec->count)
+    if (!ep_binding)
     {
-        *status = rpc_s_no_bindings;
-        return;
-    }          
-                                             
-    /*
-     * Otherwise, use the a valid handle to converse with the EP mapper.
-     */
+        /*
+         * Spin through the binding vector array looking for a non-NULL pointer
+         * to a binding handle.  If one is found set curr_hand to its offset in
+         * the binding vector.
+         * Also check for a binding handle with no endpoint; if one is found
+         * return an error.
+         */
 
-    get_ep_binding(binding_vec->binding_h[curr_hand], &ep_binding, status);
-    if (*status != rpc_s_ok)
-        return;
+        curr_hand = binding_vec->count;
+        for (i = 0; i < binding_vec->count; i++)
+        {
+            if (binding_vec->binding_h[i] != NULL)
+            {
+                rpc_binding_rep_p_t binding_rep = (rpc_binding_rep_p_t) binding_vec->binding_h[i];
+                if (binding_rep->addr_has_endpoint == false)
+                {
+                    *status = rpc_s_invalid_binding;
+                    return;
+                }
+
+#ifdef __hpux__
+                if (binding_rep->rpc_addr && binding_rep->rpc_addr->sa.family == RPC_C_NAF_ID_IP)
+                {
+                    struct sockaddr_in* addr = (struct sockaddr_in*) &binding_rep->rpc_addr->sa;
+                    unsigned char* addr_bytes = (unsigned char*) &addr->sin_addr.s_addr;
+
+                    /* Don't attempt to connect on the loopback interface on HP-UX
+                       because the ep mapper incorrectly rejects attempts to register
+                       mappings through it */
+                    if (addr_bytes[0] == 127)
+                    {
+                        continue;
+                    }
+                }
+
+                if (binding_rep->rpc_addr && binding_rep->rpc_addr->rpc_protseq_id == RPC_C_PROTSEQ_ID_NCALRPC)
+                {
+                    /* Don't attempt to connect over ncalrpc on HP-UX because its native DCE
+                       implementation does not understand it */
+                    continue;
+                }
+#endif
+
+                curr_hand = i;
+                break;
+            }
+        }
+
+        /*
+         * If all the handles were NULL'd out, return an error.
+         */
+
+        if (curr_hand >= binding_vec->count)
+        {
+            *status = rpc_s_no_bindings;
+            return;
+        }
+
+        /*
+         * Otherwise, use the a valid handle to converse with the EP mapper.
+         */
+
+        get_ep_binding(binding_vec->binding_h[curr_hand], &ep_binding, status);
+        if (*status != rpc_s_ok)
+            return;
+    }
 
     /*
      * Allocate the EP entry structure to avoid taking up stack space.
@@ -611,7 +634,7 @@ PUBLIC void rpc_ep_unregister
 { 
     ept_entry_t                 *ept_entry;
     rpc_if_rep_p_t              if_rep = (rpc_if_rep_p_t) ifspec;
-    rpc_binding_handle_t        ep_binding;
+    rpc_binding_handle_t        ep_binding = NULL;
     unsigned32                  i, j, k, st;
     rpc_tower_ref_vector_p_t    tower_vec;
     unsigned32                  curr_hand;
@@ -632,47 +655,70 @@ PUBLIC void rpc_ep_unregister
         return;
     }          
 
+#ifndef __hpux__
     /*
-     * Spin through the binding vector array looking for a non-NULL pointer
-     * to a binding handle.  If one is found set curr_hand to its offset in 
-     * the binding vector.
-     * Also check for a binding handle with no endpoint; if one is found
-     * return an error.
-     */                                      
+     * First attempt to contact the local endpoint mapper with ncalrpc.
+     * This should work even if the network has not yet come up
+     */
+    rpc_binding_from_string_binding(
+        (unsigned_char_t*) "ncalrpc:[epmapper]",
+        &ep_binding,
+        status);
 
-    curr_hand = binding_vec->count;
-    for (i = 0; i < binding_vec->count; i++)
+    if (*status == rpc_s_ok)
     {
-        if (binding_vec->binding_h[i] != NULL) 
-        {   
-            if (((rpc_binding_rep_p_t) binding_vec->binding_h[i])
-                ->addr_has_endpoint == false)
-            {
-                *status = rpc_s_invalid_binding;
-                return;
-    }
-
-            curr_hand = i;
+        if (!rpc_mgmt_is_server_listening(ep_binding, status))
+        {
+            rpc_binding_free(&ep_binding, status);
+            ep_binding = NULL;
         }
     }
+#endif
 
-    /*
-     * If all the handles were NULL'd out, return an error.
-     */
-
-    if (curr_hand >= binding_vec->count)
+    if (!ep_binding)
     {
-        *status = rpc_s_no_bindings;
-        return;
-    }          
-                                             
-    /*
-     * Otherwise, use the a valid handle to converse with the EP mapper.
-     */
+        /*
+         * Spin through the binding vector array looking for a non-NULL pointer
+         * to a binding handle.  If one is found set curr_hand to its offset in
+         * the binding vector.
+         * Also check for a binding handle with no endpoint; if one is found
+         * return an error.
+         */
 
-    get_ep_binding(binding_vec->binding_h[curr_hand], &ep_binding, status);
-    if (*status != rpc_s_ok)
-        return;
+        curr_hand = binding_vec->count;
+        for (i = 0; i < binding_vec->count; i++)
+        {
+            if (binding_vec->binding_h[i] != NULL)
+            {
+                if (((rpc_binding_rep_p_t) binding_vec->binding_h[i])
+                    ->addr_has_endpoint == false)
+                {
+                    *status = rpc_s_invalid_binding;
+                    return;
+                }
+
+                curr_hand = i;
+            }
+        }
+
+        /*
+         * If all the handles were NULL'd out, return an error.
+         */
+
+        if (curr_hand >= binding_vec->count)
+        {
+            *status = rpc_s_no_bindings;
+            return;
+        }
+
+        /*
+         * Otherwise, use the a valid handle to converse with the EP mapper.
+         */
+
+        get_ep_binding(binding_vec->binding_h[curr_hand], &ep_binding, status);
+        if (*status != rpc_s_ok)
+            return;
+    }
 
     /*
      * Allocate the EP entry structure to avoid taking up stack space.
@@ -705,6 +751,13 @@ PUBLIC void rpc_ep_unregister
 
         if (binding_vec->binding_h[i] == NULL)
             continue;
+
+        if (binding_vec->binding_h[i]->rpc_addr &&
+            rpc_g_protseq_id[binding_vec->binding_h[i]->rpc_addr->rpc_protseq_id].uses_ep_mapper == 0)
+        {
+            /* Skip over protocol sequences that do not require the endpoint mapper */
+            continue;
+        }
 
         /*
          * Convert the binding handle to tower_ref vector
