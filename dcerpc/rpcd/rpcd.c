@@ -920,18 +920,189 @@ INTERNAL void start_as_daemon(void)
     attach_log_file();
 }
 
+static
+void*
+rpcd_listen_thread(
+    void* arg
+    )
+{
+    error_status_t status = 0;
+
+    rpc_server_listen(5, &status);
+    *(error_status_t*) arg = status;
+
+    return arg;
+}
+
+static
+void*
+rpcd_network_thread(
+    void* arg
+    )
+{
+    error_status_t status = 0;
+    int index = 0;
+    static const struct timespec retry_interval = {5, 0};
+    static const char* network_protseqs[] =
+    {
+        "ncacn_ip_tcp",
+        "ncadg_ip_udp",
+        NULL
+    };
+
+    while (network_protseqs[index])
+    {
+        rpc_server_use_protseq_if(
+            (unsigned char*) network_protseqs[index],
+            0,
+            ept_v3_0_s_ifspec,
+            &status);
+
+        if (!STATUS_OK(&status))
+        {
+            printf("(rpcd) Could not listen on %s: %x.  Retrying in %i seconds\n",
+                   network_protseqs[index], status, (int) retry_interval.tv_sec);
+            dcethread_delay(&retry_interval);
+        }
+        else
+        {
+            index++;
+        }
+    }
+
+    *(error_status_t*) arg = status;
+
+    return arg;
+}
+
+static
+void
+rpcd_handle_sigint(
+    int sig
+    )
+{
+    raise(SIGTERM);
+}
+
+static
+void
+rpcd_configure_signals(
+    void
+    )
+{
+    sigset_t set;
+    int i = 0;
+
+    static const int block_signals[] =
+    {
+        SIGTERM,
+        SIGHUP,
+        -1
+    };
+    static const struct sigaction act =
+    {
+        .sa_handler = rpcd_handle_sigint,
+        .sa_flags = 0
+    };
+
+    if (sigaction(SIGINT, &act, NULL) < 0)
+    {
+        printf("(rpcd) System call failed\n");
+        exit(1);
+    }
+
+    if (sigemptyset(&set) < 0)
+    {
+        printf("(rpcd) System call failed\n");
+        exit(1);
+    }
+
+    for (i = 0; block_signals[i] != -1; i++)
+    {
+        if (sigaddset(&set, block_signals[i]) < 0)
+        {
+            printf("(rpcd) System call failed\n");
+            exit(1);
+        }
+    }
+
+    if (pthread_sigmask(SIG_SETMASK, &set, NULL) != 0)
+    {
+        printf("(rpcd) pthread_sigmask(): %s\n", strerror(errno));
+        exit(1);
+    }
+}
+
+static
+void
+rpcd_wait_signals(
+    error_status_t* status
+    )
+{
+    sigset_t set;
+    static int wait_signals[] =
+    {
+        SIGTERM,
+        SIGHUP,
+        -1
+    };
+    int sig = -1;
+    int i = 0;
+
+    if (sigemptyset(&set) < 0)
+    {
+        *status = rpc_s_unknown_error;
+        goto error;
+    }
+
+    for (i = 0; wait_signals[i] != -1; i++)
+    {
+        if (sigaddset(&set, wait_signals[i]) < 0)
+        {
+            *status = rpc_s_unknown_error;
+            goto error;
+        }
+    }
+
+    for (;;)
+    {
+        if (sigwait(&set, &sig) < 0)
+        {
+            *status = rpc_s_unknown_error;
+            goto error;
+        }
+
+        printf("(rpcd) Received signal %i\n", sig);
+
+        switch (sig)
+        {
+        case SIGTERM:
+            goto cleanup;
+        default:
+            break;
+        }
+    }
+
+cleanup:
+
+    return;
+
+error:
+
+    goto cleanup;
+}
+
 int main(int argc, char *argv[])
 {
-    error_status_t  status;
+    error_status_t  status, listen_status, network_status;
     int uid ;
     int ret;
     const char* sm_notify = NULL;
     int notify_fd = -1;
     int notify_code = 0;
-    int try = 0;
-    static const int try_interval = 5;
-    static const int max_tries = (60 / 5);
-
+    dcethread* listen_thread = NULL;
+    dcethread* network_thread = NULL;
+    boolean32 is_listening = false;
 
     /* begin */
 
@@ -947,6 +1118,9 @@ int main(int argc, char *argv[])
         fprintf(stderr, "(rpcd) Must be root to start rpcd, your uid = %d \n", uid);
         exit(2);
     }
+
+    /* Set up signals */
+    rpcd_configure_signals();
 
     /*
      * If not debugging, fork off a process to be the rpcd.  The parent exits.
@@ -980,31 +1154,46 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    for (try = 0; try < max_tries; try++)
-    {
-        use_protseqs(&status);
-
-        if (STATUS_OK(&status))
-        {
-            break;
-        }
-
-        sleep(try_interval);
-    }
-
-    if (! STATUS_OK(&status)) exit(1);
-
     /*
-     * Start handling RPCs and performing forwarding.
+     * Register lcalrpc endpoint as a baseline to ensure local services can talk to us
      */
+    rpc_server_use_protseq_if((unsigned char*) "ncalrpc", 0, ept_v3_0_s_ifspec, &status);
 
-    if (dflag)
-        printf("(rpcd) listening...\n");
+    if (!STATUS_OK(&status))
+    {
+        printf("(rpcd) could not listen on ncalrpc\n");
+        exit(1);
+    }
 
     rpc__server_register_fwd_map(fwd_map, &status);
     if (check_st_bad("Unable to rpc_server_register_fwd_map", &status))
         exit(1);
 
+    if (dflag)
+        printf("(rpcd) listening...\n");
+
+    /*
+     * Fire up listener thread
+     */
+    dcethread_create_throw(&listen_thread, NULL, rpcd_listen_thread, (void*) &listen_status);
+
+    /*
+     * Busy wait until we are actually listening
+     */
+    while (!is_listening)
+    {
+        is_listening = rpc_mgmt_is_server_listening(NULL, &status);
+
+        if (!STATUS_OK(&status))
+        {
+            printf("(rpcd) could not determine if listener is running\n");
+            exit(1);
+        }
+    }
+
+    /*
+     * If we were started by the service manager, let it know we are ready
+     */
     if ((sm_notify = getenv("LIKEWISE_SM_NOTIFY")) != NULL)
     {
         notify_fd = atoi(sm_notify);
@@ -1023,9 +1212,51 @@ int main(int argc, char *argv[])
         close(notify_fd);
     }
 
-    rpc_server_listen(5, &status);
-    if (check_st_bad("Unable to rpc_server_listen", &status))
+    /*
+     * Fire up network detection thread
+     */
+
+    dcethread_create_throw(&network_thread, NULL, rpcd_network_thread, (void*) &network_status);
+
+    /*
+     * Wait for signals
+     */
+
+    rpcd_wait_signals(&status);
+
+    if (check_st_bad("Error waiting for signals", &status))
+    {
         exit(1);
+    }
+
+    /*
+     * Tell listener thread to stop
+     */
+
+    rpc_mgmt_stop_server_listening(NULL, &status);
+
+    if (check_st_bad("Error stopping server", &status))
+    {
+        exit(1);
+    }
     
+    /*
+     * Wait for listener thread to exit
+     */
+    dcethread_join_throw(listen_thread, NULL);
+
+    /*
+     * Cancel network detection thread
+     */
+    dcethread_interrupt_throw(network_thread);
+
+    /*
+     * Join network detection thread
+     */
+    dcethread_join_throw(network_thread, NULL);
+
+    /*
+     * We're done
+     */
     exit(0);
 }
