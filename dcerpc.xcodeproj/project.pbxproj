@@ -4241,6 +4241,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+				DD04350110769FDA0010E492 /* DCERPC */,
 				DDDF310F106AE5F700E6A9C2 /* Aggregrate */,
 				DDDF30E8106AE4AD00E6A9C2 /* fl */,
 				DDDF303C106ADA4D00E6A9C2 /* flex */,
@@ -4268,7 +4269,6 @@
 				DDE704E41071196F00563825 /* echo_server */,
 				DDFD946E10723BEB008E776F /* echo_client */,
 				DDFD949810723EB5008E776F /* epstatus */,
-				DD04350110769FDA0010E492 /* DCERPC */,
 			);
 		};
 /* End PBXProject section */
