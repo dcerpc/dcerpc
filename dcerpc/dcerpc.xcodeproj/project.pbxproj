@@ -122,7 +122,7 @@
 		DD0435DE1076A19C0010E492 /* libnaf_ip.so in Copy Transports */ = {isa = PBXBuildFile; fileRef = DD7FBDA41074061400B63C2A /* libnaf_ip.so */; };
 		DD0435E01076A19C0010E492 /* libprot_ncacn.so in Copy Transports */ = {isa = PBXBuildFile; fileRef = DDCCFFA810740B3A0007183F /* libprot_ncacn.so */; };
 		DD0435E11076A19C0010E492 /* libprot_ncadg.so in Copy Transports */ = {isa = PBXBuildFile; fileRef = DDCCFFDD10740CD50007183F /* libprot_ncadg.so */; };
-		DD0435E21076A19C0010E492 /* libauth_gss_negotiate.so in Copy Transports */ = {isa = PBXBuildFile; fileRef = DDCC000D10740EA40007183F /* libauth_gss_negotiate.so */; };
+		DD0435E21076A19C0010E492 /* libauth_gss_negotiate.so in Copy Authentications */ = {isa = PBXBuildFile; fileRef = DDCC000D10740EA40007183F /* libauth_gss_negotiate.so */; };
 		DD081622106C1A250007E433 /* codesets.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0E7100408FD0080B762 /* codesets.idl */; };
 		DD081623106C1A250007E433 /* conv.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0E9100408FD0080B762 /* conv.idl */; };
 		DD081624106C1A250007E433 /* convc.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0EA100408FD0080B762 /* convc.idl */; };
@@ -188,11 +188,10 @@
 		DD10F660106D3E88005F1EF3 /* libmgmt_stubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F5EA106D3528005F1EF3 /* libmgmt_stubs.a */; };
 		DD10F8CC106D73C3005F1EF3 /* conv.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0E9100408FD0080B762 /* conv.idl */; };
 		DD10F8CD106D73D9005F1EF3 /* convc.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0EA100408FD0080B762 /* convc.idl */; };
-		DD7FBDA91074063F00B63C2A /* libdcerpc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE7054610711E1800563825 /* libdcerpc.dylib */; };
+		DD32545F107CE8FC00BF66BD /* libnaf_np.so in Copy Transports */ = {isa = PBXBuildFile; fileRef = DD7FBDD8107407D200B63C2A /* libnaf_np.so */; };
 		DD7FBDAF1074067D00B63C2A /* ipnaf.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2CA100408FD0080B762 /* ipnaf.c */; };
 		DD7FBDB01074067D00B63C2A /* ipnaf_linux.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2CB100408FD0080B762 /* ipnaf_linux.c */; };
 		DD7FBDB11074067D00B63C2A /* twr_ip.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2D1100408FD0080B762 /* twr_ip.c */; };
-		DD7FBDDD107407F500B63C2A /* libdcerpc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE7054610711E1800563825 /* libdcerpc.dylib */; };
 		DD7FBDE21074084F00B63C2A /* npnaf.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2CD100408FD0080B762 /* npnaf.c */; };
 		DD7FBDE31074084F00B63C2A /* npnaf_linux.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2CE100408FD0080B762 /* npnaf_linux.c */; };
 		DD7FBDE41074084F00B63C2A /* twr_np.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2D2100408FD0080B762 /* twr_np.c */; };
@@ -217,13 +216,10 @@
 		DDC9994E107AB66F00330A72 /* marshall.h in Copy generic headers */ = {isa = PBXBuildFile; fileRef = DD3DB100100408FD0080B762 /* marshall.h */; };
 		DDC9994F107AB66F00330A72 /* ndr_rep.h in Copy generic headers */ = {isa = PBXBuildFile; fileRef = DD3DB101100408FD0080B762 /* ndr_rep.h */; };
 		DDC99950107AB66F00330A72 /* ndrtypes.h in Copy generic headers */ = {isa = PBXBuildFile; fileRef = DD3DB102100408FD0080B762 /* ndrtypes.h */; };
-		DDCC000310740D490007183F /* libdcethread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DDDF3132106AE68900E6A9C2 /* libdcethread.dylib */; };
-		DDCC001210740EBE0007183F /* libdcerpc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE7054610711E1800563825 /* libdcerpc.dylib */; };
 		DDCC001310740F400007183F /* gssauth.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2C8100408FD0080B762 /* gssauth.c */; };
 		DDCC001410740F400007183F /* gssauthcn.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2C9100408FD0080B762 /* gssauthcn.c */; };
 		DDCCFF8B10740A1E0007183F /* comsoc_smb.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1F2100408FD0080B762 /* comsoc_smb.c */; };
 		DDCCFF9B10740A7A0007183F /* SMBClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD38F1AB106976B200EEF3A7 /* SMBClient.framework */; };
-		DDCCFFAD10740B5D0007183F /* libdcerpc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE7054610711E1800563825 /* libdcerpc.dylib */; };
 		DDCCFFB010740B970007183F /* cnassoc.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB29C100408FD0080B762 /* cnassoc.c */; };
 		DDCCFFB110740B970007183F /* cnbind.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB29D100408FD0080B762 /* cnbind.c */; };
 		DDCCFFB210740B970007183F /* cncall.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB29E100408FD0080B762 /* cncall.c */; };
@@ -244,9 +240,7 @@
 		DDCCFFC110740B970007183F /* cnsclsm.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2AD100408FD0080B762 /* cnsclsm.c */; };
 		DDCCFFC210740B970007183F /* cnsm.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2AE100408FD0080B762 /* cnsm.c */; };
 		DDCCFFC310740B970007183F /* cnxfer.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2AF100408FD0080B762 /* cnxfer.c */; };
-		DDCCFFD410740CA50007183F /* libdcethread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DDDF3132106AE68900E6A9C2 /* libdcethread.dylib */; };
 		DDCCFFE410740CF50007183F /* libprot_ncadg_stubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F8C3106D7357005F1EF3 /* libprot_ncadg_stubs.a */; };
-		DDCCFFE510740CFD0007183F /* libdcerpc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE7054610711E1800563825 /* libdcerpc.dylib */; };
 		DDCCFFE610740D1F0007183F /* conv.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2B0100408FD0080B762 /* conv.c */; };
 		DDCCFFE710740D1F0007183F /* dg.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2B1100408FD0080B762 /* dg.c */; };
 		DDCCFFE810740D1F0007183F /* dgcall.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2B2100408FD0080B762 /* dgcall.c */; };
@@ -898,20 +892,6 @@
 			remoteGlobalIDString = DDDF3256106BD43400E6A9C2;
 			remoteInfo = dceidl;
 		};
-		DD7FBDA71074063700B63C2A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDE7054510711E1800563825;
-			remoteInfo = dcerpc;
-		};
-		DD7FBDDB107407EF00B63C2A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDE7054510711E1800563825;
-			remoteInfo = dcerpc;
-		};
 		DD9B505E107BF2B40074C2F5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
@@ -926,47 +906,12 @@
 			remoteGlobalIDString = DD08161A106C19580007E433;
 			remoteInfo = dce;
 		};
-		DDCC000110740D430007183F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDDF3131106AE68900E6A9C2;
-			remoteInfo = dcethread;
-		};
-		DDCC001010740EB80007183F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDE7054510711E1800563825;
-			remoteInfo = dcerpc;
-		};
-		DDCCFFAB10740B560007183F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDE7054510711E1800563825;
-			remoteInfo = dcerpc;
-		};
-		DDCCFFD210740CA10007183F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDDF3131106AE68900E6A9C2;
-			remoteInfo = dcethread;
-		};
 		DDCCFFE010740CEA0007183F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = DD10F8C2106D7357005F1EF3;
 			remoteInfo = prot_ncadg_stubs;
-		};
-		DDCCFFE210740CEF0007183F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDE7054510711E1800563825;
-			remoteInfo = dcerpc;
 		};
 		DDD41A1610725BBF0002C71D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1146,11 +1091,22 @@
 			dstSubfolderSpec = 7;
 			files = (
 				DD0435DE1076A19C0010E492 /* libnaf_ip.so in Copy Transports */,
+				DD32545F107CE8FC00BF66BD /* libnaf_np.so in Copy Transports */,
 				DD0435E01076A19C0010E492 /* libprot_ncacn.so in Copy Transports */,
 				DD0435E11076A19C0010E492 /* libprot_ncadg.so in Copy Transports */,
-				DD0435E21076A19C0010E492 /* libauth_gss_negotiate.so in Copy Transports */,
 			);
 			name = "Copy Transports";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DD32545D107CE87F00BF66BD /* Copy Authentications */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Authentications;
+			dstSubfolderSpec = 7;
+			files = (
+				DD0435E21076A19C0010E492 /* libauth_gss_negotiate.so in Copy Authentications */,
+			);
+			name = "Copy Authentications";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		DD9B4FF0107BF0630074C2F5 /* Copy compat headers */ = {
@@ -2117,7 +2073,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD7FBDA91074063F00B63C2A /* libdcerpc.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2125,7 +2080,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD7FBDDD107407F500B63C2A /* libdcerpc.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2133,7 +2087,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DDCC001210740EBE0007183F /* libdcerpc.dylib in Frameworks */,
 				DD0FE805107411EB004AB68C /* Kerberos.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2142,8 +2095,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DDCCFFAD10740B5D0007183F /* libdcerpc.dylib in Frameworks */,
-				DDCCFFD410740CA50007183F /* libdcethread.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2152,8 +2103,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				DDCCFFE410740CF50007183F /* libprot_ncadg_stubs.a in Frameworks */,
-				DDCCFFE510740CFD0007183F /* libdcerpc.dylib in Frameworks */,
-				DDCC000310740D490007183F /* libdcethread.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3702,41 +3651,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DD7FBDA01074061400B63C2A /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DD7FBDD4107407D200B63C2A /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DDCC000910740EA40007183F /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DDCCFFA410740B3A0007183F /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DDCCFFD910740CD50007183F /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		DDD80A1C107562E300956CF0 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -3797,6 +3711,7 @@
 				DD04350010769FDA0010E492 /* Frameworks */,
 				DD0434FE10769FDA0010E492 /* Resources */,
 				DD04362C1076A32D0010E492 /* Copy Transports */,
+				DD32545D107CE87F00BF66BD /* Copy Authentications */,
 				DD0434FD10769FDA0010E492 /* Headers */,
 				DDC99924107AACB500330A72 /* Create dce header folder */,
 				DDC9990E107AA3FA00330A72 /* Copy dce headers */,
@@ -3976,14 +3891,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DD7FBDBE107406A200B63C2A /* Build configuration list for PBXNativeTarget "naf_ip" */;
 			buildPhases = (
-				DD7FBDA01074061400B63C2A /* Headers */,
 				DD7FBDA11074061400B63C2A /* Sources */,
 				DD7FBDA21074061400B63C2A /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				DD7FBDA81074063700B63C2A /* PBXTargetDependency */,
 			);
 			name = naf_ip;
 			productName = naf_ip;
@@ -3994,14 +3907,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DD7FBDE11074082D00B63C2A /* Build configuration list for PBXNativeTarget "naf_np" */;
 			buildPhases = (
-				DD7FBDD4107407D200B63C2A /* Headers */,
 				DD7FBDD5107407D200B63C2A /* Sources */,
 				DD7FBDD6107407D200B63C2A /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				DD7FBDDC107407EF00B63C2A /* PBXTargetDependency */,
 			);
 			name = naf_np;
 			productName = naf_np;
@@ -4012,14 +3923,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DDCC002010740F5B0007183F /* Build configuration list for PBXNativeTarget "auth_gss_negotiate" */;
 			buildPhases = (
-				DDCC000910740EA40007183F /* Headers */,
 				DDCC000A10740EA40007183F /* Sources */,
 				DDCC000B10740EA40007183F /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				DDCC001110740EB80007183F /* PBXTargetDependency */,
 			);
 			name = auth_gss_negotiate;
 			productName = auth_gss_negotiate;
@@ -4030,15 +3939,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DDCCFFC610740BC90007183F /* Build configuration list for PBXNativeTarget "prot_ncacn" */;
 			buildPhases = (
-				DDCCFFA410740B3A0007183F /* Headers */,
 				DDCCFFA510740B3A0007183F /* Sources */,
 				DDCCFFA610740B3A0007183F /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				DDCCFFAC10740B560007183F /* PBXTargetDependency */,
-				DDCCFFD310740CA10007183F /* PBXTargetDependency */,
 			);
 			name = prot_ncacn;
 			productName = prot_ncacn;
@@ -4049,7 +3955,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DDCC000610740D670007183F /* Build configuration list for PBXNativeTarget "prot_ncadg" */;
 			buildPhases = (
-				DDCCFFD910740CD50007183F /* Headers */,
 				DDCCFFDA10740CD50007183F /* Sources */,
 				DDCCFFDB10740CD50007183F /* Frameworks */,
 			);
@@ -4058,8 +3963,6 @@
 			);
 			dependencies = (
 				DDCCFFE110740CEA0007183F /* PBXTargetDependency */,
-				DDCCFFE310740CEF0007183F /* PBXTargetDependency */,
-				DDCC000210740D430007183F /* PBXTargetDependency */,
 			);
 			name = prot_ncadg;
 			productName = prot_ncadg;
@@ -5145,16 +5048,6 @@
 			target = DDDF3256106BD43400E6A9C2 /* dceidl */;
 			targetProxy = DD10F8CE106D742F005F1EF3 /* PBXContainerItemProxy */;
 		};
-		DD7FBDA81074063700B63C2A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDE7054510711E1800563825 /* dcerpc */;
-			targetProxy = DD7FBDA71074063700B63C2A /* PBXContainerItemProxy */;
-		};
-		DD7FBDDC107407EF00B63C2A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDE7054510711E1800563825 /* dcerpc */;
-			targetProxy = DD7FBDDB107407EF00B63C2A /* PBXContainerItemProxy */;
-		};
 		DD9B505F107BF2B40074C2F5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DD04350110769FDA0010E492 /* DCERPC */;
@@ -5165,35 +5058,10 @@
 			target = DD08161A106C19580007E433 /* dce */;
 			targetProxy = DDC99980107AB91A00330A72 /* PBXContainerItemProxy */;
 		};
-		DDCC000210740D430007183F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDDF3131106AE68900E6A9C2 /* dcethread */;
-			targetProxy = DDCC000110740D430007183F /* PBXContainerItemProxy */;
-		};
-		DDCC001110740EB80007183F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDE7054510711E1800563825 /* dcerpc */;
-			targetProxy = DDCC001010740EB80007183F /* PBXContainerItemProxy */;
-		};
-		DDCCFFAC10740B560007183F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDE7054510711E1800563825 /* dcerpc */;
-			targetProxy = DDCCFFAB10740B560007183F /* PBXContainerItemProxy */;
-		};
-		DDCCFFD310740CA10007183F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDDF3131106AE68900E6A9C2 /* dcethread */;
-			targetProxy = DDCCFFD210740CA10007183F /* PBXContainerItemProxy */;
-		};
 		DDCCFFE110740CEA0007183F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DD10F8C2106D7357005F1EF3 /* prot_ncadg_stubs */;
 			targetProxy = DDCCFFE010740CEA0007183F /* PBXContainerItemProxy */;
-		};
-		DDCCFFE310740CEF0007183F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDE7054510711E1800563825 /* dcerpc */;
-			targetProxy = DDCCFFE210740CEF0007183F /* PBXContainerItemProxy */;
 		};
 		DDD41A1710725BBF0002C71D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
