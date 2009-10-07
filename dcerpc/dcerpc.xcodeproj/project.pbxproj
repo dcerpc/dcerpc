@@ -119,10 +119,10 @@
 		DD0435C11076A12A0010E492 /* mswrappers.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAF87100408FC0080B762 /* mswrappers.c */; };
 		DD0435C21076A12A0010E492 /* wc16str.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAF83100408FC0080B762 /* wc16str.c */; };
 		DD0435C31076A14E0010E492 /* dcerpc.h in Headers */ = {isa = PBXBuildFile; fileRef = DD3DB0D5100408FD0080B762 /* dcerpc.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		DD0435DE1076A19C0010E492 /* libnaf_ip.so in Copy Transports */ = {isa = PBXBuildFile; fileRef = DD7FBDA41074061400B63C2A /* libnaf_ip.so */; };
-		DD0435E01076A19C0010E492 /* libprot_ncacn.so in Copy Transports */ = {isa = PBXBuildFile; fileRef = DDCCFFA810740B3A0007183F /* libprot_ncacn.so */; };
-		DD0435E11076A19C0010E492 /* libprot_ncadg.so in Copy Transports */ = {isa = PBXBuildFile; fileRef = DDCCFFDD10740CD50007183F /* libprot_ncadg.so */; };
-		DD0435E21076A19C0010E492 /* libauth_gss_negotiate.so in Copy Authentications */ = {isa = PBXBuildFile; fileRef = DDCC000D10740EA40007183F /* libauth_gss_negotiate.so */; };
+		DD0435DE1076A19C0010E492 /* libnaf_ip.so in Copy Modules */ = {isa = PBXBuildFile; fileRef = DD7FBDA41074061400B63C2A /* libnaf_ip.so */; };
+		DD0435E01076A19C0010E492 /* libprot_ncacn.so in Copy Modules */ = {isa = PBXBuildFile; fileRef = DDCCFFA810740B3A0007183F /* libprot_ncacn.so */; };
+		DD0435E11076A19C0010E492 /* libprot_ncadg.so in Copy Modules */ = {isa = PBXBuildFile; fileRef = DDCCFFDD10740CD50007183F /* libprot_ncadg.so */; };
+		DD0435E21076A19C0010E492 /* libauth_gss_negotiate.so in Copy Modules */ = {isa = PBXBuildFile; fileRef = DDCC000D10740EA40007183F /* libauth_gss_negotiate.so */; };
 		DD081622106C1A250007E433 /* codesets.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0E7100408FD0080B762 /* codesets.idl */; };
 		DD081623106C1A250007E433 /* conv.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0E9100408FD0080B762 /* conv.idl */; };
 		DD081624106C1A250007E433 /* convc.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0EA100408FD0080B762 /* convc.idl */; };
@@ -188,7 +188,7 @@
 		DD10F660106D3E88005F1EF3 /* libmgmt_stubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F5EA106D3528005F1EF3 /* libmgmt_stubs.a */; };
 		DD10F8CC106D73C3005F1EF3 /* conv.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0E9100408FD0080B762 /* conv.idl */; };
 		DD10F8CD106D73D9005F1EF3 /* convc.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0EA100408FD0080B762 /* convc.idl */; };
-		DD32545F107CE8FC00BF66BD /* libnaf_np.so in Copy Transports */ = {isa = PBXBuildFile; fileRef = DD7FBDD8107407D200B63C2A /* libnaf_np.so */; };
+		DD32545F107CE8FC00BF66BD /* libnaf_np.so in Copy Modules */ = {isa = PBXBuildFile; fileRef = DD7FBDD8107407D200B63C2A /* libnaf_np.so */; };
 		DD7FBDAF1074067D00B63C2A /* ipnaf.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2CA100408FD0080B762 /* ipnaf.c */; };
 		DD7FBDB01074067D00B63C2A /* ipnaf_linux.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2CB100408FD0080B762 /* ipnaf_linux.c */; };
 		DD7FBDB11074067D00B63C2A /* twr_ip.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2D1100408FD0080B762 /* twr_ip.c */; };
@@ -1084,29 +1084,19 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		DD04362C1076A32D0010E492 /* Copy Transports */ = {
+		DD04362C1076A32D0010E492 /* Copy Modules */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = Transports;
+			dstPath = Modules;
 			dstSubfolderSpec = 7;
 			files = (
-				DD0435DE1076A19C0010E492 /* libnaf_ip.so in Copy Transports */,
-				DD32545F107CE8FC00BF66BD /* libnaf_np.so in Copy Transports */,
-				DD0435E01076A19C0010E492 /* libprot_ncacn.so in Copy Transports */,
-				DD0435E11076A19C0010E492 /* libprot_ncadg.so in Copy Transports */,
+				DD0435DE1076A19C0010E492 /* libnaf_ip.so in Copy Modules */,
+				DD32545F107CE8FC00BF66BD /* libnaf_np.so in Copy Modules */,
+				DD0435E01076A19C0010E492 /* libprot_ncacn.so in Copy Modules */,
+				DD0435E11076A19C0010E492 /* libprot_ncadg.so in Copy Modules */,
+				DD0435E21076A19C0010E492 /* libauth_gss_negotiate.so in Copy Modules */,
 			);
-			name = "Copy Transports";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DD32545D107CE87F00BF66BD /* Copy Authentications */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = Authentications;
-			dstSubfolderSpec = 7;
-			files = (
-				DD0435E21076A19C0010E492 /* libauth_gss_negotiate.so in Copy Authentications */,
-			);
-			name = "Copy Authentications";
+			name = "Copy Modules";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		DD9B4FF0107BF0630074C2F5 /* Copy compat headers */ = {
@@ -3710,8 +3700,7 @@
 				DD0434FF10769FDA0010E492 /* Sources */,
 				DD04350010769FDA0010E492 /* Frameworks */,
 				DD0434FE10769FDA0010E492 /* Resources */,
-				DD04362C1076A32D0010E492 /* Copy Transports */,
-				DD32545D107CE87F00BF66BD /* Copy Authentications */,
+				DD04362C1076A32D0010E492 /* Copy Modules */,
 				DD0434FD10769FDA0010E492 /* Headers */,
 				DDC99924107AACB500330A72 /* Create dce header folder */,
 				DDC9990E107AA3FA00330A72 /* Copy dce headers */,
