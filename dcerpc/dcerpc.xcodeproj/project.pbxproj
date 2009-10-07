@@ -906,6 +906,13 @@
 			remoteGlobalIDString = DD08161A106C19580007E433;
 			remoteInfo = dce;
 		};
+		DDCA7F7D107CFE3D0064466D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD08161A106C19580007E433;
+			remoteInfo = dce;
+		};
 		DDCCFFE010740CEA0007183F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
@@ -4156,6 +4163,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				DDCA7F7E107CFE3D0064466D /* PBXTargetDependency */,
 				DDE7055410711E8100563825 /* PBXTargetDependency */,
 				DDE7055010711E8100563825 /* PBXTargetDependency */,
 				DDE7055210711E8100563825 /* PBXTargetDependency */,
@@ -5047,6 +5055,11 @@
 			target = DD08161A106C19580007E433 /* dce */;
 			targetProxy = DDC99980107AB91A00330A72 /* PBXContainerItemProxy */;
 		};
+		DDCA7F7E107CFE3D0064466D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD08161A106C19580007E433 /* dce */;
+			targetProxy = DDCA7F7D107CFE3D0064466D /* PBXContainerItemProxy */;
+		};
 		DDCCFFE110740CEA0007183F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DD10F8C2106D7357005F1EF3 /* prot_ncadg_stubs */;
@@ -5226,6 +5239,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = NO;
 				INFOPLIST_FILE = "DCERPC-Info.plist";
 				INSTALL_PATH = /System/Library/Frameworks;
 				OTHER_LDFLAGS = "";
@@ -5252,6 +5266,7 @@
 				FRAMEWORK_VERSION = A;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_MODEL_TUNING = G5;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = NO;
 				INFOPLIST_FILE = "DCERPC-Info.plist";
 				INSTALL_PATH = /System/Library/Frameworks;
 				ONLY_ACTIVE_ARCH = NO;
