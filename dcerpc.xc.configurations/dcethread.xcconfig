@@ -1,0 +1,12 @@
+//
+//  dcethread.xcconfig
+//  dcerpc
+//
+//  Created by Brad Suinn on 9/29/09.
+//  Copyright 2009 Apple Inc. All rights reserved.
+//
+
+#include "base_config"
+
+HEADER_SEARCH_PATHS = $(HEADER_SEARCH_PATHS_BASE)
+GCC_PREPROCESSOR_DEFINITIONS = $(GCC_PREPROCESSOR_DEFINITIONS_BASE2) API

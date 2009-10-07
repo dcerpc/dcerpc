@@ -1,0 +1,20 @@
+//
+//  transports.xcconfig
+//  dcerpc
+//
+//  Created by Brad Suinn on 9/29/09.
+//  Copyright 2009 Apple Inc. All rights reserved.
+//
+
+#include "base_config"
+#include "rpc_paths"
+
+DYLIB_COMPATIBILITY_VERSION =
+DYLIB_CURRENT_VERSION =
+MACH_O_TYPE = mh_bundle
+EXECUTABLE_EXTENSION = so
+
+GCC_PREPROCESSOR_DEFINITIONS = $(GCC_PREPROCESSOR_DEFINITIONS_PATH2)
+HEADER_SEARCH_PATHS = $(HEADER_SEARCH_PATHS_BASE4)
+
+OTHER_LDFLAGS = -undefined dynamic_lookup

@@ -1,0 +1,9 @@
+#!/bin/sh
+if test ! -e "${SRCROOT}/dcerpc/configure"; then
+    cd "${SRCROOT}"
+    echo "Running buildconf and configure"
+    ./dcerpc/buildconf
+    ./dcerpc/configure
+else
+    echo "buildconf and configure have already been executed"
+fi
