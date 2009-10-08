@@ -116,7 +116,6 @@
 		DD0435C01076A12A0010E492 /* dummyfuncs.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAF84100408FC0080B762 /* dummyfuncs.c */; };
 		DD0435C11076A12A0010E492 /* mswrappers.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAF87100408FC0080B762 /* mswrappers.c */; };
 		DD0435C21076A12A0010E492 /* wc16str.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAF83100408FC0080B762 /* wc16str.c */; };
-		DD0435C31076A14E0010E492 /* dcerpc.h in Headers */ = {isa = PBXBuildFile; fileRef = DD3DB0D5100408FD0080B762 /* dcerpc.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DD0435DE1076A19C0010E492 /* libnaf_ip.so in Copy Modules */ = {isa = PBXBuildFile; fileRef = DD7FBDA41074061400B63C2A /* libnaf_ip.so */; };
 		DD0435E01076A19C0010E492 /* libprot_ncacn.so in Copy Modules */ = {isa = PBXBuildFile; fileRef = DDCCFFA810740B3A0007183F /* libprot_ncacn.so */; };
 		DD0435E11076A19C0010E492 /* libprot_ncadg.so in Copy Modules */ = {isa = PBXBuildFile; fileRef = DDCCFFDD10740CD50007183F /* libprot_ncadg.so */; };
@@ -198,15 +197,11 @@
 		DD95AA7510756C3800683E5B /* acf_l.l in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB029100408FC0080B762 /* acf_l.l */; };
 		DD95AA7610756C3800683E5B /* nidl_y.y in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB075100408FC0080B762 /* nidl_y.y */; };
 		DD95AA7710756C3800683E5B /* nidl_l.l in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB074100408FC0080B762 /* nidl_l.l */; };
-		DD9B4FF1107BF06B0074C2F5 /* baserpc.h in Copy compat headers */ = {isa = PBXBuildFile; fileRef = DD3DB0D3100408FD0080B762 /* baserpc.h */; };
-		DD9B4FF2107BF06B0074C2F5 /* dce2msrpc.h in Copy compat headers */ = {isa = PBXBuildFile; fileRef = DD3DB0D4100408FD0080B762 /* dce2msrpc.h */; };
-		DD9B4FF3107BF06B0074C2F5 /* dcerpc.h in Copy compat headers */ = {isa = PBXBuildFile; fileRef = DD3DB0D5100408FD0080B762 /* dcerpc.h */; };
-		DD9B4FF4107BF06B0074C2F5 /* dcerpc.idl.include in Copy compat headers */ = {isa = PBXBuildFile; fileRef = DD3DB0D6100408FD0080B762 /* dcerpc.idl.include */; };
-		DD9B4FF5107BF06B0074C2F5 /* mswrappers.h in Copy compat headers */ = {isa = PBXBuildFile; fileRef = DD3DB0D8100408FD0080B762 /* mswrappers.h */; };
-		DD9B4FF6107BF06B0074C2F5 /* rpcfields.h in Copy compat headers */ = {isa = PBXBuildFile; fileRef = DD3DB0D9100408FD0080B762 /* rpcfields.h */; };
-		DD9B4FF7107BF06B0074C2F5 /* rpcstatus.h in Copy compat headers */ = {isa = PBXBuildFile; fileRef = DD3DB0DA100408FD0080B762 /* rpcstatus.h */; };
 		DD9D320D107D51CF00FA8214 /* junk.c in Sources */ = {isa = PBXBuildFile; fileRef = DD9D320C107D51CF00FA8214 /* junk.c */; };
 		DD9D32C3107E345B00FA8214 /* DCERPC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD04350210769FDA0010E492 /* DCERPC.framework */; };
+		DDA1C015107E91CB004D2055 /* nidlmsg.m in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB077100408FC0080B762 /* nidlmsg.m */; };
+		DDA1C02F107E947F004D2055 /* dcerpc.m in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB200100408FD0080B762 /* dcerpc.m */; };
+		DDA1C037107E952B004D2055 /* junk.c in Create catalogs folders */ = {isa = PBXBuildFile; fileRef = DD9D320C107D51CF00FA8214 /* junk.c */; };
 		DDC99904107AA36600330A72 /* dceidl in Resources */ = {isa = PBXBuildFile; fileRef = DDDF3257106BD43400E6A9C2 /* dceidl */; };
 		DDC99930107AAD5600330A72 /* codesets.idl in Create dce header folder */ = {isa = PBXBuildFile; fileRef = DD3DB0E7100408FD0080B762 /* codesets.idl */; };
 		DDC99945107AB5E100330A72 /* dce.h in Copy darwin headers */ = {isa = PBXBuildFile; fileRef = DD3DB0EC100408FD0080B762 /* dce.h */; };
@@ -471,6 +466,28 @@
 				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE)_cstub.c",
 			);
 			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -cepv out ${SHARED_DERIVED_FILE_DIR}/dce ${INPUT_FILE_PATH}";
+		};
+		DDA1C022107E92B2004D2055 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.m";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"${SHARED_DERIVED_FILE_DIR}/idl.cat",
+			);
+			script = "gencat ${SHARED_DERIVED_FILE_DIR}/idl.cat ${INPUT_FILE_PATH}";
+		};
+		DDA1C030107E94B8004D2055 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.m";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"${SHARED_DERIVED_FILE_DIR}/${INPUT_FILE_BASE}.cat",
+			);
+			script = "gencat ${SHARED_DERIVED_FILE_DIR}/${INPUT_FILE_BASE}.cat ${INPUT_FILE_PATH}";
 		};
 		DDD41A42107261620002C71D /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -843,119 +860,119 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DD08161A106C19580007E433 /* dce */;
+			remoteGlobalIDString = DD08161A106C19580007E433;
 			remoteInfo = dce;
 		};
 		DDEFE5A9107E37C0006B8032 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DD04350110769FDA0010E492 /* DCERPC */;
+			remoteGlobalIDString = DD04350110769FDA0010E492;
 			remoteInfo = DCERPC;
 		};
 		DDEFE649107E37E6006B8032 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DD04350110769FDA0010E492 /* DCERPC */;
+			remoteGlobalIDString = DD04350110769FDA0010E492;
 			remoteInfo = DCERPC;
 		};
 		DDEFE64B107E37F3006B8032 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DD04350110769FDA0010E492 /* DCERPC */;
+			remoteGlobalIDString = DD04350110769FDA0010E492;
 			remoteInfo = DCERPC;
 		};
 		DDEFE652107E3807006B8032 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DD04350110769FDA0010E492 /* DCERPC */;
+			remoteGlobalIDString = DD04350110769FDA0010E492;
 			remoteInfo = DCERPC;
 		};
 		DDEFE67C107E3BAA006B8032 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DD08161A106C19580007E433 /* dce */;
+			remoteGlobalIDString = DD08161A106C19580007E433;
 			remoteInfo = dce;
 		};
 		DDEFE67E107E3BBA006B8032 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DD08161A106C19580007E433 /* dce */;
+			remoteGlobalIDString = DD08161A106C19580007E433;
 			remoteInfo = dce;
 		};
 		DDEFE680107E3BD4006B8032 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DD08161A106C19580007E433 /* dce */;
+			remoteGlobalIDString = DD08161A106C19580007E433;
 			remoteInfo = dce;
 		};
 		DDEFE684107E3BE6006B8032 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DD08161A106C19580007E433 /* dce */;
+			remoteGlobalIDString = DD08161A106C19580007E433;
 			remoteInfo = dce;
 		};
 		DDEFE686107E3BF0006B8032 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DD08161A106C19580007E433 /* dce */;
+			remoteGlobalIDString = DD08161A106C19580007E433;
 			remoteInfo = dce;
 		};
 		DDEFE688107E3C0E006B8032 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DD08161A106C19580007E433 /* dce */;
+			remoteGlobalIDString = DD08161A106C19580007E433;
 			remoteInfo = dce;
 		};
 		DDEFE68A107E3C16006B8032 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DD08161A106C19580007E433 /* dce */;
+			remoteGlobalIDString = DD08161A106C19580007E433;
 			remoteInfo = dce;
 		};
 		DDEFE68C107E3C25006B8032 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DD08161A106C19580007E433 /* dce */;
+			remoteGlobalIDString = DD08161A106C19580007E433;
 			remoteInfo = dce;
 		};
 		DDEFE68E107E3C2D006B8032 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DD08161A106C19580007E433 /* dce */;
+			remoteGlobalIDString = DD08161A106C19580007E433;
 			remoteInfo = dce;
 		};
 		DDEFE693107E3C35006B8032 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DD08161A106C19580007E433 /* dce */;
+			remoteGlobalIDString = DD08161A106C19580007E433;
 			remoteInfo = dce;
 		};
 		DDEFE695107E3C41006B8032 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DD08161A106C19580007E433 /* dce */;
+			remoteGlobalIDString = DD08161A106C19580007E433;
 			remoteInfo = dce;
 		};
 		DDEFE69C107E3CCE006B8032 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DDE017DD106C334200A5E41A /* uuid */;
+			remoteGlobalIDString = DDE017DD106C334200A5E41A;
 			remoteInfo = uuid;
 		};
 		DDFA60511074FA7E006A660C /* PBXContainerItemProxy */ = {
@@ -990,21 +1007,15 @@
 			name = "Copy Modules";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DD9B4FF0107BF0630074C2F5 /* Copy compat headers */ = {
+		DD9B4FF0107BF0630074C2F5 /* Create catalogs folders */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = DCERPC.framework/Versions/A/Headers/compat;
-			dstSubfolderSpec = 16;
+			dstPath = Catalogs;
+			dstSubfolderSpec = 7;
 			files = (
-				DD9B4FF1107BF06B0074C2F5 /* baserpc.h in Copy compat headers */,
-				DD9B4FF2107BF06B0074C2F5 /* dce2msrpc.h in Copy compat headers */,
-				DD9B4FF3107BF06B0074C2F5 /* dcerpc.h in Copy compat headers */,
-				DD9B4FF4107BF06B0074C2F5 /* dcerpc.idl.include in Copy compat headers */,
-				DD9B4FF5107BF06B0074C2F5 /* mswrappers.h in Copy compat headers */,
-				DD9B4FF6107BF06B0074C2F5 /* rpcfields.h in Copy compat headers */,
-				DD9B4FF7107BF06B0074C2F5 /* rpcstatus.h in Copy compat headers */,
+				DDA1C037107E952B004D2055 /* junk.c in Create catalogs folders */,
 			);
-			name = "Copy compat headers";
+			name = "Create catalogs folders";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		DDC99924107AACB500330A72 /* Create dce header folder */ = {
@@ -3468,7 +3479,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD0435C31076A14E0010E492 /* dcerpc.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3572,7 +3582,8 @@
 				DDC9990E107AA3FA00330A72 /* Copy dce headers */,
 				DDC99943107AB4F600330A72 /* Copy darwin headers */,
 				DDC99955107AB67800330A72 /* Copy generic headers */,
-				DD9B4FF0107BF0630074C2F5 /* Copy compat headers */,
+				DD9B4FF0107BF0630074C2F5 /* Create catalogs folders */,
+				DDA1C03B107E953D004D2055 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -3693,6 +3704,7 @@
 				DD10F5D4106D341E005F1EF3 /* Frameworks */,
 			);
 			buildRules = (
+				DDA1C030107E94B8004D2055 /* PBXBuildRule */,
 			);
 			dependencies = (
 				DD10F656106D3E55005F1EF3 /* PBXTargetDependency */,
@@ -3913,6 +3925,7 @@
 				DDDF3255106BD43400E6A9C2 /* Frameworks */,
 			);
 			buildRules = (
+				DDA1C022107E92B2004D2055 /* PBXBuildRule */,
 				DDDF32A2106BDBB500E6A9C2 /* PBXBuildRule */,
 				DDDF3330106BE50A00E6A9C2 /* PBXBuildRule */,
 				DDDF331F106BE2DA00E6A9C2 /* PBXBuildRule */,
@@ -4092,6 +4105,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		DDA1C03B107E953D004D2055 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${SRCROOT}/dcerpc.xc.configurations/copy_catalogs\n";
+		};
 		DDC9990E107AA3FA00330A72 /* Copy dce headers */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -4301,6 +4327,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DDA1C02F107E947F004D2055 /* dcerpc.m in Sources */,
 				DD10F5DA106D3450005F1EF3 /* comfork.c in Sources */,
 				DD10F5DB106D3450005F1EF3 /* mgmt.c in Sources */,
 				DD10F5DC106D3450005F1EF3 /* ndrglob.c in Sources */,
@@ -4466,6 +4493,7 @@
 				DD95AA7510756C3800683E5B /* acf_l.l in Sources */,
 				DD95AA7610756C3800683E5B /* nidl_y.y in Sources */,
 				DD95AA7710756C3800683E5B /* nidl_l.l in Sources */,
+				DDA1C015107E91CB004D2055 /* nidlmsg.m in Sources */,
 				DDDF3260106BD56500E6A9C2 /* astp_com.c in Sources */,
 				DDDF3261106BD56500E6A9C2 /* astp_cpx.c in Sources */,
 				DDDF3262106BD56500E6A9C2 /* astp_dmp.c in Sources */,

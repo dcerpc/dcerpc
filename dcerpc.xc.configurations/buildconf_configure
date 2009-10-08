@@ -3,7 +3,7 @@ if test ! -e "${SRCROOT}/dcerpc/configure"; then
     cd "${SRCROOT}/dcerpc"
     echo "Running buildconf and configure"
     ./buildconf
-    ./configure
+    ./configure --disable-dependency-tracking --enable-idldumpers
 else
     echo "buildconf and configure have already been executed"
 fi
