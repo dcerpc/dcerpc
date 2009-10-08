@@ -14,10 +14,8 @@
 			);
 			dependencies = (
 				DDFA60521074FA7E006A660C /* PBXTargetDependency */,
-				DD0FE8541074D8D5004AB68C /* PBXTargetDependency */,
 				DDEA1B511074FF5400C89B95 /* PBXTargetDependency */,
 				DD0FE8561074D8DE004AB68C /* PBXTargetDependency */,
-				DD0FE8581074D8F9004AB68C /* PBXTargetDependency */,
 				DD0FE86A1074D92C004AB68C /* PBXTargetDependency */,
 				DD0FE8681074D92C004AB68C /* PBXTargetDependency */,
 				DD0FE8661074D92C004AB68C /* PBXTargetDependency */,
@@ -207,6 +205,8 @@
 		DD9B4FF5107BF06B0074C2F5 /* mswrappers.h in Copy compat headers */ = {isa = PBXBuildFile; fileRef = DD3DB0D8100408FD0080B762 /* mswrappers.h */; };
 		DD9B4FF6107BF06B0074C2F5 /* rpcfields.h in Copy compat headers */ = {isa = PBXBuildFile; fileRef = DD3DB0D9100408FD0080B762 /* rpcfields.h */; };
 		DD9B4FF7107BF06B0074C2F5 /* rpcstatus.h in Copy compat headers */ = {isa = PBXBuildFile; fileRef = DD3DB0DA100408FD0080B762 /* rpcstatus.h */; };
+		DD9D320D107D51CF00FA8214 /* junk.c in Sources */ = {isa = PBXBuildFile; fileRef = DD9D320C107D51CF00FA8214 /* junk.c */; };
+		DD9D32C3107E345B00FA8214 /* DCERPC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD04350210769FDA0010E492 /* DCERPC.framework */; };
 		DDC99904107AA36600330A72 /* dceidl in Resources */ = {isa = PBXBuildFile; fileRef = DDDF3257106BD43400E6A9C2 /* dceidl */; };
 		DDC99930107AAD5600330A72 /* codesets.idl in Create dce header folder */ = {isa = PBXBuildFile; fileRef = DD3DB0E7100408FD0080B762 /* codesets.idl */; };
 		DDC99945107AB5E100330A72 /* dce.h in Copy darwin headers */ = {isa = PBXBuildFile; fileRef = DD3DB0EC100408FD0080B762 /* dce.h */; };
@@ -218,8 +218,6 @@
 		DDC99950107AB66F00330A72 /* ndrtypes.h in Copy generic headers */ = {isa = PBXBuildFile; fileRef = DD3DB102100408FD0080B762 /* ndrtypes.h */; };
 		DDCC001310740F400007183F /* gssauth.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2C8100408FD0080B762 /* gssauth.c */; };
 		DDCC001410740F400007183F /* gssauthcn.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2C9100408FD0080B762 /* gssauthcn.c */; };
-		DDCCFF8B10740A1E0007183F /* comsoc_smb.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1F2100408FD0080B762 /* comsoc_smb.c */; };
-		DDCCFF9B10740A7A0007183F /* SMBClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD38F1AB106976B200EEF3A7 /* SMBClient.framework */; };
 		DDCCFFB010740B970007183F /* cnassoc.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB29C100408FD0080B762 /* cnassoc.c */; };
 		DDCCFFB110740B970007183F /* cnbind.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB29D100408FD0080B762 /* cnbind.c */; };
 		DDCCFFB210740B970007183F /* cncall.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB29E100408FD0080B762 /* cncall.c */; };
@@ -287,78 +285,6 @@
 		DDDF30EC106AE4C400E6A9C2 /* libmain.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAFD2100408FC0080B762 /* libmain.c */; };
 		DDDF30ED106AE4C400E6A9C2 /* libyywrap.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAFD3100408FC0080B762 /* libyywrap.c */; };
 		DDDF3103106AE5AE00E6A9C2 /* libfl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDDF30E9106AE4AD00E6A9C2 /* libfl.a */; };
-		DDDF318E106AE9F500E6A9C2 /* dcethread_atfork.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB176100408FD0080B762 /* dcethread_atfork.c */; };
-		DDDF318F106AE9F500E6A9C2 /* dcethread_checkinterrupt.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB181100408FD0080B762 /* dcethread_checkinterrupt.c */; };
-		DDDF3190106AE9F500E6A9C2 /* dcethread_cond_wait.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB187100408FD0080B762 /* dcethread_cond_wait.c */; };
-		DDDF3191106AE9F500E6A9C2 /* dcethread_create.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB18A100408FD0080B762 /* dcethread_create.c */; };
-		DDDF3192106AE9F500E6A9C2 /* dcethread_detach.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB18C100408FD0080B762 /* dcethread_detach.c */; };
-		DDDF3193106AE9F500E6A9C2 /* dcethread_exit.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB195100408FD0080B762 /* dcethread_exit.c */; };
-		DDDF3194106AE9F500E6A9C2 /* dcethread_interrupt.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB19B100408FD0080B762 /* dcethread_interrupt.c */; };
-		DDDF3195106AE9F500E6A9C2 /* dcethread_join.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB19D100408FD0080B762 /* dcethread_join.c */; };
-		DDDF3196106AE9F500E6A9C2 /* dcethread_kill.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB19F100408FD0080B762 /* dcethread_kill.c */; };
-		DDDF3197106AE9F500E6A9C2 /* dcethread_pause.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1AB100408FD0080B762 /* dcethread_pause.c */; };
-		DDDF3198106AE9F500E6A9C2 /* dcethread_read.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1AC100408FD0080B762 /* dcethread_read.c */; };
-		DDDF3199106AE9F500E6A9C2 /* dcethread_recv.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1AD100408FD0080B762 /* dcethread_recv.c */; };
-		DDDF319A106AE9F500E6A9C2 /* dcethread_recvfrom.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1AE100408FD0080B762 /* dcethread_recvfrom.c */; };
-		DDDF319B106AE9F500E6A9C2 /* dcethread_recvmsg.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1AF100408FD0080B762 /* dcethread_recvmsg.c */; };
-		DDDF319C106AE9F500E6A9C2 /* dcethread_select.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1B0100408FD0080B762 /* dcethread_select.c */; };
-		DDDF319D106AE9F500E6A9C2 /* dcethread_send.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1B2100408FD0080B762 /* dcethread_send.c */; };
-		DDDF319E106AE9F500E6A9C2 /* dcethread_sendmsg.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1B3100408FD0080B762 /* dcethread_sendmsg.c */; };
-		DDDF319F106AE9F500E6A9C2 /* dcethread_sendto.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1B4100408FD0080B762 /* dcethread_sendto.c */; };
-		DDDF31A0106AE9F500E6A9C2 /* dcethread_write.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1B9100408FD0080B762 /* dcethread_write.c */; };
-		DDDF31A7106AEB8100E6A9C2 /* dcethread-debug.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB16C100408FD0080B762 /* dcethread-debug.c */; };
-		DDDF31A8106AEB8100E6A9C2 /* dcethread-exception.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB16E100408FD0080B762 /* dcethread-exception.c */; };
-		DDDF31A9106AEB8100E6A9C2 /* dcethread-private.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB170100408FD0080B762 /* dcethread-private.c */; };
-		DDDF31AA106AEB8100E6A9C2 /* dcethread-util.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB174100408FD0080B762 /* dcethread-util.c */; };
-		DDDF31AB106AEB8100E6A9C2 /* dcethread_attr_create.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB177100408FD0080B762 /* dcethread_attr_create.c */; };
-		DDDF31AC106AEB8100E6A9C2 /* dcethread_attr_delete.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB178100408FD0080B762 /* dcethread_attr_delete.c */; };
-		DDDF31AD106AEB8100E6A9C2 /* dcethread_attr_getinheritsched.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB179100408FD0080B762 /* dcethread_attr_getinheritsched.c */; };
-		DDDF31AE106AEB8100E6A9C2 /* dcethread_attr_getprio.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB17A100408FD0080B762 /* dcethread_attr_getprio.c */; };
-		DDDF31AF106AEB8100E6A9C2 /* dcethread_attr_getsched.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB17B100408FD0080B762 /* dcethread_attr_getsched.c */; };
-		DDDF31B0106AEB8100E6A9C2 /* dcethread_attr_getstacksize.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB17C100408FD0080B762 /* dcethread_attr_getstacksize.c */; };
-		DDDF31B1106AEB8100E6A9C2 /* dcethread_attr_setinheritsched.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB17D100408FD0080B762 /* dcethread_attr_setinheritsched.c */; };
-		DDDF31B2106AEB8100E6A9C2 /* dcethread_attr_setprio.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB17E100408FD0080B762 /* dcethread_attr_setprio.c */; };
-		DDDF31B3106AEB8100E6A9C2 /* dcethread_attr_setsched.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB17F100408FD0080B762 /* dcethread_attr_setsched.c */; };
-		DDDF31B4106AEB8100E6A9C2 /* dcethread_attr_setstacksize.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB180100408FD0080B762 /* dcethread_attr_setstacksize.c */; };
-		DDDF31B5106AEB8100E6A9C2 /* dcethread_cond_destroy.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB183100408FD0080B762 /* dcethread_cond_destroy.c */; };
-		DDDF31B6106AEB8100E6A9C2 /* dcethread_cond_init.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB184100408FD0080B762 /* dcethread_cond_init.c */; };
-		DDDF31B7106AEB8100E6A9C2 /* dcethread_cond_signal.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB185100408FD0080B762 /* dcethread_cond_signal.c */; };
-		DDDF31B8106AEB8100E6A9C2 /* dcethread_cond_timedwait.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB186100408FD0080B762 /* dcethread_cond_timedwait.c */; };
-		DDDF31B9106AEB8100E6A9C2 /* dcethread_condattr_create.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB188100408FD0080B762 /* dcethread_condattr_create.c */; };
-		DDDF31BA106AEB8100E6A9C2 /* dcethread_condattr_delete.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB189100408FD0080B762 /* dcethread_condattr_delete.c */; };
-		DDDF31BB106AEB8100E6A9C2 /* dcethread_delay.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB18B100408FD0080B762 /* dcethread_delay.c */; };
-		DDDF31BC106AEB8100E6A9C2 /* dcethread_enableasync.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB18D100408FD0080B762 /* dcethread_enableasync.c */; };
-		DDDF31BD106AEB8100E6A9C2 /* dcethread_enableinterrupt.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB18E100408FD0080B762 /* dcethread_enableinterrupt.c */; };
-		DDDF31BE106AEB8100E6A9C2 /* dcethread_equal.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB18F100408FD0080B762 /* dcethread_equal.c */; };
-		DDDF31BF106AEB8100E6A9C2 /* dcethread_exc_getstatus.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB190100408FD0080B762 /* dcethread_exc_getstatus.c */; };
-		DDDF31C0106AEB8100E6A9C2 /* dcethread_exc_init.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB191100408FD0080B762 /* dcethread_exc_init.c */; };
-		DDDF31C1106AEB8100E6A9C2 /* dcethread_exc_matches.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB192100408FD0080B762 /* dcethread_exc_matches.c */; };
-		DDDF31C2106AEB8100E6A9C2 /* dcethread_exc_raise.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB193100408FD0080B762 /* dcethread_exc_raise.c */; };
-		DDDF31C3106AEB8100E6A9C2 /* dcethread_exc_setstatus.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB194100408FD0080B762 /* dcethread_exc_setstatus.c */; };
-		DDDF31C4106AEB8100E6A9C2 /* dcethread_frame_pop.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB196100408FD0080B762 /* dcethread_frame_pop.c */; };
-		DDDF31C5106AEB8100E6A9C2 /* dcethread_frame_push.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB197100408FD0080B762 /* dcethread_frame_push.c */; };
-		DDDF31C6106AEB8100E6A9C2 /* dcethread_get_expiration.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB198100408FD0080B762 /* dcethread_get_expiration.c */; };
-		DDDF31C7106AEB8100E6A9C2 /* dcethread_getprio.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB199100408FD0080B762 /* dcethread_getprio.c */; };
-		DDDF31C8106AEB8100E6A9C2 /* dcethread_getspecific.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB19A100408FD0080B762 /* dcethread_getspecific.c */; };
-		DDDF31C9106AEB8100E6A9C2 /* dcethread_ismultithreaded.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB19C100408FD0080B762 /* dcethread_ismultithreaded.c */; };
-		DDDF31CA106AEB8100E6A9C2 /* dcethread_keycreate.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB19E100408FD0080B762 /* dcethread_keycreate.c */; };
-		DDDF31CB106AEB8100E6A9C2 /* dcethread_lock_global.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1A0100408FD0080B762 /* dcethread_lock_global.c */; };
-		DDDF31CC106AEB8100E6A9C2 /* dcethread_mutex_destroy.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1A1100408FD0080B762 /* dcethread_mutex_destroy.c */; };
-		DDDF31CD106AEB8100E6A9C2 /* dcethread_mutex_init.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1A2100408FD0080B762 /* dcethread_mutex_init.c */; };
-		DDDF31CE106AEB8100E6A9C2 /* dcethread_mutex_lock.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1A3100408FD0080B762 /* dcethread_mutex_lock.c */; };
-		DDDF31CF106AEB8100E6A9C2 /* dcethread_mutex_trylock.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1A4100408FD0080B762 /* dcethread_mutex_trylock.c */; };
-		DDDF31D0106AEB8100E6A9C2 /* dcethread_mutex_unlock.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1A5100408FD0080B762 /* dcethread_mutex_unlock.c */; };
-		DDDF31D1106AEB8100E6A9C2 /* dcethread_mutexattr_create.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1A6100408FD0080B762 /* dcethread_mutexattr_create.c */; };
-		DDDF31D2106AEB8100E6A9C2 /* dcethread_mutexattr_delete.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1A7100408FD0080B762 /* dcethread_mutexattr_delete.c */; };
-		DDDF31D3106AEB8100E6A9C2 /* dcethread_mutexattr_getkind.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1A8100408FD0080B762 /* dcethread_mutexattr_getkind.c */; };
-		DDDF31D4106AEB8100E6A9C2 /* dcethread_mutexattr_setkind.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1A9100408FD0080B762 /* dcethread_mutexattr_setkind.c */; };
-		DDDF31D5106AEB8100E6A9C2 /* dcethread_once.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1AA100408FD0080B762 /* dcethread_once.c */; };
-		DDDF31D6106AEB8100E6A9C2 /* dcethread_self.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1B1100408FD0080B762 /* dcethread_self.c */; };
-		DDDF31D7106AEB8100E6A9C2 /* dcethread_setprio.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1B5100408FD0080B762 /* dcethread_setprio.c */; };
-		DDDF31D8106AEB8100E6A9C2 /* dcethread_setspecific.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1B6100408FD0080B762 /* dcethread_setspecific.c */; };
-		DDDF31D9106AEB8100E6A9C2 /* dcethread_signal_to_interrupt.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1B7100408FD0080B762 /* dcethread_signal_to_interrupt.c */; };
-		DDDF31DA106AEB8100E6A9C2 /* dcethread_unlock_global.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1B8100408FD0080B762 /* dcethread_unlock_global.c */; };
-		DDDF31DB106AEB8100E6A9C2 /* dcethread_yield.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1BA100408FD0080B762 /* dcethread_yield.c */; };
 		DDDF3260106BD56500E6A9C2 /* astp_com.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB02D100408FC0080B762 /* astp_com.c */; };
 		DDDF3261106BD56500E6A9C2 /* astp_cpx.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB02E100408FC0080B762 /* astp_cpx.c */; };
 		DDDF3262106BD56500E6A9C2 /* astp_dmp.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB02F100408FC0080B762 /* astp_dmp.c */; };
@@ -465,33 +391,19 @@
 		DDE7047A10710FB500563825 /* rpcdsliv.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB295100408FD0080B762 /* rpcdsliv.c */; };
 		DDE7047B10710FB500563825 /* rpcdutil.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB296100408FD0080B762 /* rpcdutil.c */; };
 		DDE704B61071140300563825 /* libuuid.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE017DE106C334200A5E41A /* libuuid.a */; };
-		DDE704B71071140800563825 /* libdcethread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DDDF3132106AE68900E6A9C2 /* libdcethread.dylib */; };
 		DDE704EB1071199C00563825 /* echo_server.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAFA8100408FC0080B762 /* echo_server.c */; };
 		DDE704EC1071199C00563825 /* misc.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAFAD100408FC0080B762 /* misc.c */; };
 		DDE7051810711B8800563825 /* libuuid.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE017DE106C334200A5E41A /* libuuid.a */; };
-		DDE7054A10711E4F00563825 /* dummyfuncs.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAF84100408FC0080B762 /* dummyfuncs.c */; };
-		DDE7054B10711E5200563825 /* mswrappers.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAF87100408FC0080B762 /* mswrappers.c */; };
-		DDE7054C10711E5500563825 /* wc16str.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAF83100408FC0080B762 /* wc16str.c */; };
-		DDE7055510711E9900563825 /* libdcethread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DDDF3132106AE68900E6A9C2 /* libdcethread.dylib */; };
-		DDE7055610711E9900563825 /* libidl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE0178F106C2FFD00A5E41A /* libidl.a */; };
-		DDE7055710711E9900563825 /* libnck.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F5D6106D341E005F1EF3 /* libnck.a */; };
-		DDE7055810711E9900563825 /* libuuid.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE017DE106C334200A5E41A /* libuuid.a */; };
-		DDE7055910711EBC00563825 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F7EC106D6DA7005F1EF3 /* CoreFoundation.framework */; };
-		DDE705A31071553000563825 /* dcethread_cond_broadcast.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB182100408FD0080B762 /* dcethread_cond_broadcast.c */; };
-		DDE7062B107163C500563825 /* libdcerpc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE7054610711E1800563825 /* libdcerpc.dylib */; };
-		DDE70630107163DD00563825 /* libdcerpc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE7054610711E1800563825 /* libdcerpc.dylib */; };
-		DDE7063A1071643E00563825 /* libdcethread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DDDF3132106AE68900E6A9C2 /* libdcethread.dylib */; };
+		DDEFE5AB107E37C9006B8032 /* DCERPC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD04350210769FDA0010E492 /* DCERPC.framework */; };
+		DDEFE5FB107E37DB006B8032 /* DCERPC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD04350210769FDA0010E492 /* DCERPC.framework */; };
+		DDEFE64D107E37F8006B8032 /* DCERPC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD04350210769FDA0010E492 /* DCERPC.framework */; };
+		DDEFE654107E380B006B8032 /* DCERPC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD04350210769FDA0010E492 /* DCERPC.framework */; };
 		DDFD942010723777008E776F /* comep.c in Sources */ = {isa = PBXBuildFile; fileRef = DDFD941E1072371E008E776F /* comep.c */; };
-		DDFD943A1072380D008E776F /* comep.c in Sources */ = {isa = PBXBuildFile; fileRef = DDFD941E1072371E008E776F /* comep.c */; };
 		DDFD947410723C37008E776F /* echo.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAFA6100408FC0080B762 /* echo.idl */; };
 		DDFD947510723C3A008E776F /* misc.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAFAD100408FC0080B762 /* misc.c */; };
 		DDFD947710723C4C008E776F /* echo_client.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAFA7100408FC0080B762 /* echo_client.c */; };
-		DDFD948B10723D0D008E776F /* libdcerpc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE7054610711E1800563825 /* libdcerpc.dylib */; };
-		DDFD948C10723D0D008E776F /* libdcethread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DDDF3132106AE68900E6A9C2 /* libdcethread.dylib */; };
 		DDFD948D10723D0D008E776F /* libuuid.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE017DE106C334200A5E41A /* libuuid.a */; };
 		DDFD949D10723ECD008E776F /* epstatus.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB299100408FD0080B762 /* epstatus.c */; };
-		DDFD94A510723F8A008E776F /* libdcerpc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE7054610711E1800563825 /* libdcerpc.dylib */; };
-		DDFD94A610723F8A008E776F /* libdcethread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DDDF3132106AE68900E6A9C2 /* libdcethread.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -738,26 +650,12 @@
 			remoteGlobalIDString = DDCC000C10740EA40007183F;
 			remoteInfo = auth_gss_negotiate;
 		};
-		DD0FE8531074D8D5004AB68C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDDF3131106AE68900E6A9C2;
-			remoteInfo = dcethread;
-		};
 		DD0FE8551074D8DE004AB68C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = DD08161A106C19580007E433;
 			remoteInfo = dce;
-		};
-		DD0FE8571074D8F9004AB68C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDE7054510711E1800563825;
-			remoteInfo = dcerpc;
 		};
 		DD0FE8591074D92C004AB68C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -878,21 +776,14 @@
 			remoteGlobalIDString = DDDF3256106BD43400E6A9C2;
 			remoteInfo = dceidl;
 		};
-		DD10F6B9106D6636005F1EF3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDDF3256106BD43400E6A9C2;
-			remoteInfo = dceidl;
-		};
-		DD10F8CE106D742F005F1EF3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDDF3256106BD43400E6A9C2;
-			remoteInfo = dceidl;
-		};
 		DD9B505E107BF2B40074C2F5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD04350110769FDA0010E492;
+			remoteInfo = DCERPC;
+		};
+		DD9D32C5107E346600FA8214 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
@@ -906,47 +797,12 @@
 			remoteGlobalIDString = DD08161A106C19580007E433;
 			remoteInfo = dce;
 		};
-		DDCA7F7D107CFE3D0064466D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DD08161A106C19580007E433;
-			remoteInfo = dce;
-		};
 		DDCCFFE010740CEA0007183F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = DD10F8C2106D7357005F1EF3;
 			remoteInfo = prot_ncadg_stubs;
-		};
-		DDD41A1610725BBF0002C71D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDDF3256106BD43400E6A9C2;
-			remoteInfo = dceidl;
-		};
-		DDD41A58107264820002C71D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDDF3256106BD43400E6A9C2;
-			remoteInfo = dceidl;
-		};
-		DDD41A5A107264950002C71D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDDF3256106BD43400E6A9C2;
-			remoteInfo = dceidl;
-		};
-		DDD41A5C1072649E0002C71D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDDF3256106BD43400E6A9C2;
-			remoteInfo = dceidl;
 		};
 		DDD80A501075663800956CF0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -969,75 +825,12 @@
 			remoteGlobalIDString = DDD80AB510756A0D00956CF0;
 			remoteInfo = echo_stubs;
 		};
-		DDE704B1107113E900563825 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDE017DD106C334200A5E41A;
-			remoteInfo = uuid;
-		};
-		DDE704B3107113F300563825 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDDF3131106AE68900E6A9C2;
-			remoteInfo = dcethread;
-		};
 		DDE7051410711B7600563825 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = DDE017DD106C334200A5E41A;
 			remoteInfo = uuid;
-		};
-		DDE7054D10711E8100563825 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDDF3131106AE68900E6A9C2;
-			remoteInfo = dcethread;
-		};
-		DDE7054F10711E8100563825 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDE0178E106C2FFD00A5E41A;
-			remoteInfo = idl;
-		};
-		DDE7055110711E8100563825 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDE017DD106C334200A5E41A;
-			remoteInfo = uuid;
-		};
-		DDE7055310711E8100563825 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DD10F5D5106D341E005F1EF3;
-			remoteInfo = nck;
-		};
-		DDE70629107163B800563825 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDE7054510711E1800563825;
-			remoteInfo = dcerpc;
-		};
-		DDE7062E107163D700563825 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDE7054510711E1800563825;
-			remoteInfo = dcerpc;
-		};
-		DDE706381071643800563825 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDDF3131106AE68900E6A9C2;
-			remoteInfo = dcethread;
 		};
 		DDEA1B501074FF5400C89B95 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1046,6 +839,125 @@
 			remoteGlobalIDString = DDDF3256106BD43400E6A9C2;
 			remoteInfo = dceidl;
 		};
+		DDEFE59D107E35E2006B8032 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD08161A106C19580007E433 /* dce */;
+			remoteInfo = dce;
+		};
+		DDEFE5A9107E37C0006B8032 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD04350110769FDA0010E492 /* DCERPC */;
+			remoteInfo = DCERPC;
+		};
+		DDEFE649107E37E6006B8032 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD04350110769FDA0010E492 /* DCERPC */;
+			remoteInfo = DCERPC;
+		};
+		DDEFE64B107E37F3006B8032 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD04350110769FDA0010E492 /* DCERPC */;
+			remoteInfo = DCERPC;
+		};
+		DDEFE652107E3807006B8032 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD04350110769FDA0010E492 /* DCERPC */;
+			remoteInfo = DCERPC;
+		};
+		DDEFE67C107E3BAA006B8032 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD08161A106C19580007E433 /* dce */;
+			remoteInfo = dce;
+		};
+		DDEFE67E107E3BBA006B8032 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD08161A106C19580007E433 /* dce */;
+			remoteInfo = dce;
+		};
+		DDEFE680107E3BD4006B8032 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD08161A106C19580007E433 /* dce */;
+			remoteInfo = dce;
+		};
+		DDEFE684107E3BE6006B8032 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD08161A106C19580007E433 /* dce */;
+			remoteInfo = dce;
+		};
+		DDEFE686107E3BF0006B8032 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD08161A106C19580007E433 /* dce */;
+			remoteInfo = dce;
+		};
+		DDEFE688107E3C0E006B8032 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD08161A106C19580007E433 /* dce */;
+			remoteInfo = dce;
+		};
+		DDEFE68A107E3C16006B8032 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD08161A106C19580007E433 /* dce */;
+			remoteInfo = dce;
+		};
+		DDEFE68C107E3C25006B8032 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD08161A106C19580007E433 /* dce */;
+			remoteInfo = dce;
+		};
+		DDEFE68E107E3C2D006B8032 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD08161A106C19580007E433 /* dce */;
+			remoteInfo = dce;
+		};
+		DDEFE693107E3C35006B8032 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD08161A106C19580007E433 /* dce */;
+			remoteInfo = dce;
+		};
+		DDEFE695107E3C41006B8032 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD08161A106C19580007E433 /* dce */;
+			remoteInfo = dce;
+		};
+		DDEFE69C107E3CCE006B8032 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DDE017DD106C334200A5E41A /* uuid */;
+			remoteInfo = uuid;
+		};
 		DDFA60511074FA7E006A660C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
@@ -1053,40 +965,12 @@
 			remoteGlobalIDString = DDDF303C106ADA4D00E6A9C2;
 			remoteInfo = flex;
 		};
-		DDFD948510723CF7008E776F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDDF3131106AE68900E6A9C2;
-			remoteInfo = dcethread;
-		};
 		DDFD948710723CF7008E776F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = DDE017DD106C334200A5E41A;
 			remoteInfo = uuid;
-		};
-		DDFD948910723CF7008E776F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDE7054510711E1800563825;
-			remoteInfo = dcerpc;
-		};
-		DDFD94A110723F83008E776F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDDF3131106AE68900E6A9C2;
-			remoteInfo = dcethread;
-		};
-		DDFD94A310723F83008E776F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDE7054510711E1800563825;
-			remoteInfo = dcerpc;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -1971,6 +1855,7 @@
 		DD88285F1073160C00FBF62B /* auth_gss_negotiate.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = auth_gss_negotiate.xcconfig; path = dcerpc.xc.configurations/auth_gss_negotiate.xcconfig; sourceTree = "<group>"; };
 		DD8828621073163F00FBF62B /* dcerpcd.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = dcerpcd.xcconfig; path = dcerpc.xc.configurations/dcerpcd.xcconfig; sourceTree = "<group>"; };
 		DD88286A1073189700FBF62B /* rpc_paths.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = rpc_paths.xcconfig; path = dcerpc.xc.configurations/rpc_paths.xcconfig; sourceTree = "<group>"; };
+		DD9D320C107D51CF00FA8214 /* junk.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = junk.c; path = dcerpc.xc.configurations/junk.c; sourceTree = "<group>"; };
 		DDB66DA2107BE3310095CBC1 /* base_config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = base_config.xcconfig; path = dcerpc.xc.configurations/base_config.xcconfig; sourceTree = "<group>"; };
 		DDCC000D10740EA40007183F /* libauth_gss_negotiate.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libauth_gss_negotiate.so; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDCCFFA810740B3A0007183F /* libprot_ncacn.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libprot_ncacn.so; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1979,13 +1864,11 @@
 		DDD80AB610756A0D00956CF0 /* libecho_stubs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libecho_stubs.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDDF303D106ADA4D00E6A9C2 /* flex */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = flex; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDDF30E9106AE4AD00E6A9C2 /* libfl.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libfl.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		DDDF3132106AE68900E6A9C2 /* libdcethread.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libdcethread.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDDF3257106BD43400E6A9C2 /* dceidl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = dceidl; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDE0178F106C2FFD00A5E41A /* libidl.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libidl.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDE017DE106C334200A5E41A /* libuuid.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libuuid.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDE7046310710F5100563825 /* dcerpcd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = dcerpcd; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDE704E51071196F00563825 /* echo_server */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = echo_server; sourceTree = BUILT_PRODUCTS_DIR; };
-		DDE7054610711E1800563825 /* libdcerpc.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libdcerpc.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDFD941E1072371E008E776F /* comep.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = comep.c; sourceTree = "<group>"; };
 		DDFD946F10723BEB008E776F /* echo_client */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = echo_client; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDFD949910723EB5008E776F /* epstatus */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = epstatus; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2114,6 +1997,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DDEFE5AB107E37C9006B8032 /* DCERPC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2126,13 +2010,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		DDDF30E7106AE4AD00E6A9C2 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DDDF3130106AE68900E6A9C2 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2164,9 +2041,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DD9D32C3107E345B00FA8214 /* DCERPC.framework in Frameworks */,
 				DDE704B61071140300563825 /* libuuid.a in Frameworks */,
-				DDE704B71071140800563825 /* libdcethread.dylib in Frameworks */,
-				DDE7062B107163C500563825 /* libdcerpc.dylib in Frameworks */,
 				DDD80A521075664800956CF0 /* libdcerpdc_stubs.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2176,22 +2052,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				DDE7051810711B8800563825 /* libuuid.a in Frameworks */,
-				DDE70630107163DD00563825 /* libdcerpc.dylib in Frameworks */,
-				DDE7063A1071643E00563825 /* libdcethread.dylib in Frameworks */,
 				DDD80ABE10756AAA00956CF0 /* libecho_stubs.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DDE7054410711E1800563825 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DDE7055510711E9900563825 /* libdcethread.dylib in Frameworks */,
-				DDE7055610711E9900563825 /* libidl.a in Frameworks */,
-				DDE7055710711E9900563825 /* libnck.a in Frameworks */,
-				DDE7055810711E9900563825 /* libuuid.a in Frameworks */,
-				DDE7055910711EBC00563825 /* CoreFoundation.framework in Frameworks */,
-				DDCCFF9B10740A7A0007183F /* SMBClient.framework in Frameworks */,
+				DDEFE5FB107E37DB006B8032 /* DCERPC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2199,10 +2061,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DDFD948B10723D0D008E776F /* libdcerpc.dylib in Frameworks */,
-				DDFD948C10723D0D008E776F /* libdcethread.dylib in Frameworks */,
 				DDFD948D10723D0D008E776F /* libuuid.a in Frameworks */,
 				DDD80ACF10756AF500956CF0 /* libecho_stubs.a in Frameworks */,
+				DDEFE64D107E37F8006B8032 /* DCERPC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2210,8 +2071,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DDFD94A510723F8A008E776F /* libdcerpc.dylib in Frameworks */,
-				DDFD94A610723F8A008E776F /* libdcethread.dylib in Frameworks */,
+				DDEFE654107E380B006B8032 /* DCERPC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2223,7 +2083,6 @@
 			children = (
 				DDDF303D106ADA4D00E6A9C2 /* flex */,
 				DDDF30E9106AE4AD00E6A9C2 /* libfl.a */,
-				DDDF3132106AE68900E6A9C2 /* libdcethread.dylib */,
 				DDDF3257106BD43400E6A9C2 /* dceidl */,
 				DD08161B106C19580007E433 /* dce */,
 				DDE0178F106C2FFD00A5E41A /* libidl.a */,
@@ -2233,7 +2092,6 @@
 				DD10F582106D2E62005F1EF3 /* librpc.a */,
 				DD10F5A1106D321F005F1EF3 /* libtrans.a */,
 				DD10F5D6106D341E005F1EF3 /* libnck.a */,
-				DDE7054610711E1800563825 /* libdcerpc.dylib */,
 				DD10F5EA106D3528005F1EF3 /* libmgmt_stubs.a */,
 				DD10F8C3106D7357005F1EF3 /* libprot_ncadg_stubs.a */,
 				DDE7046310710F5100563825 /* dcerpcd */,
@@ -3588,6 +3446,7 @@
 				DD88285F1073160C00FBF62B /* auth_gss_negotiate.xcconfig */,
 				DD8828621073163F00FBF62B /* dcerpcd.xcconfig */,
 				DD04350B10769FF80010E492 /* dcerpc_framework.xcconfig */,
+				DD9D320C107D51CF00FA8214 /* junk.c */,
 			);
 			name = ConfigurationFiles;
 			sourceTree = "<group>";
@@ -3683,13 +3542,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DDDF312E106AE68900E6A9C2 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		DDE0178B106C2FFD00A5E41A /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -3698,13 +3550,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		DDE017DA106C334200A5E41A /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DDE7054210711E1800563825 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3796,7 +3641,7 @@
 				DD10F4D8106D259A005F1EF3 /* PBXBuildRule */,
 			);
 			dependencies = (
-				DDD41A1710725BBF0002C71D /* PBXTargetDependency */,
+				DDEFE67F107E3BBA006B8032 /* PBXTargetDependency */,
 			);
 			name = stubs;
 			productName = stubs;
@@ -3814,6 +3659,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				DDEFE681107E3BD4006B8032 /* PBXTargetDependency */,
 			);
 			name = rpc;
 			productName = rpc;
@@ -3831,6 +3677,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				DDEFE685107E3BE6006B8032 /* PBXTargetDependency */,
 			);
 			name = trans;
 			productName = trans;
@@ -3870,7 +3717,7 @@
 				DD10F5F7106D3629005F1EF3 /* PBXBuildRule */,
 			);
 			dependencies = (
-				DD10F6BA106D6636005F1EF3 /* PBXTargetDependency */,
+				DDEFE687107E3BF0006B8032 /* PBXTargetDependency */,
 			);
 			name = mgmt_stubs;
 			productName = mgmt_stubs;
@@ -3890,7 +3737,7 @@
 				DD10F8D0106D7461005F1EF3 /* PBXBuildRule */,
 			);
 			dependencies = (
-				DD10F8CF106D742F005F1EF3 /* PBXTargetDependency */,
+				DDEFE68B107E3C16006B8032 /* PBXTargetDependency */,
 			);
 			name = prot_ncadg_stubs;
 			productName = prot_ncadg_stubs;
@@ -3907,6 +3754,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				DDEFE68D107E3C25006B8032 /* PBXTargetDependency */,
 			);
 			name = naf_ip;
 			productName = naf_ip;
@@ -3923,6 +3771,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				DDEFE68F107E3C2D006B8032 /* PBXTargetDependency */,
 			);
 			name = naf_np;
 			productName = naf_np;
@@ -3939,6 +3788,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				DDEFE694107E3C35006B8032 /* PBXTargetDependency */,
 			);
 			name = auth_gss_negotiate;
 			productName = auth_gss_negotiate;
@@ -3955,6 +3805,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				DDEFE689107E3C0E006B8032 /* PBXTargetDependency */,
 			);
 			name = prot_ncacn;
 			productName = prot_ncacn;
@@ -3992,6 +3843,7 @@
 				DDD80A261075636F00956CF0 /* PBXBuildRule */,
 			);
 			dependencies = (
+				DDEFE696107E3C41006B8032 /* PBXTargetDependency */,
 			);
 			name = dcerpdc_stubs;
 			productName = dcerpdc_stubs;
@@ -4010,6 +3862,7 @@
 				DDD80ABA10756A9D00956CF0 /* PBXBuildRule */,
 			);
 			dependencies = (
+				DDEFE5AA107E37C0006B8032 /* PBXTargetDependency */,
 			);
 			name = echo_stubs;
 			productName = echo_stubs;
@@ -4052,23 +3905,6 @@
 			productReference = DDDF30E9106AE4AD00E6A9C2 /* libfl.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		DDDF3131106AE68900E6A9C2 /* dcethread */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = DDDF3135106AE6A800E6A9C2 /* Build configuration list for PBXNativeTarget "dcethread" */;
-			buildPhases = (
-				DDDF312E106AE68900E6A9C2 /* Headers */,
-				DDDF312F106AE68900E6A9C2 /* Sources */,
-				DDDF3130106AE68900E6A9C2 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = dcethread;
-			productName = dcethread;
-			productReference = DDDF3132106AE68900E6A9C2 /* libdcethread.dylib */;
-			productType = "com.apple.product-type.library.dynamic";
-		};
 		DDDF3256106BD43400E6A9C2 /* dceidl */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DDDF325B106BD45300E6A9C2 /* Build configuration list for PBXNativeTarget "dceidl" */;
@@ -4100,6 +3936,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				DDEFE67D107E3BAA006B8032 /* PBXTargetDependency */,
 			);
 			name = idl;
 			productName = idl;
@@ -4117,6 +3954,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				DDEFE59E107E35E2006B8032 /* PBXTargetDependency */,
 			);
 			name = uuid;
 			productName = uuid;
@@ -4133,11 +3971,9 @@
 			buildRules = (
 			);
 			dependencies = (
-				DDE704B2107113E900563825 /* PBXTargetDependency */,
-				DDE704B4107113F300563825 /* PBXTargetDependency */,
-				DDE7062A107163B800563825 /* PBXTargetDependency */,
-				DDD41A59107264820002C71D /* PBXTargetDependency */,
 				DDD80A511075663800956CF0 /* PBXTargetDependency */,
+				DD9D32C6107E346600FA8214 /* PBXTargetDependency */,
+				DDEFE69D107E3CCE006B8032 /* PBXTargetDependency */,
 			);
 			name = dcerpcd;
 			productName = dcerpcd;
@@ -4156,37 +3992,13 @@
 			);
 			dependencies = (
 				DDE7051510711B7600563825 /* PBXTargetDependency */,
-				DDE7062F107163D700563825 /* PBXTargetDependency */,
-				DDE706391071643800563825 /* PBXTargetDependency */,
-				DDD41A5B107264950002C71D /* PBXTargetDependency */,
 				DDD80ABD10756AA200956CF0 /* PBXTargetDependency */,
+				DDEFE64A107E37E6006B8032 /* PBXTargetDependency */,
 			);
 			name = echo_server;
 			productName = echo_server;
 			productReference = DDE704E51071196F00563825 /* echo_server */;
 			productType = "com.apple.product-type.tool";
-		};
-		DDE7054510711E1800563825 /* dcerpc */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = DDE7054910711E3800563825 /* Build configuration list for PBXNativeTarget "dcerpc" */;
-			buildPhases = (
-				DDE7054210711E1800563825 /* Headers */,
-				DDE7054310711E1800563825 /* Sources */,
-				DDE7054410711E1800563825 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				DDCA7F7E107CFE3D0064466D /* PBXTargetDependency */,
-				DDE7055410711E8100563825 /* PBXTargetDependency */,
-				DDE7055010711E8100563825 /* PBXTargetDependency */,
-				DDE7055210711E8100563825 /* PBXTargetDependency */,
-				DDE7054E10711E8100563825 /* PBXTargetDependency */,
-			);
-			name = dcerpc;
-			productName = dcerpc;
-			productReference = DDE7054610711E1800563825 /* libdcerpc.dylib */;
-			productType = "com.apple.product-type.library.dynamic";
 		};
 		DDFD946E10723BEB008E776F /* echo_client */ = {
 			isa = PBXNativeTarget;
@@ -4199,11 +4011,9 @@
 				DDFD948010723CAB008E776F /* PBXBuildRule */,
 			);
 			dependencies = (
-				DDFD948610723CF7008E776F /* PBXTargetDependency */,
 				DDFD948810723CF7008E776F /* PBXTargetDependency */,
-				DDFD948A10723CF7008E776F /* PBXTargetDependency */,
-				DDD41A5D1072649E0002C71D /* PBXTargetDependency */,
 				DDD80ACE10756AEF00956CF0 /* PBXTargetDependency */,
+				DDEFE64C107E37F3006B8032 /* PBXTargetDependency */,
 			);
 			name = echo_client;
 			productName = echo_client;
@@ -4220,8 +4030,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				DDFD94A210723F83008E776F /* PBXTargetDependency */,
-				DDFD94A410723F83008E776F /* PBXTargetDependency */,
+				DDEFE653107E3807006B8032 /* PBXTargetDependency */,
 			);
 			name = epstatus;
 			productName = epstatus;
@@ -4245,7 +4054,6 @@
 				DDDF310F106AE5F700E6A9C2 /* Aggregrate */,
 				DDDF30E8106AE4AD00E6A9C2 /* fl */,
 				DDDF303C106ADA4D00E6A9C2 /* flex */,
-				DDDF3131106AE68900E6A9C2 /* dcethread */,
 				DDDF3256106BD43400E6A9C2 /* dceidl */,
 				DD08161A106C19580007E433 /* dce */,
 				DDE0178E106C2FFD00A5E41A /* idl */,
@@ -4256,7 +4064,6 @@
 				DD10F5A0106D321F005F1EF3 /* trans */,
 				DD10F5E9106D3528005F1EF3 /* mgmt_stubs */,
 				DD10F5D5106D341E005F1EF3 /* nck */,
-				DDE7054510711E1800563825 /* dcerpc */,
 				DDCCFFA710740B3A0007183F /* prot_ncacn */,
 				DD10F8C2106D7357005F1EF3 /* prot_ncadg_stubs */,
 				DDCCFFDC10740CD50007183F /* prot_ncadg */,
@@ -4425,6 +4232,7 @@
 				DD081633106C1A250007E433 /* smb.idl in Sources */,
 				DD081634106C1A250007E433 /* twr.idl in Sources */,
 				DD081635106C1A250007E433 /* uuid.idl in Sources */,
+				DD9D320D107D51CF00FA8214 /* junk.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4650,86 +4458,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DDDF312F106AE68900E6A9C2 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DDDF318E106AE9F500E6A9C2 /* dcethread_atfork.c in Sources */,
-				DDDF318F106AE9F500E6A9C2 /* dcethread_checkinterrupt.c in Sources */,
-				DDE705A31071553000563825 /* dcethread_cond_broadcast.c in Sources */,
-				DDDF3190106AE9F500E6A9C2 /* dcethread_cond_wait.c in Sources */,
-				DDDF3191106AE9F500E6A9C2 /* dcethread_create.c in Sources */,
-				DDDF3192106AE9F500E6A9C2 /* dcethread_detach.c in Sources */,
-				DDDF3193106AE9F500E6A9C2 /* dcethread_exit.c in Sources */,
-				DDDF3194106AE9F500E6A9C2 /* dcethread_interrupt.c in Sources */,
-				DDDF3195106AE9F500E6A9C2 /* dcethread_join.c in Sources */,
-				DDDF3196106AE9F500E6A9C2 /* dcethread_kill.c in Sources */,
-				DDDF3197106AE9F500E6A9C2 /* dcethread_pause.c in Sources */,
-				DDDF3198106AE9F500E6A9C2 /* dcethread_read.c in Sources */,
-				DDDF3199106AE9F500E6A9C2 /* dcethread_recv.c in Sources */,
-				DDDF319A106AE9F500E6A9C2 /* dcethread_recvfrom.c in Sources */,
-				DDDF319B106AE9F500E6A9C2 /* dcethread_recvmsg.c in Sources */,
-				DDDF319C106AE9F500E6A9C2 /* dcethread_select.c in Sources */,
-				DDDF319D106AE9F500E6A9C2 /* dcethread_send.c in Sources */,
-				DDDF319E106AE9F500E6A9C2 /* dcethread_sendmsg.c in Sources */,
-				DDDF319F106AE9F500E6A9C2 /* dcethread_sendto.c in Sources */,
-				DDDF31A0106AE9F500E6A9C2 /* dcethread_write.c in Sources */,
-				DDDF31A7106AEB8100E6A9C2 /* dcethread-debug.c in Sources */,
-				DDDF31A8106AEB8100E6A9C2 /* dcethread-exception.c in Sources */,
-				DDDF31A9106AEB8100E6A9C2 /* dcethread-private.c in Sources */,
-				DDDF31AA106AEB8100E6A9C2 /* dcethread-util.c in Sources */,
-				DDDF31AB106AEB8100E6A9C2 /* dcethread_attr_create.c in Sources */,
-				DDDF31AC106AEB8100E6A9C2 /* dcethread_attr_delete.c in Sources */,
-				DDDF31AD106AEB8100E6A9C2 /* dcethread_attr_getinheritsched.c in Sources */,
-				DDDF31AE106AEB8100E6A9C2 /* dcethread_attr_getprio.c in Sources */,
-				DDDF31AF106AEB8100E6A9C2 /* dcethread_attr_getsched.c in Sources */,
-				DDDF31B0106AEB8100E6A9C2 /* dcethread_attr_getstacksize.c in Sources */,
-				DDDF31B1106AEB8100E6A9C2 /* dcethread_attr_setinheritsched.c in Sources */,
-				DDDF31B2106AEB8100E6A9C2 /* dcethread_attr_setprio.c in Sources */,
-				DDDF31B3106AEB8100E6A9C2 /* dcethread_attr_setsched.c in Sources */,
-				DDDF31B4106AEB8100E6A9C2 /* dcethread_attr_setstacksize.c in Sources */,
-				DDDF31B5106AEB8100E6A9C2 /* dcethread_cond_destroy.c in Sources */,
-				DDDF31B6106AEB8100E6A9C2 /* dcethread_cond_init.c in Sources */,
-				DDDF31B7106AEB8100E6A9C2 /* dcethread_cond_signal.c in Sources */,
-				DDDF31B8106AEB8100E6A9C2 /* dcethread_cond_timedwait.c in Sources */,
-				DDDF31B9106AEB8100E6A9C2 /* dcethread_condattr_create.c in Sources */,
-				DDDF31BA106AEB8100E6A9C2 /* dcethread_condattr_delete.c in Sources */,
-				DDDF31BB106AEB8100E6A9C2 /* dcethread_delay.c in Sources */,
-				DDDF31BC106AEB8100E6A9C2 /* dcethread_enableasync.c in Sources */,
-				DDDF31BD106AEB8100E6A9C2 /* dcethread_enableinterrupt.c in Sources */,
-				DDDF31BE106AEB8100E6A9C2 /* dcethread_equal.c in Sources */,
-				DDDF31BF106AEB8100E6A9C2 /* dcethread_exc_getstatus.c in Sources */,
-				DDDF31C0106AEB8100E6A9C2 /* dcethread_exc_init.c in Sources */,
-				DDDF31C1106AEB8100E6A9C2 /* dcethread_exc_matches.c in Sources */,
-				DDDF31C2106AEB8100E6A9C2 /* dcethread_exc_raise.c in Sources */,
-				DDDF31C3106AEB8100E6A9C2 /* dcethread_exc_setstatus.c in Sources */,
-				DDDF31C4106AEB8100E6A9C2 /* dcethread_frame_pop.c in Sources */,
-				DDDF31C5106AEB8100E6A9C2 /* dcethread_frame_push.c in Sources */,
-				DDDF31C6106AEB8100E6A9C2 /* dcethread_get_expiration.c in Sources */,
-				DDDF31C7106AEB8100E6A9C2 /* dcethread_getprio.c in Sources */,
-				DDDF31C8106AEB8100E6A9C2 /* dcethread_getspecific.c in Sources */,
-				DDDF31C9106AEB8100E6A9C2 /* dcethread_ismultithreaded.c in Sources */,
-				DDDF31CA106AEB8100E6A9C2 /* dcethread_keycreate.c in Sources */,
-				DDDF31CB106AEB8100E6A9C2 /* dcethread_lock_global.c in Sources */,
-				DDDF31CC106AEB8100E6A9C2 /* dcethread_mutex_destroy.c in Sources */,
-				DDDF31CD106AEB8100E6A9C2 /* dcethread_mutex_init.c in Sources */,
-				DDDF31CE106AEB8100E6A9C2 /* dcethread_mutex_lock.c in Sources */,
-				DDDF31CF106AEB8100E6A9C2 /* dcethread_mutex_trylock.c in Sources */,
-				DDDF31D0106AEB8100E6A9C2 /* dcethread_mutex_unlock.c in Sources */,
-				DDDF31D1106AEB8100E6A9C2 /* dcethread_mutexattr_create.c in Sources */,
-				DDDF31D2106AEB8100E6A9C2 /* dcethread_mutexattr_delete.c in Sources */,
-				DDDF31D3106AEB8100E6A9C2 /* dcethread_mutexattr_getkind.c in Sources */,
-				DDDF31D4106AEB8100E6A9C2 /* dcethread_mutexattr_setkind.c in Sources */,
-				DDDF31D5106AEB8100E6A9C2 /* dcethread_once.c in Sources */,
-				DDDF31D6106AEB8100E6A9C2 /* dcethread_self.c in Sources */,
-				DDDF31D7106AEB8100E6A9C2 /* dcethread_setprio.c in Sources */,
-				DDDF31D8106AEB8100E6A9C2 /* dcethread_setspecific.c in Sources */,
-				DDDF31D9106AEB8100E6A9C2 /* dcethread_signal_to_interrupt.c in Sources */,
-				DDDF31DA106AEB8100E6A9C2 /* dcethread_unlock_global.c in Sources */,
-				DDDF31DB106AEB8100E6A9C2 /* dcethread_yield.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		DDDF3254106BD43400E6A9C2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4876,18 +4604,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DDE7054310711E1800563825 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DDCCFF8B10740A1E0007183F /* comsoc_smb.c in Sources */,
-				DDFD943A1072380D008E776F /* comep.c in Sources */,
-				DDE7054A10711E4F00563825 /* dummyfuncs.c in Sources */,
-				DDE7054B10711E5200563825 /* mswrappers.c in Sources */,
-				DDE7054C10711E5500563825 /* wc16str.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		DDFD946C10723BEB008E776F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4949,20 +4665,10 @@
 			target = DDCC000C10740EA40007183F /* auth_gss_negotiate */;
 			targetProxy = DD04351F1076A0C40010E492 /* PBXContainerItemProxy */;
 		};
-		DD0FE8541074D8D5004AB68C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDDF3131106AE68900E6A9C2 /* dcethread */;
-			targetProxy = DD0FE8531074D8D5004AB68C /* PBXContainerItemProxy */;
-		};
 		DD0FE8561074D8DE004AB68C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DD08161A106C19580007E433 /* dce */;
 			targetProxy = DD0FE8551074D8DE004AB68C /* PBXContainerItemProxy */;
-		};
-		DD0FE8581074D8F9004AB68C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDE7054510711E1800563825 /* dcerpc */;
-			targetProxy = DD0FE8571074D8F9004AB68C /* PBXContainerItemProxy */;
 		};
 		DD0FE85A1074D92C004AB68C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5049,55 +4755,25 @@
 			target = DDDF3256106BD43400E6A9C2 /* dceidl */;
 			targetProxy = DD10F6B6106D6520005F1EF3 /* PBXContainerItemProxy */;
 		};
-		DD10F6BA106D6636005F1EF3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDDF3256106BD43400E6A9C2 /* dceidl */;
-			targetProxy = DD10F6B9106D6636005F1EF3 /* PBXContainerItemProxy */;
-		};
-		DD10F8CF106D742F005F1EF3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDDF3256106BD43400E6A9C2 /* dceidl */;
-			targetProxy = DD10F8CE106D742F005F1EF3 /* PBXContainerItemProxy */;
-		};
 		DD9B505F107BF2B40074C2F5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DD04350110769FDA0010E492 /* DCERPC */;
 			targetProxy = DD9B505E107BF2B40074C2F5 /* PBXContainerItemProxy */;
+		};
+		DD9D32C6107E346600FA8214 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD04350110769FDA0010E492 /* DCERPC */;
+			targetProxy = DD9D32C5107E346600FA8214 /* PBXContainerItemProxy */;
 		};
 		DDC99981107AB91A00330A72 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DD08161A106C19580007E433 /* dce */;
 			targetProxy = DDC99980107AB91A00330A72 /* PBXContainerItemProxy */;
 		};
-		DDCA7F7E107CFE3D0064466D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DD08161A106C19580007E433 /* dce */;
-			targetProxy = DDCA7F7D107CFE3D0064466D /* PBXContainerItemProxy */;
-		};
 		DDCCFFE110740CEA0007183F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DD10F8C2106D7357005F1EF3 /* prot_ncadg_stubs */;
 			targetProxy = DDCCFFE010740CEA0007183F /* PBXContainerItemProxy */;
-		};
-		DDD41A1710725BBF0002C71D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDDF3256106BD43400E6A9C2 /* dceidl */;
-			targetProxy = DDD41A1610725BBF0002C71D /* PBXContainerItemProxy */;
-		};
-		DDD41A59107264820002C71D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDDF3256106BD43400E6A9C2 /* dceidl */;
-			targetProxy = DDD41A58107264820002C71D /* PBXContainerItemProxy */;
-		};
-		DDD41A5B107264950002C71D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDDF3256106BD43400E6A9C2 /* dceidl */;
-			targetProxy = DDD41A5A107264950002C71D /* PBXContainerItemProxy */;
-		};
-		DDD41A5D1072649E0002C71D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDDF3256106BD43400E6A9C2 /* dceidl */;
-			targetProxy = DDD41A5C1072649E0002C71D /* PBXContainerItemProxy */;
 		};
 		DDD80A511075663800956CF0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5114,90 +4790,110 @@
 			target = DDD80AB510756A0D00956CF0 /* echo_stubs */;
 			targetProxy = DDD80ACD10756AEF00956CF0 /* PBXContainerItemProxy */;
 		};
-		DDE704B2107113E900563825 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDE017DD106C334200A5E41A /* uuid */;
-			targetProxy = DDE704B1107113E900563825 /* PBXContainerItemProxy */;
-		};
-		DDE704B4107113F300563825 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDDF3131106AE68900E6A9C2 /* dcethread */;
-			targetProxy = DDE704B3107113F300563825 /* PBXContainerItemProxy */;
-		};
 		DDE7051510711B7600563825 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DDE017DD106C334200A5E41A /* uuid */;
 			targetProxy = DDE7051410711B7600563825 /* PBXContainerItemProxy */;
-		};
-		DDE7054E10711E8100563825 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDDF3131106AE68900E6A9C2 /* dcethread */;
-			targetProxy = DDE7054D10711E8100563825 /* PBXContainerItemProxy */;
-		};
-		DDE7055010711E8100563825 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDE0178E106C2FFD00A5E41A /* idl */;
-			targetProxy = DDE7054F10711E8100563825 /* PBXContainerItemProxy */;
-		};
-		DDE7055210711E8100563825 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDE017DD106C334200A5E41A /* uuid */;
-			targetProxy = DDE7055110711E8100563825 /* PBXContainerItemProxy */;
-		};
-		DDE7055410711E8100563825 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DD10F5D5106D341E005F1EF3 /* nck */;
-			targetProxy = DDE7055310711E8100563825 /* PBXContainerItemProxy */;
-		};
-		DDE7062A107163B800563825 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDE7054510711E1800563825 /* dcerpc */;
-			targetProxy = DDE70629107163B800563825 /* PBXContainerItemProxy */;
-		};
-		DDE7062F107163D700563825 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDE7054510711E1800563825 /* dcerpc */;
-			targetProxy = DDE7062E107163D700563825 /* PBXContainerItemProxy */;
-		};
-		DDE706391071643800563825 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDDF3131106AE68900E6A9C2 /* dcethread */;
-			targetProxy = DDE706381071643800563825 /* PBXContainerItemProxy */;
 		};
 		DDEA1B511074FF5400C89B95 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DDDF3256106BD43400E6A9C2 /* dceidl */;
 			targetProxy = DDEA1B501074FF5400C89B95 /* PBXContainerItemProxy */;
 		};
+		DDEFE59E107E35E2006B8032 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD08161A106C19580007E433 /* dce */;
+			targetProxy = DDEFE59D107E35E2006B8032 /* PBXContainerItemProxy */;
+		};
+		DDEFE5AA107E37C0006B8032 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD04350110769FDA0010E492 /* DCERPC */;
+			targetProxy = DDEFE5A9107E37C0006B8032 /* PBXContainerItemProxy */;
+		};
+		DDEFE64A107E37E6006B8032 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD04350110769FDA0010E492 /* DCERPC */;
+			targetProxy = DDEFE649107E37E6006B8032 /* PBXContainerItemProxy */;
+		};
+		DDEFE64C107E37F3006B8032 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD04350110769FDA0010E492 /* DCERPC */;
+			targetProxy = DDEFE64B107E37F3006B8032 /* PBXContainerItemProxy */;
+		};
+		DDEFE653107E3807006B8032 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD04350110769FDA0010E492 /* DCERPC */;
+			targetProxy = DDEFE652107E3807006B8032 /* PBXContainerItemProxy */;
+		};
+		DDEFE67D107E3BAA006B8032 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD08161A106C19580007E433 /* dce */;
+			targetProxy = DDEFE67C107E3BAA006B8032 /* PBXContainerItemProxy */;
+		};
+		DDEFE67F107E3BBA006B8032 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD08161A106C19580007E433 /* dce */;
+			targetProxy = DDEFE67E107E3BBA006B8032 /* PBXContainerItemProxy */;
+		};
+		DDEFE681107E3BD4006B8032 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD08161A106C19580007E433 /* dce */;
+			targetProxy = DDEFE680107E3BD4006B8032 /* PBXContainerItemProxy */;
+		};
+		DDEFE685107E3BE6006B8032 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD08161A106C19580007E433 /* dce */;
+			targetProxy = DDEFE684107E3BE6006B8032 /* PBXContainerItemProxy */;
+		};
+		DDEFE687107E3BF0006B8032 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD08161A106C19580007E433 /* dce */;
+			targetProxy = DDEFE686107E3BF0006B8032 /* PBXContainerItemProxy */;
+		};
+		DDEFE689107E3C0E006B8032 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD08161A106C19580007E433 /* dce */;
+			targetProxy = DDEFE688107E3C0E006B8032 /* PBXContainerItemProxy */;
+		};
+		DDEFE68B107E3C16006B8032 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD08161A106C19580007E433 /* dce */;
+			targetProxy = DDEFE68A107E3C16006B8032 /* PBXContainerItemProxy */;
+		};
+		DDEFE68D107E3C25006B8032 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD08161A106C19580007E433 /* dce */;
+			targetProxy = DDEFE68C107E3C25006B8032 /* PBXContainerItemProxy */;
+		};
+		DDEFE68F107E3C2D006B8032 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD08161A106C19580007E433 /* dce */;
+			targetProxy = DDEFE68E107E3C2D006B8032 /* PBXContainerItemProxy */;
+		};
+		DDEFE694107E3C35006B8032 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD08161A106C19580007E433 /* dce */;
+			targetProxy = DDEFE693107E3C35006B8032 /* PBXContainerItemProxy */;
+		};
+		DDEFE696107E3C41006B8032 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD08161A106C19580007E433 /* dce */;
+			targetProxy = DDEFE695107E3C41006B8032 /* PBXContainerItemProxy */;
+		};
+		DDEFE69D107E3CCE006B8032 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DDE017DD106C334200A5E41A /* uuid */;
+			targetProxy = DDEFE69C107E3CCE006B8032 /* PBXContainerItemProxy */;
+		};
 		DDFA60521074FA7E006A660C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DDDF303C106ADA4D00E6A9C2 /* flex */;
 			targetProxy = DDFA60511074FA7E006A660C /* PBXContainerItemProxy */;
 		};
-		DDFD948610723CF7008E776F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDDF3131106AE68900E6A9C2 /* dcethread */;
-			targetProxy = DDFD948510723CF7008E776F /* PBXContainerItemProxy */;
-		};
 		DDFD948810723CF7008E776F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DDE017DD106C334200A5E41A /* uuid */;
 			targetProxy = DDFD948710723CF7008E776F /* PBXContainerItemProxy */;
-		};
-		DDFD948A10723CF7008E776F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDE7054510711E1800563825 /* dcerpc */;
-			targetProxy = DDFD948910723CF7008E776F /* PBXContainerItemProxy */;
-		};
-		DDFD94A210723F83008E776F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDDF3131106AE68900E6A9C2 /* dcethread */;
-			targetProxy = DDFD94A110723F83008E776F /* PBXContainerItemProxy */;
-		};
-		DDFD94A410723F83008E776F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDE7054510711E1800563825 /* dcerpc */;
-			targetProxy = DDFD94A310723F83008E776F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -5215,7 +4911,7 @@
 				PREBINDING = NO;
 				SDKROOT = "";
 				USE_HEADERMAP = NO;
-				VALID_ARCHS = "i386 x86_64";
+				VALID_ARCHS = "ppc i386 x86_64";
 			};
 			name = Debug;
 		};
@@ -5230,7 +4926,7 @@
 				PREBINDING = NO;
 				SDKROOT = "";
 				USE_HEADERMAP = NO;
-				VALID_ARCHS = "i386 x86_64";
+				VALID_ARCHS = "ppc i386 x86_64";
 			};
 			name = Release;
 		};
@@ -5304,6 +5000,7 @@
 				INSTALL_PATH = /usr/local/bin;
 				PREBINDING = NO;
 				PRODUCT_NAME = dce;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -5319,6 +5016,7 @@
 				INSTALL_PATH = /usr/local/bin;
 				PREBINDING = NO;
 				PRODUCT_NAME = dce;
+				SKIP_INSTALL = YES;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -5336,6 +5034,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = com;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -5351,6 +5050,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = com;
+				SKIP_INSTALL = YES;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -5368,6 +5068,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = stubs;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -5383,6 +5084,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = stubs;
+				SKIP_INSTALL = YES;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -5400,6 +5102,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = rpc;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -5415,6 +5118,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = rpc;
+				SKIP_INSTALL = YES;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -5432,6 +5136,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = trans;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -5447,6 +5152,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = trans;
+				SKIP_INSTALL = YES;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -5464,6 +5170,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = nck;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -5479,6 +5186,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = nck;
+				SKIP_INSTALL = YES;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -5496,6 +5204,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = mgmt_stubs;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -5511,6 +5220,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = mgmt_stubs;
+				SKIP_INSTALL = YES;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -5528,6 +5238,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = prot_ncadg_stubs;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -5543,6 +5254,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = prot_ncadg_stubs;
+				SKIP_INSTALL = YES;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -5561,6 +5273,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = naf_ip;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -5577,6 +5290,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = naf_ip;
+				SKIP_INSTALL = YES;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -5595,6 +5309,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = naf_np;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -5611,6 +5326,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = naf_np;
+				SKIP_INSTALL = YES;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -5629,6 +5345,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = auth_gss_negotiate;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -5645,6 +5362,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = auth_gss_negotiate;
+				SKIP_INSTALL = YES;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -5663,6 +5381,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = prot_ncacn;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -5679,6 +5398,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = prot_ncacn;
+				SKIP_INSTALL = YES;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -5697,6 +5417,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = prot_ncadg;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -5713,6 +5434,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = prot_ncadg;
+				SKIP_INSTALL = YES;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -5799,6 +5521,7 @@
 				OTHER_CFLAGS = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = flex;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -5819,6 +5542,7 @@
 				OTHER_CFLAGS = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = flex;
+				SKIP_INSTALL = YES;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -5835,6 +5559,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = fl;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -5850,6 +5575,7 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = fl;
 				SDKROOT = "";
+				SKIP_INSTALL = YES;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -5877,44 +5603,6 @@
 			};
 			name = Release;
 		};
-		DDDF3133106AE68A00E6A9C2 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = DD8828241073077F00FBF62B /* dcethread.xcconfig */;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				EXECUTABLE_PREFIX = lib;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				INSTALL_PATH = /usr/local/lib;
-				MODULE_VERSION = 1.0.0;
-				OTHER_LDFLAGS = "-no-undefined";
-				PREBINDING = NO;
-				PRODUCT_NAME = dcethread;
-			};
-			name = Debug;
-		};
-		DDDF3134106AE68A00E6A9C2 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = DD8828241073077F00FBF62B /* dcethread.xcconfig */;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				EXECUTABLE_PREFIX = lib;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_MODEL_TUNING = G5;
-				INSTALL_PATH = /usr/local/lib;
-				MODULE_VERSION = 1.0.0;
-				OTHER_LDFLAGS = "-no-undefined";
-				PREBINDING = NO;
-				PRODUCT_NAME = dcethread;
-				ZERO_LINK = NO;
-			};
-			name = Release;
-		};
 		DDDF3259106BD43500E6A9C2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DD88282810730DF600FBF62B /* dceidl.xcconfig */;
@@ -5927,6 +5615,7 @@
 				INSTALL_PATH = /usr/local/bin;
 				PREBINDING = NO;
 				PRODUCT_NAME = dceidl;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -5941,6 +5630,7 @@
 				INSTALL_PATH = /usr/local/bin;
 				PREBINDING = NO;
 				PRODUCT_NAME = dceidl;
+				SKIP_INSTALL = YES;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -5958,6 +5648,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = idl;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -5973,6 +5664,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = idl;
+				SKIP_INSTALL = YES;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -5990,6 +5682,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = uuid;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -6005,6 +5698,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = uuid;
+				SKIP_INSTALL = YES;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -6057,8 +5751,8 @@
 				);
 				HEADER_SEARCH_PATHS = (
 					"\"$(SHARED_DERIVED_FILE_DIR)\"",
-					"\"$(SRCROOT)/include\"",
-					"\"$(SRCROOT)/demos/echo_server\"",
+					"\"$(SRCROOT)/dcerpc/include\"",
+					"\"$(SRCROOT)/dcerpc/demos/echo_server\"",
 				);
 				INSTALL_PATH = /usr/local/bin;
 				PREBINDING = NO;
@@ -6081,61 +5775,12 @@
 				);
 				HEADER_SEARCH_PATHS = (
 					"\"$(SHARED_DERIVED_FILE_DIR)\"",
-					"\"$(SRCROOT)/include\"",
-					"\"$(SRCROOT)/demos/echo_server\"",
+					"\"$(SRCROOT)/dcerpc/include\"",
+					"\"$(SRCROOT)/dcerpc/demos/echo_server\"",
 				);
 				INSTALL_PATH = /usr/local/bin;
 				PREBINDING = NO;
 				PRODUCT_NAME = echo_server;
-				ZERO_LINK = NO;
-			};
-			name = Release;
-		};
-		DDE7054710711E1900563825 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = DD88284010730F3E00FBF62B /* dcerpc.xcconfig */;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				EXECUTABLE_PREFIX = lib;
-				EXPORTED_SYMBOLS_FILE = "";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(APPLE_INTERNAL_DIR)/Library/Frameworks\"",
-				);
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				INSTALL_PATH = /usr/local/lib;
-				KEEP_PRIVATE_EXTERNS = NO;
-				PREBINDING = NO;
-				PRESERVE_DEAD_CODE_INITS_AND_TERMS = NO;
-				PRODUCT_NAME = dcerpc;
-				UNEXPORTED_SYMBOLS_FILE = "";
-			};
-			name = Debug;
-		};
-		DDE7054810711E1900563825 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = DD88284010730F3E00FBF62B /* dcerpc.xcconfig */;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				EXECUTABLE_PREFIX = lib;
-				EXPORTED_SYMBOLS_FILE = "";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(APPLE_INTERNAL_DIR)/Library/Frameworks\"",
-				);
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_MODEL_TUNING = G5;
-				INSTALL_PATH = /usr/local/lib;
-				KEEP_PRIVATE_EXTERNS = NO;
-				PREBINDING = NO;
-				PRESERVE_DEAD_CODE_INITS_AND_TERMS = NO;
-				PRODUCT_NAME = dcerpc;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -6156,8 +5801,8 @@
 				);
 				HEADER_SEARCH_PATHS = (
 					"\"$(SHARED_DERIVED_FILE_DIR)\"",
-					"\"$(SRCROOT)/include\"",
-					"\"$(SRCROOT)/demos/echo_server\"",
+					"\"$(SRCROOT)/dcerpc/include\"",
+					"\"$(SRCROOT)/dcerpc/demos/echo_server\"",
 				);
 				INSTALL_PATH = /usr/local/bin;
 				PREBINDING = NO;
@@ -6180,8 +5825,8 @@
 				);
 				HEADER_SEARCH_PATHS = (
 					"\"$(SHARED_DERIVED_FILE_DIR)\"",
-					"\"$(SRCROOT)/include\"",
-					"\"$(SRCROOT)/demos/echo_server\"",
+					"\"$(SRCROOT)/dcerpc/include\"",
+					"\"$(SRCROOT)/dcerpc/demos/echo_server\"",
 				);
 				INSTALL_PATH = /usr/local/bin;
 				PREBINDING = NO;
@@ -6205,7 +5850,7 @@
 					HAVE_CONFIG_H,
 				);
 				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/include\"",
+					"\"$(SRCROOT)/dcerpc/include\"",
 					"\"$(SHARED_DERIVED_FILE_DIR)\"",
 					"\"$(SHARED_DERIVED_FILE_DIR)/dce\"",
 				);
@@ -6229,7 +5874,7 @@
 					HAVE_CONFIG_H,
 				);
 				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/include\"",
+					"\"$(SRCROOT)/dcerpc/include\"",
 					"\"$(SHARED_DERIVED_FILE_DIR)\"",
 					"\"$(SHARED_DERIVED_FILE_DIR)/dce\"",
 				);
@@ -6423,15 +6068,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DDDF3135106AE6A800E6A9C2 /* Build configuration list for PBXNativeTarget "dcethread" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				DDDF3133106AE68A00E6A9C2 /* Debug */,
-				DDDF3134106AE68A00E6A9C2 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		DDDF325B106BD45300E6A9C2 /* Build configuration list for PBXNativeTarget "dceidl" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -6473,15 +6109,6 @@
 			buildConfigurations = (
 				DDE704E71071197000563825 /* Debug */,
 				DDE704E81071197000563825 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		DDE7054910711E3800563825 /* Build configuration list for PBXNativeTarget "dcerpc" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				DDE7054710711E1900563825 /* Debug */,
-				DDE7054810711E1900563825 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
