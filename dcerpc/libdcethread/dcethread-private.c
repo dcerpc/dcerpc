@@ -111,7 +111,7 @@ init(void)
 #ifdef __SUNPRO_C
 #pragma init dcethread__init
 #else
-void dcethread__init(void) __attribute__ ((constructor));
+void dcethread__init(void);
 #endif
 
 void dcethread__init(void)
@@ -193,6 +193,9 @@ dcethread*
 dcethread__new (void)
 {
     dcethread* thread;
+
+    /* Ensure thread system is initialized */
+    dcethread__init();
 
     thread = calloc(1, sizeof(dcethread));
 
@@ -584,6 +587,9 @@ dcethread__end_block(dcethread* thread, int (*interrupt)(dcethread*, void*), voi
 void
 dcethread__cleanup_self(dcethread* self)
 {
+    /* Ensure thread system is initialized */
+    dcethread__init();
+
     dcethread__change_state(self, DCETHREAD_STATE_DEAD);
     dcethread__release(self);
     pthread_setspecific(dcethread_self_key, NULL);

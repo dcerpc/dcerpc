@@ -252,7 +252,12 @@ dcethread__exc_matches(dcethread_exc* exc, dcethread_exc* pattern)
 void
 dcethread__exc_raise(dcethread_exc* exc, const char* file, unsigned int line)
 {
-    dcethread_frame* cur = pthread_getspecific(frame_key);
+    dcethread_frame* cur;
+
+    /* Ensure thread system is initialized */
+    dcethread__init();
+
+    cur = pthread_getspecific(frame_key);
 
     if (cur)
     {
