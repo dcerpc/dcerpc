@@ -202,6 +202,7 @@
 		DDA1C015107E91CB004D2055 /* nidlmsg.m in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB077100408FC0080B762 /* nidlmsg.m */; };
 		DDA1C02F107E947F004D2055 /* dcerpc.m in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB200100408FD0080B762 /* dcerpc.m */; };
 		DDA1C037107E952B004D2055 /* junk.c in Create catalogs folders */ = {isa = PBXBuildFile; fileRef = DD9D320C107D51CF00FA8214 /* junk.c */; };
+		DDA1C1FE107FDCAE004D2055 /* dcerpc.h in Headers */ = {isa = PBXBuildFile; fileRef = DD3DB0D5100408FD0080B762 /* dcerpc.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DDC99904107AA36600330A72 /* dceidl in Resources */ = {isa = PBXBuildFile; fileRef = DDDF3257106BD43400E6A9C2 /* dceidl */; };
 		DDC99930107AAD5600330A72 /* codesets.idl in Create dce header folder */ = {isa = PBXBuildFile; fileRef = DD3DB0E7100408FD0080B762 /* codesets.idl */; };
 		DDC99945107AB5E100330A72 /* dce.h in Copy darwin headers */ = {isa = PBXBuildFile; fileRef = DD3DB0EC100408FD0080B762 /* dce.h */; };
@@ -1867,6 +1868,8 @@
 		DD8828621073163F00FBF62B /* dcerpcd.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = dcerpcd.xcconfig; path = dcerpc.xc.configurations/dcerpcd.xcconfig; sourceTree = "<group>"; };
 		DD88286A1073189700FBF62B /* rpc_paths.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = rpc_paths.xcconfig; path = dcerpc.xc.configurations/rpc_paths.xcconfig; sourceTree = "<group>"; };
 		DD9D320C107D51CF00FA8214 /* junk.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = junk.c; path = dcerpc.xc.configurations/junk.c; sourceTree = "<group>"; };
+		DDA1C209107FDD0B004D2055 /* copy_catalogs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = copy_catalogs; path = dcerpc.xc.configurations/copy_catalogs; sourceTree = "<group>"; };
+		DDA1C20A107FDD0B004D2055 /* copy_dce_headers */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = copy_dce_headers; path = dcerpc.xc.configurations/copy_dce_headers; sourceTree = "<group>"; };
 		DDB66DA2107BE3310095CBC1 /* base_config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = base_config.xcconfig; path = dcerpc.xc.configurations/base_config.xcconfig; sourceTree = "<group>"; };
 		DDCC000D10740EA40007183F /* libauth_gss_negotiate.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libauth_gss_negotiate.so; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDCCFFA810740B3A0007183F /* libprot_ncacn.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libprot_ncacn.so; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3457,6 +3460,8 @@
 				DD88285F1073160C00FBF62B /* auth_gss_negotiate.xcconfig */,
 				DD8828621073163F00FBF62B /* dcerpcd.xcconfig */,
 				DD04350B10769FF80010E492 /* dcerpc_framework.xcconfig */,
+				DDA1C20A107FDD0B004D2055 /* copy_dce_headers */,
+				DDA1C209107FDD0B004D2055 /* copy_catalogs */,
 				DD9D320C107D51CF00FA8214 /* junk.c */,
 			);
 			name = ConfigurationFiles;
@@ -3479,6 +3484,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DDA1C1FE107FDCAE004D2055 /* dcerpc.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4979,7 +4985,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = NO;
 				INFOPLIST_FILE = "DCERPC-Info.plist";
-				INSTALL_PATH = /System/Library/Frameworks;
+				INSTALL_PATH = /System/Library/PrivateFrameworks;
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = DCERPC;
@@ -5006,7 +5012,7 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = NO;
 				INFOPLIST_FILE = "DCERPC-Info.plist";
-				INSTALL_PATH = /System/Library/Frameworks;
+				INSTALL_PATH = /System/Library/PrivateFrameworks;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
