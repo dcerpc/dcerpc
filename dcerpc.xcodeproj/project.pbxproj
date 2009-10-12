@@ -140,6 +140,7 @@
 		DD081633106C1A250007E433 /* smb.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB14A100408FD0080B762 /* smb.idl */; };
 		DD081634106C1A250007E433 /* twr.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB163100408FD0080B762 /* twr.idl */; };
 		DD081635106C1A250007E433 /* uuid.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB164100408FD0080B762 /* uuid.idl */; };
+		DD0A8EDE1083D88A002C6DB8 /* nidlmsg.m in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB077100408FC0080B762 /* nidlmsg.m */; };
 		DD0FE805107411EB004AB68C /* Kerberos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD0FE804107411EB004AB68C /* Kerberos.framework */; };
 		DD10F4A0106D21E7005F1EF3 /* comauth.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1D4100408FD0080B762 /* comauth.c */; };
 		DD10F4A1106D21E7005F1EF3 /* combind.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1D6100408FD0080B762 /* combind.c */; };
@@ -185,6 +186,12 @@
 		DD10F660106D3E88005F1EF3 /* libmgmt_stubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F5EA106D3528005F1EF3 /* libmgmt_stubs.a */; };
 		DD10F8CC106D73C3005F1EF3 /* conv.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0E9100408FD0080B762 /* conv.idl */; };
 		DD10F8CD106D73D9005F1EF3 /* convc.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0EA100408FD0080B762 /* convc.idl */; };
+		DD21F0C81083D18A00696F06 /* acf_y.y in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB02A100408FC0080B762 /* acf_y.y */; };
+		DD21F0C91083D18A00696F06 /* acf_l.l in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB029100408FC0080B762 /* acf_l.l */; };
+		DD21F0CA1083D18A00696F06 /* nidl_y.y in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB075100408FC0080B762 /* nidl_y.y */; };
+		DD21F0CB1083D18A00696F06 /* nidl_l.l in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB074100408FC0080B762 /* nidl_l.l */; };
+		DD21F0DC1083D32F00696F06 /* dceidl_stubs.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = DD21F0DB1083D32F00696F06 /* dceidl_stubs.xcconfig */; };
+		DD21F0DD1083D3AD00696F06 /* libdceidl_stubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD21F0B71083D15500696F06 /* libdceidl_stubs.a */; };
 		DD32545F107CE8FC00BF66BD /* libnaf_np.so in Copy Modules */ = {isa = PBXBuildFile; fileRef = DD7FBDD8107407D200B63C2A /* libnaf_np.so */; };
 		DD7FBDAF1074067D00B63C2A /* ipnaf.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2CA100408FD0080B762 /* ipnaf.c */; };
 		DD7FBDB01074067D00B63C2A /* ipnaf_linux.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2CB100408FD0080B762 /* ipnaf_linux.c */; };
@@ -193,13 +200,8 @@
 		DD7FBDE31074084F00B63C2A /* npnaf_linux.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2CE100408FD0080B762 /* npnaf_linux.c */; };
 		DD7FBDE41074084F00B63C2A /* twr_np.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2D2100408FD0080B762 /* twr_np.c */; };
 		DD7FBDE51074084F00B63C2A /* twr_uxd.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2D3100408FD0080B762 /* twr_uxd.c */; };
-		DD95AA7410756C3800683E5B /* acf_y.y in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB02A100408FC0080B762 /* acf_y.y */; };
-		DD95AA7510756C3800683E5B /* acf_l.l in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB029100408FC0080B762 /* acf_l.l */; };
-		DD95AA7610756C3800683E5B /* nidl_y.y in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB075100408FC0080B762 /* nidl_y.y */; };
-		DD95AA7710756C3800683E5B /* nidl_l.l in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB074100408FC0080B762 /* nidl_l.l */; };
 		DD9D320D107D51CF00FA8214 /* junk.c in Sources */ = {isa = PBXBuildFile; fileRef = DD9D320C107D51CF00FA8214 /* junk.c */; };
 		DD9D32C3107E345B00FA8214 /* DCERPC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD04350210769FDA0010E492 /* DCERPC.framework */; };
-		DDA1C015107E91CB004D2055 /* nidlmsg.m in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB077100408FC0080B762 /* nidlmsg.m */; };
 		DDA1C02F107E947F004D2055 /* dcerpc.m in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB200100408FD0080B762 /* dcerpc.m */; };
 		DDA1C037107E952B004D2055 /* junk.c in Create catalogs folders */ = {isa = PBXBuildFile; fileRef = DD9D320C107D51CF00FA8214 /* junk.c */; };
 		DDA1C1FE107FDCAE004D2055 /* dcerpc.h in Headers */ = {isa = PBXBuildFile; fileRef = DD3DB0D5100408FD0080B762 /* dcerpc.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -468,7 +470,7 @@
 			);
 			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -cepv out ${SHARED_DERIVED_FILE_DIR}/dce ${INPUT_FILE_PATH}";
 		};
-		DDA1C022107E92B2004D2055 /* PBXBuildRule */ = {
+		DD21F0D21083D2D400696F06 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
 			compilerSpec = com.apple.compilers.proxy.script;
 			filePatterns = "*.m";
@@ -478,6 +480,42 @@
 				"${SHARED_DERIVED_FILE_DIR}/idl.cat",
 			);
 			script = "gencat ${SHARED_DERIVED_FILE_DIR}/idl.cat ${INPUT_FILE_PATH}";
+		};
+		DD21F0D31083D2D400696F06 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.y";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h",
+				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).c",
+			);
+			script = "/usr/bin/bison -v -p ${INPUT_FILE_BASE}y -o ${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}.c -d ${INPUT_FILE_PATH} && \nsleep 1";
+		};
+		DD21F0D41083D2D400696F06 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*l_l.l";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h",
+				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).c",
+			);
+			script = "${BUILT_PRODUCTS_DIR}/flex -Pnidl_yy -o${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}.c ${INPUT_FILE_PATH} && \nsleep 1";
+		};
+		DD21F0D51083D2D400696F06 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*f_l.l";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h",
+				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).c",
+			);
+			script = "${BUILT_PRODUCTS_DIR}/flex -Pacf_yy -o${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}.c ${INPUT_FILE_PATH} &&\nsleep 1";
 		};
 		DDA1C030107E94B8004D2055 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -548,42 +586,6 @@
 				"$(SHARED_DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_sstub.c",
 			);
 			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source out ${SHARED_DERIVED_FILE_DIR} ${INPUT_FILE_PATH}";
-		};
-		DDDF32A2106BDBB500E6A9C2 /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.proxy.script;
-			filePatterns = "*.y";
-			fileType = pattern.proxy;
-			isEditable = 1;
-			outputFiles = (
-				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h",
-				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).c",
-			);
-			script = "/usr/bin/bison -v -p ${INPUT_FILE_BASE}y -o ${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}.c -d ${INPUT_FILE_PATH}";
-		};
-		DDDF331F106BE2DA00E6A9C2 /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.proxy.script;
-			filePatterns = "*f_l.l";
-			fileType = pattern.proxy;
-			isEditable = 1;
-			outputFiles = (
-				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h",
-				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).c",
-			);
-			script = "${BUILT_PRODUCTS_DIR}/flex -Pacf_yy -o${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}.c ${INPUT_FILE_PATH}\nsleep 1";
-		};
-		DDDF3330106BE50A00E6A9C2 /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.proxy.script;
-			filePatterns = "*l_l.l";
-			fileType = pattern.proxy;
-			isEditable = 1;
-			outputFiles = (
-				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h",
-				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).c",
-			);
-			script = "${BUILT_PRODUCTS_DIR}/flex -Pnidl_yy -o${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}.c ${INPUT_FILE_PATH}\nsleep 1";
 		};
 		DDE704F5107119E200563825 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -793,6 +795,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = DDDF3256106BD43400E6A9C2;
 			remoteInfo = dceidl;
+		};
+		DD21F0CD1083D1A800696F06 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD21F0B61083D15500696F06;
+			remoteInfo = dceidl_stubs;
 		};
 		DD9B505E107BF2B40074C2F5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1074,6 +1083,8 @@
 		DD10F5EA106D3528005F1EF3 /* libmgmt_stubs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmgmt_stubs.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD10F7EC106D6DA7005F1EF3 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
 		DD10F8C3106D7357005F1EF3 /* libprot_ncadg_stubs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libprot_ncadg_stubs.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD21F0B71083D15500696F06 /* libdceidl_stubs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdceidl_stubs.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD21F0DB1083D32F00696F06 /* dceidl_stubs.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = dceidl_stubs.xcconfig; path = dcerpc.xc.configurations/dceidl_stubs.xcconfig; sourceTree = "<group>"; };
 		DD38F1AB106976B200EEF3A7 /* SMBClient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SMBClient.framework; path = /AppleInternal/Library/Frameworks/SMBClient.framework; sourceTree = "<absolute>"; };
 		DD3DAF83100408FC0080B762 /* wc16str.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = wc16str.c; sourceTree = "<group>"; };
 		DD3DAF84100408FC0080B762 /* dummyfuncs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dummyfuncs.c; sourceTree = "<group>"; };
@@ -1963,6 +1974,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DD21F0B51083D15500696F06 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DD7FBDA21074061400B63C2A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -2034,6 +2052,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DD21F0DD1083D3AD00696F06 /* libdceidl_stubs.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2097,6 +2116,7 @@
 			children = (
 				DDDF303D106ADA4D00E6A9C2 /* flex */,
 				DDDF30E9106AE4AD00E6A9C2 /* libfl.a */,
+				DD21F0B71083D15500696F06 /* libdceidl_stubs.a */,
 				DDDF3257106BD43400E6A9C2 /* dceidl */,
 				DD08161B106C19580007E433 /* dce */,
 				DDE0178F106C2FFD00A5E41A /* libidl.a */,
@@ -3450,6 +3470,7 @@
 				DD88286A1073189700FBF62B /* rpc_paths.xcconfig */,
 				DD8828071073058D00FBF62B /* flex.xcconfig */,
 				DD8828241073077F00FBF62B /* dcethread.xcconfig */,
+				DD21F0DB1083D32F00696F06 /* dceidl_stubs.xcconfig */,
 				DD88282810730DF600FBF62B /* dceidl.xcconfig */,
 				DD88282B10730E5E00FBF62B /* dce.xcconfig */,
 				DD88282E10730E8F00FBF62B /* idl.xcconfig */,
@@ -3531,6 +3552,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		DD10F8BF106D7357005F1EF3 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DD21F0B31083D15500696F06 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3762,6 +3790,27 @@
 			productReference = DD10F8C3106D7357005F1EF3 /* libprot_ncadg_stubs.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		DD21F0B61083D15500696F06 /* dceidl_stubs */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DD21F0D61083D2D400696F06 /* Build configuration list for PBXNativeTarget "dceidl_stubs" */;
+			buildPhases = (
+				DD21F0B31083D15500696F06 /* Headers */,
+				DD21F0B41083D15500696F06 /* Sources */,
+				DD21F0B51083D15500696F06 /* Frameworks */,
+			);
+			buildRules = (
+				DD21F0D21083D2D400696F06 /* PBXBuildRule */,
+				DD21F0D31083D2D400696F06 /* PBXBuildRule */,
+				DD21F0D41083D2D400696F06 /* PBXBuildRule */,
+				DD21F0D51083D2D400696F06 /* PBXBuildRule */,
+			);
+			dependencies = (
+			);
+			name = dceidl_stubs;
+			productName = dceidl_stubs;
+			productReference = DD21F0B71083D15500696F06 /* libdceidl_stubs.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		DD7FBDA31074061400B63C2A /* naf_ip */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DD7FBDBE107406A200B63C2A /* Build configuration list for PBXNativeTarget "naf_ip" */;
@@ -3931,13 +3980,10 @@
 				DDDF3255106BD43400E6A9C2 /* Frameworks */,
 			);
 			buildRules = (
-				DDA1C022107E92B2004D2055 /* PBXBuildRule */,
-				DDDF32A2106BDBB500E6A9C2 /* PBXBuildRule */,
-				DDDF3330106BE50A00E6A9C2 /* PBXBuildRule */,
-				DDDF331F106BE2DA00E6A9C2 /* PBXBuildRule */,
 			);
 			dependencies = (
 				DD10F66F106D633D005F1EF3 /* PBXTargetDependency */,
+				DD21F0CE1083D1A800696F06 /* PBXTargetDependency */,
 			);
 			name = dceidl;
 			productName = dceidl;
@@ -4073,6 +4119,7 @@
 				DDDF310F106AE5F700E6A9C2 /* Aggregrate */,
 				DDDF30E8106AE4AD00E6A9C2 /* fl */,
 				DDDF303C106ADA4D00E6A9C2 /* flex */,
+				DD21F0B61083D15500696F06 /* dceidl_stubs */,
 				DDDF3256106BD43400E6A9C2 /* dceidl */,
 				DD08161A106C19580007E433 /* dce */,
 				DDE0178E106C2FFD00A5E41A /* idl */,
@@ -4105,6 +4152,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DDC99904107AA36600330A72 /* dceidl in Resources */,
+				DD21F0DC1083D32F00696F06 /* dceidl_stubs.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4357,6 +4405,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DD21F0B41083D15500696F06 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DD0A8EDE1083D88A002C6DB8 /* nidlmsg.m in Sources */,
+				DD21F0C81083D18A00696F06 /* acf_y.y in Sources */,
+				DD21F0C91083D18A00696F06 /* acf_l.l in Sources */,
+				DD21F0CA1083D18A00696F06 /* nidl_y.y in Sources */,
+				DD21F0CB1083D18A00696F06 /* nidl_l.l in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DD7FBDA11074061400B63C2A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4495,11 +4555,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD95AA7410756C3800683E5B /* acf_y.y in Sources */,
-				DD95AA7510756C3800683E5B /* acf_l.l in Sources */,
-				DD95AA7610756C3800683E5B /* nidl_y.y in Sources */,
-				DD95AA7710756C3800683E5B /* nidl_l.l in Sources */,
-				DDA1C015107E91CB004D2055 /* nidlmsg.m in Sources */,
 				DDDF3260106BD56500E6A9C2 /* astp_com.c in Sources */,
 				DDDF3261106BD56500E6A9C2 /* astp_cpx.c in Sources */,
 				DDDF3262106BD56500E6A9C2 /* astp_dmp.c in Sources */,
@@ -4788,6 +4843,11 @@
 			isa = PBXTargetDependency;
 			target = DDDF3256106BD43400E6A9C2 /* dceidl */;
 			targetProxy = DD10F6B6106D6520005F1EF3 /* PBXContainerItemProxy */;
+		};
+		DD21F0CE1083D1A800696F06 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD21F0B61083D15500696F06 /* dceidl_stubs */;
+			targetProxy = DD21F0CD1083D1A800696F06 /* PBXContainerItemProxy */;
 		};
 		DD9B505F107BF2B40074C2F5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5289,6 +5349,38 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = prot_ncadg_stubs;
 				SKIP_INSTALL = YES;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		DD21F0C21083D15600696F06 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD88282810730DF600FBF62B /* dceidl.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = /usr/local/lib;
+				PREBINDING = NO;
+				PRODUCT_NAME = dceidl_stubs;
+			};
+			name = Debug;
+		};
+		DD21F0C31083D15600696F06 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD88282810730DF600FBF62B /* dceidl.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/lib;
+				PREBINDING = NO;
+				PRODUCT_NAME = dceidl_stubs;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -6008,6 +6100,15 @@
 			buildConfigurations = (
 				DD10F8C4106D7358005F1EF3 /* Debug */,
 				DD10F8C5106D7358005F1EF3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DD21F0D61083D2D400696F06 /* Build configuration list for PBXNativeTarget "dceidl_stubs" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DD21F0C21083D15600696F06 /* Debug */,
+				DD21F0C31083D15600696F06 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

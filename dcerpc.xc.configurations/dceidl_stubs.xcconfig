@@ -1,5 +1,5 @@
 //
-//  dceidl.xcconfig
+//  dceidl_stubs.xcconfig
 //  dcerpc
 //
 //  Created by Brad Suinn on 9/29/09.
@@ -9,5 +9,5 @@
 #include "base_config"
 #include "rpc_paths"
 
-HEADER_SEARCH_PATHS = $(HEADER_SEARCH_PATHS_BASE) $(SRCROOT)/dcerpc/idl_compiler $(CONFIGURATION_TEMP_DIR)/dceidl_stubs.build/DerivedSources
+HEADER_SEARCH_PATHS = $(HEADER_SEARCH_PATHS_BASE) $(SRCROOT)/dcerpc/idl_compiler
 GCC_PREPROCESSOR_DEFINITIONS = $(GCC_PREPROCESSOR_DEFINITIONS_BASE2) MIA $(BASE_IDIR_PATH) $(BASE_CATALOG_PATH) YYERROR_VERBOSE=1 YYDEBUG=1
