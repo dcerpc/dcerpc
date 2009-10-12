@@ -5366,6 +5366,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = dceidl_stubs;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -5381,6 +5382,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = dceidl_stubs;
+				SKIP_INSTALL = YES;
 				ZERO_LINK = NO;
 			};
 			name = Release;
