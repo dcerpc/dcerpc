@@ -433,7 +433,7 @@
 				"${SHARED_DERIVED_FILE_DIR}/dce/${INPUT_FILE_BASE}_cstub.c",
 				"${SHARED_DERIVED_FILE_DIR}/dce/${INPUT_FILE_BASE}.h",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -cepv -server none out ${TEMP_FILES_DIR} ${INPUT_FILE_PATH} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce/ &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_cstub.c ${SHARED_DERIVED_FILE_DIR}/dce/\n";
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -cepv -server none out ${TEMP_FILES_DIR} ${INPUT_FILE_PATH} &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce/ &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_cstub.c ${SHARED_DERIVED_FILE_DIR}/dce/\n";
 		};
 		DD10F5F7106D3629005F1EF3 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -445,7 +445,7 @@
 				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE)_cstub.c",
 				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE)_sstub.c",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -cepv out ${TEMP_FILES_DIR} ${INPUT_FILE_PATH} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce/ &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_cstub.c ${SHARED_DERIVED_FILE_DIR}/dce/ &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_sstub.c ${SHARED_DERIVED_FILE_DIR}/dce/\n";
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -cepv out ${TEMP_FILES_DIR} ${INPUT_FILE_PATH} &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce/ &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_cstub.c ${SHARED_DERIVED_FILE_DIR}/dce/ &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_sstub.c ${SHARED_DERIVED_FILE_DIR}/dce/\n";
 		};
 		DD10F8D0106D7461005F1EF3 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -457,7 +457,7 @@
 				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE).h",
 				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE)_cstub.c",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -server none -cepv out ${TEMP_FILES_DIR} ${INPUT_FILE_PATH} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce/ &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_cstub.c ${SHARED_DERIVED_FILE_DIR}/dce/";
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -server none -cepv out ${TEMP_FILES_DIR} ${INPUT_FILE_PATH} &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce/ &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_cstub.c ${SHARED_DERIVED_FILE_DIR}/dce/";
 		};
 		DD10F8D1106D754F005F1EF3 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -470,7 +470,7 @@
 				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE)_sstub.c",
 				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE)_cstub.c",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -cepv out ${TEMP_FILES_DIR} ${INPUT_FILE_PATH} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce/ &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_cstub.c ${SHARED_DERIVED_FILE_DIR}/dce/ &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_sstub.c ${SHARED_DERIVED_FILE_DIR}/dce/";
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -cepv out ${TEMP_FILES_DIR} ${INPUT_FILE_PATH} &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce/ &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_cstub.c ${SHARED_DERIVED_FILE_DIR}/dce/ &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_sstub.c ${SHARED_DERIVED_FILE_DIR}/dce/";
 		};
 		DD21F0D21083D2D400696F06 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -493,7 +493,7 @@
 				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h",
 				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).c",
 			);
-			script = "/usr/bin/bison -v -p ${INPUT_FILE_BASE}y -o ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.c -d ${INPUT_FILE_PATH} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${DERIVED_FILES_DIR} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.c ${DERIVED_FILES_DIR}";
+			script = "/usr/bin/bison -v -p ${INPUT_FILE_BASE}y -o ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.c -d ${INPUT_FILE_PATH} &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${DERIVED_FILES_DIR} &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.c ${DERIVED_FILES_DIR}";
 		};
 		DDA1C030107E94B8004D2055 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -515,7 +515,7 @@
 			outputFiles = (
 				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).c",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/flex -Pacf_yy -o${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.c ${INPUT_FILE_PATH} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.c ${DERIVED_FILES_DIR}";
+			script = "${BUILT_PRODUCTS_DIR}/flex -Pacf_yy -o${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.c ${INPUT_FILE_PATH} &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.c ${DERIVED_FILES_DIR}";
 		};
 		DDAD97131083FB360016A764 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -526,7 +526,7 @@
 			outputFiles = (
 				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).c",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/flex -Pnidl_yy -o${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.c ${INPUT_FILE_PATH} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.c ${DERIVED_FILES_DIR}";
+			script = "${BUILT_PRODUCTS_DIR}/flex -Pnidl_yy -o${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.c ${INPUT_FILE_PATH} &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.c ${DERIVED_FILES_DIR}";
 		};
 		DDD41A42107261620002C71D /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -538,7 +538,7 @@
 				"${SHARED_DERIVED_FILE_DIR}/dce/${INPUT_FILE_BASE}_cstub.c",
 				"${SHARED_DERIVED_FILE_DIR}/dce/${INPUT_FILE_BASE}.h",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -server none out ${TEMP_FILES_DIR} ${INPUT_FILE_PATH} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce/ &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_cstub.c ${SHARED_DERIVED_FILE_DIR}/dce/\n";
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -server none out ${TEMP_FILES_DIR} ${INPUT_FILE_PATH} &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce/ &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_cstub.c ${SHARED_DERIVED_FILE_DIR}/dce/\n";
 		};
 		DDD41B6A1072768F0002C71D /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -550,7 +550,7 @@
 				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).c",
 				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h",
 			);
-			script = "/usr/bin/bison -o ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.c -y -d ${INPUT_FILE_PATH} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${DERIVED_FILES_DIR} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.c ${DERIVED_FILES_DIR}\n";
+			script = "/usr/bin/bison -o ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.c -y -d ${INPUT_FILE_PATH} &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${DERIVED_FILES_DIR} &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.c ${DERIVED_FILES_DIR}\n";
 		};
 		DDD80A261075636F00956CF0 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -561,7 +561,7 @@
 			outputFiles = (
 				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE).h",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -D_IDL -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -v -no_mepv -cepv -client none -server none out ${TEMP_FILES_DIR} ${INPUT_FILE_PATH} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce/\n";
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -D_IDL -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -v -no_mepv -cepv -client none -server none out ${TEMP_FILES_DIR} ${INPUT_FILE_PATH} &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce/\n";
 		};
 		DDD80A581075669300956CF0 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -573,7 +573,7 @@
 				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE).h",
 				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE)_sstub.c",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -D_IDL -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -v -no_mepv -cepv -client none out ${TEMP_FILES_DIR} ${INPUT_FILE_PATH} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce/ &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_sstub.c ${SHARED_DERIVED_FILE_DIR}/dce/\n";
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -D_IDL -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -v -no_mepv -cepv -client none out ${TEMP_FILES_DIR} ${INPUT_FILE_PATH} &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce/ &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_sstub.c ${SHARED_DERIVED_FILE_DIR}/dce/\n";
 		};
 		DDD80ABA10756A9D00956CF0 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -586,7 +586,7 @@
 				"$(SHARED_DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_cstub.c",
 				"$(SHARED_DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_sstub.c",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source out ${TEMP_FILES_DIR} ${INPUT_FILE_PATH} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_cstub.c ${SHARED_DERIVED_FILE_DIR} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_sstub.c ${SHARED_DERIVED_FILE_DIR}";
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source out ${TEMP_FILES_DIR} ${INPUT_FILE_PATH} &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR} &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_cstub.c ${SHARED_DERIVED_FILE_DIR} &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_sstub.c ${SHARED_DERIVED_FILE_DIR}";
 		};
 /* End PBXBuildRule section */
 
@@ -798,7 +798,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DDDF303C106ADA4D00E6A9C2 /* flex */;
+			remoteGlobalIDString = DDDF303C106ADA4D00E6A9C2;
 			remoteInfo = flex;
 		};
 		DDC99980107AB91A00330A72 /* PBXContainerItemProxy */ = {
