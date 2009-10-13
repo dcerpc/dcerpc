@@ -188,7 +188,6 @@
 		DD10F8CD106D73D9005F1EF3 /* convc.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0EA100408FD0080B762 /* convc.idl */; };
 		DD21F0C81083D18A00696F06 /* acf_y.y in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB02A100408FC0080B762 /* acf_y.y */; };
 		DD21F0CA1083D18A00696F06 /* nidl_y.y in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB075100408FC0080B762 /* nidl_y.y */; };
-		DD21F0DC1083D32F00696F06 /* dceidl_stubs.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = DD21F0DB1083D32F00696F06 /* dceidl_stubs.xcconfig */; };
 		DD21F0DD1083D3AD00696F06 /* libdceidl_stubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD21F0B71083D15500696F06 /* libdceidl_stubs.a */; };
 		DD32545F107CE8FC00BF66BD /* libnaf_np.so in Copy Modules */ = {isa = PBXBuildFile; fileRef = DD7FBDD8107407D200B63C2A /* libnaf_np.so */; };
 		DD7FBDAF1074067D00B63C2A /* ipnaf.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2CA100408FD0080B762 /* ipnaf.c */; };
@@ -4135,7 +4134,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				DDC99904107AA36600330A72 /* dceidl in Resources */,
-				DD21F0DC1083D32F00696F06 /* dceidl_stubs.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
