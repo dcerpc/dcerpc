@@ -187,9 +187,7 @@
 		DD10F8CC106D73C3005F1EF3 /* conv.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0E9100408FD0080B762 /* conv.idl */; };
 		DD10F8CD106D73D9005F1EF3 /* convc.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0EA100408FD0080B762 /* convc.idl */; };
 		DD21F0C81083D18A00696F06 /* acf_y.y in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB02A100408FC0080B762 /* acf_y.y */; };
-		DD21F0C91083D18A00696F06 /* acf_l.l in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB029100408FC0080B762 /* acf_l.l */; };
 		DD21F0CA1083D18A00696F06 /* nidl_y.y in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB075100408FC0080B762 /* nidl_y.y */; };
-		DD21F0CB1083D18A00696F06 /* nidl_l.l in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB074100408FC0080B762 /* nidl_l.l */; };
 		DD21F0DC1083D32F00696F06 /* dceidl_stubs.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = DD21F0DB1083D32F00696F06 /* dceidl_stubs.xcconfig */; };
 		DD21F0DD1083D3AD00696F06 /* libdceidl_stubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD21F0B71083D15500696F06 /* libdceidl_stubs.a */; };
 		DD32545F107CE8FC00BF66BD /* libnaf_np.so in Copy Modules */ = {isa = PBXBuildFile; fileRef = DD7FBDD8107407D200B63C2A /* libnaf_np.so */; };
@@ -205,6 +203,8 @@
 		DDA1C02F107E947F004D2055 /* dcerpc.m in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB200100408FD0080B762 /* dcerpc.m */; };
 		DDA1C037107E952B004D2055 /* junk.c in Create catalogs folders */ = {isa = PBXBuildFile; fileRef = DD9D320C107D51CF00FA8214 /* junk.c */; };
 		DDA1C1FE107FDCAE004D2055 /* dcerpc.h in Headers */ = {isa = PBXBuildFile; fileRef = DD3DB0D5100408FD0080B762 /* dcerpc.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DDAD96FD1083FA680016A764 /* acf_l.l in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB029100408FC0080B762 /* acf_l.l */; };
+		DDAD96FE1083FA680016A764 /* nidl_l.l in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB074100408FC0080B762 /* nidl_l.l */; };
 		DDC99904107AA36600330A72 /* dceidl in Resources */ = {isa = PBXBuildFile; fileRef = DDDF3257106BD43400E6A9C2 /* dceidl */; };
 		DDC99930107AAD5600330A72 /* codesets.idl in Create dce header folder */ = {isa = PBXBuildFile; fileRef = DD3DB0E7100408FD0080B762 /* codesets.idl */; };
 		DDC99945107AB5E100330A72 /* dce.h in Copy darwin headers */ = {isa = PBXBuildFile; fileRef = DD3DB0EC100408FD0080B762 /* dce.h */; };
@@ -397,7 +397,6 @@
 		DDEFE64D107E37F8006B8032 /* DCERPC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD04350210769FDA0010E492 /* DCERPC.framework */; };
 		DDEFE654107E380B006B8032 /* DCERPC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD04350210769FDA0010E492 /* DCERPC.framework */; };
 		DDFD942010723777008E776F /* comep.c in Sources */ = {isa = PBXBuildFile; fileRef = DDFD941E1072371E008E776F /* comep.c */; };
-		DDFD947410723C37008E776F /* echo.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAFA6100408FC0080B762 /* echo.idl */; };
 		DDFD947510723C3A008E776F /* misc.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAFAD100408FC0080B762 /* misc.c */; };
 		DDFD947710723C4C008E776F /* echo_client.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAFA7100408FC0080B762 /* echo_client.c */; };
 		DDFD948D10723D0D008E776F /* libuuid.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE017DE106C334200A5E41A /* libuuid.a */; };
@@ -434,7 +433,7 @@
 				"${SHARED_DERIVED_FILE_DIR}/dce/${INPUT_FILE_BASE}_cstub.c",
 				"${SHARED_DERIVED_FILE_DIR}/dce/${INPUT_FILE_BASE}.h",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -cepv -server none out ${SHARED_DERIVED_FILE_DIR}/dce ${INPUT_FILE_PATH}";
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -cepv -server none out ${TEMP_FILES_DIR} ${INPUT_FILE_PATH} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce/ &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_cstub.c ${SHARED_DERIVED_FILE_DIR}/dce/\n";
 		};
 		DD10F5F7106D3629005F1EF3 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -446,7 +445,7 @@
 				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE)_cstub.c",
 				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE)_sstub.c",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -cepv out ${SHARED_DERIVED_FILE_DIR}/dce ${INPUT_FILE_PATH}";
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -cepv out ${TEMP_FILES_DIR} ${INPUT_FILE_PATH} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce/ &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_cstub.c ${SHARED_DERIVED_FILE_DIR}/dce/ &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_sstub.c ${SHARED_DERIVED_FILE_DIR}/dce/\n";
 		};
 		DD10F8D0106D7461005F1EF3 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -455,9 +454,10 @@
 			fileType = pattern.proxy;
 			isEditable = 1;
 			outputFiles = (
+				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE).h",
 				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE)_cstub.c",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -server none -cepv out ${SHARED_DERIVED_FILE_DIR}/dce ${INPUT_FILE_PATH}";
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -server none -cepv out ${TEMP_FILES_DIR} ${INPUT_FILE_PATH} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce/ &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_cstub.c ${SHARED_DERIVED_FILE_DIR}/dce/";
 		};
 		DD10F8D1106D754F005F1EF3 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -466,9 +466,11 @@
 			fileType = pattern.proxy;
 			isEditable = 1;
 			outputFiles = (
+				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE).h",
+				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE)_sstub.c",
 				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE)_cstub.c",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -cepv out ${SHARED_DERIVED_FILE_DIR}/dce ${INPUT_FILE_PATH}";
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -cepv out ${TEMP_FILES_DIR} ${INPUT_FILE_PATH} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce/ &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_cstub.c ${SHARED_DERIVED_FILE_DIR}/dce/ &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_sstub.c ${SHARED_DERIVED_FILE_DIR}/dce/";
 		};
 		DD21F0D21083D2D400696F06 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -491,31 +493,7 @@
 				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h",
 				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).c",
 			);
-			script = "/usr/bin/bison -v -p ${INPUT_FILE_BASE}y -o ${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}.c -d ${INPUT_FILE_PATH} && \nsleep 1";
-		};
-		DD21F0D41083D2D400696F06 /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.proxy.script;
-			filePatterns = "*l_l.l";
-			fileType = pattern.proxy;
-			isEditable = 1;
-			outputFiles = (
-				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h",
-				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).c",
-			);
-			script = "${BUILT_PRODUCTS_DIR}/flex -Pnidl_yy -o${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}.c ${INPUT_FILE_PATH} && \nsleep 1";
-		};
-		DD21F0D51083D2D400696F06 /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.proxy.script;
-			filePatterns = "*f_l.l";
-			fileType = pattern.proxy;
-			isEditable = 1;
-			outputFiles = (
-				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h",
-				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).c",
-			);
-			script = "${BUILT_PRODUCTS_DIR}/flex -Pacf_yy -o${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}.c ${INPUT_FILE_PATH} &&\nsleep 1";
+			script = "/usr/bin/bison -v -p ${INPUT_FILE_BASE}y -o ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.c -d ${INPUT_FILE_PATH} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${DERIVED_FILES_DIR} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.c ${DERIVED_FILES_DIR}";
 		};
 		DDA1C030107E94B8004D2055 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -528,6 +506,28 @@
 			);
 			script = "gencat ${SHARED_DERIVED_FILE_DIR}/${INPUT_FILE_BASE}.cat ${INPUT_FILE_PATH}";
 		};
+		DDAD97121083FB360016A764 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*f_l.l";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).c",
+			);
+			script = "${BUILT_PRODUCTS_DIR}/flex -Pacf_yy -o${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.c ${INPUT_FILE_PATH} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.c ${DERIVED_FILES_DIR}";
+		};
+		DDAD97131083FB360016A764 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*l_l.l";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).c",
+			);
+			script = "${BUILT_PRODUCTS_DIR}/flex -Pnidl_yy -o${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.c ${INPUT_FILE_PATH} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.c ${DERIVED_FILES_DIR}";
+		};
 		DDD41A42107261620002C71D /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
 			compilerSpec = com.apple.compilers.proxy.script;
@@ -538,7 +538,7 @@
 				"${SHARED_DERIVED_FILE_DIR}/dce/${INPUT_FILE_BASE}_cstub.c",
 				"${SHARED_DERIVED_FILE_DIR}/dce/${INPUT_FILE_BASE}.h",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -server none out ${SHARED_DERIVED_FILE_DIR}/dce ${INPUT_FILE_PATH}";
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -server none out ${TEMP_FILES_DIR} ${INPUT_FILE_PATH} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce/ &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_cstub.c ${SHARED_DERIVED_FILE_DIR}/dce/\n";
 		};
 		DDD41B6A1072768F0002C71D /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -550,7 +550,7 @@
 				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).c",
 				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h",
 			);
-			script = "/usr/bin/bison -o ${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}.c -y -d ${INPUT_FILE_PATH}";
+			script = "/usr/bin/bison -o ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.c -y -d ${INPUT_FILE_PATH} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${DERIVED_FILES_DIR} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.c ${DERIVED_FILES_DIR}\n";
 		};
 		DDD80A261075636F00956CF0 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -561,7 +561,7 @@
 			outputFiles = (
 				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE).h",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -D_IDL -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -v -no_mepv -cepv -client none -server none out ${SHARED_DERIVED_FILE_DIR}/dce ${INPUT_FILE_PATH}";
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -D_IDL -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -v -no_mepv -cepv -client none -server none out ${TEMP_FILES_DIR} ${INPUT_FILE_PATH} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce/\n";
 		};
 		DDD80A581075669300956CF0 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -570,9 +570,10 @@
 			fileType = pattern.proxy;
 			isEditable = 1;
 			outputFiles = (
+				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE).h",
 				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE)_sstub.c",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -D_IDL -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -v -no_mepv -cepv -client none out ${SHARED_DERIVED_FILE_DIR}/dce ${INPUT_FILE_PATH}";
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -D_IDL -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -v -no_mepv -cepv -client none out ${TEMP_FILES_DIR} ${INPUT_FILE_PATH} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce/ &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_sstub.c ${SHARED_DERIVED_FILE_DIR}/dce/\n";
 		};
 		DDD80ABA10756A9D00956CF0 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -585,31 +586,7 @@
 				"$(SHARED_DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_cstub.c",
 				"$(SHARED_DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_sstub.c",
 			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source out ${SHARED_DERIVED_FILE_DIR} ${INPUT_FILE_PATH}";
-		};
-		DDE704F5107119E200563825 /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.proxy.script;
-			filePatterns = "*.idl";
-			fileType = pattern.proxy;
-			isEditable = 1;
-			outputFiles = (
-				"$(SHARED_DERIVED_FILE_DIR)/$(INPUT_FILE_BASE).h",
-				"$(SHARED_DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_sstub.c",
-			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source out ${SHARED_DERIVED_FILE_DIR} ${INPUT_FILE_PATH}";
-		};
-		DDFD948010723CAB008E776F /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.proxy.script;
-			filePatterns = "*.idl";
-			fileType = pattern.proxy;
-			isEditable = 1;
-			outputFiles = (
-				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE)_cstub.c",
-				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h",
-			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source out ${DERIVED_FILES_DIR} ${INPUT_FILE_PATH}";
+			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source out ${TEMP_FILES_DIR} ${INPUT_FILE_PATH} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_cstub.c ${SHARED_DERIVED_FILE_DIR} &&\nmv ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_sstub.c ${SHARED_DERIVED_FILE_DIR}";
 		};
 /* End PBXBuildRule section */
 
@@ -816,6 +793,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = DD04350110769FDA0010E492;
 			remoteInfo = DCERPC;
+		};
+		DDAD96E51083F7CD0016A764 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DDDF303C106ADA4D00E6A9C2 /* flex */;
+			remoteInfo = flex;
 		};
 		DDC99980107AB91A00330A72 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -3801,10 +3785,9 @@
 			buildRules = (
 				DD21F0D21083D2D400696F06 /* PBXBuildRule */,
 				DD21F0D31083D2D400696F06 /* PBXBuildRule */,
-				DD21F0D41083D2D400696F06 /* PBXBuildRule */,
-				DD21F0D51083D2D400696F06 /* PBXBuildRule */,
 			);
 			dependencies = (
+				DDAD96E61083F7CD0016A764 /* PBXTargetDependency */,
 			);
 			name = dceidl_stubs;
 			productName = dceidl_stubs;
@@ -3980,6 +3963,8 @@
 				DDDF3255106BD43400E6A9C2 /* Frameworks */,
 			);
 			buildRules = (
+				DDAD97121083FB360016A764 /* PBXBuildRule */,
+				DDAD97131083FB360016A764 /* PBXBuildRule */,
 			);
 			dependencies = (
 				DD10F66F106D633D005F1EF3 /* PBXTargetDependency */,
@@ -4053,7 +4038,6 @@
 				DDE704E31071196F00563825 /* Frameworks */,
 			);
 			buildRules = (
-				DDE704F5107119E200563825 /* PBXBuildRule */,
 			);
 			dependencies = (
 				DDE7051510711B7600563825 /* PBXTargetDependency */,
@@ -4073,7 +4057,6 @@
 				DDFD946D10723BEB008E776F /* Frameworks */,
 			);
 			buildRules = (
-				DDFD948010723CAB008E776F /* PBXBuildRule */,
 			);
 			dependencies = (
 				DDFD948810723CF7008E776F /* PBXTargetDependency */,
@@ -4411,9 +4394,7 @@
 			files = (
 				DD0A8EDE1083D88A002C6DB8 /* nidlmsg.m in Sources */,
 				DD21F0C81083D18A00696F06 /* acf_y.y in Sources */,
-				DD21F0C91083D18A00696F06 /* acf_l.l in Sources */,
 				DD21F0CA1083D18A00696F06 /* nidl_y.y in Sources */,
-				DD21F0CB1083D18A00696F06 /* nidl_l.l in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4555,6 +4536,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DDAD96FD1083FA680016A764 /* acf_l.l in Sources */,
+				DDAD96FE1083FA680016A764 /* nidl_l.l in Sources */,
 				DDDF3260106BD56500E6A9C2 /* astp_com.c in Sources */,
 				DDDF3261106BD56500E6A9C2 /* astp_cpx.c in Sources */,
 				DDDF3262106BD56500E6A9C2 /* astp_dmp.c in Sources */,
@@ -4697,7 +4680,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DDFD947410723C37008E776F /* echo.idl in Sources */,
 				DDFD947710723C4C008E776F /* echo_client.c in Sources */,
 				DDFD947510723C3A008E776F /* misc.c in Sources */,
 			);
@@ -4858,6 +4840,11 @@
 			isa = PBXTargetDependency;
 			target = DD04350110769FDA0010E492 /* DCERPC */;
 			targetProxy = DD9D32C5107E346600FA8214 /* PBXContainerItemProxy */;
+		};
+		DDAD96E61083F7CD0016A764 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DDDF303C106ADA4D00E6A9C2 /* flex */;
+			targetProxy = DDAD96E51083F7CD0016A764 /* PBXContainerItemProxy */;
 		};
 		DDC99981107AB91A00330A72 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
