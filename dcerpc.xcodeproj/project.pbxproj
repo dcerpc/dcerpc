@@ -3600,7 +3600,8 @@
 				DDC99943107AB4F600330A72 /* Copy darwin headers */,
 				DDC99955107AB67800330A72 /* Copy generic headers */,
 				DD9B4FF0107BF0630074C2F5 /* Create catalogs folders */,
-				DDA1C03B107E953D004D2055 /* ShellScript */,
+				DDA1C03B107E953D004D2055 /* Copy catalogs */,
+				DD81451C1087DAD200EAA9D9 /* Create rpc dir */,
 			);
 			buildRules = (
 			);
@@ -4140,13 +4141,28 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		DDA1C03B107E953D004D2055 /* ShellScript */ = {
+		DD81451C1087DAD200EAA9D9 /* Create rpc dir */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Create rpc dir";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "/usr/bin/install -m 0755 -o root -g wheel -d ${DSTROOT}/private/var/rpc";
+		};
+		DDA1C03B107E953D004D2055 /* Copy catalogs */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Copy catalogs";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
