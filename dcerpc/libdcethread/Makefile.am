@@ -95,7 +95,7 @@ lib_LTLIBRARIES = dcethread_mu.la
 dcethread_mu_la_SOURCES = $(TEST_FILES) test_stub.c
 dcethread_mu_la_LIBADD = libdcethread.la $(LIB_moonunit)
 dcethread_mu_la_LDFLAGS = -module -avoid-version -export-dynamic
-dcethread_mu_la_CPPFLAGS = -DTEST -DMU_LINK_STYLE=MU_LINK_UNDEFINED
+dcethread_mu_la_CPPFLAGS = -DTEST $(AM_CPPFLAGS)
 dcethread_mu_la_CFLAGS = -Wall -Werror
 
 BUILT_SOURCES = test_stub.c
