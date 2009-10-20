@@ -480,7 +480,7 @@
 			outputFiles = (
 				"${SHARED_DERIVED_FILE_DIR}/idl.cat",
 			);
-			script = "gencat ${SHARED_DERIVED_FILE_DIR}/idl.cat ${INPUT_FILE_PATH}";
+			script = "gencat ${TEMP_FILES_DIR}/idl.cat ${INPUT_FILE_PATH} &&\ncp ${TEMP_FILES_DIR}/idl.cat ${SHARED_DERIVED_FILE_DIR}";
 		};
 		DD21F0D31083D2D400696F06 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -503,7 +503,7 @@
 			outputFiles = (
 				"${SHARED_DERIVED_FILE_DIR}/${INPUT_FILE_BASE}.cat",
 			);
-			script = "gencat ${SHARED_DERIVED_FILE_DIR}/${INPUT_FILE_BASE}.cat ${INPUT_FILE_PATH}";
+			script = "gencat ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.cat ${INPUT_FILE_PATH} &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.cat ${SHARED_DERIVED_FILE_DIR}";
 		};
 		DDAD97121083FB360016A764 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
