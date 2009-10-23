@@ -997,6 +997,7 @@ INTERNAL unsigned32     send_last_frag_action_rtn
         if (status != rpc_s_ok)
         {
 		sm_p->cur_state = n_state;
+		call_rep->assoc->assoc_status = status;
 		return (status);
         }
     }
