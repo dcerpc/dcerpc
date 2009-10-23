@@ -394,4 +394,6 @@ $set 1
 364 rpc_m_ctxrundown_nomem
 365 rpc_m_ctxrundown_exc
 366 rpc_s_fault_codeset_conv_error
-
+367 rpc_s_no_call_active
+368 rpc_s_cannot_support
+369 rpc_s_no_context_available

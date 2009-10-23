@@ -1928,4 +1928,30 @@ void rpc_ns_mgmt_free_codesets (
         [out]		error_status_t		*status
 );
 
+
+/*
+ * R P C _ I M P E R S O N A T E _ C L I E N T
+ *
+ * Allows a server thread to run with the security credentials
+ * of the active client.
+ */
+void rpc_impersonate_client
+(
+    [in]    rpc_binding_handle_t    binding_handle,
+    [out]   unsigned32              *status
+);
+
+
+/*
+ * R P C _ R E V E R T _ T O _ S E L F
+ *
+ * Allows a server thread to end impersonation and revert to the
+ * per process credentials.
+ */
+void rpc_revert_to_self
+(
+    [in]    rpc_binding_handle_t    binding_handle,
+    [out]   unsigned32              *status
+);
+
 }

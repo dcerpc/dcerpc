@@ -42,7 +42,8 @@
 #include <comp.h>       /* Private communications services */
 #include <comauth.h>    /* Common Authentication services */
 
-
+#include <sys/kauth.h>
+
 /*
  * Internal variables to maintain the auth info cache.
  */
@@ -1936,4 +1937,191 @@ unsigned32              *st;
 
     (*rpc_g_authn_protocol_id[*authn_protocol]
         .epv->inq_sec_context) (auth_info, mech_context, st);
+}
+
+/*
+ **++
+ **
+ **  ROUTINE NAME:       rpc_impersonate_client
+ **
+ **  SCOPE:              PUBLIC - declared in rpc.idl
+ **
+ **  DESCRIPTION:
+ **
+ **  This routine allows a server thread to run with the security credentials
+ **  of the active client.
+ **
+ **  INPUTS:
+ **
+ **      binding_h       RPC binding handle
+ **
+ **  INPUTS/OUTPUTS:     none
+ **
+ **  OUTPUTS:
+ **
+ **      status          A value indicating the status of the routine.
+ **
+ **          rpc_s_ok                       The call was successful.
+ **          rpc_s_invalid_binding          RPC Protocol ID in binding handle
+ **                                         was invalid.
+ **          rpc_s_coding_error
+ **          rpc_s_protocol_error           Wrong type of connection
+ **          rpc_s_wrong_kind_of_binding    Wrong kind of binding
+ **
+ **  IMPLICIT INPUTS:    none
+ **
+ **  IMPLICIT OUTPUTS:   none
+ **
+ **  FUNCTION VALUE:     void
+ **
+ **  SIDE EFFECTS:       none
+ **
+ **--
+ **/
+
+PUBLIC void rpc_impersonate_client
+#ifdef _DCE_PROTO_
+(
+ rpc_binding_handle_t    binding_h,
+ unsigned32              *status
+ )
+#else
+(binding_h, status)
+rpc_binding_handle_t    binding_h;
+unsigned32              *status;
+#endif
+{
+    rpc_binding_rep_p_t binding_rep = (rpc_binding_rep_p_t) binding_h;
+    rpc_protocol_id_t       protid;
+    rpc_prot_network_epv_p_t net_epv;
+    uid_t               euid = 0;
+    gid_t               egid = 0;
+    int                 ret;
+
+    assert(binding_rep != NULL);
+
+    CODING_ERROR (status);
+    RPC_VERIFY_INIT ();
+
+    RPC_BINDING_VALIDATE(binding_rep, status);
+    if (*status != rpc_s_ok) {
+        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): invalid binding\n"));
+        return;
+    }
+
+    if (RPC_BINDING_IS_CLIENT (binding_rep)) {
+        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): wrong type of binding\n"));
+        *status = rpc_s_wrong_kind_of_binding;
+        return;
+    }
+
+    protid = binding_rep->protocol_id;
+    net_epv = RPC_PROTOCOL_INQ_NETWORK_EPV (protid);
+
+    if (net_epv->network_getpeereid == NULL)
+    {
+        *status = rpc_s_protocol_error;
+        return;
+    }
+
+    /*
+     * Call network protocol routine.
+     */
+    (*net_epv->network_getpeereid)
+    (binding_rep, &euid, &egid, status);
+
+    if (*status != rpc_s_ok)
+    {
+        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): network_getpeereid failed %d\n", *status));
+        return;
+    }
+
+    ret = pthread_setugid_np(euid, egid);
+    if (ret != 0) {
+        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): pthread_setugid_np failed %d\n", errno));
+        *status = rpc_s_no_context_available;
+        return;
+    }
+
+    *status = rpc_s_ok;
+}
+
+/*
+ **++
+ **
+ **  ROUTINE NAME:       rpc_revert_to_self
+ **
+ **  SCOPE:              PUBLIC - declared in rpc.idl
+ **
+ **  DESCRIPTION:
+ **
+ **  This routine allows a server thread to end impersonation and revert to the
+ **  per process credentials.
+ **
+ **  INPUTS:            none
+ **
+ **  INPUTS/OUTPUTS:     none
+ **
+ **  OUTPUTS:
+ **
+ **      status          A value indicating the status of the routine.
+ **
+ **          rpc_s_ok                       The call was successful.
+ **          rpc_s_invalid_binding          RPC Protocol ID in binding handle
+ **                                         was invalid.
+ **          rpc_s_coding_error
+ **          rpc_s_protocol_error           Wrong type of connection
+ **          rpc_s_wrong_kind_of_binding    Wrong kind of binding
+ **
+ **  IMPLICIT INPUTS:    none
+ **
+ **  IMPLICIT OUTPUTS:   none
+ **
+ **  FUNCTION VALUE:     void
+ **
+ **  SIDE EFFECTS:       none
+ **
+ **--
+ **/
+
+PUBLIC void rpc_revert_to_self
+#ifdef _DCE_PROTO_
+(
+ rpc_binding_handle_t    binding_h,
+ unsigned32              *status
+ )
+#else
+(binding_h, status)
+rpc_binding_handle_t    binding_h;
+unsigned32              *status;
+#endif
+{
+    rpc_binding_rep_p_t binding_rep = (rpc_binding_rep_p_t) binding_h;
+    int                 ret;
+
+    assert(binding_rep != NULL);
+
+    CODING_ERROR (status);
+    RPC_VERIFY_INIT ();
+
+    RPC_BINDING_VALIDATE(binding_rep, status);
+    if (*status != rpc_s_ok) {
+        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_revert_to_self): invalid binding\n"));
+        return;
+    }
+
+    if (RPC_BINDING_IS_CLIENT (binding_rep)) {
+        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_revert_to_self): wrong type of binding\n"));
+        *status = rpc_s_wrong_kind_of_binding;
+        return;
+    }
+
+    ret = pthread_setugid_np(KAUTH_UID_NONE, KAUTH_GID_NONE);
+    if (ret != 0) {
+        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_revert_to_self): pthread_setugid_np failed %d\n", errno));
+        *status = rpc_s_no_context_available;
+        return;
+    }
+
+    *status = rpc_s_ok;
 }

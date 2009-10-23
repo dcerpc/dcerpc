@@ -101,7 +101,8 @@ INTERNAL rpc_prot_network_epv_t cn_network_epv =
     rpc__cn_network_stop_maint,
     rpc__cn_network_select_dispatch,
     rpc__cn_network_inq_prot_vers,
-    rpc__cn_network_close
+    rpc__cn_network_close,
+    rpc__cn_network_getpeereid
 };
 
 /***********************************************************************/

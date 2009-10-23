@@ -379,6 +379,8 @@
 #define RPC_M_CTXRUNDOWN_NOMEM             rpc_m_ctxrundown_nomem
 #define RPC_M_CTXRUNDOWN_EXC               rpc_m_ctxrundown_exc
 #define RPC_S_FAULT_CODESET_CONV_ERROR     rpc_s_fault_codeset_conv_error
+#define RPC_S_NO_CALL_ACTIVE               rpc_s_no_call_active
+#define RPC_S_NO_CONTEXT_AVAILABLE         rpc_s_no_context_available
 
 #endif /* RPCSTATUS_H */
 

@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
@@ -17,7 +17,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
  */
@@ -134,7 +134,7 @@ INTERNAL pointer_t rpc__cn_network_init_desc _DCE_PROTOTYPE_ ((
 **--
 **/
 
-INTERNAL void rpc__cn_network_desc_inq_ep 
+INTERNAL void rpc__cn_network_desc_inq_ep
 #ifdef _DCE_PROTO_
 (
   rpc_socket_t            desc,
@@ -152,7 +152,7 @@ unsigned32              *status;
 {
     rpc_addr_vector_p_t rpc_addr_vec;
     unsigned32          temp_status;
-    
+
     RPC_CN_DBG_RTN_PRINTF (rpc__cn_network_desc_inq_ep);
     CODING_ERROR (status);
 
@@ -161,7 +161,7 @@ unsigned32              *status;
      */
     rpc__naf_desc_inq_addr (pseq_id, desc, &rpc_addr_vec, status);
     if (*status != rpc_s_ok) return;
-    
+
     if (rpc_addr_vec->len == 0)
     {
         rpc__naf_addr_vector_free (&rpc_addr_vec, &temp_status);
@@ -296,7 +296,7 @@ unsigned32	*status;
 **      max_calls       The min number of concurrent call requests
 **                      the server wishes to be able to handle.
 **      rpc_addr        The rpc_addr containing the endpoint and use
-**                      to bind to the socket. 
+**                      to bind to the socket.
 **      endpoint        The endpoint referred to above.
 **
 **  INPUTS/OUTPUTS:     none
@@ -317,7 +317,7 @@ unsigned32	*status;
 **--
 **/
 
-PRIVATE void rpc__cn_network_use_protseq 
+PRIVATE void rpc__cn_network_use_protseq
 #ifdef _DCE_PROTO_
 (
   rpc_protseq_id_t        pseq_id,
@@ -361,7 +361,7 @@ unsigned32              *status;
 #endif
 
     CODING_ERROR (status);
-    
+
     RPC_CN_DBG_RTN_PRINTF (rpc__cn_network_use_protseq);
 
     /*
@@ -384,7 +384,7 @@ unsigned32              *status;
          */
         if ((endpoint != NULL) && (max_calls > RPC_C_LISTEN_BACKLOG))
         {
-           *status = rpc_s_calls_too_large_for_wk_ep; 
+           *status = rpc_s_calls_too_large_for_wk_ep;
            return;
        }
     }
@@ -412,15 +412,15 @@ unsigned32              *status;
          * RPC address given.
          */
         auto_naf_id = rpc_addr->sa.family;
-        
+
         /*
          * If this call succeeds, we can safely assume stdin is a socket and
          * we will also have all the information about the socket that we need.
          */
-        rpc__naf_desc_inq_network (0, 
-                                   &auto_naf_id, 
-                                   &auto_network_if_id, 
-                                   &auto_prot_id, 
+        rpc__naf_desc_inq_network (0,
+                                   &auto_naf_id,
+                                   &auto_network_if_id,
+                                   &auto_prot_id,
                                    &auto_status);
         spawned_checked = true;
         spawned = (auto_status == rpc_s_ok);
@@ -464,7 +464,7 @@ unsigned32              *status;
     {
         if (spawned)
         {
-            spawned_same_address = !strcmp ((char *) endpoint, 
+            spawned_same_address = !strcmp ((char *) endpoint,
                                             (char *) auto_endpoint);
         }
     }
@@ -485,22 +485,22 @@ unsigned32              *status;
      */
     num_socks = (max_calls + RPC_C_LISTEN_BACKLOG - 1)/RPC_C_LISTEN_BACKLOG;
     RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                    ("(rpc__cn_network_use_protseq) Creating %d sockets\n", 
+                    ("(rpc__cn_network_use_protseq) Creating %d sockets\n",
                      num_socks));
-    RPC_MEM_ALLOC (sock_list, 
-                   rpc_socket_t *, 
+    RPC_MEM_ALLOC (sock_list,
+                   rpc_socket_t *,
                    ((num_socks) * sizeof (rpc_socket_t)),
                    RPC_C_MEM_SOCKET_LIST,
                    RPC_C_MEM_WAITOK);
-    for (i = 0, backlog = max_calls; 
-         i < num_socks; 
+    for (i = 0, backlog = max_calls;
+         i < num_socks;
          i++, backlog -= RPC_C_LISTEN_BACKLOG)
     {
         /*
          * First, create a socket for this RPC Protocol Sequence.
          */
         RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                        ("(rpc__cn_network_use_protseq) Created socket #%d\n", 
+                        ("(rpc__cn_network_use_protseq) Created socket #%d\n",
                          (i + 1)));
 #ifdef AUTOSTART
         /*
@@ -538,7 +538,7 @@ unsigned32              *status;
             RPC_SOCKET_CLOSE (sock);
             break;
         }
-        
+
         serr = rpc__socket_bind (sock, rpc_addr);
         if (RPC_SOCKET_IS_ERR (serr))
         {
@@ -565,13 +565,13 @@ unsigned32              *status;
          * Finally, add the socket to the listener thread's select
          * pool of sockets.
          */
-        rpc__network_add_desc (sock, 
-                               true, 
-                               (endpoint == NULL), 
-                               pseq_id, 
-                               priv_info, 
+        rpc__network_add_desc (sock,
+                               true,
+                               (endpoint == NULL),
+                               pseq_id,
+                               priv_info,
                                status);
-        
+
         if (*status != rpc_s_ok)
         {
             RPC_SOCKET_CLOSE (sock);
@@ -592,8 +592,8 @@ unsigned32              *status;
      */
     if (i != num_socks)
     {
-        for (created_sock_index = 0; 
-             created_sock_index < i; 
+        for (created_sock_index = 0;
+             created_sock_index < i;
              created_sock_index++)
         {
             rpc__network_remove_desc (sock_list[created_sock_index], &temp_status);
@@ -606,7 +606,6 @@ unsigned32              *status;
     }
     RPC_MEM_FREE (sock_list, RPC_C_MEM_SOCKET_LIST);
 }
-
 
 /***********************************************************************/
 
@@ -663,7 +662,7 @@ unsigned32              *status;
 **--
 **/
 
-INTERNAL pointer_t rpc__cn_network_init_desc 
+INTERNAL pointer_t rpc__cn_network_init_desc
 #ifdef _DCE_PROTO_
 (
   rpc_socket_t            *desc,
@@ -689,9 +688,9 @@ unsigned32              *status;
     rpc_cn_assoc_t      *assoc;
     unsigned32          temp_status;
     unsigned32          ssize, rsize;
-    
+
     CODING_ERROR (status);
-    
+
     RPC_CN_DBG_RTN_PRINTF (rpc__cn_network_init_desc);
 
     /*
@@ -777,7 +776,7 @@ unsigned32              *status;
     /*
      * Setup the socket's send and receive buffering
      */
-    serr = rpc__socket_set_bufs (*desc, 
+    serr = rpc__socket_set_bufs (*desc,
                                  rpc_g_cn_socket_read_buffer,
                                  rpc_g_cn_socket_write_buffer,
                                  &ssize,
@@ -821,7 +820,6 @@ unsigned32              *status;
         return (NULL);
     }
 
-
     if (spawned)
     {
         /*
@@ -844,7 +842,7 @@ unsigned32              *status;
     if (RPC_SOCKET_IS_ERR(serr))
     {
         RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
-                        ("(rpc__cn_network_init_desc) desc->%p rpc__socket_listen failed, error = %d\n", 
+                        ("(rpc__cn_network_init_desc) desc->%p rpc__socket_listen failed, error = %d\n",
                          *desc, RPC_SOCKET_ETOI(serr)));
         rpc_string_free (&endpoint, &temp_status);
         *status = rpc_s_cant_listen_sock;
@@ -864,7 +862,7 @@ unsigned32              *status;
 **  SCOPE:              PRIVATE - declared in cnnet.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Return the version number of the NCA CN protocol currently in use.
 **
 **  INPUTS:             none
@@ -890,7 +888,7 @@ unsigned32              *status;
 **--
 **/
 
-PRIVATE void rpc__cn_network_inq_prot_vers 
+PRIVATE void rpc__cn_network_inq_prot_vers
 #ifdef _DCE_PROTO_
 (
   unsigned8               *prot_id,
@@ -961,7 +959,7 @@ unsigned32              *status;
 **--
 **/
 
-PRIVATE void rpc__cn_network_select_dispatch 
+PRIVATE void rpc__cn_network_select_dispatch
 #ifdef _DCE_PROTO_
 (
   rpc_socket_t            desc,
@@ -980,19 +978,19 @@ unsigned32              *st;
     rpc_socket_t        newdesc;
     rpc_cn_assoc_t      *assoc;
     rpc_socket_error_t  serr;
-    
+
     RPC_CN_DBG_RTN_PRINTF (rpc__cn_network_select_dispatch);
     CODING_ERROR(st);
-    
+
     RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
                     ("CN: desc->%p connection request received\n", desc));
-    
+
     /*
      * We have been called by the network listener thread because a
      * network event occured on the descriptor passed in. Since the
      * only descriptors the network listener thread is listening on for us
      * are listening sockets we should just be able to accept the
-     * connection. 
+     * connection.
      */
     serr = rpc__socket_accept (desc, NULL, &newdesc);
     if (RPC_SOCKET_IS_ERR(serr))
@@ -1000,7 +998,7 @@ unsigned32              *st;
         RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
                         ("(rpc__cn_network_select_dispatch) desc->%p rpc__socket_accept failed, error = %d\n",
                          desc, RPC_SOCKET_ETOI(serr)));
-        
+
         *st = rpc_s_cannot_accept;
         dcethread_yield ();
     }
@@ -1016,11 +1014,11 @@ unsigned32              *st;
             rpc__naf_desc_inq_protseq_id (newdesc,
                                           RPC_C_PROTOCOL_ID_NCACN,
                                           &protseq_id,
-                                          &dbg_status); 
+                                          &dbg_status);
 
             if (dbg_status == rpc_s_ok)
             {
-                rpc__naf_desc_inq_peer_addr (newdesc, 
+                rpc__naf_desc_inq_peer_addr (newdesc,
                                              protseq_id,
                                              &rpc_addr,
                                              &dbg_status);
@@ -1068,7 +1066,7 @@ unsigned32              *st;
              * Set the socket to close itself if the process execs.
              */
             rpc__socket_set_close_on_exec (newdesc);
-            
+
 #ifndef NODELAY_BROKEN
             /*
              * The application is listening for new calls.
@@ -1077,7 +1075,7 @@ unsigned32              *st;
             rpc__naf_set_pkt_nodelay (newdesc, NULL, st);
             if (*st != rpc_s_ok)
             {
-                /* 
+                /*
                  * The set option failed. We'll continue anyway.
                  */
                 RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
@@ -1085,7 +1083,7 @@ unsigned32              *st;
                                  newdesc, *st));
             }
 #endif
-            
+
             /*
              * Set the keepalive socket option for this connection.
              */
@@ -1102,7 +1100,7 @@ unsigned32              *st;
 
             {
                 struct timeval tmo;
-                
+
                 tmo.tv_sec = RPC_C_SOCKET_SERVER_RECV_TIMER;
                 tmo.tv_usec = 0;
 
@@ -1127,12 +1125,12 @@ unsigned32              *st;
              * condition variables created. Also the receiver thread
              * will be created.
              */
-            assoc = rpc__cn_assoc_listen (newdesc, 
-                                          (unsigned_char_t *) priv_info, 
+            assoc = rpc__cn_assoc_listen (newdesc,
+                                          (unsigned_char_t *) priv_info,
                                           st);
             if (*st != rpc_s_ok)
             {
-                /* 
+                /*
                  * The association listen failed. Close the connection.
                  */
                 serr = RPC_SOCKET_CLOSE (newdesc);
@@ -1170,7 +1168,7 @@ unsigned32              *st;
 **      call_r          The call rep data structure to be linked to
 **                      the association control block. This may be
 **                      NULL if this association is being allocated
-**                      on the server side. 
+**                      on the server side.
 **
 **  INPUTS/OUTPUTS:     none
 **
@@ -1191,7 +1189,7 @@ unsigned32              *st;
 **--
 **/
 
-PRIVATE void rpc__cn_network_req_connect 
+PRIVATE void rpc__cn_network_req_connect
 #ifdef _DCE_PROTO_
 (
   rpc_addr_p_t            rpc_addr,
@@ -1216,10 +1214,10 @@ unsigned32              *st;
 
     //DO_NOT_CLOBBER(serr);
     //DO_NOT_CLOBBER(connect_completed);
-	 
+
     RPC_CN_DBG_RTN_PRINTF (rpc__cn_network_req_connect);
     CODING_ERROR(st);
-    
+
     /*
      * Now we need to create a connection to the server address
      * contained in the RPC address given. First create a socket to
@@ -1236,7 +1234,7 @@ unsigned32              *st;
                          assoc,
                          assoc->cn_ctlblk.cn_sock,
                          RPC_SOCKET_ETOI(serr)));
-        
+
         *st = rpc_s_cant_create_sock;
     }
     else
@@ -1255,17 +1253,17 @@ unsigned32              *st;
                             ("(rpc__cn_network_req_connect) call_rep->%p assoc->%p desc->%p Can't set socket bufs, error=%d\n",
                              assoc->call_rep,
                              assoc,
-                             assoc->cn_ctlblk.cn_sock, 
+                             assoc->cn_ctlblk.cn_sock,
                              RPC_SOCKET_ETOI (serr)));
         }
-        
+
         RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_BUFFS,
                         ("(rpc__cn_network_req_connect) desc->%p desired_sndbuf %u, desired_rcvbuf %u\n",
                          assoc->cn_ctlblk.cn_sock, rpc_g_cn_socket_read_buffer, rpc_g_cn_socket_write_buffer));
         RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_BUFFS,
                        ("(rpc__cn_network_req_connect) desc->%p actual sndbuf %u, actual rcvbuf %u\n",
                         assoc->cn_ctlblk.cn_sock, ssize, rsize));
-        
+
         if (rsize < RPC_C_ASSOC_MUST_RECV_FRAG_SIZE)
         {
 	    /*
@@ -1308,7 +1306,7 @@ unsigned32              *st;
                  */
                 RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
                                 ("(rpc__cn_network_req_connect) desc->%p RPC_SOCKET_CLOSE failed, error = %d\n",
-                                 assoc->cn_ctlblk.cn_sock, 
+                                 assoc->cn_ctlblk.cn_sock,
                                  RPC_SOCKET_ETOI(serr)));
             }
             return;
@@ -1323,10 +1321,10 @@ unsigned32              *st;
         {
             RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
                             ("(rpc__cn_network_req_connect) desc->%p rpc__socket_bind failed, error = %d\n",
-                             assoc->cn_ctlblk.cn_sock, 
+                             assoc->cn_ctlblk.cn_sock,
                              RPC_SOCKET_ETOI(serr)));
             *st = rpc_s_cant_bind_sock;
-            
+
             /*
              * The bind request failed. Close the socket just created
              * and free the association control block.
@@ -1339,7 +1337,7 @@ unsigned32              *st;
                  */
                 RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
                                 ("(rpc__cn_network_req_connect) desc->%p RPC_SOCKET_CLOSE failed, error = %d\n",
-                                 assoc->cn_ctlblk.cn_sock, 
+                                 assoc->cn_ctlblk.cn_sock,
                                  RPC_SOCKET_ETOI(serr)));
             }
             return;
@@ -1349,13 +1347,13 @@ unsigned32              *st;
          * Indicate that the connection is being attempted.
          */
         assoc->cn_ctlblk.cn_state = RPC_C_CN_CONNECTING;
-        
+
         /*
          * Since the connect call will block we will release the CN
          * global mutex before the call and reqaquire it after the call.
          */
         RPC_CN_UNLOCK ();
-        
+
         /*
          * Now actually do the connect to the server.
          */
@@ -1366,7 +1364,7 @@ unsigned32              *st;
          * Only exit the while loop on success, failure, or
          * when you've received a cancel and the cancel timer
          * has expired.
-         * If it is just a cancel, set cancel_pending and 
+         * If it is just a cancel, set cancel_pending and
          * start the cancel timer.
          */
         connect_completed = false;
@@ -1414,7 +1412,7 @@ unsigned32              *st;
                                            &retry_op,
                                            st);
                 RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                                ("(rpc__cn_network_req_connect) call_rep->%p assoc->%p desc->%p cancel caught before association setup\n", 
+                                ("(rpc__cn_network_req_connect) call_rep->%p assoc->%p desc->%p cancel caught before association setup\n",
                                  assoc->call_rep,
                                  assoc,
                                  assoc->cn_ctlblk.cn_sock));
@@ -1430,7 +1428,7 @@ unsigned32              *st;
 
         }
 
-        /* 
+        /*
          * The connect completed; see if it completed successfully.
          */
         RPC_CN_LOCK ();
@@ -1449,11 +1447,11 @@ unsigned32              *st;
         {
             RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
                             ("(rpc__cn_network_req_connect) desc->%p rpc__socket_connect failed, error = %d\n",
-                             assoc->cn_ctlblk.cn_sock, 
+                             assoc->cn_ctlblk.cn_sock,
                              RPC_SOCKET_ETOI(serr)));
-            
+
             rpc__cn_network_serr_to_status (serr, st);
-            
+
             /*
              * The connect request failed. Close the socket just created
              * and free the association control block.
@@ -1466,7 +1464,7 @@ unsigned32              *st;
                  */
                 RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
                                 ("(rpc__cn_network_req_connect) desc->%p RPC_SOCKET_CLOSE failed, error = %d\n",
-                                 assoc->cn_ctlblk.cn_sock, 
+                                 assoc->cn_ctlblk.cn_sock,
                                  RPC_SOCKET_ETOI(serr)));
             }
         }
@@ -1477,20 +1475,20 @@ unsigned32              *st;
              * Set the packet no delay option on the connection.
              */
             rpc__naf_set_pkt_nodelay (assoc->cn_ctlblk.cn_sock,
-                                      rpc_addr, 
+                                      rpc_addr,
                                       st);
             if (*st != rpc_s_ok)
             {
-                /* 
+                /*
                  * The set option failed. We'll continue anyway.
                  */
                 RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
                                 ("(rpc__cn_network_req_connect) desc->%p rpc__naf_set_pkt_nodelay failed, error = %d\n",
-                                 assoc->cn_ctlblk.cn_sock, 
+                                 assoc->cn_ctlblk.cn_sock,
                                  *st));
             }
 #endif
-            
+
             /*
              * Update the transport information by querying the socket
              */
@@ -1512,17 +1510,17 @@ unsigned32              *st;
              * Indicate that there is a valid connection.
              */
             assoc->cn_ctlblk.cn_state = RPC_C_CN_OPEN;
-            
+
             /*
              * A connection is now set up. Tell the receiver thread to begin
              * receiving on the connection.
              */
             if (assoc->cn_ctlblk.cn_rcvr_waiters)
             {
-                RPC_COND_SIGNAL (assoc->cn_ctlblk.cn_rcvr_cond, 
+                RPC_COND_SIGNAL (assoc->cn_ctlblk.cn_rcvr_cond,
                                  rpc_g_global_mutex);
             }
-            
+
             /*
              * Set the keepalive socket option for this connection.
              */
@@ -1542,7 +1540,7 @@ unsigned32              *st;
 
             {
                 struct timeval tmo;
-                
+
                 tmo.tv_sec = RPC_C_SOCKET_CLIENT_RECV_TIMER;
                 tmo.tv_usec = 0;
 
@@ -1556,7 +1554,7 @@ unsigned32              *st;
             }
 
             /*
-             * Everything went OK. Return a successful status code. 
+             * Everything went OK. Return a successful status code.
              */
             *st = rpc_s_ok;
         }
@@ -1579,11 +1577,11 @@ unsigned32              *st;
 **  INPUTS:
 **
 **      assoc           The association control block to which this connection
-**                      is attached. 
+**                      is attached.
 **
 **  INPUTS/OUTPUTS:     none
 **
-**  OUTPUTS:            
+**  OUTPUTS:
 **
 **      st              The return status of this routine.
 **                      rpc_s_ok
@@ -1599,7 +1597,7 @@ unsigned32              *st;
 **--
 **/
 
-PRIVATE void rpc__cn_network_close_connect 
+PRIVATE void rpc__cn_network_close_connect
 #ifdef _DCE_PROTO_
 (
   rpc_cn_assoc_p_t        assoc,
@@ -1614,7 +1612,7 @@ unsigned32              *st;
 
     RPC_CN_DBG_RTN_PRINTF (rpc__cn_network_close_connect);
     CODING_ERROR (st);
-    
+
     /*
      * Closing the connection will cause the receiver thread to stop
      * trying to receive on and and return to waiting on a condition
@@ -1681,7 +1679,7 @@ unsigned32              *st;
 **--
 **/
 
-PRIVATE void rpc__cn_network_mon 
+PRIVATE void rpc__cn_network_mon
 #ifdef _DCE_PROTO_
 (
   rpc_binding_rep_p_t     binding_r ATTRIBUTE_UNUSED,
@@ -1702,10 +1700,10 @@ unsigned32              *st;
 
     RPC_CN_DBG_RTN_PRINTF (rpc__cn_network_mon);
     CODING_ERROR(st);
-    
+
     /*
      * Get the association group using the group id provided as a
-     * client handle. 
+     * client handle.
      */
     grp_id.all = (unsigned long) client_h;
     grp_id = rpc__cn_assoc_grp_lkup_by_id (grp_id,
@@ -1771,7 +1769,7 @@ unsigned32              *st;
 **--
 **/
 
-PRIVATE void rpc__cn_network_stop_mon 
+PRIVATE void rpc__cn_network_stop_mon
 #ifdef _DCE_PROTO_
 (
   rpc_binding_rep_p_t     binding_r ATTRIBUTE_UNUSED,
@@ -1787,13 +1785,13 @@ unsigned32              *st;
 {
     rpc_cn_assoc_grp_t  *assoc_grp;
     rpc_cn_local_id_t   grp_id;
-    
+
     CODING_ERROR(st);
     RPC_CN_DBG_RTN_PRINTF (rpc__cn_network_stop_mon);
-    
+
     /*
      * Get the association group using the group id provided as a
-     * client handle. 
+     * client handle.
      */
     grp_id.all = (unsigned long) client_h;
     grp_id = rpc__cn_assoc_grp_lkup_by_id (grp_id,
@@ -1858,7 +1856,7 @@ unsigned32              *st;
 **--
 **/
 
-PRIVATE void rpc__cn_network_maint 
+PRIVATE void rpc__cn_network_maint
 #ifdef _DCE_PROTO_
 (
   rpc_binding_rep_p_t     binding_r,
@@ -1875,7 +1873,7 @@ unsigned32              *st;
 
     CODING_ERROR(st);
     RPC_CN_DBG_RTN_PRINTF (rpc__cn_network_maint);
-    
+
     /*
      * Get the association group using the group id contained in the
      * binding handle.
@@ -1884,8 +1882,8 @@ unsigned32              *st;
                                             (binding_r))->grp_id,
                                            RPC_C_CN_ASSOC_GRP_CLIENT,
                                            binding_r->transport_info,
-                                           st);  
-    
+                                           st);
+
     /*
      * If the association group control block can't be found
      * return an error.
@@ -1941,7 +1939,7 @@ unsigned32              *st;
 **--
 **/
 
-PRIVATE void rpc__cn_network_stop_maint 
+PRIVATE void rpc__cn_network_stop_maint
 #ifdef _DCE_PROTO_
 (
   rpc_binding_rep_p_t     binding_r,
@@ -1958,7 +1956,7 @@ unsigned32              *st;
 
     CODING_ERROR(st);
     RPC_CN_DBG_RTN_PRINTF (rpc__cn_network_stop_maint);
-    
+
     /*
      * Get the association group using the group id contained in the
      * binding handle.
@@ -1967,8 +1965,8 @@ unsigned32              *st;
                                             (binding_r))->grp_id,
                                            RPC_C_CN_ASSOC_GRP_CLIENT,
                                            binding_r->transport_info,
-                                           st); 
-    
+                                           st);
+
     /*
      * If the association group control block can't be found
      * return an error.
@@ -2023,7 +2021,7 @@ unsigned32              *st;
 **--
 **/
 
-PRIVATE boolean32 rpc__cn_network_connect_fail 
+PRIVATE boolean32 rpc__cn_network_connect_fail
 #ifdef _DCE_PROTO_
 (
 unsigned32              st
@@ -2054,7 +2052,7 @@ unsigned32              st;
         {
             return (true);
         }
-        
+
         default:
         {
             return (false);
@@ -2083,7 +2081,7 @@ unsigned32              st;
 **
 **  INPUTS/OUTPUTS:     none
 **
-**  OUTPUTS:            
+**  OUTPUTS:
 **
 **      st              The status code.
 **
@@ -2098,7 +2096,7 @@ unsigned32              st;
 **--
 **/
 
-INTERNAL void rpc__cn_network_serr_to_status 
+INTERNAL void rpc__cn_network_serr_to_status
 #ifdef _DCE_PROTO_
 (
   rpc_socket_error_t      serr,
@@ -2108,66 +2106,66 @@ INTERNAL void rpc__cn_network_serr_to_status
 (serr, st)
 rpc_socket_error_t      serr;
 unsigned32              *st;
-#endif 
+#endif
 {
     switch (serr)
     {
         case RPC_C_SOCKET_ETIMEDOUT:
         *st = rpc_s_connect_timed_out;
         break;
-        
+
         case RPC_C_SOCKET_ECONNREFUSED:
         *st = rpc_s_connect_rejected;
         break;
-        
+
         case RPC_C_SOCKET_ENETUNREACH:
         *st = rpc_s_network_unreachable;
         break;
-        
+
         case RPC_C_SOCKET_ENOSPC:
         *st = rpc_s_connect_no_resources;
         break;
-        
+
         case RPC_C_SOCKET_ENETDOWN:
         *st = rpc_s_rem_network_shutdown;
         break;
-        
+
 #ifdef ETOOMANYREFS
         case RPC_C_SOCKET_ETOOMANYREFS:
         *st = rpc_s_too_many_rem_connects;
         break;
-#endif        
+#endif
 
         case RPC_C_SOCKET_ESRCH:
         *st = rpc_s_no_rem_endpoint;
         break;
-      
-#ifdef EHOSTDOWN  
+
+#ifdef EHOSTDOWN
         case RPC_C_SOCKET_EHOSTDOWN:
         *st = rpc_s_rem_host_down;
         break;
-#endif        
+#endif
 
         case RPC_C_SOCKET_EHOSTUNREACH:
         *st = rpc_s_host_unreachable;
         break;
-        
+
         case RPC_C_SOCKET_EACCESS:
         *st = rpc_s_invalid_credentials;
         break;
-        
+
         case RPC_C_SOCKET_ECONNABORTED:
         *st = rpc_s_loc_connect_aborted;
         break;
-        
+
         case RPC_C_SOCKET_ECONNRESET:
         *st = rpc_s_connect_closed_by_rem;
         break;
-        
+
         case RPC_C_SOCKET_ENETRESET:
         *st = rpc_s_rem_host_crashed;
         break;
-        
+
         case RPC_C_SOCKET_ENOEXEC:
         *st = rpc_s_invalid_endpoint_format;
         break;
@@ -2175,13 +2173,12 @@ unsigned32              *st;
         case RPC_C_SOCKET_ETIME:
         *st = rpc_s_auth_skew;
         break;
-        
+
         default:
         *st = rpc_s_cannot_connect;
         break;
     }
-}    
-
+}
 
 /*
 **++
@@ -2199,7 +2196,7 @@ unsigned32              *st;
 **
 **  INPUTS/OUTPUTS:     none
 **
-**  OUTPUTS:            
+**  OUTPUTS:
 **
 **      rsize           The receive buffer size (rpc_g_cn_socket_read_buffer)
 **
@@ -2229,7 +2226,6 @@ rpc__cn_inq_sock_buffsize(
     *st = rpc_s_ok;
 }
 
-
 /*
 **++
 **
@@ -2250,7 +2246,7 @@ rpc__cn_inq_sock_buffsize(
 **
 **  INPUTS/OUTPUTS:     none
 **
-**  OUTPUTS:            
+**  OUTPUTS:
 **
 **      st              The status code.
 **
@@ -2314,7 +2310,7 @@ rpc__cn_set_sock_buffsize(
 **--
 **/
 
-PRIVATE void rpc__cn_network_close 
+PRIVATE void rpc__cn_network_close
 #ifdef _DCE_PROTO_
 (
   rpc_binding_rep_p_t     binding_r,
@@ -2331,7 +2327,7 @@ unsigned32              *st;
 
     CODING_ERROR(st);
     RPC_CN_DBG_RTN_PRINTF (rpc__cn_network_close);
-    
+
     /*
      * Get the association group using the group id contained in the
      * binding handle.
@@ -2340,8 +2336,8 @@ unsigned32              *st;
                                             (binding_r))->grp_id,
                                            RPC_C_CN_ASSOC_GRP_CLIENT,
                                            binding_r->transport_info,
-                                           st); 
-    
+                                           st);
+
     /*
      * If the association group control block can't be found
      * return an error.
@@ -2363,5 +2359,125 @@ unsigned32              *st;
     }
 }
 
-/***********************************************************************/
+/*
+ **++
+ **
+ **  ROUTINE NAME:       rpc__cn_network_getpeereid
+ **
+ **  SCOPE:              PRIVATE - declared in cnnet.h
+ **
+ **  DESCRIPTION:
+ **
+ **  This routine allows gets the peer effective user and group IDs
+ **
+ **  INPUTS:
+ **
+ **      binding_r       The binding rep
+ **
+ **  INPUTS/OUTPUTS:     none
+ **
+ **  OUTPUTS:
+ **
+ **      uid_t          effective user ID
+ **      gid_t          effective group ID
+ **      status          A value indicating the status of the routine.
+ **
+ **          rpc_s_ok                       The call was successful.
+ **          rpc_s_coding_error
+ **          rpc_s_connection_closed        No connection found
+ **
+ **  IMPLICIT INPUTS:    none
+ **
+ **  IMPLICIT OUTPUTS:   none
+ **
+ **  FUNCTION VALUE:     void
+ **
+ **  SIDE EFFECTS:       none
+ **
+ **--
+ **/
 
+PUBLIC void rpc__cn_network_getpeereid
+#ifdef _DCE_PROTO_
+(
+ rpc_binding_rep_p_t    binding_r,
+ uid_t                  *euid,
+ gid_t                  *egid,
+ unsigned32             *status
+ )
+#else
+(binding_h, status)
+rpc_binding_rep_p_t    binding_r;
+uid_t                  *euid,
+gid_t                  *egid,
+unsigned32             *status;
+#endif
+{
+    unsigned32          type;
+    rpc_cn_local_id_t   grp_id;
+    rpc_cn_assoc_grp_t  *assoc_grp;
+    rpc_socket_error_t  serr;
+
+    assert(binding_r != NULL);
+
+    CODING_ERROR (status);
+    RPC_CN_DBG_RTN_PRINTF (rpc__cn_network_getpeereid);
+
+    RPC_VERIFY_INIT ();
+
+    /*
+     * Determine the type of association group we are looking for.
+     */
+    if (RPC_BINDING_IS_SERVER (binding_r))
+    {
+        type = RPC_C_CN_ASSOC_GRP_SERVER;
+    }
+    else
+    {
+        type = RPC_C_CN_ASSOC_GRP_CLIENT;
+    }
+
+    /*
+     * Use the group id contained in the binding rep to find an
+     * association group.
+     */
+    grp_id = rpc__cn_assoc_grp_lkup_by_id (
+                                           ((rpc_cn_binding_rep_t *)binding_r)->grp_id,
+                                           type,
+                                           binding_r->transport_info,
+                                           status);
+
+    /*
+     * Check whether an association group was found or not.
+     */
+    if (RPC_CN_LOCAL_ID_VALID (grp_id))
+    {
+        /*
+         * An association group was found. Check whether it
+         * contains an RPC address.
+         */
+        assoc_grp = RPC_CN_ASSOC_GRP (grp_id);
+        assert(assoc_grp != NULL);
+
+        serr = rpc__socket_getpeereid
+        (((rpc_cn_assoc_t *)assoc_grp->grp_assoc_list.next)->cn_ctlblk.cn_sock,
+         euid,
+         egid);
+        if (RPC_SOCKET_IS_ERR(serr))
+        {
+            RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
+                            ("(rpc__cn_network_getpeereid) rpc__socket_getpeereid failed %d\n",
+                             RPC_SOCKET_ETOI(serr)));
+            *status = rpc_s_coding_error;
+        }
+        else {
+            *status = rpc_s_ok;
+        }
+    }
+    else
+    {
+        RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
+                        ("(rpc__cn_network_getpeereid) RPC_CN_LOCAL_ID_VALID failed\n"));
+        *status = rpc_s_connection_closed;
+    }
+}

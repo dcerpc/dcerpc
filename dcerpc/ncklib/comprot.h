@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
@@ -16,7 +16,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
  */
@@ -30,7 +30,7 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
@@ -43,14 +43,13 @@
 #include <dce/dce.h>
 #endif
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /***********************************************************************/
 /*
- * The Call EPV. 
+ * The Call EPV.
  */
 typedef rpc_call_rep_t *(*rpc_prot_call_start_fn_t) _DCE_PROTOTYPE_ ((
         rpc_binding_rep_p_t         /* in  */    /*binding_r*/,
@@ -93,7 +92,7 @@ typedef void (*rpc_prot_call_blk_til_free_fn_t) _DCE_PROTOTYPE_ ((
 
 typedef void (*rpc_prot_call_transmit_fault_fn_t) _DCE_PROTOTYPE_ ((
         rpc_call_rep_p_t            /* in  */    /*call_r*/,
-        rpc_iovector_p_t            /* in  */    /*call_fault_info*/, 
+        rpc_iovector_p_t            /* in  */    /*call_fault_info*/,
         unsigned32                  /* out */   * /*st*/
     ));
 
@@ -130,7 +129,7 @@ typedef struct
 
 /***********************************************************************/
 /*
- * The Management EPV. 
+ * The Management EPV.
  */
 typedef unsigned32 (*rpc_prot_mgt_inq_call_sent_fn_t) _DCE_PROTOTYPE_ ((
         void
@@ -168,17 +167,17 @@ typedef rpc_binding_rep_t *(*rpc_prot_binding_alloc_fn_t) _DCE_PROTOTYPE_ ((
 typedef void (*rpc_prot_binding_init_fn_t) _DCE_PROTOTYPE_ ((
         rpc_binding_rep_p_t         /* in  */    /*binding_r*/,
         unsigned32                  /* out */   * /*st*/
-    ));    
+    ));
 
 typedef void (*rpc_prot_binding_reset_fn_t) _DCE_PROTOTYPE_ ((
         rpc_binding_rep_p_t         /* in  */    /*binding_r*/,
         unsigned32                  /* out */   * /*st*/
-    ));    
+    ));
 
 typedef void (*rpc_prot_binding_changed_fn_t) _DCE_PROTOTYPE_ ((
         rpc_binding_rep_p_t         /* in  */    /*binding_r*/,
         unsigned32                  /* out */   * /*st*/
-    ));    
+    ));
 
 typedef void (*rpc_prot_binding_free_fn_t) _DCE_PROTOTYPE_ ((
         rpc_binding_rep_p_t         /* in,out */ * /*binding_r*/,
@@ -207,7 +206,7 @@ typedef void (*rpc_prot_binding_cross_fork_fn_t) _DCE_PROTOTYPE_ ((
         rpc_binding_rep_p_t         /* in  */    /*binding_r*/,
         unsigned32                  /* out */   * /*st*/
     ));
-        
+
 typedef struct
 {
     rpc_prot_binding_alloc_fn_t         binding_alloc;
@@ -227,7 +226,7 @@ typedef struct
  */
 
 typedef void (*rpc_prot_net_use_socket_fn_t) _DCE_PROTOTYPE_ ((
-	rpc_socket_t		    /* int */	 /*rpc_sock*/,
+        rpc_socket_t                /* in */	 /*rpc_sock*/,
         unsigned32                  /* in  */    /*max_calls*/,
         unsigned32                  /* out */   * /*st*/
     ));
@@ -282,7 +281,14 @@ typedef void (*rpc_prot_net_inq_prot_vers_fn_t) _DCE_PROTOTYPE_ ((
         unsigned32                  /* out */   * /*st*/
     ));
 
-typedef struct
+typedef void (*rpc_prot_net_getpeereid_fn_t) _DCE_PROTOTYPE_ ((
+        rpc_binding_rep_p_t         /* in */	  /*binding_r*/,
+        uid_t                       /* out  */  * /*uid*/,
+        gid_t                       /* out */   * /*gid*/,
+        unsigned32                  /* out */   * /*st*/
+    ));
+
+    typedef struct
 {
     rpc_prot_net_use_socket_fn_t    network_use_socket;
     rpc_prot_net_use_protseq_fn_t   network_use_protseq;
@@ -293,15 +299,15 @@ typedef struct
     rpc_prot_net_select_disp_fn_t   network_select_disp;
     rpc_prot_net_inq_prot_vers_fn_t network_inq_prot_vers;
     rpc_prot_net_close_fn_t         network_close;
+    rpc_prot_net_getpeereid_fn_t    network_getpeereid;
 } rpc_prot_network_epv_t, *rpc_prot_network_epv_p_t;
-
 
 /***********************************************************************/
 /*
  * Signature of the fork handling routines.
  *
  */
-typedef void (*rpc_prot_fork_handler_fn_t) _DCE_PROTOTYPE_ ((  
+typedef void (*rpc_prot_fork_handler_fn_t) _DCE_PROTOTYPE_ ((
         rpc_fork_stage_id_t     operation
     ));
 
@@ -320,7 +326,6 @@ typedef void (*rpc_prot_init_fn_t) _DCE_PROTOTYPE_ ((
         rpc_prot_fork_handler_fn_t  * /*fork_handler*/,
         unsigned32                  * /*st*/
     ));
-
 
 /*
  * Declarations of the RPC Protocol Service init routines.

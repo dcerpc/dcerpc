@@ -389,4 +389,7 @@ interface rpcsts
     const unsigned32 rpc_m_ctxrundown_nomem          = 0x16c9a16c;
     const unsigned32 rpc_m_ctxrundown_exc            = 0x16c9a16d;
     const unsigned32 rpc_s_fault_codeset_conv_error  = 0x16c9a16e;
+    const unsigned32 rpc_s_no_call_active            = 0x16c9a16f;
+    const unsigned32 rpc_s_cannot_support            = 0x16c9a170;
+    const unsigned32 rpc_s_no_context_available      = 0x16c9a171;
 }

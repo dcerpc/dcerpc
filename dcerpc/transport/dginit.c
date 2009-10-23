@@ -130,7 +130,8 @@ unsigned32 *st;
         rpc__dg_network_stop_maint,
         rpc__dg_network_select_dispatch,
         rpc__dg_network_inq_prot_vers,
-        rpc__dg_network_close
+        rpc__dg_network_close,
+        NULL
     };
     
     *call_epv    = &dg_call_epv;

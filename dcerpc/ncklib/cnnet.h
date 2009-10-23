@@ -217,6 +217,15 @@ PRIVATE void rpc__cn_inq_sock_buffsize _DCE_PROTOTYPE_ ((
         unsigned32	* /* ssize */,
         error_status_t  * /* st */));
 
+/*
+ * R P C _ _ C N _ N E T W O R K _ G E T P E E R E I D
+ */
+
+PRIVATE void rpc__cn_network_getpeereid _DCE_PROTOTYPE_ ((
+        rpc_binding_rep_p_t     /* binding_r */,
+        uid_t                   */* euid */,
+        gid_t                   */* egid */,
+        unsigned32              */* st */));
 
 #endif /* _CNNET_H */
 
