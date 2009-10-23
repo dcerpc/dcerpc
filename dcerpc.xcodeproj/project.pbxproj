@@ -140,7 +140,6 @@
 		DD081633106C1A250007E433 /* smb.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB14A100408FD0080B762 /* smb.idl */; };
 		DD081634106C1A250007E433 /* twr.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB163100408FD0080B762 /* twr.idl */; };
 		DD081635106C1A250007E433 /* uuid.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB164100408FD0080B762 /* uuid.idl */; };
-		DD0A8EDE1083D88A002C6DB8 /* nidlmsg.m in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB077100408FC0080B762 /* nidlmsg.m */; };
 		DD0FE805107411EB004AB68C /* Kerberos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD0FE804107411EB004AB68C /* Kerberos.framework */; };
 		DD10F4A0106D21E7005F1EF3 /* comauth.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1D4100408FD0080B762 /* comauth.c */; };
 		DD10F4A1106D21E7005F1EF3 /* combind.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1D6100408FD0080B762 /* combind.c */; };
@@ -199,7 +198,6 @@
 		DD7FBDE51074084F00B63C2A /* twr_uxd.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2D3100408FD0080B762 /* twr_uxd.c */; };
 		DD9D320D107D51CF00FA8214 /* junk.c in Sources */ = {isa = PBXBuildFile; fileRef = DD9D320C107D51CF00FA8214 /* junk.c */; };
 		DD9D32C3107E345B00FA8214 /* DCERPC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD04350210769FDA0010E492 /* DCERPC.framework */; };
-		DDA1C02F107E947F004D2055 /* dcerpc.m in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB200100408FD0080B762 /* dcerpc.m */; };
 		DDA1C037107E952B004D2055 /* junk.c in Create catalogs folders */ = {isa = PBXBuildFile; fileRef = DD9D320C107D51CF00FA8214 /* junk.c */; };
 		DDA1C1FE107FDCAE004D2055 /* dcerpc.h in Headers */ = {isa = PBXBuildFile; fileRef = DD3DB0D5100408FD0080B762 /* dcerpc.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DDAD96FD1083FA680016A764 /* acf_l.l in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB029100408FC0080B762 /* acf_l.l */; };
@@ -471,17 +469,6 @@
 			);
 			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -cepv out ${TEMP_FILES_DIR} ${INPUT_FILE_PATH} &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce/ &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_cstub.c ${SHARED_DERIVED_FILE_DIR}/dce/ &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}_sstub.c ${SHARED_DERIVED_FILE_DIR}/dce/";
 		};
-		DD21F0D21083D2D400696F06 /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.proxy.script;
-			filePatterns = "*.m";
-			fileType = pattern.proxy;
-			isEditable = 1;
-			outputFiles = (
-				"${SHARED_DERIVED_FILE_DIR}/idl.cat",
-			);
-			script = "gencat ${TEMP_FILES_DIR}/idl.cat ${INPUT_FILE_PATH} &&\ncp ${TEMP_FILES_DIR}/idl.cat ${SHARED_DERIVED_FILE_DIR}";
-		};
 		DD21F0D31083D2D400696F06 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
 			compilerSpec = com.apple.compilers.proxy.script;
@@ -493,17 +480,6 @@
 				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).c",
 			);
 			script = "/usr/bin/bison -v -p ${INPUT_FILE_BASE}y -o ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.c -d ${INPUT_FILE_PATH} &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.h ${DERIVED_FILES_DIR} &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.c ${DERIVED_FILES_DIR}";
-		};
-		DDA1C030107E94B8004D2055 /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.proxy.script;
-			filePatterns = "*.m";
-			fileType = pattern.proxy;
-			isEditable = 1;
-			outputFiles = (
-				"${SHARED_DERIVED_FILE_DIR}/${INPUT_FILE_BASE}.cat",
-			);
-			script = "gencat ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.cat ${INPUT_FILE_PATH} &&\ncp ${TEMP_FILES_DIR}/${INPUT_FILE_BASE}.cat ${SHARED_DERIVED_FILE_DIR}";
 		};
 		DDAD97121083FB360016A764 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -3720,9 +3696,9 @@
 				DD10F5D2106D341E005F1EF3 /* Headers */,
 				DD10F5D3106D341E005F1EF3 /* Sources */,
 				DD10F5D4106D341E005F1EF3 /* Frameworks */,
+				DD92D9391090F54600B869C1 /* Create dcerpc.cat */,
 			);
 			buildRules = (
-				DDA1C030107E94B8004D2055 /* PBXBuildRule */,
 			);
 			dependencies = (
 				DD10F656106D3E55005F1EF3 /* PBXTargetDependency */,
@@ -3781,9 +3757,9 @@
 				DD21F0B31083D15500696F06 /* Headers */,
 				DD21F0B41083D15500696F06 /* Sources */,
 				DD21F0B51083D15500696F06 /* Frameworks */,
+				DD92D95F1090F87B00B869C1 /* Create idl.cat */,
 			);
 			buildRules = (
-				DD21F0D21083D2D400696F06 /* PBXBuildRule */,
 				DD21F0D31083D2D400696F06 /* PBXBuildRule */,
 			);
 			dependencies = (
@@ -4155,6 +4131,38 @@
 			shellPath = /bin/sh;
 			shellScript = "/usr/bin/install -m 0755 -o root -g wheel -d ${DSTROOT}/private/var/rpc";
 		};
+		DD92D9391090F54600B869C1 /* Create dcerpc.cat */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/dcerpc/ncklib/dcerpc.m",
+			);
+			name = "Create dcerpc.cat";
+			outputPaths = (
+				"$(SHARED_DERIVED_FILE_DIR)/dcerpc.cat",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "gencat ${SHARED_DERIVED_FILE_DIR}/dcerpc.cat ${SRCROOT}/dcerpc/ncklib/dcerpc.m\n";
+		};
+		DD92D95F1090F87B00B869C1 /* Create idl.cat */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/dcerpc/idl_compiler/nidlmsg.m",
+			);
+			name = "Create idl.cat";
+			outputPaths = (
+				"$(SHARED_DERIVED_FILE_DIR)/idl.cat",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "gencat ${SHARED_DERIVED_FILE_DIR}/idl.cat ${SRCROOT}/dcerpc/idl_compiler/nidlmsg.m";
+		};
 		DDA1C03B107E953D004D2055 /* Copy catalogs */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -4378,7 +4386,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DDA1C02F107E947F004D2055 /* dcerpc.m in Sources */,
 				DD10F5DA106D3450005F1EF3 /* comfork.c in Sources */,
 				DD10F5DB106D3450005F1EF3 /* mgmt.c in Sources */,
 				DD10F5DC106D3450005F1EF3 /* ndrglob.c in Sources */,
@@ -4406,7 +4413,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD0A8EDE1083D88A002C6DB8 /* nidlmsg.m in Sources */,
 				DD21F0C81083D18A00696F06 /* acf_y.y in Sources */,
 				DD21F0CA1083D18A00696F06 /* nidl_y.y in Sources */,
 			);
