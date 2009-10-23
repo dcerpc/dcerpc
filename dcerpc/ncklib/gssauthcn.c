@@ -1857,7 +1857,7 @@ INTERNAL void rpc__gssauth_cn_unwrap_packet
 	unsigned_char_p_t auth_base = NULL;
 	unsigned16 auth_len = 0;
 	unsigned8 pad_len = auth_tlr->stub_pad_length;
-	gss_iov_buffer_desc output_iov[3] = {0};
+	gss_iov_buffer_desc output_iov[2] = {0};
 	gss_buffer_desc pdu_buffer = {0};
 	gss_buffer_desc tlr_buffer = {0};
 
