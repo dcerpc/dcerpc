@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1990 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1990 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1990 DIGITAL EQUIPMENT CORPORATION
@@ -16,7 +16,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
  */
@@ -28,7 +28,7 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
@@ -121,7 +121,7 @@ INTERNAL void send_pdu _DCE_PROTOTYPE_ ((
 /*
  * C L I E N T   A S S O C   P R E D I C A T E   T A B L E
  *
- *  
+ *
  * The predicates. All predicates except those noted below are described
  * in the NCA Connection architecture spec.
  *
@@ -134,44 +134,43 @@ INTERNAL void send_pdu _DCE_PROTOTYPE_ ((
  * the NCA Connection architecture spec. This predicate is a combination of
  * shutdown_requested_pred and shutdown_allowed_pred predicate and
  * active_refs_pred routines. See the routine header of
- * shutdown_allowed_req_pred_rtn for more information. 
+ * shutdown_allowed_req_pred_rtn for more information.
  */
-/* 
+/*
 #define SHUTDOWN_REQUESTED_PRED         0
 #define SHUTDOWN_ALLOWED_PRED           1
 #define ACTIVE_PRED                     2
 #define SHUTDOWN_ALLOWED_REQ_PRED       3
 #define LASTFRAG_PRED			4
 #define VERSION_MISMATCH_PRED           5
-*/ 
+*/
 
-/*  
+/*
  * The predicate routine prototypes.
  */
 INTERNAL unsigned8 shutdown_requested_pred_rtn _DCE_PROTOTYPE_ ((
-    pointer_t /* spc_struct */, 
+    pointer_t /* spc_struct */,
     pointer_t /* event_param */));
 
 INTERNAL unsigned8 shutdown_allowed_pred_rtn _DCE_PROTOTYPE_ ((
-    pointer_t /* spc_struct */, 
+    pointer_t /* spc_struct */,
     pointer_t /* event_param */));
 
 INTERNAL unsigned8 active_pred_rtn _DCE_PROTOTYPE_ ((
-    pointer_t /* spc_struct */, 
+    pointer_t /* spc_struct */,
     pointer_t /* event_param */)) ATTRIBUTE_UNUSED;
 
 INTERNAL unsigned8 shutdown_allowed_req_pred_rtn _DCE_PROTOTYPE_ ((
-    pointer_t /* spc_struct */, 
+    pointer_t /* spc_struct */,
     pointer_t /* event_param */)) ATTRIBUTE_UNUSED;
 
 INTERNAL unsigned8 lastfrag_pred_rtn _DCE_PROTOTYPE_ ((
-    pointer_t /* spc_struct */, 
+    pointer_t /* spc_struct */,
     pointer_t /* event_param */));
 
 INTERNAL unsigned8 version_mismatch_pred_rtn _DCE_PROTOTYPE_ ((
-    pointer_t /* spc_struct */, 
+    pointer_t /* spc_struct */,
     pointer_t /* event_param */));
-
 
 
 /***********************************************************************/
@@ -206,25 +205,25 @@ INTERNAL unsigned8 version_mismatch_pred_rtn _DCE_PROTOTYPE_ ((
  * The action rem_mark is not in the NCA architecture spec. It is
  * a combination of the rem_assoc_from_grp and mark_assoc
  * routines. See the routine header of rem_mark_action_rtn for more
- * information. 
+ * information.
  *
  * The action rem_mark_discon is not in the NCA architecture spec. It is
  * a combination of the rem_assoc_from_grp, mark_assoc and  discon_calls action
  * routines. See the routine header of rem_mark_discon_action_rtn for more
- * information. 
+ * information.
  *
  * The action decr_rem_mark_abort is not in the NCA architecture spec. It is
  * a combination of the decr_active, rem_assoc_from_grp, mark_assoc
  * and abort_assoc action routines. See the routine header of
- * decr_rem_mark_abort_action_rtn for more information. 
- * 
+ * decr_rem_mark_abort_action_rtn for more information.
+ *
  * The action shutdown_allowed_action_rtn is not part of the NCA
  * architecture specification.  It is a combination of set_shutdown_
  * request_action_rtn() and rem_mark_abort_action_rtn().  Shutdown_
  * allowed_request_action_rtn() is the entry in the state table.
  * It replaces the previous state table which included explicit
  * predicate routines and multiple action routines per state-event
- * combination.  
+ * combination.
  *
  * NOTE: The calls done event is illegal in the active state in the
  * NCA architecture spec. It is a null event here (no state change, no
@@ -238,7 +237,7 @@ INTERNAL unsigned8 version_mismatch_pred_rtn _DCE_PROTOTYPE_ ((
 #define REM_ASSOC_FROM_GRP      4
 #define SET_SECONDARY_ADDR      5
 #define AUTHENT3                6
-#define SEND_ALT_CONTEXT_REQ    7 
+#define SEND_ALT_CONTEXT_REQ    7
 #define ABORT_ASSOC             8
 #define SET_SHUTDOWN_REQUEST    9
 #define DISCON_CALLS            10
@@ -253,115 +252,115 @@ INTERNAL unsigned8 version_mismatch_pred_rtn _DCE_PROTOTYPE_ ((
 #define DECR_REM_MARK_ABORT     19
 #define PROTOCOL_ERROR          20
 #define PROCESS_FRAG		21
-#define RETRY_ASSOC 		22 
+#define RETRY_ASSOC 		22
 #define SHUTDOWN_ALLOWED	23
 #define ILLEGAL_EVENT_ABORT     24
 
-/*  
+/*
  * The action routine prototypes.
  */
 INTERNAL unsigned32     init_assoc_action_rtn _DCE_PROTOTYPE_ ((
-    pointer_t  /*spc_struct*/, 
+    pointer_t  /*spc_struct*/,
     pointer_t  /*event_param*/,
     pointer_t  /*sm*/));
 
 INTERNAL unsigned32     request_conn_action_rtn _DCE_PROTOTYPE_ ((
-    pointer_t  /*spc_struct*/, 
+    pointer_t  /*spc_struct*/,
     pointer_t  /*event_param*/,
     pointer_t  /*sm*/));
 
 INTERNAL unsigned32     mark_assoc_action_rtn _DCE_PROTOTYPE_ ((
-    pointer_t  /*spc_struct*/, 
+    pointer_t  /*spc_struct*/,
     pointer_t  /*event_param*/,
     pointer_t  /*sm*/));
 
 INTERNAL unsigned32     add_assoc_to_grp_action_rtn _DCE_PROTOTYPE_ ((
-    pointer_t  /*spc_struct*/, 
+    pointer_t  /*spc_struct*/,
     pointer_t  /*event_param*/,
     pointer_t  /*sm*/));
 
 INTERNAL unsigned32     rem_assoc_from_grp_action_rtn _DCE_PROTOTYPE_ ((
-    pointer_t  /*spc_struct*/, 
+    pointer_t  /*spc_struct*/,
     pointer_t  /*event_param*/,
     pointer_t  /*sm*/));
 
 INTERNAL unsigned32     set_secondary_addr_action_rtn _DCE_PROTOTYPE_ ((
-    pointer_t  /*spc_struct*/, 
+    pointer_t  /*spc_struct*/,
     pointer_t  /*event_param*/,
     pointer_t  /*sm*/));
 
 INTERNAL unsigned32     authent3_action_rtn _DCE_PROTOTYPE_ ((
-    pointer_t  /*spc_struct*/, 
+    pointer_t  /*spc_struct*/,
     pointer_t  /*event_param*/,
     pointer_t  /*sm*/));
 
 INTERNAL unsigned32     send_alt_context_req_action_rtn _DCE_PROTOTYPE_ ((
-    pointer_t  /*spc_struct*/, 
+    pointer_t  /*spc_struct*/,
     pointer_t  /*event_param*/,
     pointer_t  /*sm*/));
 
 INTERNAL unsigned32     abort_assoc_action_rtn _DCE_PROTOTYPE_ ((
-    pointer_t  /*spc_struct*/, 
+    pointer_t  /*spc_struct*/,
     pointer_t  /*event_param*/,
     pointer_t  /*sm*/));
 
 INTERNAL unsigned32     set_shutdown_request_action_rtn _DCE_PROTOTYPE_ ((
-    pointer_t  /*spc_struct*/, 
+    pointer_t  /*spc_struct*/,
     pointer_t  /*event_param*/,
     pointer_t  /*sm*/));
 
 INTERNAL unsigned32     discon_calls_action_rtn _DCE_PROTOTYPE_ ((
-    pointer_t  /*spc_struct*/, 
+    pointer_t  /*spc_struct*/,
     pointer_t  /*event_param*/,
     pointer_t  /*sm*/));
 
 INTERNAL unsigned32     incr_active_action_rtn _DCE_PROTOTYPE_ ((
-    pointer_t  /*spc_struct*/, 
+    pointer_t  /*spc_struct*/,
     pointer_t  /*event_param*/,
     pointer_t  /*sm*/));
 
 INTERNAL unsigned32     decr_active_action_rtn _DCE_PROTOTYPE_ ((
-    pointer_t  /*spc_struct*/, 
+    pointer_t  /*spc_struct*/,
     pointer_t  /*event_param*/,
     pointer_t  /*sm*/));
 
 INTERNAL unsigned32     mark_syntax_and_sec_action_rtn _DCE_PROTOTYPE_ ((
-    pointer_t  /*spc_struct*/, 
+    pointer_t  /*spc_struct*/,
     pointer_t  /*event_param*/,
     pointer_t  /*sm*/));
 
 INTERNAL unsigned32     mark_abort_action_rtn _DCE_PROTOTYPE_ ((
-    pointer_t  /*spc_struct*/, 
+    pointer_t  /*spc_struct*/,
     pointer_t  /*event_param*/,
     pointer_t  /*sm*/));
 
 INTERNAL unsigned32     add_mark_set_action_rtn _DCE_PROTOTYPE_ ((
-    pointer_t  /*spc_struct*/, 
+    pointer_t  /*spc_struct*/,
     pointer_t  /*event_param*/,
     pointer_t  /*sm*/));
 
 INTERNAL unsigned32     rem_mark_abort_action_rtn _DCE_PROTOTYPE_ ((
-    pointer_t  /*spc_struct*/, 
+    pointer_t  /*spc_struct*/,
     pointer_t  /*event_param*/,
     pointer_t  /*sm*/));
 
 INTERNAL unsigned32     rem_mark_action_rtn _DCE_PROTOTYPE_ ((
-    pointer_t  /*spc_struct*/, 
+    pointer_t  /*spc_struct*/,
     pointer_t  /*event_param*/,
     pointer_t  /*sm*/));
 
 INTERNAL unsigned32     rem_mark_discon_action_rtn _DCE_PROTOTYPE_ ((
-    pointer_t  /*spc_struct*/, 
+    pointer_t  /*spc_struct*/,
     pointer_t  /*event_param*/,
     pointer_t  /*sm*/));
 
 INTERNAL unsigned32     decr_rem_mark_abort_action_rtn _DCE_PROTOTYPE_ ((
-    pointer_t  /*spc_struct*/, 
+    pointer_t  /*spc_struct*/,
     pointer_t  /*event_param*/,
     pointer_t  /*sm*/));
 
 INTERNAL unsigned32     shutdown_allowed_action_rtn _DCE_PROTOTYPE_ ((
-    pointer_t  /*spc_struct*/, 
+    pointer_t  /*spc_struct*/,
     pointer_t  /*event_param*/,
     pointer_t  /*sm*/));
 
@@ -371,16 +370,16 @@ INTERNAL unsigned32     process_frag_action_rtn _DCE_PROTOTYPE_ ((
     pointer_t  /*sm*/));
 
 INTERNAL unsigned32     retry_assoc_action_rtn _DCE_PROTOTYPE_ ((
-    pointer_t /* spc_struct */, 
+    pointer_t /* spc_struct */,
     pointer_t  /*event_param*/,
     pointer_t  /*sm*/));
 
 INTERNAL unsigned32     illegal_event_abort_action_rtn _DCE_PROTOTYPE_ ((
-    pointer_t  /*spc_struct*/, 
+    pointer_t  /*spc_struct*/,
     pointer_t  /*event_param*/,
     pointer_t  /*sm*/));
 
-/*  
+/*
  * The action table itself.
  */
 GLOBAL rpc_cn_sm_action_fn_t  rpc_g_cn_client_assoc_act_tbl [] =
@@ -425,38 +424,38 @@ GLOBAL rpc_cn_sm_action_fn_t  rpc_g_cn_client_assoc_act_tbl [] =
 INTERNAL rpc_cn_sm_state_tbl_entry_t closed_state =
 {
     /* event 0 - req */
-	{REQUEST_CONN}, 
-    
+	{REQUEST_CONN},
+
     /* event 1 - abort_req */
 	{RPC_C_CLIENT_ASSOC_CLOSED},
-    
+
     /* event 2 - request_conn_ack */
 	{RPC_C_CLIENT_ASSOC_CLOSED},
-    
+
     /* event 3 - request_conn_nack */
 	{RPC_C_CLIENT_ASSOC_CLOSED},
-    
+
     /* event 4 - no_conn_ind */
 	{RPC_C_CLIENT_ASSOC_CLOSED},
-    
+
     /* event 5 - accept_conf */
 	{RPC_C_CLIENT_ASSOC_CLOSED},
-    
+
     /* event 6 - reject_conf */
 	{RPC_C_CLIENT_ASSOC_CLOSED},
-    
+
     /* event 7 - alter_context_req */
 	{RPC_C_CLIENT_ASSOC_CLOSED},
-    
+
     /* event 8 - alter_context_conf */
 	{RPC_C_CLIENT_ASSOC_CLOSED},
-    
+
     /* event 9 - allocate_req */
 	{RPC_C_CLIENT_ASSOC_CLOSED},
-    
+
     /* event 10 - deallocate_req */
 	{RPC_C_CLIENT_ASSOC_CLOSED},
-    
+
     /* event 11 - shutdown_req */
 	{RPC_C_CLIENT_ASSOC_CLOSED},
 
@@ -481,37 +480,37 @@ INTERNAL rpc_cn_sm_state_tbl_entry_t connect_wait_state =
 {
     /* event 0 - req */
     ILLEGAL_TRANSITION,
-    
+
     /* event 1 - abort_req */
 	 {ABORT_ASSOC},
-    
+
     /* event 2 - request_conn_ack */
 	 {INIT_ASSOC},
-   
-    /* event 3 - request_conn_nack */  
+
+    /* event 3 - request_conn_nack */
 	 {MARK_ASSOC},
-    
+
     /* event 4 - no_conn_ind */
     ILLEGAL_TRANSITION,
-    
+
     /* event 5 - accept_conf */
     ILLEGAL_TRANSITION,
-    
+
     /* event 6 - reject_conf */
     ILLEGAL_TRANSITION,
-    
+
     /* event 7 - alter_context_req */
     ILLEGAL_TRANSITION,
-    
+
     /* event 8 - alter_context_conf */
     ILLEGAL_TRANSITION,
-    
+
     /* event 9 - allocate_req */
     ILLEGAL_TRANSITION,
-    
+
     /* event 10 - deallocate_req */
     ILLEGAL_TRANSITION,
-    
+
     /* event 11 - shutdown_req */
     ILLEGAL_TRANSITION,
 
@@ -536,37 +535,37 @@ INTERNAL rpc_cn_sm_state_tbl_entry_t init_wait_state =
 {
     /* event 0 - req */
 	{ILLEGAL_EVENT_ABORT},
-    
+
     /* event 1 - abort_req */
 	{MARK_ABORT},
-    
+
     /* event 2 - request_conn_ack */
 	ILLEGAL_TRANSITION,
-    
+
     /* event 3 - request_conn_nack */
 	ILLEGAL_TRANSITION,
-    
+
     /* event 4 - no_conn_ind */
 	{MARK_ASSOC},
-    
+
     /* event 5 - accept_conf */
 	{ADD_MARK_SET},
-    
+
     /* event 6 - reject_conf */
 	{RETRY_ASSOC},
-    
+
     /* event 7 - alter_context_req */
 	ILLEGAL_TRANSITION,
-    
+
     /* event 8 - alter_context_conf */
 	ILLEGAL_TRANSITION,
-    
+
     /* event 9 - allocate_req */
 	ILLEGAL_TRANSITION,
-    
+
     /* event 10 - deallocate_req */
 	ILLEGAL_TRANSITION,
-    
+
     /* event 11 - shutdown_req */
 	ILLEGAL_TRANSITION,
 
@@ -585,7 +584,7 @@ INTERNAL rpc_cn_sm_state_tbl_entry_t init_wait_state =
  * O P E N _ S T A T E
  *
  * state 3 - open_wait. The association has been successfully
- * established. 
+ * established.
  */
 INTERNAL rpc_cn_sm_state_tbl_entry_t open_state =
 {
@@ -594,34 +593,34 @@ INTERNAL rpc_cn_sm_state_tbl_entry_t open_state =
 
     /* event 1 - abort_req */
 	 {REM_MARK_ABORT},
-    
+
     /* event 2 - request_conn_ack */
     ILLEGAL_TRANSITION,
-    
+
     /* event 3 - request_conn_nack */
     ILLEGAL_TRANSITION,
-    
+
     /* event 4 - no_conn_ind */
 	{REM_MARK},
-    
+
     /* event 5 - accept_conf */
     ILLEGAL_TRANSITION,
-    
+
     /* event 6 - reject_conf */
     ILLEGAL_TRANSITION,
-    
+
     /* event 7 - alter_context_req */
 	 {SEND_ALT_CONTEXT_REQ},
-    
+
     /* event 8 - alter_context_conf */
 	 {RPC_C_CLIENT_ASSOC_OPEN},
-    
+
     /* event 9 - allocate_req */
 	 {INCR_ACTIVE},
-    
+
     /* event 10 - deallocate_req */
     ILLEGAL_TRANSITION,
-    
+
     /* event 11 - shutdown_req */
 	 {SHUTDOWN_ALLOWED},
 
@@ -646,37 +645,37 @@ INTERNAL rpc_cn_sm_state_tbl_entry_t active_state =
 {
     /* event 0 - req */
 	ILLEGAL_TRANSITION,
-    
+
     /* event 1 - abort_req */
 	{REM_MARK_ABORT},
-    
+
     /* event 2 - request_conn_ack */
     ILLEGAL_TRANSITION,
-    
+
     /* event 3 - request_conn_nack */
     ILLEGAL_TRANSITION,
-    
+
     /* event 4 - no_conn_ind */
 	 {REM_MARK_DISCON},
-    
+
     /* event 5 - accept_conf */
     ILLEGAL_TRANSITION,
-    
+
     /* event 6 - reject_conf */
     ILLEGAL_TRANSITION,
-    
+
     /* event 7 - alter_context_req */
 	 {SEND_ALT_CONTEXT_REQ},
-    
+
     /* event 8 - alter_context_conf */
 	 {MARK_SYNTAX_AND_SEC},
-    
+
     /* event 9 - allocate_req */
 	 {INCR_ACTIVE},
-    
+
     /* event 10 - deallocate_req */
 	 {DECR_ACTIVE},
-    
+
     /* event 11 - shutdown_req */
 	 {SET_SHUTDOWN_REQUEST},
 
@@ -701,41 +700,41 @@ INTERNAL rpc_cn_sm_state_tbl_entry_t call_done_wait_state =
 {
     /* event 0 - req */
     ILLEGAL_TRANSITION,
-    
+
     /* event 1 - abort_req */
     ILLEGAL_TRANSITION,
-    
+
     /* event 2 - request_conn_ack */
     ILLEGAL_TRANSITION,
-    
+
     /* event 3 - request_conn_nack */
     ILLEGAL_TRANSITION,
-    
+
     /* event 4 - no_conn_ind */
     ILLEGAL_TRANSITION,
-    
+
     /* event 5 - accept_conf */
     ILLEGAL_TRANSITION,
-    
+
     /* event 6 - reject_conf */
     ILLEGAL_TRANSITION,
-    
+
     /* event 7 - alter_context_req */
     ILLEGAL_TRANSITION,
-    
+
     /* event 8 - alter_context_conf */
     ILLEGAL_TRANSITION,
-    
+
     /* event 9 - allocate_req */
     ILLEGAL_TRANSITION,
-    
+
     /* event 10 - deallocate_req */
     /* Note that this transition should have an action to decrement the */
     /* active refs and if 0 generate a calls done event. However, */
     /* this implementation will generate the calls done event when */
     /* the last call rep is popped off the association stack. */
 	 {RPC_C_CLIENT_ASSOC_CALL_DONE_WAIT},
-    
+
     /* event 11 - shutdown_req */
     ILLEGAL_TRANSITION,
 
@@ -778,7 +777,7 @@ GLOBAL rpc_cn_sm_state_entry_p_t rpc_g_cn_client_assoc_sm [] =
 **  SCOPE:              INTERNAL
 **
 **  DESCRIPTION:
-**      
+**
 **  Determines whether the client received one or more
 **  rpc_shutdown_request PDUs from the server or a shutdown request
 **  event arrived from the user. Its initial value is false. Note that
@@ -817,7 +816,7 @@ GLOBAL rpc_cn_sm_state_entry_p_t rpc_g_cn_client_assoc_sm [] =
 **--
 **/
 
-INTERNAL unsigned8 shutdown_requested_pred_rtn 
+INTERNAL unsigned8 shutdown_requested_pred_rtn
 #ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
@@ -832,13 +831,13 @@ pointer_t       event_param;
 #endif
 {
     RPC_CN_DBG_RTN_PRINTF(CLIENT shutdown_requested_pred_rtn);
-    
+
     /*
      * The association flags will indicate whether an
      * rpc_shutdown_request PDU has been received.
      */
     if (((rpc_cn_assoc_t *)spc_struct)->assoc_flags &
-        RPC_C_CN_ASSOC_SHUTDOWN_REQUESTED) 
+        RPC_C_CN_ASSOC_SHUTDOWN_REQUESTED)
     {
         /*
          * At least one rpc_shutdown_request PDU was received.
@@ -863,7 +862,7 @@ pointer_t       event_param;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Determines whether the association is needed to preserve
 **  context handles. That is, whether there are no context handles
 **  currently active, or there are other associations in the open,
@@ -913,7 +912,7 @@ pointer_t       event_param;
     rpc_cn_assoc_grp_t  *assoc_grp;
 
     RPC_CN_DBG_RTN_PRINTF(CLIENT shutdown_allowed_pred_rtn);
-    
+
     /*
      * The NCA connection architecture spec states: if one or
      * more context handles are active between a client and server at
@@ -951,7 +950,7 @@ pointer_t       event_param;
 /*
 **++
 **
-**  MACRO NAME: 	SHUTDOWN_ALLOWED_PRED        
+**  MACRO NAME: 	SHUTDOWN_ALLOWED_PRED
 **
 **  SCOPE:              INTERNAL
 **
@@ -963,7 +962,7 @@ pointer_t       event_param;
 **  context handles. That is, whether there are no context handles
 **  currently active, or there are other associations in the open,
 **  active or altered_context_wait states.
-**      
+**
 **
 **  INPUTS:
 **
@@ -981,13 +980,13 @@ pointer_t       event_param;
 **			status.  Status' scope includes the routine
 **			calling the macro.  Check status in the calling
 **			routine to determine next state and in cases,
-**			flow through the action routine. 
-** 
+**			flow through the action routine.
+**
 **  INPUTS/OUTPUTS:     none
 **
-**  OUTPUTS:            
+**  OUTPUTS:
 **
-**	status		See explanation above.  
+**	status		See explanation above.
 **
 **  IMPLICIT INPUTS:    none
 **
@@ -1025,7 +1024,7 @@ pointer_t       event_param;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Determines whether the association is currently in use. Unless
 **  the concurrent multiplexing option has been mutually selected, only one
 **  call and its related callbacks, or an alter-context request, may use
@@ -1062,7 +1061,7 @@ pointer_t       event_param;
 **--
 **/
 
-INTERNAL unsigned8 active_pred_rtn 
+INTERNAL unsigned8 active_pred_rtn
 #ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
@@ -1108,7 +1107,7 @@ pointer_t       event_param;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  This predicate routine determines whether an association has
 **  been requested to shutdown AND is allowed to shutdown AND
 **  whether there are active references to the association.
@@ -1133,16 +1132,16 @@ pointer_t       event_param;
 **  IMPLICIT OUTPUTS:   none
 **
 **  FUNCTION VALUE:     0 if no active refs AND either shutdown not
-**                        requested OR shutdown not allowed 
+**                        requested OR shutdown not allowed
 **                      1 if no active refs AND shutdown requested
-**                        AND shutdown allowed 
+**                        AND shutdown allowed
 **
 **  SIDE EFFECTS:       none
 **
 **--
 **/
 
-INTERNAL unsigned8 shutdown_allowed_req_pred_rtn 
+INTERNAL unsigned8 shutdown_allowed_req_pred_rtn
 #ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
@@ -1157,7 +1156,7 @@ pointer_t       event_param;
 #endif
 {
     RPC_CN_DBG_RTN_PRINTF(CLIENT shutdown_allowed_req_pred_rtn);
-    
+
     /*
      * Check whether an association shutdown was requested and
      * whether it is allowed.
@@ -1179,21 +1178,20 @@ pointer_t       event_param;
     }
 }
 
-
 
 /*
 **++
 **
-**  MACRO NAME:  	SHUTDOWN_ALLOWED_REQ_PRED       
+**  MACRO NAME:  	SHUTDOWN_ALLOWED_REQ_PRED
 **
 **  SCOPE:              INTERNAL
 **
 **  DESCRIPTION:
-**      
+**
 **  This is a macro version of shutdown_allowed_req_pred_rtn predicate routine.
 **  We added the macro version to avoid overhead associated with calling
 **  the predicate function from within the action routines.
-**  This predicate macro determines whether an association has    
+**  This predicate macro determines whether an association has
 **  been requested to shutdown AND is allowed to shutdown AND
 **  whether there are active references to the association.
 **
@@ -1213,22 +1211,22 @@ pointer_t       event_param;
 **			status.  Status' scope includes the routine
 **			calling the macro.  Check status in the calling
 **			routine to determine next state and in cases,
-**			flow through the action routine. 
-** 
+**			flow through the action routine.
+**
 **  INPUTS/OUTPUTS:     none
 **
-**  OUTPUTS:            
+**  OUTPUTS:
 **
-**	status		See explanation above.  
+**	status		See explanation above.
 **
 **  IMPLICIT INPUTS:    none
 **
 **  IMPLICIT OUTPUTS:   none
 **
 **  FUNCTION VALUE:     0 if no active refs AND either shutdown not
-**                        requested OR shutdown not allowed 
+**                        requested OR shutdown not allowed
 **                      1 if no active refs AND shutdown requested
-**                        AND shutdown allowed 
+**                        AND shutdown allowed
 **
 **  SIDE EFFECTS:       none
 **
@@ -1257,7 +1255,7 @@ pointer_t       event_param;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Determines if the last_frag flag is set in an rpc_bind_ack or
 **  alter_context_resp PDU.
 **
@@ -1269,7 +1267,7 @@ pointer_t       event_param;
 **                      This input argument is ignored.
 **
 **      event_param     The fragbuf containing the rpc_bind_ack or
-**                      alter_context_resp PDU. 
+**                      alter_context_resp PDU.
 **
 **  INPUTS/OUTPUTS:     none
 **
@@ -1296,7 +1294,7 @@ pointer_t       event_param;
     rpc_cn_packet_t     *header;
 
     RPC_CN_DBG_RTN_PRINTF(CLIENT lastfrag_pred_rtn);
-    
+
     /*
      * The event parameter is a pointer to the fragbuf containing
      * the rpc_bind_ack or alter_context_resp PDU.
@@ -1327,7 +1325,7 @@ pointer_t       event_param;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Determines if the rpc_bind_nak is due to a procol version mismatch
 **  with a version 5.0 server.
 **
@@ -1368,7 +1366,7 @@ pointer_t       event_param;
     unsigned32                          i;
 
     RPC_CN_DBG_RTN_PRINTF(CLIENT version_mismatch_pred_rtn);
-    
+
     /*
      * The event parameter is a pointer to the fragbuf containing
      * the rpc_bind_nak.
@@ -1388,8 +1386,8 @@ pointer_t       event_param;
         {
 
            RPC_DBG_PRINTF(rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                          ("\t\tVersion %d.%d\n", 
-                          versions->protocols[i].vers_major, 
+                          ("\t\tVersion %d.%d\n",
+                          versions->protocols[i].vers_major,
                           versions->protocols[i].vers_minor));
 
            if((versions->protocols[i].vers_major == RPC_C_CN_PROTO_VERS) &&
@@ -1397,7 +1395,7 @@ pointer_t       event_param;
            {
                 return(1);
            }
-        }   
+        }
         return (0);
     }
     else
@@ -1418,8 +1416,8 @@ pointer_t       event_param;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
-**  This is a macro version of decr_rem_mark_abort_action_rtn(). 
+**
+**  This is a macro version of decr_rem_mark_abort_action_rtn().
 **  We added the macro version to avoid overhead.
 **  Macro to decrements the active references, removes an
 **  association from an association group, marks and aborts it.
@@ -1435,7 +1433,7 @@ pointer_t       event_param;
 **                      passed to the state machine evaluation routine.
 **                      This input argument is ignored.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **	sm             The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -1480,7 +1478,7 @@ pointer_t       event_param;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  This is a macro version of decr_active_active_rtn() function.
 **  We added the macro version to avoid overhead.   We reduced the
 **  call parameters to just assoc as the rest are unnecessary.  The
@@ -1492,7 +1490,7 @@ pointer_t       event_param;
 **
 **  INPUTS:
 **
-**	assoc		Pointer to the association control block. 
+**	assoc		Pointer to the association control block.
 **
 **  OUTPUTS:            none
 **
@@ -1522,7 +1520,7 @@ pointer_t       event_param;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to send an rpc_bind PDU to the server.
 **
 **  INPUTS:
@@ -1535,7 +1533,7 @@ pointer_t       event_param;
 **                      special event related parameter which was
 **                      passed to the state machine evaluation routine.
 **
-**  INPUTS/OUTPUTS:    
+**  INPUTS/OUTPUTS:
 **
 **	sm             The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -1557,12 +1555,12 @@ pointer_t       event_param;
 **--
 **/
 
-INTERNAL unsigned32     init_assoc_action_rtn 
+INTERNAL unsigned32     init_assoc_action_rtn
 #ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
   pointer_t       event_param,
-  pointer_t       sm 
+  pointer_t       sm
 )
 #else
 (spc_struct, event_param, sm)
@@ -1579,7 +1577,7 @@ pointer_t       sm;
     rpc_cn_sm_ctlblk_t		*sm_p;
 
     RPC_CN_DBG_RTN_PRINTF(CLIENT init_assoc_action_rtn);
-    
+
     assoc = (rpc_cn_assoc_t *) spc_struct;
     assoc_sm_work = (rpc_cn_assoc_sm_work_t *) event_param;
     sm_p = (rpc_cn_sm_ctlblk_t *)sm;
@@ -1590,10 +1588,10 @@ pointer_t       sm;
      */
     uuid_create (&assoc_uuid, &(assoc->assoc_status));
     RPC_CN_ASSOC_CHECK_ST (assoc, &(assoc->assoc_status));
-    assoc->security.assoc_uuid_crc = 
-        rpc__cn_pkt_crc_compute ((unsigned8 *)&assoc_uuid, 
+    assoc->security.assoc_uuid_crc =
+        rpc__cn_pkt_crc_compute ((unsigned8 *)&assoc_uuid,
                                  sizeof (idl_uuid_t));
-    
+
     /*
      * Check the binding handle for protocol version information
      * If we know we are talking to an old server, this can save us work.
@@ -1627,7 +1625,7 @@ pointer_t       sm;
     RPC_CN_ASSOC_CHECK_ST (assoc, &(assoc->assoc_status));
 
     sm_p->cur_state = RPC_C_CLIENT_ASSOC_INIT_WAIT;
-    return (assoc->assoc_status); 
+    return (assoc->assoc_status);
 }
 
 
@@ -1639,7 +1637,7 @@ pointer_t       sm;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to request a new transport/session connection.
 **
 **  INPUTS:
@@ -1652,9 +1650,9 @@ pointer_t       sm;
 **                      the interface rep and the association group
 **                      id. This is passed in as the special event
 **                      related parameter which was passed to the
-**                      state machine evaluation routine. 
+**                      state machine evaluation routine.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **	sm             The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -1676,12 +1674,12 @@ pointer_t       sm;
 **--
 **/
 
-INTERNAL unsigned32     request_conn_action_rtn 
+INTERNAL unsigned32     request_conn_action_rtn
 #ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
   pointer_t       event_param,
-  pointer_t       sm 
+  pointer_t       sm
 )
 #else
 (spc_struct, event_param, sm)
@@ -1694,9 +1692,9 @@ pointer_t       sm;
     rpc_cn_assoc_sm_work_t      *assoc_sm_work;
     rpc_cn_sm_event_entry_t     event;
     rpc_cn_sm_ctlblk_t		*sm_p;
- 
+
     RPC_CN_DBG_RTN_PRINTF(CLIENT request_conn_action_rtn);
-    
+
     assoc = (rpc_cn_assoc_t *) spc_struct;
     assoc_sm_work = (rpc_cn_assoc_sm_work_t *) event_param;
     sm_p = (rpc_cn_sm_ctlblk_t *)sm;
@@ -1770,7 +1768,7 @@ pointer_t       sm;
                                  assoc,
                                  assoc->cn_ctlblk.cn_sock,
                                  assoc->assoc_status));
-                
+
                 event.event_id = RPC_C_ASSOC_REQUEST_CONN_NACK;
             }
             else
@@ -1792,8 +1790,8 @@ pointer_t       sm;
      */
     event.event_param = event_param;
     RPC_CN_ASSOC_INSERT_EVENT (assoc, &event);
-    sm_p->cur_state = RPC_C_CLIENT_ASSOC_CONNECT_WAIT; 
-    return ( assoc->assoc_status);  
+    sm_p->cur_state = RPC_C_CLIENT_ASSOC_CONNECT_WAIT;
+    return ( assoc->assoc_status);
 }
 
 
@@ -1805,9 +1803,9 @@ pointer_t       sm;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to mark an association with the appropriate
-**  status code. 
+**  status code.
 **
 **  INPUTS:
 **
@@ -1821,7 +1819,7 @@ pointer_t       sm;
 **                      routine.
 **                      This argument is ignored.
 **
-**  INPUTS/OUTPUTS:    
+**  INPUTS/OUTPUTS:
 **
 **	sm             The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -1846,12 +1844,12 @@ pointer_t       sm;
 **--
 **/
 
-INTERNAL unsigned32     mark_assoc_action_rtn 
+INTERNAL unsigned32     mark_assoc_action_rtn
 #ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
   pointer_t       event_param,
-  pointer_t       sm 
+  pointer_t       sm
 )
 #else
 (spc_struct, event_param, sm)
@@ -1865,15 +1863,15 @@ pointer_t       sm;
     rpc_cn_syntax_t     *syntax;
     dcethread*          current_thread_id;
     rpc_cn_sm_ctlblk_t   *sm_p;
- 
+
     RPC_CN_DBG_RTN_PRINTF(CLIENT mark_assoc_action_rtn);
-    
+
     /*
      * The special structure passed in is the association.
      */
     assoc = (rpc_cn_assoc_t *) spc_struct;
     sm_p = (rpc_cn_sm_ctlblk_t *)sm;
-    
+
     /*
      * Mark the association based on the event currently being
      * processed.
@@ -1888,7 +1886,7 @@ pointer_t       sm;
             assoc->assoc_status = rpc_s_connection_closed;
             break;
         }
-        
+
         case RPC_C_ASSOC_ABORT_REQ:
         {
             /*
@@ -1897,7 +1895,7 @@ pointer_t       sm;
             assoc->assoc_status = rpc_s_connection_aborted;
             break;
         }
-        
+
         case RPC_C_ASSOC_REJECT_CONF:
         {
             /*
@@ -1910,7 +1908,7 @@ pointer_t       sm;
             assoc->assoc_status = rpc__cn_assoc_prej_to_status
                 (RPC_CN_PKT_PROV_REJ_REASON (header));
             RPC_LIST_FIRST (assoc->syntax_list,
-                            syntax, 
+                            syntax,
                             rpc_cn_syntax_p_t);
             while (syntax != NULL)
             {
@@ -1928,7 +1926,7 @@ pointer_t       sm;
             }
             break;
         }
-        
+
         case RPC_C_ASSOC_SHUTDOWN_IND:
         {
             /*
@@ -1938,7 +1936,7 @@ pointer_t       sm;
             assoc->assoc_status = rpc_s_assoc_shutdown;
             break;
         }
-        
+
         case RPC_C_ASSOC_REQUEST_CONN_NACK:
         {
             /*
@@ -1958,7 +1956,7 @@ pointer_t       sm;
             break;
         }
     }
-    
+
     /*
      * Wake up any threads blocked waiting for receive data.
      */
@@ -1969,7 +1967,7 @@ pointer_t       sm;
         RPC_CN_ASSOC_WAKEUP (assoc);
     }
     sm_p->cur_state = RPC_C_CLIENT_ASSOC_CLOSED;
-    return (assoc->assoc_status); 
+    return (assoc->assoc_status);
 }
 
 
@@ -1981,7 +1979,7 @@ pointer_t       sm;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to add an association to an association group.
 **
 **  INPUTS:
@@ -1995,7 +1993,7 @@ pointer_t       sm;
 **                      passed to the state machine evaluation routine.
 **                      This argument is ignored.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **	sm             The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -2017,7 +2015,7 @@ pointer_t       sm;
 **--
 **/
 
-INTERNAL unsigned32     add_assoc_to_grp_action_rtn 
+INTERNAL unsigned32     add_assoc_to_grp_action_rtn
 #ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
@@ -2034,7 +2032,7 @@ pointer_t       sm;
     rpc_cn_assoc_t      *assoc;
 
     RPC_CN_DBG_RTN_PRINTF(CLIENT add_assoc_to_grp_action_rtn);
-    
+
     /*
      * The special structure is a pointer to the association.
      */
@@ -2055,7 +2053,7 @@ pointer_t       sm;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to remove an association from an association group.
 **
 **  INPUTS:
@@ -2069,7 +2067,7 @@ pointer_t       sm;
 **                      passed to the state machine evaluation routine.
 **                      This input argument is ignored.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **	sm             The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -2091,7 +2089,7 @@ pointer_t       sm;
 **--
 **/
 
-INTERNAL unsigned32     rem_assoc_from_grp_action_rtn 
+INTERNAL unsigned32     rem_assoc_from_grp_action_rtn
 #ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
@@ -2108,12 +2106,12 @@ pointer_t       sm;
     rpc_cn_assoc_t      *assoc;
 
     RPC_CN_DBG_RTN_PRINTF(CLIENT rem_assoc_from_grp_action_rtn);
-    
+
     /*
      * The special structure passed in is the association.
      */
     assoc = (rpc_cn_assoc_t *) spc_struct;
-    
+
     /*
      * Remove the association from the group.
      */
@@ -2131,7 +2129,7 @@ pointer_t       sm;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to set the optional secondary address for the
 **  association group from the received data in the rpc_bind_ack accept
 **  PDU, if provided.
@@ -2147,7 +2145,7 @@ pointer_t       sm;
 **                      special event related parameter which was
 **                      passed to the state machine evaluation routine.
 **
-**  INPUTS/OUTPUTS:    
+**  INPUTS/OUTPUTS:
 **
 **	sm             The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -2169,7 +2167,7 @@ pointer_t       sm;
 **--
 **/
 
-INTERNAL unsigned32     set_secondary_addr_action_rtn 
+INTERNAL unsigned32     set_secondary_addr_action_rtn
 #ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
@@ -2187,27 +2185,27 @@ pointer_t       sm;
     rpc_cn_assoc_grp_t  *assoc_grp;
     rpc_cn_packet_t     *header;
     rpc_cn_port_any_t   *sec_addr;
-    
+
     RPC_CN_DBG_RTN_PRINTF(CLIENT set_secondary_addr_action_rtn);
-    
+
     /*
      * The special structure is a pointer to the association.
      */
     assoc = (rpc_cn_assoc_t *) spc_struct;
-    
+
     /*
      * The event parameter is a pointer to the fragbuf containing
      * the rpc_bind_ack PDU.
      */
     header = (rpc_cn_packet_t *) ((rpc_cn_fragbuf_t *)event_param)->data_p;
-    
+
     /*
      * An rpc_bind_ack PDU has just been received from the server.
      * The association is already part of an association group. If
      * it the only one on the group the secondary address endpoint
      * contained in the rpc_bind_ack PDU still needs to be used to build a
      * secondary RPC address for subsequent associations to the same
-     * server. 
+     * server.
      */
     assoc_grp = RPC_CN_ASSOC_GRP (assoc->assoc_grp_id);
     assert(assoc_grp != NULL);
@@ -2225,14 +2223,14 @@ pointer_t       sm;
             /*
              * Copy the primary group address.
              */
-            rpc__naf_addr_copy (assoc_grp->grp_address, 
-                                &assoc_grp->grp_secaddr, 
+            rpc__naf_addr_copy (assoc_grp->grp_address,
+                                &assoc_grp->grp_secaddr,
                                 &(assoc->assoc_status));
             if (assoc->assoc_status != rpc_s_ok)
             {
                 return (assoc->assoc_status);
             }
-            
+
             /*
              * Set the endpoint in the primary group address to that
              * provided in the rpc_bind_ack PDU. The resulting address
@@ -2241,10 +2239,32 @@ pointer_t       sm;
              * a NULL termination.
              */
 
+#if 0
             rpc__naf_addr_set_endpoint (
                     (unsigned_char_t *) sec_addr->s,
                                         &(assoc_grp->grp_secaddr),
                                         &(assoc->assoc_status));
+#else
+            /* Temporary hack to work around 7317053 for now */
+            {
+                char tempBuffer[200];
+
+                if (strncasecmp((char *)sec_addr->s, "\\PIPE\\", 6) != 0)
+                {
+                    strcpy (tempBuffer, "\\PIPE\\");
+                    strcat (tempBuffer, sec_addr->s);
+                }
+                else {
+                    strcpy (tempBuffer, sec_addr->s);
+                }
+
+            rpc__naf_addr_set_endpoint (
+                                        (unsigned_char_t *) tempBuffer,
+                                        &(assoc_grp->grp_secaddr),
+                                        &(assoc->assoc_status));
+            }
+#endif
+
             if (assoc->assoc_status != rpc_s_ok)
             {
                 return (assoc->assoc_status);
@@ -2261,7 +2281,7 @@ pointer_t       sm;
             assoc_grp->grp_max_assoc = 1;
         }
     }
-    
+
     return (assoc->assoc_status);
 }
 
@@ -2274,7 +2294,7 @@ pointer_t       sm;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to optionally, if required for an authentication
 **  mechanism, send an rpc_auth_3 PDU for the third leg of a three_way
 **  authentication handshake. This PDU may be concatenated with a
@@ -2292,7 +2312,7 @@ pointer_t       sm;
 **                      passed to the state machine evaluation routine.
 **                      This input argument is ignored.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **	sm             The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -2314,7 +2334,7 @@ pointer_t       sm;
 **--
 **/
 
-INTERNAL unsigned32     authent3_action_rtn 
+INTERNAL unsigned32     authent3_action_rtn
 #ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
@@ -2334,13 +2354,12 @@ pointer_t       sm;
     rpc_protocol_version_t      *protocol_version;
     rpc_cn_sm_ctlblk_t		*sm_p;
 
-
     RPC_CN_DBG_RTN_PRINTF(CLIENT authent3_action_rtn);
-    
+
     /*
      * The special structure is a pointer to the association.
      */
-    
+
     assoc = (rpc_cn_assoc_t *) spc_struct;
     assoc_sm_work = (rpc_cn_assoc_sm_work_t *) event_param;
     sm_p = (rpc_cn_sm_ctlblk_t *)sm;
@@ -2391,7 +2410,7 @@ pointer_t       sm;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to send the rpc_alter_context PDU to the server.
 **
 **  INPUTS:
@@ -2404,7 +2423,7 @@ pointer_t       sm;
 **                      special event related parameter which was
 **                      passed to the state machine evaluation routine.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **	sm             The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -2426,12 +2445,12 @@ pointer_t       sm;
 **--
 **/
 
-INTERNAL unsigned32     send_alt_context_req_action_rtn 
+INTERNAL unsigned32     send_alt_context_req_action_rtn
 #ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
   pointer_t       event_param,
-  pointer_t       sm 
+  pointer_t       sm
 )
 #else
 (spc_struct, event_param, sm)
@@ -2446,10 +2465,10 @@ pointer_t       sm;
     rpc_cn_sm_ctlblk_t		*sm_p;
 
     RPC_CN_DBG_RTN_PRINTF(CLIENT send_alt_context_req_action_rtn);
-    
+
     assoc = (rpc_cn_assoc_t *) spc_struct;
     assoc_sm_work = (rpc_cn_assoc_sm_work_t *) event_param;
-    sm_p = (rpc_cn_sm_ctlblk_t *)sm;  
+    sm_p = (rpc_cn_sm_ctlblk_t *)sm;
 
     if (assoc->assoc_vers_minor == RPC_C_CN_PROTO_VERS_COMPAT)
     {
@@ -2463,7 +2482,7 @@ pointer_t       sm;
     /*
      * Format an rpc_alter_context PDU and send it to the server.
      */
-    send_pdu (assoc, 
+    send_pdu (assoc,
               RPC_C_CN_PKT_ALTER_CONTEXT,
               assoc_sm_work->pres_context,
               0,
@@ -2472,7 +2491,7 @@ pointer_t       sm;
               &(assoc->assoc_status));
     RPC_CN_ASSOC_CHECK_ST (assoc, &(assoc->assoc_status));
 
-    sm_p->cur_state = RPC_C_CLIENT_ASSOC_ACTIVE; 
+    sm_p->cur_state = RPC_C_CLIENT_ASSOC_ACTIVE;
     return (assoc->assoc_status);
 }
 
@@ -2485,7 +2504,7 @@ pointer_t       sm;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to abort an association.
 **
 **  INPUTS:
@@ -2499,7 +2518,7 @@ pointer_t       sm;
 **                      passed to the state machine evaluation routine.
 **                      This input argument is ignored.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **	sm             The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -2521,12 +2540,12 @@ pointer_t       sm;
 **--
 **/
 
-INTERNAL unsigned32     abort_assoc_action_rtn 
+INTERNAL unsigned32     abort_assoc_action_rtn
 #ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
   pointer_t       event_param ATTRIBUTE_UNUSED,
-  pointer_t       sm 
+  pointer_t       sm
 )
 #else
 (spc_struct, event_param, sm)
@@ -2539,21 +2558,21 @@ pointer_t       sm;
     rpc_cn_sm_ctlblk_t		*sm_p;
 
     RPC_CN_DBG_RTN_PRINTF(CLIENT abort_assoc_action_rtn);
-    
+
     /*
      * The special structure is a pointer to the association.
      */
     assoc = (rpc_cn_assoc_t *) spc_struct;
     sm_p = (rpc_cn_sm_ctlblk_t *)sm;
- 
+
     /*
      * Close the connection on the association.
      */
     rpc__cn_network_close_connect (assoc,
                                    &(assoc->assoc_status));
     RPC_CN_ASSOC_CHECK_ST (assoc, &(assoc->assoc_status));
-    sm_p->cur_state = RPC_C_CLIENT_ASSOC_CLOSED; 
-    return (assoc->assoc_status); 
+    sm_p->cur_state = RPC_C_CLIENT_ASSOC_CLOSED;
+    return (assoc->assoc_status);
 }
 
 
@@ -2565,13 +2584,13 @@ pointer_t       sm;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
-**  This action routine is a combination of SHUTDOWN_ALLOWED_PRED,  
-**  which is a macro version of shutdown_allowed_pred_rtn(), 
+**
+**  This action routine is a combination of SHUTDOWN_ALLOWED_PRED,
+**  which is a macro version of shutdown_allowed_pred_rtn(),
 **  plus the action routines set_shutdown_request_action_rtn()
 **  and rem_mark_abort_action_rtn().   shutdown_allowed_action
-**  _rtn() was newly created because of the changes to struct 
-**  rcp_cn_sm_state_entry_t calling for a flat data structure. 
+**  _rtn() was newly created because of the changes to struct
+**  rcp_cn_sm_state_entry_t calling for a flat data structure.
 **  The open_state for events deallocate_req (11) and
 **  shutdown_ind (14) require a predicate plus multiple action
 **  routines.   Since these action routines are also called individually
@@ -2585,12 +2604,12 @@ pointer_t       sm;
 **                      the special structure which is passed to the
 **                      state machine event evaluation routine.
 **
-**      event_param     The fragbuf containing the rpc_shutdown_ind PDU. 
+**      event_param     The fragbuf containing the rpc_shutdown_ind PDU.
 **                      This is passed in as the
 **                      special event related parameter which was
 **                      passed to the state machine evaluation routine.
 **
-**  INPUTS/OUTPUTS:  
+**  INPUTS/OUTPUTS:
 **
 **	sm              The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -2612,12 +2631,12 @@ pointer_t       sm;
 **--
 **/
 
-INTERNAL unsigned32     shutdown_allowed_action_rtn 
+INTERNAL unsigned32     shutdown_allowed_action_rtn
 #ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
   pointer_t       event_param,
-  pointer_t       sm 
+  pointer_t       sm
 )
 #else
 (spc_struct, event_param, sm)
@@ -2629,7 +2648,7 @@ pointer_t       sm;
     rpc_cn_assoc_t *assoc;
     rpc_cn_sm_ctlblk_t *sm_p;
     rpc_cn_assoc_grp_t  *assoc_grp;
-    unsigned32  status; 
+    unsigned32  status;
 
     RPC_CN_DBG_RTN_PRINTF(CLIENT shutdown_allowed_action_rtn);
     sm_p = (rpc_cn_sm_ctlblk_t *)sm;
@@ -2641,33 +2660,33 @@ pointer_t       sm;
      * context wait states.  Macro writes the functional
      * result into status which is used later to determine
      * the updated state for sm->cur_state.
-     */ 
+     */
     SHUTDOWN_ALLOWED_PRED(spc_struct, event_param, status);
 
-   /* 
+   /*
     * The special structure is a pointer to the association.
     */
     assoc = (rpc_cn_assoc_t *) spc_struct;
 
     /*
-     * Status is set in the predicate macro, SHUTDOWN_ALLOWED_PRED.  
-     */  
+     * Status is set in the predicate macro, SHUTDOWN_ALLOWED_PRED.
+     */
     switch(status)
     {
     case 0:
-    	{ 
-	set_shutdown_request_action_rtn(spc_struct,event_param, sm);
-    	sm_p->cur_state = RPC_C_CLIENT_ASSOC_OPEN; 
-	break; 	
-        } 
+        {
+            set_shutdown_request_action_rtn(spc_struct,event_param, sm);
+            sm_p->cur_state = RPC_C_CLIENT_ASSOC_OPEN;
+            break;
+        }
      case 1:
 	{
     	rem_mark_abort_action_rtn (spc_struct, event_param, sm);
     	sm_p->cur_state = RPC_C_CLIENT_ASSOC_CLOSED;
-	break; 	
+	break;
 	}
-    }/* end switch */ 
-    return (assoc->assoc_status); 
+    }/* end switch */
+    return (assoc->assoc_status);
 }
 
 /*
@@ -2678,7 +2697,7 @@ pointer_t       sm;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to set the shutdown requested predicate to true.
 **
 **  INPUTS:
@@ -2687,12 +2706,12 @@ pointer_t       sm;
 **                      the special structure which is passed to the
 **                      state machine event evaluation routine.
 **
-**      event_param     The fragbuf containing the rpc_shutdown_ind PDU. 
+**      event_param     The fragbuf containing the rpc_shutdown_ind PDU.
 **                      This is passed in as the
 **                      special event related parameter which was
 **                      passed to the state machine evaluation routine.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **	sm             The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -2714,12 +2733,12 @@ pointer_t       sm;
 **--
 **/
 
-INTERNAL unsigned32     set_shutdown_request_action_rtn 
+INTERNAL unsigned32     set_shutdown_request_action_rtn
 #ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
   pointer_t       event_param ATTRIBUTE_UNUSED,
-  pointer_t       sm 
+  pointer_t       sm
 )
 #else
 (spc_struct, event_param, sm)
@@ -2732,7 +2751,7 @@ pointer_t       sm;
     rpc_cn_sm_ctlblk_t *sm_p;
 
     RPC_CN_DBG_RTN_PRINTF(CLIENT set_shutdown_request_action_rtn);
-    
+
     /*
      * The special structure is a pointer to the association.
      */
@@ -2745,7 +2764,7 @@ pointer_t       sm;
      */
     assoc->assoc_flags |= RPC_C_CN_ASSOC_SHUTDOWN_REQUESTED;
 
-    sm_p->cur_state = RPC_C_CLIENT_ASSOC_ACTIVE; 
+    sm_p->cur_state = RPC_C_CLIENT_ASSOC_ACTIVE;
     return (assoc->assoc_status);
 
 }
@@ -2759,7 +2778,7 @@ pointer_t       sm;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to set the active predicate to true. The client
 **  runtime allocated the association for the new call and its
 **  callbacks. Only one call and its related callbacks may allocate an
@@ -2776,7 +2795,7 @@ pointer_t       sm;
 **                      passed to the state machine evaluation routine.
 **                      This input argument is ignored.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **	sm             The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -2803,7 +2822,7 @@ INTERNAL unsigned32     incr_active_action_rtn
 (
   pointer_t       spc_struct,
   pointer_t       event_param ATTRIBUTE_UNUSED,
-  pointer_t       sm 
+  pointer_t       sm
 )
 #else
 (spc_struct, event_param, sm)
@@ -2839,7 +2858,7 @@ pointer_t       sm;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to set the active predicate to false. The client
 **  runtime deallocated the association when done with an alter context
 **  request, a call, its callbacks, etc.
@@ -2855,7 +2874,7 @@ pointer_t       sm;
 **                      passed to the state machine evaluation routine.
 **                      This input argument is ignored.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **	sm             The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -2877,12 +2896,12 @@ pointer_t       sm;
 **--
 **/
 
-INTERNAL unsigned32     decr_active_action_rtn 
+INTERNAL unsigned32     decr_active_action_rtn
 #ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
   pointer_t       event_param,
-  pointer_t       sm 
+  pointer_t       sm
 )
 #else
 (spc_struct, event_param, sm)
@@ -2893,61 +2912,60 @@ pointer_t       sm;
 {
     rpc_cn_assoc_t *assoc;
     rpc_cn_sm_ctlblk_t *sm_p;
-    unsigned32 status; 
+    unsigned32 status;
 
     RPC_CN_DBG_RTN_PRINTF(CLIENT decr_active_action_rtn);
-    
+
     /*
      * The predicate macro will fill in a value for status.  That value
      * determines which actions to take here, as well as which states
      * to put next in sm->cur_state.   Note that case 0 is the
-     * decr_active_action_rtn(). 
-     */  
+     * decr_active_action_rtn().
+     */
     SHUTDOWN_ALLOWED_REQ_PRED(spc_struct, event_param, status);
     sm_p = (rpc_cn_sm_ctlblk_t *)sm;
 
     /*
-     * The special structure is a pointer to the association. 
-     */ 
+     * The special structure is a pointer to the association.
+     */
     assoc = (rpc_cn_assoc_t *)spc_struct;
 
     /*
      * Status is set inside the predicate macro.  Use the
      * value of status to switch to the action routines.
-     * Status is 0 if there are no active refs AND either shutdown 
+     * Status is 0 if there are no active refs AND either shutdown
      * not requested OR shutdown not allowed.  In this case,
      * call DECR_ACTIVE to reset the assoc->assoc_ref_count.
-     * Status is 1 if no active refs AND shutdown requested AND 
+     * Status is 1 if no active refs AND shutdown requested AND
      * shutdown allowed.  In this case, call DECR_REM_MARK_
      * ABORT which also increments the assoc ref_count and
      * calls rem_mark_abort_action_rtn().
-     */  
+     */
     switch(status)
     {
     case 0:
-	{ 
+	{
     	DECR_ACTIVE_ACTION(assoc);
 	sm_p->cur_state = RPC_C_CLIENT_ASSOC_OPEN;
-	break; 
+	break;
 	}
     case 1:
 	{
      	/*
-	 * Update state (sm->cur_state) inside the macro itself.  
-	 */ 	
+	 * Update state (sm->cur_state) inside the macro itself.
+	 */
 	DECR_REM_MARK_ABORT_ACTION(spc_struct, event_param, sm);
-	break; 
+	break;
  	}
      case 2:
 	{
 	DECR_ACTIVE_ACTION(assoc);
 	sm_p->cur_state = RPC_C_CLIENT_ASSOC_ACTIVE;
-	break; 
+	break;
 	}
-    }  /* end switch */  
-    return (assoc->assoc_status); 
+    }  /* end switch */
+    return (assoc->assoc_status);
 }
-
 
 
 /*
@@ -2958,7 +2976,7 @@ pointer_t       sm;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to create a no_conn_ind event for each of the
 **  calls currently using the association. This allows the call state
 **  machinery to properly detect the disconnect and terminate the
@@ -2976,7 +2994,7 @@ pointer_t       sm;
 **                      passed to the state machine evaluation routine.
 **                      This input argument is ignored.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **	sm             The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -2998,7 +3016,7 @@ pointer_t       sm;
 **--
 **/
 
-INTERNAL unsigned32     discon_calls_action_rtn 
+INTERNAL unsigned32     discon_calls_action_rtn
 #ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
@@ -3015,7 +3033,7 @@ pointer_t       sm;
     rpc_cn_assoc_t      *assoc;
 
     RPC_CN_DBG_RTN_PRINTF(CLIENT discon_calls_action_rtn);
-    
+
     /*
      * The special structure is a pointer to the association.
      */
@@ -3035,7 +3053,7 @@ pointer_t       sm;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to mark the association with negotiated
 **  transfer syntax and security.
 **
@@ -3046,12 +3064,12 @@ pointer_t       sm;
 **                      state machine event evaluation routine.
 **
 **      event_param     The fragbuf containing an rpc_bind_ack or
-**                      rpc_alter_context_resp PDU. 
+**                      rpc_alter_context_resp PDU.
 **                      This is passed in as the
 **                      special event related parameter which was
 **                      passed to the state machine evaluation routine.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **	sm             The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -3073,12 +3091,12 @@ pointer_t       sm;
 **--
 **/
 
-INTERNAL unsigned32     mark_syntax_and_sec_action_rtn 
+INTERNAL unsigned32     mark_syntax_and_sec_action_rtn
 #ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
   pointer_t       event_param,
-  pointer_t       sm 
+  pointer_t       sm
 )
 #else
 (spc_struct, event_param, sm)
@@ -3103,13 +3121,13 @@ pointer_t       sm;
     unsigned8                       ptype;
 
     RPC_CN_DBG_RTN_PRINTF(CLIENT mark_syntax_and_sec_action_rtn);
-    
+
     /*
      * The special structure is a pointer to the association.
      */
     assoc = (rpc_cn_assoc_t *) spc_struct;
     sm_p = (rpc_cn_sm_ctlblk_t *)sm;
-    
+
     status = lastfrag_pred_rtn(spc_struct, event_param);
     if (status == 0)
     {
@@ -3136,9 +3154,9 @@ pointer_t       sm;
      */
     sec_addr = (rpc_cn_port_any_t *)
         ((unsigned8 *)(header) + RPC_CN_PKT_SIZEOF_BIND_ACK_HDR);
-    pres_result_list = (rpc_cn_pres_result_list_t *) 
+    pres_result_list = (rpc_cn_pres_result_list_t *)
 	RPC_CN_ALIGN_PTR(((unsigned8 *)sec_addr + 2 + sec_addr->length), 4);
-    
+
     /*
      * Lookup the correct presentation context element by matching
      * the call ID in the header if there are results in the list.  If
@@ -3159,17 +3177,17 @@ pointer_t       sm;
              * abstract syntax we only have to check the first element of the
              * results list.
              */
-            if (pres_result_list->pres_results[0].result == 
+            if (pres_result_list->pres_results[0].result ==
                 RPC_C_CN_PCONT_ACCEPTANCE)
-            {       
+            {
                 pres_context->syntax_valid = true;
-        
+
                 /*
                  * We have an accepted transfer syntax. Note that
                  * the transfer syntax UUID is not saved. The stubs
                  * require only the transfer syntax vector index.
                  */
-            
+
                 /*
                  * To determine the syntax vector index the syntax vector
                  * will be scanned looking for a transfer syntax which matches
@@ -3189,7 +3207,7 @@ pointer_t       sm;
 #if DEBUG
                 if (i == pres_context->syntax_vector->count)
                 {
-		    
+
 		    /*
 		     * rpc_m_nts_not_found
 		     * "(%s) Negotiated transfer syntax not found
@@ -3211,7 +3229,7 @@ pointer_t       sm;
                  * code in the header into a status code.
                  */
                 pres_context->syntax_status = rpc__cn_assoc_pprov_to_status
-                (pres_result_list->pres_results[0].reason); 
+                (pres_result_list->pres_results[0].reason);
             }
         }
     }
@@ -3259,7 +3277,7 @@ pointer_t       sm;
                 local_auth_value->assoc_uuid_crc = auth_value->assoc_uuid_crc;
                 local_auth_value->sub_type = auth_value->sub_type;
                 local_auth_value->checksum_length = auth_value->checksum_length;
-                
+
             }
             else
             {
@@ -3270,7 +3288,7 @@ pointer_t       sm;
                                        auth_tlr->auth_value;
                 local_auth_value_len = RPC_CN_PKT_AUTH_LEN(header);
             }
-           
+
             RPC_CN_AUTH_VFY_SRVR_RESP (&assoc->security,
                                        sec_context,
                                        (pointer_t)local_auth_value,
@@ -3293,8 +3311,8 @@ pointer_t       sm;
             {
                 rpc_authn_protocol_id_t authn_protocol;
 
-                /* 
-                 * The response is OK. Use the 
+                /*
+                 * The response is OK. Use the
                  * authentication level to check the packet.
                  * If a raw packet exists, use that one instead
                  * of the unpacked one.
@@ -3348,7 +3366,7 @@ pointer_t       sm;
                 }
             }
         }
-   
+
         /*
          * Free assembly buffer
          */
@@ -3358,7 +3376,7 @@ pointer_t       sm;
                  ("(mark_syntax_and_sec_action_rtn) Free'd auth_buffer: %p\n",
                  assoc->security.auth_buffer_info.auth_buffer));
 
-            RPC_MEM_FREE(assoc->security.auth_buffer_info.auth_buffer, 
+            RPC_MEM_FREE(assoc->security.auth_buffer_info.auth_buffer,
                          RPC_C_MEM_CN_PAC_BUF);
             assoc->security.auth_buffer_info.auth_buffer = NULL;
             assoc->security.auth_buffer_info.auth_buffer_len = 0;
@@ -3440,7 +3458,7 @@ DONE:
      */
     assoc->assoc_flags &= ~RPC_C_CN_ASSOC_AUTH_EXPECTED;
     RPC_CN_ASSOC_WAKEUP (assoc);
-    sm_p->cur_state = RPC_C_CLIENT_ASSOC_ACTIVE; 
+    sm_p->cur_state = RPC_C_CLIENT_ASSOC_ACTIVE;
     return (assoc->assoc_status);
 }
 
@@ -3453,7 +3471,7 @@ DONE:
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to mark and abort an association.
 **
 **  INPUTS:
@@ -3467,7 +3485,7 @@ DONE:
 **                      passed to the state machine evaluation routine.
 **                      This input argument is ignored.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **	sm             The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -3489,12 +3507,12 @@ DONE:
 **--
 **/
 
-INTERNAL unsigned32     mark_abort_action_rtn 
+INTERNAL unsigned32     mark_abort_action_rtn
 #ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
   pointer_t       event_param,
-  pointer_t       sm 
+  pointer_t       sm
 )
 #else
 (spc_struct, event_param, sm)
@@ -3507,31 +3525,31 @@ pointer_t       sm;
     rpc_cn_sm_ctlblk_t *sm_p;
 
     RPC_CN_DBG_RTN_PRINTF(CLIENT mark_abort_action_rtn);
-    
+
     /*
      * The special structure is a pointer to the association.
      */
     assoc = (rpc_cn_assoc_t *) spc_struct;
     sm_p = (rpc_cn_sm_ctlblk_t *)sm;
-    
+
     /*
      * Note that since we are calling action routines from
      * within action routines, we need to update state as
      * a final step here.  Otherwise, the action routines
      * would update sm->cur_state inappropriately for
      * the calling routine, mark_abort_action_rtn().
-     */ 
+     */
     abort_assoc_action_rtn (spc_struct, event_param, sm);
     if (assoc->assoc_status != rpc_s_ok)
     {
 	sm_p->cur_state = RPC_C_CLIENT_ASSOC_CLOSED;
-	return (assoc->assoc_status);  
+	return (assoc->assoc_status);
     }
 
     mark_assoc_action_rtn (spc_struct, event_param, sm);
 
     sm_p->cur_state = RPC_C_CLIENT_ASSOC_CLOSED;
-    return (assoc->assoc_status);  
+    return (assoc->assoc_status);
 }
 
 #ifdef NOT_USED
@@ -3550,7 +3568,7 @@ pointer_t       sm;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Returns 1 if the association request requires an optional 3-leg
 **  authentication handshake. Returns 0 if if didn't.
 **
@@ -3561,7 +3579,7 @@ pointer_t       sm;
 **                      state machine event evaluation routine.
 **
 **      event_param     The fragment buffer containing the rpc_bind
-**                      PDU. The special event related 
+**                      PDU. The special event related
 **                      parameter which is passed to the state
 **                      machine event evaluation routine.
 **
@@ -3583,7 +3601,7 @@ pointer_t       sm;
 **--
 **/
 
-INTERNAL unsigned8 authent3_pred_rtn 
+INTERNAL unsigned8 authent3_pred_rtn
 #ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct __attribute__((ATTRIBUTE_UNUSED__)),
@@ -3644,7 +3662,7 @@ pointer_t       event_param;
 /*
 **++
 **
-**  MACRO NAME:		AUTHENT3_PRED       
+**  MACRO NAME:		AUTHENT3_PRED
 **
 **  SCOPE:              INTERNAL
 **
@@ -3654,7 +3672,7 @@ pointer_t       event_param;
 **  the predicate function from within the action routines.
 **  Macro set status to 1 if the association request requires an optional 3-leg
 **  authentication handshake, otherwise, sets status to 0.
-**      
+**
 **
 **  INPUTS:
 **
@@ -3663,7 +3681,7 @@ pointer_t       event_param;
 **                      state machine event evaluation routine.
 **
 **      event_param     The fragment buffer containing the rpc_bind
-**                      PDU. The special event related 
+**                      PDU. The special event related
 **                      parameter which is passed to the state
 **                      machine event evaluation routine.
 **
@@ -3672,8 +3690,8 @@ pointer_t       event_param;
 **			status.  Status' scope includes the routine
 **			calling the macro.  Check status in the calling
 **			routine to determine next state and in cases,
-**			flow through the action routine. 
-** 
+**			flow through the action routine.
+**
 **	tlr		Struct rpc_cn_auth_tlr_t.  Declared in the
 **			calling routine.  Used in RPC_CN_AUTH_THREE_WAY.
 **
@@ -3682,12 +3700,12 @@ pointer_t       event_param;
 **
 **	three_way	Boolean32.  Used internally to  RPC_CN_AUTH_
 **			THREE_WAY.
-** 
+**
 **  INPUTS/OUTPUTS:     none
 **
-**  OUTPUTS:            
+**  OUTPUTS:
 **
-**	status		See explanation above.  
+**	status		See explanation above.
 **
 **  IMPLICIT INPUTS:    none
 **
@@ -3743,10 +3761,10 @@ pointer_t       event_param;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to add an association to an association group,
 **  mark the assciation with the negotiated transfer syntax,
-**  optionally perform the third leg of a three-way 
+**  optionally perform the third leg of a three-way
 **  authentication handshake, and set the secondary address in the
 **  association. This routine will also record the server's maximum
 **  transmit and receive fragment sizes in the association
@@ -3760,9 +3778,9 @@ pointer_t       event_param;
 **      event_param     The fragment buffer containing the PDU. This
 **                      is passed in as the special event related
 **                      parameter which was passed to the state
-**                      machine evaluation routine. 
+**                      machine evaluation routine.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **	sm             The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -3784,12 +3802,12 @@ pointer_t       event_param;
 **--
 **/
 
-INTERNAL unsigned32     add_mark_set_action_rtn 
+INTERNAL unsigned32     add_mark_set_action_rtn
 #ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
   pointer_t       event_param,
-  pointer_t       sm 
+  pointer_t       sm
 )
 #else
 (spc_struct, event_param, sm)
@@ -3809,13 +3827,13 @@ pointer_t       sm;
     unsigned32		status;
 
     RPC_CN_DBG_RTN_PRINTF(CLIENT add_mark_set_action_rtn);
-   
+
     /*
      * The special structure is a pointer to the association.
      */
     assoc = (rpc_cn_assoc_t *) spc_struct;
     sm_p = (rpc_cn_sm_ctlblk_t *)sm;
-    
+
     status = lastfrag_pred_rtn(spc_struct, event_param);
     if (status == 0)
     {
@@ -3840,7 +3858,7 @@ pointer_t       sm;
      * Use the group id passed back from the server to see if we
      * already have an association group.
      */
-    assoc->assoc_grp_id = rpc__cn_assoc_grp_lkup_by_remid (RPC_CN_PKT_ASSOC_GROUP_ID (header), 
+    assoc->assoc_grp_id = rpc__cn_assoc_grp_lkup_by_remid (RPC_CN_PKT_ASSOC_GROUP_ID (header),
                                                            RPC_C_CN_ASSOC_GRP_CLIENT,
                                                            assoc->cn_ctlblk.rpc_addr,
                                                            &local_st);
@@ -3866,7 +3884,7 @@ pointer_t       sm;
      * a final step here.  Otherwise, the action routines
      * called here, would update sm->cur_state inappropriately for
      * add_mark_set_action_rtn().
-     */ 
+     */
     add_assoc_to_grp_action_rtn (spc_struct, NULL, sm);
     if (assoc->assoc_status != rpc_s_ok)
     {
@@ -3886,7 +3904,7 @@ pointer_t       sm;
 
     /*
      * Optionally perform three-way auth.  auth tlr set up in
-     * AUTHENT3_PRED, used *again* in 
+     * AUTHENT3_PRED, used *again* in
      */
 
     AUTHENT3_PRED(spc_struct, event_param, status, tlr, local_st, three_way);
@@ -3912,7 +3930,6 @@ pointer_t       sm;
 	}
     }
 
-
     /*
      * Set the secondary address on the group using the secondary
      * address endpoint sent from the server.
@@ -3923,7 +3940,7 @@ pointer_t       sm;
        sm_p->cur_state =  RPC_C_CLIENT_ASSOC_OPEN;
        return (assoc->assoc_status);
     }
-    
+
     /*
      * Record the server's max transmit frag size as our max receive
      * frag size in the association. Record the server's max receive
@@ -3960,7 +3977,7 @@ pointer_t       sm;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to remove an association from an association
 **  group, mark and abort it.
 **
@@ -3975,7 +3992,7 @@ pointer_t       sm;
 **                      passed to the state machine evaluation routine.
 **                      This input argument is ignored.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **	sm             The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -3997,12 +4014,12 @@ pointer_t       sm;
 **--
 **/
 
-INTERNAL unsigned32     rem_mark_abort_action_rtn 
+INTERNAL unsigned32     rem_mark_abort_action_rtn
 #ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
   pointer_t       event_param,
-  pointer_t       sm 
+  pointer_t       sm
 )
 #else
 (spc_struct, event_param, sm)
@@ -4015,18 +4032,18 @@ pointer_t       sm;
     rpc_cn_sm_ctlblk_t *sm_p;
 
     RPC_CN_DBG_RTN_PRINTF(CLIENT rem_mark_abort_action_rtn);
-    
+
     /*
      * The special structure is a pointer to the association.
      */
     assoc = (rpc_cn_assoc_t *) spc_struct;
     sm_p = (rpc_cn_sm_ctlblk_t *)sm;
- 
+
     rem_assoc_from_grp_action_rtn (spc_struct, event_param, sm);
     if (assoc->assoc_status != rpc_s_ok)
     {
 	sm_p->cur_state =  RPC_C_CLIENT_ASSOC_CLOSED ;
-	return (assoc->assoc_status); 
+	return (assoc->assoc_status);
     }
 
     /*
@@ -4035,18 +4052,18 @@ pointer_t       sm;
      * a final step here.  Otherwise, the action routines
      * called here, would update sm->cur_state inappropriately for
      * rem_mark_abort_action_rtn().
-     */ 
+     */
     abort_assoc_action_rtn (spc_struct, event_param, sm);
     if (assoc->assoc_status != rpc_s_ok)
     {
 	sm_p->cur_state =  RPC_C_CLIENT_ASSOC_CLOSED ;
-	return (assoc->assoc_status); 
+	return (assoc->assoc_status);
     }
 
     mark_assoc_action_rtn (spc_struct, event_param, sm);
 
     sm_p->cur_state =  RPC_C_CLIENT_ASSOC_CLOSED ;
-    return (assoc->assoc_status); 
+    return (assoc->assoc_status);
 }
 
 
@@ -4058,7 +4075,7 @@ pointer_t       sm;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to remove an association from an association
 **  group and mark it.
 **
@@ -4073,7 +4090,7 @@ pointer_t       sm;
 **                      passed to the state machine evaluation routine.
 **                      This input argument is ignored.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **	sm             The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -4095,12 +4112,12 @@ pointer_t       sm;
 **--
 **/
 
-INTERNAL unsigned32     rem_mark_action_rtn 
+INTERNAL unsigned32     rem_mark_action_rtn
 #ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
   pointer_t       event_param,
-  pointer_t       sm 
+  pointer_t       sm
 )
 #else
 (spc_struct, event_param, sm)
@@ -4113,17 +4130,17 @@ pointer_t       sm;
     rpc_cn_sm_ctlblk_t *sm_p;
 
     RPC_CN_DBG_RTN_PRINTF(CLIENT rem_mark_action_rtn);
-    
+
     /*
      * The special structure is a pointer to the association.
      */
     assoc = (rpc_cn_assoc_t *) spc_struct;
     sm_p = (rpc_cn_sm_ctlblk_t *)sm;
-   
+
     rem_assoc_from_grp_action_rtn (spc_struct, event_param, sm);
     if (assoc->assoc_status != rpc_s_ok)
     {
-	sm_p->cur_state = RPC_C_CLIENT_ASSOC_CLOSED;   
+	sm_p->cur_state = RPC_C_CLIENT_ASSOC_CLOSED;
 	return (assoc->assoc_status);
     }
 
@@ -4133,10 +4150,10 @@ pointer_t       sm;
      * a final step here.  Otherwise, the action routines
      * called here, would update sm->cur_state inappropriately for
      * rem_mark_action_rtn().
-     */ 
+     */
     mark_assoc_action_rtn (spc_struct, event_param, sm);
 
-    sm_p->cur_state = RPC_C_CLIENT_ASSOC_CLOSED;   
+    sm_p->cur_state = RPC_C_CLIENT_ASSOC_CLOSED;
     return (assoc->assoc_status);
 }
 
@@ -4149,7 +4166,7 @@ pointer_t       sm;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to remove an association from an association
 **  group, mark it and create a no connection indication event for
 **  all calls currently using the association.
@@ -4165,7 +4182,7 @@ pointer_t       sm;
 **                      passed to the state machine evaluation routine.
 **                      This input argument is ignored.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **	sm             The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -4187,12 +4204,12 @@ pointer_t       sm;
 **--
 **/
 
-INTERNAL unsigned32     rem_mark_discon_action_rtn 
+INTERNAL unsigned32     rem_mark_discon_action_rtn
 #ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
   pointer_t       event_param,
-  pointer_t       sm 
+  pointer_t       sm
 )
 #else
 (spc_struct, event_param, sm)
@@ -4205,24 +4222,24 @@ pointer_t       sm;
     rpc_cn_sm_ctlblk_t *sm_p;
 
     RPC_CN_DBG_RTN_PRINTF(CLIENT rem_mark_discon_action_rtn);
-    
+
     /*
      * The special structure is a pointer to the association.
      */
     assoc = (rpc_cn_assoc_t *) spc_struct;
     sm_p = (rpc_cn_sm_ctlblk_t *)sm;
-    
+
     /*
      * Note that since we are calling action routines from
      * within action routines, we need to update state as
      * a final step here.  Otherwise, the action routines
      * called here, would update sm->cur_state inappropriately for
      * rem_mark_discon_action_rtn().
-     */ 
+     */
     rem_assoc_from_grp_action_rtn (spc_struct, event_param, sm);
     mark_assoc_action_rtn (spc_struct, event_param, sm );
     discon_calls_action_rtn (spc_struct, event_param, sm);
-    sm_p->cur_state = RPC_C_CLIENT_ASSOC_CALL_DONE_WAIT; 
+    sm_p->cur_state = RPC_C_CLIENT_ASSOC_CALL_DONE_WAIT;
     return (assoc->assoc_status);
 }
 
@@ -4235,13 +4252,13 @@ pointer_t       sm;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to decrement the active references, remove an
 **  association from an association group, mark and abort it.
 **  Note that this action is not called explicitly from the state
 **  tables any longer.  It is called from within other actions.
 **  Update state not here, but in the routines calling decr_rem
-**  mark_abort_action_rtn(). 
+**  mark_abort_action_rtn().
 **
 **  INPUTS:
 **
@@ -4254,7 +4271,7 @@ pointer_t       sm;
 **                      passed to the state machine evaluation routine.
 **                      This input argument is ignored.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **	sm             The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -4276,12 +4293,12 @@ pointer_t       sm;
 **--
 **/
 
-INTERNAL unsigned32     decr_rem_mark_abort_action_rtn 
+INTERNAL unsigned32     decr_rem_mark_abort_action_rtn
 #ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
   pointer_t       event_param,
-  pointer_t       sm 
+  pointer_t       sm
 )
 #else
 (spc_struct, event_param, sm)
@@ -4292,9 +4309,9 @@ pointer_t       sm;
 {
     rpc_cn_assoc_t *assoc;
     rpc_cn_sm_ctlblk_t *sm_p ATTRIBUTE_UNUSED;
-   
+
     RPC_CN_DBG_RTN_PRINTF(CLIENT decr_rem_mark_abort_action_rtn);
-    
+
     /*
      * The special structure is a pointer to the association.
      */
@@ -4307,7 +4324,7 @@ pointer_t       sm;
     }
     rem_mark_abort_action_rtn (spc_struct, event_param, sm);
     return (assoc->assoc_status);
-} 
+}
 
 
 /*
@@ -4318,7 +4335,7 @@ pointer_t       sm;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to process multiple rpc_bind_ack or alter_context_resp
 **  PDU packets and reconstruct the security information.
 **
@@ -4332,9 +4349,9 @@ pointer_t       sm;
 **                      state machine event evaluation routine.
 **
 **      event_param     The fragbuf containing the rpc_bind_ack or
-**                      alter_context_resp PDU. 
-**                      This is passed in as the special event related 
-**                      parameter which was passed to the state machine 
+**                      alter_context_resp PDU.
+**                      This is passed in as the special event related
+**                      parameter which was passed to the state machine
 **                      evaluation routine.
 **
 **  INPUTS/OUTPUTS:     none
@@ -4353,7 +4370,7 @@ pointer_t       sm;
 **--
 **/
 
-INTERNAL unsigned32     process_frag_action_rtn 
+INTERNAL unsigned32     process_frag_action_rtn
 #ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
@@ -4375,7 +4392,6 @@ pointer_t       sm;
     unsigned8                           *auth_buffer;
     unsigned32                          auth_buffer_max;
     unsigned32                          auth_buffer_len;
-
 
     RPC_CN_DBG_RTN_PRINTF(CLIENT process_frag_action_rtn);
 
@@ -4413,7 +4429,7 @@ pointer_t       sm;
          */
         auth_buffer_max = RPC_C_CN_LARGE_FRAG_SIZE * 3;
 
-        RPC_MEM_ALLOC(auth_buffer, unsigned8 *, 
+        RPC_MEM_ALLOC(auth_buffer, unsigned8 *,
                       auth_buffer_max,
                       RPC_C_MEM_CN_PAC_BUF,
                       RPC_C_MEM_WAITOK);
@@ -4441,13 +4457,13 @@ pointer_t       sm;
 
     /*
      * Concatenate this security info on to the buffer.
-     * 
+     *
      * We have to watch out for the checksum at the end of the
      * auth trailer, we only want to recover the KRB_AP_REQ message.
      */
     auth_tlr = RPC_CN_PKT_AUTH_TLR(req_header,RPC_CN_PKT_FRAG_LEN (req_header));
     auth_value = (rpc_cn_bind_auth_value_priv_t *)auth_tlr->auth_value;
-    auth_value_len = RPC_CN_PKT_AUTH_LEN (req_header) - 
+    auth_value_len = RPC_CN_PKT_AUTH_LEN (req_header) -
                          auth_value->checksum_length;
 
     /*
@@ -4464,19 +4480,18 @@ pointer_t       sm;
     {
         auth_value_len -= RPC_CN_PKT_SIZEOF_BIND_AUTH_VAL;
         assert(auth_value_len == auth_value->cred_length);
-        memcpy(auth_buffer+auth_buffer_len, 
-               auth_value->credentials, 
+        memcpy(auth_buffer+auth_buffer_len,
+               auth_value->credentials,
                auth_value->cred_length);
         ((rpc_cn_bind_auth_value_priv_t *)auth_buffer)->cred_length += auth_value->cred_length;
     }
 
     RPC_DBG_PRINTF (rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_BIG_PAC,
-    ("(process_frag_action_rtn) Copied to auth_buffer: %p, auth_buffer_len=%d, auth_value_len=%d, auth_buffer_max=%d\n", 
+    ("(process_frag_action_rtn) Copied to auth_buffer: %p, auth_buffer_len=%d, auth_value_len=%d, auth_buffer_max=%d\n",
     auth_buffer, auth_buffer_len, auth_value_len, auth_buffer_max));
 
     auth_buffer_len += auth_value_len;
 
-    
     /*
      * Update our per-association data
      */
@@ -4496,7 +4511,7 @@ pointer_t       sm;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to retry an BIND operation with a RPC version 5.0 server.
 **
 **  INPUTS:
@@ -4506,8 +4521,8 @@ pointer_t       sm;
 **                      state machine event evaluation routine.
 **
 **      event_param     The rpc_bind_nak packet.
-**                      This is passed in as the special event related 
-**                      parameter which was passed to the state machine 
+**                      This is passed in as the special event related
+**                      parameter which was passed to the state machine
 **                      evaluation routine.  It is ignored.
 **
 **  INPUTS/OUTPUTS:     none
@@ -4526,12 +4541,12 @@ pointer_t       sm;
 **--
 **/
 
-INTERNAL unsigned32     retry_assoc_action_rtn 
+INTERNAL unsigned32     retry_assoc_action_rtn
 #ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
   pointer_t       event_param,
-  pointer_t       sm 
+  pointer_t       sm
 )
 #else
 (spc_struct, event_param, sm)
@@ -4552,13 +4567,13 @@ pointer_t       sm;
      */
     assoc = (rpc_cn_assoc_t *) spc_struct;
     sm_p = (rpc_cn_sm_ctlblk_t *)sm;
-   
+
     status = version_mismatch_pred_rtn(spc_struct, event_param);
     if ( status == 0)
     {
 	mark_abort_action_rtn(spc_struct, event_param, sm);
     	sm_p->cur_state = RPC_C_CLIENT_ASSOC_CLOSED;
-    	return (assoc->assoc_status);  
+        return (assoc->assoc_status);
     }
 
     resp_header = (rpc_cn_packet_t *) event_param;
@@ -4619,7 +4634,7 @@ pointer_t       sm;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to ignore an illegal event and abort an association.
 **
 **  INPUTS:
@@ -4633,7 +4648,7 @@ pointer_t       sm;
 **                      passed to the state machine evaluation routine.
 **                      This input argument is ignored.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **	sm              The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -4655,12 +4670,12 @@ pointer_t       sm;
 **--
 **/
 
-INTERNAL unsigned32     illegal_event_abort_action_rtn 
+INTERNAL unsigned32     illegal_event_abort_action_rtn
 #ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
   pointer_t       event_param,
-  pointer_t       sm 
+  pointer_t       sm
 )
 #else
 (spc_struct, event_param, sm)
@@ -4674,13 +4689,13 @@ pointer_t       sm;
     dcethread* current_thread_id;
 
     RPC_CN_DBG_RTN_PRINTF(CLIENT illegal_event_abort_action_rtn);
-    
+
     /*
      * The special structure is a pointer to the association.
      */
     assoc = (rpc_cn_assoc_t *) spc_struct;
     sm_p = (rpc_cn_sm_ctlblk_t *)sm;
-    
+
     /*
      * "Illegal state transition detected in CN client association
      * state machine [cur_state: %s, cur_event: %s, assoc: %x]"
@@ -4700,12 +4715,12 @@ rpc_g_cn_assoc_client_events[assoc->assoc_state.cur_event-RPC_C_CN_STATEBASE],
      * a final step here.  Otherwise, the action routines
      * would update sm->cur_state inappropriately for
      * the calling routine, illegal_event_abort_action_rtn().
-     */ 
+     */
     abort_assoc_action_rtn (spc_struct, event_param, sm);
     if (assoc->assoc_status != rpc_s_ok)
     {
 	sm_p->cur_state = RPC_C_CLIENT_ASSOC_CLOSED;
-	return (assoc->assoc_status);  
+	return (assoc->assoc_status);
     }
 
     /*
@@ -4746,9 +4761,8 @@ rpc_g_cn_assoc_client_events[assoc->assoc_state.cur_event-RPC_C_CN_STATEBASE],
         RPC_CN_ASSOC_WAKEUP (assoc);
     }
     sm_p->cur_state = RPC_C_CLIENT_ASSOC_CLOSED;
-    return (assoc->assoc_status); 
+    return (assoc->assoc_status);
 }
-
 
 
 /*
@@ -4759,7 +4773,7 @@ rpc_g_cn_assoc_client_events[assoc->assoc_state.cur_event-RPC_C_CN_STATEBASE],
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  This routine will allocate, format and send either an rpc_bind or
 **  rpc_alter_context PDU.
 **
@@ -4780,7 +4794,7 @@ rpc_g_cn_assoc_client_events[assoc->assoc_state.cur_event-RPC_C_CN_STATEBASE],
 **
 **  INPUTS/OUTPUTS:     none
 **
-**  OUTPUTS:            
+**  OUTPUTS:
 **
 **      st              The return status of this routine.
 **                      rpc_s_ok
@@ -4796,7 +4810,7 @@ rpc_g_cn_assoc_client_events[assoc->assoc_state.cur_event-RPC_C_CN_STATEBASE],
 **--
 **/
 
-INTERNAL void send_pdu 
+INTERNAL void send_pdu
 #ifdef _DCE_PROTO_
 (
   rpc_cn_assoc_p_t        assoc,
@@ -4836,12 +4850,12 @@ unsigned32              *st;
     unsigned8			version;
 
     RPC_CN_DBG_RTN_PRINTF (CLIENT send_pdu);
-    
+
     RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_PKT,("CLIENT send_pdu\n"));
 
     /*
      * Allocate a large fragbuf. We won't expend any more time here
-     * trying to optimize to allocate a small fragbuf. 
+     * trying to optimize to allocate a small fragbuf.
      */
     RPC_CN_FRAGBUF_ALLOC (fragbuf, rpc_g_cn_large_frag_size, st);
     header = (rpc_cn_packet_t *)fragbuf->data_p;
@@ -4877,7 +4891,7 @@ unsigned32              *st;
          */
         header_size += sizeof (rpc_cn_pres_cont_list_t) +
                        (sizeof (rpc_cn_pres_syntax_id_t) *
-                       (pres_context->syntax_vector->count - 1)); 
+                       (pres_context->syntax_vector->count - 1));
         pres_cont_list->n_context_elem = 1;
         RPC_CN_ASSOC_CONTEXT_ID (assoc)++;
         pres_cont_list->pres_cont_elem[0].pres_context_id = RPC_CN_ASSOC_CONTEXT_ID (assoc);
@@ -4893,7 +4907,7 @@ unsigned32              *st;
             unsigned32          st;
 
             uuid_to_string (&pres_context->syntax_abstract_id.id,
-                            &abstract, 
+                            &abstract,
                             &st);
             RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
                             ("CN: call_rep->%p assoc->%p desc->%p negotiating for abstract syntax->%s,%x context_id->%x call_id->%x\n",
@@ -4905,14 +4919,14 @@ unsigned32              *st;
                              RPC_CN_ASSOC_CONTEXT_ID (assoc),
                              rpc_g_cn_call_id));
             rpc_string_free (&abstract, &st);
-        }    
+        }
 #endif
 
         for (i = 0; i < pres_context->syntax_vector->count; i++)
         {
-            pres_cont_list->pres_cont_elem[0].transfer_syntaxes[i].id = 
+            pres_cont_list->pres_cont_elem[0].transfer_syntaxes[i].id =
                 pres_context->syntax_vector->syntax_id[i].id;
-            pres_cont_list->pres_cont_elem[0].transfer_syntaxes[i].version = 
+            pres_cont_list->pres_cont_elem[0].transfer_syntaxes[i].version =
                 pres_context->syntax_vector->syntax_id[i].version;
 
 #ifdef DEBUG
@@ -4920,9 +4934,9 @@ unsigned32              *st;
             {
                 unsigned_char_t     *transfer;
                 unsigned32          st;
-                
+
                 uuid_to_string (&pres_context->syntax_vector->syntax_id[i].id,
-                                &transfer, 
+                                &transfer,
                                 &st);
                 RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
                                 ("CN: call_rep->%p assoc->%p desc->%p transfer_syntax[%x]->%s,%x\n",
@@ -4933,7 +4947,7 @@ unsigned32              *st;
                                  transfer,
                                  pres_context->syntax_vector->syntax_id[i].version));
                 rpc_string_free (&transfer, &st);
-            }    
+            }
 #endif
 
         }
@@ -4985,10 +4999,10 @@ unsigned32              *st;
         flags = RPC_C_CN_FLAGS_FIRST_FRAG | RPC_C_CN_FLAGS_LAST_FRAG;
 
         fragbuf->data_size = header_size;
-        rpc__cn_pkt_format_common (header, 
-                                   pdu_type, 
+        rpc__cn_pkt_format_common (header,
+                                   pdu_type,
                                    flags,
-                                   fragbuf->data_size, 
+                                   fragbuf->data_size,
                                    auth_len,
                                    rpc_g_cn_call_id,
                                    version);
@@ -5008,7 +5022,7 @@ unsigned32              *st;
      * We have security info to deal with.  Calculate the
      * size of the authentication trailer. The header size up to
      * this point should already be a multiple of 4 meaning the
-     * auth trailer will fall on a 4-byte boundary. 
+     * auth trailer will fall on a 4-byte boundary.
      */
     /* header_size = (header_size + 3) & ~0x03; */
     auth_tlr = (rpc_cn_auth_tlr_t *) ((unsigned8 *)(header) + header_size);
@@ -5079,10 +5093,10 @@ unsigned32              *st;
 
         (void) memset(auth_tlr->auth_value, auth_len, 0);
 
-        RPC_CN_AUTH_FMT_CLIENT_REQ (&assoc->security, 
+        RPC_CN_AUTH_FMT_CLIENT_REQ (&assoc->security,
                                     sec_context,
-                                    (pointer_t)auth_tlr->auth_value, 
-                                    &auth_len,       
+                                    (pointer_t)auth_tlr->auth_value,
+                                    &auth_len,
                                     &last_auth_pos,
                                     &auth_len_remain,
                                     old_server,
@@ -5096,7 +5110,7 @@ unsigned32              *st;
         /* auth_len now has length of auth_value */
 
         RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_BIG_PAC,
-("(send_pdu) After FMT_CLIENT_REQ, header_size=%u, auth_len=%u, auth_len_remain=%u\n", 
+("(send_pdu) After FMT_CLIENT_REQ, header_size=%u, auth_len=%u, auth_len_remain=%u\n",
             header_size, auth_len, auth_len_remain));
 
         if (auth_len_remain == 0) {
@@ -5105,10 +5119,10 @@ unsigned32              *st;
         }
 
         fragbuf->data_size = header_size + auth_len;
-        rpc__cn_pkt_format_common (header, 
-                                   pdu_type, 
-                                   flags, 
-                                   fragbuf->data_size, 
+        rpc__cn_pkt_format_common (header,
+                                   pdu_type,
+                                   flags,
+                                   fragbuf->data_size,
                                    auth_len,
                                    rpc_g_cn_call_id,
                                    version);
@@ -5119,9 +5133,9 @@ unsigned32              *st;
         assoc->bind_packets_sent++;
 
         RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_BIG_PAC,
-       ("(send_pdu) SENT fragbuf, data_size=%u, first_frag=%s, last_frag=%s st=0x%x\n", 
-            fragbuf->data_size, 
-            (flags & RPC_C_CN_FLAGS_FIRST_FRAG) ? "true": "false", 
+       ("(send_pdu) SENT fragbuf, data_size=%u, first_frag=%s, last_frag=%s st=0x%x\n",
+            fragbuf->data_size,
+            (flags & RPC_C_CN_FLAGS_FIRST_FRAG) ? "true": "false",
             (flags & RPC_C_CN_FLAGS_LAST_FRAG) ? "true": "false",
             *st));
 
