@@ -43,6 +43,7 @@
 #include <comauth.h>    /* Common Authentication services */
 
 #include <sys/kauth.h>
+#include <sys/syscall.h>
 
 /*
  * Internal variables to maintain the auth info cache.
@@ -1997,6 +1998,9 @@ unsigned32              *status;
     uid_t               euid = 0;
     gid_t               egid = 0;
     int                 ret;
+    int                 err;
+    gid_t               *gid_list = NULL;
+    int                 ngids;
 
     assert(binding_rep != NULL);
 
@@ -2004,12 +2008,14 @@ unsigned32              *status;
     RPC_VERIFY_INIT ();
 
     RPC_BINDING_VALIDATE(binding_rep, status);
-    if (*status != rpc_s_ok) {
+    if (*status != rpc_s_ok)
+    {
         RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): invalid binding\n"));
         return;
     }
 
-    if (RPC_BINDING_IS_CLIENT (binding_rep)) {
+    if (RPC_BINDING_IS_CLIENT (binding_rep))
+    {
         RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): wrong type of binding\n"));
         *status = rpc_s_wrong_kind_of_binding;
         return;
@@ -2043,7 +2049,50 @@ unsigned32              *status;
         return;
     }
 
+    /* get the number of groups */
+    ngids = getgroups (0, NULL);
+    if (ngids < 0)
+    {
+        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): getgroups count failed %d\n", errno));
+        *status = rpc_s_no_context_available;
+        goto error;
+    }
+
+    /* allocate an array to hold all the groups */
+    RPC_MEM_ALLOC(gid_list, gid_t *, sizeof (gid_t) * (ngids + 1),
+                  RPC_C_MEM_UTIL, RPC_C_MEM_WAITOK);
+    if (gid_list == NULL)
+    {
+        *status = rpc_s_no_memory;
+        goto error;
+    }
+
+    /* get the groups */
+    ngids = getgroups (ngids, gid_list);
+    if (ngids < 0)
+    {
+        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): getgroups failed %d\n", errno));
+        *status = rpc_s_no_context_available;
+        goto error;
+    }
+
+    /* opt back into the dynamic group resolutions */
+    err = syscall(SYS_initgroups, ngids, gid_list, euid);
+    if (err == -1)
+    {
+        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): SYS_initgroups failed %d\n", errno));
+        *status = rpc_s_no_context_available;
+        goto error;
+    }
+
     *status = rpc_s_ok;
+    return;
+
+error:
+    pthread_setugid_np(KAUTH_UID_NONE, KAUTH_GID_NONE);
+
+    if (gid_list != NULL)
+        RPC_MEM_FREE(gid_list, RPC_C_MEM_UTIL);
 }
 
 /*
@@ -2105,19 +2154,22 @@ unsigned32              *status;
     RPC_VERIFY_INIT ();
 
     RPC_BINDING_VALIDATE(binding_rep, status);
-    if (*status != rpc_s_ok) {
+    if (*status != rpc_s_ok)
+    {
         RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_revert_to_self): invalid binding\n"));
         return;
     }
 
-    if (RPC_BINDING_IS_CLIENT (binding_rep)) {
+    if (RPC_BINDING_IS_CLIENT (binding_rep))
+    {
         RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_revert_to_self): wrong type of binding\n"));
         *status = rpc_s_wrong_kind_of_binding;
         return;
     }
 
     ret = pthread_setugid_np(KAUTH_UID_NONE, KAUTH_GID_NONE);
-    if (ret != 0) {
+    if (ret != 0)
+    {
         RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_revert_to_self): pthread_setugid_np failed %d\n", errno));
         *status = rpc_s_no_context_available;
         return;
