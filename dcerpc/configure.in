@@ -170,6 +170,8 @@ AM_CONDITIONAL(ENABLE_DCOM, test x$rpc_arg_dcom = yes)
 AM_CONDITIONAL(TARGET_OS_LINUX, test x$target_os = xlinux-gnu)
 AM_CONDITIONAL(TARGET_OS_DARWIN, test x$target_os = xdarwin)
 
+AC_CHECK_FUNCS(pthread_setugid_np)
+
 #####################################################################
 ## COMPONENT: threads
 

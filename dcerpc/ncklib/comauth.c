@@ -1992,6 +1992,7 @@ rpc_binding_handle_t    binding_h;
 unsigned32              *status;
 #endif
 {
+#if HAVE_PTHREAD_SETUGID_NP
     rpc_binding_rep_p_t binding_rep = (rpc_binding_rep_p_t) binding_h;
     rpc_protocol_id_t       protid;
     rpc_prot_network_epv_p_t net_epv;
@@ -2044,7 +2045,7 @@ unsigned32              *status;
 
     ret = pthread_setugid_np(euid, egid);
     if (ret != 0) {
-        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): pthread_setugid_np failed %d\n", errno));
+        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): pthread_setugid_np failed %d for euid %d, egid %d\n", errno, euid, egid));
         *status = rpc_s_no_context_available;
         return;
     }
@@ -2053,7 +2054,7 @@ unsigned32              *status;
     ngids = getgroups (0, NULL);
     if (ngids < 0)
     {
-        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): getgroups count failed %d\n", errno));
+        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): getgroups count failed %d for euid %d, egid %d\n", errno, euid, egid));
         *status = rpc_s_no_context_available;
         goto error;
     }
@@ -2071,7 +2072,7 @@ unsigned32              *status;
     ngids = getgroups (ngids, gid_list);
     if (ngids < 0)
     {
-        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): getgroups failed %d\n", errno));
+        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): getgroups failed %d for euid %d, egid %d\n", errno, euid, egid));
         *status = rpc_s_no_context_available;
         goto error;
     }
@@ -2080,19 +2081,27 @@ unsigned32              *status;
     err = syscall(SYS_initgroups, ngids, gid_list, euid);
     if (err == -1)
     {
-        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): SYS_initgroups failed %d\n", errno));
+        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): SYS_initgroups failed %d for euid %d, egid %d\n", errno, euid, egid));
         *status = rpc_s_no_context_available;
         goto error;
     }
 
     *status = rpc_s_ok;
-    return;
 
 error:
-    pthread_setugid_np(KAUTH_UID_NONE, KAUTH_GID_NONE);
+    if (*status != rpc_s_ok)
+    {
+        /* error occurred, try to revert back to previous user/group ID */
+        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): reverting credentials due to error %d\n", *status));
+        pthread_setugid_np(KAUTH_UID_NONE, KAUTH_GID_NONE);
+    }
 
     if (gid_list != NULL)
         RPC_MEM_FREE(gid_list, RPC_C_MEM_UTIL);
+
+#else
+    *status = rpc_s_not_supported;
+#endif
 }
 
 /*
@@ -2145,6 +2154,7 @@ rpc_binding_handle_t    binding_h;
 unsigned32              *status;
 #endif
 {
+#if HAVE_PTHREAD_SETUGID_NP
     rpc_binding_rep_p_t binding_rep = (rpc_binding_rep_p_t) binding_h;
     int                 ret;
 
@@ -2176,4 +2186,7 @@ unsigned32              *status;
     }
 
     *status = rpc_s_ok;
+#else
+    *status = rpc_s_not_supported;
+#endif
 }
