@@ -123,7 +123,7 @@ unsigned32 *st;
     };
     static rpc_prot_network_epv_t dg_network_epv =
     {
-	.network_use_socket = NULL,
+        .network_use_socket = NULL,
         rpc__dg_network_use_protseq_sv,
         rpc__dg_network_mon,
         rpc__dg_network_stop_mon,
@@ -132,7 +132,7 @@ unsigned32 *st;
         rpc__dg_network_select_dispatch,
         rpc__dg_network_inq_prot_vers,
         rpc__dg_network_close,
-        NULL
+        .network_getpeereid = NULL
     };
     
     *call_epv    = &dg_call_epv;

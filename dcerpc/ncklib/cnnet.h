@@ -208,7 +208,7 @@ PRIVATE boolean32 rpc__cn_network_connect_fail _DCE_PROTOTYPE_ ((unsigned32));
 PRIVATE void rpc__cn_set_sock_buffsize _DCE_PROTOTYPE_ ((
         unsigned32	  /* rsize */,
         unsigned32	  /* ssize */,
-        error_status_t	* /* st */));
+        unsigned32	* /* st */));
 
 /*
  * R P C _ _ C N _ I N Q _ S O C K _ B U F F S I Z E
@@ -216,7 +216,7 @@ PRIVATE void rpc__cn_set_sock_buffsize _DCE_PROTOTYPE_ ((
 PRIVATE void rpc__cn_inq_sock_buffsize _DCE_PROTOTYPE_ ((
         unsigned32	* /* rsize */,
         unsigned32	* /* ssize */,
-        error_status_t  * /* st */));
+        unsigned32  * /* st */));
 
 /*
  * R P C _ _ C N _ N E T W O R K _ G E T P E E R E I D

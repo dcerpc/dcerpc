@@ -565,11 +565,11 @@ extern void rpc__dbg_set_switches    (
 void rpc__cn_set_sock_buffsize (
         unsigned32	  /* rsize */,
         unsigned32	  /* ssize */,
-        error_status_t	* /* st */);
+        unsigned32	* /* st */);
 void rpc__cn_inq_sock_buffsize (
         unsigned32	* /* rsize */,
         unsigned32	* /* ssize */,
-        error_status_t  * /* st */);
+        unsigned32  * /* st */);
 
 
 extern int lookup_name(char *table[], char *s);

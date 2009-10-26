@@ -43,8 +43,13 @@
 #include <comp.h>       /* Private communications services */
 #include <comauth.h>    /* Common Authentication services */
 
+#if HAVE_SYS_KAUTH_H
 #include <sys/kauth.h>
+#endif
+
+#if HAVE_SYS_SYSCALL_H
 #include <sys/syscall.h>
+#endif
 
 /*
  * Internal variables to maintain the auth info cache.
@@ -2000,9 +2005,6 @@ unsigned32              *status;
     uid_t               euid = 0;
     gid_t               egid = 0;
     int                 ret;
-    int                 err;
-    gid_t               *gid_list = NULL;
-    int                 ngids;
 
     assert(binding_rep != NULL);
 
@@ -2051,36 +2053,11 @@ unsigned32              *status;
         return;
     }
 
-    /* get the number of groups */
-    ngids = getgroups (0, NULL);
-    if (ngids < 0)
-    {
-        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): getgroups count failed %d for euid %d, egid %d\n", errno, euid, egid));
-        *status = rpc_s_no_context_available;
-        goto error;
-    }
-
-    /* allocate an array to hold all the groups */
-    RPC_MEM_ALLOC(gid_list, gid_t *, sizeof (gid_t) * (ngids + 1),
-                  RPC_C_MEM_UTIL, RPC_C_MEM_WAITOK);
-    if (gid_list == NULL)
-    {
-        *status = rpc_s_no_memory;
-        goto error;
-    }
-
-    /* get the groups */
-    ngids = getgroups (ngids, gid_list);
-    if (ngids < 0)
-    {
-        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): getgroups failed %d for euid %d, egid %d\n", errno, euid, egid));
-        *status = rpc_s_no_context_available;
-        goto error;
-    }
-
-    /* opt back into the dynamic group resolutions */
-    err = syscall(SYS_initgroups, ngids, gid_list, euid);
-    if (err == -1)
+    /* opt back into the dynamic group resolutions.
+     For better performance, we only add in our egid instead of the
+     entire group list. */
+    ret = syscall(SYS_initgroups, 1, egid, euid);
+    if (ret == -1)
     {
         RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): SYS_initgroups failed %d for euid %d, egid %d\n", errno, euid, egid));
         *status = rpc_s_no_context_available;
@@ -2096,9 +2073,6 @@ error:
         RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): reverting credentials due to error %d\n", *status));
         pthread_setugid_np(KAUTH_UID_NONE, KAUTH_GID_NONE);
     }
-
-    if (gid_list != NULL)
-        RPC_MEM_FREE(gid_list, RPC_C_MEM_UTIL);
 
 #else
     *status = rpc_s_not_supported;

@@ -2219,7 +2219,7 @@ PRIVATE void
 rpc__cn_inq_sock_buffsize(
 	unsigned32	*rsize,
 	unsigned32	*ssize,
-	error_status_t	*st)
+	unsigned32	*st)
 {
     *rsize = rpc_g_cn_socket_read_buffer;
     *ssize = rpc_g_cn_socket_write_buffer;
@@ -2265,7 +2265,7 @@ PRIVATE void
 rpc__cn_set_sock_buffsize(
 	unsigned32	rsize,
 	unsigned32	ssize,
-	error_status_t	*st)
+	unsigned32	*st)
 {
     rpc_g_cn_socket_read_buffer = rsize;
     rpc_g_cn_socket_write_buffer = ssize;

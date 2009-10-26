@@ -2281,11 +2281,11 @@ char                *argv[];
 void rpc__cn_set_sock_buffsize (
         unsigned32	  /* rsize */,
         unsigned32	  /* ssize */,
-        error_status_t	* /* st */);
+        unsigned32	* /* st */);
 void rpc__cn_inq_sock_buffsize (
         unsigned32	* /* rsize */,
         unsigned32	* /* ssize */,
-        error_status_t  * /* st */);
+        unsigned32  * /* st */);
 
 static void start_test(test, argc, argv)
 
