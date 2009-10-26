@@ -2056,7 +2056,7 @@ unsigned32              *status;
     /* opt back into the dynamic group resolutions.
      For better performance, we only add in our egid instead of the
      entire group list. */
-    ret = syscall(SYS_initgroups, 1, egid, euid);
+    ret = syscall(SYS_initgroups, 1, &egid, euid);
     if (ret == -1)
     {
         RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): SYS_initgroups failed %d for euid %d, egid %d\n", errno, euid, egid));
