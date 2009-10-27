@@ -8,6 +8,6 @@
 
 #include "base_config"
 
-FRAMEWORK_SEARCH_PATHS = $(inherited) "$(APPLE_INTERNAL_DIR)/Library/Frameworks" /System/Library/Frameworks
+FRAMEWORK_SEARCH_PATHS = $(inherited) "System/Library/PrivateFrameworks" /System/Library/Frameworks
 HEADER_SEARCH_PATHS = $(HEADER_SEARCH_PATHS_BASE2)
 GCC_PREPROCESSOR_DEFINITIONS = $(GCC_PREPROCESSOR_DEFINITIONS_BASE2) _GNU_SOURCE _REENTRANT _POSIX_C_SOURCE=3

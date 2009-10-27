@@ -37,7 +37,6 @@
 		DD0435221076A0D60010E492 /* libnck.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F5D6106D341E005F1EF3 /* libnck.a */; };
 		DD0435231076A0D60010E492 /* libuuid.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE017DE106C334200A5E41A /* libuuid.a */; };
 		DD0435731076A0F20010E492 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F7EC106D6DA7005F1EF3 /* CoreFoundation.framework */; };
-		DD0435741076A0F20010E492 /* SMBClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD38F1AB106976B200EEF3A7 /* SMBClient.framework */; };
 		DD0435751076A10E0010E492 /* dcethread_atfork.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB176100408FD0080B762 /* dcethread_atfork.c */; };
 		DD0435761076A10E0010E492 /* dcethread_checkinterrupt.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB181100408FD0080B762 /* dcethread_checkinterrupt.c */; };
 		DD0435771076A10E0010E492 /* dcethread_cond_broadcast.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB182100408FD0080B762 /* dcethread_cond_broadcast.c */; };
@@ -173,7 +172,6 @@
 		DD10F5A5106D3252005F1EF3 /* comsoc.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1EE100408FD0080B762 /* comsoc.c */; };
 		DD10F5A6106D3252005F1EF3 /* comsoc_bsd.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1F0100408FD0080B762 /* comsoc_bsd.c */; };
 		DD10F5A7106D3252005F1EF3 /* comsoc_smb.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1F2100408FD0080B762 /* comsoc_smb.c */; };
-		DD10F5B7106D3368005F1EF3 /* SMBClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD38F1AB106976B200EEF3A7 /* SMBClient.framework */; };
 		DD10F5DA106D3450005F1EF3 /* comfork.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1DB100408FD0080B762 /* comfork.c */; };
 		DD10F5DB106D3450005F1EF3 /* mgmt.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB245100408FD0080B762 /* mgmt.c */; };
 		DD10F5DC106D3450005F1EF3 /* ndrglob.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB248100408FD0080B762 /* ndrglob.c */; };
@@ -200,6 +198,8 @@
 		DD9D32C3107E345B00FA8214 /* DCERPC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD04350210769FDA0010E492 /* DCERPC.framework */; };
 		DDA1C037107E952B004D2055 /* junk.c in Create catalogs folders */ = {isa = PBXBuildFile; fileRef = DD9D320C107D51CF00FA8214 /* junk.c */; };
 		DDA1C1FE107FDCAE004D2055 /* dcerpc.h in Headers */ = {isa = PBXBuildFile; fileRef = DD3DB0D5100408FD0080B762 /* dcerpc.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DDAD850B109676D6003620DE /* SMBClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDAD850A109676D6003620DE /* SMBClient.framework */; };
+		DDAD850C109676D6003620DE /* SMBClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDAD850A109676D6003620DE /* SMBClient.framework */; };
 		DDAD96FD1083FA680016A764 /* acf_l.l in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB029100408FC0080B762 /* acf_l.l */; };
 		DDAD96FE1083FA680016A764 /* nidl_l.l in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB074100408FC0080B762 /* nidl_l.l */; };
 		DDC99904107AA36600330A72 /* dceidl in Resources */ = {isa = PBXBuildFile; fileRef = DDDF3257106BD43400E6A9C2 /* dceidl */; };
@@ -1044,7 +1044,6 @@
 		DD10F8C3106D7357005F1EF3 /* libprot_ncadg_stubs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libprot_ncadg_stubs.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD21F0B71083D15500696F06 /* libdceidl_stubs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdceidl_stubs.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD21F0DB1083D32F00696F06 /* dceidl_stubs.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = dceidl_stubs.xcconfig; path = dcerpc.xc.configurations/dceidl_stubs.xcconfig; sourceTree = "<group>"; };
-		DD38F1AB106976B200EEF3A7 /* SMBClient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SMBClient.framework; path = /AppleInternal/Library/Frameworks/SMBClient.framework; sourceTree = "<absolute>"; };
 		DD3DAF83100408FC0080B762 /* wc16str.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = wc16str.c; sourceTree = "<group>"; };
 		DD3DAF84100408FC0080B762 /* dummyfuncs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dummyfuncs.c; sourceTree = "<group>"; };
 		DD3DAF85100408FC0080B762 /* exports */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = exports; sourceTree = "<group>"; };
@@ -1840,6 +1839,7 @@
 		DD9D320C107D51CF00FA8214 /* junk.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = junk.c; path = dcerpc.xc.configurations/junk.c; sourceTree = "<group>"; };
 		DDA1C209107FDD0B004D2055 /* copy_catalogs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = copy_catalogs; path = dcerpc.xc.configurations/copy_catalogs; sourceTree = "<group>"; };
 		DDA1C20A107FDD0B004D2055 /* copy_dce_headers */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = copy_dce_headers; path = dcerpc.xc.configurations/copy_dce_headers; sourceTree = "<group>"; };
+		DDAD850A109676D6003620DE /* SMBClient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SMBClient.framework; path = /System/Library/PrivateFrameworks/SMBClient.framework; sourceTree = "<absolute>"; };
 		DDB66DA2107BE3310095CBC1 /* base_config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = base_config.xcconfig; path = dcerpc.xc.configurations/base_config.xcconfig; sourceTree = "<group>"; };
 		DDCC000D10740EA40007183F /* libauth_gss_negotiate.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libauth_gss_negotiate.so; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDCCFFA810740B3A0007183F /* libprot_ncacn.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libprot_ncacn.so; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1864,10 +1864,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				DD0435731076A0F20010E492 /* CoreFoundation.framework in Frameworks */,
-				DD0435741076A0F20010E492 /* SMBClient.framework in Frameworks */,
 				DD0435211076A0D60010E492 /* libidl.a in Frameworks */,
 				DD0435221076A0D60010E492 /* libnck.a in Frameworks */,
 				DD0435231076A0D60010E492 /* libuuid.a in Frameworks */,
+				DDAD850B109676D6003620DE /* SMBClient.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1904,7 +1904,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD10F5B7106D3368005F1EF3 /* SMBClient.framework in Frameworks */,
+				DDAD850C109676D6003620DE /* SMBClient.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3450,9 +3450,9 @@
 		DD8828B9107319F600FBF62B /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				DDAD850A109676D6003620DE /* SMBClient.framework */,
 				DD10F7EC106D6DA7005F1EF3 /* CoreFoundation.framework */,
 				DD0FE804107411EB004AB68C /* Kerberos.framework */,
-				DD38F1AB106976B200EEF3A7 /* SMBClient.framework */,
 			);
 			name = "External Frameworks and Libraries";
 			sourceTree = "<group>";
@@ -5044,6 +5044,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(APPLE_INTERNAL_DIR)/Library/Frameworks\"",
+					"\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
 				);
 				FRAMEWORK_VERSION = A;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -5073,6 +5074,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(APPLE_INTERNAL_DIR)/Library/Frameworks\"",
+					"\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
 				);
 				FRAMEWORK_VERSION = A;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -5230,6 +5232,10 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
+				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
@@ -5248,6 +5254,10 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
+				);
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_MODEL_TUNING = G5;
 				INSTALL_PATH = /usr/local/lib;
