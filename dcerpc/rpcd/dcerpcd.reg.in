@@ -3,6 +3,6 @@
 [HKEY_THIS_MACHINE\Services\dcerpc]
 "Description"="Likewise DCE/RPC Endpoint Mapper"
 "Path"="@SBINDIR@/dcerpcd"
-"Arguments"="dcerpcd -f"
+"Arguments"="@SBINDIR@/dcerpcd -f"
 "Dependencies"=""
 "Type"=dword:00000001
