@@ -5004,6 +5004,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CURRENT_PROJECT_VERSION = 1;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -5013,6 +5014,7 @@
 				SDKROOT = "";
 				USE_HEADERMAP = NO;
 				VALID_ARCHS = "ppc i386 x86_64";
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
 		};
@@ -5021,6 +5023,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CURRENT_PROJECT_VERSION = 1;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -5028,6 +5031,7 @@
 				SDKROOT = "";
 				USE_HEADERMAP = NO;
 				VALID_ARCHS = "ppc i386 x86_64";
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
 		};

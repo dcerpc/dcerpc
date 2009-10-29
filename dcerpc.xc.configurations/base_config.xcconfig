@@ -21,3 +21,5 @@ WARNING_CFLAGS = -Wformat=2 -Wwrite-strings -Wcast-align -Wpointer-arith -Wstric
 
 GCC_STRICT_ALIASING = NO
 OTHER_CFLAGS = -fPIC -fstack-protector
+
+VERSIONING_SYSTEM=apple-generic
