@@ -5,10 +5,10 @@ MY_IDLFLAGS = -I$(IDL_INCLUDE_DIR)/.. -I$(top_builddir)/include $(DCETHREADINCLU
 
 install-strip:	install
 
-nobase_bin_PROGRAMS=demo/samrt_server demo/samrt_client
+noinst_PROGRAMS=samrt_server samrt_client
 
-demo_samrt_server_SOURCES=misc.c samrt_server.c samrt_sstub.c
-demo_samrt_client_SOURCES=misc.c samrt_client.c samrt_cstub.c
+samrt_server_SOURCES=misc.c samrt_server.c samrt_sstub.c
+samrt_client_SOURCES=misc.c samrt_client.c samrt_cstub.c
 
 noinst_HEADERS=misc.h samrt.idl samrt.acf
 
@@ -17,8 +17,8 @@ CLEANFILES=samrt.h samrt_sstub.c samrt_cstub.c
 libs=$(top_builddir)/dcelib/libdcerpc.la \
 	$(top_builddir)/uuid/libuuid.la
 
-demo_samrt_server_LDADD=$(libs)
-demo_samrt_client_LDADD=$(libs)
+samrt_server_LDADD=$(libs)
+samrt_client_LDADD=$(libs)
 
 demo_samrt_server_LDFLAGS=$(AM_LDFLAGS) $(NAF_NP_LDFLAGS)
 demo_samrt_client_LDFLAGS=$(AM_LDFLAGS) $(NAF_NP_LDFLAGS)

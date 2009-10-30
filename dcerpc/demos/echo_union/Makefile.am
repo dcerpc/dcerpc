@@ -5,10 +5,10 @@ MY_IDLFLAGS = -I$(IDL_INCLUDE_DIR)/.. -I$(top_builddir)/include $(DCETHREADINCLU
 
 install-strip:	install
 
-nobase_bin_PROGRAMS=demo/echou_server demo/echou_client
+noinst_PROGRAMS=echou_server echou_client
 
-demo_echou_server_SOURCES=misc.c echou_server.c echou_sstub.c
-demo_echou_client_SOURCES=misc.c echou_client.c echou_cstub.c
+echou_server_SOURCES=misc.c echou_server.c echou_sstub.c
+echou_client_SOURCES=misc.c echou_client.c echou_cstub.c
 
 noinst_HEADERS=misc.h echou.idl echou.acf
 
@@ -16,8 +16,8 @@ CLEANFILES=echou.h echou_sstub.o echou_cstub.o
 
 libs=$(top_builddir)/dcelib/libdcerpc.la $(top_builddir)/uuid/libuuid.la
 
-demo_echou_server_LDADD=$(libs)
-demo_echou_client_LDADD=$(libs)
+echou_server_LDADD=$(libs)
+echou_client_LDADD=$(libs)
 
 demo_echou_server_LDFLAGS=$(AM_LDFLAGS) $(NAF_NP_LDFLAGS)
 demo_echou_client_LDFLAGS=$(AM_LDFLAGS) $(NAF_NP_LDFLAGS)
