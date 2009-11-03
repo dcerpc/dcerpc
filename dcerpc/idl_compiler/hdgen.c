@@ -243,7 +243,7 @@ unescape_string(const char* str)
         }
     }
 
-    res[len] = 0;
+    res[dst] = 0;
 
     return res;
 }
