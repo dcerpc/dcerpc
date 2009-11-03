@@ -256,8 +256,10 @@ typedef struct
     rpc_naf_set_port_restriction_fn_t naf_set_port_restriction;
     rpc_naf_get_next_restricted_port_fn_t naf_get_next_restricted_port;
     rpc_naf_inq_max_frag_size_fn_t  naf_inq_max_frag_size;
-} rpc_naf_epv_t, *rpc_naf_epv_p_t;
+} rpc_naf_epv_t;
 
+/* NAF endpoint vectors don't need to be modified, const them. */
+typedef const rpc_naf_epv_t * rpc_naf_epv_p_t;
 
 /***********************************************************************/
 /*

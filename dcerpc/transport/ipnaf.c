@@ -353,7 +353,7 @@ unsigned32              *status;
      * Extension  Service are vectored through these  EPVs.
      */
 
-    static rpc_naf_epv_t rpc_ip_epv =
+    static const rpc_naf_epv_t rpc_ip_epv =
     {
         addr_alloc,
         addr_copy,
