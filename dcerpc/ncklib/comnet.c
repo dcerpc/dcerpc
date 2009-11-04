@@ -2737,13 +2737,20 @@ CLEANUP:
 **/
 
 PUBLIC void rpc_server_use_protseq_ep
-    (rpc_protseq, max_calls, endpoint, status)
-
+#ifdef _DCE_PROTO_
+(
+    unsigned_char_p_t       rpc_protseq,
+    unsigned32              max_calls,
+    unsigned_char_p_t       endpoint,
+    unsigned32              *status
+)
+#else
+(rpc_protseq, max_calls, endpoint, status)
 unsigned_char_p_t       rpc_protseq;
 unsigned32              max_calls;
 unsigned_char_p_t       endpoint;
 unsigned32              *status;
-
+#endif
 {
     rpc_protseq_id_t        pseq_id;
     rpc_naf_id_t            naf_id;

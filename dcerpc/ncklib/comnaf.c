@@ -620,12 +620,19 @@ unsigned32              *status;
 **--
 **/
 
-PRIVATE void rpc__naf_addr_inq_netaddr (rpc_addr, netaddr, status)
-    
+PRIVATE void rpc__naf_addr_inq_netaddr
+#ifdef _DCE_PROTO_
+(
+    rpc_addr_p_t            rpc_addr,
+    unsigned_char_t         **netaddr,
+    unsigned32              *status
+)
+#else
+(rpc_addr, netaddr, status)
 rpc_addr_p_t            rpc_addr;
 unsigned_char_t         **netaddr;
 unsigned32              *status;
-
+#endif
 {
     /*
      * dispatch to the appropriate NAF service
@@ -672,12 +679,19 @@ unsigned32              *status;
 **--
 **/
 
-PRIVATE void rpc__naf_addr_set_options (network_options, rpc_addr, status)
-    
+PRIVATE void rpc__naf_addr_set_options
+#ifdef _DCE_PROTO_
+(
+    unsigned_char_p_t       network_options,
+    rpc_addr_p_t            *rpc_addr,
+    unsigned32              *status
+)
+#else
+(network_options, rpc_addr, status)
 unsigned_char_p_t       network_options;
 rpc_addr_p_t            *rpc_addr;
 unsigned32              *status;
-
+#endif
 {
     /*
      * dispatch to the appropriate NAF service
@@ -724,11 +738,19 @@ unsigned32              *status;
 **--
 **/
 
-PRIVATE void rpc__naf_addr_inq_options (rpc_addr, network_options, status)
-    
+PRIVATE void rpc__naf_addr_inq_options
+#ifdef _DCE_PROTO_
+(
+    rpc_addr_p_t            rpc_addr,
+    unsigned_char_t         **network_options,
+    unsigned32              *status
+)
+#else
+(rpc_addr, network_options, status)
 rpc_addr_p_t            rpc_addr;
 unsigned_char_t         **network_options;
 unsigned32              *status;
+#endif
 
 {
     /*
@@ -783,13 +805,21 @@ unsigned32              *status;
 **--
 **/
 
-PRIVATE void rpc__naf_desc_inq_addr (protseq_id, desc, rpc_addr_vec, status)
-    
+PRIVATE void rpc__naf_desc_inq_addr
+#ifdef _DCE_PROTO_
+(
+    rpc_protseq_id_t        protseq_id,
+    rpc_socket_t            desc,
+    rpc_addr_vector_p_t     *rpc_addr_vec,
+    unsigned32              *status
+)
+#else
+(protseq_id, desc, rpc_addr_vec, status)
 rpc_protseq_id_t        protseq_id;
 rpc_socket_t            desc;
 rpc_addr_vector_p_t     *rpc_addr_vec;
 unsigned32              *status;
-
+#endif
 {
     rpc_naf_id_t naf_id;                                     
 
@@ -842,14 +872,22 @@ unsigned32              *status;
 **/
 
 PRIVATE void rpc__naf_desc_inq_network
-        (desc, naf_id, socket_type, protocol_id, status)
-
+#ifdef _DCE_PROTO_
+(
+    rpc_socket_t              desc,
+    rpc_naf_id_t              *naf_id,
+    rpc_network_if_id_t       *socket_type,
+    rpc_network_protocol_id_t *protocol_id,
+    unsigned32                *status
+)
+#else
+(desc, naf_id, socket_type, protocol_id, status)
 rpc_socket_t              desc;
 rpc_naf_id_t              *naf_id;
 rpc_network_if_id_t       *socket_type;
 rpc_network_protocol_id_t *protocol_id;
 unsigned32                *status;
-
+#endif
 {
     CODING_ERROR (status);
 
