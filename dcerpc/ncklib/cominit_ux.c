@@ -255,19 +255,20 @@ PRIVATE void rpc__load_modules(void)
                         
                         init_func = dlsym(image, "rpc__module_init_func");
                         if (init_func != NULL)
+			{
                                 (*init_func)();
+			}
                         else                        
+			{
+				RPC_DBG_GPRINTF ((
+				    "%s: dlsym error: %s\n", __func__, dlerror()));
                                 dlclose(image);
+			}
                 }
                 else
                 {
-                        RPC_DCE_SVC_PRINTF ((
-                                        DCE_SVC(RPC__SVC_HANDLE, "%s%x"),
-                                        rpc_svc_general,
-                                        svc_c_sev_fatal | svc_c_action_abort,
-                                        rpc_m_call_failed,
-                                        "rpc__load_modules",
-                                        dlerror() ));
+			RPC_DBG_GPRINTF ((
+			    "%s: dlopen error: %s\n", __func__, dlerror()));
                 }
 		free(namelist[i]);
         }
