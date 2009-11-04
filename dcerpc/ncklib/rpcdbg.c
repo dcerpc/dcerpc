@@ -192,19 +192,22 @@ unsigned32      *status;
  */
 PRIVATE int rpc__printf (const char *format, ...)
 {
-    char            buff[300];
+    char            buff[1024];
     char            *s = buff;
+    size_t	    remain = sizeof(buff);
 
     if (RPC_DBG (rpc_e_dbg_pid, 1))
     {
-        sprintf (s, "[pid: %06lu] ", (unsigned long)getpid());
+        snprintf (s, remain, "[pid: %06lu] ", (unsigned long)getpid());
         s = &buff[strlen(buff)];
+	remain = sizeof(buff) - (s - buff);
     }
 
     if (RPC_DBG (rpc_e_dbg_timestamp, 1))
     {
-        sprintf (s, "[time: %06lu] ", (unsigned long) rpc__clock_stamp());
+        snprintf (s, remain, "[time: %06lu] ", (unsigned long) rpc__clock_stamp());
         s = &buff[strlen(buff)];
+	remain = sizeof(buff) - (s - buff);
     }
 
     if (RPC_DBG (rpc_e_dbg_thread_id, 1))
@@ -213,18 +216,19 @@ PRIVATE int rpc__printf (const char *format, ...)
 
         self = dcethread_self ();
 #ifdef CMA_INCLUDE
-        sprintf (s, "[thread: %08x.%08x] ", self.field1, self.field2);
+        snprintf (s, remain, "[thread: %08x.%08x] ", self.field1, self.field2);
 #else
-        sprintf (s, "[thread: %08lx] ", (unsigned long) self);
+        snprintf (s, remain, "[thread: %08lx] ", (unsigned long) self);
 #endif
         s = &buff[strlen (buff)];
+	remain = sizeof(buff) - (s - buff);
     }
 
     {
 	va_list         arg_ptr;
 
 	va_start (arg_ptr, format);
-	vsprintf (s, format, arg_ptr);
+	vsnprintf (s, remain, format, arg_ptr);
 	va_end (arg_ptr);
     }
 
