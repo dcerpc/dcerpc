@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2007, Novell, Inc.
  * All rights reserved.
+ * Portions Copyright (c) 2009 Apple Inc. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -478,4 +479,73 @@ unsigned32   *status;
     *status = rpc_s_ok;
 
     return true;
+}
+
+/*
+**++
+**
+**  ROUTINE NAME:       rpc__np_is_valid_endpoint
+**
+**  SCOPE:              PRIVATE - declared in npnaf.h
+**
+**  DESCRIPTION:
+**
+**  Return a boolean value to indicate if the given endpoint
+**  ins a valid NPNAF endpoint.
+**
+**
+**  INPUTS:
+**
+**      endpoint        The endpoint string.
+**
+**  INPUTS/OUTPUTS:     none
+**
+**  OUTPUTS:
+**
+**      status          A value indicating the status of the routine.
+**
+**  IMPLICIT INPUTS:    none
+**
+**  IMPLICIT OUTPUTS:   none
+**
+**  FUNCTION VALUE:
+**
+**      result          true => the address is local.
+**                      false => not.
+**
+**  SIDE EFFECTS:       none
+**
+**--
+**/
+
+PRIVATE boolean32 rpc__np_is_valid_endpoint
+#ifdef _DCE_PROTO_
+(
+    const unsigned_char_t *endpoint,
+    unsigned32            *status
+)
+#else
+(endpoint, status)
+const unsigned_char_t *endpoint;
+unsigned32   *status;
+#endif
+{
+    CODING_ERROR (status);
+
+    if (endpoint == NULL)
+    {
+        *status = rpc_s_invalid_arg;
+        return false;
+    }
+
+    if (strncasecmp((const char *)endpoint, "\\PIPE\\", 6) == 0)
+    {
+	*status = rpc_s_ok;
+	return true;
+    }
+    else
+    {
+	*status = rpc_s_invalid_endpoint_format;
+	return false;
+    }
 }

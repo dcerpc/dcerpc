@@ -33,6 +33,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		D66FCA0E10A21C0C000A62AD /* libtrans.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F5A1106D321F005F1EF3 /* libtrans.a */; };
+		D66FCA0F10A21C16000A62AD /* libtrans.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F5A1106D321F005F1EF3 /* libtrans.a */; };
 		DD0435211076A0D60010E492 /* libidl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE0178F106C2FFD00A5E41A /* libidl.a */; };
 		DD0435221076A0D60010E492 /* libnck.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F5D6106D341E005F1EF3 /* libnck.a */; };
 		DD0435231076A0D60010E492 /* libuuid.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE017DE106C334200A5E41A /* libuuid.a */; };
@@ -110,7 +112,6 @@
 		DD0435BB1076A10E0010E492 /* dcethread_signal_to_interrupt.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1B7100408FD0080B762 /* dcethread_signal_to_interrupt.c */; };
 		DD0435BC1076A10E0010E492 /* dcethread_unlock_global.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1B8100408FD0080B762 /* dcethread_unlock_global.c */; };
 		DD0435BD1076A10E0010E492 /* dcethread_yield.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1BA100408FD0080B762 /* dcethread_yield.c */; };
-		DD0435BE1076A12A0010E492 /* comsoc_smb.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1F2100408FD0080B762 /* comsoc_smb.c */; };
 		DD0435BF1076A12A0010E492 /* comep.c in Sources */ = {isa = PBXBuildFile; fileRef = DDFD941E1072371E008E776F /* comep.c */; };
 		DD0435C01076A12A0010E492 /* dummyfuncs.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAF84100408FC0080B762 /* dummyfuncs.c */; };
 		DD0435C11076A12A0010E492 /* mswrappers.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAF87100408FC0080B762 /* mswrappers.c */; };
@@ -566,6 +567,20 @@
 /* End PBXBuildRule section */
 
 /* Begin PBXContainerItemProxy section */
+		D6CD48FC10A24F7C00F359CB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD10F5A0106D321F005F1EF3;
+			remoteInfo = trans;
+		};
+		D6CD490010A24F9200F359CB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD10F5A0106D321F005F1EF3;
+			remoteInfo = trans;
+		};
 		DD0435111076A0A30010E492 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
@@ -1944,6 +1959,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D66FCA0E10A21C0C000A62AD /* libtrans.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1951,6 +1967,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D66FCA0F10A21C16000A62AD /* libtrans.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3781,6 +3798,7 @@
 			);
 			dependencies = (
 				DDEFE68D107E3C25006B8032 /* PBXTargetDependency */,
+				D6CD490110A24F9200F359CB /* PBXTargetDependency */,
 			);
 			name = naf_ip;
 			productName = naf_ip;
@@ -3798,6 +3816,7 @@
 			);
 			dependencies = (
 				DDEFE68F107E3C2D006B8032 /* PBXTargetDependency */,
+				D6CD48FD10A24F7C00F359CB /* PBXTargetDependency */,
 			);
 			name = naf_np;
 			productName = naf_np;
@@ -4212,7 +4231,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD0435BE1076A12A0010E492 /* comsoc_smb.c in Sources */,
 				DD0435BF1076A12A0010E492 /* comep.c in Sources */,
 				DD0435C01076A12A0010E492 /* dummyfuncs.c in Sources */,
 				DD0435C11076A12A0010E492 /* mswrappers.c in Sources */,
@@ -4716,6 +4734,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		D6CD48FD10A24F7C00F359CB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD10F5A0106D321F005F1EF3 /* trans */;
+			targetProxy = D6CD48FC10A24F7C00F359CB /* PBXContainerItemProxy */;
+		};
+		D6CD490110A24F9200F359CB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD10F5A0106D321F005F1EF3 /* trans */;
+			targetProxy = D6CD490010A24F9200F359CB /* PBXContainerItemProxy */;
+		};
 		DD0435121076A0A30010E492 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DD10F5D5106D341E005F1EF3 /* nck */;

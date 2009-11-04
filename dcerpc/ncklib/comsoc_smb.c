@@ -765,7 +765,7 @@ rpc__smb_socket_connect(
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
     rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
     char *netaddr = NULL;
-    char *endpoint = NULL;
+    unsigned_char_t *endpoint = NULL;
     char *pipename = NULL;
     unsigned32 dbg_status = 0;
 #if HAVE_LIKEWISE_LWIO
@@ -795,8 +795,7 @@ rpc__smb_socket_connect(
     RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_connect - netaddr <%s>\n", netaddr));
     RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_connect - ep <%s>\n", endpoint));
 
-    if (!strncmp(endpoint, "\\pipe\\", sizeof("\\pipe\\") - 1) ||
-        !strncmp(endpoint, "\\PIPE\\", sizeof("\\PIPE\\") - 1))
+    if (rpc__np_is_valid_endpoint(endpoint, &dbg_status))
     {
         pipename = endpoint + sizeof("\\pipe\\") - 1;
     }
@@ -1140,8 +1139,7 @@ rpc__smb_socket_listen_thread(void* data)
                                 (unsigned_char_t**) &endpoint,
                                 &dbg_status);
 
-    if (!strncmp(endpoint, "\\pipe\\", sizeof("\\pipe\\") - 1) ||
-        !strncmp(endpoint, "\\PIPE\\", sizeof("\\PIPE\\") - 1))
+    if (rpc__np_is_valid_endpoint(endpoint, &dbg_status))
     {
         pipename = endpoint + sizeof("\\pipe\\") - 1;
     }

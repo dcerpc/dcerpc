@@ -185,6 +185,11 @@ PRIVATE boolean32 rpc__np_is_local_addr _DCE_PROTOTYPE_ ((
         unsigned32                  * /*status*/
     ));
 
+PRIVATE boolean32 rpc__np_is_valid_endpoint _DCE_PROTOTYPE_ ((
+	const unsigned_char_t      * /* endpoint */,
+	unsigned32                 * /* status */
+    ));
+
 #ifdef __cplusplus
 }
 #endif

@@ -812,7 +812,7 @@ unsigned32              *status;
 
     if (np_addr->rpc_protseq_id == RPC_C_PROTSEQ_ID_NCACN_NP)
     { 
-        if (strncasecmp((char *)endpoint, "\\PIPE\\", 6) != 0)
+        if (!rpc__np_is_valid_endpoint(endpoint, status))
         {
             *status = rpc_s_invalid_endpoint_format;
             return;
@@ -951,9 +951,8 @@ unsigned32              *status;
             RPC_C_MEM_WAITOK);
         if (np_addr->rpc_protseq_id == RPC_C_PROTSEQ_ID_NCACN_NP)
         {
-            if (strncasecmp(sun_path, "\\PIPE\\", 6) != 0)
+            if (!rpc__np_is_valid_endpoint((const unsigned_char_t *)sun_path, status))
             {
-                *status = rpc_s_invalid_endpoint_format;
                 return;
             }
             for (p = (unsigned char*) sun_path, q = (unsigned char*) *endpoint; *p != '\0'; p++) {
