@@ -47,8 +47,7 @@
 #  include <rpcsvc.h>
 
 /*
- * A few macros for dealing with debugging code / printfs.  In general,
- * code is generated only if DEBUG is defined.
+ * A few macros for dealing with debugging code / printfs.
  *
  * The model here is that there are a number of debug "switches", each one
  * of which can be set to some debug "level".  The switches are represented
@@ -96,11 +95,11 @@ typedef enum {
     rpc_es_dbg_dg_max_psock,             /* 33 */
     rpc_es_dbg_dg_max_window_size,       /* 34 */
     rpc_es_dbg_threads,       	 	 /* 35 */
-    rpc_es_dbg_uxd_max_pth_unfrag_tpdu,   /*  36 */
-    rpc_es_dbg_uxd_max_loc_unfrag_tpdu,   /*  37 */
-    rpc_es_dbg_uxd_max_tsdu,              /* 38 */
-    rpc_es_dbg_np_max_pth_unfrag_tpdu,   /*  39 */
-    rpc_es_dbg_np_max_loc_unfrag_tpdu,   /*  40 */
+    rpc_es_dbg_uxd_max_pth_unfrag_tpdu,  /* 36 */
+    rpc_es_dbg_uxd_max_loc_unfrag_tpdu,  /* 37 */
+    rpc_es_dbg_uxd_max_tsdu,             /* 38 */
+    rpc_es_dbg_np_max_pth_unfrag_tpdu,   /* 39 */
+    rpc_es_dbg_np_max_loc_unfrag_tpdu,   /* 40 */
     rpc_es_dbg_np_max_tsdu,              /* 41 */
  
     /* 
@@ -115,8 +114,6 @@ typedef enum {
 
 #define RPC_C_DBG_SWITCHES      43      /* size of rpc_g_dbg_switches[] */
 
-#ifdef DEBUG
-
 /*
  * Debug table
  *
@@ -124,53 +121,25 @@ typedef enum {
  */
 EXTERNAL unsigned8 rpc_g_dbg_switches[];
 
-#endif
-
-
 /*
  * R P C _ D B G
  *
  * Tests whether a particular debug switch is set at a particular level (or
  * higher).
  */
-#ifdef DEBUG 
-
 #define RPC_DBG(switch, level) (rpc_g_dbg_switches[(int) (switch)] >= (level))
-
-#else /* DEBUG */
-
-#define RPC_DBG(switch, level) (0)
-
-#endif /* DEBUG */
 
 /*
  * R P C _ D B G _ E X A C T
  *
  * Tests whether a particular debug switch is set at exactly a particular level
  */
-#ifdef DEBUG 
-
 #define RPC_DBG_EXACT(switch, level) (rpc_g_dbg_switches[(int) (switch)] == (level))
-
-#else /* DEBUG */
-
-#define RPC_DBG_EXACT(switch, level) (0)
-
-#endif /* DEBUG */
-
 
 /*
  * a macro to set *status rpc_s_coding_error
  */
-#ifdef DEBUG
-
 #define CODING_ERROR(status)        *(status) = rpc_s_coding_error
-
-#else /* DEBUG */
-
-#define CODING_ERROR(status)
-
-#endif /* DEBUG */
 
 #ifndef DCE_RPC_SVC
 /*
@@ -182,12 +151,9 @@ EXTERNAL unsigned8 rpc_g_dbg_switches[];
  *      RPC_DBG_PRINTF(rpc_es_dbg_xmit, 3, ("Sent pkt %d", pkt_count));
  *
  * I.e. the third parameter is the argument list to "printf" and must be
- * enclosed in parens.  The macro is designed this way to allow us to 
- * eliminate all debug code when DEBUG is not defined.
+ * enclosed in parens.
  *
  */
-#ifdef DEBUG
-
 #define RPC_DBG_ADD_PRINTF(switch, level, pargs) \
 ( \
     ! RPC_DBG((switch), (level)) ? \
@@ -202,14 +168,6 @@ EXTERNAL unsigned8 rpc_g_dbg_switches[];
 
 #define RPC_DBG_GPRINTF(pargs) \
     RPC_DBG_PRINTF(rpc_es_dbg_general, 1, pargs)
-
-#else /* DEBUG */
-
-#define RPC_DBG_PRINTF(switch, level, pargs) do {;} while(0)
-#define RPC_DBG_ADD_PRINTF(switch, level, pargs) do {;} while(0)
-#define RPC_DBG_GPRINTF(pargs) do {;} while(0)
-
-#endif /* DEBUG */
 
 #else	/* !DCE_RPC_SVC */
 

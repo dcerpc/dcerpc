@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
@@ -16,7 +16,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
  */
@@ -28,7 +28,7 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
@@ -39,7 +39,6 @@
 #if HAVE_CONFIG_H
 #include <config.h>
 #endif
-
 
 #include <ctype.h>
 #include <commonp.h>
@@ -52,7 +51,7 @@
  */
 
 GLOBAL unsigned8 rpc_g_dbg_switches[RPC_C_DBG_SWITCHES];
-      
+
 /*
  * string buffer used by uuid_string()
  */
@@ -81,7 +80,7 @@ INTERNAL char         uuid_string_buff[40];
  * can process is: "1-5.7,6.3,9.5". *
  *
  * This code largely cribbed from sendmail's "tTflag" function, which is...
- * 
+ *
  * Copyright (c) 1988 Regents of the University of California.
  * All rights reserved.
  *
@@ -97,7 +96,7 @@ INTERNAL char         uuid_string_buff[40];
  *  Berkeley, California
  */
 
-PUBLIC void rpc__dbg_set_switches 
+PUBLIC void rpc__dbg_set_switches
 #ifdef _DCE_PROTO_
 (
     const char      *s ATTRIBUTE_UNUSED,
@@ -109,16 +108,10 @@ const char      *s;
 unsigned32      *status;
 #endif
 {
-#ifndef DEBUG
-
-    *status = rpc_s_ok;
-
-#else
-
     int         first, last;
     register int i;
 
-    *status = rpc_s_ok; 
+    *status = rpc_s_ok;
 
     for (;;)
     {
@@ -172,7 +165,6 @@ unsigned32      *status;
         if (*s++ == '\0')
             return;
     }
-#endif
 }
 
 
@@ -196,7 +188,7 @@ unsigned32      *status;
  * The last choice is to use the "old" notation. In this case also you
  * can't use prototypes.
  *
- * Only support the stdargs form 
+ * Only support the stdargs form
  */
 PRIVATE int rpc__printf (const char *format, ...)
 {
@@ -230,7 +222,7 @@ PRIVATE int rpc__printf (const char *format, ...)
 
     {
 	va_list         arg_ptr;
-	
+
 	va_start (arg_ptr, format);
 	vsprintf (s, format, arg_ptr);
 	va_end (arg_ptr);
@@ -259,7 +251,7 @@ PRIVATE int rpc__printf (const char *format, ...)
  *
  */
 
-PRIVATE void rpc__die 
+PRIVATE void rpc__die
 #ifdef _DCE_PROTO_
 (
     char            *text,
@@ -273,7 +265,7 @@ char            *file;
 int             line;
 #endif
 {
-#ifndef FILE_SEPARATOR_CHAR 
+#ifndef FILE_SEPARATOR_CHAR
 #define FILE_SEPARATOR_CHAR '/'
 /*#error  "FILE_SEPARATOR_CHAR not defined!"*/
 #endif
@@ -304,7 +296,7 @@ int             line;
  * Return a pointer to a printed UUID.
  */
 
-PRIVATE char *rpc__uuid_string 
+PRIVATE char *rpc__uuid_string
 #ifdef _DCE_PROTO_
 (
     idl_uuid_t          *uuid ATTRIBUTE_UNUSED
@@ -322,7 +314,6 @@ idl_uuid_t          *uuid;
 
     unsigned_char_p_t   uuid_string_p;
     unsigned32          status;
-
 
     uuid_to_string (uuid, &uuid_string_p, &status);
     if (status != uuid_s_ok)
@@ -359,11 +350,9 @@ const char      *file ATTRIBUTE_UNUSED;
 int             line ATTRIBUTE_UNUSED;
 #endif
 {
-#ifdef DEBUG
     if (RPC_DBG(rpc_e_dbg_source, 1))
     {
         EPRINTF("    [file: %s, line: %d]\n", file, line);
     }
-#endif
 }
 #endif /* !DCE_RPC_SVC */
