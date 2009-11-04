@@ -4148,7 +4148,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "/usr/bin/install -m 0755 -o root -g wheel -d ${DSTROOT}/private/var/rpc";
+			shellScript = "/usr/bin/install -m 0755 -o root -g wheel -d ${DSTROOT}/private/var/rpc\n/usr/bin/install -m 0755 -o root -g wheel -d ${DSTROOT}/private/var/rpc/ncalrpc\n/usr/bin/install -m 0755 -o root -g wheel -d ${DSTROOT}/private/var/rpc/ncacn_np";
 		};
 		DD92D9391090F54600B869C1 /* Create dcerpc.cat */ = {
 			isa = PBXShellScriptBuildPhase;

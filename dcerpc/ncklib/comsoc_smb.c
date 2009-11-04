@@ -2055,9 +2055,52 @@ error:
     return serr;
 }
 
+/* ======================================================================== */
+/*
+ * R P C _ _ S M B _ S O C K E T _ D U P L I C A T E
+ *
+ * Wrap the native socket representation in a rpc_socket_t. We duplicate the
+ * socket file descriptor because we will eventually end up close(2)ing it.
+ *
+ * Note that we sneakily replace the socket's vtable, thereby turning it into
+ * a BSD socket. This is necessary because the native socket representation
+ * that comes down from inetd or launchd is a file descriptor. If we used the
+ * real SMB vtable, then we would be hooked into the Likewise SMB redirector
+ * codem which is not what we want.
+ */
+
+INTERNAL rpc_socket_error_t
+rpc__smb_socket_duplicate(
+    rpc_socket_t        sock,
+    rpc_protseq_id_t    protseq_id,
+    const void *        sockrep /* pointer to native representation */
+    )
+{
+    const int *		sockfd = (const int *)sockrep;
+    rpc_socket_error_t  serr = RPC_C_SOCKET_OK;
+
+    RPC_DBG_GPRINTF(("(rpc__smb_socket_duplicate) sockfd=%d\n",
+		sockfd ? *sockfd : -1));
+
+    if (sockfd == NULL || *sockfd == -1) {
+        return RPC_C_SOCKET_ENOTSOCK;
+    }
+
+    if (protseq_id != RPC_C_PROTSEQ_ID_NCACN_NP)
+    {
+	return RPC_C_SOCKET_EINVAL;
+    }
+
+    rpc__smb_socket_destroy((rpc_smb_socket_p_t) sock->data.pointer);
+    sock->data.word = dup(*sockfd);
+    sock->vtbl = &rpc_g_bsd_socket_vtbl;
+
+    return serr;
+}
+
 rpc_socket_vtbl_t const rpc_g_smb_socket_vtbl =
 {
-    .socket_duplicate = NULL,
+    .socket_duplicate = rpc__smb_socket_duplicate,
     .socket_construct = rpc__smb_socket_construct,
     .socket_destruct = rpc__smb_socket_destruct,
     .socket_bind = rpc__smb_socket_bind,

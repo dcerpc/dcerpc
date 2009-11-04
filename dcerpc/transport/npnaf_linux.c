@@ -206,9 +206,6 @@ PRIVATE void rpc__np_desc_inq_addr
 {
     rpc_np_addr_p_t         np_addr;
     rpc_np_addr_t           loc_np_addr;
-#ifdef NP_NETADDR
-    char                    *p;
-#endif
     int                     err = 0;
 
     CODING_ERROR (status);
@@ -275,15 +272,24 @@ PRIVATE void rpc__np_desc_inq_addr
 
     if (np_addr->rpc_protseq_id == RPC_C_PROTSEQ_ID_NCACN_NP)
     {
-#ifdef NP_NETADDR
-        np_addr->sa.sun_path[RPC_C_ENDPOINT_NP_MAX + 1] = '\\';
-        np_addr->sa.sun_path[RPC_C_ENDPOINT_NP_MAX + 2] = '\\';
-        gethostname(&np_addr->sa.sun_path[RPC_C_ENDPOINT_NP_MAX + 3], RPC_C_NETADDR_NP_MAX - 3);
-        np_addr->sa.sun_path[RPC_C_NETADDR_NP_MAX - 1] = '\0';
-        for (p = &np_addr->sa.sun_path[RPC_C_ENDPOINT_NP_MAX + 3]; *p != '.' && *p != '\0'; p++)
-            *p = toupper(*p);
-        *p = '\0';
-#endif /* NP_NETADDR */
+	/*
+	 * Assume that named pipes are unix domain sockets where the
+	 * socket name is the same as the endpoint name. Trim the
+	 * leading path components and prefix "\\PIPE\\" to make it
+	 * into a names pipe endpoint.
+	 */
+	struct sockaddr_un tmp = np_addr->sa;
+	const char * last;
+
+	last = strrchr(tmp.sun_path, '/');
+	if (!last) {
+	    RPC_MEM_FREE (np_addr, RPC_C_MEM_RPC_ADDR);
+	    *status = rpc_s_no_addrs;
+	    return;
+	}
+
+        snprintf(np_addr->sa.sun_path, sizeof(np_addr->sa.sun_path),
+	    "\\PIPE\\%s", last + 1);
     }
 
     (*rpc_addr_vec)->len = 1;

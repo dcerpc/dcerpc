@@ -295,6 +295,8 @@ rpc__bsd_socket_duplicate(
         return RPC_C_SOCKET_ENOTSOCK;
     }
 
+    close(sock->data.word);
+
     RPC_SOCKET_DISABLE_CANCEL;
     sock->data.word = dup(*sockfd);
     serr = ((sock->data.word == -1) ? errno : RPC_C_SOCKET_OK);

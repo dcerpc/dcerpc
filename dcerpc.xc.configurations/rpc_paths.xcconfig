@@ -8,7 +8,7 @@
 
 #include "base_config"
 
-BASE_RPC_PATHS = RPC_C_UXD_DIR=\"/var/rpc\" RPC_C_NP_DIR=\"/var/rpc\"
+BASE_RPC_PATHS = RPC_C_UXD_DIR=\"/var/rpc/ncalrpc\" RPC_C_NP_DIR=\"/var/rpc/ncacn_np\"
 BASE_CATALOG_PATH = CATALOG_DIR=\"/System/Library/PrivateFrameworks/DCERPC.framework/Resources/Catalogs\"
 BASE_IDIR_PATH = DEFAULT_IDIR=\"/usr/local/include\"
 

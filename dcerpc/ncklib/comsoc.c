@@ -36,40 +36,40 @@ rpc__socket_duplicate (
     rpc_socket_t * sock
     )
 {
-    int err = RPC_C_SOCKET_OK;
+    int serr = RPC_C_SOCKET_OK;
     const rpc_socket_vtbl_t * socket_vtbl;
+
+    *sock = NULL;
 
     socket_vtbl = rpc_g_protseq_id[pseq_id].socket_vtbl;
     if (socket_vtbl->socket_duplicate == NULL) {
 	return RPC_C_SOCKET_ENOTSUP;
     }
 
-    *sock = calloc(1, sizeof(**sock));
-
-    if (!*sock)
+    /* Make an unbound protseq socket. */
+    serr = rpc__socket_open(pseq_id, NULL, sock);
+    if (RPC_SOCKET_IS_ERR(serr))
     {
-        err = ENOMEM;
-        goto error;
+	goto error;
     }
 
-    (*sock)->vtbl = socket_vtbl;
-    (*sock)->pseq_id = pseq_id;
-
-    err = (*sock)->vtbl->socket_duplicate(*sock, pseq_id, sockrep);
-    if (err)
+    /* Now bind it to the native representation. */
+    serr = (*sock)->vtbl->socket_duplicate(*sock, pseq_id, sockrep);
+    if (RPC_SOCKET_IS_ERR(serr))
     {
         goto error;
     }
 
 done:
 
-    return err;
+    return serr;
 
 error:
 
     if (*sock)
     {
-        free(*sock);
+	rpc__socket_close(*sock);
+	*sock = NULL;
     }
 
     goto done;
@@ -111,6 +111,7 @@ error:
     if (*sock)
     {
         free(*sock);
+	*sock = NULL;
     }
 
     goto done;

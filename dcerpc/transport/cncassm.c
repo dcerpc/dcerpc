@@ -2239,31 +2239,10 @@ pointer_t       sm;
              * a NULL termination.
              */
 
-#if 0
             rpc__naf_addr_set_endpoint (
                     (unsigned_char_t *) sec_addr->s,
                                         &(assoc_grp->grp_secaddr),
                                         &(assoc->assoc_status));
-#else
-            /* Temporary hack to work around 7317053 for now */
-            {
-                char tempBuffer[200];
-
-                if (strncasecmp((char *)sec_addr->s, "\\PIPE\\", 6) != 0)
-                {
-                    strcpy (tempBuffer, "\\PIPE\\");
-                    strcat (tempBuffer, sec_addr->s);
-                }
-                else {
-                    strcpy (tempBuffer, sec_addr->s);
-                }
-
-            rpc__naf_addr_set_endpoint (
-                                        (unsigned_char_t *) tempBuffer,
-                                        &(assoc_grp->grp_secaddr),
-                                        &(assoc->assoc_status));
-            }
-#endif
 
             if (assoc->assoc_status != rpc_s_ok)
             {
@@ -4904,11 +4883,11 @@ unsigned32              *st;
         if (RPC_DBG2 (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL))
         {
             unsigned_char_t     *abstract;
-            unsigned32          st;
+            unsigned32          tmp;
 
             uuid_to_string (&pres_context->syntax_abstract_id.id,
                             &abstract,
-                            &st);
+                            &tmp);
             RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
                             ("CN: call_rep->%p assoc->%p desc->%p negotiating for abstract syntax->%s,%x context_id->%x call_id->%x\n",
                              assoc->call_rep,
@@ -4918,7 +4897,7 @@ unsigned32              *st;
                              pres_context->syntax_abstract_id.version,
                              RPC_CN_ASSOC_CONTEXT_ID (assoc),
                              rpc_g_cn_call_id));
-            rpc_string_free (&abstract, &st);
+            rpc_string_free (&abstract, &tmp);
         }
 #endif
 
