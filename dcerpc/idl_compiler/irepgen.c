@@ -1873,10 +1873,10 @@ static void IR_gen_multid_aos
 	 * From the N-dim array type with [v1_string], create an (N-1)-dim
 	 * array type, without [v1_string], whose base type is array.
 	 */
-	new_type_p = AST_type_node(AST_array_k);
-	base_type_p = AST_type_node(AST_array_k);
-	new_array_p = AST_array_node(base_type_p);
-	new_index_p = AST_array_index_node(array_p->index_count-1);
+	new_type_p = AST_type_node(null_parser_location, AST_array_k);
+	base_type_p = AST_type_node(null_parser_location, AST_array_k);
+	new_array_p = AST_array_node(null_parser_location, base_type_p);
+	new_index_p = AST_array_index_node(null_parser_location, array_p->index_count-1);
 
 	new_type_p->name = type_p->name;
 	new_type_p->type_structure.array = new_array_p;
@@ -1900,8 +1900,8 @@ static void IR_gen_multid_aos
 	/*
 	 * Set up the array base type with the [v1_string] attribute.
 	 */
-	base_array_p = AST_array_node(array_p->element_type);
-	base_index_p = AST_array_index_node(1);
+	base_array_p = AST_array_node(null_parser_location, array_p->element_type);
+	base_index_p = AST_array_index_node(null_parser_location, 1);
 
 	base_type_p->type_structure.array = base_array_p;
 	AST_SET_STRING0(base_type_p);

@@ -4,6 +4,7 @@
  *  (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  *  (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  *  (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ *  Portions Copyright (c) 2009 Apple Inc. All rights reserved
  *  To anyone who acknowledges that this file is provided "AS IS"
  *  without any express or implied warranty:
  *                  permission to use, copy, modify, and distribute this
@@ -38,11 +39,7 @@
 **
 */
 
-#ifdef vms
-#  include <types.h>
-#else
-#  include <sys/types.h>
-#endif
+#include <sys/types.h>
 
 #include <nidl.h>
 #include <nametbl.h>
@@ -50,21 +47,48 @@
 #include <ast.h>
 #include <astp.h>
 #include <frontend.h>
-#include <flex_bison_support.h>
 
-extern int nidl_yylineno;
+#define YYDEBUG 1
+
 extern boolean search_attributes_table ;
-
-int yyparse(void);
-int yylex(void);
 
 /*
 **  Local cells used for inter-production communication
 */
 static ASTP_attr_k_t       ASTP_bound_type;    /* Array bound attribute */
 
+/* An opaque pointer. */
+#ifndef YY_TYPEDEF_YY_SCANNER_T
+#define YY_TYPEDEF_YY_SCANNER_T
+typedef void* yyscan_t;
+#endif
+
+typedef struct nidl_parser_state_t
+{
+   yyscan_t     nidl_yyscanner;
+   unsigned     nidl_yynerrs;
+   parser_location_t nidl_location;
+} nidl_parser_state_t;
+
+static void nidl_yyerror (YYLTYPE *, yyscan_t, char const *);
+
 %}
 
+%locations
+%defines
+%error-verbose
+%pure-parser
+%name-prefix="nidl_yy"
+
+/* Tell Bison that the Flexer takes a yyscan_t parameter. */
+%lex-param { void * lexxer }
+/* Tell Bison that we will pass the yyscan_t scanner into yyparse. */
+%parse-param { nidl_parser_state_t * nidl }
+
+/* Tell Bison how to get the lexxer argument from the parser state. */
+%{
+#define lexxer nidl->nidl_yyscanner
+%}
 
         /*   Declaration of yylval, yyval                   */
 %union
@@ -93,7 +117,6 @@ static ASTP_attr_k_t       ASTP_bound_type;    /* Array bound attribute */
 	 ASTP_attributes_t      y_attributes;   /* attributes flags     */
 
      	 AST_cpp_quote_n_t*     y_cpp_quote;    /* Quoted C within interface treated as one 'kind' of export node + quote outside interfaces */
-	 
 
 	 struct {
 		  long            int_val ;        /* Integer constant     */
@@ -104,15 +127,7 @@ static ASTP_attr_k_t       ASTP_bound_type;    /* Array bound attribute */
 }
 
 %{
-#if YYDEBUG
-extern char const *current_file;
-static void yyprint(FILE * stream, int token ATTRIBUTE_UNUSED, YYSTYPE lval ATTRIBUTE_UNUSED)	{
-	fprintf(stream, " %s:%d", current_file, *yylineno_p);
-}
-#define YYPRINT yyprint
-#endif
-
-
+#include <nidl_l.h>
 %}
 
 /********************************************************************/
@@ -120,7 +135,6 @@ static void yyprint(FILE * stream, int token ATTRIBUTE_UNUSED, YYSTYPE lval ATTR
 /*          Tokens used by the IDL parser.                          */
 /*                                                                  */
 /********************************************************************/
-
 
 /* Keywords                 */
 %token ALIGN_KW
@@ -203,7 +217,6 @@ static void yyprint(FILE * stream, int token ATTRIBUTE_UNUSED, YYSTYPE lval ATTR
 
 %token UUID_REP
 
-
 /*  Punctuation             */
 
 %token COLON
@@ -264,8 +277,8 @@ grammar_start:     	interfaces cpp_quotes
 					(ASTP_node_t*)global_cppquotes_post, (ASTP_node_t*)$<y_cpp_quote>2);
 			}
 			|
-			optional_imports_cppquotes 
-			|  
+			optional_imports_cppquotes
+			|
         		{
             			$<y_import>$ = (AST_import_n_t *)NULL;
 		        }
@@ -280,54 +293,49 @@ grammar_start:     	interfaces cpp_quotes
 			}*/
 		;
 
-
 interfaces:
 	interfaces interface_plus
 	|
-	interface_plus	
+	interface_plus
 	;
-
 
 /*Centeris wfu*/
 cpp_quotes:
-	cpp_quote cpp_quotes   
-	{        		
+	cpp_quote cpp_quotes
+	{
 		$<y_cpp_quote>$ = (AST_cpp_quote_n_t *) AST_concat_element(
                                                 (ASTP_node_t *) $<y_cpp_quote>1,
-                                                (ASTP_node_t *) $<y_cpp_quote>2);				
+                                                (ASTP_node_t *) $<y_cpp_quote>2);
         }
 	| /*Nothing*/
-	{	$<y_cpp_quote>$ = (AST_cpp_quote_n_t *)NULL;		
-	}	
+	{	$<y_cpp_quote>$ = (AST_cpp_quote_n_t *)NULL;
+	}
 	;
-    
 
 interface_plus:
 	cpp_quotes interface
 	{
 		global_cppquotes = (AST_cpp_quote_n_t*)AST_concat_element(
-			(ASTP_node_t*)global_cppquotes, (ASTP_node_t*)$<y_cpp_quote>1);		
-	}	
+			(ASTP_node_t*)global_cppquotes, (ASTP_node_t*)$<y_cpp_quote>1);
+	}
 	;
 
-
-interface:	
+interface:
         interface_init interface_start interface_ancestor interface_tail
         {
-            AST_finish_interface_node(the_interface);
+            AST_finish_interface_node(nidl_location(nidl), the_interface);
         }
 	;
-
-
 
 interface_start:
         interface_attributes INTERFACE_KW IDENTIFIER
         {
-	    AST_type_n_t * interface_type = AST_type_node(AST_interface_k);
+	    AST_type_n_t * interface_type =
+          AST_type_node(nidl_location(nidl), AST_interface_k);
 	    interface_type->type_structure.interface = the_interface;
 	    interface_type->name = $<y_id>3;
             the_interface->name = $<y_id>3;
-            ASTP_add_name_binding (the_interface->name, interface_type);
+            ASTP_add_name_binding (nidl_location(nidl), the_interface->name, interface_type);
         }
     ;
 
@@ -343,16 +351,17 @@ interface_ancestor:
 	;
 
 interface_init:
-        /* Always create the interface node and auto-import the system idl */		
+        /* Always create the interface node and auto-import the system idl */
         {
             STRTAB_str_t nidl_idl_str;
             nidl_idl_str = STRTAB_add_string (AUTO_IMPORT_FILE);
             AST_interface_n_t* old = the_interface;
 
-	    the_interface = AST_interface_node();			  		
+	         the_interface = AST_interface_node(nidl_location(nidl));
             the_interface->prev = old;
-	    the_interface->exports = NULL;
-            the_interface->imports = AST_import_node(nidl_idl_str);
+	         the_interface->exports = NULL;
+            the_interface->imports =
+               AST_import_node(nidl_location(nidl), nidl_idl_str);
             the_interface->imports->interface = FE_parse_import (nidl_idl_str);
             if (the_interface->imports->interface != NULL)
             {
@@ -362,22 +371,19 @@ interface_init:
         }
     ;
 
-
-
 interface_tail:
         LBRACE interface_body RBRACE
         { $<y_interface>$ = $<y_interface>2; }
     |   error
         {
             $<y_interface>$ = NULL;
-            log_error(nidl_yylineno,NIDL_MISSONINTER, NULL);
+            log_error(nidl_yylineno(nidl),NIDL_MISSONINTER, NULL);
         }
     |   error RBRACE
         {
             $<y_interface>$ = NULL;
         }
     ;
-
 
 interface_body:
         optional_imports exports extraneous_semi
@@ -393,7 +399,7 @@ interface_body:
   ;
 
 optional_imports:
-        imports 
+        imports
     |   /* Nothing */
         {
             $<y_import>$ = (AST_import_n_t *)NULL;
@@ -410,8 +416,8 @@ optional_imports_cppquotes:
 
 				global_cppquotes_post = (AST_cpp_quote_n_t*)AST_concat_element(
 					(ASTP_node_t*)global_cppquotes_post, (ASTP_node_t*)$<y_cpp_quote>2);
-	}    	
-	
+	}
+
     ;
 
 imports:
@@ -449,8 +455,6 @@ import_files:
         }
     ;
 
-
-
 import_file:
         STRING
         {
@@ -458,7 +462,7 @@ import_file:
             int_p = FE_parse_import ($<y_string>1);
             if (int_p != (AST_interface_n_t *)NULL)
             {
-                $<y_import>$ = AST_import_node($<y_string>1);
+                $<y_import>$ = AST_import_node(nidl_location(nidl), $<y_string>1);
                 $<y_import>$->interface = int_p;
             }
             else
@@ -476,26 +480,29 @@ exports:
         }
     ;
 
-
 export:
         type_dcl      SEMI
         {
-                $<y_export>$ = AST_types_to_exports ($<y_type_ptr>1);
+                $<y_export>$ = AST_types_to_exports (nidl_location(nidl),
+                                             $<y_type_ptr>1);
         }
     |   const_dcl     SEMI
         {
                 $<y_export>$ = AST_export_node (
+                        nidl_location(nidl),
                         (ASTP_node_t *) $<y_constant>1, AST_constant_k);
         }
     |   operation_dcl SEMI
         {
             if (ASTP_parsing_main_idl)
                 $<y_export>$ = AST_export_node (
+                        nidl_location(nidl),
                         (ASTP_node_t *) $<y_operation>1, AST_operation_k);
         }
     |   cpp_quote
         {
             $<y_export>$ = AST_export_node (
+                     nidl_location(nidl),
                 (ASTP_node_t *) $<y_cpp_quote>1, AST_cpp_quote_k);
         }
     |   error SEMI
@@ -507,30 +514,30 @@ export:
 cpp_quote:
         CPP_QUOTE_KW LPAREN STRING RPAREN
         {
-        	$<y_cpp_quote>$ = AST_cpp_quote_node($<y_string>3);	
-		
-        }    
+            $<y_cpp_quote>$ =
+               AST_cpp_quote_node(nidl_location(nidl), $<y_string>3);
+
+        }
 	;
 
 const_dcl:
         CONST_KW type_spec declarator EQUAL const_exp
 
         {
-           $<y_constant>$ = AST_finish_constant_node ($<y_constant>5,
-                                        $<y_declarator>3, $<y_type>2);
+           $<y_constant>$ = AST_finish_constant_node (nidl_location(nidl),
+                     $<y_constant>5, $<y_declarator>3, $<y_type>2);
         }
     ;
-
 
 const_exp:  expression
         {
-				$<y_constant>$ = AST_constant_from_exp($<y_exp>1);
+				$<y_constant>$ = AST_constant_from_exp(nidl_location(nidl),
+                                    $<y_exp>1);
 				if ($<y_constant>$ == NULL)	{
-					 log_error(nidl_yylineno, NIDL_EXPNOTCONST, NULL);
+					 log_error(nidl_yylineno(nidl), NIDL_EXPNOTCONST, NULL);
 				}
         }
     ;
-
 
 type_dcl:
         TYPEDEF_KW type_declarator
@@ -542,12 +549,11 @@ type_dcl:
 type_declarator:
         attributes type_spec declarators extraneous_comma
         {
-            $<y_type_ptr>$  = AST_declarators_to_types(the_interface, $<y_type>2,
-                        $<y_declarator>3, &$<y_attributes>1) ;
+            $<y_type_ptr>$  = AST_declarators_to_types(nidl_location(nidl),
+                  the_interface, $<y_type>2, $<y_declarator>3, &$<y_attributes>1) ;
             ASTP_free_simple_list((ASTP_node_t *)$<y_attributes>1.bounds);
         }
     ;
-
 
 type_spec:
         simple_type_spec
@@ -565,7 +571,6 @@ simple_type_spec:
     |   handle_type_spec
     ;
 
-
 constructed_type_spec:
         struct_type_spec
     |   union_type_spec
@@ -573,11 +578,10 @@ constructed_type_spec:
     |   pipe_type_spec
     ;
 
-
 named_type_spec:
         IDENTIFIER
         {
-            $<y_type>$ = AST_lookup_named_type($<y_id>1);
+            $<y_type>$ = AST_lookup_named_type(nidl_location(nidl), $<y_id>1);
         }
     ;
 
@@ -595,13 +599,13 @@ floating_point_type_spec:
 extraneous_comma:
         /* Nothing */
     |   COMMA
-        { log_warning(nidl_yylineno, NIDL_EXTRAPUNCT, ",", NULL);}
+        { log_warning(nidl_yylineno(nidl), NIDL_EXTRAPUNCT, ",", NULL);}
     ;
 
 extraneous_semi:
         /* Nothing */
     |   SEMI
-        { log_warning(nidl_yylineno, NIDL_EXTRAPUNCT, ";", NULL);}
+        { log_warning(nidl_yylineno(nidl), NIDL_EXTRAPUNCT, ";", NULL);}
     ;
 
 optional_unsigned_kw:
@@ -654,7 +658,7 @@ integer_type_spec:
         { $<y_type>$ = AST_lookup_integer_type_node($<y_int_info>1.int_size,$<y_int_info>1.int_signed); }
     |   optional_unsigned_kw INT_KW
         {
-            log_warning(nidl_yylineno,NIDL_INTSIZEREQ, NULL);
+            log_warning(nidl_yylineno(nidl),NIDL_INTSIZEREQ, NULL);
             $<y_type>$ = AST_lookup_integer_type_node(AST_long_integer_k,$<y_int_info>1.int_signed);
         }
     ;
@@ -694,7 +698,7 @@ push_name_space:
 pop_name_space:
         RBRACE
         {
-            ASTP_patch_field_reference ();
+            ASTP_patch_field_reference (nidl_location(nidl));
             NAMETABLE_pop_level ();
         }
     ;
@@ -703,6 +707,7 @@ union_type_spec:
         UNION_KW ne_union_body
         {
         $<y_type>$ = AST_disc_union_node(
+                         nidl_location(nidl),
                          NAMETABLE_NIL_ID,      /* tag name          */
                          NAMETABLE_NIL_ID,      /* union name        */
                          NAMETABLE_NIL_ID,      /* discriminant name */
@@ -713,6 +718,7 @@ union_type_spec:
         UNION_KW SWITCH_KW LPAREN simple_type_spec IDENTIFIER RPAREN union_body
         {
         $<y_type>$ = AST_disc_union_node(
+                         nidl_location(nidl),
                          NAMETABLE_NIL_ID,      /* tag name          */
                          ASTP_tagged_union_id,  /* union name        */
                          $<y_id>5,              /* discriminant name */
@@ -722,6 +728,7 @@ union_type_spec:
     |   UNION_KW IDENTIFIER ne_union_body
         {
         $<y_type>$ = AST_disc_union_node(
+                         nidl_location(nidl),
                          $<y_id>2,              /* tag name          */
                          NAMETABLE_NIL_ID,      /* union name        */
                          NAMETABLE_NIL_ID,      /* discriminant name */
@@ -731,6 +738,7 @@ union_type_spec:
     |   UNION_KW SWITCH_KW LPAREN simple_type_spec IDENTIFIER RPAREN IDENTIFIER union_body
         {
         $<y_type>$ = AST_disc_union_node(
+                         nidl_location(nidl),
                          NAMETABLE_NIL_ID,      /* tag name          */
                          $<y_id>7,              /* union name        */
                          $<y_id>5,              /* discriminant name */
@@ -740,6 +748,7 @@ union_type_spec:
     |   UNION_KW IDENTIFIER SWITCH_KW LPAREN simple_type_spec IDENTIFIER RPAREN union_body
         {
         $<y_type>$ = AST_disc_union_node(
+                         nidl_location(nidl),
                          $<y_id>2,              /* tag name          */
                          ASTP_tagged_union_id,  /* union name        */
                          $<y_id>6,              /* discriminant name */
@@ -749,6 +758,7 @@ union_type_spec:
     |   UNION_KW IDENTIFIER SWITCH_KW LPAREN simple_type_spec IDENTIFIER RPAREN IDENTIFIER union_body
         {
         $<y_type>$ = AST_disc_union_node(
+                         nidl_location(nidl),
                          $<y_id>2,              /* tag name          */
                          $<y_id>8,              /* union name        */
                          $<y_id>6,              /* discriminant name */
@@ -757,7 +767,8 @@ union_type_spec:
         }
     |   UNION_KW IDENTIFIER
         {
-            $<y_type>$ = AST_type_from_tag (AST_disc_union_k, $<y_id>2);
+            $<y_type>$ = AST_type_from_tag (nidl_location(nidl),
+                              AST_disc_union_k, $<y_id>2);
         }
     ;
 
@@ -828,56 +839,61 @@ union_case_list:
 ne_union_case_label:
         const_exp
         {
-            $<y_label>$ = AST_case_label_node($<y_constant>1);
+            $<y_label>$ = AST_case_label_node(
+                              nidl_location(nidl), $<y_constant>1);
         }
     ;
 union_case_label:
         CASE_KW const_exp COLON
         {
-            $<y_label>$ = AST_case_label_node($<y_constant>2);
+            $<y_label>$ = AST_case_label_node(
+                              nidl_location(nidl), $<y_constant>2);
         }
     |   DEFAULT_KW COLON
         {
-            $<y_label>$ = AST_default_case_label_node();
+            $<y_label>$ = AST_default_case_label_node(
+                              nidl_location(nidl));
         }
     ;
 
 ne_union_member:
         attribute_opener rest_of_attribute_list SEMI
         {
-            $<y_arm>$ = AST_declarator_to_arm(NULL, NULL, &$<y_attributes>2);
+            $<y_arm>$ = AST_declarator_to_arm(nidl_location(nidl),
+                  NULL, NULL, &$<y_attributes>2);
             ASTP_free_simple_list((ASTP_node_t *)$<y_attributes>2.bounds);
         }
     |   attribute_opener rest_of_attribute_list type_spec declarator SEMI
         {
-            $<y_arm>$ = AST_declarator_to_arm($<y_type>3,
-                                $<y_declarator>4, &$<y_attributes>2);
+            $<y_arm>$ = AST_declarator_to_arm(nidl_location(nidl),
+                  $<y_type>3, $<y_declarator>4, &$<y_attributes>2);
             ASTP_free_simple_list((ASTP_node_t *)$<y_attributes>2.bounds);
         }
     ;
 union_member:
         /* nothing */ SEMI
         {
-            $<y_arm>$ = AST_arm_node(NAMETABLE_NIL_ID,NULL,NULL);
+            $<y_arm>$ = AST_arm_node(nidl_location(nidl),
+                              NAMETABLE_NIL_ID,NULL,NULL);
         }
     |   attributes type_spec declarator SEMI
         {
             if (ASTP_TEST_ATTR(&$<y_attributes>1, ASTP_CASE))
             {
                 ASTP_attr_flag_t attr1 = ASTP_CASE;
-                log_error(nidl_yylineno, NIDL_EUMEMATTR,
+                log_error(nidl_yylineno(nidl), NIDL_EUMEMATTR,
                       KEYWORDS_lookup_text(AST_attribute_to_token(&attr1)),
 		      NULL);
             }
             if (ASTP_TEST_ATTR(&$<y_attributes>1, ASTP_DEFAULT))
             {
                 ASTP_attr_flag_t attr1 = ASTP_DEFAULT;
-                log_error(nidl_yylineno, NIDL_EUMEMATTR,
+                log_error(nidl_yylineno(nidl), NIDL_EUMEMATTR,
                       KEYWORDS_lookup_text(AST_attribute_to_token(&attr1)),
 		      NULL);
             }
-            $<y_arm>$ = AST_declarator_to_arm($<y_type>2,
-                                $<y_declarator>3, &$<y_attributes>1);
+            $<y_arm>$ = AST_declarator_to_arm(nidl_location(nidl),
+                  $<y_type>2, $<y_declarator>3, &$<y_attributes>1);
             ASTP_free_simple_list((ASTP_node_t *)$<y_attributes>1.bounds);
         }
     ;
@@ -885,15 +901,18 @@ union_member:
 struct_type_spec:
         STRUCT_KW push_name_space member_list pop_name_space
         {
-            $<y_type>$ = AST_structure_node($<y_field>3, NAMETABLE_NIL_ID) ;
+            $<y_type>$ = AST_structure_node(nidl_location(nidl),
+                           $<y_field>3, NAMETABLE_NIL_ID) ;
         }
     |   STRUCT_KW IDENTIFIER push_name_space member_list pop_name_space
         {
-            $<y_type>$ = AST_structure_node($<y_field>4, $<y_id>2) ;
+            $<y_type>$ = AST_structure_node(nidl_location(nidl),
+                           $<y_field>4, $<y_id>2) ;
         }
     |   STRUCT_KW IDENTIFIER
         {
-            $<y_type>$ = AST_type_from_tag (AST_structure_k, $<y_id>2);
+            $<y_type>$ = AST_type_from_tag (nidl_location(nidl),
+                              AST_structure_k, $<y_id>2);
         }
     ;
 
@@ -910,7 +929,8 @@ member_list:
 member:
         attributes type_spec old_attribute_syntax declarators SEMI
         {
-            $<y_field>$ = AST_declarators_to_fields($<y_declarator>4,
+            $<y_field>$ = AST_declarators_to_fields(nidl_location(nidl),
+                                                    $<y_declarator>4,
                                                     $<y_type>2,
                                                     &$<y_attributes>1);
             ASTP_free_simple_list((ASTP_node_t *)$<y_attributes>1.bounds);
@@ -920,7 +940,8 @@ member:
 enum_type_spec:
         ENUM_KW optional_tag enum_body
         {
-             $<y_type>$ = AST_enumerator_node($<y_constant>3, AST_short_integer_k);
+             $<y_type>$ = AST_enumerator_node(nidl_location(nidl),
+                              $<y_constant>3, AST_short_integer_k);
         }
     ;
 
@@ -951,25 +972,27 @@ enum_ids:
 enum_id:
         IDENTIFIER optional_value
         {
-            $<y_constant>$ = AST_enum_constant($<y_id>1, $<y_exp>2) ;
+            $<y_constant>$ = AST_enum_constant(nidl_location(nidl),
+                              $<y_id>1, $<y_exp>2) ;
         }
     ;
 
 pipe_type_spec:
         PIPE_KW type_spec
         {
-            $<y_type>$ = AST_pipe_node ($<y_type>2);
+            $<y_type>$ = AST_pipe_node (nidl_location(nidl), $<y_type>2);
         }
     ;
 
 optional_value:
 	/* Nothing */
 		{
-			 $<y_exp>$ = AST_exp_integer_constant(0, true);
+			 $<y_exp>$ = AST_exp_integer_constant(nidl_location(nidl),
+                                 0, true);
 		}
 	| EQUAL expression
 		{
-	 		 ASTP_validate_integer($<y_exp>2);
+          ASTP_validate_integer(nidl_location(nidl), $<y_exp>2);
 			 $<y_exp>$ = $<y_exp>2;
 		}
 	;
@@ -987,8 +1010,6 @@ declarators:
         }
     ;
 
-
-
 declarator:
 	declarator1
 		{ $<y_declarator>$ = $<y_declarator>1; }
@@ -1004,13 +1025,11 @@ declarator1:
                         (ASTP_node_t *)NULL, $<y_ptrlevels>1 );
             };
 
-
 pointer :
             STAR
             { $<y_ptrlevels>$ = 1;}
        |    STAR pointer
             { $<y_ptrlevels>$ = $<y_ptrlevels>2 + 1; };
-
 
 direct_declarator:
             IDENTIFIER
@@ -1033,7 +1052,6 @@ direct_declarator:
             }
        ;
 
-
     /*
      * The following productions use an AST routine with the signature:
      *
@@ -1055,47 +1073,56 @@ direct_declarator:
 array_bounds:
         LBRACKET RBRACKET
         {
-            $<y_index>$ = ASTP_array_index_node ( NULL, ASTP_default_bound,
+            $<y_index>$ = ASTP_array_index_node (nidl_location(nidl),
+                                                 NULL, ASTP_default_bound,
                                                  NULL, ASTP_open_bound);
         }
     |   LBRACKET STAR RBRACKET
         {
-            $<y_index>$ = ASTP_array_index_node  ( NULL, ASTP_default_bound,
+            $<y_index>$ = ASTP_array_index_node  (nidl_location(nidl),
+                                                 NULL, ASTP_default_bound,
                                                  NULL, ASTP_open_bound);
         }
     |   LBRACKET const_exp RBRACKET
         {
-            $<y_index>$ = ASTP_array_index_node  ( NULL, ASTP_default_bound,
+            $<y_index>$ = ASTP_array_index_node  (nidl_location(nidl),
+                                                 NULL, ASTP_default_bound,
                                                  $<y_constant>2, ASTP_constant_bound);
         }
     |   LBRACKET STAR DOTDOT STAR RBRACKET
         {
-            $<y_index>$ = ASTP_array_index_node  ( NULL, ASTP_open_bound,
+            $<y_index>$ = ASTP_array_index_node  (nidl_location(nidl),
+                                                 NULL, ASTP_open_bound,
                                                  NULL, ASTP_open_bound);
         }
     |   LBRACKET STAR DOTDOT const_exp RBRACKET
         {
-            $<y_index>$ = ASTP_array_index_node  ( NULL, ASTP_open_bound,
-                                                 $<y_constant>4, ASTP_constant_bound);
+            $<y_index>$ = ASTP_array_index_node  (nidl_location(nidl),
+                                                 NULL, ASTP_open_bound,
+                                                 $<y_constant>4,
+                                                 ASTP_constant_bound);
         }
     |   LBRACKET const_exp DOTDOT STAR RBRACKET
         {
-            $<y_index>$ = ASTP_array_index_node  ( $<y_constant>2, ASTP_constant_bound,
+            $<y_index>$ = ASTP_array_index_node  (nidl_location(nidl),
+                                                 $<y_constant>2,
+                                                 ASTP_constant_bound,
                                                  NULL, ASTP_open_bound);
         }
     |   LBRACKET const_exp DOTDOT const_exp RBRACKET
         {
-            $<y_index>$ = ASTP_array_index_node  ( $<y_constant>2, ASTP_constant_bound,
+            $<y_index>$ = ASTP_array_index_node  (nidl_location(nidl),
+                                                 $<y_constant>2, ASTP_constant_bound,
                                                  $<y_constant>4, ASTP_constant_bound);
         }
     ;
-
 
 operation_dcl:
         attributes type_spec declarators extraneous_comma
         {
             if (ASTP_parsing_main_idl)
                 $<y_operation>$ = AST_operation_node (
+                                    nidl_location(nidl),
                                     $<y_type>2,         /*The type node*/
                                     $<y_declarator>3,   /* Declarator list */
                                    &$<y_attributes>1);  /* attributes */
@@ -1103,7 +1130,7 @@ operation_dcl:
         }
     | error declarators
         {
-        log_error(nidl_yylineno,NIDL_MISSONOP, NULL);
+        log_error(nidl_yylineno(nidl),NIDL_MISSONOP, NULL);
         $<y_operation>$ = NULL;
         }
     ;
@@ -1125,7 +1152,7 @@ param_names:
 end_param_names:
         RPAREN
         {
-        ASTP_patch_field_reference ();
+        ASTP_patch_field_reference (nidl_location(nidl));
         NAMETABLE_pop_level ();
         }
     ;
@@ -1174,6 +1201,7 @@ param_dcl:
             {
                 if (ASTP_parsing_main_idl)
                     $<y_parameter>$ = AST_declarator_to_param(
+                                            nidl_location(nidl),
                                             &$<y_attributes>1,
                                             $<y_type>2,
                                             $<y_declarator>4);
@@ -1182,7 +1210,7 @@ param_dcl:
         }
     |    error old_attribute_syntax declarator_or_null
         {
-            log_error(nidl_yylineno, NIDL_MISSONPARAM, NULL);
+            log_error(nidl_yylineno(nidl), NIDL_MISSONPARAM, NULL);
             $<y_parameter>$ = (AST_parameter_n_t *)NULL;
         }
     ;
@@ -1233,7 +1261,6 @@ bounds_closer:
         }
     ;
 
-
 /*
  * Production to accept attributes in the old location, and issue a clear error that
  * the translator should be used.
@@ -1245,12 +1272,11 @@ old_attribute_syntax:
             if (($<y_attributes>1.bounds != NULL) ||
                ($<y_attributes>1.attr_flags != 0))
             {
-                log_error(nidl_yylineno,NIDL_ATTRTRANS, NULL);
+                log_error(nidl_yylineno(nidl),NIDL_ATTRTRANS, NULL);
                 ASTP_free_simple_list((ASTP_node_t *)$<y_attributes>1.bounds);
             }
         }
     ;
-
 
 /*
  * Interface Attributes
@@ -1262,7 +1288,7 @@ interface_attributes:
         attribute_opener interface_attr_list extraneous_comma attribute_closer
     |   attribute_opener error attribute_closer
         {
-            log_error(nidl_yylineno,NIDL_ERRINATTR, NULL);
+            log_error(nidl_yylineno(nidl),NIDL_ERRINATTR, NULL);
         }
 
     |   /* Nothing */
@@ -1277,13 +1303,13 @@ interface_attr_list:
 interface_attr:
         UUID_KW error
         {
-            log_error(nidl_yylineno,NIDL_SYNTAXUUID, NULL);
+            log_error(nidl_yylineno(nidl),NIDL_SYNTAXUUID, NULL);
         }
     |   UUID_KW UUID_REP
         {
             {
                 if (ASTP_IF_AF_SET(the_interface,ASTP_IF_UUID))
-                        log_error(nidl_yylineno, NIDL_ATTRUSEMULT, NULL);
+                        log_error(nidl_yylineno(nidl), NIDL_ATTRUSEMULT, NULL);
                 ASTP_SET_IF_AF(the_interface,ASTP_IF_UUID);
                 the_interface->uuid = $<y_uuid>2;
             }
@@ -1291,20 +1317,20 @@ interface_attr:
     |   ENDPOINT_KW LPAREN port_list extraneous_comma RPAREN
         {
             if (ASTP_IF_AF_SET(the_interface,ASTP_IF_PORT))
-                    log_error(nidl_yylineno, NIDL_ATTRUSEMULT, NULL);
+                    log_error(nidl_yylineno(nidl), NIDL_ATTRUSEMULT, NULL);
             ASTP_SET_IF_AF(the_interface,ASTP_IF_PORT);
         }
     |   EXCEPTIONS_KW LPAREN excep_list extraneous_comma RPAREN
         {
             if (ASTP_IF_AF_SET(the_interface, ASTP_IF_EXCEPTIONS))
-                log_error(nidl_yylineno, NIDL_ATTRUSEMULT, NULL);
+                log_error(nidl_yylineno(nidl), NIDL_ATTRUSEMULT, NULL);
             ASTP_SET_IF_AF(the_interface, ASTP_IF_EXCEPTIONS);
         }
     |   VERSION_KW LPAREN version_number RPAREN
         {
             {
                 if (ASTP_IF_AF_SET(the_interface,ASTP_IF_VERSION))
-                        log_error(nidl_yylineno, NIDL_ATTRUSEMULT, NULL);
+                        log_error(nidl_yylineno(nidl), NIDL_ATTRUSEMULT, NULL);
                 ASTP_SET_IF_AF(the_interface,ASTP_IF_VERSION);
             }
 
@@ -1313,21 +1339,21 @@ interface_attr:
         {
             {
                 if (AST_LOCAL_SET(the_interface))
-                        log_warning(nidl_yylineno, NIDL_MULATTRDEF, NULL);
+                        log_warning(nidl_yylineno(nidl), NIDL_MULATTRDEF, NULL);
                 AST_SET_LOCAL(the_interface);
             }
         }
     |   POINTER_DEFAULT_KW LPAREN pointer_class RPAREN
         {
             if (the_interface->pointer_default != 0)
-                    log_error(nidl_yylineno, NIDL_ATTRUSEMULT, NULL);
+                    log_error(nidl_yylineno(nidl), NIDL_ATTRUSEMULT, NULL);
             the_interface->pointer_default = $<y_ptrclass>3;
         }
 	 /* extensions to osf */
 	 |	  OBJECT_KW
 	 		{
 				if (AST_OBJECT_SET(the_interface))
-					 log_warning(nidl_yylineno, NIDL_MULATTRDEF, NULL);
+					 log_warning(nidl_yylineno(nidl), NIDL_MULATTRDEF, NULL);
 				AST_SET_OBJECT(the_interface);
 			}
 	 |		acf_interface_attr
@@ -1340,7 +1366,7 @@ acf_interface_attr:
 	IMPLICIT_HANDLE_KW LPAREN HANDLE_T_KW IDENTIFIER RPAREN
 	{
 		if (the_interface->implicit_handle_name != NAMETABLE_NIL_ID)
-			 log_error(nidl_yylineno, NIDL_ATTRUSEMULT, NULL);
+			 log_error(nidl_yylineno(nidl), NIDL_ATTRUSEMULT, NULL);
 
 		ASTP_set_implicit_handle(the_interface, NAMETABLE_NIL_ID, $<y_id>4);
 	}
@@ -1348,8 +1374,8 @@ acf_interface_attr:
 	IMPLICIT_HANDLE_KW LPAREN IDENTIFIER IDENTIFIER RPAREN
 	{
 		if (the_interface->implicit_handle_name != NAMETABLE_NIL_ID)
-			log_error(nidl_yylineno, NIDL_ATTRUSEMULT, NULL);
-	
+			log_error(nidl_yylineno(nidl), NIDL_ATTRUSEMULT, NULL);
+
 		ASTP_set_implicit_handle(the_interface, $<y_id>3, $<y_id>4);
 	}
 	;
@@ -1365,7 +1391,7 @@ version_number:
         {
             the_interface->version = $<y_int_info>1.int_val;
             if (the_interface->version > /*(unsigned int)*/ASTP_C_USHORT_MAX)
-                log_error(nidl_yylineno, NIDL_MAJORTOOLARGE,
+                log_error(nidl_yylineno(nidl), NIDL_MAJORTOOLARGE,
 			  ASTP_C_USHORT_MAX, NULL);
         }
    |    FLOAT_NUMERIC
@@ -1375,10 +1401,10 @@ version_number:
             STRTAB_str_to_string($<y_string>1, &float_text);
             sscanf(float_text,"%d.%d",&major_version,&minor_version);
             if (major_version > (unsigned int)ASTP_C_USHORT_MAX)
-                log_error(nidl_yylineno, NIDL_MAJORTOOLARGE,
+                log_error(nidl_yylineno(nidl), NIDL_MAJORTOOLARGE,
 			  ASTP_C_USHORT_MAX, NULL);
             if (minor_version > (unsigned int)ASTP_C_USHORT_MAX)
-                log_error(nidl_yylineno, NIDL_MINORTOOLARGE,
+                log_error(nidl_yylineno(nidl), NIDL_MINORTOOLARGE,
 			  ASTP_C_USHORT_MAX, NULL);
             the_interface->version = (minor_version * 65536) + major_version;
         }
@@ -1413,14 +1439,16 @@ excep_spec:
         IDENTIFIER
         {
             if (ASTP_parsing_main_idl)
-                $<y_exception>$ = AST_exception_node($<y_id>1);
+            {
+                $<y_exception>$ =
+                   AST_exception_node(nidl_location(nidl), $<y_id>1);
+            }
             else
+            {
                 $<y_exception>$ = NULL;
+            }
         }
     ;
-
-
-
 
 /*
  * Attributes that can appear on fields or parameters. These are the array
@@ -1467,7 +1495,6 @@ array_bound_type:
         }
     ;
 
-
 array_bound_id_list:
         array_bound_id
     |   array_bound_id_list COMMA array_bound_id
@@ -1482,11 +1509,14 @@ array_bound_id_list:
 array_bound_id:
 	  expression
 			{
-				 $<y_attributes>$.bounds = AST_array_bound_from_expr($<y_exp>1, ASTP_bound_type);
+				 $<y_attributes>$.bounds =
+                AST_array_bound_from_expr(nidl_location(nidl),
+                        $<y_exp>1, ASTP_bound_type);
 			}
     |   /* nothing */
         {
-        $<y_attributes>$.bounds = AST_array_bound_info (NAMETABLE_NIL_ID, ASTP_bound_type, FALSE);
+        $<y_attributes>$.bounds = AST_array_bound_info (nidl_location(nidl),
+                        NAMETABLE_NIL_ID, ASTP_bound_type, FALSE);
         }
     ;
 
@@ -1500,11 +1530,13 @@ neu_switch_type:
 neu_switch_id:
         IDENTIFIER
         {
-        $<y_attributes>$.bounds = AST_array_bound_info($<y_id>1, ASTP_bound_type, FALSE);
+        $<y_attributes>$.bounds = AST_array_bound_info(nidl_location(nidl),
+                        $<y_id>1, ASTP_bound_type, FALSE);
         }
     |   STAR IDENTIFIER
         {
-        $<y_attributes>$.bounds = AST_array_bound_info($<y_id>2, ASTP_bound_type, TRUE);
+        $<y_attributes>$.bounds = AST_array_bound_info(nidl_location(nidl),
+                        $<y_id>2, ASTP_bound_type, TRUE);
         }
     ;
 
@@ -1522,7 +1554,6 @@ attributes:
         }
      ;
 
-
 rest_of_attribute_list:
         attribute_list extraneous_comma attribute_closer
      |  error attribute_closer
@@ -1533,7 +1564,7 @@ rest_of_attribute_list:
          */
         $<y_attributes>$.bounds = NULL;
         $<y_attributes>$.attr_flags = 0;
-        log_error(nidl_yylineno, NIDL_ERRINATTR, NULL);
+        log_error(nidl_yylineno(nidl), NIDL_ERRINATTR, NULL);
         }
      |  error SEMI
         {
@@ -1542,11 +1573,10 @@ rest_of_attribute_list:
          */
         $<y_attributes>$.bounds = NULL;
         $<y_attributes>$.attr_flags = 0;
-        log_error(nidl_yylineno, NIDL_MISSONATTR, NULL);
+        log_error(nidl_yylineno(nidl), NIDL_MISSONATTR, NULL);
         search_attributes_table = false;
         }
      ;
-
 
 attribute_list:
         attribute
@@ -1559,7 +1589,7 @@ attribute_list:
            * a message.
            */
           if (($<y_attributes>1.attr_flags & $<y_attributes>3.attr_flags) != 0)
-                log_warning(nidl_yylineno, NIDL_MULATTRDEF, NULL);
+                log_warning(nidl_yylineno(nidl), NIDL_MULATTRDEF, NULL);
           $<y_attributes>$.attr_flags = $<y_attributes>1.attr_flags |
                                         $<y_attributes>3.attr_flags;
           $<y_attributes>$.bounds = (ASTP_type_attr_n_t *) AST_concat_element (
@@ -1567,7 +1597,6 @@ attribute_list:
                                 (ASTP_node_t*) $<y_attributes>3.bounds);
         }
      ;
-
 
 attribute:
         /* bound attributes */
@@ -1602,12 +1631,12 @@ attribute:
                                         ASTP_OUT | ASTP_OUT_SHAPE;
                                   $<y_attributes>$.bounds = NULL;       }
 	 |	  IID_IS_KW LPAREN IDENTIFIER RPAREN
-											{ $<y_attributes>$.iid_is_name = $<y_id>3; 
+											{ $<y_attributes>$.iid_is_name = $<y_id>3;
                                    $<y_attributes>$.bounds = NULL;
                                    $<y_attributes>$.attr_flags = 0;
 											}
 	 |	  IID_IS_KW LPAREN STAR IDENTIFIER RPAREN /* MIDL extension */
-											{ $<y_attributes>$.iid_is_name = $<y_id>4; 
+											{ $<y_attributes>$.iid_is_name = $<y_id>4;
                                    $<y_attributes>$.bounds = NULL;
                                    $<y_attributes>$.attr_flags = 0;
 											}
@@ -1630,7 +1659,8 @@ attribute:
     |   RANGE_KW LPAREN expression COMMA expression RPAREN /* MIDL extension */
                                 { $<y_attributes>$.attr_flags = ASTP_RANGE;
                                   $<y_attributes>$.bounds =
-                                     AST_range_from_expr($<y_exp>3, $<y_exp>5);
+                                     AST_range_from_expr(nidl_location(nidl),
+                                           $<y_exp>3, $<y_exp>5);
                                 }
 
         /* Type-only Attribute(s) */
@@ -1676,12 +1706,11 @@ attribute:
         {
                 char const *identifier; /* place to receive the identifier text */
                 NAMETABLE_id_to_string ($<y_id>1, &identifier);
-                log_error (nidl_yylineno, NIDL_UNKNOWNATTR, identifier, NULL);
+                log_error (nidl_yylineno(nidl), NIDL_UNKNOWNATTR, identifier, NULL);
                 $<y_attributes>$.attr_flags = 0;
                 $<y_attributes>$.bounds = NULL;
         }
     ;
-
 
 /********************************************************************/
 /*                                                                  */
@@ -1697,7 +1726,8 @@ conditional_expression:
         {$<y_exp>$ = $<y_exp>1;}
    |    logical_OR_expression QUESTION expression COLON conditional_expression
         {
-	 			$<y_exp>$ = AST_expression(AST_EXP_TERNARY_OP, $<y_exp>1, $<y_exp>3, $<y_exp>5);
+            $<y_exp>$ = AST_expression(nidl_location(nidl),
+                     AST_EXP_TERNARY_OP, $<y_exp>1, $<y_exp>3, $<y_exp>5);
         }
    ;
 
@@ -1706,7 +1736,8 @@ logical_OR_expression:
         {$<y_exp>$ = $<y_exp>1;}
    |    logical_OR_expression BARBAR logical_AND_expression
         {
-	 			$<y_exp>$ = AST_expression(AST_EXP_BINARY_LOG_OR, $<y_exp>1, $<y_exp>3, NULL);
+            $<y_exp>$ = AST_expression(nidl_location(nidl),
+                  AST_EXP_BINARY_LOG_OR, $<y_exp>1, $<y_exp>3, NULL);
         }
    ;
 
@@ -1715,7 +1746,8 @@ logical_AND_expression:
         {$<y_exp>$ = $<y_exp>1;}
    |    logical_AND_expression AMPAMP inclusive_OR_expression
         {
-				$<y_exp>$ = AST_expression(AST_EXP_BINARY_LOG_AND, $<y_exp>1, $<y_exp>3, NULL);
+				$<y_exp>$ = AST_expression(nidl_location(nidl),
+                  AST_EXP_BINARY_LOG_AND, $<y_exp>1, $<y_exp>3, NULL);
         }
    ;
 
@@ -1724,7 +1756,8 @@ inclusive_OR_expression:
         {$<y_exp>$ = $<y_exp>1;}
    |    inclusive_OR_expression BAR exclusive_OR_expression
         {
-				$<y_exp>$ = AST_expression(AST_EXP_BINARY_OR, $<y_exp>1, $<y_exp>3, NULL);
+				$<y_exp>$ = AST_expression(nidl_location(nidl),
+                  AST_EXP_BINARY_OR, $<y_exp>1, $<y_exp>3, NULL);
         }
    ;
 
@@ -1733,7 +1766,8 @@ exclusive_OR_expression:
         {$<y_exp>$ = $<y_exp>1;}
    |    exclusive_OR_expression CARET AND_expression
         {
-				$<y_exp>$ = AST_expression(AST_EXP_BINARY_XOR, $<y_exp>1, $<y_exp>3, NULL);
+				$<y_exp>$ = AST_expression(nidl_location(nidl),
+                  AST_EXP_BINARY_XOR, $<y_exp>1, $<y_exp>3, NULL);
         }
    ;
 
@@ -1742,7 +1776,8 @@ AND_expression:
         {$<y_exp>$ = $<y_exp>1;}
    |    AND_expression AMP equality_expression
         {
-				$<y_exp>$ = AST_expression(AST_EXP_BINARY_AND, $<y_exp>1, $<y_exp>3, NULL);
+				$<y_exp>$ = AST_expression(nidl_location(nidl),
+                  AST_EXP_BINARY_AND, $<y_exp>1, $<y_exp>3, NULL);
         }
    ;
 
@@ -1751,11 +1786,13 @@ equality_expression:
         {$<y_exp>$ = $<y_exp>1;}
    |    equality_expression EQUALEQUAL relational_expression
         {
-				$<y_exp>$ = AST_expression(AST_EXP_BINARY_EQUAL, $<y_exp>1, $<y_exp>3, NULL);
+				$<y_exp>$ = AST_expression(nidl_location(nidl),
+                  AST_EXP_BINARY_EQUAL, $<y_exp>1, $<y_exp>3, NULL);
         }
    |    equality_expression NOTEQUAL relational_expression
         {
-				$<y_exp>$ = AST_expression(AST_EXP_BINARY_NE, $<y_exp>1, $<y_exp>3, NULL);
+				$<y_exp>$ = AST_expression(nidl_location(nidl),
+                  AST_EXP_BINARY_NE, $<y_exp>1, $<y_exp>3, NULL);
 
         }
    ;
@@ -1765,19 +1802,23 @@ relational_expression:
         {$<y_exp>$ = $<y_exp>1;}
    |    relational_expression LANGLE shift_expression
         {
-				$<y_exp>$ = AST_expression(AST_EXP_BINARY_LT, $<y_exp>1, $<y_exp>3, NULL);
+				$<y_exp>$ = AST_expression(nidl_location(nidl),
+                  AST_EXP_BINARY_LT, $<y_exp>1, $<y_exp>3, NULL);
         }
    |    relational_expression RANGLE shift_expression
         {
-				$<y_exp>$ = AST_expression(AST_EXP_BINARY_GT, $<y_exp>1, $<y_exp>3, NULL);
+				$<y_exp>$ = AST_expression(nidl_location(nidl),
+                  AST_EXP_BINARY_GT, $<y_exp>1, $<y_exp>3, NULL);
         }
    |    relational_expression LESSEQUAL shift_expression
         {
-				$<y_exp>$ = AST_expression(AST_EXP_BINARY_LE, $<y_exp>1, $<y_exp>3, NULL);
+				$<y_exp>$ = AST_expression(nidl_location(nidl),
+                  AST_EXP_BINARY_LE, $<y_exp>1, $<y_exp>3, NULL);
         }
    |    relational_expression GREATEREQUAL shift_expression
         {
-				$<y_exp>$ = AST_expression(AST_EXP_BINARY_GE, $<y_exp>1, $<y_exp>3, NULL);
+				$<y_exp>$ = AST_expression(nidl_location(nidl),
+                  AST_EXP_BINARY_GE, $<y_exp>1, $<y_exp>3, NULL);
 
         }
    ;
@@ -1787,11 +1828,13 @@ shift_expression:
         {$<y_exp>$ = $<y_exp>1;}
    |    shift_expression LANGLEANGLE additive_expression
         {
-				$<y_exp>$ = AST_expression(AST_EXP_BINARY_LSHIFT, $<y_exp>1, $<y_exp>3, NULL);
+				$<y_exp>$ = AST_expression(nidl_location(nidl),
+                  AST_EXP_BINARY_LSHIFT, $<y_exp>1, $<y_exp>3, NULL);
         }
    |    shift_expression RANGLEANGLE additive_expression
         {
-				$<y_exp>$ = AST_expression(AST_EXP_BINARY_RSHIFT, $<y_exp>1, $<y_exp>3, NULL);
+				$<y_exp>$ = AST_expression(nidl_location(nidl),
+                  AST_EXP_BINARY_RSHIFT, $<y_exp>1, $<y_exp>3, NULL);
 
         }
    ;
@@ -1801,12 +1844,14 @@ additive_expression:
         {$<y_exp>$ = $<y_exp>1;}
    |    additive_expression PLUS multiplicative_expression
         {
-				$<y_exp>$ = AST_expression(AST_EXP_BINARY_PLUS, $<y_exp>1, $<y_exp>3, NULL);
+				$<y_exp>$ = AST_expression(nidl_location(nidl),
+                  AST_EXP_BINARY_PLUS, $<y_exp>1, $<y_exp>3, NULL);
 
         }
    |    additive_expression MINUS multiplicative_expression
         {
-				$<y_exp>$ = AST_expression(AST_EXP_BINARY_MINUS, $<y_exp>1, $<y_exp>3, NULL);
+				$<y_exp>$ = AST_expression(nidl_location(nidl),
+                  AST_EXP_BINARY_MINUS, $<y_exp>1, $<y_exp>3, NULL);
         }
    ;
 
@@ -1815,22 +1860,25 @@ multiplicative_expression:
         {$<y_exp>$ = $<y_exp>1;}
    |    multiplicative_expression STAR cast_expression
         {
-				$<y_exp>$ = AST_expression(AST_EXP_BINARY_STAR, $<y_exp>1, $<y_exp>3, NULL);
+				$<y_exp>$ = AST_expression(nidl_location(nidl),
+                  AST_EXP_BINARY_STAR, $<y_exp>1, $<y_exp>3, NULL);
 				/*
             if (($<y_exp>$.exp.constant.val.integer < $<y_exp>1.exp.constant.val.integer) &&
                 ($<y_exp>$.exp.constant.val.integer < $<y_exp>3.exp.constant.val.integer))
-                log_error (nidl_yylineno, NIDL_INTOVERFLOW,
+                log_error (nidl_yylineno(nidl), NIDL_INTOVERFLOW,
 			   KEYWORDS_lookup_text(LONG_KW), NULL);
 					*/
         }
    |    multiplicative_expression SLASH cast_expression
         {
-				$<y_exp>$ = AST_expression(AST_EXP_BINARY_SLASH, $<y_exp>1, $<y_exp>3, NULL);
+				$<y_exp>$ = AST_expression(nidl_location(nidl),
+                  AST_EXP_BINARY_SLASH, $<y_exp>1, $<y_exp>3, NULL);
         }
    |    multiplicative_expression PERCENT cast_expression
         {
-				$<y_exp>$ = AST_expression(AST_EXP_BINARY_PERCENT, $<y_exp>1, $<y_exp>3, NULL);
-            /*    log_error (nidl_yylineno, NIDL_INTDIVBY0, NULL); */
+				$<y_exp>$ = AST_expression(nidl_location(nidl),
+                  AST_EXP_BINARY_PERCENT, $<y_exp>1, $<y_exp>3, NULL);
+            /*    log_error (nidl_yylineno(nidl), NIDL_INTDIVBY0, NULL); */
         }
    ;
 
@@ -1843,23 +1891,28 @@ unary_expression:
         {$<y_exp>$ = $<y_exp>1;}
    |    PLUS primary_expression
         {
-				$<y_exp>$ = AST_expression(AST_EXP_UNARY_PLUS, $<y_exp>2, NULL, NULL);
+				$<y_exp>$ = AST_expression(nidl_location(nidl),
+                  AST_EXP_UNARY_PLUS, $<y_exp>2, NULL, NULL);
 		  }
    |    MINUS primary_expression
         {
-				$<y_exp>$ = AST_expression(AST_EXP_UNARY_MINUS, $<y_exp>2, NULL, NULL);
+				$<y_exp>$ = AST_expression(nidl_location(nidl),
+                  AST_EXP_UNARY_MINUS, $<y_exp>2, NULL, NULL);
         }
    |    TILDE primary_expression
         {
-				$<y_exp>$ = AST_expression(AST_EXP_UNARY_TILDE, $<y_exp>2, NULL, NULL);
+				$<y_exp>$ = AST_expression(nidl_location(nidl),
+                  AST_EXP_UNARY_TILDE, $<y_exp>2, NULL, NULL);
         }
    |    NOT primary_expression
         {
-				$<y_exp>$ = AST_expression(AST_EXP_UNARY_NOT, $<y_exp>2, NULL, NULL);
+				$<y_exp>$ = AST_expression(nidl_location(nidl),
+                  AST_EXP_UNARY_NOT, $<y_exp>2, NULL, NULL);
         }
 	|	  STAR primary_expression
 		  {
-			  $<y_exp>$ = AST_expression(AST_EXP_UNARY_STAR, $<y_exp>2, NULL, NULL);
+			  $<y_exp>$ = AST_expression(nidl_location(nidl),
+                 AST_EXP_UNARY_STAR, $<y_exp>2, NULL, NULL);
 		  }
    ;
 
@@ -1869,152 +1922,121 @@ primary_expression:
     |   INTEGER_NUMERIC
         {
 				$<y_exp>$ = AST_exp_integer_constant(
+               nidl_location(nidl),
 					$<y_int_info>1.int_val,
 					$<y_int_info>1.int_signed);
         }
     |   CHAR
         {
-				$<y_exp>$ = AST_exp_char_constant($<y_char>1);
+				$<y_exp>$ = AST_exp_char_constant(nidl_location(nidl), $<y_char>1);
         }
     |   IDENTIFIER
         {
-			  	$<y_exp>$ = AST_exp_identifier($<y_id>1);
+            $<y_exp>$ = AST_exp_identifier(nidl_location(nidl), $<y_id>1);
         }
     |   STRING
         {
-            $<y_exp>$ = AST_exp_string_constant($<y_string>1);
+            $<y_exp>$ = AST_exp_string_constant(
+                  nidl_location(nidl), $<y_string>1);
         }
     |   NULL_KW
         {
-            $<y_exp>$ = AST_exp_null_constant();
+            $<y_exp>$ = AST_exp_null_constant(nidl_location(nidl));
         }
 
     |   TRUE_KW
         {
-            $<y_exp>$ = AST_exp_boolean_constant(true);
+            $<y_exp>$ = AST_exp_boolean_constant(nidl_location(nidl), true);
         }
 
     |   FALSE_KW
         {
-            $<y_exp>$ = AST_exp_boolean_constant(false);
+            $<y_exp>$ = AST_exp_boolean_constant(nidl_location(nidl), false);
         }
    |    FLOAT_NUMERIC
         {
-				$<y_exp>$ = AST_exp_integer_constant(0,0);
-            log_error(nidl_yylineno, NIDL_FLOATCONSTNOSUP, NULL);
+				$<y_exp>$ = AST_exp_integer_constant(nidl_location(nidl), 0,0);
+            log_error(nidl_yylineno(nidl), NIDL_FLOATCONSTNOSUP, NULL);
         }
    ;
 %%
 
-/*****************************************************************
- *
- *  Helper functions for managing multiple BISON parser contexts
- *
- *  GNU Bison v1.25 support for DCE 1.2.2 idl_compiler
- *  added 07-11-97 Jim Doyle, Boston University, <jrd@bu.edu>
- *
- *  Maintainance note:
- *
- *    The set of bison-specific static and global variables
- *    managed by the following code may need to changed for versions
- *    GNU Bison earlier or newer than V1.25.
- *
- *
- *****************************************************************/
-
-/*****************************************************************
- *
- * Data structure to store the state of a BISON lexxer context
- *
- *****************************************************************/
-
-struct nidl_bisonparser_state
-  {
-
-    /*
-     * BISON parser globals that need to preserved whenever
-     * we switch into a new parser context (i.e. multiple,
-     * nested parsers).
-     */
-
-    int yychar;
-    int yynerrs;
-    YYSTYPE yylval;
-
-  };
-
-
-typedef struct nidl_bisonparser_state nidl_bisonparser_activation_record;
-
-/*****************************************************************
- *
- * Basic constructors/destructors for FLEX activation states
- *
- *****************************************************************/
-
-void *
-new_nidl_bisonparser_activation_record()
-  {
-    return (malloc(sizeof(nidl_bisonparser_activation_record)));
-  }
-
-void
-delete_nidl_bisonparser_activation_record(void * p)
+nidl_parser_p nidl_parser_alloc
+(
+    boolean     *cmd_opt_arr,   /* [in] Array of command option flags */
+    void        **cmd_val_arr,  /* [in] Array of command option values */
+    char        *nidl_file       /* [in] ACF file name */
+)
 {
- if (p)
-    free((void *)p);
+   nidl_parser_state_t * nidl;
+
+   nidl = NEW(nidl_parser_state_t);
+
+   /* Set global (STRTAB_str_t error_file_name_id) for error processing. */
+   set_name_for_errors(nidl_file);
+   nidl->nidl_location.fileid = STRTAB_add_string(nidl_file);
+
+   // XXX save file name ID in parser state
+
+   return nidl;
 }
 
-/*****************************************************************
- *
- * Get/Set/Initialize methods
- *
- *****************************************************************/
+void nidl_parser_destroy
+(
+   nidl_parser_p nidl
+)
+{
+   FREE(nidl);
+}
 
-void *
-get_current_nidl_bisonparser_activation()
-  {
-    nidl_bisonparser_activation_record * p;
+void nidl_parser_input
+(
+    nidl_parser_p nidl,
+    FILE * in
+)
+{
+    assert(nidl->nidl_yyscanner == NULL);
 
-    p = (nidl_bisonparser_activation_record * )
-                new_nidl_bisonparser_activation_record();
+    nidl_yylex_init(&nidl->nidl_yyscanner);
+    nidl_yyset_in(in, nidl->nidl_yyscanner);
+}
 
-    /*
-     * save the statics internal to the parser
-     *
-     */
+const parser_location_t * nidl_location
+(
+   nidl_parser_p nidl
+)
+{
+    /* Update the current location before handing it back ... */
+    nidl->nidl_location.lineno = nidl_yylineno(nidl);
+    nidl->nidl_location.location = *nidl_yyget_lloc(nidl->nidl_yyscanner);
 
-     p->yychar = yychar;
-     p->yynerrs = yynerrs;
-     p->yylval = yylval;
+    return &nidl->nidl_location;
+}
 
-     return (void *)p;
-  }
+unsigned nidl_yylineno
+(
+   nidl_parser_p nidl
+)
+{
+   return nidl_yyget_lineno(nidl->nidl_yyscanner);
+}
 
-void
-set_current_nidl_bisonparser_activation(void * ptr)
-  {
+unsigned nidl_yynerrs
+(
+   nidl_parser_p nidl
+)
+{
+   return nidl->nidl_yynerrs;
+}
 
-    nidl_bisonparser_activation_record * p =
-      (nidl_bisonparser_activation_record *)ptr;
+static void nidl_yyerror
+(
+    YYLTYPE * yylloc,
+    yyscan_t scanner,
+    char const * message
+)
+{
+    idl_yyerror(yylloc, scanner, message);
+}
 
-    // restore the statics
-
-
-     yychar = p->yychar;
-     yynerrs = p->yynerrs;
-     yylval = p->yylval;
-
-
-  }
-
-void
-init_new_nidl_bisonparser_activation()
-  {
-    // set some initial conditions for a new Bison parser state
-
-    yynerrs = 0;
-
-  }
-
-/* preserve coding style vim: set tw=78 sw=3 ts=3 : */
+/* preserve coding style vim: set tw=78 sw=3 ts=3 et : */

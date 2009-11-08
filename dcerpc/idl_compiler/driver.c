@@ -71,10 +71,9 @@ static jmp_buf nidl_termination_jmp_buf;
 ** This routine utilizes setjmp/longjmp to perform an orderly termination
 ** of the idl compiler.
 */
-void nidl_terminate (
-#ifdef PROTO
-void
-#endif
+void nidl_terminate
+(
+    void
 )
 {
     extern void *errors;
@@ -541,11 +540,11 @@ boolean DRIVER_main
     VAXC$ESTABLISH(attempt_to_print_errors);
 #else
 #ifndef _MSDOS
-    signal(SIGBUS, (void (*)())attempt_to_print_errors);
+    signal(SIGBUS, (void (*)(void))attempt_to_print_errors);
 #endif
-    signal(SIGSEGV, (void (*)())attempt_to_print_errors);
-    signal(SIGFPE, (void (*)())attempt_to_print_errors);
-    signal(SIGILL, (void (*)())attempt_to_print_errors);
+    signal(SIGSEGV, (void (*)(void))attempt_to_print_errors);
+    signal(SIGFPE, (void (*)(void))attempt_to_print_errors);
+    signal(SIGILL, (void (*)(void))attempt_to_print_errors);
 #endif
 
 

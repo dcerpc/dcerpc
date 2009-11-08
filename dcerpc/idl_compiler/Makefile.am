@@ -1,6 +1,8 @@
 ## Process this file with automake to produce Makefile.in
 include $(top_srcdir)/include.mk
 
+FLEX ?= $(LEX)
+
 # This Makefile builds the IDL compiler
 
 # configure/automake adds the dcethread library to everything that is built in
@@ -25,10 +27,10 @@ dceidl_SOURCES = acf_y.c acf_l.c nidl_y.c nidl_l.c astp_com.c astp_cpx.c \
 	user_exc.c icharsup.c astp_exp.c
 dceidl_LDFLAGS = @LTLDFLAGS@
 
-noinst_HEADERS= acf.h ast.h astp.h astp_dmp.h backend.h be_pvt.h bedeck.h \
+noinst_HEADERS= ast.h astp.h astp_dmp.h backend.h be_pvt.h bedeck.h \
  checker.h chkichar.h clihamts.h clihandl.h command.h commstat.h cspeldcl.h \
  cspell.h cstubgen.h cstubmts.h ddbe.h default_msg.h driver.h dutils.h \
- errors.h fe_pvt.h files.h flex_bison_support.h frontend.h genpipes.h \
+ errors.h fe_pvt.h files.h frontend.h genpipes.h \
  getflags.h hdgen.h icharsup.h ifspec.h ir_pvt.h irep.h marshall.h \
  message.h mtsbacke.h mtspipes.h nametbl.h namtbpvt.h nidl.h nidlmsg.h \
  propagat.h sstubmts.h sysdep.h user_exc.h
@@ -41,13 +43,13 @@ BUILT_SOURCES=acf_y.c acf_l.c nidl_y.c nidl_l.c idl.cat
 acf_y.c acf_y.h: acf_y.y
 	$(BISON) -v $(AM_YFLAGS) $(YFLAGS) -p acf_yy -o acf_y.c -d $<
 
-acf_l.c: acf_l.l
+acf_l.c acf_l.h: acf_l.l
 	$(FLEX) $(AM_LFLAGS) $(LFLAGS) -Pacf_yy -o$@ $<
 
 nidl_y.c nidl_y.h: nidl_y.y
 	$(BISON) -v $(AM_YFLAGS) $(YFLAGS) -p nidl_yy -o nidl_y.c -d $<
 
-nidl_l.c: nidl_l.l
+nidl_l.c nidl_l.h: nidl_l.l
 	$(FLEX) $(AM_LFLAGS) $(LFLAGS) -Pnidl_yy -o$@ $<
 
 # Generate error message catalog for IDL compiler

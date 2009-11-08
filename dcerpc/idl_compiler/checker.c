@@ -6006,7 +6006,8 @@ static void type_represent_as
     /* ACF 'include' statement advised for definition of type 'name' */
 
     if (int_p->includes == NULL
-        &&  ASTP_lookup_binding(type_p->rep_as_type->type_name,
+        &&  ASTP_lookup_binding(null_parser_location,
+				type_p->rep_as_type->type_name,
                                 fe_type_n_k, FALSE) == NULL)
     {
         char const*id_name;
@@ -6017,7 +6018,8 @@ static void type_represent_as
 
     {
     AST_type_n_t *rep_type_p = (AST_type_n_t *) /* IDL rep_as type, if any */
-        ASTP_lookup_binding(type_p->rep_as_type->type_name, fe_type_n_k, FALSE);
+        ASTP_lookup_binding(null_parser_location,
+			type_p->rep_as_type->type_name, fe_type_n_k, FALSE);
 
     /* A [represent_as] type cannot be a non-encapsulated union */
 

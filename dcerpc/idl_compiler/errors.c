@@ -170,7 +170,7 @@ void yywhere
 }
 
 /*
- *  y y e r r o r
+ *  i d l _ y y e r r o r
  *
  *  Function:   Called by yypaser when a parse error is encountered.
  *
@@ -184,15 +184,20 @@ void yywhere
  *              by A. T. Schreiner & H. G. Friedman
  */
 
-void yyerror
+void idl_yyerror
 (
-    char const *message
+    YYLTYPE * yylloc,
+    yyscan_t scanner,
+    char const * message
 )
 {
     static int list = 0;        /* Note: Currently always 0 */
 
     if (message || !list)
     {
+		/* XXX need to carry a nerrs around on the XXX_parser_state_t, and
+		 * increment it generically here ...
+		 */
         (*yynerrs_p)++;
         yywhere();
 
@@ -211,25 +216,6 @@ void yyerror
 
     putc('\n', stderr);
     list = 0;
-}
-
-/*
- *  a c f _ y y e r r o r
- *  n i d l _ y y e r r o r
- *
- *
- *  Function:   Stub functions for the ACF and NIDL parsers
- *
- */
-
-void nidl_yyerror(char *m)
-{
-  yyerror(m);
-}
-
-void acf_yyerror(char *m)
-{
-  yyerror(m);
 }
 
 
@@ -986,7 +972,10 @@ void set_name_for_errors
         error_file_name_id = STRTAB_add_string(filename);
         STRTAB_str_to_string(error_file_name_id, &current_file);
     }
-    else current_file = NULL;
+    else
+	{
+		current_file = NULL;
+	}
 }
 
 /*

@@ -405,8 +405,8 @@ void CHK_type_cs
     /* ACF 'include' statement advised for definition of type 'name' */
     if (int_p->includes == NULL
         && type_p->cs_char_type != NULL
-        && ASTP_lookup_binding(type_p->cs_char_type->type_name,
-                               fe_type_n_k, FALSE) == NULL)
+        && ASTP_lookup_binding(null_parser_location,
+	    type_p->cs_char_type->type_name, fe_type_n_k, FALSE) == NULL)
     {
         char const *id_name;
         NAMETABLE_id_to_string(type_p->cs_char_type->type_name, &id_name);

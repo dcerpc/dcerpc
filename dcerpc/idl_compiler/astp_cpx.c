@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2009 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -44,39 +45,33 @@
 #include <astp.h>
 #include <nidlmsg.h>
 
-extern int nidl_yylineno;
-
 
 /*
  * Prototypes for static routines and forward references
  */
 
 static void ASTP_add_tag_binding (
-#ifdef PROTO
+    parser_location_p	location,
     NAMETABLE_id_t      name,
     AST_type_n_t *type_node
-#endif
 );
 
 static void ASTP_process_sp_type (
-#ifdef PROTO
+    parser_location_p	location,
     AST_interface_n_t *interface_node_ptr,
     AST_type_n_t *type_node_ptr
-#endif
 );
 
 static AST_field_n_t *AST_field_node (
-#ifdef PROTO
+    parser_location_p	location,
     NAMETABLE_id_t field_name
-#endif
 );
 
 static void AST_find_self_reference (
-#ifdef PROTO
-    AST_interface_n_t *interface_node_ptr,
-    AST_type_p_n_t *active_type_chain,
-    AST_type_n_t *current_type_node_ptr
-#endif
+    parser_location_p	location,
+    AST_interface_n_t  *interface_node_ptr,
+    AST_type_p_n_t     *active_type_chain,
+    AST_type_n_t       *current_type_node_ptr
 );
 
 
@@ -100,16 +95,11 @@ extern int error_count;     /* number of errors detected thus far */
  */
 
 static void ASTP_add_tag_binding
-#ifdef PROTO
 (
+    parser_location_p	location,
     NAMETABLE_id_t      name,
     AST_type_n_t *type_node
 )
-#else
-(name, type_node)
-    NAMETABLE_id_t      name;
-    AST_type_n_t *type_node;
-#endif
 {
     /*
      * Add name to nametable and bind it to the specified node
@@ -128,11 +118,11 @@ static void ASTP_add_tag_binding
             (binding->fe_info->file != STRTAB_NULL_STR))
         {
             STRTAB_str_to_string(binding->fe_info->file, &filename);
-            log_error (nidl_yylineno, NIDL_NAMEPREVDECLAT, identifier,
+            log_error (location->lineno, NIDL_NAMEPREVDECLAT, identifier,
                     filename, binding->fe_info->source_line, NULL);
         }
         else
-            log_error (nidl_yylineno, NIDL_NAMEALRDEC, identifier, NULL);
+            log_error (location->lineno, NIDL_NAMEALRDEC, identifier, NULL);
     }
 
     return;
@@ -151,20 +141,13 @@ static void ASTP_add_tag_binding
  */
 
 ASTP_array_index_n_t *ASTP_array_index_node
-#ifdef PROTO
 (
+    parser_location_p location,
     AST_constant_n_t *lower_bound,          /* Pointer to lower bound constant node */
     ASTP_bound_t     lower_bound_type,      /* Lower bound type */
     AST_constant_n_t *upper_bound,          /* Pointer to upper bound constant node */
     ASTP_bound_t     upper_bound_type       /* Upper bound type */
 )
-#else
-(lower_bound, lower_bound_type,upper_bound, upper_bound_type)
-    AST_constant_n_t *lower_bound;          /* Pointer to lower bound constant node */
-    ASTP_bound_t     lower_bound_type;      /* Lower bound type */
-    AST_constant_n_t *upper_bound;          /* Pointer to upper bound constant node */
-    ASTP_bound_t     upper_bound_type;      /* Upper bound type */
-#endif
 {
     ASTP_array_index_n_t *index_node_ptr;
 
@@ -190,7 +173,8 @@ ASTP_array_index_n_t *ASTP_array_index_node
     {
         if (lower_bound_type == ASTP_default_bound)
         {
-            index_node_ptr->upper_bound = AST_clone_constant(upper_bound);
+            index_node_ptr->upper_bound =
+		AST_clone_constant(location, upper_bound);
             index_node_ptr->upper_bound->value.int_val--;
         }
         else
@@ -217,14 +201,10 @@ ASTP_array_index_n_t *ASTP_array_index_node
  */
 
 AST_array_index_n_t *AST_array_index_node
-#ifdef PROTO
 (
+    parser_location_p location,
     unsigned short array_size
 )
-#else
-(array_size)
-    unsigned short array_size;
-#endif
 {
     unsigned short      i;
     AST_array_index_n_t *index_vector,
@@ -237,7 +217,7 @@ AST_array_index_n_t *AST_array_index_node
          i<array_size;
          i++, index_node++)
     {
-        ASTP_set_fe_info (&index_node->fe_info, fe_array_index_n_k);
+        ASTP_set_fe_info (location, &index_node->fe_info, fe_array_index_n_k);
     }
 
     return index_vector;
@@ -256,14 +236,10 @@ AST_array_index_n_t *AST_array_index_node
 
 
 AST_array_n_t *AST_array_node
-#ifdef PROTO
 (
+    parser_location_p location,
     AST_type_n_t *element_type_ptr
 )
-#else
-(element_type_ptr)
-    AST_type_n_t *element_type_ptr;
-#endif
 {
     AST_array_n_t *array_node_ptr;
 
@@ -273,7 +249,7 @@ AST_array_n_t *AST_array_node
     /* Link in the element type */
     array_node_ptr->element_type = element_type_ptr;
 
-    ASTP_set_fe_info(&array_node_ptr->fe_info, fe_array_n_k);
+    ASTP_set_fe_info(location, &array_node_ptr->fe_info, fe_array_n_k);
 
     return array_node_ptr;
 }
@@ -291,16 +267,14 @@ AST_array_n_t *AST_array_node
  */
 
 AST_field_attr_n_t *AST_field_attr_node
-#ifdef PROTO
-(void)
-#else
-()
-#endif
+(
+    parser_location_p location
+)
 {
     AST_field_attr_n_t *field_attr_node_ptr;
 
     field_attr_node_ptr = NEW (AST_field_attr_n_t);
-    ASTP_set_fe_info(&field_attr_node_ptr->fe_info, fe_field_attr_n_k);
+    ASTP_set_fe_info(location, &field_attr_node_ptr->fe_info, fe_field_attr_n_k);
 
     return field_attr_node_ptr;
 }
@@ -318,14 +292,10 @@ AST_field_attr_n_t *AST_field_attr_node
  */
 
 AST_field_ref_n_t *AST_field_ref_node
-#ifdef PROTO
 (
+    parser_location_p location,
     unsigned short dimension
 )
-#else
-(dimension)
-    unsigned short dimension;
-#endif
 {
     unsigned short i;
     AST_field_ref_n_t *field_ref_vector,
@@ -338,7 +308,7 @@ AST_field_ref_n_t *AST_field_ref_node
          i++, field_ref_node++)
     {
         field_ref_node->valid = FALSE;
-        ASTP_set_fe_info(&field_ref_node->fe_info, fe_field_ref_n_k);
+        ASTP_set_fe_info(location, &field_ref_node->fe_info, fe_field_ref_n_k);
     }
 
     return field_ref_vector;
@@ -357,16 +327,11 @@ AST_field_ref_n_t *AST_field_ref_node
  *
  */
 AST_type_n_t *AST_structure_node
-#ifdef PROTO
 (
+    parser_location_p location,
     AST_field_n_t *field_list,
     NAMETABLE_id_t identifier
 )
-#else
-(field_list, identifier)
-    AST_field_n_t *field_list;
-    NAMETABLE_id_t identifier;
-#endif
 {
     AST_structure_n_t   *structure_node_ptr;    /* Structure */
     AST_type_n_t        *type_node_ptr;         /* Type node for structure */
@@ -379,7 +344,7 @@ AST_type_n_t *AST_structure_node
     structure_node_ptr = NEW (AST_structure_n_t);
     structure_node_ptr->fields = field_list;
     structure_node_ptr->tag_name = identifier;
-    ASTP_set_fe_info(&structure_node_ptr->fe_info, fe_structure_n_k);
+    ASTP_set_fe_info(location, &structure_node_ptr->fe_info, fe_structure_n_k);
 
 
     /*
@@ -404,7 +369,7 @@ AST_type_n_t *AST_structure_node
             /*
              * First reference, so allocate a new type.
              */
-            tag_type_node_ptr = AST_type_node(AST_structure_k);
+            tag_type_node_ptr = AST_type_node(location, AST_structure_k);
 
             /*
              * Set up a name binding such that we can reference this structure by
@@ -412,7 +377,7 @@ AST_type_n_t *AST_structure_node
              * defined_as_tag flag should be set to true.
              */
             AST_SET_DEF_AS_TAG(tag_type_node_ptr);
-            ASTP_add_tag_binding(identifier, tag_type_node_ptr);
+            ASTP_add_tag_binding(location, identifier, tag_type_node_ptr);
             ASTP_save_tag_ref(identifier, AST_structure_k, tag_type_node_ptr);
             tag_type_node_ptr->type_structure.structure = structure_node_ptr;
         }
@@ -423,7 +388,7 @@ AST_type_n_t *AST_structure_node
             {
                 char const *identifier_text; /* place to receive the identifier text */
                 NAMETABLE_id_to_string (identifier, &identifier_text);
-                log_error (nidl_yylineno, NIDL_BADTAGREF, identifier_text,
+                log_error (location->lineno, NIDL_BADTAGREF, identifier_text,
 			   NULL);
 
                 /* State where the name was previously declared, if known */
@@ -432,13 +397,13 @@ AST_type_n_t *AST_structure_node
                 {
                     char const *filename; /* place to receive the filename text pointer */
                     STRTAB_str_to_string(tag_type_node_ptr->fe_info->file, &filename);
-		    log_error (nidl_yylineno, NIDL_NAMEPREVDECLAT,
+		    log_error (location->lineno, NIDL_NAMEPREVDECLAT,
 			       identifier_text, filename,
 			       tag_type_node_ptr->fe_info->source_line, NULL);
                 }
 
                 /* recovery is to return a bogus type node */
-                tag_type_node_ptr = AST_type_node(AST_structure_k);
+                tag_type_node_ptr = AST_type_node(location, AST_structure_k);
                 AST_SET_DEF_AS_TAG(tag_type_node_ptr);
             }
             else if (tag_type_node_ptr->type_structure.structure != NULL)
@@ -452,16 +417,16 @@ AST_type_n_t *AST_structure_node
                 {
                     char const *filename; /* place to receive the filename text pointer */
                     STRTAB_str_to_string(tag_type_node_ptr->fe_info->file, &filename);
-		    log_error (nidl_yylineno, NIDL_NAMEPREVDECLAT,
+		    log_error (location->lineno, NIDL_NAMEPREVDECLAT,
 			       identifier_text, filename,
 			       tag_type_node_ptr->fe_info->source_line, NULL);
                 }
                 else
-                    log_error (nidl_yylineno, NIDL_NAMEALRDEC,
+                    log_error (location->lineno, NIDL_NAMEALRDEC,
 			       identifier_text, NULL);
 
                 /* recovery is to return a bogus type node */
-                tag_type_node_ptr = AST_type_node(AST_structure_k);
+                tag_type_node_ptr = AST_type_node(location, AST_structure_k);
                 AST_SET_DEF_AS_TAG(tag_type_node_ptr);
             }
         }
@@ -474,7 +439,7 @@ AST_type_n_t *AST_structure_node
      * code.  We cannot mark this type as complete because then copies of this
      * tag would not be check for self_pointing types.
      */
-    type_node_ptr = AST_type_node(AST_structure_k);
+    type_node_ptr = AST_type_node(location, AST_structure_k);
     type_node_ptr->type_structure.structure = structure_node_ptr;
 
     /* Fill in the FE info so we can find the [def_as_tag] node from the type node */
@@ -518,16 +483,10 @@ AST_type_n_t *AST_structure_node
  */
 
 AST_arm_n_t *AST_label_arm
-#ifdef PROTO
 (
     AST_arm_n_t *member,
     AST_case_label_n_t *case_labels
 )
-#else
-(member, case_labels)
-    AST_arm_n_t *member;
-    AST_case_label_n_t *case_labels;
-#endif
 {
     /*
      * Fill in the fields of the arm node which identifies the list of values
@@ -553,14 +512,10 @@ AST_arm_n_t *AST_label_arm
  */
 
 AST_case_label_n_t *AST_case_label_node
-#ifdef PROTO
 (
+    parser_location_p location,
     AST_constant_n_t *case_label
 )
-#else
-(case_label)
-    AST_constant_n_t *case_label;
-#endif
 {
     AST_case_label_n_t *case_label_node;
 
@@ -575,7 +530,7 @@ AST_case_label_n_t *AST_case_label_node
     /*
      * Set source information
      */
-    ASTP_set_fe_info (&case_label_node->fe_info, fe_case_label_n_k);
+    ASTP_set_fe_info (location, &case_label_node->fe_info, fe_case_label_n_k);
 
     /*
      * Return the case node
@@ -595,11 +550,9 @@ AST_case_label_n_t *AST_case_label_node
  */
 
 AST_case_label_n_t *AST_default_case_label_node
-#ifdef PROTO
-(void)
-#else
-()
-#endif
+(
+    parser_location_p location
+)
 {
     AST_case_label_n_t *case_label_node;
 
@@ -608,7 +561,7 @@ AST_case_label_n_t *AST_default_case_label_node
      * value and set the default_label flag to identify this as a
      * default case label.
      */
-    case_label_node = AST_case_label_node(NULL);
+    case_label_node = AST_case_label_node(location, NULL);
     case_label_node->default_label = TRUE;
     return case_label_node;
 }
@@ -627,22 +580,14 @@ AST_case_label_n_t *AST_default_case_label_node
  *
  */
 AST_type_n_t *AST_disc_union_node
-#ifdef PROTO
 (
+    parser_location_p location,
     NAMETABLE_id_t identifier,
     NAMETABLE_id_t union_name,
     NAMETABLE_id_t disc_name,
     AST_type_n_t *disc_type,
     AST_arm_n_t *arm_list
 )
-#else
-(identifier, union_name, disc_name, disc_type, arm_list)
-    NAMETABLE_id_t identifier;
-    NAMETABLE_id_t union_name;
-    NAMETABLE_id_t disc_name;
-    AST_type_n_t *disc_type;
-    AST_arm_n_t *arm_list;
-#endif
 {
     AST_disc_union_n_t  *disc_union_node_ptr;   /* disc_union */
     AST_type_n_t        *type_node_ptr;         /* Type node for disc_union */
@@ -657,7 +602,7 @@ AST_type_n_t *AST_disc_union_node
     disc_union_node_ptr->discrim_name = disc_name;
     disc_union_node_ptr->discrim_type = disc_type;
     disc_union_node_ptr->arms = arm_list;
-    ASTP_set_fe_info (&disc_union_node_ptr->fe_info, fe_disc_union_n_k);
+    ASTP_set_fe_info (location, &disc_union_node_ptr->fe_info, fe_disc_union_n_k);
 
 
     /*
@@ -682,7 +627,7 @@ AST_type_n_t *AST_disc_union_node
             /*
              * First reference, so allocate a new type.
              */
-            tag_type_node_ptr = AST_type_node(AST_disc_union_k);
+            tag_type_node_ptr = AST_type_node(location, AST_disc_union_k);
 
             /*
              * Set up a name binding such that we can reference this union by
@@ -690,7 +635,7 @@ AST_type_n_t *AST_disc_union_node
              * defined_as_tag flag should be set to true.
              */
             AST_SET_DEF_AS_TAG(tag_type_node_ptr);
-            ASTP_add_tag_binding(identifier, tag_type_node_ptr);
+            ASTP_add_tag_binding(location, identifier, tag_type_node_ptr);
             ASTP_save_tag_ref(identifier, AST_disc_union_k, tag_type_node_ptr);
             tag_type_node_ptr->type_structure.disc_union = disc_union_node_ptr;
         }
@@ -701,7 +646,7 @@ AST_type_n_t *AST_disc_union_node
             {
                 char const *identifier_text; /* place to receive the identifier text */
                 NAMETABLE_id_to_string (identifier, &identifier_text);
-                log_error (nidl_yylineno, NIDL_BADTAGREF, identifier_text,
+                log_error (location->lineno, NIDL_BADTAGREF, identifier_text,
 			   NULL);
 
                 /* State where the name was previously declared, if known */
@@ -710,13 +655,13 @@ AST_type_n_t *AST_disc_union_node
                 {
                     char const *filename;             /* place to receive the filename text pointer */
                     STRTAB_str_to_string(tag_type_node_ptr->fe_info->file, &filename);
-		    log_error (nidl_yylineno, NIDL_NAMEPREVDECLAT,
+		    log_error (location->lineno, NIDL_NAMEPREVDECLAT,
 			       identifier_text, filename,
 			       tag_type_node_ptr->fe_info->source_line, NULL);
                 }
 
                 /* recovery is to return a bogus type node */
-                tag_type_node_ptr = AST_type_node(AST_disc_union_k);
+                tag_type_node_ptr = AST_type_node(location, AST_disc_union_k);
                 AST_SET_DEF_AS_TAG(tag_type_node_ptr);
             }
             else if (tag_type_node_ptr->type_structure.disc_union != NULL)
@@ -730,16 +675,16 @@ AST_type_n_t *AST_disc_union_node
                 {
                     char const *filename; /* place to receive the filename text pointer */
                     STRTAB_str_to_string(tag_type_node_ptr->fe_info->file, &filename);
-		    log_error (nidl_yylineno, NIDL_NAMEPREVDECLAT,
+		    log_error (location->lineno, NIDL_NAMEPREVDECLAT,
 			       identifier_text, filename,
 			       tag_type_node_ptr->fe_info->source_line, NULL);
                 }
                 else
-                    log_error (nidl_yylineno, NIDL_NAMEALRDEC,
+                    log_error (location->lineno, NIDL_NAMEALRDEC,
 			       identifier_text, NULL);
 
                 /* recovery is to return a bogus type node */
-                tag_type_node_ptr = AST_type_node(AST_disc_union_k);
+                tag_type_node_ptr = AST_type_node(location, AST_disc_union_k);
                 AST_SET_DEF_AS_TAG(tag_type_node_ptr);
             }
         }
@@ -752,7 +697,7 @@ AST_type_n_t *AST_disc_union_node
      * code.  We cannot mark this type as complete because then copies of this
      * tag would not be check for self_pointing types.
      */
-    type_node_ptr = AST_type_node(AST_disc_union_k);
+    type_node_ptr = AST_type_node(location, AST_disc_union_k);
     type_node_ptr->type_structure.disc_union = disc_union_node_ptr;
 
     /* Fill in the FE info so we can find the [def_as_tag] node from the type node */
@@ -798,18 +743,12 @@ AST_type_n_t *AST_disc_union_node
  */
 
 AST_arm_n_t *AST_arm_node
-#ifdef PROTO
 (
+    parser_location_p location,
     NAMETABLE_id_t name,
     AST_case_label_n_t *label,
     AST_type_n_t *type
 )
-#else
-(name, label, type)
-    NAMETABLE_id_t name;
-    AST_case_label_n_t *label;
-    AST_type_n_t *type;
-#endif
 {
     AST_arm_n_t * arm_node_ptr;
 
@@ -825,7 +764,7 @@ AST_arm_n_t *AST_arm_node
     /*
      * Set source information
      */
-    ASTP_set_fe_info (&arm_node_ptr->fe_info, fe_arm_n_k);
+    ASTP_set_fe_info (location, &arm_node_ptr->fe_info, fe_arm_n_k);
 
 
     /*
@@ -833,7 +772,7 @@ AST_arm_n_t *AST_arm_node
      * is already declared in this scope.
      */
     if (name != NAMETABLE_NIL_ID)
-        ASTP_add_name_binding (name, arm_node_ptr);
+        ASTP_add_name_binding (location, name, arm_node_ptr);
 
 
     /*
@@ -851,15 +790,11 @@ AST_arm_n_t *AST_arm_node
  *  a structure.
  */
 
-static AST_field_n_t * AST_field_node
-#ifdef PROTO
+AST_field_n_t * AST_field_node
 (
+    parser_location_p	location,
     NAMETABLE_id_t field_name
 )
-#else
-(field_name)
-    NAMETABLE_id_t field_name;
-#endif
 {
     AST_field_n_t * field_node_ptr;
 
@@ -873,14 +808,14 @@ static AST_field_n_t * AST_field_node
     /*
      * Set source information
      */
-    ASTP_set_fe_info (&field_node_ptr->fe_info, fe_field_n_k);
+    ASTP_set_fe_info (location, &field_node_ptr->fe_info, fe_field_n_k);
 
 
     /*
      * Bind field name to the field node, give an error if it
      * is already declared in this scope
      */
-    ASTP_add_name_binding (field_name, field_node_ptr);
+    ASTP_add_name_binding (location, field_name, field_node_ptr);
 
     /*
      * Return the new field node
@@ -901,18 +836,12 @@ static AST_field_n_t * AST_field_node
  */
 
 AST_field_n_t *AST_declarators_to_fields
-#ifdef PROTO
 (
+    parser_location_p    location,
     ASTP_declarator_n_t *declarators_ptr,
     AST_type_n_t        *type_ptr,
     ASTP_attributes_t   *attributes
 )
-#else
-(declarators_ptr, type_ptr, attributes)
-    ASTP_declarator_n_t *declarators_ptr;
-    AST_type_n_t *type_ptr;
-    ASTP_attributes_t   *attributes;
-#endif
 {
     AST_field_n_t * field_list = NULL;
     AST_field_n_t * new_field;
@@ -925,10 +854,10 @@ AST_field_n_t *AST_declarators_to_fields
      */
     for (dp = declarators_ptr; dp; dp = dp->next)
     {
-        new_field = AST_field_node (dp->name);
-        new_field->type = AST_propagate_type(type_ptr, declarators_ptr,
-                                             attributes,
-                                             (ASTP_node_t *)new_field);
+        new_field = AST_field_node (location, dp->name);
+        new_field->type = AST_propagate_type(location,
+				type_ptr, declarators_ptr, attributes,
+				(ASTP_node_t *)new_field);
 
         /* Disallow indirection [attribute(*field)] */
         if (attributes != NULL)
@@ -942,14 +871,14 @@ AST_field_n_t *AST_declarators_to_fields
             }
         }
 
-        new_field->field_attrs = AST_set_field_attrs(attributes,
+        new_field->field_attrs = AST_set_field_attrs(location, attributes,
                 (ASTP_node_t *)new_field, new_field->type);
 
-        AST_set_flags(&new_field->flags, (ASTP_node_t *)new_field, attributes);
+        AST_set_flags(location, &new_field->flags, (ASTP_node_t *)new_field, attributes);
         field_list = (AST_field_n_t *)AST_concat_element(
                 (ASTP_node_t *)field_list, (ASTP_node_t *)new_field);
 
-        ASTP_validate_forward_ref(new_field->type);
+        ASTP_validate_forward_ref(location, new_field->type);
     }
 
 
@@ -975,18 +904,12 @@ AST_field_n_t *AST_declarators_to_fields
  */
 
 AST_arm_n_t *AST_declarator_to_arm
-#ifdef PROTO
 (
+    parser_location_p location,
     AST_type_n_t *type_ptr,
     ASTP_declarator_n_t *declarator,
     ASTP_attributes_t   *attributes
 )
-#else
-(type_ptr, declarator, attributes)
-    AST_type_n_t *type_ptr;
-    ASTP_declarator_n_t *declarator;
-    ASTP_attributes_t   *attributes;
-#endif
 {
     AST_arm_n_t * arm_list = NULL;
     AST_arm_n_t * new_arm;
@@ -995,20 +918,22 @@ AST_arm_n_t *AST_declarator_to_arm
 
     if (declarator == NULL)
     {
-        arm_list = AST_arm_node(NAMETABLE_NIL_ID, NULL, NULL);
+        arm_list = AST_arm_node(location, NAMETABLE_NIL_ID, NULL, NULL);
         if (ASTP_TEST_ATTR(attributes, ASTP_DEFAULT))
         {
             if (ASTP_TEST_ATTR(attributes, ASTP_CASE))
             {
                 ASTP_attr_flag_t attr1 = ASTP_CASE;
                 ASTP_attr_flag_t attr2 = ASTP_DEFAULT;
-                log_error(nidl_yylineno, NIDL_CONFLICTATTR,
+                log_error(location->lineno, NIDL_CONFLICTATTR,
                       KEYWORDS_lookup_text(AST_attribute_to_token(&attr1)),
                       KEYWORDS_lookup_text(AST_attribute_to_token(&attr2)),
 		      NULL);
             }
             else
-                arm_list->labels = AST_default_case_label_node();
+	    {
+                arm_list->labels = AST_default_case_label_node(location);
+	    }
         }
         if (ASTP_TEST_ATTR(attributes, ASTP_CASE))
         {
@@ -1023,7 +948,7 @@ AST_arm_n_t *AST_declarator_to_arm
      * appending them to the list of arm nodes.
      */
     for (dp = declarator; dp; dp = dp->next) {
-        new_arm = AST_arm_node (dp->name,NULL,NULL);
+        new_arm = AST_arm_node (location, dp->name,NULL,NULL);
         /*
          * Process the union arm attributes for non-encapsulated unions.
          */
@@ -1033,13 +958,15 @@ AST_arm_n_t *AST_declarator_to_arm
             {
                 ASTP_attr_flag_t attr1 = ASTP_CASE;
                 ASTP_attr_flag_t attr2 = ASTP_DEFAULT;
-                log_error(nidl_yylineno, NIDL_CONFLICTATTR,
+                log_error(location->lineno, NIDL_CONFLICTATTR,
                       KEYWORDS_lookup_text(AST_attribute_to_token(&attr1)),
                       KEYWORDS_lookup_text(AST_attribute_to_token(&attr2)),
 		      NULL);
             }
             else
-                new_arm->labels = AST_default_case_label_node();
+	    {
+                new_arm->labels = AST_default_case_label_node(location);
+	    }
         }
         if (ASTP_TEST_ATTR(attributes, ASTP_CASE))
         {
@@ -1048,10 +975,10 @@ AST_arm_n_t *AST_declarator_to_arm
         }
         /* Clear the attributes since they do not appear in the AST. */
         ASTP_CLR_ATTR(attributes, ASTP_CASE | ASTP_DEFAULT);
-        new_arm->type = AST_propagate_type(type_ptr, declarator,
-                                             attributes,
-                                            (ASTP_node_t *)new_arm);
-        AST_set_flags(&new_arm->flags, (ASTP_node_t *)new_arm, attributes);
+        new_arm->type = AST_propagate_type(location,
+				    type_ptr, declarator, attributes,
+				    (ASTP_node_t *)new_arm);
+        AST_set_flags(location, &new_arm->flags, (ASTP_node_t *)new_arm, attributes);
 
         /*
          *  If the union arm is a pointer with the string attribute, generated
@@ -1060,14 +987,14 @@ AST_arm_n_t *AST_declarator_to_arm
         if (AST_STRING_SET(new_arm) && new_arm->type &&
             new_arm->type->kind == AST_pointer_k)
         {
-            ASTP_set_array_rep_type(new_arm->type,
+            ASTP_set_array_rep_type(location, new_arm->type,
                 new_arm->type->type_structure.pointer->pointee_type,
                 TRUE);
         }
 
         arm_list = (AST_arm_n_t *)AST_concat_element(
                 (ASTP_node_t *)arm_list, (ASTP_node_t *)new_arm);
-        ASTP_validate_forward_ref(new_arm->type);
+        ASTP_validate_forward_ref(location, new_arm->type);
     }
 
 
@@ -1094,16 +1021,11 @@ AST_arm_n_t *AST_declarator_to_arm
  */
 
 AST_type_n_t *AST_type_from_tag
-#ifdef PROTO
 (
+    parser_location_p location,
     AST_type_k_t kind,
     NAMETABLE_id_t identifier
 )
-#else
-(kind, identifier)
-    AST_type_k_t kind;
-    NAMETABLE_id_t identifier;
-#endif
 {
     AST_type_n_t        *tag_type_node_ptr;     /* Type node for tag */
 
@@ -1118,7 +1040,7 @@ AST_type_n_t *AST_type_from_tag
         {
             char const *identifier_text; /* place to receive the identifier text */
             NAMETABLE_id_to_string (identifier, &identifier_text);
-            log_error (nidl_yylineno, NIDL_BADTAGREF, identifier_text, NULL);
+            log_error (location->lineno, NIDL_BADTAGREF, identifier_text, NULL);
 
             /* State where the name was previously declared, if known */
             if ((tag_type_node_ptr->fe_info->source_line != 0) &&
@@ -1126,13 +1048,13 @@ AST_type_n_t *AST_type_from_tag
             {
                 char const *filename;         /* place to receive the filename text pointer */
                 STRTAB_str_to_string(tag_type_node_ptr->fe_info->file, &filename);
-                log_error (nidl_yylineno, NIDL_NAMEPREVDECLAT, identifier_text,
+                log_error (location->lineno, NIDL_NAMEPREVDECLAT, identifier_text,
                         filename, tag_type_node_ptr->fe_info->source_line,
 			NULL);
             }
 
             /* recovery is to return a bogus type node */
-            tag_type_node_ptr = AST_type_node(kind);
+            tag_type_node_ptr = AST_type_node(location, kind);
             AST_SET_DEF_AS_TAG(tag_type_node_ptr);
         }
     }
@@ -1140,7 +1062,7 @@ AST_type_n_t *AST_type_from_tag
         /*
          * Allocate the type node for this tag
          */
-        tag_type_node_ptr = AST_type_node (kind);
+        tag_type_node_ptr = AST_type_node (location, kind);
         AST_SET_DEF_AS_TAG(tag_type_node_ptr);
         tag_type_node_ptr->type_structure.structure = NULL;
 
@@ -1157,7 +1079,7 @@ AST_type_n_t *AST_type_from_tag
          * Bind this type node to the tag so further references to it will
          * resolve to this instance of the type node.
          */
-        ASTP_add_tag_binding(identifier,tag_type_node_ptr);
+        ASTP_add_tag_binding(location, identifier,tag_type_node_ptr);
      }
 
 
@@ -1193,14 +1115,10 @@ AST_type_n_t *AST_type_from_tag
  *
  */
 void ASTP_patch_tag_references
-#ifdef PROTO
 (
+    parser_location_p	location,
     AST_interface_n_t *interface_node_ptr
 )
-#else
-(interface_node_ptr)
-    AST_interface_n_t *interface_node_ptr;
-#endif
 {
     AST_type_n_t *type_node_ptr;
     ASTP_tag_ref_n_t *tag_ref_node_ptr;
@@ -1263,7 +1181,7 @@ void ASTP_patch_tag_references
                 AST_structure_n_t *struct_p;
                 struct_p = type_node_ptr->type_structure.structure =
                     NEW (AST_structure_n_t);
-                ASTP_set_fe_info (&struct_p->fe_info, fe_structure_n_k);
+                ASTP_set_fe_info (location, &struct_p->fe_info, fe_structure_n_k);
                 struct_p->tag_name = tag_ref_node_ptr->name;
                 continue;
             }
@@ -1293,7 +1211,7 @@ void ASTP_patch_tag_references
                    /* allow for opaque type as above */
                 && tag_ref_node_ptr->type_node_ptr->type_structure.structure)
             {
-                AST_find_self_reference(interface_node_ptr,
+                AST_find_self_reference(location, interface_node_ptr,
                         NULL, tag_ref_node_ptr->type_node_ptr);
             }
         }
@@ -1309,7 +1227,7 @@ void ASTP_patch_tag_references
             if (!AST_DEF_AS_TAG_SET(ASTP_tag_ref_list->type_node_ptr) &&
                 !AST_SELF_POINTER_SET(ASTP_tag_ref_list->type_node_ptr))
             {
-                AST_find_self_reference(interface_node_ptr,
+                AST_find_self_reference(location, interface_node_ptr,
                         NULL, ASTP_tag_ref_list->type_node_ptr);
 
                 /*
@@ -1320,7 +1238,7 @@ void ASTP_patch_tag_references
                 tp = ASTP_tag_ref_list->type_node_ptr->fe_info->tag_ptr;
                 if ((tp != NULL) && AST_SELF_POINTER_SET(tp))
                 {
-                    ASTP_process_sp_type(interface_node_ptr, ASTP_tag_ref_list->type_node_ptr);
+                    ASTP_process_sp_type(location, interface_node_ptr, ASTP_tag_ref_list->type_node_ptr);
                 }
             }
 
@@ -1351,18 +1269,12 @@ void ASTP_patch_tag_references
  */
 
 static int ASTP_check_chain
-#ifdef PROTO
 (
+    parser_location_p location,
     AST_interface_n_t *interface_node_ptr,
     AST_type_p_n_t *active_type_chain,
     AST_type_n_t *current_type_node_ptr
 )
-#else
-(interface_node_ptr, active_type_chain, current_type_node_ptr)
-    AST_interface_n_t *interface_node_ptr;
-    AST_type_p_n_t *active_type_chain;
-    AST_type_n_t *current_type_node_ptr;
-#endif
 {
     AST_type_p_n_t  *tp;                /* pointer into current chain */
     int             found;              /* current node found on active chain */
@@ -1393,7 +1305,7 @@ static int ASTP_check_chain
     if (found)
     {
         for (tp = active_type_chain; tp; tp = tp->next)
-            ASTP_process_sp_type(interface_node_ptr, tp->type);
+            ASTP_process_sp_type(location, interface_node_ptr, tp->type);
     }
 
     return found;
@@ -1412,18 +1324,12 @@ static int ASTP_check_chain
  */
 
 static void AST_find_self_reference
-#ifdef PROTO
 (
+    parser_location_p location,
     AST_interface_n_t *interface_node_ptr,
     AST_type_p_n_t *active_type_chain,
     AST_type_n_t *current_type_node_ptr
 )
-#else
-(interface_node_ptr, active_type_chain, current_type_node_ptr)
-    AST_interface_n_t *interface_node_ptr;
-    AST_type_p_n_t *active_type_chain;
-    AST_type_n_t *current_type_node_ptr;
-#endif
 {
     AST_type_p_n_t  link_node;
     AST_field_n_t   *fp;
@@ -1435,7 +1341,7 @@ static void AST_find_self_reference
      * it and all types that follow it in the active type chain are self
      * pointing.
      */
-     if (ASTP_check_chain(interface_node_ptr, active_type_chain,
+     if (ASTP_check_chain(location, interface_node_ptr, active_type_chain,
                         current_type_node_ptr)) return;
 
 
@@ -1452,7 +1358,7 @@ static void AST_find_self_reference
     switch (current_type_node_ptr->kind)
     {
         case AST_pointer_k:
-            AST_find_self_reference(interface_node_ptr, &link_node,
+            AST_find_self_reference(location, interface_node_ptr, &link_node,
                 current_type_node_ptr->type_structure.pointer->pointee_type);
             break;
         case AST_structure_k:
@@ -1476,7 +1382,7 @@ static void AST_find_self_reference
             /* Loop through each field, checking type for self references */
             for (fp = current_type_node_ptr->type_structure.structure->fields;
                 fp; fp = fp->next)
-                AST_find_self_reference(interface_node_ptr,
+                AST_find_self_reference(location, interface_node_ptr,
                                         tag_link_node_ptr, fp->type);
             break;
             }
@@ -1504,14 +1410,14 @@ static void AST_find_self_reference
             {
                 if (ap->type != NULL)
                 {
-                    AST_find_self_reference(interface_node_ptr,
+                    AST_find_self_reference(location, interface_node_ptr,
                                     tag_link_node_ptr, ap->type);
                 }
             }
             break;
             }
         case AST_array_k:
-            AST_find_self_reference(interface_node_ptr, &link_node,
+            AST_find_self_reference(location, interface_node_ptr, &link_node,
                 current_type_node_ptr->type_structure.array->element_type);
             break;
         default:
@@ -1539,16 +1445,11 @@ static void AST_find_self_reference
  */
 
 static void ASTP_process_sp_type
-#ifdef PROTO
 (
+    parser_location_p location,
     AST_interface_n_t *interface_node_ptr,
     AST_type_n_t *type_node_ptr
 )
-#else
-(interface_node_ptr, type_node_ptr)
-    AST_interface_n_t *interface_node_ptr;
-    AST_type_n_t *type_node_ptr;
-#endif
 {
     AST_type_p_n_t *tp_node; /* type pointer node to link on chain */
 
@@ -1570,7 +1471,7 @@ static void ASTP_process_sp_type
      */
     if ((type_node_ptr->kind == AST_pointer_k) &&
         (type_node_ptr->type_structure.pointer->pointee_type->array_rep_type != NULL))
-            ASTP_process_sp_type(interface_node_ptr,
+            ASTP_process_sp_type(location, interface_node_ptr,
                     type_node_ptr->type_structure.pointer->pointee_type->array_rep_type);
 
 
@@ -1604,7 +1505,7 @@ static void ASTP_process_sp_type
      * Create a new type pointer node and link it on the sp_types list
      * of the interface node.
      */
-    tp_node = AST_type_ptr_node();
+    tp_node = AST_type_ptr_node(location);
     tp_node->type = type_node_ptr;
     FE_SET(type_node_ptr->fe_info->flags,FE_SELF_POINTING);
 

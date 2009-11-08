@@ -3,6 +3,7 @@
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2009 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -416,19 +417,64 @@ typedef struct ASTP_parameter_count_t
 } ASTP_parameter_count_t;
 
 
-extern boolean ASTP_expr_is_simple(AST_exp_n_t * exp);
-extern AST_exp_n_t * AST_expression(unsigned long exp_type, AST_exp_n_t * oper1, AST_exp_n_t * oper2, AST_exp_n_t * oper3);
-extern AST_exp_n_t * AST_exp_boolean_constant(boolean value);
-extern AST_exp_n_t * AST_exp_null_constant(void);
-extern AST_exp_n_t * AST_exp_string_constant(STRTAB_str_t string);
-extern AST_exp_n_t * AST_exp_identifier(NAMETABLE_id_t name);
-extern AST_exp_n_t * AST_exp_char_constant(char value);
-extern AST_exp_n_t * AST_exp_integer_constant(long value, int int_signed);
-extern AST_constant_n_t * AST_constant_from_exp(AST_exp_n_t * exp);
-extern boolean ASTP_evaluate_expr(AST_exp_n_t * exp_node, boolean constant_only);
-extern void ASTP_free_exp(AST_exp_n_t * exp);
-extern long ASTP_expr_integer_value(AST_exp_n_t * exp);
+boolean ASTP_expr_is_simple(
+    parser_location_p location,
+    AST_exp_n_t * exp
+);
 
+AST_exp_n_t * AST_expression(
+    parser_location_p location,
+    unsigned long exp_type,
+    AST_exp_n_t * oper1,
+    AST_exp_n_t * oper2,
+    AST_exp_n_t * oper3
+);
+
+boolean ASTP_evaluate_expr(
+    parser_location_p location,
+    AST_exp_n_t * exp_node,
+    boolean constant_only
+);
+
+long ASTP_expr_integer_value(
+    parser_location_p location,
+    AST_exp_n_t * exp
+);
+
+AST_exp_n_t * AST_exp_boolean_constant(
+    parser_location_p location,
+    boolean value
+);
+
+AST_exp_n_t * AST_exp_null_constant(
+    parser_location_p location
+);
+
+AST_exp_n_t * AST_exp_string_constant(
+    parser_location_p location,
+    STRTAB_str_t string
+);
+
+AST_exp_n_t * AST_exp_identifier(
+    parser_location_p location,
+    NAMETABLE_id_t name
+);
+
+AST_exp_n_t * AST_exp_char_constant(
+    parser_location_p location,
+    char value
+);
+
+AST_exp_n_t * AST_exp_integer_constant(
+    parser_location_p location,
+    long value,
+    int int_signed
+);
+
+AST_constant_n_t * AST_constant_from_exp(
+    parser_location_p location,
+    AST_exp_n_t * exp
+);
 
 /*
  *  Interface Attributes
@@ -474,7 +520,6 @@ extern ASTP_tag_ref_n_t *ASTP_tag_ref_list;
  *  Control for parser
  */
 extern boolean ASTP_parsing_main_idl;   /* True when parsing the main idl */
-extern int  yylineno;                   /* Current line number */
 
 /*
  *  Builtin in constants
@@ -508,582 +553,473 @@ extern NAMETABLE_id_t   ASTP_tagged_union_id;
  * Function prototypes exported by ASTP_{COM/GBL/DMP/CPX/SIM}.C
  */
 ASTP_type_attr_n_t *AST_array_bound_info(
-#ifdef PROTO
+    parser_location_p location,
     NAMETABLE_id_t name,
     ASTP_attr_k_t kind,
     boolean is_pointer
-#endif
 );
+
 ASTP_type_attr_n_t * AST_array_bound_from_expr(
-#ifdef PROTO
-		  AST_exp_n_t * exp,
-		  ASTP_attr_k_t kind
-#endif
+    parser_location_p location,
+    AST_exp_n_t * exp,
+    ASTP_attr_k_t kind
 );
+
 ASTP_type_attr_n_t * AST_range_from_expr(
-#ifdef PROTO
-		  AST_exp_n_t * min_exp,
-		  AST_exp_n_t * max_exp
-#endif
+    parser_location_p location,
+    AST_exp_n_t * min_exp,
+    AST_exp_n_t * max_exp
 );
+
 void AST_capture_operation_attrs(
-#ifdef PROTO
     void
-#endif
 );
 
 AST_constant_n_t *AST_clone_constant(
-#ifdef PROTO
+    parser_location_p location,
     AST_constant_n_t *constant_node_p
-#endif
 );
 
 ASTP_node_t *AST_concat_element(
-#ifdef PROTO
     ASTP_node_t *list_head,
     ASTP_node_t *element
-#endif
 );
 
 AST_constant_n_t *AST_constant_node(
-#ifdef PROTO
+    parser_location_p location,
     AST_constant_k_t kind
-#endif
 );
 
 ASTP_declarator_n_t *AST_declarator_node(
-#ifdef PROTO
     NAMETABLE_id_t name
-#endif
 );
 
 void AST_declarator_operation(
-#ifdef PROTO
     ASTP_declarator_n_t     *declarator,
     AST_type_k_t            op_kind,
     ASTP_node_t             *op_info,
     int                     pointer_count
-#endif
 );
 
 AST_parameter_n_t *AST_declarator_to_param(
-#ifdef PROTO
+    parser_location_p location,
     ASTP_attributes_t   *attributes,
     AST_type_n_t *type,
     ASTP_declarator_n_t *declarator
-#endif
 );
 
 AST_type_p_n_t *AST_declarators_to_types(
-#ifdef PROTO
- AST_interface_n_t * ifp,
+    parser_location_p   ploc,
+    AST_interface_n_t * ifp,
     AST_type_n_t        *type_ptr,
     ASTP_declarator_n_t *declarators_ptr,
     ASTP_attributes_t   *attributes
-#endif
 );
 
 AST_export_n_t *AST_export_node(
-#ifdef PROTO
+    parser_location_p location,
     ASTP_node_t *export_ptr,
     AST_export_k_t kind
-#endif
 );
 
 AST_cpp_quote_n_t *AST_cpp_quote_node(
-#ifdef PROTO
+    parser_location_p location,
     STRTAB_str_t text
-#endif
 );
 
 AST_include_n_t *AST_include_node(
-#ifdef PROTO
+    parser_location_p location,
     STRTAB_str_t include_file,
     STRTAB_str_t include_file_name
-#endif
 );
 
 AST_import_n_t *AST_import_node(
-#ifdef PROTO
+    parser_location_p location,
     STRTAB_str_t imported_file
-#endif
 );
 
 AST_exception_n_t *AST_exception_node(
-#ifdef PROTO
+    parser_location_p location,
     NAMETABLE_id_t  excep_name
-#endif
 );
 
 AST_name_n_t *AST_name_node(
-#ifdef PROTO
     NAMETABLE_id_t  name
-#endif
 );
 
 void AST_init(
-#ifdef PROTO
-        void
-#endif
+    parser_location_p location
 );
 
 AST_constant_n_t *AST_integer_constant(
-#ifdef PROTO
+    parser_location_p location,
     long int value
-#endif
 );
 
 AST_interface_n_t *AST_interface_node(
-#ifdef PROTO
-      void
-#endif
+    parser_location_p location
 );
 
 void AST_finish_interface_node(
-#ifdef PROTO
+    parser_location_p	location,
     AST_interface_n_t *interface_node
-#endif
 );
 
 AST_operation_n_t *AST_operation_node(
-#ifdef PROTO
+    parser_location_p location,
     AST_type_n_t *result_type,
     ASTP_declarator_n_t *declarator,
     ASTP_attributes_t   *attributes
-#endif
 );
 
 AST_parameter_n_t * AST_parameter_node(
-#ifdef PROTO
+    parser_location_p location,
     NAMETABLE_id_t identifier
-#endif
 );
 
 AST_rep_as_n_t *AST_represent_as_node(
-#ifdef PROTO
+    parser_location_p location,
     NAMETABLE_id_t name
-#endif
 );
 
 AST_cs_char_n_t *AST_cs_char_node(
-#ifdef PROTO
+    parser_location_p location,
     NAMETABLE_id_t name
-#endif
 );
 
 AST_type_n_t *AST_set_type_attrs(
-#ifdef PROTO
+    parser_location_p	 location,
     AST_type_n_t        *type_node_ptr,
     ASTP_attributes_t   *attributes
-#endif
 );
 
 void AST_set_ports(
-#ifdef PROTO
     AST_interface_n_t *interface_node_p
-#endif
 );
 
 AST_type_n_t *AST_type_node(
-#ifdef PROTO
+    parser_location_p location,
     AST_type_k_t kind
-#endif
 );
 
 AST_type_p_n_t *AST_type_ptr_node(
-#ifdef PROTO
-    void
-#endif
+    parser_location_p location
 );
 
 AST_export_n_t *AST_types_to_exports(
-#ifdef PROTO
+    parser_location_p   location,
     AST_type_p_n_t *type_p_list
-#endif
 );
 
 
 AST_array_n_t *AST_array_node(
-#ifdef PROTO
+    parser_location_p location,
     AST_type_n_t *element_type_ptr
-#endif
 );
 
 AST_array_index_n_t *AST_array_index_node(
-#ifdef PROTO
+    parser_location_p	location,
     unsigned short array_size
-#endif
 );
 
 
 ASTP_array_index_n_t *ASTP_array_index_node(
-#ifdef PROTO
+    parser_location_p location,
     AST_constant_n_t *lower_bound,
     ASTP_bound_t lower_bound_type,
     AST_constant_n_t *upper_bound,
     ASTP_bound_t upper_bound_type
-#endif
 );
 
 AST_constant_n_t *AST_boolean_constant(
-#ifdef PROTO
+    parser_location_p location,
     boolean value
-#endif
 );
 
 AST_case_label_n_t *AST_case_label_node(
-#ifdef PROTO
+    parser_location_p location,
     AST_constant_n_t *case_label
-#endif
 );
 
 AST_constant_n_t *AST_char_constant(
-#ifdef PROTO
+    parser_location_p location,
     char value
-#endif
 );
 
 
 AST_arm_n_t *AST_declarator_to_arm(
-#ifdef PROTO
+    parser_location_p location,
     AST_type_n_t *type_ptr,
     ASTP_declarator_n_t *declarator,
     ASTP_attributes_t   *attributes
-#endif
 );
 
 AST_field_n_t *AST_declarators_to_fields(
-#ifdef PROTO
+    parser_location_p    location,
     ASTP_declarator_n_t *declarators_ptr,
     AST_type_n_t        *type_ptr,
     ASTP_attributes_t   *attributes
-#endif
 );
 
 AST_case_label_n_t *AST_default_case_label_node(
-#ifdef PROTO
-    void
-#endif
+    parser_location_p location
 );
 
 AST_type_n_t *AST_disc_union_node(
-#ifdef PROTO
+    parser_location_p location,
     NAMETABLE_id_t tag_name,
     NAMETABLE_id_t union_name,
     NAMETABLE_id_t disc_name,
     AST_type_n_t *disc_type,
     AST_arm_n_t *arms_list
-#endif
 );
 
 AST_type_n_t *AST_enumerator_node(
-#ifdef PROTO
+    parser_location_p location,
     AST_constant_n_t *constant_list,
     AST_type_k_t size
-#endif
 );
 
 AST_constant_n_t *AST_enum_constant(
+    parser_location_p location,
     NAMETABLE_id_t identifier,
-	 AST_exp_n_t * exp
+    AST_exp_n_t * exp
 );
 
 
 AST_constant_n_t *AST_finish_constant_node(
-#ifdef PROTO
+    parser_location_p location,
     AST_constant_n_t *constant_ptr,
     ASTP_declarator_n_t *declarator,
     AST_type_n_t *type_ptr
-#endif
 );
 
 AST_field_attr_n_t *AST_field_attr_node(
-#ifdef PROTO
-    void
-#endif
+    parser_location_p location
 );
 
 AST_field_ref_n_t *AST_field_ref_node(
-#ifdef PROTO
+    parser_location_p location,
     unsigned short dimension
-#endif
 );
 
 AST_operation_n_t *AST_function_node(
-#ifdef PROTO
-    AST_type_n_t          *result_type,
-    NAMETABLE_id_t        op_name,
-    AST_parameter_n_t *parameters
-#endif
+    parser_location_p	location,
+    AST_type_n_t       *result_type,
+    NAMETABLE_id_t      op_name,
+    AST_parameter_n_t  *parameters
 );
 
 AST_arm_n_t *AST_label_arm(
-#ifdef PROTO
     AST_arm_n_t *member,
     AST_case_label_n_t *case_labels
-#endif
 );
 
 AST_type_n_t *AST_lookup_integer_type_node(
-#ifdef PROTO
       AST_type_k_t    int_size,
       int             int_signed
-#endif
 );
 
 AST_type_n_t *AST_lookup_type_node(
-#ifdef PROTO
     AST_type_k_t kind
-#endif
 );
 
 AST_type_n_t *AST_lookup_named_type(
-#ifdef PROTO
+    parser_location_p location,
     NAMETABLE_id_t type_name
-#endif
 );
 
 AST_constant_n_t *AST_named_constant(
-#ifdef PROTO
+    parser_location_p location,
     NAMETABLE_id_t const_name
-#endif
 );
 
 AST_constant_n_t *AST_null_constant(
-#ifdef PROTO
-    void
-#endif
+    parser_location_p location
 );
 
 AST_type_n_t *AST_pipe_node(
-#ifdef PROTO
+    parser_location_p location,
     AST_type_n_t *pipe_type
-#endif
 );
 
 AST_pointer_n_t *AST_pointer_node(
-#ifdef PROTO
+    parser_location_p	 location,
     AST_type_n_t * pointee
-#endif
 );
 
 AST_type_n_t *AST_set_union_arms(
-#ifdef PROTO
     AST_type_n_t *union_type_ptr,
     AST_arm_n_t *member_list
-#endif
 );
 
 AST_constant_n_t *AST_string_constant(
-#ifdef PROTO
+    parser_location_p location,
     STRTAB_str_t value
-#endif
 );
 
 AST_type_n_t *AST_structure_node(
-#ifdef PROTO
+    parser_location_p location,
     AST_field_n_t *field_list,
     NAMETABLE_id_t identifier
-#endif
 );
 
 AST_field_n_t *AST_tag_declarators_to_fields(
-#ifdef PROTO
     ASTP_declarator_n_t *declarators,
     NAMETABLE_id_t      identifier,
     ASTP_attributes_t   *attributes,
     AST_type_k_t        kind
-#endif
 );
 
 AST_type_n_t *AST_type_from_tag(
-#ifdef PROTO
+    parser_location_p location,
     AST_type_k_t kind,
     NAMETABLE_id_t identifier
-#endif
 );
 
 void AST_set_type_boolean_attrs(
-#ifdef PROTO
     AST_type_n_t *type_node
-#endif
 );
 
 void AST_clear_type_attrs(
-#ifdef PROTO
     void
-#endif
 );
 
 boolean AST_lookup_field_attr(
-#ifdef PROTO
     ASTP_attributes_t   *attributes,    /* [in] Attributes - bounds field is */
                                         /*      linked list of field attrs   */
     ASTP_attr_k_t       field_attr      /* [in] Field attribute to look up */
-#endif
 );
 
 AST_field_attr_n_t *AST_set_field_attrs(
-#ifdef PROTO
+    parser_location_p	location,
     ASTP_attributes_t  *attributes,
     ASTP_node_t *parent_node,
     AST_type_n_t *type_node
-#endif
 );
 
 void ASTP_free_declarators(
-#ifdef PROTO
     ASTP_declarator_n_t *declarators_ptr
-#endif
 );
 
 void ASTP_free_simple_list(
-#ifdef PROTO
     ASTP_node_t *list_ptr
-#endif
 );
 
 AST_type_n_t *AST_propagate_type(
-#ifdef PROTO
+    parser_location_p	 location,
     AST_type_n_t *type_node_ptr,
     ASTP_declarator_n_t *declarator_ptr,
     ASTP_attributes_t *attributes,
     ASTP_node_t *parent_node
-#endif
 );
 
 void ASTP_add_name_binding(
-    NAMETABLE_id_t name,
-    void	   *AST_node
+    parser_location_p	location,
+    NAMETABLE_id_t	name,
+    void	       *AST_node
 );
 
 AST_type_n_t *ASTP_chase_ptr_to_kind(
-#ifdef PROTO
     AST_type_n_t *type_node,
     AST_type_k_t kind
-#endif
 );
 
 AST_type_n_t *ASTP_chase_ptr_to_type(
-#ifdef PROTO
     AST_type_n_t *type_node
-#endif
 );
 
 ASTP_node_t *ASTP_lookup_binding(
-#ifdef PROTO
+    parser_location_p	location,
     NAMETABLE_id_t      name,
     fe_node_k_t         node_kind,
     boolean             noforward_ref
-#endif
 );
 
 void ASTP_patch_tag_references(
-#ifdef PROTO
+    parser_location_p	location,
     AST_interface_n_t *interface_node_ptr
-#endif
 );
 
 void ASTP_patch_field_reference(
-#ifdef PROTO
-    void
-#endif
+    parser_location_p	 location
 );
 
 void ASTP_set_fe_info(
+    parser_location_p	location,
     fe_info_t   **fe_info_ptr,
     fe_node_k_t   fe_node_kind
 );
 
 void ASTP_save_tag_ref(
-#ifdef PROTO
     NAMETABLE_id_t      identifier,
     AST_type_k_t        kind,
     AST_type_n_t        *type_node_ptr
-#endif
 );
 
 void ASTP_process_pa_type(
-#ifdef PROTO
     AST_type_n_t *type_node_ptr
-#endif
 );
 
 void AST_set_flags(
-#ifdef PROTO
+    parser_location_p	 location,
     AST_flags_t         *flags,
     ASTP_node_t         *node_ptr,
     ASTP_attributes_t   *attributes
-#endif
 );
 
 long AST_attribute_to_token(
-#ifdef PROTO
     ASTP_attr_flag_t    *attribute
-#endif
 );
 
 AST_arm_n_t *AST_arm_node(
-#ifdef PROTO
+    parser_location_p location,
     NAMETABLE_id_t name,
     AST_case_label_n_t *label,
     AST_type_n_t *type
-#endif
 );
 
 void ASTP_parse_port(
-#ifdef PROTO
       AST_interface_n_t   *interface_p,
       STRTAB_str_t        port_string
-#endif
 );
 
 void ASTP_validate_forward_ref(
-#ifdef PROTO
+    parser_location_p location,
     AST_type_n_t *type
-#endif
 );
 
 NAMETABLE_id_t AST_generate_name(
-#ifdef PROTO
     AST_interface_n_t *int_p,
     const char       *suffix
-#endif
 );
 
 void ASTP_validate_integer(
-#ifdef PROTO
-      AST_exp_n_t *expression
-#endif
+    parser_location_p location,
+    AST_exp_n_t *expression
 );
 
 void KEYWORDS_init(
-#ifdef PROTO
     void
-#endif
 );
 
 const char *KEYWORDS_lookup_text(
-#ifdef PROTO
     long token
-#endif
 );
 
 int KEYWORDS_screen(
-#ifdef PROTO
     const char * identifier,
     NAMETABLE_id_t * id
-#endif
 );
 
 void ASTP_set_array_rep_type
 (
-#ifdef PROTO
+    parser_location_p   location,
     AST_type_n_t        *type_node_ptr,
     AST_type_n_t        *array_base_type,
     boolean             is_varying
-#endif
 );
+
 void ASTP_set_implicit_handle(
 	 AST_interface_n_t   *int_p,
 	 NAMETABLE_id_t type_name,

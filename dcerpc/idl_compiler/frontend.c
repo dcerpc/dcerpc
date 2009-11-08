@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2009 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -59,9 +60,7 @@
 #include <files.h>
 #include <getflags.h>
 #include <propagat.h>
-#include <nidl_y.h>
 #include <message.h>
-#include <flex_bison_support.h>
 
 #define CONFIG_SUFFIX ".acf"
 
@@ -81,19 +80,7 @@
 }
 #endif
 
-extern int yyparse(void);
-
-extern void acf_cleanup(void);
-
-extern void acf_init(
-    boolean     *cmd_opt_arr,   /* [in] Array of command option flags */
-    void        **cmd_val_arr,  /* [in] Array of command option values */
-    char        *acf_file       /* [in] ACF file name */
-);
-
 /* Globals */
-extern int acf_yylineno;
-extern int nidl_yylineno;
 
 /* Local data definitions. */
 
@@ -111,23 +98,30 @@ static FE_import_file_n_t * imported_file_list = NULL;
 extern boolean ASTP_parsing_main_idl;
 
 /*
+ * All the error reporting requires a parser location to access line
+ * numbers, etc. However, the APIs are structured such that they may
+ * invoke parser errors even when we are not in the middle of a parse.
+ * In that case, what's the correct line number? Who knows? Let's make
+ * a dummy location and hope we don't get any errors at the wrong time.
+ *	    -- jpeach
+ */
+
+const parser_location_t empty_parser_location;
+
+/*
 **  i n i t
 **
 **  Frontend-specific initialization.
 */
 
-#ifdef PROTO
 static void FE_init(void)
-#else
-static void FE_init()
-#endif
 {
     saved_cmd_opt = NULL;
     saved_cmd_val = NULL;
 
     KEYWORDS_init();
     NAMETABLE_init();
-    AST_init();
+    AST_init(null_parser_location);
 }
 
 /*
@@ -141,7 +135,6 @@ static void FE_init()
 
 #if defined(CPP)
 static void cpp
-#ifdef PROTO
 (
     char        *cpp_cmd,       /* [in] Base command to invoke cpp */
     char        *cpp_opt,       /* [in] Addtl command options for cpp */
@@ -152,18 +145,6 @@ static void cpp
     char        **idir_list,    /* [in] List of -I directories */
     FILE        **cpp_output    /*[out] File ID of cpp output */
 )
-#else
-(cpp_cmd, cpp_opt, file_name, dst_file_name, def_strings, undef_strings,
-idir_list, cpp_output)
-    char        *cpp_cmd;       /* [in] Command to invoke cpp */
-    char        *cpp_opt;       /* [in] Addtl command options for cpp */
-    char        *file_name;     /* [in] Source full filespec; "" => stdin */
-    char        *dst_file_name; /* [in] Target filespec (VMS) */
-    char        **def_strings;  /* [in] List of #define's for preprocessor */
-    char        **undef_strings;/* [in] List of #undefine's for preprocessor */
-    char        **idir_list;    /* [in] List of -I directories */
-    FILE        **cpp_output;   /*[out] File ID of cpp output */
-#endif
 
 {
 #ifdef VMS
@@ -329,31 +310,16 @@ idir_list, cpp_output)
 */
 
 static boolean parse_acf        /* Returns true on success */
-#ifdef PROTO
 (
     boolean     *cmd_opt,       /* [in] Array of command option flags */
     void        **cmd_val,      /* [in] Array of command option values */
     char        *acf_file       /* [in] ACF full file name */
 )
-#else
-(cmd_opt, cmd_val, acf_file)
-    boolean     *cmd_opt;       /* [in] Array of command option flags */
-    void        **cmd_val;      /* [in] Array of command option values */
-    char        *acf_file;      /* [in] ACF full file name */
-#endif
 
 {
-    extern int acf_yyparse( void);
-
-    extern FILE *acf_yyin;
-    extern int  acf_yynerrs;
-    extern char * acf_yytext;
-
-    FILE        **yyin_sp;              /* Used to save yy pointer variables */
-    int         *yylineno_sp;
-    int         *yynerrs_sp;
-    char        **yytext_sp;
-    char        temp_path_name[max_string_len]; /* Full temp file pathname */
+    FILE *  acf_yyin;
+    char    temp_path_name[max_string_len]; /* Full temp file pathname */
+    void *  acf_parser;
 
     if (cmd_opt[opt_verbose])
         message_print(NIDL_PROCESSACF, acf_file);
@@ -363,38 +329,13 @@ static boolean parse_acf        /* Returns true on success */
     /*
      * lex & yacc intializations
      */
-    acf_yylineno = 1;                       /* Not sure why/if these 3 are needed */
 
-    /*
-     * Hack the yy pointer variables to point at the ACF-specific yy variables.
-     * Then parse the ACF, and restore the yy pointer variable to their
-     * original state.  This hack allows us to share error reporting routines
-     * with the main parser.  See errors.h for details.
-     */
-    yyin_sp     = yyin_p;
-    yylineno_sp = yylineno_p;
-    yynerrs_sp  = yynerrs_p;
-    yytext_sp   = yytext_p;
-
-    yyin_p      = &acf_yyin;
-    yylineno_p  = &acf_yylineno;
-    yynerrs_p   = &acf_yynerrs;
-    yytext_p    = &acf_yytext;
-
-    acf_init(cmd_opt, cmd_val, acf_file);
+    acf_parser = acf_parser_alloc(cmd_opt, cmd_val, acf_file);
 
 #if defined(CPP)
     if (cmd_opt[opt_cpp])
     {
-#ifdef VMS
-        char temp_file_name[max_string_len];
-        ASSERTION(max_string_len > L_tmpnam);
-        FILE_parse(acf_file, (char *)NULL, 0, temp_file_name, sizeof(temp_file_name), (char *)NULL, 0);
-        FILE_form_filespec(temp_file_name, "sys$scratch:", ".acf$tmp",
-                           (char *)NULL, temp_path_name, sizeof(temp_path_name));
-#else
         temp_path_name[0] = '\0';
-#endif
 
         cpp((char *)cmd_val[opt_cpp],
             (char *)cmd_val[opt_cpp_opt],
@@ -410,31 +351,25 @@ static boolean parse_acf        /* Returns true on success */
         /* No cpp, just open source file */
         FILE_open(acf_file, &acf_yyin);
 
-    if (acf_yyparse() != 0 && acf_yynerrs == 0)
-        log_error(acf_yylineno, NIDL_COMPABORT, NULL);
+    acf_parser_input(acf_parser, acf_yyin);
+    if (acf_yyparse(acf_parser) != 0 && acf_yynerrs(acf_parser) == 0)
+    {
+        log_error(acf_yylineno(acf_parser), NIDL_COMPABORT, NULL);
+    }
 
-    acf_cleanup();
 
-#ifndef VMS
     if (cmd_opt[opt_cpp])
         PCLOSE(acf_yyin)
     else
         fclose(acf_yyin);
-#endif
-#ifdef VMS
-    fclose(acf_yyin);
-    if (cmd_opt[opt_cpp])
-        delete(temp_path_name);
-#endif
 
-    yyin_p      = yyin_sp;
-    yylineno_p  = yylineno_sp;
-    yynerrs_p   = yynerrs_sp;
-    yytext_p    = yytext_sp;
-
-    if (acf_yynerrs != 0)
+    if (acf_yynerrs(acf_parser) != 0)
+    {
+	acf_parser_destroy(acf_parser);
         return false;
+    }
 
+    acf_parser_destroy(acf_parser);
     return true;
 }
 
@@ -449,14 +384,9 @@ static boolean parse_acf        /* Returns true on success */
 */
 
 static boolean already_imported
-#ifdef PROTO
 (
     STRTAB_str_t import_path_id      /* The name to check */
 )
-#else
-(import_path_id)
-    STRTAB_str_t import_path_id;
-#endif
 
 {
     char                 new_import_full_fn[max_string_len];
@@ -549,10 +479,8 @@ static boolean parse
     AST_interface_n_t **int_p   /*[out] Ptr to interface node */
 )
 {
-    extern FILE *nidl_yyin;
-    extern int nidl_yynerrs;
+    FILE *nidl_yyin;
     extern char *nidl_yytext;
-    extern int nidl_yyparse(void);
 
     char const  *sf;                            /* Source filespec */
     char        full_path_name[max_string_len]; /* Full source pathname */
@@ -567,6 +495,8 @@ static boolean parse
     boolean     acf_exists;                     /* T => ACF file exists */
     struct stat stat_buf;                       /* File lookup stats */
     int         i=0;
+
+    void *	nidl_parser;
 
     /* One-time saving of command array addresses to static storage. */
     if (saved_cmd_opt == NULL)
@@ -601,15 +531,7 @@ static boolean parse
 #if defined(CPP)
     if (cmd_opt[opt_cpp])
     {
-#ifdef VMS
-        char temp_file_name[max_string_len];
-        ASSERTION(max_string_len > L_tmpnam);
-        FILE_parse(full_path_name, (char *)NULL, 0, temp_file_name, sizeof(temp_file_name), (char *)NULL, 0);
-        FILE_form_filespec(temp_file_name, "sys$scratch:", ".idl$tmp",
-                           (char *)NULL, temp_path_name, sizeof(temp_path_name));
-#else
         temp_path_name[0] = '\0';
-#endif
 
 	/* define the macro describing dceidl compiler (for conditional
 	   constructions) */
@@ -639,20 +561,8 @@ static boolean parse
      */
     set_name_for_errors((full_path_name[0] == '\0') ? "stdin" : full_path_name);
 
-    /*
-     * lex & yacc intializations
-     */
-    nidl_yylineno = 1;
-
-    /*
-     * Hack the yy pointer variables to point at the IDL-specific yy variables
-     * before starting the parse.  This hack allows us to share error reporting
-     * routines with the ACF parser.  See errors.h for details.
-     */
-    yyin_p      = &nidl_yyin;
-    yylineno_p  = &nidl_yylineno;
-    yynerrs_p   = &nidl_yynerrs;
-    yytext_p    = &nidl_yytext;
+    nidl_parser = nidl_parser_alloc(cmd_opt, cmd_val, full_path_name);
+    nidl_parser_input(nidl_parser, nidl_yyin);
 
 #if YYDEBUG && 0
 	 {
@@ -661,21 +571,16 @@ static boolean parse
 	 }
 #endif
 
-    if (nidl_yyparse() != 0 && error_count == 0)
-        log_error(nidl_yylineno, NIDL_COMPABORT, NULL);
+    if (nidl_yyparse(nidl_parser) != 0 && error_count == 0)
+        log_error(nidl_yylineno(nidl_parser), NIDL_COMPABORT, NULL);
     *int_p = the_interface;
 
-#ifndef VMS
+    nidl_parser_destroy(nidl_parser);
+
     if (cmd_opt[opt_cpp])
         PCLOSE(nidl_yyin)
     else
         fclose(nidl_yyin);
-#endif
-#ifdef VMS
-    fclose(nidl_yyin);
-    if (cmd_opt[opt_cpp])
-        delete(temp_path_name);
-#endif
 
     if (error_count != 0)
         return false;        /* Error parsing IDL */
@@ -729,21 +634,6 @@ static boolean parse
     }
 
     acf_exists = FILE_lookup(acf_file, idir_list, &stat_buf, full_acf_name, sizeof (full_acf_name));
-#ifdef VMS
-    if (!acf_exists)
-    {
-        /*
-         * This code is for the special case where foo.idl is the source file
-         * but foo is also a logical name; use the full filespec so that foo
-         * isn't translated.
-         */
-        if (!FILE_form_filespec((char *)NULL, (char *)NULL, CONFIG_SUFFIX,
-                                full_path_name, acf_file, sizeof(acf_file)))
-            return false;
-        acf_exists = FILE_lookup(acf_file, (char **)NULL, &stat_buf,
-                                 full_acf_name, sizeof (full_acf_name));
-    }
-#endif
 
     if (!file_dir_is_cwd)
         idir_list[i] = NULL;
@@ -775,15 +665,9 @@ static boolean parse
  */
 
 AST_interface_n_t *FE_parse_import
-#ifdef PROTO
 (
     STRTAB_str_t    new_input   /* [in] string table id of file to parse */
 )
-#else
-(new_input)
-    STRTAB_str_t    new_input;  /* [in] string table id of file to parse */
-#endif
-
 {
 
 	 /*
@@ -804,19 +688,9 @@ AST_interface_n_t *FE_parse_import
 	  * For any given import, we have to save and reset FOUR different
 	  * state machines:
 	  *
-	 *    ACF parser, ACF flexxer, NIDL parser, NIDL lexxer
+	  *    ACF parser, ACF flexxer, NIDL parser, NIDL lexxer
 	  *
 	  */
-
-	 void * saved_nidl_flexxer_state;
-	 void * saved_acf_flexxer_state;
-	 void * saved_nidl_bisonparser_state;
-	 void * saved_acf_bisonparser_state;
-
-	 void * new_nidl_flexxer_state;
-	 void * new_acf_flexxer_state;
-	 void * new_nidl_bisonparser_state;
-	 void * new_acf_bisonparser_state;
 
 	 boolean saved_ASTP_parsing_main_idl;
 	 char saved_current_file[ PATH_MAX ];
@@ -834,20 +708,6 @@ AST_interface_n_t *FE_parse_import
 	  */
 	 if (already_imported (new_input))
 		  return (AST_interface_n_t *)NULL;
-
-	 /*
-	  * SAVE THE CURRENT FLEXXER STATE
-	  */
-
-	 saved_nidl_flexxer_state = get_current_nidl_flexxer_activation();
-	 saved_acf_flexxer_state = get_current_acf_flexxer_activation();
-
-	 /*
-	  * SAVE THE CURRENT BISON STATE
-	  */
-
-	 saved_nidl_bisonparser_state = get_current_nidl_bisonparser_activation();
-	 saved_acf_bisonparser_state = get_current_acf_bisonparser_activation();
 
 	 /* save the AST state */
 
@@ -883,30 +743,6 @@ AST_interface_n_t *FE_parse_import
 	  * Create new, empty and initialized parser context to
 	  * do the import.
 	  */
-
-	 /* Make a new NIDL Flex token analyzer state-machine */
-
-	 new_nidl_flexxer_state = new_nidl_flexxer_activation_record();
-	 set_current_nidl_flexxer_activation(new_nidl_flexxer_state);
-	 init_new_nidl_flexxer_activation();
-
-	 /* Make a new NIDL Bison parser state-machine */
-
-	 new_nidl_bisonparser_state = new_nidl_bisonparser_activation_record();
-	 set_current_nidl_bisonparser_activation(new_nidl_bisonparser_state);
-	 init_new_nidl_bisonparser_activation();
-
-	 /* Make a new ACF Flex token analyzer state-machine */
-
-	 new_acf_flexxer_state = new_acf_flexxer_activation_record();
-	 set_current_acf_flexxer_activation(new_acf_flexxer_state);
-	 init_new_acf_flexxer_activation();
-
-	 /* Make a new ACF Bison parser state-machine */
-
-	 new_acf_bisonparser_state = new_acf_bisonparser_activation_record();
-	 set_current_acf_bisonparser_activation(new_acf_bisonparser_state);
-	 init_new_acf_bisonparser_activation();
 
 	 /* Now we can parse the import file....
 	  * Parse the file.  Routine parse normally returns a AST_interface_n_t,
@@ -956,26 +792,6 @@ AST_interface_n_t *FE_parse_import
 	  */
 
 	 /*
-	  * Blow away the Bison and Flexer state-machines that we setup in here
-	  * to parse the imported file.
-	  */
-
-	 delete_nidl_flexxer_activation_record(new_nidl_flexxer_state);
-	 delete_acf_flexxer_activation_record(new_acf_flexxer_state);
-	 delete_nidl_bisonparser_activation_record(new_nidl_bisonparser_state);
-	 delete_acf_bisonparser_activation_record(new_acf_bisonparser_state);
-
-	 /*
-	  * Restore the previous Bison and Flexer state-machines so
-	  * that we can continue where we left off.
-	  */
-
-	 set_current_nidl_flexxer_activation(saved_nidl_flexxer_state);
-	 set_current_acf_flexxer_activation(saved_acf_flexxer_state);
-	 set_current_nidl_bisonparser_activation(saved_nidl_bisonparser_state);
-	 set_current_acf_bisonparser_activation(saved_acf_bisonparser_state);
-
-	 /*
 	  * Restore information used by error reporting routines.
 	  */
 	 ASTP_parsing_main_idl = saved_ASTP_parsing_main_idl;
@@ -994,7 +810,6 @@ AST_interface_n_t *FE_parse_import
 */
 
 static boolean parse_idl        /* Returns true on success */
-#ifdef PROTO
 (
     boolean     *cmd_opt,       /* [in] Array of command option flags */
     void        **cmd_val,      /* [in] Array of command option values */
@@ -1002,14 +817,6 @@ static boolean parse_idl        /* Returns true on success */
                                 /*      STRTAB_NULL_STR => stdin */
     AST_interface_n_t **int_p   /*[out] Ptr to interface node */
 )
-#else
-(cmd_opt, cmd_val, idl_sid, int_p)
-    boolean     *cmd_opt;       /* [in] Array of command option flags */
-    void        **cmd_val;      /* [in] Array of command option values */
-    STRTAB_str_t idl_sid;       /* [in] IDL filespec stringtable ID */
-                                /*      STRTAB_NULL_STR => stdin */
-    AST_interface_n_t **int_p;  /*[out] Ptr to interface node */
-#endif
 
 {
     boolean status;                     /* Status to return */
@@ -1032,8 +839,8 @@ static boolean parse_idl        /* Returns true on success */
         strlcat(file_name_part, file_type_part, sizeof(file_name_part));
 
         /*
-         * Issue a warning on any system IDL files a user might
-         * accidentally chose one of those name and get strange behavior.
+         * Issue a warning on any system IDL files - a user might
+         * accidentally choose one of those name and get strange behavior.
          */
         if (!strcmp(file_name_part,"iovector.idl")) name_warning = true;
         else if (!strcmp(file_name_part,"lbase.idl")) name_warning = true;
@@ -1087,7 +894,6 @@ static boolean parse_idl        /* Returns true on success */
 */
 
 boolean FE_main                 /* Returns true on success */
-#ifdef PROTO
 (
     boolean     *cmd_opt,       /* [in] Array of command option flags */
     void        **cmd_val,      /* [in] Array of command option values */
@@ -1095,14 +901,6 @@ boolean FE_main                 /* Returns true on success */
                                 /*      STRTAB_NULL_STR => stdin */
     AST_interface_n_t **int_p   /*[out] Ptr to interface node */
 )
-#else
-(cmd_opt, cmd_val, idl_sid, int_p)
-    boolean     *cmd_opt;       /* [in] Array of command option flags */
-    void        **cmd_val;      /* [in] Array of command option values */
-    STRTAB_str_t idl_sid;       /* [in] IDL filespec stringtable ID */
-                                /*      STRTAB_NULL_STR => stdin */
-    AST_interface_n_t **int_p;  /*[out] Ptr to interface node */
-#endif
 
 {
     boolean status;

@@ -3,6 +3,7 @@
  *  (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  *  (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  *  (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ *  Portions Copyright (c) 2009 Apple Inc. All rights reserved
  *  To anyone who acknowledges that this file is provided "AS IS"
  *  without any express or implied warranty:
  *                  permission to use, copy, modify, and distribute this
@@ -55,7 +56,6 @@ This grammar file needs to be built with GNU Bison V1.25 or later.
 #include <stdarg.h>
 
 #include <nidl.h>               /* IDL compiler-wide defs */
-#include <acf.h>                /* ACF include file - keep first! */
 
 #include <ast.h>                /* Abstract Syntax Tree defs */
 #include <astp.h>               /* Import AST processing routine defs */
@@ -65,12 +65,11 @@ This grammar file needs to be built with GNU Bison V1.25 or later.
 #include <files.h>
 #include <propagat.h>
 #include <checker.h>
-#include <flex_bison_support.h>
+
+#define YYDEBUG 1
 
 extern AST_interface_n_t *the_interface;    /* Ptr to AST interface node */
 extern boolean ASTP_parsing_main_idl;       /* True when parsing main IDL */
-extern int acf_yylineno;
-extern int acf_yylex(void);
 
 typedef union                   /* Attributes bitmask */
 {
@@ -109,7 +108,43 @@ typedef struct acf_param_t      /* ACF parameter info structure */
     NAMETABLE_id_t  param_id;                   /* Parameter name */
 }   acf_param_t;
 
-static acf_attrib_t interface_attr,     /* Interface attributes */
+/* An opaque pointer. */
+#ifndef YY_TYPEDEF_YY_SCANNER_T
+#define YY_TYPEDEF_YY_SCANNER_T
+typedef void* yyscan_t;
+#endif
+
+typedef struct acf_parser_state_t
+{
+    yyscan_t	acf_yyscanner;
+    unsigned	acf_yynerrs;
+    parser_location_t acf_location;
+
+    boolean	acf_dumpers;
+
+    acf_attrib_t acf_interface_attr;	/* Interface attributes */
+    acf_attrib_t acf_type_attr;		/* Type attributes */
+    acf_attrib_t acf_operation_attr;	/* Operation attributes */
+    acf_attrib_t acf_parameter_attr;	/* Parameter attributes */
+
+    const char * acf_interface_name;        /* Interface name */
+    const char * acf_impl_name;             /* Implicit handle name */
+    const char * acf_type_name;             /* Current type name */
+    const char * acf_repr_type_name;        /* Current represent_as type */
+    const char * acf_cs_char_type_name;     /* Current cs_char type */
+    const char * acf_operation_name;        /* Current operation name */
+    const char * acf_cs_tag_rtn_name;       /* Current cs_tag_rtn name */
+    const char * acf_binding_callout_name;  /* Current binding_callout name */
+    boolean	 acf_named_type;    /* True if parsed type is named type */
+
+    AST_include_n_t * acf_include_list;	    /* List of AST include nodes */
+
+    acf_param_t * acf_parameter_list;	    /* Param list for curr. operation */
+    acf_param_t * acf_parameter_free_list;  /* True if param attrs specified */
+    boolean       acf_parameter_attr_list;  /* True if param attrs specified */
+} acf_parser_state_t;
+
+static acf_attrib_t
                     type_attr,          /* Type attributes */
                     operation_attr,     /* Operation attributes */
                     parameter_attr;     /* Parameter attributes */
@@ -132,34 +167,37 @@ static acf_param_t  *parameter_list,        /* Param list for curr. operation */
                     *parameter_free_list;   /* List of available acf_param_t */
 static boolean      parameter_attr_list;    /* True if param attrs specified */
 
-static boolean      *cmd_opt;       /* Array of command option flags */
-static void         **cmd_val;      /* Array of command option values */
-
 /*
  * Forward declarations to shut up the compiler
  */
 
-void acf_init(boolean *, void **, char *);
-void acf_cleanup(void);
-static boolean lookup_exception(NAMETABLE_id_t, boolean, AST_exception_n_t **);
-static boolean lookup_type(char const *, boolean, NAMETABLE_id_t *, AST_type_n_t **);
-static boolean lookup_operation(char const *, boolean, NAMETABLE_id_t *, AST_operation_n_t **);
-static boolean lookup_parameter(AST_operation_n_t *, char const *, boolean, NAMETABLE_id_t *, AST_parameter_n_t **);
+static boolean lookup_exception(acf_parser_state_t *, NAMETABLE_id_t,
+	boolean, AST_exception_n_t **);
+static boolean lookup_type(acf_parser_state_t *, char const *, boolean,
+	NAMETABLE_id_t *, AST_type_n_t **);
+static boolean lookup_operation(acf_parser_state_t *, char const *,
+	boolean, NAMETABLE_id_t *, AST_operation_n_t **);
+static boolean lookup_parameter(acf_parser_state_t *, AST_operation_n_t *,
+	char const *, boolean, NAMETABLE_id_t *, AST_parameter_n_t **);
 static boolean lookup_rep_as_name(AST_type_p_n_t *, NAMETABLE_id_t, AST_type_n_t **, char const **);
 static boolean lookup_cs_char_name(AST_type_p_n_t *, NAMETABLE_id_t, AST_type_n_t **, char const * *);
 static acf_param_t * alloc_param(void);
 static void free_param(acf_param_t *);
 static void free_param_list(acf_param_t **);
 void add_param_to_list(acf_param_t *, acf_param_t **);
-static void append_parameter(AST_operation_n_t *, char const *, acf_attrib_t *);
-static void process_rep_as_type(AST_interface_n_t *, AST_type_n_t *, char const *);
-static void process_cs_char_type(AST_interface_n_t *, AST_type_n_t *, char const *);
-#ifdef DUMPERS
-static void dump_attributes(char *, char const *, acf_attrib_t *);
-#endif
+static void append_parameter(acf_parser_state_t *, AST_operation_n_t *,
+	char const *, acf_attrib_t *);
+static void process_rep_as_type(acf_parser_state_t *, AST_interface_n_t *,
+	AST_type_n_t *, char const *);
+static void process_cs_char_type(acf_parser_state_t *, AST_interface_n_t *,
+	AST_type_n_t *, char const *);
+static void dump_attributes(const char *, const char *, acf_attrib_t *);
+
 /*
  * Warning and Error stuff
  */
+
+static void acf_yyerror ( YYLTYPE *, yyscan_t, char const *);
 
 /*
 **  a c f _ e r r o r
@@ -167,15 +205,20 @@ static void dump_attributes(char *, char const *, acf_attrib_t *);
 **  Issues an error message, and bumps the error count.
 **
 */
-static void acf_error(long msgid, ...)
+static void acf_error
+(
+    acf_parser_state_t * acf,
+    long msgid,
+    ...
+)
 {
     va_list ap;
 
     va_start(ap, msgid);
-
-    vlog_error(acf_yylineno, msgid, ap);
-
+    vlog_error(acf_yylineno(acf), msgid, ap);
     va_end(ap);
+
+    acf->acf_yynerrs++;
 }
 
 /*
@@ -184,17 +227,38 @@ static void acf_error(long msgid, ...)
 **  Issues a warning message.
 **
 */
-static void acf_warning(long msgid, ...)
+static void acf_warning
+(
+    acf_parser_state_t * acf,
+    long msgid,
+    ...
+)
 {
     va_list ap;
 
     va_start(ap, msgid);
 
-    vlog_warning(acf_yylineno, msgid, ap);
+    vlog_warning(acf_yylineno(acf), msgid, ap);
 
     va_end(ap);
 }
 
+%}
+
+%locations
+%defines
+%error-verbose
+%pure-parser
+%name-prefix="acf_yy"
+
+/* Tell Bison that the Flexer takes a yyscan_t parameter. */
+%lex-param { void * lexxer }
+/* Tell Bison that we will pass the yyscan_t scanner into yyparse. */
+%parse-param { acf_parser_state_t * acf }
+
+/* Tell Bison how to get the lexxer argument from the parser state. */
+%{
+#define lexxer acf->acf_yyscanner
 %}
 
 /*------------------------------------*
@@ -211,6 +275,10 @@ static void acf_warning(long msgid, ...)
     NAMETABLE_id_t  y_id;       /* Identifier */
     STRTAB_str_t    y_string;   /* Text string */
 }
+
+%{
+#include <acf_l.h>
+%}
 
 /*-----------------------------*
  *  Tokens used by the parser  *
@@ -280,16 +348,17 @@ acf_interface_header:
         char const      *ast_int_name;  /* Interface name in AST node */
         NAMETABLE_id_t  impl_name_id;   /* Nametable id of impl_handle var */
 
-#ifdef DUMPERS
-        if (cmd_opt[opt_dump_acf])
-            dump_attributes("ACF interface", interface_name, &interface_attr);
-#endif
+        if (acf->acf_dumpers)
+	{
+            dump_attributes("ACF interface", acf->acf_interface_name,
+		    &acf->acf_interface_attr);
+	}
 
         /* Store source information. */
         if (the_interface->fe_info != NULL)
         {
             the_interface->fe_info->acf_file = error_file_name_id;
-            the_interface->fe_info->acf_source_line = acf_yylineno;
+            the_interface->fe_info->acf_source_line = acf_yylineno(acf);
         }
 
         /*
@@ -317,37 +386,37 @@ acf_interface_header:
 
             STRTAB_str_to_string(the_interface->fe_info->file, &file_name);
 
-            acf_error(NIDL_INTNAMDIF, acf_int_name, ast_int_name);
-            acf_error(NIDL_NAMEDECLAT, ast_int_name, file_name,
+            acf_error(acf, NIDL_INTNAMDIF, acf_int_name, ast_int_name);
+            acf_error(acf, NIDL_NAMEDECLAT, ast_int_name, file_name,
                       the_interface->fe_info->source_line);
         }
         else
         {
-            if (interface_attr.bit.code)
+            if (acf->acf_interface_attr.bit.code)
                 AST_SET_CODE(the_interface);
-            if (interface_attr.bit.nocode)
+            if (acf->acf_interface_attr.bit.nocode)
                 AST_SET_NO_CODE(the_interface);
-            if (interface_attr.bit.decode)
+            if (acf->acf_interface_attr.bit.decode)
                 AST_SET_DECODE(the_interface);
-            if (interface_attr.bit.encode)
+            if (acf->acf_interface_attr.bit.encode)
                 AST_SET_ENCODE(the_interface);
-            if (interface_attr.bit.explicit_handle)
+            if (acf->acf_interface_attr.bit.explicit_handle)
                 AST_SET_EXPLICIT_HANDLE(the_interface);
-            if (interface_attr.bit.in_line)
+            if (acf->acf_interface_attr.bit.in_line)
                 AST_SET_IN_LINE(the_interface);
-            if (interface_attr.bit.out_of_line)
+            if (acf->acf_interface_attr.bit.out_of_line)
                 AST_SET_OUT_OF_LINE(the_interface);
-            if (interface_attr.bit.auto_handle)
+            if (acf->acf_interface_attr.bit.auto_handle)
                 AST_SET_AUTO_HANDLE(the_interface);
-            if (interface_attr.bit.nocancel)
+            if (acf->acf_interface_attr.bit.nocancel)
                 AST_SET_NO_CANCEL(the_interface);
 
-            if (interface_attr.bit.cs_tag_rtn)
+            if (acf->acf_interface_attr.bit.cs_tag_rtn)
                 the_interface->cs_tag_rtn_name = NAMETABLE_add_id(cs_tag_rtn_name);
-            if (interface_attr.bit.binding_callout)
+            if (acf->acf_interface_attr.bit.binding_callout)
                 the_interface->binding_callout_name = NAMETABLE_add_id(binding_callout_name);
 
-            if (interface_attr.bit.implicit_handle)
+            if (acf->acf_interface_attr.bit.implicit_handle)
             {
                 /* Store the [implicit_handle] variable name in nametbl. */
                 impl_name_id = NAMETABLE_add_id(impl_name);
@@ -364,7 +433,7 @@ acf_interface_header:
         impl_name = NULL;
         binding_callout_name = NULL;
         cs_tag_rtn_name = NULL;
-        interface_attr.mask = 0;        /* Reset attribute mask */
+        acf->acf_interface_attr.mask = 0;        /* Reset attribute mask */
     }
     ;
 
@@ -381,86 +450,86 @@ acf_interface_attrs:
 acf_interface_attr:
         acf_code_attr
     {
-        if (interface_attr.bit.code)
-            log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
-        interface_attr.bit.code = TRUE;
+        if (acf->acf_interface_attr.bit.code)
+            log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
+        acf->acf_interface_attr.bit.code = TRUE;
     }
     |   acf_nocode_attr
     {
-        if (interface_attr.bit.nocode)
-            log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
-        interface_attr.bit.nocode = TRUE;
+        if (acf->acf_interface_attr.bit.nocode)
+            log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
+        acf->acf_interface_attr.bit.nocode = TRUE;
     }
     |   acf_binding_callout_attr
     {
-        if (interface_attr.bit.binding_callout)
-            log_error(acf_yylineno, NIDL_ATTRUSEMULT, NULL);
-        interface_attr.bit.binding_callout = TRUE;
+        if (acf->acf_interface_attr.bit.binding_callout)
+            log_error(acf_yylineno(acf), NIDL_ATTRUSEMULT, NULL);
+        acf->acf_interface_attr.bit.binding_callout = TRUE;
     }
     |   acf_cs_tag_rtn_attr
     {
-        if (interface_attr.bit.cs_tag_rtn)
-            log_error(acf_yylineno, NIDL_ATTRUSEMULT, NULL);
-        interface_attr.bit.cs_tag_rtn = TRUE;
+        if (acf->acf_interface_attr.bit.cs_tag_rtn)
+            log_error(acf_yylineno(acf), NIDL_ATTRUSEMULT, NULL);
+        acf->acf_interface_attr.bit.cs_tag_rtn = TRUE;
     }
     |   acf_explicit_handle_attr
     {
-        if (interface_attr.bit.explicit_handle)
-            log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
-        interface_attr.bit.explicit_handle = TRUE;
+        if (acf->acf_interface_attr.bit.explicit_handle)
+            log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
+        acf->acf_interface_attr.bit.explicit_handle = TRUE;
     }
     |   acf_nocancel_attr
     {
-        if (interface_attr.bit.nocancel)
-            log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
-        interface_attr.bit.nocancel = TRUE;
+        if (acf->acf_interface_attr.bit.nocancel)
+            log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
+        acf->acf_interface_attr.bit.nocancel = TRUE;
     }
     |   acf_inline_attr
     {
-        if (interface_attr.bit.in_line)
-            log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
-        interface_attr.bit.in_line = TRUE;
+        if (acf->acf_interface_attr.bit.in_line)
+            log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
+        acf->acf_interface_attr.bit.in_line = TRUE;
     }
     |   acf_outofline_attr
     {
-        if (interface_attr.bit.out_of_line)
-            log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
-        interface_attr.bit.out_of_line = TRUE;
+        if (acf->acf_interface_attr.bit.out_of_line)
+            log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
+        acf->acf_interface_attr.bit.out_of_line = TRUE;
     }
     |   acf_implicit_handle_attr
     {
-        if (interface_attr.bit.implicit_handle)
-            log_error(acf_yylineno, NIDL_ATTRUSEMULT, NULL);
-        interface_attr.bit.implicit_handle = TRUE;
+        if (acf->acf_interface_attr.bit.implicit_handle)
+            log_error(acf_yylineno(acf), NIDL_ATTRUSEMULT, NULL);
+        acf->acf_interface_attr.bit.implicit_handle = TRUE;
     }
     |   acf_auto_handle_attr
     {
-        if (interface_attr.bit.auto_handle)
-            log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
-        interface_attr.bit.auto_handle = TRUE;
+        if (acf->acf_interface_attr.bit.auto_handle)
+            log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
+        acf->acf_interface_attr.bit.auto_handle = TRUE;
     }
     |   acf_extern_exceps_attr
     {
-        if (interface_attr.bit.extern_exceps)
-            log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
-        interface_attr.bit.extern_exceps = TRUE;
+        if (acf->acf_interface_attr.bit.extern_exceps)
+            log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
+        acf->acf_interface_attr.bit.extern_exceps = TRUE;
     }
     |   IDENTIFIER
     {
         if (NAMETABLE_add_id("decode") == $<y_id>1)
         {
-            if (interface_attr.bit.decode)
-                log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
-            interface_attr.bit.decode = TRUE;
+            if (acf->acf_interface_attr.bit.decode)
+                log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
+            acf->acf_interface_attr.bit.decode = TRUE;
         }
         else if (NAMETABLE_add_id("encode") == $<y_id>1)
         {
-            if (interface_attr.bit.encode)
-                log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
-            interface_attr.bit.encode = TRUE;
+            if (acf->acf_interface_attr.bit.encode)
+                log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
+            acf->acf_interface_attr.bit.encode = TRUE;
         }
         else
-            log_error(acf_yylineno, NIDL_ERRINATTR, NULL);
+            log_error(acf_yylineno(acf), NIDL_ERRINATTR, NULL);
     }
     ;
 
@@ -522,7 +591,7 @@ acf_ext_excep:
     {
         AST_exception_n_t *excep_p;
         if (ASTP_parsing_main_idl)
-            if (lookup_exception($<y_id>1, TRUE, &excep_p))
+            if (lookup_exception(acf, $<y_id>1, TRUE, &excep_p))
                 AST_SET_EXTERN(excep_p);
     }
     ;
@@ -538,9 +607,9 @@ acf_interface_body:
         LBRACE acf_body_elements RBRACE
     |   LBRACE RBRACE
     |   error
-        { log_error(acf_yylineno, NIDL_SYNTAXERR, NULL); }
+        { log_error(acf_yylineno(acf), NIDL_SYNTAXERR, NULL); }
     |   error RBRACE
-        { log_error(acf_yylineno, NIDL_SYNTAXERR, NULL); }
+        { log_error(acf_yylineno(acf), NIDL_SYNTAXERR, NULL); }
     ;
 
 acf_body_elements:
@@ -554,9 +623,9 @@ acf_body_element:
     |   acf_operation_declaration SEMI
     |   error SEMI
         {
-            log_error(acf_yylineno, NIDL_SYNTAXERR, NULL);
+            log_error(acf_yylineno(acf), NIDL_SYNTAXERR, NULL);
             /* Re-initialize attr masks to avoid sticky attributes */
-            interface_attr.mask = 0;
+            acf->acf_interface_attr.mask = 0;
             type_attr.mask      = 0;
             operation_attr.mask = 0;
             parameter_attr.mask = 0;
@@ -573,7 +642,7 @@ acf_include:
         include_list = NULL;
         }
     |   INCLUDE_KW error
-        { log_error(acf_yylineno, NIDL_SYNTAXERR, NULL); }
+        { log_error(acf_yylineno(acf), NIDL_SYNTAXERR, NULL); }
     ;
 
 acf_include_list:
@@ -600,7 +669,7 @@ acf_include_name:
             FILE_parse(parsed_include_file, (char *)NULL, 0, (char *)NULL, 0,
                        include_type, sizeof (include_type));
             if (include_type[0] != '\0')
-                acf_warning(NIDL_INCLUDEXT);
+                acf_warning(acf, NIDL_INCLUDEXT);
 
             FILE_form_filespec(parsed_include_file, (char *)NULL,
 							   ".h",
@@ -608,13 +677,14 @@ acf_include_name:
 
             /* Create an include node. */
             include_file_id = STRTAB_add_string(include_file);
-            include_p = AST_include_node(include_file_id, $<y_string>1);
+            include_p = AST_include_node(acf_location(acf),
+		    include_file_id, $<y_string>1);
 
             /* Store source information. */
             if (include_p->fe_info != NULL)
             {
                 include_p->fe_info->acf_file = error_file_name_id;
-                include_p->fe_info->acf_source_line = acf_yylineno;
+                include_p->fe_info->acf_source_line = acf_yylineno(acf);
             }
 
             include_list = (AST_include_n_t *)
@@ -626,7 +696,7 @@ acf_include_name:
 
 acf_type_declaration:
         TYPEDEF_KW error
-        { log_error(acf_yylineno, NIDL_SYNTAXERR, NULL); }
+        { log_error(acf_yylineno(acf), NIDL_SYNTAXERR, NULL); }
     |   TYPEDEF_KW acf_type_attr_list acf_named_type_list
     {
         type_attr.mask = 0;             /* Reset attribute mask */
@@ -654,10 +724,8 @@ acf_named_type:
 
         NAMETABLE_id_to_string($<y_id>1, &type_name);
 
-#ifdef DUMPERS
-        if (cmd_opt[opt_dump_acf])
+        if (acf->acf_dumpers)
             dump_attributes("ACF type", type_name, &type_attr);
-#endif
 
         /*
          *  Lookup the type_name parsed and verify that it is a valid type
@@ -669,13 +737,13 @@ acf_named_type:
          *  [cs_char_type_name] = name of cs_char type.
          */
 
-        if (lookup_type(type_name, TRUE, &type_id, &type_p))
+        if (lookup_type(acf, type_name, TRUE, &type_id, &type_p))
         {
             /* Store source information. */
             if (type_p->fe_info != NULL)
             {
                 type_p->fe_info->acf_file = error_file_name_id;
-                type_p->fe_info->acf_source_line = acf_yylineno;
+                type_p->fe_info->acf_source_line = acf_yylineno(acf);
             }
 
             if (type_attr.bit.heap
@@ -689,9 +757,9 @@ acf_named_type:
                 (type_p->xmit_as_type == NULL))
                 PROP_set_type_attr(type_p,AST_OUT_OF_LINE);
             if (type_attr.bit.represent_as)
-                process_rep_as_type(the_interface, type_p, repr_type_name);
+                process_rep_as_type(acf, the_interface, type_p, repr_type_name);
             if (type_attr.bit.cs_char)
-                process_cs_char_type(the_interface, type_p, cs_char_type_name);
+                process_cs_char_type(acf, the_interface, type_p, cs_char_type_name);
         }
     }
     ;
@@ -705,11 +773,11 @@ acf_rest_of_attr_list:
         acf_type_attrs RBRACKET
     |   error SEMI
         {
-        log_error(acf_yylineno, NIDL_MISSONATTR, NULL);
+        log_error(acf_yylineno(acf), NIDL_MISSONATTR, NULL);
         }
     |   error RBRACKET
         {
-        log_error(acf_yylineno, NIDL_ERRINATTR, NULL);
+        log_error(acf_yylineno(acf), NIDL_ERRINATTR, NULL);
         }
     ;
 
@@ -722,31 +790,31 @@ acf_type_attr:
         acf_represent_attr
     {
         if (type_attr.bit.represent_as)
-            log_error(acf_yylineno, NIDL_ATTRUSEMULT, NULL);
+            log_error(acf_yylineno(acf), NIDL_ATTRUSEMULT, NULL);
         type_attr.bit.represent_as = TRUE;
     }
     |   acf_cs_char_attr
     {
         if (type_attr.bit.cs_char)
-            log_error(acf_yylineno, NIDL_ATTRUSEMULT, NULL);
+            log_error(acf_yylineno(acf), NIDL_ATTRUSEMULT, NULL);
         type_attr.bit.cs_char = TRUE;
     }
     |   acf_heap_attr
     {
         if (type_attr.bit.heap)
-            log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
+            log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
         type_attr.bit.heap = TRUE;
     }
     |   acf_inline_attr
     {
         if (type_attr.bit.in_line)
-            log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
+            log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
         type_attr.bit.in_line = TRUE;
     }
     |   acf_outofline_attr
     {
         if (type_attr.bit.out_of_line)
-            log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
+            log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
         type_attr.bit.out_of_line = TRUE;
     }
     ;
@@ -798,10 +866,9 @@ acf_operation:
         char const          *param_name;/* character string of param id */
 
         NAMETABLE_id_to_string($<y_id>1, &operation_name);
-#ifdef DUMPERS
-        if (cmd_opt[opt_dump_acf])
+
+        if (acf->acf_dumpers)
             dump_attributes("ACF operation", operation_name, &operation_attr);
-#endif
 
         /*
          *  Operation and parameter attributes are ignored for imported
@@ -825,13 +892,13 @@ acf_operation:
              *  parameter_list = linked list of parameter information.
              */
 
-            if (lookup_operation(operation_name, TRUE, &op_id, &op_p))
+            if (lookup_operation(acf, operation_name, TRUE, &op_id, &op_p))
             {
                 /* Store source information. */
                 if (op_p->fe_info != NULL)
                 {
                     op_p->fe_info->acf_file = error_file_name_id;
-                    op_p->fe_info->acf_source_line = acf_yylineno;
+                    op_p->fe_info->acf_source_line = acf_yylineno(acf);
                 }
 
                 if (operation_attr.bit.comm_status)
@@ -883,14 +950,14 @@ acf_operation:
                         log_error = TRUE;
 
                     NAMETABLE_id_to_string(p->param_id, &param_name);
-                    if (lookup_parameter(op_p, param_name, log_error,
+                    if (lookup_parameter(acf, op_p, param_name, log_error,
                                          &param_id, &param_p))
                     {
                         /* Store source information. */
                         if (param_p->fe_info != NULL)
                         {
                             param_p->fe_info->acf_file = error_file_name_id;
-                            param_p->fe_info->acf_source_line = acf_yylineno;
+                            param_p->fe_info->acf_source_line = acf_yylineno(acf);
                         }
 
                         if (p->parameter_attr.bit.comm_status)
@@ -915,7 +982,7 @@ acf_operation:
                          * but disallow it.
                          */
                         if (p->parameter_attr.bit.out_of_line)
-                            acf_error(NIDL_INVOOLPRM);
+                            acf_error(acf, NIDL_INVOOLPRM);
                         if (p->parameter_attr.bit.cs_stag)
                             AST_SET_CS_STAG(param_p);
                         if (p->parameter_attr.bit.cs_drtag)
@@ -931,7 +998,7 @@ acf_operation:
                          * Append a parameter to the operation parameter list.
                          */
                         NAMETABLE_id_to_string(p->param_id, &param_name);
-                        append_parameter(op_p, param_name, &p->parameter_attr);
+                        append_parameter(acf, op_p, param_name, &p->parameter_attr);
                     }
                 }
             }
@@ -957,49 +1024,49 @@ acf_op_attr:
         acf_commstat_attr
     {
         if (operation_attr.bit.comm_status)
-            log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
+            log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
         operation_attr.bit.comm_status = TRUE;
     }
     |   acf_code_attr
     {
         if (operation_attr.bit.code)
-            log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
+            log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
         operation_attr.bit.code = TRUE;
     }
     |   acf_nocode_attr
     {
         if (operation_attr.bit.nocode)
-            log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
+            log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
         operation_attr.bit.nocode = TRUE;
     }
     |   acf_cs_tag_rtn_attr
     {
         if (operation_attr.bit.cs_tag_rtn)
-            log_error(acf_yylineno, NIDL_ATTRUSEMULT, NULL);
+            log_error(acf_yylineno(acf), NIDL_ATTRUSEMULT, NULL);
         operation_attr.bit.cs_tag_rtn = TRUE;
     }
     |   acf_enable_allocate_attr
     {
         if (operation_attr.bit.enable_allocate)
-            log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
+            log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
         operation_attr.bit.enable_allocate = TRUE;
     }
     |   acf_explicit_handle_attr
     {
         if (operation_attr.bit.explicit_handle)
-            log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
+            log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
         operation_attr.bit.explicit_handle = TRUE;
     }
     |   acf_nocancel_attr
     {
         if (operation_attr.bit.nocancel)
-            log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
+            log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
         operation_attr.bit.nocancel = TRUE;
     }
     |   acf_faultstat_attr
     {
         if (operation_attr.bit.fault_status)
-            log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
+            log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
         operation_attr.bit.fault_status = TRUE;
     }
     |   IDENTIFIER
@@ -1007,17 +1074,17 @@ acf_op_attr:
         if (NAMETABLE_add_id("decode") == $<y_id>1)
         {
             if (operation_attr.bit.decode)
-                log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
+                log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
             operation_attr.bit.decode = TRUE;
         }
         else if (NAMETABLE_add_id("encode") == $<y_id>1)
         {
             if (operation_attr.bit.encode)
-                log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
+                log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
             operation_attr.bit.encode = TRUE;
         }
         else
-            log_error(acf_yylineno, NIDL_ERRINATTR, NULL);
+            log_error(acf_yylineno(acf), NIDL_ERRINATTR, NULL);
     }
     ;
 
@@ -1056,14 +1123,12 @@ acf_parameters:
 acf_parameter:
         acf_param_attr_list IDENTIFIER
     {
-#ifdef DUMPERS
-        if (cmd_opt[opt_dump_acf])
+        if (acf->acf_dumpers)
         {
             char const *param_name;
             NAMETABLE_id_to_string($<y_id>2, &param_name);
             dump_attributes("ACF parameter", param_name, &parameter_attr);
         }
-#endif
 
         if (parameter_attr_list)        /* If there were param attributes: */
         {
@@ -1106,31 +1171,31 @@ acf_param_attr:
         acf_commstat_attr
     {
         if (parameter_attr.bit.comm_status)
-            log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
+            log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
         parameter_attr.bit.comm_status = TRUE;
     }
     |   acf_faultstat_attr
     {
         if (parameter_attr.bit.fault_status)
-            log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
+            log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
         parameter_attr.bit.fault_status = TRUE;
     }
     |   acf_heap_attr
     {
         if (parameter_attr.bit.heap)
-            log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
+            log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
         parameter_attr.bit.heap = TRUE;
     }
     |   acf_inline_attr
     {
         if (parameter_attr.bit.in_line)
-            log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
+            log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
         parameter_attr.bit.in_line = TRUE;
     }
     |   acf_outofline_attr
     {
         if (parameter_attr.bit.out_of_line)
-            log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
+            log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
         parameter_attr.bit.out_of_line = TRUE;
     }
     |   IDENTIFIER
@@ -1138,23 +1203,23 @@ acf_param_attr:
         if (NAMETABLE_add_id("cs_stag") == $<y_id>1)
         {
             if (parameter_attr.bit.cs_stag)
-                log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
+                log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
             parameter_attr.bit.cs_stag = TRUE;
         }
         else if (NAMETABLE_add_id("cs_drtag") == $<y_id>1)
         {
             if (parameter_attr.bit.cs_drtag)
-                log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
+                log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
             parameter_attr.bit.cs_drtag = TRUE;
         }
         else if (NAMETABLE_add_id("cs_rtag") == $<y_id>1)
         {
             if (parameter_attr.bit.cs_rtag)
-                log_warning(acf_yylineno, NIDL_MULATTRDEF, NULL);
+                log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
             parameter_attr.bit.cs_rtag = TRUE;
         }
         else
-            log_error(acf_yylineno, NIDL_ERRINATTR, NULL);
+            log_error(acf_yylineno(acf), NIDL_ERRINATTR, NULL);
     }
     ;
 
@@ -1171,76 +1236,80 @@ acf_commstat_attr:      COMM_STATUS_KW;
 acf_faultstat_attr:     FAULT_STATUS_KW;
 
 %%
-
+
 /***************************
  *  yacc programs section  *
  ***************************/
 
 /*
- *  a c f _ i n i t
+ *  a c f _ p a r s e r _ a l l o c
  *
- *  Function:   Called before ACF parsing to initialize variables.
+ *  Function:   Called to create an new ACF parser object
  *
  */
 
-void acf_init
-#ifdef PROTO
+acf_parser_p acf_parser_alloc
 (
     boolean     *cmd_opt_arr,   /* [in] Array of command option flags */
     void        **cmd_val_arr,  /* [in] Array of command option values */
     char        *acf_file       /* [in] ACF file name */
 )
-#else
-(cmd_opt_arr, cmd_val_arr, acf_file)
-    boolean     *cmd_opt_arr;   /* [in] Array of command option flags */
-    void        **cmd_val_arr;  /* [in] Array of command option values */
-    char        *acf_file;      /* [in] ACF file name */
-#endif
-
 {
-    /* Save passed command array and interface node addrs in static storage. */
-    cmd_opt = cmd_opt_arr;
-    cmd_val = cmd_val_arr;
+    acf_parser_state_t * acf;
+
+    acf = NEW(acf_parser_state_t);
+
+    acf->acf_dumpers = FALSE;
+
+#ifdef DUMPERS
+    if (cmd_opt_arr[opt_dump_acf])
+	acf->acf_dumpers = TRUE;
+#else
+    (void)cmd_opt_arr;
+#endif
 
     /* Set global (STRTAB_str_t error_file_name_id) for error processing. */
     set_name_for_errors(acf_file);
+    acf->acf_location.fileid = STRTAB_add_string(acf_file);
 
-    interface_attr.mask = 0;
-    type_attr.mask      = 0;
-    operation_attr.mask = 0;
-    parameter_attr.mask = 0;
+   // XXX save file name ID in parser state
 
-    interface_name      = NULL;
-    type_name           = NULL;
-    repr_type_name      = NULL;
-    cs_char_type_name   = NULL;
-    operation_name      = NULL;
-    binding_callout_name= NULL;
-    cs_tag_rtn_name     = NULL;
+    acf->acf_interface_attr.mask = 0;
+    acf->acf_type_attr.mask      = 0;
+    acf->acf_operation_attr.mask = 0;
+    acf->acf_parameter_attr.mask = 0;
 
-    include_list        = NULL;
+    acf->acf_interface_name      = NULL;
+    acf->acf_type_name           = NULL;
+    acf->acf_repr_type_name      = NULL;
+    acf->acf_cs_char_type_name   = NULL;
+    acf->acf_operation_name      = NULL;
+    acf->acf_binding_callout_name= NULL;
+    acf->acf_cs_tag_rtn_name     = NULL;
 
-    parameter_list      = NULL;
-    parameter_free_list = NULL;
+    acf->acf_include_list        = NULL;
+
+    acf->acf_parameter_list      = NULL;
+    acf->acf_parameter_free_list = NULL;
+
+    return acf;
 }
-
+
 /*
- *  a c f _ c l e a n u p
+ *  a c f _ p a r s e r _ d e s t r o y
  *
  *  Function:   Called after ACF parsing to free allocated memory.
  *
  */
 
-#ifdef PROTO
-void acf_cleanup(void)
-#else
-void acf_cleanup()
-#endif
-
+void acf_parser_destroy
+(
+    acf_parser_p acf
+)
 {
     acf_param_t *p, *q;     /* Ptrs to parameter record */
 
-    p = parameter_free_list;
+    p = acf->acf_parameter_free_list;
 
     while (p != NULL)
     {
@@ -1248,10 +1317,66 @@ void acf_cleanup()
         p = p->next;
         FREE(q);
     }
-}
-
 
-
+    if (acf->acf_yyscanner)
+    {
+	acf_yylex_destroy(acf->acf_yyscanner);
+    }
+
+    FREE(acf);
+}
+
+void acf_parser_input
+(
+    acf_parser_p acf,
+    FILE * in
+)
+{
+
+    assert(acf->acf_yyscanner == NULL);
+
+    acf_yylex_init(&acf->acf_yyscanner);
+    acf_yyset_in(in, acf->acf_yyscanner);
+}
+
+unsigned acf_yylineno
+(
+   acf_parser_p acf
+)
+{
+   return acf_yyget_lineno(acf->acf_yyscanner);
+}
+
+const parser_location_t * acf_location
+(
+   acf_parser_p acf
+)
+{
+    /* Update the current location before handing it back ... */
+    acf->acf_location.lineno = acf_yylineno(acf);
+    acf->acf_location.location = *acf_yyget_lloc(acf->acf_yyscanner);
+
+    return &acf->acf_location;
+}
+
+unsigned acf_yynerrs
+(
+   acf_parser_p acf
+)
+{
+   return acf->acf_yynerrs;
+}
+
+static void acf_yyerror
+(
+    YYLTYPE * yylloc,
+    yyscan_t scanner,
+    char const * message
+)
+{
+    idl_yyerror(yylloc, scanner, message);
+}
+
 /*
 **  l o o k u p _ e x c e p t i o n
 **
@@ -1263,6 +1388,7 @@ void acf_cleanup()
 
 static boolean lookup_exception
 (
+    acf_parser_state_t *acf,
     NAMETABLE_id_t  excep_id,     /* [in] Nametable id of exception name */
     boolean         log_error,    /* [in] TRUE => log error if name not found */
     AST_exception_n_t **excep_ptr /*[out] Ptr to AST exception node */
@@ -1286,13 +1412,13 @@ static boolean lookup_exception
     if (log_error)
     {
         NAMETABLE_id_to_string(excep_id, &perm_excep_name);
-        acf_error(NIDL_EXCNOTDEF, perm_excep_name);
+        acf_error(acf, NIDL_EXCNOTDEF, perm_excep_name);
     }
 
     *excep_ptr = NULL;
     return FALSE;
 }
-
+
 /*
 **  l o o k u p _ t y p e
 **
@@ -1304,6 +1430,7 @@ static boolean lookup_exception
 
 static boolean lookup_type
 (
+    acf_parser_state_t *acf,
     char const      *type_name, /* [in] Name to look up */
     boolean         log_error,  /* [in] TRUE => log error if name not found */
     NAMETABLE_id_t  *type_id,   /*[out] Nametable id of type name */
@@ -1331,13 +1458,13 @@ static boolean lookup_type
     {
         name_id = NAMETABLE_add_id(type_name);
         NAMETABLE_id_to_string(name_id, &perm_type_name);
-        acf_error(NIDL_TYPNOTDEF, perm_type_name);
+        acf_error(acf, NIDL_TYPNOTDEF, perm_type_name);
     }
 
     *type_ptr = NULL;
     return FALSE;
 }
-
+
 /*
 **  l o o k u p _ o p e r a t i o n
 **
@@ -1349,6 +1476,7 @@ static boolean lookup_type
 
 static boolean lookup_operation
 (
+    acf_parser_state_t *acf,
     char const      *op_name,   /* [in] Name to look up */
     boolean         log_error,  /* [in] TRUE => log error if name not found */
     NAMETABLE_id_t  *op_id,     /*[out] Nametable id of operation name */
@@ -1376,13 +1504,13 @@ static boolean lookup_operation
     {
         name_id = NAMETABLE_add_id(op_name);
         NAMETABLE_id_to_string(name_id, &perm_op_name);
-        acf_error(NIDL_OPNOTDEF, perm_op_name);
+        acf_error(acf, NIDL_OPNOTDEF, perm_op_name);
     }
 
     *op_ptr = NULL;
     return FALSE;
 }
-
+
 /*
 **  l o o k u p _ p a r a m e t e r
 **
@@ -1394,6 +1522,7 @@ static boolean lookup_operation
 
 static boolean lookup_parameter
 (
+    acf_parser_state_t  *acf,
     AST_operation_n_t   *op_p,          /* [in] Ptr to AST operation node */
     char const          *param_name,    /* [in] Parameter name to look up */
     boolean             log_error,      /* [in] TRUE=> log error if not found */
@@ -1429,14 +1558,14 @@ static boolean lookup_parameter
 
         STRTAB_str_to_string(op_p->fe_info->file, &file_name);
 
-        acf_error(NIDL_PRMNOTDEF, perm_param_name, op_name);
-        acf_error(NIDL_NAMEDECLAT, op_name, file_name,
+        acf_error(acf, NIDL_PRMNOTDEF, perm_param_name, op_name);
+        acf_error(acf, NIDL_NAMEDECLAT, op_name, file_name,
                   op_p->fe_info->source_line);
     }
 
     return FALSE;
 }
-
+
 /*
 **  l o o k u p _ r e p _ a s _ n a m e
 **
@@ -1472,7 +1601,7 @@ static boolean lookup_rep_as_name
 
     return FALSE;
 }
-
+
 /*
 **  l o o k u p _ c s _ c h a r _ n a m e
 **
@@ -1508,7 +1637,7 @@ static boolean lookup_cs_char_name
 
     return FALSE;
 }
-
+
 /*
  *  a c f _ a l l o c _ p a r a m
  *
@@ -1521,12 +1650,7 @@ static boolean lookup_cs_char_name
  *  Side Effects:   Exits program if unable to allocate memory.
  */
 
-#ifdef PROTO
 static acf_param_t *alloc_param(void)
-#else
-static acf_param_t *alloc_param()
-#endif
-
 {
     acf_param_t *p;     /* Ptr to parameter record */
 
@@ -1545,7 +1669,7 @@ static acf_param_t *alloc_param()
 
     return p;
 }
-
+
 /*
  *  a c f _ f r e e _ p a r a m
  *
@@ -1558,15 +1682,9 @@ static acf_param_t *alloc_param()
  */
 
 static void free_param
-#ifdef PROTO
 (
     acf_param_t *p              /* [in] Pointer to acf_param_t record */
 )
-#else
-(p)
-    acf_param_t *p;             /* [in] Pointer to acf_param_t record */
-#endif
-
 {
     p->parameter_attr.mask  = 0;
     p->param_id             = NAMETABLE_NIL_ID;
@@ -1586,15 +1704,9 @@ static void free_param
  */
 
 static void free_param_list
-#ifdef PROTO
 (
     acf_param_t **list          /* [in] Address of list pointer */
 )
-#else
-(list)
-    acf_param_t **list;         /* [in] Address of list pointer */
-#endif
-
 {
     acf_param_t *p, *q;     /* Ptrs to parameter record */
 
@@ -1609,7 +1721,7 @@ static void free_param_list
 
     *list = NULL;            /* List now empty */
 }
-
+
 /*
  *  a d d _ p a r a m _ t o _ l i s t
  *
@@ -1622,17 +1734,10 @@ static void free_param_list
  */
 
 void add_param_to_list
-#ifdef PROTO
 (
     acf_param_t *p,             /* [in] Pointer to parameter record */
     acf_param_t **list          /* [in] Address of list pointer */
 )
-#else
-(p, list)
-    acf_param_t *p;             /* [in] Pointer to parameter record */
-    acf_param_t **list;         /* [in] Address of list pointer */
-#endif
-
 {
     acf_param_t *q;         /* Ptr to parameter record */
 
@@ -1647,7 +1752,7 @@ void add_param_to_list
 
     p->next = NULL;         /* Param is now last in list */
 }
-
+
 /*
 **  a p p e n d _ p a r a m e t e r
 **
@@ -1656,6 +1761,7 @@ void add_param_to_list
 
 static void append_parameter
 (
+    acf_parser_state_t  *acf,
     AST_operation_n_t   *op_p,          /* [in] Ptr to AST operation node */
     char const          *param_name,    /* [in] Parameter name */
     acf_attrib_t        *param_attr     /* [in] Parameter attributes */
@@ -1674,7 +1780,7 @@ static void append_parameter
     status_type_p = (AST_type_n_t *)NAMETABLE_lookup_binding(status_id);
     if (status_type_p == NULL)
     {
-        acf_error(NIDL_ERRSTATDEF, "error_status_t", "nbase.idl");
+        acf_error(acf, NIDL_ERRSTATDEF, "error_status_t", "nbase.idl");
         return;
     }
 
@@ -1683,9 +1789,9 @@ static void append_parameter
      * that has the specified parameter attributes.
      */
     new_param_id = NAMETABLE_add_id(param_name);
-    new_param_p = AST_parameter_node(new_param_id);
-    new_type_p  = AST_type_node(AST_pointer_k);
-    new_ptr_p   = AST_pointer_node(status_type_p);
+    new_param_p = AST_parameter_node(acf_location(acf), new_param_id);
+    new_type_p  = AST_type_node(acf_location(acf), AST_pointer_k);
+    new_ptr_p   = AST_pointer_node(acf_location(acf), status_type_p);
 
     new_type_p->type_structure.pointer = new_ptr_p;
     AST_SET_REF(new_type_p);
@@ -1719,7 +1825,7 @@ static void append_parameter
         param_p->last = new_param_p;
     }
 }
-
+
 /*
 **  p r o c e s s _ r e p _ a s _ t y p e
 **
@@ -1730,6 +1836,7 @@ static void append_parameter
 
 static void process_rep_as_type
 (
+    acf_parser_state_t  *acf,
     AST_interface_n_t   *int_p,     /* [in] Ptr to AST interface node */
     AST_type_n_t        *type_p,    /* [in] Ptr to AST type node */
     char const      *ref_type_name  /* [in] Name in represent_as() clause */
@@ -1754,9 +1861,9 @@ static void process_rep_as_type
         NAMETABLE_id_to_string(parent_type_p->name, &parent_name);
         STRTAB_str_to_string(parent_type_p->fe_info->acf_file, &file_name);
 
-        acf_error(NIDL_REPASNEST);
-        acf_error(NIDL_TYPEREPAS, parent_name, perm_name);
-        acf_error(NIDL_NAMEDECLAT, parent_name, file_name,
+        acf_error(acf, NIDL_REPASNEST);
+        acf_error(acf, NIDL_TYPEREPAS, parent_name, perm_name);
+        acf_error(acf, NIDL_NAMEDECLAT, parent_name, file_name,
                   parent_type_p->fe_info->acf_source_line);
     }
 
@@ -1779,8 +1886,8 @@ static void process_rep_as_type
             STRTAB_str_to_string(
                             type_p->rep_as_type->fe_info->acf_file, &file_name);
 
-            acf_error(NIDL_CONFREPRTYPE, new_ref_type_name, perm_name);
-            acf_error(NIDL_NAMEDECLAT, perm_name, file_name,
+            acf_error(acf, NIDL_CONFREPRTYPE, new_ref_type_name, perm_name);
+            acf_error(acf, NIDL_NAMEDECLAT, perm_name, file_name,
                       type_p->rep_as_type->fe_info->acf_source_line);
         }
     }
@@ -1794,12 +1901,13 @@ static void process_rep_as_type
 
         /* Add represent_as type name and build rep_as AST node. */
 
-        repas_p = type_p->rep_as_type = AST_represent_as_node(ref_type_id);
+        repas_p = type_p->rep_as_type =
+	    AST_represent_as_node(acf_location(acf),ref_type_id);
         /* Store source information. */
         if (repas_p->fe_info != NULL)
         {
             repas_p->fe_info->acf_file = error_file_name_id;
-            repas_p->fe_info->acf_source_line = acf_yylineno;
+            repas_p->fe_info->acf_source_line = acf_yylineno(acf);
         }
 
         /* Check for associated def-as-tag node. */
@@ -1809,7 +1917,7 @@ static void process_rep_as_type
 
         /* Link type node into list of represent_as types. */
 
-        typep_p = AST_type_ptr_node();
+        typep_p = AST_type_ptr_node(acf_location(acf));
         typep_p->type = type_p;
 
         int_p->ra_types = (AST_type_p_n_t *)AST_concat_element(
@@ -1817,7 +1925,7 @@ static void process_rep_as_type
                                                 (ASTP_node_t *)typep_p);
     }
 }
-
+
 /*
 **  p r o c e s s _ c s _ c h a r _ t y p e
 **
@@ -1828,6 +1936,7 @@ static void process_rep_as_type
 
 static void process_cs_char_type
 (
+    acf_parser_state_t  *acf,
     AST_interface_n_t   *int_p,     /* [in] Ptr to AST interface node */
     AST_type_n_t        *type_p,    /* [in] Ptr to AST type node */
     char const      *ref_type_name  /* [in] Name in cs_char() clause */
@@ -1853,9 +1962,9 @@ static void process_cs_char_type
         STRTAB_str_to_string(parent_type_p->fe_info->acf_file, &file_name);
 
         /*** This needs updating ***/
-        acf_error(NIDL_REPASNEST);
-        acf_error(NIDL_TYPEREPAS, parent_name, perm_name);
-        acf_error(NIDL_NAMEDECLAT, parent_name, file_name,
+        acf_error(acf, NIDL_REPASNEST);
+        acf_error(acf, NIDL_TYPEREPAS, parent_name, perm_name);
+        acf_error(acf, NIDL_NAMEDECLAT, parent_name, file_name,
                   parent_type_p->fe_info->acf_source_line);
     }
 
@@ -1879,8 +1988,8 @@ static void process_cs_char_type
                         type_p->cs_char_type->fe_info->acf_file, &file_name);
 
             /*** This needs updating ***/
-            acf_error(NIDL_CONFREPRTYPE, new_ref_type_name, perm_name);
-            acf_error(NIDL_NAMEDECLAT, perm_name, file_name,
+            acf_error(acf, NIDL_CONFREPRTYPE, new_ref_type_name, perm_name);
+            acf_error(acf, NIDL_NAMEDECLAT, perm_name, file_name,
                       type_p->cs_char_type->fe_info->acf_source_line);
         }
     }
@@ -1894,12 +2003,13 @@ static void process_cs_char_type
 
         /* Add cs_char type name and build cs_char AST node. */
 
-        cschar_p = type_p->cs_char_type = AST_cs_char_node(ref_type_id);
+        cschar_p = type_p->cs_char_type = AST_cs_char_node(
+				acf_location(acf), ref_type_id);
         /* Store source information. */
         if (cschar_p->fe_info != NULL)
         {
             cschar_p->fe_info->acf_file = error_file_name_id;
-            cschar_p->fe_info->acf_source_line = acf_yylineno;
+            cschar_p->fe_info->acf_source_line = acf_yylineno(acf);
         }
 
         /* Check for associated def-as-tag node. */
@@ -1909,7 +2019,7 @@ static void process_cs_char_type
 
         /* Link type node into list of cs_char types. */
 
-        typep_p = AST_type_ptr_node();
+        typep_p = AST_type_ptr_node(acf_location(acf));
         typep_p->type = type_p;
 
         int_p->cs_types = (AST_type_p_n_t *)AST_concat_element(
@@ -1917,8 +2027,7 @@ static void process_cs_char_type
                                                 (ASTP_node_t *)typep_p);
     }
 }
-
-#ifdef DUMPERS
+
 /*
  *  d u m p _ a t t r i b u t e s
  *
@@ -1935,21 +2044,12 @@ static void process_cs_char_type
  */
 
 static void dump_attributes
-#ifdef PROTO
 (
-    char            *header_text,       /* [in] Initial output text */
-    char const            *node_name,         /* [in] Name of tree node */
+    const char	    *header_text,       /* [in] Initial output text */
+    char const      *node_name,         /* [in] Name of tree node */
     acf_attrib_t    *node_attr_p        /* [in] Node attributes ptr */
 )
-#else
-(header_text, node_name, node_attr_p)
-    char            *header_text;       /* [in] Initial output text */
-    char            *node_name;         /* [in] Name of tree node */
-    acf_attrib_t    *node_attr_p;       /* [in] Node attributes ptr */
-#endif
-
 #define MAX_ATTR_TEXT   1024    /* Big enough for lots of extern_exceptions */
-
 {
     char            attr_text[MAX_ATTR_TEXT];   /* Buf for formatting attrs */
     int             pos;                /* Position in buffer */
@@ -1960,7 +2060,9 @@ static void dump_attributes
     printf("%s %s", header_text, node_name);
 
     if (node_attr.mask == 0)
+    {
         printf("\n");
+    }
     else
     {
         printf(" attributes: ");
@@ -2053,114 +2155,5 @@ static void dump_attributes
         printf("%s\n", attr_text);
     }
 }
-#endif
-
-/*****************************************************************
- *
- *  Helper functions for managing multiple BISON parser contexts
- *
- *  GNU Bison v1.25 support for DCE 1.2.2 idl_compiler
- *  added 07-11-97 Jim Doyle, Boston University, <jrd@bu.edu>
- *
- *  Maintainance note:
- *
- *    The set of bison-specific static and global variables
- *    managed by the following code may need to changed for versions
- *    GNU Bison earlier or newer than V1.25.
- *
- *
- *****************************************************************/
-
-/*****************************************************************
- *
- * Data structure to store the state of a BISON lexxer context
- *
- *****************************************************************/
-
-struct acf_bisonparser_state
-  {
-
-    /*
-     * BISON parser globals that need to preserved whenever
-     * we switch into a new parser context (i.e. multiple,
-     * nested parsers).
-     */
-
-    int yychar;
-    int yynerrs;
-    YYSTYPE yylval;
-
-  };
-
-typedef struct acf_bisonparser_state acf_bisonparser_activation_record;
-
-/*****************************************************************
- *
- * Basic constructors/destructors for FLEX activation states
- *
- *****************************************************************/
-
-void *
-new_acf_bisonparser_activation_record()
-  {
-    return (malloc(sizeof(acf_bisonparser_activation_record)));
-  }
-
-void
-delete_acf_bisonparser_activation_record(void * p)
-{
- if (p)
-    free((void *)p);
-}
-
-/*****************************************************************
- *
- * Get/Set/Initialize methods
- *
- *****************************************************************/
-
-void *
-get_current_acf_bisonparser_activation()
-  {
-    acf_bisonparser_activation_record * p;
-
-    p = (acf_bisonparser_activation_record * )
-                new_acf_bisonparser_activation_record();
-
-    /*
-     * save the statics internal to the parser
-     *
-     */
-
-     p->yychar = yychar;
-     p->yynerrs = yynerrs;
-     p->yylval = yylval;
-
-     return (void *)p;
-  }
-
-void
-set_current_acf_bisonparser_activation(void * ptr)
-  {
-
-    acf_bisonparser_activation_record * p =
-      (acf_bisonparser_activation_record *)ptr;
-
-    /* restore the statics */
-
-     yychar = p->yychar;
-     yynerrs = p->yynerrs;
-     yylval = p->yylval;
-
-  }
-
-void
-init_new_acf_bisonparser_activation()
-  {
-    /* set some initial conditions for a new Bison parser state */
-
-    yynerrs = 0;
-
-  }
 
 /* preserve coding style vim: set tw=78 sw=4 : */

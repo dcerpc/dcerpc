@@ -46,6 +46,12 @@
 
 #define IDL_ERROR_LIST_SIZE 5
 
+/* An opaque pointer. */
+#ifndef YY_TYPEDEF_YY_SCANNER_T
+#define YY_TYPEDEF_YY_SCANNER_T
+typedef void* yyscan_t;
+#endif
+
 void error
 (
 	long msg_id,
@@ -154,31 +160,27 @@ boolean print_errors
     void
 );
 
-void yyerror
+#if ! defined YYLTYPE && ! defined YYLTYPE_IS_DECLARED
+typedef struct YYLTYPE
+{
+    int first_line;
+    int first_column;
+    int last_line;
+    int last_column;
+} YYLTYPE;
+# define yyltype YYLTYPE /* obsolescent; will be withdrawn */
+# define YYLTYPE_IS_DECLARED 1
+# define YYLTYPE_IS_TRIVIAL 1
+#endif
+
+void idl_yyerror
 (
-    char const *message
+    YYLTYPE * yylloc,
+    yyscan_t scanner,
+    char const * message
 );
 
 void yywhere(void);
-
-/*
- *  The following global variables are used by error reporting routines, most
- *  notably yyerror().  The signature of yyerror is defined by yacc to be:
- *
- *          void yyerror(char *message)
- *
- *  Because of the limitations of the routine signature, yyerror relies on
- *  global variables defined by the parser to output additional information
- *  about the error.  Since IDL uses multiple parsers, the global variables
- *  needed depend on which parse is active.  The workaround used here is
- *  that before each individual parse, the pointer variables below will be
- *  set to point to the relevant globals for that parse.  The error routines
- *  can then access the relevant data indirectly through the pointer variables.
- */
-extern FILE     **yyin_p;
-extern int      *yylineno_p;
-extern int      *yynerrs_p;
-extern char     **yytext_p;
 
 /*
  * Error info to be fillin the fe_info nodes

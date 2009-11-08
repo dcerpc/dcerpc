@@ -688,7 +688,7 @@ static void PROP_process_pa_type
      * Create a new type pointer node and link it on the pa_types list
      * of the interface node.
      */
-    tp_node = AST_type_ptr_node();
+    tp_node = AST_type_ptr_node(null_parser_location);
     tp_node->type = type_node_ptr;
 
     /* link it on the pa_types list of the interface node */
@@ -726,7 +726,7 @@ void PROP_process_up_type
     /*
      * Create a new type pointer node and link it on the unions with ptrs list.
      */
-    tp_node = AST_type_ptr_node();
+    tp_node = AST_type_ptr_node(null_parser_location);
     tp_node->type = type_node_ptr;
 
     PROP_up_types_list = (AST_type_p_n_t *)AST_concat_element(
@@ -3044,7 +3044,7 @@ static void type_prop
     {
         AST_type_p_n_t  *typep_p;       /* Used to link type nodes */
 
-        typep_p = AST_type_ptr_node();
+        typep_p = AST_type_ptr_node(null_parser_location);
         typep_p->type = type_p;
 
         FE_SET(type_p->fe_info->flags,FE_OOL);
@@ -3057,7 +3057,7 @@ static void type_prop
             (type_p->type_structure.pointer->pointee_type->array_rep_type != NULL) &&
              !FE_TEST(type_p->type_structure.pointer->pointee_type->array_rep_type->fe_info->flags,FE_OOL))
         {
-            typep_p = AST_type_ptr_node();
+            typep_p = AST_type_ptr_node(null_parser_location);
             typep_p->type = type_p;
 
             FE_SET(type_p->type_structure.pointer->pointee_type->array_rep_type->fe_info->flags,FE_OOL);
@@ -3431,7 +3431,8 @@ static void op_add_binding_handle_param
     /* Have to create an '[in] handle_t IDL_handle' parameter. */
 
     new_param_id = NAMETABLE_add_id("IDL_handle");
-    new_param_p = AST_parameter_node(new_param_id); /* Get inited param node */
+    new_param_p = AST_parameter_node(null_parser_location,
+			    new_param_id); /* Get inited param node */
 
     new_param_p->type = ASTP_handle_ptr;
     new_param_p->uplink = op_p;
@@ -4060,7 +4061,7 @@ static void type_add_type_to_sp_list
      *  Create a new type pointer node and link it on the sp_types list of the
      *  interface node.  Set the FE flag indicating that it is on the sp list.
      */
-    tp = AST_type_ptr_node();
+    tp = AST_type_ptr_node(null_parser_location);
     tp->type = type_node_ptr;
     FE_SET(type_node_ptr->fe_info->flags,FE_SELF_POINTING);
 

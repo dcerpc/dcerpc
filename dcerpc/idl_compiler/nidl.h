@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2009 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -244,9 +245,60 @@ typedef enum {
 #ifdef DUMPERS
 #  define YYDEBUG 1
    /* If ASSERTION expression is FALSE, then issue warning */
-#  define ASSERTION(x) if (!(x)) warning(NIDL_INTERNAL_ERROR, __FILE__, __LINE__)
+#  define ASSERTION(x) do { \
+    if (!(x)) { warning(NIDL_INTERNAL_ERROR, __FILE__, __LINE__) } \
+} while (0)
 #else
 #  define ASSERTION(x) do {;} while (0);
 #endif
+
+#if ! defined YYLTYPE && ! defined YYLTYPE_IS_DECLARED
+typedef struct YYLTYPE
+{
+  int first_line;
+  int first_column;
+  int last_line;
+  int last_column;
+} YYLTYPE;
+# define yyltype YYLTYPE /* obsolescent; will be withdrawn */
+# define YYLTYPE_IS_DECLARED 1
+# define YYLTYPE_IS_TRIVIAL 1
+#endif
+
+typedef struct parser_location_t
+{
+    unsigned	lineno;
+    STRTAB_str_t fileid;
+    YYLTYPE	location;
+} parser_location_t;
+
+extern const parser_location_t empty_parser_location;
+#define null_parser_location &empty_parser_location
+
+typedef const parser_location_t * parser_location_p;
+
+/* Public NIDL parser API ... */
+struct nidl_parser_state_t;
+typedef struct nidl_parser_state_t * nidl_parser_p;
+
+nidl_parser_p nidl_parser_alloc (boolean *,void **,char *);
+void nidl_parser_destroy (nidl_parser_p);
+void nidl_parser_input (nidl_parser_p, FILE *);
+unsigned nidl_yylineno (nidl_parser_p);
+parser_location_p nidl_location (nidl_parser_p);
+unsigned nidl_yynerrs (nidl_parser_p);
+int nidl_yyparse(nidl_parser_p);
+
+/* Public ACF parser API ... */
+struct acf_parser_state_t;
+typedef struct acf_parser_state_t * acf_parser_p;
+
+acf_parser_p acf_parser_alloc (boolean *, void **, char *);
+void acf_parser_input (acf_parser_p, FILE *);
+void acf_parser_destroy (acf_parser_p);
+unsigned acf_yylineno (acf_parser_p);
+parser_location_p acf_location (acf_parser_p);
+unsigned acf_yynerrs (acf_parser_p);
+int acf_yyparse (acf_parser_p);
 
 #endif

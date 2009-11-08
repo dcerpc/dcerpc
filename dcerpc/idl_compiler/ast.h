@@ -881,7 +881,7 @@ typedef enum {
 #define AST_EXP_2_OP_MASK		0x0fffff000
 
 #define AST_EXP_TERNARY_OP		0x000000001
-#define AST_EXP_3_OP_MASK		0x100000000
+#define AST_EXP_3_OP_MASK		0x100000000ULL
 
 /*
  *  A S T _ c o n s t a n t _ n _ t
@@ -1198,7 +1198,7 @@ typedef struct AST_field_attr_n_t {
  * Type used to evaluate expressions
  */
 typedef struct AST_exp_n_t {
-    unsigned long exp_type;	/* AST_EXP_xxx flags */
+    unsigned long long exp_type;	/* AST_EXP_xxx flags */
     union	{
 	struct	{
 	    AST_constant_k_t    type;     /* datatype of the constant */
