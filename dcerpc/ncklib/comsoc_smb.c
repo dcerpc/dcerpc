@@ -1414,27 +1414,51 @@ smb_data_do_recv(
 
         if (!NT_SUCCESS(status))
         {
-            RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_do_recv - SMBReadFile failed 0x%x\n", status));
+            RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
+                           ("rpc__smb_socket_do_recv - SMBReadFile failed 0x%x\n",
+                            status));
             serr = rpc_smb_ntstatus_to_rpc_error (status);
         }
 #else
-        /* <bms> for transactions, do the send and receive in a
-         single transaction. */
-        status = SMBTransactNamedPipe(smb->handle,
-                                      smb->hFile,
-                                      smb->sendbuffer.base,
-                                      smb->sendbuffer.start_cursor - cursor,
-                                      smb->recvbuffer.end_cursor,
-                                      bytes_requested,
-                                      &bytes_read);
-
-        /* assume all the data got sent */
-        rpc__smb_buffer_settle(&smb->sendbuffer);
-
-        if (!NT_SUCCESS(status))
+        if ((smb->sendbuffer.start_cursor - cursor) == 0)
         {
-            RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_do_recv - SMBTransactNamedPipe failed 0x%x\n", status));
-            serr = rpc_smb_ntstatus_to_rpc_error (status);
+            /* <bms> Must be reading in a fragment, so read the data in
+             without using transactions */
+            status = SMBReadFile(smb->handle,
+                                 smb->hFile,
+                                 smb->recvbuffer.end_cursor,
+                                 0,
+                                 bytes_requested,
+                                 &bytes_read);
+            if (!NT_SUCCESS(status))
+            {
+                RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
+                               ("rpc__smb_socket_do_recv - SMBReadFile failed 0x%x\n",
+                                status));
+                serr = rpc_smb_ntstatus_to_rpc_error (status);
+            }
+        }
+        else
+        {
+            /* <bms> for transactions, do send and rcv in a single transaction. */
+            status = SMBTransactNamedPipe(smb->handle,
+                                          smb->hFile,
+                                          smb->sendbuffer.base,
+                                          smb->sendbuffer.start_cursor - cursor,
+                                          smb->recvbuffer.end_cursor,
+                                          bytes_requested,
+                                          &bytes_read);
+
+            /* assume all the data got sent */
+            rpc__smb_buffer_settle(&smb->sendbuffer);
+
+            if (!NT_SUCCESS(status))
+            {
+                RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
+                               ("rpc__smb_socket_do_recv - SMBTransactNamedPipe failed 0x%x\n",
+                                status));
+                serr = rpc_smb_ntstatus_to_rpc_error (status);
+            }
         }
 #endif
 
