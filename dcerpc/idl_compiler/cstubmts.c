@@ -204,7 +204,7 @@ static void CSPELL_client_stub_routine
     fprintf(fid, "rpc_transfer_syntax_t\t\tIDL_transfer_syntax;\n");
     fprintf(fid, "rpc_iovector_elt_t\t\tIDL_outs;\n");
     fprintf(fid, "volatile ndr_ulong_int\t\tIDL_fault_code=error_status_ok;\n");
-    fprintf(fid, "volatile ndr_ulong_int\t\tIDL_user_fault_id;\n");
+    fprintf(fid, "volatile ndr_ulong_int\t\tIDL_user_fault_id=0;\n");
     fprintf(fid,
            "volatile RPC_SS_THREADS_CANCEL_STATE_T IDL_async_cancel_state;\n");
     fprintf(fid, "IDL_ms_t\t\tIDL_ms;\n");
@@ -475,7 +475,7 @@ void DDBE_spell_pickling_stub
      * Standard local variables
      */
     fprintf(fid, "volatile ndr_ulong_int IDL_fault_code=error_status_ok;\n");
-    fprintf(fid, "volatile ndr_ulong_int IDL_user_fault_id;\n");
+    fprintf(fid, "volatile ndr_ulong_int IDL_user_fault_id=0;\n");
     fprintf(fid,
            "volatile RPC_SS_THREADS_CANCEL_STATE_T IDL_async_cancel_state;\n");
     fprintf(fid, "IDL_es_state_t *IDL_es_state_p;\n");
