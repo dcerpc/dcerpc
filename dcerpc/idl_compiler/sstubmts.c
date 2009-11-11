@@ -600,9 +600,9 @@ static void CSPELL_server_stub_routine
     fprintf(fid, "IDL_ms_t IDL_ms;\n");
     fprintf(fid, "volatile ndr_boolean IDL_manager_entered = ndr_false;\n");
     fprintf(fid,
-         "volatile RPC_SS_THREADS_CANCEL_STATE_T IDL_async_cancel_state;\n");
+         "volatile RPC_SS_THREADS_CANCEL_STATE_T IDL_async_cancel_state=RPC_SS_THREADS_CANCEL_STATE_T_INITIALIZER;\n");
     fprintf(fid,
-         "volatile RPC_SS_THREADS_CANCEL_STATE_T IDL_general_cancel_state;\n");
+         "volatile RPC_SS_THREADS_CANCEL_STATE_T IDL_general_cancel_state=RPC_SS_THREADS_CANCEL_STATE_T_INITIALIZER;\n");
     fprintf(fid, "idl_byte IDL_stack_packet[IDL_STACK_PACKET_SIZE];\n");
 
     if (AST_HAS_IN_PIPES_SET(p_operation)
