@@ -15,6 +15,8 @@
 #include <cnp.h>
 #include <npnaf.h>
 #include <stddef.h>
+#include <sys/param.h>
+#include <sys/mount.h>
 
 #if HAVE_LIKEWISE_LWIO
 #include <lwio/lwio.h>
@@ -778,6 +780,9 @@ rpc__smb_socket_connect(
     size_t len;
     char* smbpath = NULL;
     NTSTATUS status;
+    unsigned32 have_mountpath = 0;
+    int ret;
+    struct statfs fsBuf;
 #endif
 
     RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_connect called\n"));
@@ -792,8 +797,10 @@ rpc__smb_socket_connect(
                                 (unsigned_char_t**) &endpoint,
                                 &dbg_status);
 
-    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_connect - netaddr <%s>\n", netaddr));
-    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_connect - ep <%s>\n", endpoint));
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
+                   ("rpc__smb_socket_connect - netaddr <%s>\n", netaddr));
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
+                   ("rpc__smb_socket_connect - ep <%s>\n", endpoint));
 
     if (rpc__np_is_valid_endpoint(endpoint, &dbg_status))
     {
@@ -805,42 +812,83 @@ rpc__smb_socket_connect(
         goto error;
     }
 
-    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_connect - pipename <%s>\n", pipename));
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
+                   ("rpc__smb_socket_connect - pipename <%s>\n", pipename));
 
 #if HAVE_LIKEWISE_LWIO
     len = strlen(netaddr) + strlen(pipename) + strlen("\\rdr\\\\IPC$\\") + 1;
     smbpath = malloc(len);
     if (smbpath == NULL) {
-        RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_connect - smbpath malloc failed\n"));
+        RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
+                       ("rpc__smb_socket_connect - smbpath malloc failed\n"));
         serr = RPC_C_SOCKET_ENOMEM;
         goto error;
     }
-    snprintf (smbpath, len, "\\rdr\\%s\\IPC$\\%s", (char*) netaddr, (char*) pipename);
+    snprintf (smbpath, len, "\\rdr\\%s\\IPC$\\%s",
+              (char*) netaddr, (char*) pipename);
 #elif HAVE_SMBCLIENT_FRAMEWORK
-    len = strlen(netaddr) + strlen(pipename) + strlen("smb:///IPC$/") + 1;
-    smbpath = malloc(len);
-    if (smbpath == NULL)
+    if (netaddr[0] == '/')
     {
-        RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_connect - smbpath malloc failed\n"));
-        serr = RPC_C_SOCKET_ENOMEM;
-        goto error;
+        /* see if its a mountpath instead of a host addr */
+        ret = statfs ((char *) netaddr, &fsBuf);
+        if (ret != 0)
+        {
+            RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
+                           ("rpc__smb_socket_connect - statfs failed %d errno %d\n",
+                            ret, errno));
+        }
+        else
+        {
+            /* its a mountpath, so use a different api
+             to find the existing smb session to share */
+            have_mountpath = 1;
+        }
     }
-    snprintf (smbpath, len, "smb://%s/IPC$/%s", (char*) netaddr, (char*) pipename);
+
+    if (have_mountpath == 0)
+    {
+        /* its not a mount path, so just pass in the URL string */
+        len = strlen(netaddr) + strlen("smb://") + 1;
+        smbpath = malloc(len);
+        if (smbpath == NULL)
+        {
+            RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
+                           ("rpc__smb_socket_connect - smbpath malloc failed\n"));
+            serr = RPC_C_SOCKET_ENOMEM;
+            goto error;
+        }
+        snprintf (smbpath, len, "smb://%s", (char*) netaddr);
+    }
+
 #else
     serr = RPC_C_SOCKET_C_ENOTSUP;
     goto error;
 #endif
 
-    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_connect - smbpath <%s>\n", smbpath));
-
 #if HAVE_SMBCLIENT_FRAMEWORK
     /* Never have a username or password here. Either we use an already existing
      authenticated session, or log in as guest, or fail. Never prompt for a
      username or password so always set kSMBOptionNoPrompt */
-    status = SMBOpenServerEx(smbpath, &smb->handle, kSMBOptionNoPrompt);
+    if (have_mountpath == 0)
+    {
+        RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
+                       ("rpc__smb_socket_connect - SMBOpenServerEx <%s>\n",
+                        smbpath));
+        status = SMBOpenServerEx(smbpath, &smb->handle, kSMBOptionNoPrompt);
+    }
+    else
+    {
+        RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
+                       ("rpc__smb_socket_connect - SMBOpenServerWithMountPoint <%s>\n",
+                        netaddr));
+        status = SMBOpenServerWithMountPoint(netaddr, NULL, &smb->handle, 0);
+    }
+
     if (!NT_SUCCESS(status))
     {
-        RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_connect - SMBOpenServerEx failed 0x%x\n", status));
+        RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
+                       ("rpc__smb_socket_connect - SMBOpenServerEx failed 0x%x\n",
+                        status));
         serr = rpc_smb_ntstatus_to_rpc_error (status);
         goto error;
     }
@@ -854,7 +902,9 @@ rpc__smb_socket_connect(
                            &smb->hFile);
     if (!NT_SUCCESS(status))
     {
-        RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_connect - SMBCreateFile failed 0x%x\n", status));
+        RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
+                       ("rpc__smb_socket_connect - SMBCreateFile failed 0x%x\n",
+                        status));
         serr = rpc_smb_ntstatus_to_rpc_error (status);
         goto error;
     }
