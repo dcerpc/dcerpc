@@ -6,6 +6,18 @@
 //  Copyright 2009 Apple Inc. All rights reserved.
 //
 
+// I don't think that we should be using the headermap, since we
+// have files with the same name. However, dependency tracking for
+// the IDL files, and dtrace header generation depends on this,
+// see:
+//
+// <rdar://problem/7303485> generated header files don't get correct dependencies
+// <rdar://problem/7306702> dtrace header generation depends on USE_HEADERMAP=YES
+USE_HEADERMAP=YES
+HEADERMAP_INCLUDES_PROJECT_HEADERS=NO
+HEADERMAP_INCLUDES_FRAMEWORK_ENTRIES_FOR_ALL_PRODUCT_TYPES=NO
+HEADERMAP_INCLUDES_FLAT_ENTRIES_FOR_TARGET_BEING_BUILT=NO
+
 HEADER_SEARCH_PATHS_BASE = "$(SRCROOT)/dcerpc/include"
 HEADER_SEARCH_PATHS_BASE2 = $(HEADER_SEARCH_PATHS_BASE) "$(SHARED_DERIVED_FILE_DIR)" "$(SHARED_DERIVED_FILE_DIR)/dce"
 HEADER_SEARCH_PATHS_BASE3 = $(HEADER_SEARCH_PATHS_BASE2) "$(SRCROOT)/dcerpc/ncklib"
