@@ -508,3 +508,72 @@ rpc_binding_inq_transport_info(
 
     *st = rpc_s_ok;
 }
+
+/*
+**++
+**
+**  ROUTINE NAME:       rpc__np_is_valid_endpoint
+**
+**  SCOPE:              PRIVATE - declared in npnaf.h
+**
+**  DESCRIPTION:
+**
+**  Return a boolean value to indicate if the given endpoint
+**  ins a valid NPNAF endpoint.
+**
+**
+**  INPUTS:
+**
+**      endpoint        The endpoint string.
+**
+**  INPUTS/OUTPUTS:     none
+**
+**  OUTPUTS:
+**
+**      status          A value indicating the status of the routine.
+**
+**  IMPLICIT INPUTS:    none
+**
+**  IMPLICIT OUTPUTS:   none
+**
+**  FUNCTION VALUE:
+**
+**      result          true => the address is local.
+**                      false => not.
+**
+**  SIDE EFFECTS:       none
+**
+**--
+**/
+
+PRIVATE boolean32 rpc__np_is_valid_endpoint
+#ifdef _DCE_PROTO_
+(
+    const unsigned_char_t *endpoint,
+    unsigned32            *status
+)
+#else
+(endpoint, status)
+const unsigned_char_t *endpoint;
+unsigned32   *status;
+#endif
+{
+    CODING_ERROR (status);
+
+    if (endpoint == NULL)
+    {
+        *status = rpc_s_invalid_arg;
+        return false;
+    }
+
+    if (strncasecmp((const char *)endpoint, "\\PIPE\\", 6) == 0)
+    {
+	*status = rpc_s_ok;
+	return true;
+    }
+    else
+    {
+	*status = rpc_s_invalid_endpoint_format;
+	return false;
+    }
+}
