@@ -40,13 +40,8 @@
 #define files_incl
 
 #ifndef S_IFREG
-#ifdef vms
-#  include <types.h>
-#  include <stat.h>
-#else
 #  include <sys/types.h>
 #  include <sys/stat.h>
-#endif
 #endif
 
 #include <nidl.h>               /* IDL common defs */
@@ -89,13 +84,6 @@ extern boolean FILE_form_filespec(
     char       *out_filespec,
 	size_t     out_filespec_len
 );
-
-#ifdef VMS
-/*
-**  Default filespec; only good for one call to FILE_parse.
-*/
-extern char *FILE_def_filespec;
-#endif
 
 extern boolean FILE_parse(
     char const *filespec,

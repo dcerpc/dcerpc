@@ -44,32 +44,17 @@
 **
 */
 
-#if defined(__VMS) && !defined(VMS)
-#define VMS
-#define vms
-#endif
-
 /*
  *  exit status codes
  */
-#ifdef VMS
-#   define pgm_warning 0x10000000  /* 0 % 8 == warning */
-#   define pgm_ok      0x00000001  /* 1 % 8 == success */
-#   define pgm_error   0x10000002  /* 2 % 8 == error   */
-#else
 #   define pgm_ok      0
 #   define pgm_warning 2
 #   define pgm_error   3
-#endif
 
 /*
 ** Macro to test a system-specific status code for failure status.
 */
-#ifdef VMS
-#define ERROR_STATUS(s) (((s) & 1) != 1)
-#else
 #define ERROR_STATUS(s) ((s) != 0)
-#endif
 
 /*
 ** define HASDIRTREE if OS has foo/widget/bar file system.
@@ -109,22 +94,6 @@
 #endif
 #endif
 
-
-/* VAX VMS  */
-#ifdef VMS
-#define HASDIRTREE
-#define BRANCHCHAR ']'
-#define BRANCHSTRING "]"
-/* VMS model is that system .IDL and .H files are in the same directory. */
-#define DEFAULT_IDIR    "DCE:"
-#define DEFAULT_H_IDIR  "DCE:"
-#define INCLUDE_TEMPLATE "#include <dce/%s>\n"
-#define USER_INCLUDE_TEMPLATE "#include <%s>\n"
-#define USER_INCLUDE_H_TEMPLATE "#include <%s.h>\n"
-#define CD_IDIR "[]"
-#endif
-
-
 #if defined(__OSF__) || defined(__OSF1__) || defined(__osf__) || defined(BSD) || defined(SYS5) || defined(ultrix) || defined(_AIX) || defined(__ultrix) || defined(_BSD) || defined(__linux__)
 #define UNIX
 #define HASDIRTREE
@@ -161,11 +130,7 @@ Porting Message:  You must provide definitions for the symbols
 /*
 ** Default filetype names.
 */
-#if defined(VMS) || defined(_MSDOS)
-#define OBJ_FILETYPE ".OBJ"
-#else
 #define OBJ_FILETYPE ".@OBJEXT@"
-#endif
 
 /*
 ** Commands to invoke C-Preprocessor, C-Compiler etc.
@@ -197,14 +162,6 @@ Porting Message:  You must provide definitions for the symbols
 # define HEADER_SUFFIX  ".h"
 # define CAUX_SUFFIX    "_x.c"
 # define SAUX_SUFFIX    "_y.c"
-#endif
-
-#ifdef VMS
-# define CSTUB_SUFFIX   "_cstub.c"
-# define SSTUB_SUFFIX   "_sstub.c"
-# define HEADER_SUFFIX  ".h"
-# define CAUX_SUFFIX    "_caux.c"
-# define SAUX_SUFFIX    "_saux.c"
 #endif
 
 #ifndef CSTUB_SUFFIX
@@ -284,11 +241,7 @@ Porting Message:  You must provide definitions for the files suffixes to
 **  to allocate buffer space for manipulating the path name string.
 */
 #ifndef PATH_MAX
-# ifdef VMS
-# define PATH_MAX  256
-# else
 # define PATH_MAX 1024
-# endif
 #endif
 
 /*
@@ -312,33 +265,4 @@ Porting Message:  You must provide definitions for the files suffixes to
 #endif
 
 
-/*
-** To avoid passing the VMS C compiler lines of more than 255 characters, we
-** redirect fprintf through a special routine, use on other Digital platforms
-** also for consistancy in testing of compiler output.
-*/
-#if defined(vms) || defined(ultrix) || defined(__osf__)
-#define IDL_USE_OUTPUT_LINE
-#ifdef fprintf
-#undef fprintf
-#endif
-#define fprintf output_line
-
-/*
-** Functions exported by sysdep.c
-*/
-extern int output_line(
-#ifdef PROTO
-    FILE * fid,                 /* [in] File handle */
-    char *format,               /* [in] Format string */
-    ...                         /* [in] 0-N format arguments */
-#endif
-);
-
-extern void flush_output_line(
-#ifdef PROTO
-    FILE * fid                  /* [in] File handle */
-#endif
-);
-#endif
 #endif

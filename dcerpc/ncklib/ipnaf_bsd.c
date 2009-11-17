@@ -45,13 +45,8 @@
 #include <comsoc.h>
 #include <ipnaf.h>
 
-#if !defined(vms)
 #include <net/if.h>
 #include <sys/ioctl.h>
-#else
-#include <if.h>
-#endif
-
 
 
 /***********************************************************************

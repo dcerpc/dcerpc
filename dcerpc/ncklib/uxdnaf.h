@@ -51,11 +51,7 @@
  */
 
 
-#ifdef VMS
-#include <un.h>
-#else
 #include <sys/un.h>
-#endif
 
 #ifndef RPC_C_UXD_DIR
 #define RPC_C_UXD_DIR	"/var/opt/novell/xad/rpc"

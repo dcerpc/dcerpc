@@ -68,13 +68,11 @@ EXTERNAL	IObjectExporter_v0_0_epv_t objex_mgr_epv;
 #ifdef RPC_LLB
 #include <rpcdlbdb.h>
 #endif
-          
+
 #include <dce/dce_error.h>
 
-#ifndef VMS
 #include <sys/ioctl.h>
 #include <sys/stat.h>
-#endif
 #include <locale.h>
 #include <syslog.h>
 #include <ctype.h>

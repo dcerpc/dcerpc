@@ -50,28 +50,9 @@
 #include <lsysdep.h>
 
 /*
- * Pointer cells for the two tables.  Note that for a VMS shareable image
- * version of the runtime, these two cells must be moved to a separate
- * module at the head of the image.
+ * Pointer cells for the two tables.
  */
-#if defined(VMS) && defined(VAX)
-globaldef {"NDR_G_ASCII_TO_EBCDIC"} rpc_trans_tab_p_t ndr_g_ascii_to_ebcdic;
-globaldef {"NDR_G_EBCDIC_TO_ASCII"} rpc_trans_tab_p_t ndr_g_ebcdic_to_ascii;
-#else
 globaldef rpc_trans_tab_p_t ndr_g_ascii_to_ebcdic = "NDR_G_ASCII_TO_EBCDIC";
 globaldef rpc_trans_tab_p_t ndr_g_ebcdic_to_ascii ="NDR_G_EBCDIC_TO_ASCII";
-#endif
 
-
-
-/* 
-** For alpha/VMS we need to export the globals to match the externs in
-** stubbase.h because the default common model is ANSI-style
-*/
-#if defined(VMS) && defined(__alpha)
-ndr_boolean rpc_ss_allocate_is_set_up = ndr_false;
-ndr_boolean rpc_ss_context_is_set_up = ndr_false;
-ndr_boolean rpc_ss_client_is_set_up = ndr_false;
-ndr_boolean rpc_ss_server_is_set_up = ndr_false;
-#endif
 

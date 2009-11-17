@@ -559,12 +559,3 @@ void rpc_ss_xmit_iovec_if_necess
 #endif
 );
 
-#if defined(VMS) && defined(VAX)
-void rpc_ss_ndr_m_for_conf_string
-(
-    idl_byte **p_type_vec_ptr,
-    rpc_void_p_t param_addr,
-    idl_boolean *p_is_string,
-    IDL_msp_t IDL_msp
-);
-#endif

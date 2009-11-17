@@ -398,40 +398,4 @@ typedef enum {
 
 /***************************************************************************/
 
-/*
- *  Cause a syntax error if compiling on VAX and G_float not specified when any
- *  doubles are used.  Note that on VAX G_float *must* be used by the
- *  application, or incorrect double floating point values will be returned. 
- *  This test should remain outside the IDLBASE_H conditional, because it
- *  needs to be checked on every include.
- *
- *  This need not be done for DEC C or DEC C++
- */
-
-#if defined(IDL_DOUBLE_USED) && ( defined(VAX) || defined(__VAX) || defined(vax) || defined(__vax) )
-
-#if defined(vaxc) && !defined(__cplusplus) && !defined(__DECC)
-#  if CC$gfloat != 1
-#    if defined(vms) || defined(__VMS)
- #error "RPC requires VAX G_float data format: build with /G_FLOAT qualifier"
-#    else
- #error "RPC requires VAX G_float data format: build with -Mg option"
-#    endif /* vsm OR __VMS  */
-#  endif   /* CC$gloat */
-#endif /* vaxc && ! c++ && ! __DECC */
-
-#if defined(__cplusplus) || defined(__DECC)
-#  if __G_FLOAT != 1
- #error "RPC requires VAX G_float data format: build with /FLOAT=G_FLOAT qualifier"
-#  endif/* __G_FLOAT */
-#endif /* c++ or __DECC */
-
-#if defined(ultrix) && defined(vax) && !defined(vaxc)
-#  if GFLOAT != 1
- #error \
-"RPC requires GFLOAT:RPC requires VAX G_float data format: build with -Mg option"
-#  endif/* GFLOAT */
-#endif /* ultrix && vax && ! vaxc */
-
-#endif /* IDL_DOUBLE_USED */
 

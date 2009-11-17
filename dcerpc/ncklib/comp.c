@@ -289,10 +289,6 @@ GLOBAL rpc_tower_prot_ids_t rpc_g_tower_prot_ids[RPC_C_PROTSEQ_ID_MAX*2] =
  */
 
 GLOBAL 
-#ifdef VMS
-/* Provide psect name if VMS */
-{"rpc_sym9_g_protseq_id"}
-#endif
 rpc_protseq_id_elt_t     rpc_g_protseq_id[RPC_C_PROTSEQ_ID_MAX] = 
 {
 #if 0

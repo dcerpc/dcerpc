@@ -768,7 +768,6 @@ void DDBE_gen_cstub
     /*
      * Emit a closing #pragma standard to match the nostandard pragma above
      */
-    fprintf(fid, "#ifdef VMS\n#pragma standard\n#endif\n");
     CSPELL_restore_stub_warnings(fid);
 
     the_interface = NULL;

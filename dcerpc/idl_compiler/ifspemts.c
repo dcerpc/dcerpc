@@ -167,12 +167,7 @@ void CSPELL_interface_def
     fprintf(fid, "  %d, /* op count */\n", ifp->op_count);
     fprintf(fid, "  %ld, /* if version */\n", ifp->version);
     fprintf(fid, "  {");
-    /* make sure we print things right on 64-bit machines (alpha) */
-#if defined(_VMS) || defined(__alpha)
-    fprintf(fid, "0x%8.8xu, ", ifp->uuid.time_low);
-#else
     fprintf(fid, "0x%8.8lxu, ", ifp->uuid.time_low);
-#endif
     fprintf(fid, "0x%4.4x, ", ifp->uuid.time_mid);
     fprintf(fid, "0x%4.4x, ", ifp->uuid.time_hi_and_version);
     fprintf(fid, "0x%2.2x, ", ifp->uuid.clock_seq_hi_and_reserved);

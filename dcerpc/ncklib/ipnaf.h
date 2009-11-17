@@ -51,15 +51,9 @@
  */
 
 
-#ifndef VMS
 #include <netinet/in.h>
 #include <netinet/tcp.h>
 #include <arpa/inet.h>
-#else
-#include <in.h>
-#include <tcp.h>
-#include <inet.h>
-#endif
 
 /***********************************************************************
  *

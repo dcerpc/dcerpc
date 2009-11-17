@@ -51,11 +51,7 @@
 /*
  *  Include the Internet specific socket address
  */
-#ifdef VMS
-#include <in.h>
-#else
 #include <netinet/in.h>
-#endif
 
 /*
 **++

@@ -72,9 +72,7 @@
 /*                                                                            */
 /******************************************************************************/
 
-#ifndef VMS
-    ndr_boolean rpc_ss_context_is_set_up = ndr_false;
-#endif
+ndr_boolean rpc_ss_context_is_set_up = ndr_false;
 
 static RPC_SS_THREADS_ONCE_T context_once = RPC_SS_THREADS_ONCE_INIT;
 
@@ -100,10 +98,7 @@ void rpc_ss_init_context_once(
 {
     RPC_SS_THREADS_INIT;
     RPC_SS_THREADS_ONCE( &context_once, rpc_ss_init_context );
-#ifndef VMS
     rpc_ss_context_is_set_up = ndr_true;
-#endif
-
 }
 
 /*  Number of context slots in hash table.

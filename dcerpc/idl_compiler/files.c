@@ -36,14 +36,8 @@
 **
 */
 
-#ifdef vms
-#  include <types.h>
-#  include <stat.h>
-#  include <descrip.h>
-#else
-#  include <sys/types.h>
-#  include <sys/stat.h>
-#endif
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include <nidl.h>
 #include <files.h>
@@ -106,11 +100,7 @@ boolean FILE_create             /* Returns TRUE on success */
 #endif
 
 {
-#ifndef VMS
 #define MODE_WRITE "w"
-#else
-#define MODE_WRITE "w","mbc = 16","rop = WBH","mbf = 3"
-#endif
 
     if ((*fid = fopen(filespec, MODE_WRITE)) == NULL)
     {
@@ -152,22 +142,7 @@ boolean FILE_lookup             /* Returns TRUE on success */
      */
     if (stat(filespec, stat_buf) != -1)
     {
-#ifndef VMS
         strlcpy(lookup_spec, filespec, lookup_spec_len);
-#else
-        /*
-         * This code is for the special case where foo.idl is the source file
-         * but foo is also a logical name; form a full filespec so that
-         * subsequent logic won't remove .idl and translate logical foo.
-         */
-        char *cp, *cwd = getcwd((char *)NULL, PATH_MAX);
-        if (cwd != NULL)
-            for (cp = cwd; *cp != '\0'; cp++) *cp = tolower(*cp);
-        if (!FILE_form_filespec(filespec, cwd, (char *)NULL, (char *)NULL,
-                                lookup_spec, lookup_spec_len))
-            strlcpy(lookup_spec, filespec, lookup_spec_len);
-        if (cwd != NULL) free(cwd);
-#endif
         return TRUE;
     }
 
@@ -216,9 +191,6 @@ boolean FILE_lookup             /* Returns TRUE on success */
 **
 **  Forms a file specification from the specified components.
 */
-#ifdef VMS
-# include <ctype.h>
-#endif
 
 boolean FILE_form_filespec      /* Returns TRUE on success */
 (                               /* For all [in] args, NULL => none */
@@ -268,64 +240,7 @@ boolean FILE_form_filespec      /* Returns TRUE on success */
             FILE_def_filespec = type;
 
         if (!FILE_parse(in_filespec, in_dir, sizeof (in_dir), in_name, sizeof(in_name), in_type, sizeof(in_type)))
-#ifndef VMS
             return FALSE;
-#else
-        {
-            char tmp_filespec[PATH_MAX];
-            /*
-             * On VMS, the parse could fail because the input filespec is a
-             * partial filespec in U*ix format.  Attempt to translate the dir-
-             * ectory spec into and compose the output filespec in U*ix format.
-             */
-            if (dirspec == NULL || strcmp(dirspec, CD_IDIR) == 0)
-                /* Don't do relative path; Top-level name could be logical. */
-                dir = "";
-            else if (dirspec != NULL)
-            {
-                extern char *getenv(), *shell$translate_vms();
-                char *logical_val;
-
-                /*
-                ** Determine if the dirspec is a logical (need to try twice
-                ** because getenv is case sensitive).
-                */
-                logical_val = getenv(dirspec);
-                if (logical_val == NULL)
-                {
-                    char upcase_log[PATH_MAX];
-                    strncpy(upcase_log, dirspec, PATH_MAX);
-                    for (logical_val = upcase_log; *logical_val; logical_val++)
-                        if (isalpha(*logical_val))
-                            *logical_val = toupper(*logical_val);
-                    logical_val = getenv(upcase_log);
-                }
-
-                /*
-                ** If the dirspec is a logical, translate the equivalence
-                ** name, otherwise translate the dirspec itself.
-                */
-                if (logical_val != NULL)
-                {
-                    dir = shell$translate_vms(logical_val);
-                }
-                else
-                    dir = shell$translate_vms(dirspec);
-
-                if (dir == (char *)0 || dir == (char *)-1)
-                    return FALSE;
-            }
-
-            /*
-            ** Concatenate U*ix dir spec with input filespec.
-            */
-            strlcpy(tmp_filespec, dir, sizeof (tmp_filespec));
-            strlcat(tmp_filespec, "/", sizeof(tmp_filespec));
-            strlcat(tmp_filespec, in_filespec, sizeof(tmp_filespec));
-            if (!FILE_parse(tmp_filespec, in_dir, sizeof(in_dir), in_name, sizeof(in_name), in_type, sizeof(in_type)))
-                return FALSE;
-        }
-#endif  /* VMS */
     }
 
     if (dir == NULL)
@@ -333,40 +248,8 @@ boolean FILE_form_filespec      /* Returns TRUE on success */
 
     /* Parse rel_filespec into its components. */
     if (rel_filespec != NULL && rel_filespec[0] != '\0')
-#ifndef VMS
         if (!FILE_parse(rel_filespec, rel_dir, sizeof(rel_dir), rel_name, sizeof(rel_name), rel_type, sizeof(rel_type)))
             return FALSE;
-#else
-        if (    (in_filespec != NULL && in_filespec[0] != '\0')
-            ||  (dir != NULL && dir[0] != '\0') )
-        {
-            /*
-             * Setup the related or file type global FILE_def_filespec such
-             * that any file lookup is handled appropriately in FILE_parse.
-             */
-            if (type)
-                FILE_def_filespec = type;
-            if (!FILE_parse(rel_filespec, rel_dir, sizeof(rel_dir), rel_name, sizeof(rel_name), rel_type, sizeof(rel_type)))
-                return FALSE;
-        }
-        else
-        {
-            /*
-             * Special case VMS logic to finesse the case where the related
-             * filespec can be a partial filespec in U*ix format - break it into
-             * a filetype and a "filename" containing all but the filetype.
-             */
-            int  len;
-            char *cp = strrchr(rel_filespec, '.');
-            if (cp == NULL)
-                len = strlen(rel_filespec);
-            else
-                len = cp - rel_filespec;
-            strncpy(rel_name, rel_filespec, len);
-            rel_name[len] = '\0';
-            strlcpy(rel_type, &rel_filespec[len], sizeof (rel_type));
-        }
-#endif  /* VMS */
 
     /* Apply first valid of in_dir, dir, or rel_dir. */
     if (in_dir[0] != '\0')
@@ -401,21 +284,7 @@ boolean FILE_form_filespec      /* Returns TRUE on success */
     if (res_dir[0] != '\0')
     {
         strlcat(out_filespec, res_dir, out_filespec_len);
-#ifndef VMS
         strlcat(out_filespec, BRANCHSTRING, out_filespec_len);
-#else
-        {
-        /* If the directory spec is a logical name, append a colon. */
-        char upcase_dir[PATH_MAX];
-        char *cp;
-
-        strlcpy(upcase_dir, res_dir, sizeof (upcase_dir));
-        for (cp = upcase_dir; *cp; cp++)
-            if (isalpha(*cp))
-                *cp = toupper(*cp);
-        if (getenv(upcase_dir) != NULL) strlcat(out_filespec, ":", out_filespec_len);
-        }
-#endif
     }
 
     if (res_name[0] != '\0')
@@ -431,68 +300,23 @@ boolean FILE_form_filespec      /* Returns TRUE on success */
 #endif
 }
 
-#ifdef VMS
-/*
- * VMS-specific code used in parsing file specifications.
- */
-#include <fab.h>
-#include <nam.h>
-#include <rmsdef.h>
-
-static char vms_filespec[NAM$C_MAXRSS];
-
-/*
-**  p r o c e s s _ v m s _ f i l e s p e c
-**
-**  Action routine called from shell$to_vms to process a VMS file specification.
-*/
-
-static int process_vms_filespec
-#ifdef PROTO
-(
-    char        *filespec,      /* [in] VMS filespec */
-    int         flags           /* [in] Translation flags */
-)
-#else
-(filespec, flags)
-    char        *filespec;      /* [in] VMS filespec */
-    int         flags;          /* [in] Translation flags */
-#endif
-
-{
-    strlcpy(vms_filespec, filespec, sizeof (vms_filespec));
-
-    /* Return zero to prevent further translation of wildcards. */
-    return 0;
-}
-#endif
-
 /*
 **  F I L E _ p a r s e
 **
 **  Parses a specified pathanme into individual components.
 */
 
-#ifdef VMS
-/*
-**  Macro to copy a string and translate it to lower case.
-**  Requires local variable declaration of int i.
-*/
-#define STRNLCPY(dst, src, len) \
-    for (i = 0; i < (len); i++) (dst)[i] = tolower((src)[i]);
-#endif
 
 boolean FILE_parse              /* Returns TRUE on success */
 (
     char const  *filespec,      /* [in] Filespec */
     char        *dir,           /*[i,o] Directory portion; NULL =>don't want */
-	size_t		dir_len,		/*[i] len of dir */
+    size_t	dir_len,		/*[i] len of dir */
     char        *name,          /*[i,o] Filename portion;  NULL =>don't want */
-	size_t		name_len ATTRIBUTE_UNUSED,		/*[i] len of name */
+    size_t	name_len ATTRIBUTE_UNUSED,		/*[i] len of name */
     char        *type,          /*[i,o] File type (ext);   NULL =>don't want */
-	size_t		type_len		/*[i] len of type */
+    size_t	type_len		/*[i] len of type */
 )
-#ifndef VMS     /* This code works partially on VMS; better version below */
 {
 #if defined(HASDIRTREE)
     FILE_k_t    filekind;       /* File kind */
@@ -548,9 +372,6 @@ boolean FILE_parse              /* Returns TRUE on success */
      */
     for (i = pn_len - 1; i >= 0; i--)
         if (pn[i] == BRANCHCHAR
-#ifdef VMS
-            || pn[i] == ':'
-#endif
 #if BRANCHAR == '\\'
             || pn[i] == '/'
 #endif
@@ -560,11 +381,7 @@ boolean FILE_parse              /* Returns TRUE on success */
              * On VMS, the BRANCHCHAR is considered part of the directory.
              */
             leaf_start = i + 1;
-#ifdef VMS
-            dir_end = i + 1;
-#else
             dir_end = i > 0 ? i : 1;
-#endif
             slash_seen = TRUE;
             break;
         }
@@ -625,132 +442,6 @@ boolean FILE_parse              /* Returns TRUE on success */
 #endif
 }
 
-#else
-/*
-**  VMS-specific version of FILE_parse.
-*/
-{
-    unsigned int rms_status;    /* RMS status */
-    struct FAB  fab;            /* RMS File Access Block */
-    struct NAM  nam;            /* RMS Name Block */
-    char defspec[NAM$C_MAXRSS]; /* Default file specification */
-    char outspec[NAM$C_MAXRSS]; /* Expanded file specification */
-    int         i;
-
-    fab = cc$rms_fab;       /* Set to prototype FAB for proper initialization */
-    if (FILE_def_filespec == NULL)
-        defspec[0] = '\0';
-    else
-        strlcpy(defspec, FILE_def_filespec, sizeof (defspec));
-    FILE_def_filespec = NULL;
-    fab.fab$l_dna   = defspec;
-    fab.fab$b_dns   = strlen(defspec);
-    fab.fab$l_fna   = filespec;
-    fab.fab$b_fns   = strlen(filespec);
-    fab.fab$l_fop   = 0;
-    fab.fab$w_ifi   = 0;
-    fab.fab$l_nam   = &nam;
-
-    nam = cc$rms_nam;       /* Set to prototype NAM for proper initialization */
-    nam.nam$l_esa   = outspec;
-    nam.nam$b_ess   = NAM$C_MAXRSS;
-    nam.nam$b_nop   = NAM$M_SYNCHK;
-    nam.nam$l_rlf   = 0;
-
-    rms_status = SYS$PARSE(&fab, 0, 0);
-    if (rms_status != RMS$_NORMAL)
-    {
-        /*
-         * Don't give up yet - file specification could be in U*ix format.
-         */
-        if (shell$to_vms(filespec, process_vms_filespec, 1) != 1)
-        {
-            /*
-             * Still don't give up - if filespec starts with logical name,
-             * it will need a leading slash.
-             */
-            char inspec[NAM$C_MAXRSS];
-            inspec[0] = '/';
-            strlcpy(&inspec[1], filespec, sizeof (inspec) - 1);
-            if (shell$to_vms(inspec, process_vms_filespec, 1) != 1)
-                return FALSE;
-        }
-
-        fab.fab$l_fna = vms_filespec;
-        fab.fab$b_fns = strlen(vms_filespec);
-
-        rms_status = SYS$PARSE(&fab, 0, 0);
-        if (rms_status != RMS$_NORMAL)
-            return FALSE;
-    }
-
-
-    /*
-     * Copy results to output parameters.  Only copy explicitly specified
-     * components of the file specification.
-     */
-    if (dir != NULL)
-    {
-        if (nam.nam$l_fnb & (NAM$M_NODE | NAM$M_EXP_DEV | NAM$M_EXP_DIR))
-        {
-            /*
-             *  If the directory was explictly in the filespec, do a search to
-             *  get the directory that actually contains the file.  If it fails
-             *  redo the parse, because we know that the parse succeeded above
-             *  and we may be trying to create a file instead of opening one.
-             */
-            nam.nam$b_nop   = 0;
-            rms_status = SYS$PARSE(&fab, 0, 0);
-            rms_status = SYS$SEARCH(&fab, 0, 0);
-            if (rms_status != RMS$_NORMAL)
-            {
-                /* Search failed, so just do a syntax_only parse */
-                nam.nam$b_nop   = NAM$M_SYNCHK;
-                SYS$PARSE(&fab, 0, 0);
-            }
-
-            /* Append the results of the parse into the dir output argument */
-            STRNLCPY(dir, nam.nam$l_node, nam.nam$b_node);
-            STRNLCPY(&dir[nam.nam$b_node], nam.nam$l_dev, nam.nam$b_dev);
-            STRNLCPY(&dir[nam.nam$b_node + nam.nam$b_dev],
-                    nam.nam$l_dir, nam.nam$b_dir);
-            dir[nam.nam$b_node + nam.nam$b_dev + nam.nam$b_dir] = '\0';
-        }
-        else
-            dir[0] = '\0';
-    }
-
-    if (name != NULL)
-    {
-        if (nam.nam$l_fnb & NAM$M_EXP_NAME)
-        {
-            STRNLCPY(name, nam.nam$l_name, nam.nam$b_name);
-            name[nam.nam$b_name] = '\0';
-        }
-        else
-            name[0] = '\0';
-    }
-
-    if (type != NULL)
-    {
-        if (nam.nam$l_fnb & (NAM$M_EXP_TYPE | NAM$M_EXP_VER))
-        {
-            STRNLCPY(type, nam.nam$l_type, nam.nam$b_type);
-            if (nam.nam$l_fnb & NAM$M_EXP_VER)
-            {
-                STRNLCPY(&type[nam.nam$b_type], nam.nam$l_ver, nam.nam$b_ver);
-                type[nam.nam$b_type + nam.nam$b_ver] = '\0';
-            }
-            else
-                type[nam.nam$b_type] = '\0';
-        }
-        else
-            type[0] = '\0';
-    }
-
-    return TRUE;
-}
-#endif
 
 /*
 **  F I L E _ h a s _ d i r _ i n f o
@@ -942,33 +633,7 @@ int FILE_execute_cmd
         message_print(msg_id, (char*)cmd);
 
     /* Execute the command, errors to default output device */
-#ifdef VMS
-    {
-        $DESCRIPTOR(vcmd, cmd);
-        vcmd.dsc$w_length = strlen(cmd);
-        status = LIB$SPAWN(&vcmd);
-	/* If it failed, output a message as sometimes the subprocess won't even though it failed */
-	if ((status & 1) != 1) {
-	    /*
-	    ** If we haven't yet output a message associated with the spawned command, then
-	    ** include it in the message, because the SYSERMSG requires the context of
-	    ** a previously reported message.
-	    */
-	    if (msg_id == 0) {
-		idl_error_list_t errvec[2];
-		errvec[0].msg_id = NIDL_STUBCOMPILE;
-		errvec[0].arg1   = cmd;
-		errvec[1].msg_id = NIDL_SYSERRMSG;
-		errvec[1].arg1   = strerror(EVMSERR,status);
-		error_list(2, errvec, TRUE);
-		}
-	    else
-		message_print(NIDL_SYSERRMSG,strerror(EVMSERR,status));
-	}
-    }
-#else
     status = system(cmd);
-#endif
 
     /* Free the command string */
     FREE(cmd);
@@ -994,10 +659,6 @@ void FILE_delete
 #endif
 
 {
-#ifdef VMS
-    remove (filename);
-#else
     unlink (filename);
-#endif
 }
 /* preserve coding style vim: set tw=78 sw=4 : */

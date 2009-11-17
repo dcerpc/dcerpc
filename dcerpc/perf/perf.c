@@ -47,11 +47,6 @@
 
 void print_binding_info(char *text, handle_t h);
 
-
-#ifdef vms
-#define unlink delete
-#endif
-
 static int n_calls = 0,
     n_brd = 0,
     n_maybe = 0,

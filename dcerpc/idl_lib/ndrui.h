@@ -647,18 +647,6 @@ void rpc_ss_ndr_unmar_Z_values
 #endif
 );
 
-#if defined(VMS) && defined(VAX)
-
-void rpc_ss_complete_conf_arr_descs
-(
-    idl_ulong_int num_conf_char_arrays,
-    idl_byte **conf_char_array_list,
-    rpc_void_p_t IDL_param_vector[],
-    IDL_msp_t IDL_msp
-);
-
-#endif
-
 void rpc_ss_ndr_unmar_check_bounds_correlation
 #ifdef IDL_PROTOTYPES
 (

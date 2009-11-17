@@ -2765,11 +2765,7 @@ fork_test_replay:
          * Do the fork.  Both parent and child need to jump back and
          * start over again.
          */
-#ifndef VMS
         cpid = fork();
-#else
-        cpid = vfork();
-#endif
         fork_count++;
         argc = save_argc;
         argv = save_argv;
@@ -2786,11 +2782,7 @@ fork_test_replay:
          * Do the fork.  Only parent need to jump back and
          * start over again.
          */
-#ifndef VMS
         cpid = fork();
-#else
-        cpid = vfork();
-#endif
         fork_count++;
 
         if (cpid == 0)  /* child */
@@ -2808,11 +2800,7 @@ fork_test_replay:
          * Do the fork.  Only child need to jump back and
          * start over again.
          */
-#ifndef VMS
         cpid = fork();
-#else
-        cpid = vfork();
-#endif
         fork_count++;
 
         if (cpid != 0)    /* original */
@@ -2838,11 +2826,7 @@ fork_test_replay:
          * Do the fork twice.  Both child and grandchild need to jump back and
          * start over again.
          */
-#ifndef VMS
         cpid = fork();
-#else
-        cpid = vfork();
-#endif
         fork_count++;
 
         if (cpid != 0)    /* original */
@@ -2851,11 +2835,7 @@ fork_test_replay:
             break;
         }
 
-#ifndef VMS
         cpid = fork();
-#else
-        cpid = vfork();
-#endif
         if (cpid == 0)  /* grandchild */
             fork_count++;
 
@@ -2871,11 +2851,7 @@ fork_test_replay:
          * Do the fork twice.  Only grandchild need to jump back and
          * start over again.
          */
-#ifndef VMS
         cpid = fork();
-#else
-        cpid = vfork();
-#endif
         fork_count++;
 
         if (cpid != 0)    /* original */
@@ -2884,11 +2860,7 @@ fork_test_replay:
             break;
         }
 
-#ifndef VMS
         cpid = fork();
-#else
-        cpid = vfork();
-#endif
         fork_count++;
 
         if (cpid != 0)    /* child */
@@ -2909,11 +2881,7 @@ fork_test_replay:
          * Do the fork.  Only child need to jump back and
          * start over again.
          */
-#ifndef VMS
         cpid = fork();
-#else
-        cpid = vfork();
-#endif
         fork_count++;
 
         if (cpid != 0)    /* original */

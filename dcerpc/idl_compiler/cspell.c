@@ -1143,8 +1143,6 @@ void CSPELL_suppress_stub_warnings
     fprintf(fid, "#pragma GCC diagnostic ignored \"-Wmissing-field-initializers\"\n");
     fprintf(fid, "#pragma GCC diagnostic ignored \"-Wmissing-braces\"\n");
     fprintf(fid, "#endif\n");
-
-    fprintf(fid, "#ifdef VMS\n#pragma nostandard\n#endif\n");
 }
 
 void CSPELL_restore_stub_warnings
@@ -1157,6 +1155,5 @@ void CSPELL_restore_stub_warnings
 	FILE   *fid;
 #endif
 {
-    fprintf(fid, "#ifdef VMS\n#pragma standard\n#endif\n");
 }
 

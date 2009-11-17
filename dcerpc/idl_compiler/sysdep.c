@@ -39,13 +39,8 @@
 
 #include <nidl.h>
 
-#ifdef vms
-# include <types.h>
-# include <stat.h>
-#else
-# include <sys/types.h>
-# include <sys/stat.h>
-#endif
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #ifndef MAX_INCLUSION_DEPTH
 # define MAX_INCLUSION_DEPTH 10
@@ -65,7 +60,6 @@ char *sysdep_save_temp
     char *old_name;
 #endif
 {
-#ifndef vms
         char new_name[64];
         char *new_name_ptr;
         sprintf(new_name,"IDL%02d.TMP", temp_count);
@@ -77,7 +71,6 @@ char *sysdep_save_temp
                 error(NIDL_RENAMEFAILED,old_name,new_name);
         }
         return(new_name_ptr);
-#endif
 }
 
 void sysdep_cleanup_temp
@@ -87,7 +80,6 @@ void sysdep_cleanup_temp
 ()
 #endif
 {
-#ifndef vms
         int i;
         char *name;
 
@@ -102,7 +94,6 @@ void sysdep_cleanup_temp
                 }
         }
         temp_count = 0;
-#endif
 }
 
 #endif
@@ -157,11 +148,7 @@ void msdos_fix_filename
 #endif
 #define MAX_FORMAT_LEN  255
 #define INDENT_SP_PER_LVL 2
-#if defined(vax) && !defined(vms)
-# include <varargs.h>
-#else
-# include <stdarg.h>
-#endif
+#include <stdarg.h>
 #include <stdio.h>
 
 static char out_buffer[LINE_BUFF_SIZE]; /* Buffer for outputs */
@@ -245,11 +232,7 @@ int output_line
     char temp;
     int i, j, len, new_len;
 
-#if defined(vax) && !defined(vms)
-    va_start (args);
-#else
     va_start (args, format);
-#endif
 
     /*
     ** If not the same fid as the last call, flush the output buffer for the

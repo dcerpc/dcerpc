@@ -43,14 +43,6 @@
 #ifndef RPCEXC_H
 #define RPCEXC_H 	1
 
-#if defined(VMS) || defined(__VMS)
-#pragma nostandard
-#if defined(__DECC) || defined(__cplusplus)
-#pragma extern_model __save
-#pragma extern_model __strict_refdef
-#endif /* DEC C or C++ */
-#endif /* VMS  */
-
 #include <dce/dcethread.h>
 
 #ifndef HAS_GLOBALDEFS 
@@ -203,14 +195,5 @@ RPC_EXTERN_EXCEPTION rpc_x_ss_incompatible_codesets;
 RPC_EXTERN_EXCEPTION rpc_x_stub_protocol_error;
 RPC_EXTERN_EXCEPTION rpc_x_unknown_stub_rtl_if_vers;
 RPC_EXTERN_EXCEPTION rpc_x_ss_codeset_conv_error;
-
-#if defined(VMS) || defined(__VMS)
-#if defined(__DECC) || defined(__cplusplus)
-#pragma extern_model __restore
-#endif /* DEC C or C++ */
-
-#pragma standard
-
-#endif /* VMS */
 
 #endif /* _RPCEXC_H */

@@ -75,13 +75,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#ifdef VMS
-#   include <descrip.h>
-#   define MAX_MSG_IDENT   32      /* Max size of message identifier */
-#   define MAX_MSG_TEXT   256      /* Max size of VMS message text */
-#   define MAX_FMT_TEXT   512      /* Max size of formatted output string */
-#   define MSG_OPTS       0xF      /* %FACIL-S-IDENT, Text */
-#else
 #   define MAX_FMT_TEXT   512      /* Max size of formatted output string */
 #   ifdef HAVE_NL_TYPES_H
 #       include <nl_types.h>
@@ -117,7 +110,6 @@ static long max_message_number		/* Compute number of messages. */
 	= (long)(sizeof(default_messages)/sizeof(char *) - 1);
 #   define def_message(id) \
 	default_messages[(id<0||id>max_message_number)?0:id]
-#endif
 
 #include <message.h>
 static char     msg_prefix[PATH_MAX+3];
@@ -138,40 +130,6 @@ void message_open
 (image_name)
       char    *image_name;
 #endif
-
-#ifdef VMS
-                    /* m e s s a g e _ o p e n  (VMS) */
-{
-    struct dsc$descriptor
-                    ctrstr,     /* Descriptor for stored text of message */
-                    outbuf;     /* Descriptor for formatted text of message */
-    long            flags;      /* Message flags */
-    unsigned short  outlen;     /* Length of formatted message */
-    long            status;
-    char            version_text[MAX_MSG_TEXT];
-
-    ctrstr.dsc$w_length     = sizeof(version_text)-1;
-    ctrstr.dsc$b_dtype      = DSC$K_DTYPE_T;    /* Text */
-    ctrstr.dsc$b_class      = DSC$K_CLASS_S;    /* Static */
-    ctrstr.dsc$a_pointer    = version_text;         /* Point at local buffer */
-
-    strncpy(msg_prefix,image_name,PATH_MAX);
-    strlcat(msg_prefix,": ", sizeof(msg_prefix));
-
-#ifdef DUMPERS
-    status = SYS$GETMSG(MESSAGE_VERSION, &ctrstr.dsc$w_length, &ctrstr, 1, 0);
-    if ((status & 1) == 0)
-        fprintf(stderr, "%sError in error message processing!\n",msg_prefix);
-    version_text[ctrstr.dsc$w_length] = '\0';
-    if (atoi(version_text) != MESSAGE_VERSION_USED)
-        fprintf(stderr, "%sMessage catalog version mismatch, Expected: \"%d\", Actual: \"%s\"\n",
-            msg_prefix, MESSAGE_VERSION_USED, version_text );
-#endif
-    return;
-}
-
-#else
-                    /* m e s s a g e _ o p e n  (non-VMS) */
 {
 #ifdef HAVE_NL_TYPES_H
     char cat_name[PATH_MAX] = CATALOG_DIR "idl.cat";
@@ -203,7 +161,6 @@ void message_open
 #endif /* HAVE_NL_TYPES_H */
     return;
 }
-#endif /* !VMS */
 
 /*
  *  m e s s a g e _ c l o s e
@@ -220,14 +177,6 @@ void message_close
 ()
 #endif
 
-#ifdef VMS
-                    /* m e s s a g e _ c l o s e  (VMS) */
-{
-    return;
-}
-
-#else
-                    /* m e s s a g e _ c l o s e  (non-VMS) */
 {
 #ifdef HAVE_NL_TYPES_H
     if (cat_handle != (nl_catd)-1) catclose(cat_handle);
@@ -235,7 +184,6 @@ void message_close
     return;
 }
 
-#endif
 
 /*
  *  m e s s a g e _ p r i n t
@@ -246,14 +194,11 @@ void message_close
  *              [arg1,...,arg5] - Optional arguments for message formatting
  *
  *  Outputs:    message printed to stderr.
- *              On VAX/VMS systems, the message is output to
- *              SYS$ERROR/SYS$OUTPUT following the VAX/VMS conventions.
  */
 
 void vmessage_print
 (long msgid, va_list arglist)
-
-{   /* non-VMS message_print() */
+{
     char format[MAX_FMT_TEXT];     /* Format string */
 
 #ifdef HAVE_NL_TYPES_H
@@ -285,51 +230,18 @@ void vmessage_print
 }
 
 void message_print
-#ifdef VMS
-(
-    long msgid,
-    char *arg1,
-    char *arg2,
-    char *arg3,
-    char *arg4,
-    char *arg5
-)
-#else
 #ifdef __STDC__
 (long msgid, ...)
 #else
 (va_alist) va_dcl
 #endif
-#endif
-
-#if defined(VMS) && !defined(BROKEN_PUTMSG)
-                    /* m e s s a g e _ p r i n t  (VMS) */
 {
-    long            status;
-    char            *msg_vec[8]; /* create a message vec for PUTMSG */
-
-    /* Initialize the message vector */
-    msg_vec[0] = (char *)7;
-    msg_vec[1] = (char *)msgid;
-    msg_vec[2] = (char *)5;
-    msg_vec[3] = arg1;
-    msg_vec[4] = arg2;
-    msg_vec[5] = arg3;
-    msg_vec[6] = arg4;
-    msg_vec[7] = arg5;
-
-    status = SYS$PUTMSG(msg_vec, 0, 0, 0);
-    if ((status & 1) == 0) LIB$SIGNAL(status);
-}
-#else
-{   /* non-VMS message_print() */
     va_list arglist;
 
     VA_START(arglist, msgid, long);
-	vmessage_print (msgid, arglist);
+    vmessage_print (msgid, arglist);
     va_end(arglist);
 }
-#endif
 
 
 #ifndef UUIDGEN
@@ -365,43 +277,6 @@ void message_sprint
     char    *arg1, *arg2,           /* 0-5 directive arguments */
             *arg3, *arg4, *arg5;
 #endif
-
-#ifdef VMS
-                    /* m e s s a g e _ s p r i n t  (VMS) */
-{
-    struct dsc$descriptor
-                    ctrstr,     /* Descriptor for stored text of message */
-                    outbuf;     /* Descriptor for formatted text of message */
-    long            flags;      /* Message flags */
-    unsigned short  outlen;     /* Length of formatted message */
-    long            status;
-    char            msg_text[MAX_MSG_TEXT];
-
-    ctrstr.dsc$w_length     = sizeof(msg_text)-1;
-    ctrstr.dsc$b_dtype      = DSC$K_DTYPE_T;    /* Text */
-    ctrstr.dsc$b_class      = DSC$K_CLASS_S;    /* Static */
-    ctrstr.dsc$a_pointer    = msg_text;         /* Point at local buffer */
-
-    flags = MSG_OPTS;           /* %FAC-S-IDENT, Text */
-
-    status = SYS$GETMSG(msgid, &ctrstr.dsc$w_length, &ctrstr, flags, 0);
-    if ((status & 1) == 0)
-        fprintf(stderr, "Error in error message processing!\n");
-
-    outbuf.dsc$w_length     = MAX_FMT_TEXT-1;   /* Assume user buf fits max */
-    outbuf.dsc$b_dtype      = DSC$K_DTYPE_T;    /* Text */
-    outbuf.dsc$b_class      = DSC$K_CLASS_S;    /* Static */
-    outbuf.dsc$a_pointer    = str;              /* Point at user buffer */
-
-    status = SYS$FAO(&ctrstr, &outlen, &outbuf, arg1, arg2, arg3, arg4, arg5);
-    if ((status & 1) == 0)
-        fprintf(stderr, "Error in error message processing!\n");
-
-    str[outlen] = '\0';
-}
-
-#else
-                   /* m e s s a g e _ s p r i n t  (non-VMS) */
 {
     char *msg_text;     /* Ptr to message text (storage owned by catgets) */
 
@@ -427,8 +302,6 @@ void message_sprint
 
     NL_SPRINTF(str, msg_text, arg1, arg2, arg3, arg4, arg5);
 }
-
-#endif
 
 /*
  *  m e s s a g e _ f p r i n t
@@ -462,45 +335,6 @@ void message_fprint
     char    *arg1, *arg2,           /* 0-5 directive arguments */
             *arg3, *arg4, *arg5;
 #endif
-
-#ifdef VMS
-                    /* m e s s a g e _ f p r i n t  (VMS) */
-{
-    char            str[MAX_FMT_TEXT];     /* Formatted message text */
-    struct dsc$descriptor
-                    ctrstr,     /* Descriptor for stored text of message */
-                    outbuf;     /* Descriptor for formatted text of message */
-    long            flags;      /* Message flags */
-    unsigned short  outlen;     /* Length of formatted message */
-    long            status;
-    char            msg_text[MAX_MSG_TEXT];
-
-    ctrstr.dsc$w_length     = sizeof(msg_text)-1;
-    ctrstr.dsc$b_dtype      = DSC$K_DTYPE_T;    /* Text */
-    ctrstr.dsc$b_class      = DSC$K_CLASS_S;    /* Static */
-    ctrstr.dsc$a_pointer    = msg_text;         /* Point at local buffer */
-
-    flags = 1;           /* Text Only, No facility or severity prefix */
-
-    status = SYS$GETMSG(msgid, &ctrstr.dsc$w_length, &ctrstr, flags, 0);
-    if ((status & 1) == 0)
-        fprintf(stderr, "Error in error message processing!\n");
-
-    outbuf.dsc$w_length     = MAX_FMT_TEXT-1;   /* Assume user buf fits max */
-    outbuf.dsc$b_dtype      = DSC$K_DTYPE_T;    /* Text */
-    outbuf.dsc$b_class      = DSC$K_CLASS_S;    /* Static */
-    outbuf.dsc$a_pointer    = str;              /* Point at user buffer */
-
-    status = SYS$FAO(&ctrstr, &outlen, &outbuf, arg1, arg2, arg3, arg4, arg5);
-    if ((status & 1) == 0)
-        fprintf(stderr, "Error in error message processing!\n");
-
-    str[outlen] = '\0';
-    fprintf(fid, "%s\n", str);
-}
-
-#else
-                   /* m e s s a g e _ f p r i n t  (non-VMS) */
 {
     char            str[MAX_FMT_TEXT];     /* Formatted message text */
     char *msg_text;     /* Ptr to message text (storage owned by catgets) */
@@ -514,5 +348,4 @@ void message_fprint
     fprintf(fid, "%s\n", str);
 }
 
-#endif
 #endif

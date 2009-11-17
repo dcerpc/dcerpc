@@ -215,9 +215,6 @@ PUBLIC void rpc__dbg_set_switches    _DCE_PROTOTYPE_ ((
  * The last choice is to abandon this all together, define NO_RPC_PRINTF
  * and just use "printf" (from commonp.h).
  */
-#if defined(VMS) || (defined(ultrix) && defined(vaxc))
-#define NO_RPC_PRINTF
-#endif
 
 #ifndef NO_RPC_PRINTF
 

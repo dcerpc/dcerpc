@@ -70,7 +70,6 @@
  * apparently due to the underlying wait() call from pclose and the unpredict-
  * ability of the order of child exits.
  */
-#ifndef VMS
 #include <errno.h>
 #define PCLOSE(stream) \
 { \
@@ -78,7 +77,6 @@
     /* Silently read to eof - extra lines should cause COMPABORT msg anyway */ \
     while (fgets(buf, sizeof(buf), stream) != NULL) ; \
 }
-#endif
 
 /* Globals */
 
@@ -130,7 +128,6 @@ static void FE_init(void)
 **  Sends the source file through CPP before giving it to lex.
 **  The cpp_output argument is a file ID for the output from cpp.
 **      UNIX only:      cpp_output is connected to piped output from cpp.
-**      VAX/VMS only:   cpp_output is connected to a temp file of cpp output.
 */
 
 #if defined(CPP)
@@ -147,124 +144,44 @@ static void cpp
 )
 
 {
-#ifdef VMS
-    boolean     paren_flag;
-    char        dir[max_string_len], name[max_string_len], type[max_string_len];
-    char        expanded_file_name[max_string_len];
-    int         system_status;
-#endif
     char        cmd[max_string_len];    /* Command to spawn cpp */
 
     cmd[0] = '\0';
+
+    assert(cpp_cmd && *cpp_cmd);
 
     /* Put together beginning of command. */
 
     strlcpy(cmd, cpp_cmd, sizeof(cmd));
     strlcat(cmd, " ", sizeof(cmd));
-#ifdef VMS
-    strlcat(cmd, "/PREPROCESS=", sizeof(cmd));
-    strlcat(cmd, dst_file_name, sizeof(cmd));
+    strlcat(cmd, cpp_opt ? cpp_opt : "", sizeof(cmd));
     strlcat(cmd, " ", sizeof(cmd));
-#endif
-    strlcat(cmd, cpp_opt, sizeof(cmd));
-    strlcat(cmd, " ", sizeof(cmd));
-#ifndef VMS
-    strlcat(cmd, file_name, sizeof(cmd));
-#else
-    /* On VMS, hack so source filespec in U*ix format still works. */
-    FILE_parse(file_name, dir, sizeof(dir), name, sizeof(name), type, sizeof(type));
-    FILE_form_filespec(name, dir, type, (char *)NULL, expanded_file_name, sizeof(expanded_file_name));
-    strlcat(cmd, expanded_file_name, sizeof(cmd));
-#endif
+    strlcat(cmd, file_name ? file_name : "" , sizeof(cmd));
 
     /* Append the -D strings. */
 
-#ifdef VMS
-    if (*def_strings)
-    {
-        paren_flag = TRUE;
-        strlcat(cmd, " /DEFINE=(", sizeof(cmd));
-    }
-    else
-        paren_flag = FALSE;
-#endif
-
     while (*def_strings)
     {
-#ifndef VMS
         strlcat(cmd, " -D", sizeof(cmd));
-#endif
         strlcat(cmd, *def_strings++, sizeof(cmd));
-#ifdef VMS
-        strlcat(cmd, ",", sizeof(cmd));
-#endif
     }
-
-#ifdef VMS
-    if (paren_flag)
-        /* Overwrite trailing comma with paren. */
-        cmd[strlen(cmd)-1] = ')';
-#endif
 
     /* Append the -U strings. */
-
-#ifdef VMS
-    if (*undef_strings)
-    {
-        paren_flag = TRUE;
-        strlcat(cmd, " /UNDEFINE=(", sizeof(cmd));
-    }
-    else
-        paren_flag = FALSE;
-#endif
-
     while (*undef_strings)
     {
-#ifndef VMS
         strlcat(cmd, " -U", sizeof(cmd));
-#endif
         strlcat(cmd, *undef_strings++, sizeof(cmd));
-#ifdef VMS
-        strlcat(cmd, ",", sizeof(cmd));
-#endif
     }
-
-#ifdef VMS
-    if (paren_flag)
-        /* Overwrite trailing comma with paren. */
-        cmd[strlen(cmd)-1] = ')';
-#endif
 
     /* If cpp_cmd is the default, append the -I directories. */
 
     if (strcmp(cpp_cmd, CMD_def_cpp_cmd) == 0)
     {
-#ifdef VMS
-        if (*idir_list)
-        {
-            paren_flag = TRUE;
-            strlcat(cmd, " /INCLUDE_DIRECTORY=(", sizeof(cmd));
-        }
-        else
-            paren_flag = FALSE;
-#endif
-
         while (*idir_list)
         {
-#ifndef VMS
             strlcat(cmd, " -I", sizeof(cmd));
-#endif
             strlcat(cmd, *idir_list++, sizeof(cmd));
-#ifdef VMS
-            strlcat(cmd, ",", sizeof(cmd));
-#endif
         }
-
-#ifdef VMS
-        if (paren_flag)
-            /* Overwrite trailing comma with paren. */
-            cmd[strlen(cmd)-1] = ')';
-#endif
     }
 
     /* Now execute the cpp command and open output file or pipe. */
@@ -272,28 +189,8 @@ static void cpp
     if (saved_cmd_opt[opt_verbose])
         message_print(NIDL_RUNCPP,cmd);
 
-#ifdef VMS
-    {
-        $DESCRIPTOR(vcmd, cmd);
-        vcmd.dsc$w_length = strlen(cmd);
-        system_status = LIB$SPAWN(&vcmd);
-        if (($VMS_STATUS_SEVERITY(system_status) == STS$K_ERROR) ||
-            ($VMS_STATUS_SEVERITY(system_status) == STS$K_SEVERE))
-        {
-            idl_error_list_t errvec[2];
-            errvec[0].msg_id = NIDL_INVOKECPP;
-            errvec[1].msg_id = NIDL_SYSERRMSG;
-            errvec[1].arg1   = strerror(EVMSERR,system_status);
-            error_list(2, errvec, TRUE);
-        }
-    }
-    FILE_open(dst_file_name, cpp_output);
-#endif
-
-#ifndef VMS
     if ((*cpp_output = popen(cmd, "r")) == 0)
         error(NIDL_INVOKECPP);
-#endif
 }
 #endif
 
@@ -480,7 +377,6 @@ static boolean parse
 )
 {
     FILE *nidl_yyin;
-    extern char *nidl_yytext;
 
     char const  *sf;                            /* Source filespec */
     char        full_path_name[max_string_len]; /* Full source pathname */

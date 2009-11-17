@@ -127,12 +127,6 @@ typedef rpc_trans_tab_t * rpc_trans_tab_p_t;
 
 #define STUBS_USE_PTHREADS	1
 
-#if defined(VMS) || defined(__VMS)
-#pragma nostandard
-#define IDL_ENABLE_STATUS_MAPPING
-#endif /* VMS */
-
-
 /***************************************************************************/
 
 /* 
@@ -174,20 +168,7 @@ typedef rpc_trans_tab_t * rpc_trans_tab_p_t;
 #define IDL_offsetofarr(_type, _member) \
     (((char *)((_type *)0)->_member) - (char *)((_type *)0))
 
-#if defined(__VMS) && ( defined(__DECC) || defined(__cplusplus) )
-#pragma extern_model __save
-#pragma extern_model __common_block __shr
-#endif /* VMS or DECC or C++ */
-
 #include <dce/rpcexc.h>
-
-
-#else /* NCK defined */
-
-#if defined(__VMS) && (defined(__DECC) || defined(__cplusplus))
-#pragma extern_model __save
-#pragma extern_model __common_block __shr
-#endif /* VMS, DEC C, or C++ */
 
 #endif  /* NCK */
 
@@ -1002,33 +983,6 @@ void rpc_ss_init_context_once   _DCE_PROTOTYPE_ ((void));
 
 #define RPC_SS_INIT_CONTEXT if(!rpc_ss_context_is_set_up)rpc_ss_init_context_once();
 
-#if defined(VMS) || defined(__VMS)
-#    define IDL_ENABLE_STATUS_MAPPING
-#    undef RPC_SS_INIT_CLIENT
-#    define RPC_SS_INIT_CLIENT if(!rpc_ss_client_is_set_up) \
-        { \
-            rpc_ss_init_client_once(); \
-            rpc_ss_client_is_set_up = ndr_true; \
-        }
-#    undef RPC_SS_INIT_SERVER
-#    define RPC_SS_INIT_SERVER if(!rpc_ss_server_is_set_up) \
-        { \
-            rpc_ss_init_server_once(); \
-            rpc_ss_server_is_set_up = ndr_true; \
-        }
-#    undef RPC_SS_INIT_ALLOCATE
-#    define RPC_SS_INIT_ALLOCATE if(!rpc_ss_allocate_is_set_up) \
-        { \
-            rpc_ss_init_allocate_once(); \
-            rpc_ss_allocate_is_set_up = ndr_true; \
-        }
-#    undef RPC_SS_INIT_CONTEXT
-#    define RPC_SS_INIT_CONTEXT if(!rpc_ss_context_is_set_up) \
-        { \
-            rpc_ss_init_context_once(); \
-            rpc_ss_context_is_set_up = ndr_true; \
-        }
-#endif /* VMS */
 
 #ifdef MEMORY_NOT_WRITTEN_SERIALLY
 
@@ -1710,15 +1664,6 @@ void rpc_ss_bind_authn_client _DCE_PROTOTYPE_ ((
 #endif  /* !defined(NCK) || defined(NCK_NEED_MARSHALLING) */
 
 /* Matching pragma for one specified above */
-
-#if defined(VMS) || defined(__VMS)
-
-#if defined(__DECC) || defined(__cplusplus)
-#pragma extern_model __restore
-#endif /* DEC C or C++ */
-
-#pragma standard
-#endif /* VMS  */
 
 #ifdef __cplusplus
 }

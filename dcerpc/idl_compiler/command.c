@@ -89,11 +89,9 @@ static const char *client;
 #define client_all  3
 static const char *client_vals[]    = { "none", "stub", "aux", "all", NULL };
 
-#if defined(VMS) || defined(UNIX)
 const char      *CMD_def_cpp_cmd;
 static const char *cpp_cmd;
 static const char *cpp_opt;
-#endif
 
 static const char *cstub_suffix   = CSTUB_SUFFIX,
                 *cstub_file;
@@ -175,25 +173,15 @@ OPTIONS option_table[]={
 	{"cepv",         ASSERTARG,                      FD(cmd_opt[opt_cepv])},
 	{"client",       STRARG,                         FD(client)},
 	{"confirm",      ASSERTARG|HIDARG,               FD(cmd_opt[opt_confirm])},
-#if defined(VMS) || defined(UNIX)
-	{"cpp_cmd",      OSTRARG,                        FD(cpp_cmd)},
-	{"cpp_opt",      STRARG,                         FD(cpp_opt)},
-#endif
+        {"cpp_cmd",      OSTRARG,                        FD(cpp_cmd)},
+        {"cpp_opt",      STRARG,                         FD(cpp_opt)},
 	{"cstub",        STRARG,                         FD(cstub_file)},
-#ifdef VMS
-	{"d",            VSTRARG(MAX_DEF_STRINGS),       FDV(def_strings)},
-#else
 	{"D",            VSTRARG(MAX_DEF_STRINGS),       FDV(def_strings)},
-#endif
 #ifdef DUMPERS
 	{"dump",         VSTRARG(MAX_DUMP_STRINGS)|HIDARG,FDV(dump_strings)},
 #endif
 	{"header",       OSTRARG,                        FD(header_file)},
-#ifdef VMS
-	{"i",            VSTRARG(MAX_IMPORT_DIRECTORIES),FDV(import_directories)},
-#else
 	{"I",            VSTRARG(MAX_IMPORT_DIRECTORIES),FDV(import_directories)},
-#endif
 	{"keep",         STRARG,                         FD(keep)},
 	{"midl",         ASSERTARG|HIDARG,               FD(cmd_opt[opt_midl])},
 	{"no_bug",       VINTARG(NUM_BUGS),              FDV(do_not_do_bug)},
@@ -211,15 +199,9 @@ OPTIONS option_table[]={
 	{"space_opt",    ASSERTARG,                      FD(cmd_opt[opt_space_opt])},
 	{"sstub",        STRARG,                         FD(sstub_file)},
 	{"standard",     STRARG,                         FD(standard)},
-#ifdef UNIX
 	{"stdin",        ASSERTARG,                      FD(cmd_opt[opt_stdin])},
-#endif
 	{"syntax_only",  ASSERTARG,                      FD(cmd_opt[opt_syntax_check])},
-#ifdef VMS
-	{"u",            VSTRARG(MAX_DEF_STRINGS),       FDV(undef_strings)},
-#else
 	{"U",            VSTRARG(MAX_DEF_STRINGS),       FDV(undef_strings)},
-#endif
 	{"v",            ASSERTARG|HIDARG,               FD(cmd_opt[opt_verbose])},
 	{"version",      ASSERTARG|HIDARG,               FD(cmd_opt[opt_version])},
 	{0,              0,                              0}
@@ -244,7 +226,6 @@ void CMD_explain_args()
      * Don't print full list of command options here unless -confirm
      * specified, but let user know there is a way to do it.
      */
-    /** When VMS DCL syntax is added, will need to conditionalize arg below **/
     if (cmd_opt[opt_confirm])
         printflags(option_table);
     else
@@ -722,20 +703,12 @@ boolean CMD_parse_args          /* Returns TRUE on success */
 
     cmd_opt[opt_confirm]        = FALSE;
 
-#ifdef VMS
-    cpp_cmd                     = UNSPECIFIED;
-    cmd_opt[opt_cpp]            = FALSE;
-#endif
-#ifdef UNIX
     cpp_cmd                     = CPP;
     cmd_opt[opt_cpp]            = TRUE;
-#endif
 
-#if defined(VMS) || defined(UNIX)
     CMD_def_cpp_cmd             = CPP;
     cmd_opt[opt_cpp_opt]        = TRUE;
     cpp_opt                     = "";
-#endif
 
     cmd_opt[opt_cstub]          = TRUE;
     cstub_file                  = "";
@@ -822,20 +795,6 @@ boolean CMD_parse_args          /* Returns TRUE on success */
     /*
      * Parse command line options.
      */
-#ifdef VMS
-    {
-    extern DCL_parse_args(    
-        boolean     *cmd_opt,       /*[out] Array of cmd option arguments */
-        void        **cmd_val       /*[out] Array of cmd option values */
-        );
-
-    if (DCL_parse_args(cmd_opt, cmd_val))
-    {
-        *p_idl_sid = STRTAB_add_string((char *)cmd_val[opt_source]);
-        return TRUE;
-    }
-    }
-#endif
     getflags(argc, argv, option_table);
 
     if (cmd_opt[opt_version])
@@ -1002,22 +961,14 @@ boolean CMD_parse_args          /* Returns TRUE on success */
         for ( ; i > 0; i--)
             import_directories[i] = import_directories[i-1];
         import_directories[0] = CD_IDIR;
-#ifdef VMS
-        flags_incr_count(option_table, "i", 2);
-#else
         flags_incr_count(option_table, "I", 2);
-#endif
     }
 
     if (!cmd_opt[opt_def_idir] &&
         (import_directories[0] == NULL || import_directories[0][0] == '\0'))
     {
         import_directories[0] = CD_IDIR;
-#ifdef VMS
-        flags_incr_count(option_table, "i", 1);
-#else
         flags_incr_count(option_table, "I", 1);
-#endif
     }
 
     /*
@@ -1076,12 +1027,7 @@ boolean CMD_parse_args          /* Returns TRUE on success */
             error(NIDL_UNKFLAG, src_filespec);
             return FALSE;
         }
-#ifdef VMS
-        else
-            /* Default file type to .idl on VMS */
-            FILE_form_filespec(src_filespec, (char *)NULL, ".idl", (char *)NULL,
-                               src_filespec, sizeof(src_filespec));
-#endif
+
         src_file_str = STRTAB_add_string(src_filespec);
     }
 
@@ -1151,28 +1097,11 @@ boolean CMD_parse_args          /* Returns TRUE on success */
      */
     if (cmd_opt[opt_out])
     {
-#ifndef vms
         if (!FILE_kind(out_dir, &out_dir_kind))
             error(NIDL_FILENOTFND, out_dir);
 
         if (out_dir_kind != file_dir)
             error(NIDL_FILENOTDIR, out_dir);
-#else
-        /* Parse out dir so any logical gets translated and for error check */
-        char odir[PATH_MAX];
-        char oname[PATH_MAX];
-        char otype[PATH_MAX];
-        if (FILE_parse(out_dir, odir, sizeof (odir), oname, sizeof (oname), otype, sizeof (otype)))
-            if (oname[0] != '\0' || otype[0] != '\0')
-                error(NIDL_FILENOTDIR, out_dir);
-            else
-            {
-		out_dir = NEW_VEC (char, strlen(odir) + 1);
-                strlcpy(out_dir, odir, strlen(odir) + 1);
-            }
-        else
-            error(NIDL_FILENOTFND, out_dir);
-#endif
     }
 
     /*
@@ -1259,21 +1188,8 @@ boolean CMD_parse_args          /* Returns TRUE on success */
     cmd_val[opt_caux]       = (void *)alloc_and_copy(caux_file);
     cmd_val[opt_cc_cmd]     = (void *)cc_cmd;
     cmd_val[opt_cc_opt]     = (void *)cc_opt;
-#ifdef UNIX
     cmd_val[opt_cpp]        = (void *)cpp_cmd;
     cmd_val[opt_cpp_opt]    = (void *)cpp_opt;
-#endif
-#ifdef VMS
-    /* On VMS the default is -no_cpp.  See if -cpp was specified. */
-    if (cpp_cmd != UNSPECIFIED)
-    {
-        cmd_opt[opt_cpp] = TRUE;
-        if (cpp_cmd[0] == '\0')
-            cpp_cmd = (void *)CPP;  /* Set to default */
-        cmd_val[opt_cpp] = (void *)cpp_cmd;
-    }
-    cmd_val[opt_cpp_opt]    = (void *)cpp_opt;
-#endif
     cmd_val[opt_cstub]      = (void *)alloc_and_copy(cstub_file);
     cmd_val[opt_header]     = (void *)alloc_and_copy(header_file);
     cmd_val[opt_out]        = (void *)out_dir;

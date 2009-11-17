@@ -1090,8 +1090,6 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_set_nbio
 rpc_socket_t        sock;
 #endif
 {
-#ifndef vms
-
     rpc_socket_error_t  serr;
 
     RPC_SOCKET_DISABLE_CANCEL;
@@ -1103,22 +1101,6 @@ rpc_socket_t        sock;
     }
 
     return (serr);
-
-#else
-
-#ifdef DUMMY
-/*
- * Note: This call to select non-blocking I/O is not implemented
- * by UCX on VMS. If this routine is really needed to work in the future
- * on VMS this will have to be done via QIO's.
- */
-    int flag = true;
-    
-    ioctl(sock, FIONBIO, &flag);
-#endif
-    return (RPC_C_SOCKET_OK);
-
-#endif
 }
 
 /*
@@ -1141,7 +1123,6 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_set_close_on_exec
 rpc_socket_t        sock;
 #endif
 {
-#ifndef vms
     rpc_socket_error_t  serr;
 
     RPC_SOCKET_DISABLE_CANCEL;
@@ -1152,9 +1133,6 @@ rpc_socket_t        sock;
         RPC_DBG_GPRINTF(("(rpc__bsd_socket_set_close_on_exec) error=%d\n", serr));
     }
     return (serr);
-#else
-    return (RPC_C_SOCKET_OK);
-#endif
 }
 
 /*

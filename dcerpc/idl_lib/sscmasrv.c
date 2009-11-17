@@ -58,9 +58,7 @@
 /*                                                                            */
 /******************************************************************************/
 
-#ifndef VMS
-    ndr_boolean rpc_ss_server_is_set_up = ndr_false;
-#endif
+ndr_boolean rpc_ss_server_is_set_up = ndr_false;
 
 void rpc_ss_init_server_once(
 #ifdef IDL_PROTOTYPES
@@ -76,9 +74,7 @@ void rpc_ss_init_server_once(
     RPC_SS_THREADS_INIT;
     rpc_ss_init_client_once();
     rpc_ss_init_allocate_once();
-#ifndef VMS
     rpc_ss_server_is_set_up = ndr_true;
-#endif
 
 #ifdef PERFMON
     RPC_SS_INIT_SERVER_ONCE_X;

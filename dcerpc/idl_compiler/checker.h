@@ -49,12 +49,7 @@
 */
 
 /* Evaluates to the text for the 'standard extended' command option */
-#ifdef VMS
-#define OPT_STD_EXTENDED \
-(CMD_DCL_interface) ? "/STANDARD=EXTENDED" : "-standard extended"
-#else
 #define OPT_STD_EXTENDED "-standard extended"
-#endif
 
 /*
  * Get the last field in a structure.  The first field in a structure has a

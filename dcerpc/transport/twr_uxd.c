@@ -50,11 +50,7 @@
 /*
  *  Include the Internet specific socket address
  */
-#ifdef VMS
-#include <un.h>
-#else
 #include <sys/un.h>
-#endif
 
 /*
 **++

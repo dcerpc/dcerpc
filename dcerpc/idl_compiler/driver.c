@@ -48,7 +48,7 @@
 #include <backend.h>    /* Decl. of BE_main() */
 #include <message.h>    /* reporting functions */
 #include <frontend.h>   /* Declaration of FE_main() */
-#if defined(MIA) && (defined(VMS) || defined(__osf__) || defined(DUMPERS))
+#if defined(MIA) && defined(DUMPERS)
 static char *saved_header_file; /* Saved header filespec */
 #endif
 
@@ -101,14 +101,11 @@ void nidl_terminate
 */
 static long attempt_to_print_errors(void)
 {
-#if !defined(vms)
-#ifndef _MSDOS
     signal(SIGBUS,SIG_DFL);
-#endif
     signal(SIGSEGV,SIG_DFL);
     signal(SIGFPE,SIG_DFL);
     signal(SIGILL,SIG_DFL);
-#endif
+
     /*
      * Try printing out the errors, if there are none, or it was
      * attempted before, this call will just return.
@@ -536,17 +533,10 @@ boolean DRIVER_main
      * Establish a handler such that we always try to output the
      * error messages, even when the compiler has an internal error.
      */
-#ifdef vms
-    VAXC$ESTABLISH(attempt_to_print_errors);
-#else
-#ifndef _MSDOS
     signal(SIGBUS, (void (*)(void))attempt_to_print_errors);
-#endif
     signal(SIGSEGV, (void (*)(void))attempt_to_print_errors);
     signal(SIGFPE, (void (*)(void))attempt_to_print_errors);
     signal(SIGILL, (void (*)(void))attempt_to_print_errors);
-#endif
-
 
     /*
      * This point is established for orderly termination of the compilation.
@@ -597,7 +587,7 @@ boolean DRIVER_main
             else
                 filename[0] = '\0';
             saved_header = (char *)cmd_val[opt_header];
-#if defined(MIA) && (defined(VMS) || defined(__osf__) || defined(DUMPERS))
+#if defined(MIA) && defined(DUMPERS)
             saved_header_file = saved_header; /* Static copy for BE callback */
 #endif
             cmd_val[opt_header] = (void *)filename;
@@ -630,43 +620,22 @@ boolean DRIVER_main
         char **idir_list;               /* Array of include directories */
         char idir_opt[max_string_len];  /* Cmd list of include directories */
         char cc_cmd[max_string_len];    /* Base command line and options */
-#ifdef VMS
-        boolean     paren_flag;         /* TRUE if trailing paren needed */
-#endif
 
         /* Paste together command line option for include directories. */
 
-#if defined(UNIX) || defined(VMS)
         idir_list = (char **)cmd_val[opt_idir];
         idir_opt[0] = '\0';
-
-#ifdef VMS
-        if (*idir_list || cmd_opt[opt_out])
-        {
-            paren_flag = TRUE;
-            strlcat(idir_opt, " /INCLUDE_DIRECTORY=(", sizeof(idir_opt));
-        }
-        else
-            paren_flag = FALSE;
-#endif
 
         /* If an -out directory was specified, place it at front of idir list */
         if (cmd_opt[opt_out])
         {
-#ifdef UNIX
             strlcat(idir_opt, " -I", sizeof(idir_opt));
-#endif
             strlcat(idir_opt, (char *)cmd_val[opt_out], sizeof(idir_opt));
-#ifdef VMS
-            strlcat(idir_opt, ",", sizeof(idir_opt));
-#endif
         }
 
         while (*idir_list)
         {
-#ifdef UNIX
             strlcat(idir_opt, " -I", sizeof(idir_opt));
-#endif
             /*
              * If this include dir is the system IDL dir, then replace it
              * with the system H dir, which might be different.
@@ -676,17 +645,7 @@ boolean DRIVER_main
             else
                 strlcat(idir_opt, *idir_list, sizeof(idir_opt));
             idir_list++;
-#ifdef VMS
-            strlcat(idir_opt, ",", sizeof(idir_opt));
-#endif
         }
-
-#ifdef VMS
-        if (paren_flag)
-            /* Overwrite trailing comma with paren. */
-            idir_opt[strlen(idir_opt)-1] = ')';
-#endif
-#endif
 
         /* Paste together base command line. */
 

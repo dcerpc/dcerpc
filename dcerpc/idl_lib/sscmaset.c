@@ -90,7 +90,7 @@ void rpc_ss_call_free
 }
 
 
-#if defined(CMA_INCLUDE) && !defined(VMS)  /* Need CMA_INCLUDE which provides cma_global_lock */
+#if defined(CMA_INCLUDE)  /* Need CMA_INCLUDE which provides cma_global_lock */
 
 /******************************************************************************/
 /*                                                                            */
@@ -115,79 +115,6 @@ char * safe_getenv
     return result;
 }
 #define getenv safe_getenv
-#endif
-
-#if defined(CMA_INCLUDE) && defined(VMS) 
-/******************************************************************************/
-/* Note: CMA now provides these jackets on all platforms other than VAX/VMS   */
-/*       so we don't need them anywhere else                                  */
-/*                                                                            */
-/*    Set up jackets for fopen, fread, and fclose to make them thread safe.   */
-/*    If the base implementation provides safe ones, these can be discarded.  */
-/*                                                                            */
-/******************************************************************************/
-FILE * safe_fopen
-#ifdef IDL_PROTOTYPES
-(
-    char *filename,
-    char *type
-)
-#else
-(filename, type)
-    char *filename;
-    char *type;
-#endif
-{
-    FILE *result;
-    cma_lock_global();
-    result = fopen(filename, type);
-    cma_unlock_global();
-    return result;
-}
-#define fopen safe_fopen
-
-int safe_fread
-#ifdef IDL_PROTOTYPES
-(
-    char        *ptr,
-    unsigned    sizeof_ptr,
-    unsigned    nitems,
-    FILE        *stream
-)
-#else
-(ptr, sizeof_ptr, nitems, stream)
-    char        *ptr;
-    unsigned    sizeof_ptr;
-    unsigned    nitems;
-    FILE        *stream;
-#endif
-{
-    int result;
-    cma_lock_global();
-    result = fread(ptr, sizeof_ptr, nitems, stream);
-    cma_unlock_global();
-    return result;
-}
-#define fread safe_fread
-
-int safe_fclose
-#ifdef IDL_PROTOTYPES
-(
-    FILE *stream
-)
-#else
-(stream)
-    FILE *stream;
-#endif
-{
-    int result;
-    cma_lock_global();
-    result = fclose(stream);
-    cma_unlock_global();
-    return result;
-}
-#define fclose safe_fclose
-
 #endif
 
 /***************************************************************************
@@ -259,9 +186,7 @@ FILE *fid;
 /*                                                                            */
 /******************************************************************************/
 
-#ifndef VMS
 ndr_boolean rpc_ss_client_is_set_up = ndr_false;
-#endif
 static RPC_SS_THREADS_ONCE_T client_once = RPC_SS_THREADS_ONCE_INIT;
 
 globaldef dcethread_exc rpc_x_assoc_grp_not_found;
@@ -686,11 +611,7 @@ void rpc_ss_init_client_once(
 {
     RPC_SS_THREADS_INIT;
     RPC_SS_THREADS_ONCE( &client_once, rpc_ss_init_client );
-
-#ifndef VMS
     rpc_ss_client_is_set_up = ndr_true;
-#endif
-
 }
 
 
@@ -713,15 +634,6 @@ void rpc_ss_init_client_once(
 #define dce_rpc_s_mod 0x16c9a000
 #define dce_thd_s_mod 0x177db000
 #define dce_sec_s_mod 0x17122000
-
-/* Architecture-Specific Status definitions */
-#ifdef VMS
-#include <stsdef.h>
-#include <ssdef.h>
-#ifndef sec_s_mod
-#define sec_s_mod 249790466
-#endif
-#endif
 
 /******************************************************************************/
 /*                                                                            */
@@ -749,55 +661,6 @@ void rpc_ss_map_dce_to_local_status
 
     status_code = (*status_code_p & STATUS_CODE_MASK)
         >> STATUS_CODE_SHIFT;
-
-#ifdef VMS
-    /* Mapping for DCE/RPC status codes */
-    if (facility_and_comp_code == dce_rpc_s_mod)
-        *status_code_p =  (rpc_s_mod & ~STS$M_CODE) | (status_code << 3);
-
-    /* Mapping for DCE/Security status codes */
-    if (facility_and_comp_code == dce_sec_s_mod)
-        *status_code_p = (sec_s_mod & ~STS$M_CODE) | (status_code << 3);
-
-    /* Mapping for DCE/THD status codes */
-    if (facility_and_comp_code == dce_thd_s_mod)
-    {
-        /* Have to case this because some are system-specific errors */
-        switch (status_code) 
-        {
-            case 5:     *status_code_p = SS$_ACCVIO; break;
-            case 6:     *status_code_p = SS$_EXQUOTA; break;
-            case 7:     *status_code_p = SS$_INSFMEM; break;
-            case 8:     *status_code_p = SS$_NOPRIV; break;        
-            case 9:     *status_code_p = SS$_NORMAL; break;
-            case 10:    *status_code_p = SS$_OPCDEC; break;
-            case 11:    *status_code_p = SS$_RADRMOD; break;
-            case 12:    *status_code_p = SS$_OPCDEC; break;
-            case 13:    *status_code_p = SS$_ROPRAND; break;
-            case 14:    *status_code_p = SS$_BREAK; break;
-            case 15:    *status_code_p = SS$_ABORT; break;
-            case 16:    *status_code_p = SS$_COMPAT; break;
-            case 17:    *status_code_p = SS$_FLTOVF; break;
-            case 18:    *status_code_p = SS$_BADPARAM; break;
-            case 19:    *status_code_p = SS$_NOMBX; break;
-            case 20:    *status_code_p = SS$_EXCPUTIM; break;
-            case 21:    *status_code_p = SS$_EXDISKQUOTA; break;
-            case 22:    *status_code_p = SS$_INTOVF; break;
-            case 23:    *status_code_p = SS$_INTDIV; break;
-            case 24:    *status_code_p = SS$_FLTOVF; break;
-            case 25:    *status_code_p = SS$_FLTDIV; break;
-            case 26:    *status_code_p = SS$_FLTUND; break;
-            case 27:    *status_code_p = SS$_DECOVF; break;
-            case 28:    *status_code_p = SS$_SUBRNG; break;
-            default:  
-                /* Actual DCE/THD status */
-                *status_code_p =  (exc_s_exception & ~STS$M_CODE) | (status_code << 3);
-                break;
-        }
-    }
-
-    /* If mapping isn't available, leave it alone */
-#endif
 }
 
 
@@ -816,62 +679,7 @@ void rpc_ss_map_local_to_dce_status
     error_status_t *status_code_p;  /* [in,out] pointer to local status -> DCE status */
 #endif
 {
-#ifdef VMS
-    int facility = $VMS_STATUS_FAC_NO(*status_code_p);
-    int message_number = $VMS_STATUS_CODE(*status_code_p);
-
-    /* If success, return error_status_ok */
-    if ((*status_code_p & 1) != 0) 
-    {
-        *status_code_p = error_status_ok;
-        return;
-    }
-
-    /* Otherwise, map for each facility */
-    switch (facility)
-    {
-        case $VMS_STATUS_FAC_NO(rpc_s_mod): /* DCE RPC facility */
-            *status_code_p = (dce_rpc_s_mod | message_number);
-            break;
-        case $VMS_STATUS_FAC_NO(exc_s_exception): /* CMA facility */
-            *status_code_p = (dce_thd_s_mod | message_number);
-            break;
-        case $VMS_STATUS_FAC_NO(sec_s_mod): /* DCE Security facility */
-            *status_code_p = (dce_sec_s_mod | message_number);
-            break;
-        case 0: /* VMS facility */
-            /* Map system errors, onto DCE threads status values */
-            switch (*status_code_p) 
-            {
-                case SS$_ACCVIO:    *status_code_p = dce_thd_s_mod | 5; break;
-                case SS$_EXQUOTA:   *status_code_p = dce_thd_s_mod | 6; break;
-                case SS$_INSFMEM:   *status_code_p = dce_thd_s_mod | 7; break;
-                case SS$_NOPRIV:    *status_code_p = dce_thd_s_mod | 8; break;        
-                case SS$_NORMAL:    *status_code_p = dce_thd_s_mod | 9; break;
-                case SS$_OPCDEC:    *status_code_p = dce_thd_s_mod |10; break;
-                case SS$_RADRMOD:   *status_code_p = dce_thd_s_mod |11; break;
-                case SS$_ROPRAND:   *status_code_p = dce_thd_s_mod |13; break;
-                case SS$_BREAK:     *status_code_p = dce_thd_s_mod |14; break;
-                case SS$_ABORT:     *status_code_p = dce_thd_s_mod |15; break;
-                case SS$_COMPAT:    *status_code_p = dce_thd_s_mod |16; break;
-                case SS$_FLTOVF:    *status_code_p = dce_thd_s_mod |17; break;
-                case SS$_BADPARAM:  *status_code_p = dce_thd_s_mod |18; break;
-                case SS$_NOMBX:     *status_code_p = dce_thd_s_mod |19; break;
-                case SS$_EXCPUTIM:  *status_code_p = dce_thd_s_mod |20; break;
-                case SS$_EXDISKQUOTA:*status_code_p = dce_thd_s_mod |21; break;
-                case SS$_INTOVF:    *status_code_p = dce_thd_s_mod |22; break;
-                case SS$_INTDIV:    *status_code_p = dce_thd_s_mod |23; break;
-                case SS$_FLTDIV:    *status_code_p = dce_thd_s_mod |25; break;
-                case SS$_FLTUND:    *status_code_p = dce_thd_s_mod |26; break;
-                case SS$_DECOVF:    *status_code_p = dce_thd_s_mod |27; break;
-                case SS$_SUBRNG:    *status_code_p = dce_thd_s_mod |28; break;
-            }
-            break;
-        default:
-            /* If mapping isn't available, leave value alone */
-            break;
-    }
-#endif
+	/* XXX todo? */
 }
 #endif /* IDL_ENABLE_STATUS_MAPPING */
 

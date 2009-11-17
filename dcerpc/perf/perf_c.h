@@ -59,20 +59,14 @@
 
 #include <dce/rpcexc.h>
 
-#if defined(vms) || defined(SYS5)
+#if defined(SYS5)
 #  define index strchr
 #endif
 
 extern char *error_text();
 
-#if defined(vax) && ! (defined(vms) || defined(ultrix))
-#  include <vax.h>
-#  define MARSHALL_DOUBLE(d) d_to_g(d)
-#  define UNMARSHALL_DOUBLE(d) g_to_d(d)
-#else
-#  define MARSHALL_DOUBLE(d)
-#  define UNMARSHALL_DOUBLE(d)
-#endif
+#define MARSHALL_DOUBLE(d)
+#define UNMARSHALL_DOUBLE(d)
 
 extern uuid_old_t FooType, BarType, FooObj1, FooObj2, BarObj1, BarObj2;
 extern idl_uuid_t NilTypeObj, NilObj, ZotObj, ZotType;

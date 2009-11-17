@@ -105,13 +105,9 @@ typedef struct BE_local_var_t
 } BE_local_var_t;
 
 #ifdef DEBUG_VERBOSE
-#  define debug(x) if (BE_dump_debug) printf x
+#  define debug(x) do { if (BE_dump_debug) printf x ; } while (0)
 #else
-#  ifndef VMS
 #     define debug(x)
-#  else
-#     define debug(x) if(0) printf x
-#  endif
 #endif
 
 #endif

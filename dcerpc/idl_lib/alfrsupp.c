@@ -164,9 +164,7 @@ typedef void (*destructor_t)
 /*    Set up CMA machinery required by rpc_ss_allocate, rpc_ss_free           */
 /*                                                                            */
 /******************************************************************************/
-#ifndef VMS
-    ndr_boolean rpc_ss_allocate_is_set_up = ndr_false;
-#endif
+ndr_boolean rpc_ss_allocate_is_set_up = ndr_false;
 
 static RPC_SS_THREADS_ONCE_T allocate_once = RPC_SS_THREADS_ONCE_INIT;
 
@@ -262,9 +260,7 @@ void rpc_ss_init_allocate_once(
 {
     RPC_SS_THREADS_INIT;
     RPC_SS_THREADS_ONCE( &allocate_once, rpc_ss_init_allocate );
-#ifndef VMS
     rpc_ss_allocate_is_set_up = ndr_true;
-#endif
 }
 
 /******************************************************************************/

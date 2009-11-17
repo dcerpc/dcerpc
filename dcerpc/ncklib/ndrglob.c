@@ -49,10 +49,6 @@ GLOBAL u_char ndr_g_local_drep_packed[4] = {
 };
 
 GLOBAL 
-#ifdef VMS
-/* Provide psect name if VMS */
-{"ndr_g_local_drep"} 
-#endif
 ndr_format_t ndr_g_local_drep = {
     NDR_LOCAL_INT_REP,
     NDR_LOCAL_CHAR_REP,
