@@ -98,30 +98,6 @@ void sysdep_cleanup_temp
 
 #endif
 
-
-#ifdef MSDOS
-/* Make a legal unix file name from a DOS one */
-void msdos_fix_filename
-#ifdef PROTO
-(
-    char *name
-)
-#else
-(name)
-    char *name;
-#endif
-{
-        while(*name)
-        {
-                if(*name == '\\')
-                        *name = '/';
-                name++;
-        }
-}
-
-#endif
-
-
 #if defined(IDL_USE_OUTPUT_LINE)
 #undef fprintf
 

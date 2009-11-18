@@ -163,7 +163,6 @@ boolean FILE_lookup             /* Returns TRUE on success */
             return TRUE;
     }
 
-#if defined(UNIX) || defined(_MSDOS)
     /*
      * On Unix-like filesystems, make another pass over the idir_list if the
      * search filespec has a directory name, prepending each idir to the search
@@ -177,10 +176,6 @@ boolean FILE_lookup             /* Returns TRUE on success */
             if (stat(lookup_spec, stat_buf) != -1)
                 return TRUE;
         }
-#endif
-
-    return FALSE;
-
 #else
     error(NIDL_FNUNIXONLY, __FILE__, __LINE__);
 #endif

@@ -95,21 +95,9 @@ static long NAMETABLE_names_are_temporary;
 
 
 
-#ifdef MSDOS
-    The support for the STRTAB must be fixed for MSDOS to not enter strings more
-    than once, and just return the previously allocated index.
 
-    /*
-     * Compiling with Microsoft C: use huge modifier to put
-     * name and string tables in separate segments
-     */
-    static char huge STRTAB[STRTAB_SIZE];/* The string table */
-    static int  STRTAB_index = 1;       /* Current index... (index 0 is NULL string */
-#else
-
-    /* Compiling for UNIX or AEGIS */
-#   define nameTable(id,member) (id)->member
-#endif /*MSDOS*/
+/* Compiling for UNIX or AEGIS */
+#define nameTable(id,member) (id)->member
 
 
 
@@ -920,16 +908,7 @@ STRTAB_str_t STRTAB_add_string
     const char * string
 )
 {
-#ifdef MSDOS
-    int     string_handle;
-
-    strlcpy (&STRTAB[STRTAB_index], string, STRTAB_SIZE - STRTAB_index);
-    string_handle = STRTAB_index;
-    STRTAB_index += strlen (string) + 1;
-    return string_handle;
-#else
     return NAMETABLE_add_id(string);
-#endif
 }
 
 /*--------------------------------------------------------------------*/
@@ -953,11 +932,7 @@ void STRTAB_str_to_string
     const char ** strp
 )
 {
-#ifdef MSDOS
-    *strp = &STRTAB[str];
-#else
     NAMETABLE_id_to_string(str, strp);
-#endif
 }
 
 /*--------------------------------------------------------------------*/
@@ -976,40 +951,8 @@ void STRTAB_str_to_string
  *
  */
 
-#ifdef MSDOS
-#ifdef TURBOC
-static hash_slot huge *nameTablePtr(i)
-int i;
-{
-    char huge *tmp;
-    hash_slot huge *return_val;
-    long offset;
-    tmp = (char *) nameTableData;
-    offset = (long) sizeof(hash_slot)  * (long)i;
-    tmp += offset;
-    return_val = (hash_slot *)tmp;
-    return (return_val);
-}
-#endif
-#endif
-
 void NAMETABLE_init ()
 {
-#ifdef MSDOS
-#ifdef TURBOC
-    {
-
-This still needs more work. I do not understand the TURBO-C stuff yet.
-
-            void far *farcalloc();
-            nameTableData = farcalloc((unsigned long)NAMETABLE_SIZE,
-                                  (unsigned long) sizeof(hash_slot));
-            if(!nameTableData)
-                    error(NIDL_ALLOCNAMTBL);
-    }
-#endif
-#endif
-
     NAMETABLE_root = NULL;
     NAMETABLE_temp_chain = NULL;
     NAMETABLE_unbalanced = 0;
@@ -1020,27 +963,6 @@ This still needs more work. I do not understand the TURBO-C stuff yet.
      */
     currentLevel = 0;
 
-}
-
-
-/*--------------------------------------------------------------------*/
-
-/*
- *
- * Function:    Initializes the string table.
- *
- * Inputs:
- *
- * Outputs:
- *
- * Notes:       The string table is a fixed size
- *
- */
-
-void STRTAB_init () {
-#ifdef MSDOS
-        STRTAB_index = 0;
-#endif
 }
 
 /*--------------------------------------------------------------------*/

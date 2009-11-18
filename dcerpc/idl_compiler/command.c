@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
@@ -16,7 +16,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
 **
@@ -57,10 +57,6 @@
 
 extern boolean  ERR_no_warnings;    /* Global copy of -no_warn cmd option */
 extern char     *last_string;       /* Last string parsed from cmd line */
-
-#ifdef MSDOS
-static int max_suffix_len;
-#endif
 
 static boolean  cmd_opt[NUM_OPTS];  /* True/False values for command options */
 static void     *cmd_val[NUM_OPTS]; /* Values associated w/ options (if any) */
@@ -669,7 +665,7 @@ boolean CMD_parse_args          /* Returns TRUE on success */
     char    l_caux_file[PATH_MAX];      /* Work buf for full caux filespec */
     char    l_saux_file[PATH_MAX];      /* Work buf for full saux filespec */
     char    filespec[PATH_MAX];         /* Work buf for any filespec */
-    
+
     /*
      * Set up default command line options.
      */
@@ -678,8 +674,8 @@ boolean CMD_parse_args          /* Returns TRUE on success */
         support_bug[i] = FALSE;
     /*
      *  By default, -bug 4 is included in the code which causes
-     *  arrays of [ref] pointers contained in structures to not 
-     *  be represented as a hole in NDR.  
+     *  arrays of [ref] pointers contained in structures to not
+     *  be represented as a hole in NDR.
      */
     support_bug[bug_array_no_ref_hole] = TRUE;
 
@@ -806,7 +802,7 @@ boolean CMD_parse_args          /* Returns TRUE on success */
      * Check -bug and -no_bug options.
      */
     for (i = flags_option_count(option_table, "bug") - 1; i >= 0; i--)
-        if ((do_bug[i] < 1) || (do_bug[i] > NUM_BUGS) || 
+        if ((do_bug[i] < 1) || (do_bug[i] > NUM_BUGS) ||
             (do_bug[i] == bug_array_no_ref_hole))
         {
             message_print(NIDL_INVBUG, do_bug[i]);
@@ -1057,28 +1053,6 @@ boolean CMD_parse_args          /* Returns TRUE on success */
         cmd_opt[opt_emit_sstub] = TRUE;
         cmd_opt[opt_saux]       = TRUE;
     }
-
-    /*
-     * Now construct any names that are based on the source filespec.
-     */
-
-#ifdef MSDOS
-    {
-#define extlen(s) (strchr(s, '.') == NULL) ? strlen(s) : (strchr(s, '.') - s)
-    int tmp;
-    int     namelen;                    /* Length of source filename */
-
-    namelen = strlen(src_filename);
-    max_suffix_len = extlen(cstub_suffix);
-    if ((tmp = extlen(sstub_suffix)) > max_suffix_len) max_suffix_len = tmp;
-
-    if (namelen + max_suffix_len > 8)
-    {
-        message_print(NIDL_SRCFILELEN);
-        exit(pgm_error);
-    }
-    }
-#endif
 
     /* If -syntax_only specified, disable all output file processing. */
     if (cmd_opt[opt_syntax_check])

@@ -274,18 +274,6 @@ int             line;
 /*#error  "FILE_SEPARATOR_CHAR not defined!"*/
 #endif
 
-#if 0
-#ifdef MSDOS
-#  define SEPCHAR   '\\'
-#else
-#ifdef vms
-#  define SEPCHAR   ']'
-#else
-#  define SEPCHAR   '/'
-#endif
-#endif
-#endif /* 0 */
-
     char        *p = strrchr (file, FILE_SEPARATOR_CHAR);
 
     EPRINTF("(rpc) *** FATAL ERROR \"%s\" at %s\\%d ***\n",

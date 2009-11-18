@@ -51,14 +51,8 @@
 typedef struct NAMETABLE_n_t * NAMETABLE_id_t;
 #define NAMETABLE_NIL_ID NULL
 
-#ifdef MSDOS
-typedef int  STRTAB_str_t ;
-#define STRTAB_NULL_STR  ((STRTAB_str_t) 0)
-#else
 typedef NAMETABLE_id_t  STRTAB_str_t ;
 #define STRTAB_NULL_STR  NULL
-#endif
-
 
 #include <nidl.h>
 
@@ -149,9 +143,6 @@ void  NAMETABLE_dump_tab(
 );
 
 #endif
-void  STRTAB_init(
-    void
-);
 
 NAMETABLE_id_t NAMETABLE_add_derived_name(
     NAMETABLE_id_t id,

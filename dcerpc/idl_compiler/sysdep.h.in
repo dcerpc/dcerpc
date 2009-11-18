@@ -63,37 +63,6 @@
 ** define HASINODES if system has real inodes returned by stat()
 */
 
-/* MSDOS */
-#ifdef _MSDOS
-#ifndef __STDC__
-#define __STDC__ 1
-#endif
-#define BRANCHCHAR '\\'
-#define BRANCHSTRING "\\"
-#define HASPOPEN
-#define HASDIRTREE
-#define DEFAULT_IDIR     "\\mstools\\h"
-#define DEFAULT_H_IDIR   "\\mstools\\h"
-#define INCLUDE_TEMPLATE "#include <dce\\%s>\n"
-#define USER_INCLUDE_TEMPLATE "#include \"%s\"\n"
-#define USER_INCLUDE_H_TEMPLATE "#include \"%s.h\"\n"
-#define MESSAGE_CATALOG_DIR "\\bin"
-#define CD_IDIR "."
-#define unlink _unlink
-#define getcwd _getcwd
-#define chdir _chdir
-#define stat _stat
-#define popen _popen
-#define pclose _pclose
-#define S_IFMT _S_IFMT
-#define S_IFDIR _S_IFDIR
-#define S_IFREG _S_IFREG
-#define NO_TRY_CATCH_FINALLY
-#ifdef TURBOC
-#define stat(a,b) turboc_stat(a,b)
-#endif
-#endif
-
 #if defined(__OSF__) || defined(__OSF1__) || defined(__osf__) || defined(BSD) || defined(SYS5) || defined(ultrix) || defined(_AIX) || defined(__ultrix) || defined(_BSD) || defined(__linux__)
 #define UNIX
 #define HASDIRTREE
@@ -154,14 +123,6 @@ Porting Message:  You must provide definitions for the symbols
 #  define SAUX_SUFFIX    	"_saux.c"
 # endif
 # define HEADER_SUFFIX  	".h"
-#endif
-
-#ifdef _MSDOS
-# define CSTUB_SUFFIX   "_c.c"
-# define SSTUB_SUFFIX   "_s.c"
-# define HEADER_SUFFIX  ".h"
-# define CAUX_SUFFIX    "_x.c"
-# define SAUX_SUFFIX    "_y.c"
 #endif
 
 #ifndef CSTUB_SUFFIX

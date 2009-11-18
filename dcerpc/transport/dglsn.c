@@ -238,7 +238,7 @@ INTERNAL unsigned32 saved_rqe_list_len = 0;
 
 /* ================================================================ */
 
-#if ! defined(MISPACKED_HDR) && ! defined(MSDOS)
+#if ! defined(MISPACKED_HDR)
 
 /*
  * S W A B _ H D R
