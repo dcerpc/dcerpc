@@ -6623,20 +6623,24 @@ void CHECKER_acf_error
 )
 {
     ASTP_node_t *node_p = in_node_p;
-	va_list arglist;
+    va_list arglist;
 
-	va_start (arglist, msgid);
+    va_start (arglist, msgid);
 
     if (node_p->fe_info->acf_file != (STRTAB_str_t)0)
+    {
         vlog_source_error(node_p->fe_info->acf_file,
                          node_p->fe_info->acf_source_line,
                          msgid, arglist);
+    }
     else
+    {
         vlog_source_error(node_p->fe_info->file,
                          node_p->fe_info->source_line,
                          msgid, arglist);
+    }
 
-	va_end (arglist);
+    va_end (arglist);
 }
 
 /*

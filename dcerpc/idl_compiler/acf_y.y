@@ -138,34 +138,12 @@ typedef struct acf_parser_state_t
     boolean	 acf_named_type;    /* True if parsed type is named type */
 
     AST_include_n_t * acf_include_list;	    /* List of AST include nodes */
+    AST_include_n_t * acf_include_p;        /* Ptr to a created include node */
 
     acf_param_t * acf_parameter_list;	    /* Param list for curr. operation */
     acf_param_t * acf_parameter_free_list;  /* True if param attrs specified */
     boolean       acf_parameter_attr_list;  /* True if param attrs specified */
 } acf_parser_state_t;
-
-static acf_attrib_t
-                    type_attr,          /* Type attributes */
-                    operation_attr,     /* Operation attributes */
-                    parameter_attr;     /* Parameter attributes */
-
-static char const *interface_name;        /* Interface name */
-static char const *impl_name;             /* Implicit handle name */
-static char const *type_name;             /* Current type name */
-static char const *repr_type_name;        /* Current represent_as type */
-static char const *cs_char_type_name;     /* Current cs_char type */
-static char const *operation_name;        /* Current operation name */
-static char const *cs_tag_rtn_name;       /* Current cs_tag_rtn name */
-static char const *binding_callout_name;  /* Current binding_callout name */
-
-static boolean  named_type;             /* True if parsed type is named type */
-
-static AST_include_n_t  *include_list,  /* List of AST include nodes */
-                        *include_p;     /* Ptr to a created include node */
-
-static acf_param_t  *parameter_list,        /* Param list for curr. operation */
-                    *parameter_free_list;   /* List of available acf_param_t */
-static boolean      parameter_attr_list;    /* True if param attrs specified */
 
 /*
  * Forward declarations to shut up the compiler
@@ -181,9 +159,9 @@ static boolean lookup_parameter(acf_parser_state_t *, AST_operation_n_t *,
 	char const *, boolean, NAMETABLE_id_t *, AST_parameter_n_t **);
 static boolean lookup_rep_as_name(AST_type_p_n_t *, NAMETABLE_id_t, AST_type_n_t **, char const **);
 static boolean lookup_cs_char_name(AST_type_p_n_t *, NAMETABLE_id_t, AST_type_n_t **, char const * *);
-static acf_param_t * alloc_param(void);
-static void free_param(acf_param_t *);
-static void free_param_list(acf_param_t **);
+static acf_param_t * alloc_param(acf_parser_state_t *);
+static void free_param(acf_parser_state_t *, acf_param_t *);
+static void free_param_list(acf_parser_state_t *, acf_param_t **);
 void add_param_to_list(acf_param_t *, acf_param_t **);
 static void append_parameter(acf_parser_state_t *, AST_operation_n_t *,
 	char const *, acf_attrib_t *);
@@ -191,7 +169,7 @@ static void process_rep_as_type(acf_parser_state_t *, AST_interface_n_t *,
 	AST_type_n_t *, char const *);
 static void process_cs_char_type(acf_parser_state_t *, AST_interface_n_t *,
 	AST_type_n_t *, char const *);
-static void dump_attributes(const char *, const char *, acf_attrib_t *);
+static void dump_attributes(acf_parser_state_t *, const char *, const char *, acf_attrib_t *);
 
 /*
  * Warning and Error stuff
@@ -350,7 +328,7 @@ acf_interface_header:
 
         if (acf->acf_dumpers)
 	{
-            dump_attributes("ACF interface", acf->acf_interface_name,
+            dump_attributes(acf, "ACF interface", acf->acf_interface_name,
 		    &acf->acf_interface_attr);
 	}
 
@@ -375,13 +353,13 @@ acf_interface_header:
 
         NAMETABLE_id_to_string(the_interface->name, &ast_int_name);
 
-        if (strcmp(interface_name, ast_int_name) != 0)
+        if (strcmp(acf->acf_interface_name, ast_int_name) != 0)
         {
             char const *acf_int_name;   /* Ptr to permanent copy */
             NAMETABLE_id_t name_id;     /* Handle on permanent copy */
             char const *file_name;      /* Related file name */
 
-            name_id = NAMETABLE_add_id(interface_name);
+            name_id = NAMETABLE_add_id(acf->acf_interface_name);
             NAMETABLE_id_to_string(name_id, &acf_int_name);
 
             STRTAB_str_to_string(the_interface->fe_info->file, &file_name);
@@ -412,27 +390,31 @@ acf_interface_header:
                 AST_SET_NO_CANCEL(the_interface);
 
             if (acf->acf_interface_attr.bit.cs_tag_rtn)
-                the_interface->cs_tag_rtn_name = NAMETABLE_add_id(cs_tag_rtn_name);
+                the_interface->cs_tag_rtn_name = NAMETABLE_add_id(acf->acf_cs_tag_rtn_name);
             if (acf->acf_interface_attr.bit.binding_callout)
-                the_interface->binding_callout_name = NAMETABLE_add_id(binding_callout_name);
+	    {
+                the_interface->binding_callout_name =
+		    NAMETABLE_add_id(acf->acf_binding_callout_name);
+	    }
 
             if (acf->acf_interface_attr.bit.implicit_handle)
             {
                 /* Store the [implicit_handle] variable name in nametbl. */
-                impl_name_id = NAMETABLE_add_id(impl_name);
+                impl_name_id = NAMETABLE_add_id(acf->acf_impl_name);
 
-					 ASTP_set_implicit_handle(the_interface,
-					 	named_type ? NAMETABLE_add_id(type_name) : NAMETABLE_NIL_ID,
-						impl_name_id);
+	        ASTP_set_implicit_handle(the_interface,
+		    acf->acf_named_type ? NAMETABLE_add_id(acf->acf_type_name)
+			       : NAMETABLE_NIL_ID,
+		    impl_name_id);
 
             }
         }
 
-        interface_name = NULL;
-        type_name = NULL;
-        impl_name = NULL;
-        binding_callout_name = NULL;
-        cs_tag_rtn_name = NULL;
+        acf->acf_interface_name = NULL;
+        acf->acf_type_name = NULL;
+        acf->acf_impl_name = NULL;
+        acf->acf_binding_callout_name = NULL;
+        acf->acf_cs_tag_rtn_name = NULL;
         acf->acf_interface_attr.mask = 0;        /* Reset attribute mask */
     }
     ;
@@ -544,12 +526,12 @@ acf_implicit_handle:
 acf_impl_type:
         acf_handle_type
     {
-        named_type = FALSE;
+        acf->acf_named_type = FALSE;
     }
     |   IDENTIFIER
     {
-        NAMETABLE_id_to_string($<y_id>1, &type_name);
-        named_type = TRUE;
+        NAMETABLE_id_to_string($<y_id>1, &acf->acf_type_name);
+        acf->acf_named_type = TRUE;
     }
     ;
 
@@ -560,7 +542,7 @@ acf_handle_type:
 acf_impl_name:
         IDENTIFIER
     {
-        NAMETABLE_id_to_string($<y_id>1, &impl_name);
+        NAMETABLE_id_to_string($<y_id>1, &acf->acf_impl_name);
     }
     ;
 
@@ -599,7 +581,7 @@ acf_ext_excep:
 acf_interface_name:
         IDENTIFIER
     {
-        NAMETABLE_id_to_string($<y_id>1, &interface_name);
+        NAMETABLE_id_to_string($<y_id>1, &acf->acf_interface_name);
     }
     ;
 
@@ -626,9 +608,9 @@ acf_body_element:
             log_error(acf_yylineno(acf), NIDL_SYNTAXERR, NULL);
             /* Re-initialize attr masks to avoid sticky attributes */
             acf->acf_interface_attr.mask = 0;
-            type_attr.mask      = 0;
-            operation_attr.mask = 0;
-            parameter_attr.mask = 0;
+            acf->acf_type_attr.mask      = 0;
+            acf->acf_operation_attr.mask = 0;
+            acf->acf_parameter_attr.mask = 0;
         }
     ;
 
@@ -636,10 +618,12 @@ acf_include:
         INCLUDE_KW acf_include_list
         {
         if (ASTP_parsing_main_idl)
+	{
             the_interface->includes = (AST_include_n_t *)
                 AST_concat_element((ASTP_node_t *)the_interface->includes,
-                                   (ASTP_node_t *)include_list);
-        include_list = NULL;
+                                   (ASTP_node_t *)acf->acf_include_list);
+	}
+        acf->acf_include_list = NULL;
         }
     |   INCLUDE_KW error
         { log_error(acf_yylineno(acf), NIDL_SYNTAXERR, NULL); }
@@ -677,19 +661,19 @@ acf_include_name:
 
             /* Create an include node. */
             include_file_id = STRTAB_add_string(include_file);
-            include_p = AST_include_node(acf_location(acf),
+            acf->acf_include_p = AST_include_node(acf_location(acf),
 		    include_file_id, $<y_string>1);
 
             /* Store source information. */
-            if (include_p->fe_info != NULL)
+            if (acf->acf_include_p->fe_info != NULL)
             {
-                include_p->fe_info->acf_file = error_file_name_id;
-                include_p->fe_info->acf_source_line = acf_yylineno(acf);
+                acf->acf_include_p->fe_info->acf_file = error_file_name_id;
+                acf->acf_include_p->fe_info->acf_source_line = acf_yylineno(acf);
             }
 
-            include_list = (AST_include_n_t *)
-                AST_concat_element((ASTP_node_t *)include_list,
-                                   (ASTP_node_t *)include_p);
+            acf->acf_include_list = (AST_include_n_t *)
+                AST_concat_element((ASTP_node_t *)acf->acf_include_list,
+                                   (ASTP_node_t *)acf->acf_include_p);
         }
     }
     ;
@@ -699,20 +683,20 @@ acf_type_declaration:
         { log_error(acf_yylineno(acf), NIDL_SYNTAXERR, NULL); }
     |   TYPEDEF_KW acf_type_attr_list acf_named_type_list
     {
-        type_attr.mask = 0;             /* Reset attribute mask */
-        repr_type_name = NULL;          /* Reset represent_as type name */
-        cs_char_type_name = NULL;       /* Reset cs_char type name */
+        acf->acf_type_attr.mask = 0;    /* Reset attribute mask */
+        acf->acf_repr_type_name = NULL; /* Reset represent_as type name */
+        acf->acf_cs_char_type_name = NULL;       /* Reset cs_char type name */
     }
     ;
 
 acf_named_type_list:
         acf_named_type
     {
-        type_name = NULL;               /* Reset type name */
+        acf->acf_type_name = NULL;               /* Reset type name */
     }
     |   acf_named_type_list COMMA acf_named_type
     {
-        type_name = NULL;               /* Reset type name */
+        acf->acf_type_name = NULL;               /* Reset type name */
     }
     ;
 
@@ -722,10 +706,13 @@ acf_named_type:
         NAMETABLE_id_t  type_id;        /* Nametable id of type name */
         AST_type_n_t    *type_p;        /* Ptr to AST type node */
 
-        NAMETABLE_id_to_string($<y_id>1, &type_name);
+        NAMETABLE_id_to_string($<y_id>1, &acf->acf_type_name);
 
         if (acf->acf_dumpers)
-            dump_attributes("ACF type", type_name, &type_attr);
+	{
+            dump_attributes(acf, "ACF type",
+		    acf->acf_type_name, &acf->acf_type_attr);
+	}
 
         /*
          *  Lookup the type_name parsed and verify that it is a valid type
@@ -737,7 +724,7 @@ acf_named_type:
          *  [cs_char_type_name] = name of cs_char type.
          */
 
-        if (lookup_type(acf, type_name, TRUE, &type_id, &type_p))
+        if (lookup_type(acf, acf->acf_type_name, TRUE, &type_id, &type_p))
         {
             /* Store source information. */
             if (type_p->fe_info != NULL)
@@ -746,20 +733,20 @@ acf_named_type:
                 type_p->fe_info->acf_source_line = acf_yylineno(acf);
             }
 
-            if (type_attr.bit.heap
+            if (acf->acf_type_attr.bit.heap
                 && type_p->kind != AST_pipe_k
                 && !AST_CONTEXT_RD_SET(type_p))
                 PROP_set_type_attr(type_p,AST_HEAP);
-            if (type_attr.bit.in_line)
+            if (acf->acf_type_attr.bit.in_line)
                 PROP_set_type_attr(type_p,AST_IN_LINE);
-            if ((type_attr.bit.out_of_line) &&
+            if ((acf->acf_type_attr.bit.out_of_line) &&
                 (type_p->kind != AST_pointer_k) &&
                 (type_p->xmit_as_type == NULL))
                 PROP_set_type_attr(type_p,AST_OUT_OF_LINE);
-            if (type_attr.bit.represent_as)
-                process_rep_as_type(acf, the_interface, type_p, repr_type_name);
-            if (type_attr.bit.cs_char)
-                process_cs_char_type(acf, the_interface, type_p, cs_char_type_name);
+            if (acf->acf_type_attr.bit.represent_as)
+                process_rep_as_type(acf, the_interface, type_p, acf->acf_repr_type_name);
+            if (acf->acf_type_attr.bit.cs_char)
+                process_cs_char_type(acf, the_interface, type_p, acf->acf_cs_char_type_name);
         }
     }
     ;
@@ -789,33 +776,33 @@ acf_type_attrs:
 acf_type_attr:
         acf_represent_attr
     {
-        if (type_attr.bit.represent_as)
+        if (acf->acf_type_attr.bit.represent_as)
             log_error(acf_yylineno(acf), NIDL_ATTRUSEMULT, NULL);
-        type_attr.bit.represent_as = TRUE;
+        acf->acf_type_attr.bit.represent_as = TRUE;
     }
     |   acf_cs_char_attr
     {
-        if (type_attr.bit.cs_char)
+        if (acf->acf_type_attr.bit.cs_char)
             log_error(acf_yylineno(acf), NIDL_ATTRUSEMULT, NULL);
-        type_attr.bit.cs_char = TRUE;
+        acf->acf_type_attr.bit.cs_char = TRUE;
     }
     |   acf_heap_attr
     {
-        if (type_attr.bit.heap)
+        if (acf->acf_type_attr.bit.heap)
             log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
-        type_attr.bit.heap = TRUE;
+        acf->acf_type_attr.bit.heap = TRUE;
     }
     |   acf_inline_attr
     {
-        if (type_attr.bit.in_line)
+        if (acf->acf_type_attr.bit.in_line)
             log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
-        type_attr.bit.in_line = TRUE;
+        acf->acf_type_attr.bit.in_line = TRUE;
     }
     |   acf_outofline_attr
     {
-        if (type_attr.bit.out_of_line)
+        if (acf->acf_type_attr.bit.out_of_line)
             log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
-        type_attr.bit.out_of_line = TRUE;
+        acf->acf_type_attr.bit.out_of_line = TRUE;
     }
     ;
 
@@ -826,7 +813,7 @@ acf_represent_attr:
 acf_repr_type:
         IDENTIFIER
     {
-        NAMETABLE_id_to_string($<y_id>1, &repr_type_name);
+        NAMETABLE_id_to_string($<y_id>1, &acf->acf_repr_type_name);
     }
     ;
 
@@ -837,15 +824,15 @@ acf_cs_char_attr:
 acf_cs_char_type:
         IDENTIFIER
     {
-        NAMETABLE_id_to_string($<y_id>1, &cs_char_type_name);
+        NAMETABLE_id_to_string($<y_id>1, &acf->acf_cs_char_type_name);
     }
     ;
 
 acf_operation_declaration:
         acf_op_attr_list acf_operations
     {
-        operation_attr.mask = 0;        /* Reset attribute mask */
-        cs_tag_rtn_name     = NULL;     /* Reset cs_tag_rtn name */
+        acf->acf_operation_attr.mask = 0;        /* Reset attribute mask */
+        acf->acf_cs_tag_rtn_name     = NULL;     /* Reset cs_tag_rtn name */
     }
     ;
 
@@ -865,10 +852,13 @@ acf_operation:
         boolean             log_error;  /* TRUE => error if name not found */
         char const          *param_name;/* character string of param id */
 
-        NAMETABLE_id_to_string($<y_id>1, &operation_name);
+        NAMETABLE_id_to_string($<y_id>1, &acf->acf_operation_name);
 
         if (acf->acf_dumpers)
-            dump_attributes("ACF operation", operation_name, &operation_attr);
+	{
+            dump_attributes(acf, "ACF operation",
+		    acf->acf_operation_name, &acf->acf_operation_attr);
+	}
 
         /*
          *  Operation and parameter attributes are ignored for imported
@@ -892,7 +882,7 @@ acf_operation:
              *  parameter_list = linked list of parameter information.
              */
 
-            if (lookup_operation(acf, operation_name, TRUE, &op_id, &op_p))
+            if (lookup_operation(acf, acf->acf_operation_name, TRUE, &op_id, &op_p))
             {
                 /* Store source information. */
                 if (op_p->fe_info != NULL)
@@ -901,7 +891,7 @@ acf_operation:
                     op_p->fe_info->acf_source_line = acf_yylineno(acf);
                 }
 
-                if (operation_attr.bit.comm_status)
+                if (acf->acf_operation_attr.bit.comm_status)
                 {
                     /*
                      * Assume the AST Builder always builds a result param,
@@ -909,27 +899,27 @@ acf_operation:
                      */
                     AST_SET_COMM_STATUS(op_p->result);
                 }
-                if (operation_attr.bit.fault_status)
+                if (acf->acf_operation_attr.bit.fault_status)
                     AST_SET_FAULT_STATUS(op_p->result);
 
-                if (operation_attr.bit.code)
+                if (acf->acf_operation_attr.bit.code)
                     AST_SET_CODE(op_p);
-                if (operation_attr.bit.nocode)
+                if (acf->acf_operation_attr.bit.nocode)
                     AST_SET_NO_CODE(op_p);
-                if (operation_attr.bit.decode)
+                if (acf->acf_operation_attr.bit.decode)
                     AST_SET_DECODE(op_p);
-                if (operation_attr.bit.encode)
+                if (acf->acf_operation_attr.bit.encode)
                     AST_SET_ENCODE(op_p);
-                if (operation_attr.bit.enable_allocate)
+                if (acf->acf_operation_attr.bit.enable_allocate)
                     AST_SET_ENABLE_ALLOCATE(op_p);
-                if (operation_attr.bit.explicit_handle)
+                if (acf->acf_operation_attr.bit.explicit_handle)
                     AST_SET_EXPLICIT_HANDLE(op_p);
-                if (operation_attr.bit.nocancel)
+                if (acf->acf_operation_attr.bit.nocancel)
                     AST_SET_NO_CANCEL(op_p);
-                if (operation_attr.bit.cs_tag_rtn)
-                    op_p->cs_tag_rtn_name = NAMETABLE_add_id(cs_tag_rtn_name);
+                if (acf->acf_operation_attr.bit.cs_tag_rtn)
+                    op_p->cs_tag_rtn_name = NAMETABLE_add_id(acf->acf_cs_tag_rtn_name);
 
-                for (p = parameter_list ; p != NULL ; p = p->next)
+                for (p = acf->acf_parameter_list ; p != NULL ; p = p->next)
                 {
                     /*
                      * Most parameter attributes, if present, require that the
@@ -1004,9 +994,9 @@ acf_operation:
             }
         }
 
-        free_param_list(&parameter_list);       /* Free parameter list */
+        free_param_list(acf, &acf->acf_parameter_list);       /* Free parameter list */
 
-        operation_name = NULL;
+        acf->acf_operation_name = NULL;
     }
     ;
 
@@ -1023,65 +1013,65 @@ acf_op_attrs:
 acf_op_attr:
         acf_commstat_attr
     {
-        if (operation_attr.bit.comm_status)
+        if (acf->acf_operation_attr.bit.comm_status)
             log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
-        operation_attr.bit.comm_status = TRUE;
+        acf->acf_operation_attr.bit.comm_status = TRUE;
     }
     |   acf_code_attr
     {
-        if (operation_attr.bit.code)
+        if (acf->acf_operation_attr.bit.code)
             log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
-        operation_attr.bit.code = TRUE;
+        acf->acf_operation_attr.bit.code = TRUE;
     }
     |   acf_nocode_attr
     {
-        if (operation_attr.bit.nocode)
+        if (acf->acf_operation_attr.bit.nocode)
             log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
-        operation_attr.bit.nocode = TRUE;
+        acf->acf_operation_attr.bit.nocode = TRUE;
     }
     |   acf_cs_tag_rtn_attr
     {
-        if (operation_attr.bit.cs_tag_rtn)
+        if (acf->acf_operation_attr.bit.cs_tag_rtn)
             log_error(acf_yylineno(acf), NIDL_ATTRUSEMULT, NULL);
-        operation_attr.bit.cs_tag_rtn = TRUE;
+        acf->acf_operation_attr.bit.cs_tag_rtn = TRUE;
     }
     |   acf_enable_allocate_attr
     {
-        if (operation_attr.bit.enable_allocate)
+        if (acf->acf_operation_attr.bit.enable_allocate)
             log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
-        operation_attr.bit.enable_allocate = TRUE;
+        acf->acf_operation_attr.bit.enable_allocate = TRUE;
     }
     |   acf_explicit_handle_attr
     {
-        if (operation_attr.bit.explicit_handle)
+        if (acf->acf_operation_attr.bit.explicit_handle)
             log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
-        operation_attr.bit.explicit_handle = TRUE;
+        acf->acf_operation_attr.bit.explicit_handle = TRUE;
     }
     |   acf_nocancel_attr
     {
-        if (operation_attr.bit.nocancel)
+        if (acf->acf_operation_attr.bit.nocancel)
             log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
-        operation_attr.bit.nocancel = TRUE;
+        acf->acf_operation_attr.bit.nocancel = TRUE;
     }
     |   acf_faultstat_attr
     {
-        if (operation_attr.bit.fault_status)
+        if (acf->acf_operation_attr.bit.fault_status)
             log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
-        operation_attr.bit.fault_status = TRUE;
+        acf->acf_operation_attr.bit.fault_status = TRUE;
     }
     |   IDENTIFIER
     {
         if (NAMETABLE_add_id("decode") == $<y_id>1)
         {
-            if (operation_attr.bit.decode)
+            if (acf->acf_operation_attr.bit.decode)
                 log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
-            operation_attr.bit.decode = TRUE;
+            acf->acf_operation_attr.bit.decode = TRUE;
         }
         else if (NAMETABLE_add_id("encode") == $<y_id>1)
         {
-            if (operation_attr.bit.encode)
+            if (acf->acf_operation_attr.bit.encode)
                 log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
-            operation_attr.bit.encode = TRUE;
+            acf->acf_operation_attr.bit.encode = TRUE;
         }
         else
             log_error(acf_yylineno(acf), NIDL_ERRINATTR, NULL);
@@ -1095,7 +1085,7 @@ acf_binding_callout_attr:
 acf_binding_callout_name:
         IDENTIFIER
     {
-        NAMETABLE_id_to_string($<y_id>1, &binding_callout_name);
+        NAMETABLE_id_to_string($<y_id>1, &acf->acf_binding_callout_name);
     }
     ;
 
@@ -1106,7 +1096,7 @@ acf_cs_tag_rtn_attr:
 acf_cs_tag_rtn_name:
         IDENTIFIER
     {
-        NAMETABLE_id_to_string($<y_id>1, &cs_tag_rtn_name);
+        NAMETABLE_id_to_string($<y_id>1, &acf->acf_cs_tag_rtn_name);
     }
     ;
 
@@ -1127,26 +1117,27 @@ acf_parameter:
         {
             char const *param_name;
             NAMETABLE_id_to_string($<y_id>2, &param_name);
-            dump_attributes("ACF parameter", param_name, &parameter_attr);
+            dump_attributes(acf, "ACF parameter",
+		    param_name, &acf->acf_parameter_attr);
         }
 
-        if (parameter_attr_list)        /* If there were param attributes: */
+        if (acf->acf_parameter_attr_list) /* If there were param attributes: */
         {
             acf_param_t *p;             /* Pointer to parameter record */
 
             /*
              * Allocate and initialize a parameter record.
              */
-            p = alloc_param();
-            p->parameter_attr = parameter_attr;
+            p = alloc_param(acf);
+            p->parameter_attr = acf->acf_parameter_attr;
             p->param_id = $<y_id>2;
 
             /*
              * Add to end of parameter list.
              */
-            add_param_to_list(p, &parameter_list);
+            add_param_to_list(p, &acf->acf_parameter_list);
 
-            parameter_attr.mask = 0;
+            acf->acf_parameter_attr.mask = 0;
         }
     }
     ;
@@ -1154,11 +1145,11 @@ acf_parameter:
 acf_param_attr_list:
         LBRACKET acf_param_attrs RBRACKET
     {
-        parameter_attr_list = TRUE;     /* Flag that we have param attributes */
+        acf->acf_parameter_attr_list = TRUE;     /* Flag that we have param attributes */
     }
     |   /* Nothing */
     {
-        parameter_attr_list = FALSE;
+        acf->acf_parameter_attr_list = FALSE;
     }
     ;
 
@@ -1170,53 +1161,53 @@ acf_param_attrs:
 acf_param_attr:
         acf_commstat_attr
     {
-        if (parameter_attr.bit.comm_status)
+        if (acf->acf_parameter_attr.bit.comm_status)
             log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
-        parameter_attr.bit.comm_status = TRUE;
+        acf->acf_parameter_attr.bit.comm_status = TRUE;
     }
     |   acf_faultstat_attr
     {
-        if (parameter_attr.bit.fault_status)
+        if (acf->acf_parameter_attr.bit.fault_status)
             log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
-        parameter_attr.bit.fault_status = TRUE;
+        acf->acf_parameter_attr.bit.fault_status = TRUE;
     }
     |   acf_heap_attr
     {
-        if (parameter_attr.bit.heap)
+        if (acf->acf_parameter_attr.bit.heap)
             log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
-        parameter_attr.bit.heap = TRUE;
+        acf->acf_parameter_attr.bit.heap = TRUE;
     }
     |   acf_inline_attr
     {
-        if (parameter_attr.bit.in_line)
+        if (acf->acf_parameter_attr.bit.in_line)
             log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
-        parameter_attr.bit.in_line = TRUE;
+        acf->acf_parameter_attr.bit.in_line = TRUE;
     }
     |   acf_outofline_attr
     {
-        if (parameter_attr.bit.out_of_line)
+        if (acf->acf_parameter_attr.bit.out_of_line)
             log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
-        parameter_attr.bit.out_of_line = TRUE;
+        acf->acf_parameter_attr.bit.out_of_line = TRUE;
     }
     |   IDENTIFIER
     {
         if (NAMETABLE_add_id("cs_stag") == $<y_id>1)
         {
-            if (parameter_attr.bit.cs_stag)
+            if (acf->acf_parameter_attr.bit.cs_stag)
                 log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
-            parameter_attr.bit.cs_stag = TRUE;
+            acf->acf_parameter_attr.bit.cs_stag = TRUE;
         }
         else if (NAMETABLE_add_id("cs_drtag") == $<y_id>1)
         {
-            if (parameter_attr.bit.cs_drtag)
+            if (acf->acf_parameter_attr.bit.cs_drtag)
                 log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
-            parameter_attr.bit.cs_drtag = TRUE;
+            acf->acf_parameter_attr.bit.cs_drtag = TRUE;
         }
         else if (NAMETABLE_add_id("cs_rtag") == $<y_id>1)
         {
-            if (parameter_attr.bit.cs_rtag)
+            if (acf->acf_parameter_attr.bit.cs_rtag)
                 log_warning(acf_yylineno(acf), NIDL_MULATTRDEF, NULL);
-            parameter_attr.bit.cs_rtag = TRUE;
+            acf->acf_parameter_attr.bit.cs_rtag = TRUE;
         }
         else
             log_error(acf_yylineno(acf), NIDL_ERRINATTR, NULL);
@@ -1650,14 +1641,17 @@ static boolean lookup_cs_char_name
  *  Side Effects:   Exits program if unable to allocate memory.
  */
 
-static acf_param_t *alloc_param(void)
+static acf_param_t *alloc_param
+(
+    acf_parser_state_t * acf
+)
 {
     acf_param_t *p;     /* Ptr to parameter record */
 
-    if (parameter_free_list != NULL)
+    if (acf->acf_parameter_free_list != NULL)
     {
-        p = parameter_free_list;
-        parameter_free_list = parameter_free_list->next;
+        p = acf->acf_parameter_free_list;
+        acf->acf_parameter_free_list = acf->acf_parameter_free_list->next;
     }
     else
     {
@@ -1683,14 +1677,15 @@ static acf_param_t *alloc_param(void)
 
 static void free_param
 (
+    acf_parser_state_t * acf,
     acf_param_t *p              /* [in] Pointer to acf_param_t record */
 )
 {
     p->parameter_attr.mask  = 0;
     p->param_id             = NAMETABLE_NIL_ID;
 
-    p->next                 = parameter_free_list;
-    parameter_free_list     = p;
+    p->next                 = acf->acf_parameter_free_list;
+    acf->acf_parameter_free_list     = p;
 }
 
 /*
@@ -1705,6 +1700,7 @@ static void free_param
 
 static void free_param_list
 (
+    acf_parser_state_t * acf,
     acf_param_t **list          /* [in] Address of list pointer */
 )
 {
@@ -1716,7 +1712,7 @@ static void free_param_list
     {
         q = p;
         p = p->next;
-        free_param(q);
+        free_param(acf, q);
     }
 
     *list = NULL;            /* List now empty */
@@ -2045,6 +2041,7 @@ static void process_cs_char_type
 
 static void dump_attributes
 (
+    acf_parser_state_t *acf,
     const char	    *header_text,       /* [in] Initial output text */
     char const      *node_name,         /* [in] Name of tree node */
     acf_attrib_t    *node_attr_p        /* [in] Node attributes ptr */
@@ -2124,25 +2121,25 @@ static void dump_attributes
         if (node_attr.bit.represent_as)
         {
             strlcat(attr_text, "represent_as(", sizeof(attr_text));
-            strlcat(attr_text, repr_type_name, sizeof(attr_text));
+            strlcat(attr_text, acf->acf_repr_type_name, sizeof(attr_text));
             strlcat(attr_text, "), ", sizeof(attr_text));
         }
         if (node_attr.bit.cs_char)
         {
             strlcat(attr_text, "cs_char(", sizeof(attr_text));
-            strlcat(attr_text, cs_char_type_name, sizeof(attr_text));
+            strlcat(attr_text, acf->acf_cs_char_type_name, sizeof(attr_text));
             strlcat(attr_text, "), ", sizeof(attr_text));
         }
         if (node_attr.bit.cs_tag_rtn)
         {
             strlcat(attr_text, "cs_tag_rtn(", sizeof(attr_text));
-            strlcat(attr_text, cs_tag_rtn_name, sizeof(attr_text));
+            strlcat(attr_text, acf->acf_cs_tag_rtn_name, sizeof(attr_text));
             strlcat(attr_text, "), ", sizeof(attr_text));
         }
         if (node_attr.bit.binding_callout)
         {
             strlcat(attr_text, "binding_callout(", sizeof(attr_text));
-            strlcat(attr_text, binding_callout_name, sizeof(attr_text));
+            strlcat(attr_text, acf->acf_binding_callout_name, sizeof(attr_text));
             strlcat(attr_text, "), ", sizeof(attr_text));
         }
 
