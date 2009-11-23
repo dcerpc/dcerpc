@@ -44,6 +44,7 @@
 #include <message.h>
 #include <nidlmsg.h>
 #include <driver.h>
+#include <nidl.h>
 #include <stdarg.h>
 
 #define MAX_LINE_LEN    256
@@ -80,7 +81,6 @@ typedef struct error_log_rec_t
 
 FILE    **yyin_p;           /* Points to yyin or acf_yyin */
 int     *yylineno_p;        /* Points to yylineno or acf_yylineno */
-int     *yynerrs_p;         /* Points to yynerrs or acf_yynerrs */
 char ** yytext_p;
 
 boolean ERR_no_warnings;    /* Global copy of -no_warn command line option */
@@ -112,7 +112,7 @@ extern void sysdep_cleanup_temp ( void );
 
 void yywhere
 (
-    void
+    const struct parser_location_t * location
 )
 {
 	boolean    have_text = false;  /* True if have source text to output */
@@ -122,10 +122,13 @@ void yywhere
 	char const *near_text;         /* Text of object near error */
 	STRTAB_str_t string_id;     /* Entry in string table of near text */
 	char wherebuf[WHERE_TEXT_LEN+1];
-	char * text_p = *yytext_p;
-	lineno = *yylineno_p;
+	const char * text_p;
 
-	if (*text_p)
+	text_p = location->text;
+	lineno = location->lineno;
+	error_file_name_id = location->fileid;
+
+	if (text_p && *text_p)
 	{
 		for (text_len = 0; text_len < WHERE_TEXT_LEN; ++text_len)
 		{
@@ -177,7 +180,7 @@ void yywhere
  *  Inputs:     message -  error message to display
  *              token    - expected token
  *
- *  Globals:    yynerrs_p
+ *  Globals:
  *
  *  Notes:      This was adapted from the book
  *                  "Compiler Construction under Unix"
@@ -186,8 +189,7 @@ void yywhere
 
 void idl_yyerror
 (
-    YYLTYPE * yylloc,
-    yyscan_t scanner,
+	parser_location_p location,
     char const * message
 )
 {
@@ -195,11 +197,8 @@ void idl_yyerror
 
     if (message || !list)
     {
-		/* XXX need to carry a nerrs around on the XXX_parser_state_t, and
-		 * increment it generically here ...
-		 */
-        (*yynerrs_p)++;
-        yywhere();
+		error_count++;
+        yywhere(location);
 
         /*
          * Only print the yacc version of errors if it isn't for a syntax error.
@@ -890,17 +889,16 @@ void error_list
 {
     int i;
 
-    if (current_file)
-        message_print(NIDL_LINEFILE, current_file, *yylineno_p);
-
     for (i = 0; i < vecsize; i++)
-	message_print(errvec[i].msg_id,
-		      errvec[i].arg[0],
-		      errvec[i].arg[1],
-		      errvec[i].arg[2],
-		      errvec[i].arg[3],
-		      errvec[i].arg[4]
-		     );
+	{
+		message_print(errvec[i].msg_id,
+				  errvec[i].arg[0],
+				  errvec[i].arg[1],
+				  errvec[i].arg[2],
+				  errvec[i].arg[3],
+				  errvec[i].arg[4]
+				 );
+	}
 
     if (!exitflag) return;
 

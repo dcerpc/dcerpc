@@ -219,7 +219,7 @@ static void dump_node_address
 void AST_dump_nametable_id
 #ifdef PROTO
 (
-    char   *format_string,
+    const char   *format_string,
     NAMETABLE_id_t id
 )
 #else
@@ -1865,7 +1865,7 @@ static void AST_dump_field_ref
 }
 
 
-void AST_enable_hex_dump ()
+void AST_enable_hex_dump (void)
 {
     debug_dump = (char*)1;
 }

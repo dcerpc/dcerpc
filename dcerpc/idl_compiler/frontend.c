@@ -376,7 +376,7 @@ static boolean parse
     AST_interface_n_t **int_p   /*[out] Ptr to interface node */
 )
 {
-    FILE *nidl_yyin;
+    FILE *nidl_yyin = NULL;
 
     char const  *sf;                            /* Source filespec */
     char        full_path_name[max_string_len]; /* Full source pathname */

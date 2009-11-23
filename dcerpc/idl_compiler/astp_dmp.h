@@ -74,7 +74,7 @@ void AST_dump_parameter
 void AST_dump_nametable_id
 (
 #ifdef PROTO
-    char   *format_string,
+    const char   *format_string,
     NAMETABLE_id_t id
 #endif
 );
@@ -104,7 +104,7 @@ void AST_dump_constant
 #endif
 );
 
-void AST_enable_hex_dump();
+void AST_enable_hex_dump(void);
 
 
 #endif /* Dumpers */

@@ -1191,7 +1191,7 @@ param_dcl:
                    ($<y_attributes>1.bounds != NULL) ||
                    ($<y_attributes>1.attr_flags != 0))
                 {
-                    yywhere();  /* Issue a syntax error for this line */
+                    yywhere(nidl_location(nidl));  /* Issue a syntax error for this line */
                     YYERROR;    /* Allow natural error recovery */
                 }
 
@@ -2009,6 +2009,7 @@ const parser_location_t * nidl_location
     /* Update the current location before handing it back ... */
     nidl->nidl_location.lineno = nidl_yylineno(nidl);
     nidl->nidl_location.location = *nidl_yyget_lloc(nidl->nidl_yyscanner);
+    nidl->nidl_location.text = nidl_yyget_text(nidl->nidl_yyscanner);
 
     return &nidl->nidl_location;
 }
@@ -2036,7 +2037,13 @@ static void nidl_yyerror
     char const * message
 )
 {
-    idl_yyerror(yylloc, scanner, message);
+    struct parser_location_t loc;
+
+    loc.lineno = nidl_yyget_lineno(scanner);
+    loc.location = *nidl_yyget_lloc(scanner);
+    loc.text = nidl_yyget_text(scanner);
+
+    idl_yyerror(&loc, message);
 }
 
 /* preserve coding style vim: set tw=78 sw=3 ts=3 et : */

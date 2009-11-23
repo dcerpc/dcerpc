@@ -1346,6 +1346,7 @@ const parser_location_t * acf_location
     /* Update the current location before handing it back ... */
     acf->acf_location.lineno = acf_yylineno(acf);
     acf->acf_location.location = *acf_yyget_lloc(acf->acf_yyscanner);
+    acf->acf_location.text = acf_yyget_text(acf->acf_yyscanner);
 
     return &acf->acf_location;
 }
@@ -1365,7 +1366,13 @@ static void acf_yyerror
     char const * message
 )
 {
-    idl_yyerror(yylloc, scanner, message);
+    struct parser_location_t loc;
+
+    loc.lineno = acf_yyget_lineno(scanner);
+    loc.location = *acf_yyget_lloc(scanner);
+    loc.text = acf_yyget_text(scanner);
+
+    idl_yyerror(&loc, message);
 }
 
 /*

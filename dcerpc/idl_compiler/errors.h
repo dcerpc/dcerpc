@@ -173,14 +173,18 @@ typedef struct YYLTYPE
 # define YYLTYPE_IS_TRIVIAL 1
 #endif
 
+struct parser_location_t;
+
 void idl_yyerror
 (
-    YYLTYPE * yylloc,
-    yyscan_t scanner,
+    const struct parser_location_t * location,
     char const * message
 );
 
-void yywhere(void);
+void yywhere
+(
+    const struct parser_location_t * location
+);
 
 /*
  * Error info to be fillin the fe_info nodes

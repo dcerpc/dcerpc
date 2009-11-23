@@ -246,7 +246,7 @@ typedef enum {
 #  define YYDEBUG 1
    /* If ASSERTION expression is FALSE, then issue warning */
 #  define ASSERTION(x) do { \
-    if (!(x)) { warning(NIDL_INTERNAL_ERROR, __FILE__, __LINE__) } \
+    if (!(x)) { warning(NIDL_INTERNAL_ERROR, __FILE__, __LINE__); } \
 } while (0)
 #else
 #  define ASSERTION(x) do {;} while (0);
@@ -267,9 +267,10 @@ typedef struct YYLTYPE
 
 typedef struct parser_location_t
 {
-    unsigned	lineno;
-    STRTAB_str_t fileid;
-    YYLTYPE	location;
+    unsigned	    lineno;
+    STRTAB_str_t    fileid;
+    YYLTYPE	    location;
+    const char *    text;
 } parser_location_t;
 
 extern const parser_location_t empty_parser_location;
