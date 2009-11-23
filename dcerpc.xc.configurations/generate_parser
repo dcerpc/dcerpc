@@ -1,0 +1,41 @@
+#! /bin/bash
+
+set -e
+
+# Turn foo.[ly] into foo.h
+outfile_name()
+{
+    local input=$(basename "$1")
+    local extension="$2"
+    echo ${input%.[ly]}.${extension}
+}
+
+# Turn fool.y into fooyy
+parser_prefix()
+{
+    local input=$(basename "$1")
+    echo ${input%[ly].[ly]}yy
+}
+
+run()
+{
+    local status
+
+    echo "$@"
+    "$@"
+}
+
+OUTDIR="$(dirname ${SCRIPT_OUTPUT_FILE_0})"
+
+LEXER="$(basename ${SCRIPT_INPUT_FILE_0})"
+PARSER="$(basename ${SCRIPT_INPUT_FILE_1})"
+PREFIX="$(parser_prefix ${PARSER})"
+
+mkdir -p "$OUTDIR"
+cd "$OUTDIR"
+
+run flex -P${PREFIX} -o $(outfile_name ${LEXER} c) ${SCRIPT_INPUT_FILE_0}
+run bison -v -d -p ${PREFIX} -o $(outfile_name ${PARSER} c) ${SCRIPT_INPUT_FILE_1}
+
+echo $LEXER \-\> $(outfile_name ${LEXER} c) $(outfile_name ${LEXER} h)
+echo $PARSER \-\> $(outfile_name ${PARSER} c) $(outfile_name ${PARSER} h)

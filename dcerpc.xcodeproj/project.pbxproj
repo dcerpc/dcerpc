@@ -7,13 +7,25 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
+		D6E6B60310BCB1CE00E1DCF5 /* Generate IDL Parsers */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = D6E6B60610BCB20E00E1DCF5 /* Build configuration list for PBXAggregateTarget "Generate IDL Parsers" */;
+			buildPhases = (
+				D6E6B60210BCB1CE00E1DCF5 /* Configure */,
+				D6E6B60A10BCB25A00E1DCF5 /* Generate ACF Parser */,
+				D6E6B60C10BCB26400E1DCF5 /* Generate NIDL Parser */,
+			);
+			dependencies = (
+			);
+			name = "Generate IDL Parsers";
+			productName = "Generate IDL Parsers";
+		};
 		DDDF310F106AE5F700E6A9C2 /* Aggregrate */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = DDDF311F106AE61A00E6A9C2 /* Build configuration list for PBXAggregateTarget "Aggregrate" */;
 			buildPhases = (
 			);
 			dependencies = (
-				DDFA60521074FA7E006A660C /* PBXTargetDependency */,
 				DDEA1B511074FF5400C89B95 /* PBXTargetDependency */,
 				DD0FE8561074D8DE004AB68C /* PBXTargetDependency */,
 				DD0FE86A1074D92C004AB68C /* PBXTargetDependency */,
@@ -33,6 +45,10 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		D610EA3910B7575800D0305F /* acf_l.c in Sources */ = {isa = PBXBuildFile; fileRef = D610EA3810B7575800D0305F /* acf_l.c */; };
+		D610EA3B10B7577F00D0305F /* acf_y.c in Sources */ = {isa = PBXBuildFile; fileRef = D610EA3A10B7577F00D0305F /* acf_y.c */; };
+		D62430B610B7596C0092FD35 /* nidl_l.c in Sources */ = {isa = PBXBuildFile; fileRef = D62430B510B7596C0092FD35 /* nidl_l.c */; };
+		D62430B810B759790092FD35 /* nidl_y.c in Sources */ = {isa = PBXBuildFile; fileRef = D62430B710B759790092FD35 /* nidl_y.c */; };
 		D66FCA0E10A21C0C000A62AD /* libtrans.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F5A1106D321F005F1EF3 /* libtrans.a */; };
 		D66FCA0F10A21C16000A62AD /* libtrans.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F5A1106D321F005F1EF3 /* libtrans.a */; };
 		DD0435211076A0D60010E492 /* libidl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE0178F106C2FFD00A5E41A /* libidl.a */; };
@@ -184,9 +200,7 @@
 		DD10F660106D3E88005F1EF3 /* libmgmt_stubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F5EA106D3528005F1EF3 /* libmgmt_stubs.a */; };
 		DD10F8CC106D73C3005F1EF3 /* conv.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0E9100408FD0080B762 /* conv.idl */; };
 		DD10F8CD106D73D9005F1EF3 /* convc.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0EA100408FD0080B762 /* convc.idl */; };
-		DD21F0C81083D18A00696F06 /* acf_y.y in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB02A100408FC0080B762 /* acf_y.y */; };
-		DD21F0CA1083D18A00696F06 /* nidl_y.y in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB075100408FC0080B762 /* nidl_y.y */; };
-		DD21F0DD1083D3AD00696F06 /* libdceidl_stubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD21F0B71083D15500696F06 /* libdceidl_stubs.a */; };
+		DD21F0DD1083D3AD00696F06 /* libdceidl_parser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD21F0B71083D15500696F06 /* libdceidl_parser.a */; };
 		DD32545F107CE8FC00BF66BD /* libnaf_np.so in Copy Modules */ = {isa = PBXBuildFile; fileRef = DD7FBDD8107407D200B63C2A /* libnaf_np.so */; };
 		DD7FBDAF1074067D00B63C2A /* ipnaf.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2CA100408FD0080B762 /* ipnaf.c */; };
 		DD7FBDB01074067D00B63C2A /* ipnaf_linux.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2CB100408FD0080B762 /* ipnaf_linux.c */; };
@@ -201,8 +215,6 @@
 		DDA1C1FE107FDCAE004D2055 /* dcerpc.h in Headers */ = {isa = PBXBuildFile; fileRef = DD3DB0D5100408FD0080B762 /* dcerpc.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DDAD850B109676D6003620DE /* SMBClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDAD850A109676D6003620DE /* SMBClient.framework */; };
 		DDAD850C109676D6003620DE /* SMBClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDAD850A109676D6003620DE /* SMBClient.framework */; };
-		DDAD96FD1083FA680016A764 /* acf_l.l in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB029100408FC0080B762 /* acf_l.l */; };
-		DDAD96FE1083FA680016A764 /* nidl_l.l in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB074100408FC0080B762 /* nidl_l.l */; };
 		DDC99904107AA36600330A72 /* dceidl in Resources */ = {isa = PBXBuildFile; fileRef = DDDF3257106BD43400E6A9C2 /* dceidl */; };
 		DDC99930107AAD5600330A72 /* codesets.idl in Create dce header folder */ = {isa = PBXBuildFile; fileRef = DD3DB0E7100408FD0080B762 /* codesets.idl */; };
 		DDC99945107AB5E100330A72 /* dce.h in Copy darwin headers */ = {isa = PBXBuildFile; fileRef = DD3DB0EC100408FD0080B762 /* dce.h */; };
@@ -259,28 +271,12 @@
 		DDCCFFFB10740D1F0007183F /* dgsoc.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2C5100408FD0080B762 /* dgsoc.c */; };
 		DDCCFFFC10740D1F0007183F /* dgutl.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2C6100408FD0080B762 /* dgutl.c */; };
 		DDCCFFFD10740D1F0007183F /* dgxq.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB2C7100408FD0080B762 /* dgxq.c */; };
-		DDD41B4B107274920002C71D /* initscan.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAFCF100408FC0080B762 /* initscan.c */; };
-		DDD41C3B1072A7FD0002C71D /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAFD4100408FC0080B762 /* main.c */; };
-		DDD41D2C1072C4EF0002C71D /* parse.y in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB01F100408FC0080B762 /* parse.y */; };
 		DDD80A24107562FF00956CF0 /* dsm.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB286100408FD0080B762 /* dsm.idl */; };
 		DDD80A521075664800956CF0 /* libdcerpdc_stubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDD80A20107562E300956CF0 /* libdcerpdc_stubs.a */; };
 		DDD80A531075665000956CF0 /* ep.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0F7100408FD0080B762 /* ep.idl */; };
 		DDD80AB910756A2D00956CF0 /* echo.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAFA6100408FC0080B762 /* echo.idl */; };
 		DDD80ABE10756AAA00956CF0 /* libecho_stubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDD80AB610756A0D00956CF0 /* libecho_stubs.a */; };
 		DDD80ACF10756AF500956CF0 /* libecho_stubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDD80AB610756A0D00956CF0 /* libecho_stubs.a */; };
-		DDDF304D106ADA8100E6A9C2 /* ccl.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAFC5100408FC0080B762 /* ccl.c */; };
-		DDDF304E106ADA9C00E6A9C2 /* dfa.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAFC8100408FC0080B762 /* dfa.c */; };
-		DDDF304F106ADA9C00E6A9C2 /* ecs.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAFC9100408FC0080B762 /* ecs.c */; };
-		DDDF3050106ADA9C00E6A9C2 /* gen.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAFCE100408FC0080B762 /* gen.c */; };
-		DDDF3052106ADA9C00E6A9C2 /* misc.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB01A100408FC0080B762 /* misc.c */; };
-		DDDF3053106ADA9C00E6A9C2 /* nfa.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB01E100408FC0080B762 /* nfa.c */; };
-		DDDF3054106ADB1B00E6A9C2 /* tblcmp.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB024100408FC0080B762 /* tblcmp.c */; };
-		DDDF3055106ADB2300E6A9C2 /* yylex.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB026100408FC0080B762 /* yylex.c */; };
-		DDDF305D106ADCA500E6A9C2 /* skel.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB022100408FC0080B762 /* skel.c */; };
-		DDDF305E106ADCAD00E6A9C2 /* sym.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB023100408FC0080B762 /* sym.c */; };
-		DDDF30EC106AE4C400E6A9C2 /* libmain.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAFD2100408FC0080B762 /* libmain.c */; };
-		DDDF30ED106AE4C400E6A9C2 /* libyywrap.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAFD3100408FC0080B762 /* libyywrap.c */; };
-		DDDF3103106AE5AE00E6A9C2 /* libfl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDDF30E9106AE4AD00E6A9C2 /* libfl.a */; };
 		DDDF3260106BD56500E6A9C2 /* astp_com.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB02D100408FC0080B762 /* astp_com.c */; };
 		DDDF3261106BD56500E6A9C2 /* astp_cpx.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB02E100408FC0080B762 /* astp_cpx.c */; };
 		DDDF3262106BD56500E6A9C2 /* astp_dmp.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB02F100408FC0080B762 /* astp_dmp.c */; };
@@ -470,40 +466,6 @@
 			);
 			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -cepv out ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH} ${INPUT_FILE_PATH} &&\nmv -n ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce/ &&\nmv -n ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/${INPUT_FILE_BASE}_cstub.c ${SHARED_DERIVED_FILE_DIR}/dce/ &&\nmv -n ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/${INPUT_FILE_BASE}_sstub.c ${SHARED_DERIVED_FILE_DIR}/dce/";
 		};
-		DD21F0D31083D2D400696F06 /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.proxy.script;
-			filePatterns = "*.y";
-			fileType = pattern.proxy;
-			isEditable = 1;
-			outputFiles = (
-				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h",
-				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).c",
-			);
-			script = "/usr/bin/bison -v -p ${INPUT_FILE_BASE}y -o ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/${INPUT_FILE_BASE}.c -d ${INPUT_FILE_PATH} &&\nmv -n ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/${INPUT_FILE_BASE}.h ${DERIVED_FILES_DIR} &&\nmv -n ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/${INPUT_FILE_BASE}.c ${DERIVED_FILES_DIR}";
-		};
-		DDAD97121083FB360016A764 /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.proxy.script;
-			filePatterns = "*f_l.l";
-			fileType = pattern.proxy;
-			isEditable = 1;
-			outputFiles = (
-				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).c",
-			);
-			script = "${BUILT_PRODUCTS_DIR}/flex -Pacf_yy -o${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/${INPUT_FILE_BASE}.c ${INPUT_FILE_PATH} &&\nmv -n ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/${INPUT_FILE_BASE}.c ${DERIVED_FILES_DIR}";
-		};
-		DDAD97131083FB360016A764 /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.proxy.script;
-			filePatterns = "*l_l.l";
-			fileType = pattern.proxy;
-			isEditable = 1;
-			outputFiles = (
-				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).c",
-			);
-			script = "${BUILT_PRODUCTS_DIR}/flex -Pnidl_yy -o${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/${INPUT_FILE_BASE}.c ${INPUT_FILE_PATH} &&\nmv -n ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/${INPUT_FILE_BASE}.c ${DERIVED_FILES_DIR}";
-		};
 		DDD41A42107261620002C71D /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
 			compilerSpec = com.apple.compilers.proxy.script;
@@ -515,18 +477,6 @@
 				"${SHARED_DERIVED_FILE_DIR}/dce/${INPUT_FILE_BASE}.h",
 			);
 			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -server none out ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH} ${INPUT_FILE_PATH} &&\nmv -n ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce/ &&\nmv -n ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/${INPUT_FILE_BASE}_cstub.c ${SHARED_DERIVED_FILE_DIR}/dce/\n";
-		};
-		DDD41B6A1072768F0002C71D /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.proxy.script;
-			filePatterns = "*.y";
-			fileType = pattern.proxy;
-			isEditable = 1;
-			outputFiles = (
-				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).c",
-				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h",
-			);
-			script = "/usr/bin/bison -o ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/${INPUT_FILE_BASE}.c -y -d ${INPUT_FILE_PATH} &&\nmv -n ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/${INPUT_FILE_BASE}.h ${DERIVED_FILES_DIR} &&\nmv -n ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/${INPUT_FILE_BASE}.c ${DERIVED_FILES_DIR}\n";
 		};
 		DDD80A261075636F00956CF0 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -580,6 +530,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = DD10F5A0106D321F005F1EF3;
 			remoteInfo = trans;
+		};
+		D6E6B60710BCB24600E1DCF5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D6E6B60310BCB1CE00E1DCF5;
+			remoteInfo = "Generate IDL Parsers";
 		};
 		DD0435111076A0A30010E492 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -707,13 +664,6 @@
 			remoteGlobalIDString = DDCCFFA710740B3A0007183F;
 			remoteInfo = prot_ncacn;
 		};
-		DD0FE86B1074D9D3004AB68C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDDF30E8106AE4AD00E6A9C2;
-			remoteInfo = fl;
-		};
 		DD10F646106D3C51005F1EF3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
@@ -749,13 +699,6 @@
 			remoteGlobalIDString = DD10F5E9106D3528005F1EF3;
 			remoteInfo = mgmt_stubs;
 		};
-		DD10F66E106D633D005F1EF3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDDF303C106ADA4D00E6A9C2;
-			remoteInfo = flex;
-		};
 		DD10F6B6106D6520005F1EF3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
@@ -783,13 +726,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = DD04350110769FDA0010E492;
 			remoteInfo = DCERPC;
-		};
-		DDAD96E51083F7CD0016A764 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDDF303C106ADA4D00E6A9C2;
-			remoteInfo = flex;
 		};
 		DDC99980107AB91A00330A72 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -959,13 +895,6 @@
 			remoteGlobalIDString = DDE017DD106C334200A5E41A;
 			remoteInfo = uuid;
 		};
-		DDFA60511074FA7E006A660C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDDF303C106ADA4D00E6A9C2;
-			remoteInfo = flex;
-		};
 		DDFD948710723CF7008E776F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
@@ -1043,6 +972,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D610EA3810B7575800D0305F /* acf_l.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = acf_l.c; sourceTree = "<group>"; };
+		D610EA3A10B7577F00D0305F /* acf_y.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = acf_y.c; sourceTree = "<group>"; };
+		D62430B510B7596C0092FD35 /* nidl_l.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = nidl_l.c; sourceTree = "<group>"; };
+		D62430B710B759790092FD35 /* nidl_y.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = nidl_y.c; sourceTree = "<group>"; };
 		DD04350210769FDA0010E492 /* DCERPC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DCERPC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD04350310769FDA0010E492 /* DCERPC-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "DCERPC-Info.plist"; sourceTree = "<group>"; };
 		DD04350B10769FF80010E492 /* dcerpc_framework.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = dcerpc_framework.xcconfig; path = dcerpc.xc.configurations/dcerpc_framework.xcconfig; sourceTree = "<group>"; };
@@ -1057,12 +990,11 @@
 		DD10F5EA106D3528005F1EF3 /* libmgmt_stubs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmgmt_stubs.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD10F7EC106D6DA7005F1EF3 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
 		DD10F8C3106D7357005F1EF3 /* libprot_ncadg_stubs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libprot_ncadg_stubs.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		DD21F0B71083D15500696F06 /* libdceidl_stubs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdceidl_stubs.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD21F0B71083D15500696F06 /* libdceidl_parser.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdceidl_parser.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD21F0DB1083D32F00696F06 /* dceidl_stubs.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = dceidl_stubs.xcconfig; path = dcerpc.xc.configurations/dceidl_stubs.xcconfig; sourceTree = "<group>"; };
 		DD3DAF83100408FC0080B762 /* wc16str.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = wc16str.c; sourceTree = "<group>"; };
 		DD3DAF84100408FC0080B762 /* dummyfuncs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dummyfuncs.c; sourceTree = "<group>"; };
 		DD3DAF85100408FC0080B762 /* exports */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = exports; sourceTree = "<group>"; };
-		DD3DAF86100408FC0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DAF87100408FC0080B762 /* mswrappers.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mswrappers.c; sourceTree = "<group>"; };
 		DD3DAF9A100408FC0080B762 /* echon.acf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = echon.acf; sourceTree = "<group>"; };
 		DD3DAF9B100408FC0080B762 /* echon.idl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = echon.idl; sourceTree = "<group>"; };
@@ -1070,8 +1002,6 @@
 		DD3DAF9D100408FC0080B762 /* echon_server.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = echon_server.c; sourceTree = "<group>"; };
 		DD3DAF9E100408FC0080B762 /* getopt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = getopt.c; sourceTree = "<group>"; };
 		DD3DAF9F100408FC0080B762 /* getopt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = getopt.h; sourceTree = "<group>"; };
-		DD3DAFA0100408FC0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		DD3DAFA1100408FC0080B762 /* Makefile.w32 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.w32; sourceTree = "<group>"; };
 		DD3DAFA2100408FC0080B762 /* misc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = misc.c; sourceTree = "<group>"; };
 		DD3DAFA3100408FC0080B762 /* misc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = misc.h; sourceTree = "<group>"; };
 		DD3DAFA5100408FC0080B762 /* echo.acf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = echo.acf; sourceTree = "<group>"; };
@@ -1080,8 +1010,6 @@
 		DD3DAFA8100408FC0080B762 /* echo_server.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = echo_server.c; sourceTree = "<group>"; };
 		DD3DAFA9100408FC0080B762 /* getopt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = getopt.c; sourceTree = "<group>"; };
 		DD3DAFAA100408FC0080B762 /* getopt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = getopt.h; sourceTree = "<group>"; };
-		DD3DAFAB100408FC0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		DD3DAFAC100408FC0080B762 /* Makefile.w32 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.w32; sourceTree = "<group>"; };
 		DD3DAFAD100408FC0080B762 /* misc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = misc.c; sourceTree = "<group>"; };
 		DD3DAFAE100408FC0080B762 /* misc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = misc.h; sourceTree = "<group>"; };
 		DD3DAFB0100408FC0080B762 /* echo_client.exe */ = {isa = PBXFileReference; lastKnownFileType = file; path = echo_client.exe; sourceTree = "<group>"; };
@@ -1091,103 +1019,14 @@
 		DD3DAFB5100408FC0080B762 /* echou.idl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = echou.idl; sourceTree = "<group>"; };
 		DD3DAFB6100408FC0080B762 /* echou_client.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = echou_client.c; sourceTree = "<group>"; };
 		DD3DAFB7100408FC0080B762 /* echou_server.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = echou_server.c; sourceTree = "<group>"; };
-		DD3DAFB8100408FC0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DAFB9100408FC0080B762 /* misc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = misc.c; sourceTree = "<group>"; };
 		DD3DAFBA100408FC0080B762 /* misc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = misc.h; sourceTree = "<group>"; };
-		DD3DAFBB100408FC0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		DD3DAFBD100408FC0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DAFBE100408FC0080B762 /* misc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = misc.c; sourceTree = "<group>"; };
 		DD3DAFBF100408FC0080B762 /* misc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = misc.h; sourceTree = "<group>"; };
 		DD3DAFC0100408FC0080B762 /* samrt.acf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = samrt.acf; sourceTree = "<group>"; };
 		DD3DAFC1100408FC0080B762 /* samrt.idl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = samrt.idl; sourceTree = "<group>"; };
 		DD3DAFC2100408FC0080B762 /* samrt_client.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = samrt_client.c; sourceTree = "<group>"; };
 		DD3DAFC3100408FC0080B762 /* samrt_server.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = samrt_server.c; sourceTree = "<group>"; };
-		DD3DAFC5100408FC0080B762 /* ccl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ccl.c; sourceTree = "<group>"; };
-		DD3DAFC6100408FC0080B762 /* configure.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = configure.in; sourceTree = "<group>"; };
-		DD3DAFC7100408FC0080B762 /* COPYING */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
-		DD3DAFC8100408FC0080B762 /* dfa.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dfa.c; sourceTree = "<group>"; };
-		DD3DAFC9100408FC0080B762 /* ecs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ecs.c; sourceTree = "<group>"; };
-		DD3DAFCA100408FC0080B762 /* flex.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = flex.1; sourceTree = "<group>"; };
-		DD3DAFCB100408FC0080B762 /* flex.skl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = flex.skl; sourceTree = "<group>"; };
-		DD3DAFCC100408FC0080B762 /* flexdef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = flexdef.h; sourceTree = "<group>"; };
-		DD3DAFCD100408FC0080B762 /* FlexLexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlexLexer.h; sourceTree = "<group>"; };
-		DD3DAFCE100408FC0080B762 /* gen.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gen.c; sourceTree = "<group>"; };
-		DD3DAFCF100408FC0080B762 /* initscan.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = initscan.c; sourceTree = "<group>"; };
-		DD3DAFD0100408FC0080B762 /* INSTALL */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = INSTALL; sourceTree = "<group>"; };
-		DD3DAFD1100408FC0080B762 /* install.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = install.sh; sourceTree = "<group>"; };
-		DD3DAFD2100408FC0080B762 /* libmain.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = libmain.c; sourceTree = "<group>"; };
-		DD3DAFD3100408FC0080B762 /* libyywrap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = libyywrap.c; sourceTree = "<group>"; };
-		DD3DAFD4100408FC0080B762 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
-		DD3DAFD5100408FC0080B762 /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
-		DD3DAFD7100408FC0080B762 /* alloca.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = alloca.c; sourceTree = "<group>"; };
-		DD3DAFD9100408FC0080B762 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
-		DD3DAFDA100408FC0080B762 /* libmain.ch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = libmain.ch; sourceTree = "<group>"; };
-		DD3DAFDB100408FC0080B762 /* libyywrap.ch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = libyywrap.ch; sourceTree = "<group>"; };
-		DD3DAFDC100408FC0080B762 /* parse.ych */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = parse.ych; sourceTree = "<group>"; };
-		DD3DAFDD100408FC0080B762 /* README.amiga */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.amiga; sourceTree = "<group>"; };
-		DD3DAFDE100408FC0080B762 /* SMakefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SMakefile; sourceTree = "<group>"; };
-		DD3DAFE0100408FC0080B762 /* Atari.patches */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Atari.patches; sourceTree = "<group>"; };
-		DD3DAFE2100408FC0080B762 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
-		DD3DAFE3100408FC0080B762 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		DD3DAFE4100408FC0080B762 /* NOTES */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NOTES; sourceTree = "<group>"; };
-		DD3DAFE6100408FC0080B762 /* Borland-2.4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Borland-2.4"; sourceTree = "<group>"; };
-		DD3DAFE7100408FC0080B762 /* Turbo-C */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Turbo-C"; sourceTree = "<group>"; };
-		DD3DAFE8100408FC0080B762 /* debflex.awk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = debflex.awk; sourceTree = "<group>"; };
-		DD3DAFE9100408FC0080B762 /* EBCDIC */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = EBCDIC; sourceTree = "<group>"; };
-		DD3DAFEB100408FC0080B762 /* mywc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mywc.c; sourceTree = "<group>"; };
-		DD3DAFEC100408FC0080B762 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
-		DD3DAFED100408FC0080B762 /* wc1.l */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.lex; path = wc1.l; sourceTree = "<group>"; };
-		DD3DAFEE100408FC0080B762 /* wc2.l */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.lex; path = wc2.l; sourceTree = "<group>"; };
-		DD3DAFEF100408FC0080B762 /* wc3.l */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.lex; path = wc3.l; sourceTree = "<group>"; };
-		DD3DAFF0100408FC0080B762 /* wc4.l */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.lex; path = wc4.l; sourceTree = "<group>"; };
-		DD3DAFF1100408FC0080B762 /* wc5.l */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.lex; path = wc5.l; sourceTree = "<group>"; };
-		DD3DAFF2100408FC0080B762 /* flex.man */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = flex.man; sourceTree = "<group>"; };
-		DD3DAFF4100408FC0080B762 /* alloca.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = alloca.c; sourceTree = "<group>"; };
-		DD3DAFF5100408FC0080B762 /* alloca.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = alloca.h; sourceTree = "<group>"; };
-		DD3DAFF6100408FC0080B762 /* THINK_C_notes */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = THINK_C_notes; sourceTree = "<group>"; };
-		DD3DAFF7100408FC0080B762 /* xmalloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmalloc.c; sourceTree = "<group>"; };
-		DD3DAFF9100408FC0080B762 /* configur.bat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = configur.bat; sourceTree = "<group>"; };
-		DD3DAFFA100408FC0080B762 /* djgpp.sed */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = djgpp.sed; sourceTree = "<group>"; };
-		DD3DAFFB100408FC0080B762 /* MSC70.make */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MSC70.make; sourceTree = "<group>"; };
-		DD3DAFFD100408FC0080B762 /* diffs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = diffs; sourceTree = "<group>"; };
-		DD3DAFFE100408FC0080B762 /* fixit.l */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.lex; path = fixit.l; sourceTree = "<group>"; };
-		DD3DAFFF100408FC0080B762 /* initscan-mvs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "initscan-mvs.c"; sourceTree = "<group>"; };
-		DD3DB000100408FC0080B762 /* MVS.mail */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MVS.mail; sourceTree = "<group>"; };
-		DD3DB001100408FC0080B762 /* MVS.todo */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MVS.todo; sourceTree = "<group>"; };
-		DD3DB002100408FC0080B762 /* MVS.uudecode */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MVS.uudecode; sourceTree = "<group>"; };
-		DD3DB003100408FC0080B762 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
-		DD3DB004100408FC0080B762 /* unfixit.l */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.lex; path = unfixit.l; sourceTree = "<group>"; };
-		DD3DB005100408FC0080B762 /* NeXT */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NeXT; sourceTree = "<group>"; };
-		DD3DB007100408FC0080B762 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
-		DD3DB008100408FC0080B762 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		DD3DB00A100408FC0080B762 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
-		DD3DB00B100408FC0080B762 /* Makefile.os2 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.os2; sourceTree = "<group>"; };
-		DD3DB00C100408FC0080B762 /* parse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = parse.c; sourceTree = "<group>"; };
-		DD3DB00D100408FC0080B762 /* parse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = parse.h; sourceTree = "<group>"; };
-		DD3DB00E100408FC0080B762 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
-		DD3DB00F100408FC0080B762 /* testxxLexer.l */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.lex; path = testxxLexer.l; sourceTree = "<group>"; };
-		DD3DB011100408FC0080B762 /* flex.info */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = flex.info; sourceTree = "<group>"; };
-		DD3DB012100408FC0080B762 /* flex.texi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = flex.texi; sourceTree = "<group>"; };
-		DD3DB014100408FC0080B762 /* build.com */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = build.com; sourceTree = "<group>"; };
-		DD3DB015100408FC0080B762 /* descrip.mms */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = descrip.mms; sourceTree = "<group>"; };
-		DD3DB016100408FC0080B762 /* mkskel.tpu */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mkskel.tpu; sourceTree = "<group>"; };
-		DD3DB017100408FC0080B762 /* README.VMS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.VMS; sourceTree = "<group>"; };
-		DD3DB018100408FC0080B762 /* vms-code.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "vms-code.c"; sourceTree = "<group>"; };
-		DD3DB019100408FC0080B762 /* vms-conf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "vms-conf.h"; sourceTree = "<group>"; };
-		DD3DB01A100408FC0080B762 /* misc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = misc.c; sourceTree = "<group>"; };
-		DD3DB01B100408FC0080B762 /* mkinstalldirs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = mkinstalldirs; sourceTree = "<group>"; };
-		DD3DB01C100408FC0080B762 /* mkskel.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = mkskel.sh; sourceTree = "<group>"; };
-		DD3DB01D100408FC0080B762 /* NEWS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NEWS; sourceTree = "<group>"; };
-		DD3DB01E100408FC0080B762 /* nfa.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = nfa.c; sourceTree = "<group>"; };
-		DD3DB01F100408FC0080B762 /* parse.y */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.yacc; path = parse.y; sourceTree = "<group>"; };
-		DD3DB020100408FC0080B762 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
-		DD3DB021100408FC0080B762 /* scan.l */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.lex; path = scan.l; sourceTree = "<group>"; };
-		DD3DB022100408FC0080B762 /* skel.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = skel.c; sourceTree = "<group>"; };
-		DD3DB023100408FC0080B762 /* sym.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sym.c; sourceTree = "<group>"; };
-		DD3DB024100408FC0080B762 /* tblcmp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tblcmp.c; sourceTree = "<group>"; };
-		DD3DB025100408FC0080B762 /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
-		DD3DB026100408FC0080B762 /* yylex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = yylex.c; sourceTree = "<group>"; };
-		DD3DB028100408FC0080B762 /* acf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = acf.h; sourceTree = "<group>"; };
 		DD3DB029100408FC0080B762 /* acf_l.l */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.lex; path = acf_l.l; sourceTree = "<group>"; };
 		DD3DB02A100408FC0080B762 /* acf_y.y */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.yacc; path = acf_y.y; sourceTree = "<group>"; };
 		DD3DB02B100408FC0080B762 /* ast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ast.h; sourceTree = "<group>"; };
@@ -1232,7 +1071,6 @@
 		DD3DB052100408FC0080B762 /* fe_pvt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fe_pvt.h; sourceTree = "<group>"; };
 		DD3DB053100408FC0080B762 /* files.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = files.c; sourceTree = "<group>"; };
 		DD3DB054100408FC0080B762 /* files.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = files.h; sourceTree = "<group>"; };
-		DD3DB055100408FC0080B762 /* flex_bison_support.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = flex_bison_support.h; sourceTree = "<group>"; };
 		DD3DB056100408FC0080B762 /* frontend.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = frontend.c; sourceTree = "<group>"; };
 		DD3DB057100408FC0080B762 /* frontend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = frontend.h; sourceTree = "<group>"; };
 		DD3DB058100408FC0080B762 /* genpipes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = genpipes.h; sourceTree = "<group>"; };
@@ -1250,7 +1088,6 @@
 		DD3DB064100408FC0080B762 /* irepscp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = irepscp.c; sourceTree = "<group>"; };
 		DD3DB065100408FC0080B762 /* keywds.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = keywds.c; sourceTree = "<group>"; };
 		DD3DB066100408FC0080B762 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
-		DD3DB067100408FC0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB068100408FC0080B762 /* marshall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = marshall.h; sourceTree = "<group>"; };
 		DD3DB069100408FC0080B762 /* message.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = message.c; sourceTree = "<group>"; };
 		DD3DB06A100408FC0080B762 /* message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = message.h; sourceTree = "<group>"; };
@@ -1319,7 +1156,6 @@
 		DD3DB0AA100408FD0080B762 /* interpsh.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = interpsh.c; sourceTree = "<group>"; };
 		DD3DB0AB100408FD0080B762 /* lapollo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lapollo.h; sourceTree = "<group>"; };
 		DD3DB0AC100408FD0080B762 /* lsysdep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lsysdep.h; sourceTree = "<group>"; };
-		DD3DB0AD100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB0AE100408FD0080B762 /* marbfman.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = marbfman.c; sourceTree = "<group>"; };
 		DD3DB0AF100408FD0080B762 /* nbaseool.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = nbaseool.c; sourceTree = "<group>"; };
 		DD3DB0B0100408FD0080B762 /* ndrcharp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ndrcharp.c; sourceTree = "<group>"; };
@@ -1359,14 +1195,12 @@
 		DD3DB0D4100408FD0080B762 /* dce2msrpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce2msrpc.h; sourceTree = "<group>"; };
 		DD3DB0D5100408FD0080B762 /* dcerpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dcerpc.h; sourceTree = "<group>"; };
 		DD3DB0D6100408FD0080B762 /* dcerpc.idl.include */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dcerpc.idl.include; sourceTree = "<group>"; };
-		DD3DB0D7100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB0D8100408FD0080B762 /* mswrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mswrappers.h; sourceTree = "<group>"; };
 		DD3DB0D9100408FD0080B762 /* rpcfields.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rpcfields.h; sourceTree = "<group>"; };
 		DD3DB0DA100408FD0080B762 /* rpcstatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rpcstatus.h; sourceTree = "<group>"; };
 		DD3DB0DD100408FD0080B762 /* dce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce.h; sourceTree = "<group>"; };
 		DD3DB0DE100408FD0080B762 /* dce_error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce_error.h; sourceTree = "<group>"; };
 		DD3DB0DF100408FD0080B762 /* dce_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce_utils.h; sourceTree = "<group>"; };
-		DD3DB0E0100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB0E1100408FD0080B762 /* sec_authn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sec_authn.h; sourceTree = "<group>"; };
 		DD3DB0E3100408FD0080B762 /* marshall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = marshall.h; sourceTree = "<group>"; };
 		DD3DB0E4100408FD0080B762 /* ndr_rep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndr_rep.h; sourceTree = "<group>"; };
@@ -1379,7 +1213,6 @@
 		DD3DB0EC100408FD0080B762 /* dce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce.h; sourceTree = "<group>"; };
 		DD3DB0ED100408FD0080B762 /* dce_error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce_error.h; sourceTree = "<group>"; };
 		DD3DB0EE100408FD0080B762 /* dce_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce_utils.h; sourceTree = "<group>"; };
-		DD3DB0EF100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB0F0100408FD0080B762 /* sec_authn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sec_authn.h; sourceTree = "<group>"; };
 		DD3DB0F1100408FD0080B762 /* dce.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dce.h.in; sourceTree = "<group>"; };
 		DD3DB0F2100408FD0080B762 /* dce_error.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dce_error.h.in; sourceTree = "<group>"; };
@@ -1391,26 +1224,20 @@
 		DD3DB0F9100408FD0080B762 /* dce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce.h; sourceTree = "<group>"; };
 		DD3DB0FA100408FD0080B762 /* dce_error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce_error.h; sourceTree = "<group>"; };
 		DD3DB0FB100408FD0080B762 /* dce_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce_utils.h; sourceTree = "<group>"; };
-		DD3DB0FC100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB0FD100408FD0080B762 /* sec_authn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sec_authn.h; sourceTree = "<group>"; };
-		DD3DB0FF100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB100100408FD0080B762 /* marshall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = marshall.h; sourceTree = "<group>"; };
 		DD3DB101100408FD0080B762 /* ndr_rep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndr_rep.h; sourceTree = "<group>"; };
 		DD3DB102100408FD0080B762 /* ndrtypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndrtypes.h; sourceTree = "<group>"; };
-		DD3DB104100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB105100408FD0080B762 /* marshall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = marshall.h; sourceTree = "<group>"; };
 		DD3DB106100408FD0080B762 /* ndr_rep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndr_rep.h; sourceTree = "<group>"; };
 		DD3DB107100408FD0080B762 /* ndrtypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndrtypes.h; sourceTree = "<group>"; };
 		DD3DB109100408FD0080B762 /* dce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce.h; sourceTree = "<group>"; };
 		DD3DB10A100408FD0080B762 /* dce_error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce_error.h; sourceTree = "<group>"; };
 		DD3DB10B100408FD0080B762 /* dce_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce_utils.h; sourceTree = "<group>"; };
-		DD3DB10C100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB10D100408FD0080B762 /* sec_authn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sec_authn.h; sourceTree = "<group>"; };
-		DD3DB10F100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB110100408FD0080B762 /* marshall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = marshall.h; sourceTree = "<group>"; };
 		DD3DB111100408FD0080B762 /* ndr_rep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndr_rep.h; sourceTree = "<group>"; };
 		DD3DB112100408FD0080B762 /* ndrtypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndrtypes.h; sourceTree = "<group>"; };
-		DD3DB114100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB115100408FD0080B762 /* marshall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = marshall.h; sourceTree = "<group>"; };
 		DD3DB116100408FD0080B762 /* ndr_rep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndr_rep.h; sourceTree = "<group>"; };
 		DD3DB117100408FD0080B762 /* ndrtypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndrtypes.h; sourceTree = "<group>"; };
@@ -1423,9 +1250,7 @@
 		DD3DB11F100408FD0080B762 /* dce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce.h; sourceTree = "<group>"; };
 		DD3DB120100408FD0080B762 /* dce_error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce_error.h; sourceTree = "<group>"; };
 		DD3DB121100408FD0080B762 /* dce_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce_utils.h; sourceTree = "<group>"; };
-		DD3DB122100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB123100408FD0080B762 /* sec_authn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sec_authn.h; sourceTree = "<group>"; };
-		DD3DB124100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB125100408FD0080B762 /* marshall.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = marshall.h.in; sourceTree = "<group>"; };
 		DD3DB126100408FD0080B762 /* mgmt.acf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mgmt.acf; sourceTree = "<group>"; };
 		DD3DB127100408FD0080B762 /* mgmt.idl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mgmt.idl; sourceTree = "<group>"; };
@@ -1435,11 +1260,9 @@
 		DD3DB12B100408FD0080B762 /* ndr_rep.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ndr_rep.h.in; sourceTree = "<group>"; };
 		DD3DB12C100408FD0080B762 /* ndrold.idl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ndrold.idl; sourceTree = "<group>"; };
 		DD3DB12D100408FD0080B762 /* ndrtypes.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ndrtypes.h.in; sourceTree = "<group>"; };
-		DD3DB12F100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB130100408FD0080B762 /* marshall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = marshall.h; sourceTree = "<group>"; };
 		DD3DB131100408FD0080B762 /* ndr_rep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndr_rep.h; sourceTree = "<group>"; };
 		DD3DB132100408FD0080B762 /* ndrtypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndrtypes.h; sourceTree = "<group>"; };
-		DD3DB134100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB135100408FD0080B762 /* marshall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = marshall.h; sourceTree = "<group>"; };
 		DD3DB136100408FD0080B762 /* ndr_rep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndr_rep.h; sourceTree = "<group>"; };
 		DD3DB137100408FD0080B762 /* ndrtypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndrtypes.h; sourceTree = "<group>"; };
@@ -1449,11 +1272,9 @@
 		DD3DB13B100408FD0080B762 /* rpcpvt.idl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rpcpvt.idl; sourceTree = "<group>"; };
 		DD3DB13C100408FD0080B762 /* rpcsts.idl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rpcsts.idl; sourceTree = "<group>"; };
 		DD3DB13D100408FD0080B762 /* rpctypes.idl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rpctypes.idl; sourceTree = "<group>"; };
-		DD3DB13F100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB140100408FD0080B762 /* marshall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = marshall.h; sourceTree = "<group>"; };
 		DD3DB141100408FD0080B762 /* ndr_rep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndr_rep.h; sourceTree = "<group>"; };
 		DD3DB142100408FD0080B762 /* ndrtypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndrtypes.h; sourceTree = "<group>"; };
-		DD3DB144100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB145100408FD0080B762 /* marshall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = marshall.h; sourceTree = "<group>"; };
 		DD3DB146100408FD0080B762 /* ndr_rep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndr_rep.h; sourceTree = "<group>"; };
 		DD3DB147100408FD0080B762 /* ndrtypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndrtypes.h; sourceTree = "<group>"; };
@@ -1463,30 +1284,24 @@
 		DD3DB14C100408FD0080B762 /* dce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce.h; sourceTree = "<group>"; };
 		DD3DB14D100408FD0080B762 /* dce_error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce_error.h; sourceTree = "<group>"; };
 		DD3DB14E100408FD0080B762 /* dce_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce_utils.h; sourceTree = "<group>"; };
-		DD3DB14F100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB150100408FD0080B762 /* sec_authn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sec_authn.h; sourceTree = "<group>"; };
 		DD3DB152100408FD0080B762 /* dce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce.h; sourceTree = "<group>"; };
 		DD3DB153100408FD0080B762 /* dce_error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce_error.h; sourceTree = "<group>"; };
 		DD3DB154100408FD0080B762 /* dce_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce_utils.h; sourceTree = "<group>"; };
-		DD3DB155100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB156100408FD0080B762 /* sec_authn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sec_authn.h; sourceTree = "<group>"; };
 		DD3DB158100408FD0080B762 /* dce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce.h; sourceTree = "<group>"; };
 		DD3DB159100408FD0080B762 /* dce_error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce_error.h; sourceTree = "<group>"; };
 		DD3DB15A100408FD0080B762 /* dce_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce_utils.h; sourceTree = "<group>"; };
-		DD3DB15B100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB15C100408FD0080B762 /* sec_authn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sec_authn.h; sourceTree = "<group>"; };
-		DD3DB15E100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB15F100408FD0080B762 /* marshall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = marshall.h; sourceTree = "<group>"; };
 		DD3DB160100408FD0080B762 /* ndr_rep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndr_rep.h; sourceTree = "<group>"; };
 		DD3DB161100408FD0080B762 /* ndrtypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndrtypes.h; sourceTree = "<group>"; };
 		DD3DB162100408FD0080B762 /* stubbase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stubbase.h; sourceTree = "<group>"; };
 		DD3DB163100408FD0080B762 /* twr.idl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = twr.idl; sourceTree = "<group>"; };
 		DD3DB164100408FD0080B762 /* uuid.idl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = uuid.idl; sourceTree = "<group>"; };
-		DD3DB166100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB167100408FD0080B762 /* marshall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = marshall.h; sourceTree = "<group>"; };
 		DD3DB168100408FD0080B762 /* ndr_rep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndr_rep.h; sourceTree = "<group>"; };
 		DD3DB169100408FD0080B762 /* ndrtypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndrtypes.h; sourceTree = "<group>"; };
-		DD3DB16A100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB16C100408FD0080B762 /* dcethread-debug.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "dcethread-debug.c"; sourceTree = "<group>"; };
 		DD3DB16D100408FD0080B762 /* dcethread-debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dcethread-debug.h"; sourceTree = "<group>"; };
 		DD3DB16E100408FD0080B762 /* dcethread-exception.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "dcethread-exception.c"; sourceTree = "<group>"; };
@@ -1566,11 +1381,7 @@
 		DD3DB1B8100408FD0080B762 /* dcethread_unlock_global.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dcethread_unlock_global.c; sourceTree = "<group>"; };
 		DD3DB1B9100408FD0080B762 /* dcethread_write.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dcethread_write.c; sourceTree = "<group>"; };
 		DD3DB1BA100408FD0080B762 /* dcethread_yield.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dcethread_yield.c; sourceTree = "<group>"; };
-		DD3DB1BB100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB1BC100408FD0080B762 /* test-exception.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "test-exception.c"; sourceTree = "<group>"; };
-		DD3DB1BE100408FD0080B762 /* acinclude.m4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = acinclude.m4; sourceTree = "<group>"; };
-		DD3DB1BF100408FD0080B762 /* ax_cflags_gcc_option.m4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ax_cflags_gcc_option.m4; sourceTree = "<group>"; };
-		DD3DB1C0100408FD0080B762 /* rpc_libunistr.m4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rpc_libunistr.m4; sourceTree = "<group>"; };
 		DD3DB1C2100408FD0080B762 /* cn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cn.h; sourceTree = "<group>"; };
 		DD3DB1C3100408FD0080B762 /* cnasgsm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cnasgsm.h; sourceTree = "<group>"; };
 		DD3DB1C4100408FD0080B762 /* cnassm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cnassm.h; sourceTree = "<group>"; };
@@ -1658,43 +1469,32 @@
 		DD3DB217100408FD0080B762 /* id_base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = id_base.h; sourceTree = "<group>"; };
 		DD3DB21A100408FD0080B762 /* comsoc_sys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = comsoc_sys.h; sourceTree = "<group>"; };
 		DD3DB21B100408FD0080B762 /* cs_s_conv.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cs_s_conv.c; sourceTree = "<group>"; };
-		DD3DB21C100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB21D100408FD0080B762 /* sysconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sysconf.h; sourceTree = "<group>"; };
 		DD3DB21F100408FD0080B762 /* comsoc_sys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = comsoc_sys.h; sourceTree = "<group>"; };
 		DD3DB220100408FD0080B762 /* cs_s_conv.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cs_s_conv.c; sourceTree = "<group>"; };
-		DD3DB221100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB222100408FD0080B762 /* sysconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sysconf.h; sourceTree = "<group>"; };
 		DD3DB224100408FD0080B762 /* comsoc_sys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = comsoc_sys.h; sourceTree = "<group>"; };
 		DD3DB225100408FD0080B762 /* cs_s_conv.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cs_s_conv.c; sourceTree = "<group>"; };
-		DD3DB226100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB227100408FD0080B762 /* sysconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sysconf.h; sourceTree = "<group>"; };
 		DD3DB229100408FD0080B762 /* comsoc_sys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = comsoc_sys.h; sourceTree = "<group>"; };
 		DD3DB22A100408FD0080B762 /* cs_s_conv.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cs_s_conv.c; sourceTree = "<group>"; };
-		DD3DB22B100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB22C100408FD0080B762 /* sysconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sysconf.h; sourceTree = "<group>"; };
 		DD3DB22E100408FD0080B762 /* comsoc_sys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = comsoc_sys.h; sourceTree = "<group>"; };
 		DD3DB22F100408FD0080B762 /* cs_s_conv.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cs_s_conv.c; sourceTree = "<group>"; };
-		DD3DB230100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB231100408FD0080B762 /* sysconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sysconf.h; sourceTree = "<group>"; };
-		DD3DB232100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB234100408FD0080B762 /* comsoc_sys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = comsoc_sys.h; sourceTree = "<group>"; };
 		DD3DB235100408FD0080B762 /* cs_s_conv.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cs_s_conv.c; sourceTree = "<group>"; };
-		DD3DB236100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB237100408FD0080B762 /* sysconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sysconf.h; sourceTree = "<group>"; };
 		DD3DB239100408FD0080B762 /* comsoc_sys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = comsoc_sys.h; sourceTree = "<group>"; };
 		DD3DB23A100408FD0080B762 /* cs_s_conv.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cs_s_conv.c; sourceTree = "<group>"; };
-		DD3DB23B100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB23C100408FD0080B762 /* sysconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sysconf.h; sourceTree = "<group>"; };
 		DD3DB23E100408FD0080B762 /* comsoc_sys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = comsoc_sys.h; sourceTree = "<group>"; };
 		DD3DB23F100408FD0080B762 /* cs_s_conv.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cs_s_conv.c; sourceTree = "<group>"; };
-		DD3DB240100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB241100408FD0080B762 /* sysconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sysconf.h; sourceTree = "<group>"; };
 		DD3DB242100408FD0080B762 /* ipnaf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ipnaf.h; sourceTree = "<group>"; };
 		DD3DB243100408FD0080B762 /* ipnaf_bsd.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ipnaf_bsd.c; sourceTree = "<group>"; };
-		DD3DB244100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB245100408FD0080B762 /* mgmt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mgmt.c; sourceTree = "<group>"; };
 		DD3DB246100408FD0080B762 /* mgmtp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mgmtp.h; sourceTree = "<group>"; };
-		DD3DB247100408FD0080B762 /* ncklib.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ncklib.mk; sourceTree = "<group>"; };
 		DD3DB248100408FD0080B762 /* ndrglob.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ndrglob.c; sourceTree = "<group>"; };
 		DD3DB249100408FD0080B762 /* ndrglob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndrglob.h; sourceTree = "<group>"; };
 		DD3DB24A100408FD0080B762 /* ndrp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndrp.h; sourceTree = "<group>"; };
@@ -1735,7 +1535,6 @@
 		DD3DB26D100408FD0080B762 /* twrp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = twrp.h; sourceTree = "<group>"; };
 		DD3DB26E100408FD0080B762 /* uxdnaf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uxdnaf.h; sourceTree = "<group>"; };
 		DD3DB270100408FD0080B762 /* client.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = client.c; sourceTree = "<group>"; };
-		DD3DB271100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB272100408FD0080B762 /* perf.acf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = perf.acf; sourceTree = "<group>"; };
 		DD3DB273100408FD0080B762 /* perf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = perf.c; sourceTree = "<group>"; };
 		DD3DB274100408FD0080B762 /* perf.idl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = perf.idl; sourceTree = "<group>"; };
@@ -1758,7 +1557,6 @@
 		DD3DB286100408FD0080B762 /* dsm.idl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsm.idl; sourceTree = "<group>"; };
 		DD3DB287100408FD0080B762 /* dsm_p.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dsm_p.h; sourceTree = "<group>"; };
 		DD3DB288100408FD0080B762 /* dsm_unix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dsm_unix.c; sourceTree = "<group>"; };
-		DD3DB289100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB28A100408FD0080B762 /* oxids.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = oxids.cxx; sourceTree = "<group>"; };
 		DD3DB28B100408FD0080B762 /* rc.dce-clean */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "rc.dce-clean"; sourceTree = "<group>"; };
 		DD3DB28C100408FD0080B762 /* rc.dcerpcd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = rc.dcerpcd; sourceTree = "<group>"; };
@@ -1774,7 +1572,6 @@
 		DD3DB296100408FD0080B762 /* rpcdutil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rpcdutil.c; sourceTree = "<group>"; };
 		DD3DB297100408FD0080B762 /* rpcdutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rpcdutil.h; sourceTree = "<group>"; };
 		DD3DB299100408FD0080B762 /* epstatus.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = epstatus.c; sourceTree = "<group>"; };
-		DD3DB29A100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB29C100408FD0080B762 /* cnassoc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cnassoc.c; sourceTree = "<group>"; };
 		DD3DB29D100408FD0080B762 /* cnbind.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cnbind.c; sourceTree = "<group>"; };
 		DD3DB29E100408FD0080B762 /* cncall.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cncall.c; sourceTree = "<group>"; };
@@ -1823,7 +1620,6 @@
 		DD3DB2C9100408FD0080B762 /* gssauthcn.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gssauthcn.c; sourceTree = "<group>"; };
 		DD3DB2CA100408FD0080B762 /* ipnaf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ipnaf.c; sourceTree = "<group>"; };
 		DD3DB2CB100408FD0080B762 /* ipnaf_linux.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ipnaf_linux.c; sourceTree = "<group>"; };
-		DD3DB2CC100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB2CD100408FD0080B762 /* npnaf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = npnaf.c; sourceTree = "<group>"; };
 		DD3DB2CE100408FD0080B762 /* npnaf_linux.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = npnaf_linux.c; sourceTree = "<group>"; };
 		DD3DB2CF100408FD0080B762 /* schnauth.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = schnauth.c; sourceTree = "<group>"; };
@@ -1832,7 +1628,6 @@
 		DD3DB2D2100408FD0080B762 /* twr_np.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = twr_np.c; sourceTree = "<group>"; };
 		DD3DB2D3100408FD0080B762 /* twr_uxd.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = twr_uxd.c; sourceTree = "<group>"; };
 		DD3DB2D5100408FD0080B762 /* get_802_addr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = get_802_addr.c; sourceTree = "<group>"; };
-		DD3DB2D6100408FD0080B762 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DD3DB2D7100408FD0080B762 /* uuid.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = uuid.c; sourceTree = "<group>"; };
 		DD3DB2D8100408FD0080B762 /* uuid_i.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uuid_i.h; sourceTree = "<group>"; };
 		DD3DB2D9100408FD0080B762 /* uuidsys.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = uuidsys.c; sourceTree = "<group>"; };
@@ -1861,8 +1656,6 @@
 		DDCCFFDD10740CD50007183F /* libprot_ncadg.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libprot_ncadg.so; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDD80A20107562E300956CF0 /* libdcerpdc_stubs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdcerpdc_stubs.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDD80AB610756A0D00956CF0 /* libecho_stubs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libecho_stubs.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		DDDF303D106ADA4D00E6A9C2 /* flex */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = flex; sourceTree = BUILT_PRODUCTS_DIR; };
-		DDDF30E9106AE4AD00E6A9C2 /* libfl.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libfl.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDDF3257106BD43400E6A9C2 /* dceidl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = dceidl; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDE0178F106C2FFD00A5E41A /* libidl.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libidl.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDE017DE106C334200A5E41A /* libuuid.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libuuid.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1948,13 +1741,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DD21F0B51083D15500696F06 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		DD7FBDA21074061400B63C2A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -2009,26 +1795,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DDDF303B106ADA4D00E6A9C2 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DDDF3103106AE5AE00E6A9C2 /* libfl.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DDDF30E7106AE4AD00E6A9C2 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		DDDF3255106BD43400E6A9C2 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD21F0DD1083D3AD00696F06 /* libdceidl_stubs.a in Frameworks */,
+				DD21F0DD1083D3AD00696F06 /* libdceidl_parser.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2090,9 +1861,7 @@
 		034768DFFF38A50411DB9C8B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				DDDF303D106ADA4D00E6A9C2 /* flex */,
-				DDDF30E9106AE4AD00E6A9C2 /* libfl.a */,
-				DD21F0B71083D15500696F06 /* libdceidl_stubs.a */,
+				DD21F0B71083D15500696F06 /* libdceidl_parser.a */,
 				DDDF3257106BD43400E6A9C2 /* dceidl */,
 				DD08161B106C19580007E433 /* dce */,
 				DDE0178F106C2FFD00A5E41A /* libidl.a */,
@@ -2123,6 +1892,7 @@
 		0867D691FE84028FC02AAC07 /* dcerpc */ = {
 			isa = PBXGroup;
 			children = (
+				D6FC8BD410B765C300C5F198 /* DerivedSources */,
 				08FB77AEFE84172EC02AAC07 /* Sources */,
 				DD8828671073178F00FBF62B /* ConfigurationFiles */,
 				DD8828B9107319F600FBF62B /* External Frameworks and Libraries */,
@@ -2139,7 +1909,6 @@
 			children = (
 				DD3DB0D1100408FD0080B762 /* include */,
 				DD3DAF81100408FC0080B762 /* dcelib */,
-				DD3DAFC4100408FC0080B762 /* flex-2.5.4 */,
 				DD3DB027100408FC0080B762 /* idl_compiler */,
 				DD3DB080100408FC0080B762 /* idl_lib */,
 				DD3DB16B100408FD0080B762 /* libdcethread */,
@@ -2155,13 +1924,23 @@
 			name = Sources;
 			sourceTree = "<group>";
 		};
+		D6FC8BD410B765C300C5F198 /* DerivedSources */ = {
+			isa = PBXGroup;
+			children = (
+				D62430B710B759790092FD35 /* nidl_y.c */,
+				D62430B510B7596C0092FD35 /* nidl_l.c */,
+				D610EA3810B7575800D0305F /* acf_l.c */,
+				D610EA3A10B7577F00D0305F /* acf_y.c */,
+			);
+			path = DerivedSources;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		DD3DAF81100408FC0080B762 /* dcelib */ = {
 			isa = PBXGroup;
 			children = (
 				DD3DAF82100408FC0080B762 /* darwin */,
 				DD3DAF84100408FC0080B762 /* dummyfuncs.c */,
 				DD3DAF85100408FC0080B762 /* exports */,
-				DD3DAF86100408FC0080B762 /* Makefile.am */,
 				DD3DAF87100408FC0080B762 /* mswrappers.c */,
 			);
 			name = dcelib;
@@ -2182,7 +1961,6 @@
 				DD3DAF99100408FC0080B762 /* echo_number */,
 				DD3DAFA4100408FC0080B762 /* echo_server */,
 				DD3DAFB3100408FC0080B762 /* echo_union */,
-				DD3DAFBB100408FC0080B762 /* Makefile.am */,
 				DD3DAFBC100408FC0080B762 /* samr_test */,
 			);
 			name = demos;
@@ -2198,8 +1976,6 @@
 				DD3DAF9D100408FC0080B762 /* echon_server.c */,
 				DD3DAF9E100408FC0080B762 /* getopt.c */,
 				DD3DAF9F100408FC0080B762 /* getopt.h */,
-				DD3DAFA0100408FC0080B762 /* Makefile.am */,
-				DD3DAFA1100408FC0080B762 /* Makefile.w32 */,
 				DD3DAFA2100408FC0080B762 /* misc.c */,
 				DD3DAFA3100408FC0080B762 /* misc.h */,
 			);
@@ -2215,8 +1991,6 @@
 				DD3DAFA8100408FC0080B762 /* echo_server.c */,
 				DD3DAFA9100408FC0080B762 /* getopt.c */,
 				DD3DAFAA100408FC0080B762 /* getopt.h */,
-				DD3DAFAB100408FC0080B762 /* Makefile.am */,
-				DD3DAFAC100408FC0080B762 /* Makefile.w32 */,
 				DD3DAFAD100408FC0080B762 /* misc.c */,
 				DD3DAFAE100408FC0080B762 /* misc.h */,
 				DD3DAFAF100408FC0080B762 /* prebuilt */,
@@ -2241,7 +2015,6 @@
 				DD3DAFB5100408FC0080B762 /* echou.idl */,
 				DD3DAFB6100408FC0080B762 /* echou_client.c */,
 				DD3DAFB7100408FC0080B762 /* echou_server.c */,
-				DD3DAFB8100408FC0080B762 /* Makefile.am */,
 				DD3DAFB9100408FC0080B762 /* misc.c */,
 				DD3DAFBA100408FC0080B762 /* misc.h */,
 			);
@@ -2251,7 +2024,6 @@
 		DD3DAFBC100408FC0080B762 /* samr_test */ = {
 			isa = PBXGroup;
 			children = (
-				DD3DAFBD100408FC0080B762 /* Makefile.am */,
 				DD3DAFBE100408FC0080B762 /* misc.c */,
 				DD3DAFBF100408FC0080B762 /* misc.h */,
 				DD3DAFC0100408FC0080B762 /* samrt.acf */,
@@ -2262,207 +2034,9 @@
 			path = samr_test;
 			sourceTree = "<group>";
 		};
-		DD3DAFC4100408FC0080B762 /* flex-2.5.4 */ = {
-			isa = PBXGroup;
-			children = (
-				DD3DAFC5100408FC0080B762 /* ccl.c */,
-				DD3DAFC6100408FC0080B762 /* configure.in */,
-				DD3DAFC7100408FC0080B762 /* COPYING */,
-				DD3DAFC8100408FC0080B762 /* dfa.c */,
-				DD3DAFC9100408FC0080B762 /* ecs.c */,
-				DD3DAFCA100408FC0080B762 /* flex.1 */,
-				DD3DAFCB100408FC0080B762 /* flex.skl */,
-				DD3DAFCC100408FC0080B762 /* flexdef.h */,
-				DD3DAFCD100408FC0080B762 /* FlexLexer.h */,
-				DD3DAFCE100408FC0080B762 /* gen.c */,
-				DD3DAFCF100408FC0080B762 /* initscan.c */,
-				DD3DAFD0100408FC0080B762 /* INSTALL */,
-				DD3DAFD1100408FC0080B762 /* install.sh */,
-				DD3DAFD2100408FC0080B762 /* libmain.c */,
-				DD3DAFD3100408FC0080B762 /* libyywrap.c */,
-				DD3DAFD4100408FC0080B762 /* main.c */,
-				DD3DAFD5100408FC0080B762 /* Makefile.in */,
-				DD3DAFD6100408FC0080B762 /* MISC */,
-				DD3DB01A100408FC0080B762 /* misc.c */,
-				DD3DB01B100408FC0080B762 /* mkinstalldirs */,
-				DD3DB01C100408FC0080B762 /* mkskel.sh */,
-				DD3DB01D100408FC0080B762 /* NEWS */,
-				DD3DB01E100408FC0080B762 /* nfa.c */,
-				DD3DB01F100408FC0080B762 /* parse.y */,
-				DD3DB020100408FC0080B762 /* README */,
-				DD3DB021100408FC0080B762 /* scan.l */,
-				DD3DB022100408FC0080B762 /* skel.c */,
-				DD3DB023100408FC0080B762 /* sym.c */,
-				DD3DB024100408FC0080B762 /* tblcmp.c */,
-				DD3DB025100408FC0080B762 /* version.h */,
-				DD3DB026100408FC0080B762 /* yylex.c */,
-			);
-			name = "flex-2.5.4";
-			path = "dcerpc/flex-2.5.4";
-			sourceTree = "<group>";
-		};
-		DD3DAFD6100408FC0080B762 /* MISC */ = {
-			isa = PBXGroup;
-			children = (
-				DD3DAFD7100408FC0080B762 /* alloca.c */,
-				DD3DAFD8100408FC0080B762 /* Amiga */,
-				DD3DAFDF100408FC0080B762 /* Atari */,
-				DD3DAFE1100408FC0080B762 /* Borland */,
-				DD3DAFE5100408FC0080B762 /* Borland.old */,
-				DD3DAFE8100408FC0080B762 /* debflex.awk */,
-				DD3DAFE9100408FC0080B762 /* EBCDIC */,
-				DD3DAFEA100408FC0080B762 /* fastwc */,
-				DD3DAFF2100408FC0080B762 /* flex.man */,
-				DD3DAFF3100408FC0080B762 /* Macintosh */,
-				DD3DAFF8100408FC0080B762 /* MSDOS */,
-				DD3DAFFC100408FC0080B762 /* MVS */,
-				DD3DB005100408FC0080B762 /* NeXT */,
-				DD3DB006100408FC0080B762 /* NT */,
-				DD3DB009100408FC0080B762 /* OS2 */,
-				DD3DB00C100408FC0080B762 /* parse.c */,
-				DD3DB00D100408FC0080B762 /* parse.h */,
-				DD3DB00E100408FC0080B762 /* README */,
-				DD3DB00F100408FC0080B762 /* testxxLexer.l */,
-				DD3DB010100408FC0080B762 /* texinfo */,
-				DD3DB013100408FC0080B762 /* VMS */,
-			);
-			path = MISC;
-			sourceTree = "<group>";
-		};
-		DD3DAFD8100408FC0080B762 /* Amiga */ = {
-			isa = PBXGroup;
-			children = (
-				DD3DAFD9100408FC0080B762 /* config.h */,
-				DD3DAFDA100408FC0080B762 /* libmain.ch */,
-				DD3DAFDB100408FC0080B762 /* libyywrap.ch */,
-				DD3DAFDC100408FC0080B762 /* parse.ych */,
-				DD3DAFDD100408FC0080B762 /* README.amiga */,
-				DD3DAFDE100408FC0080B762 /* SMakefile */,
-			);
-			path = Amiga;
-			sourceTree = "<group>";
-		};
-		DD3DAFDF100408FC0080B762 /* Atari */ = {
-			isa = PBXGroup;
-			children = (
-				DD3DAFE0100408FC0080B762 /* Atari.patches */,
-			);
-			path = Atari;
-			sourceTree = "<group>";
-		};
-		DD3DAFE1100408FC0080B762 /* Borland */ = {
-			isa = PBXGroup;
-			children = (
-				DD3DAFE2100408FC0080B762 /* config.h */,
-				DD3DAFE3100408FC0080B762 /* Makefile */,
-				DD3DAFE4100408FC0080B762 /* NOTES */,
-			);
-			path = Borland;
-			sourceTree = "<group>";
-		};
-		DD3DAFE5100408FC0080B762 /* Borland.old */ = {
-			isa = PBXGroup;
-			children = (
-				DD3DAFE6100408FC0080B762 /* Borland-2.4 */,
-				DD3DAFE7100408FC0080B762 /* Turbo-C */,
-			);
-			path = Borland.old;
-			sourceTree = "<group>";
-		};
-		DD3DAFEA100408FC0080B762 /* fastwc */ = {
-			isa = PBXGroup;
-			children = (
-				DD3DAFEB100408FC0080B762 /* mywc.c */,
-				DD3DAFEC100408FC0080B762 /* README */,
-				DD3DAFED100408FC0080B762 /* wc1.l */,
-				DD3DAFEE100408FC0080B762 /* wc2.l */,
-				DD3DAFEF100408FC0080B762 /* wc3.l */,
-				DD3DAFF0100408FC0080B762 /* wc4.l */,
-				DD3DAFF1100408FC0080B762 /* wc5.l */,
-			);
-			path = fastwc;
-			sourceTree = "<group>";
-		};
-		DD3DAFF3100408FC0080B762 /* Macintosh */ = {
-			isa = PBXGroup;
-			children = (
-				DD3DAFF4100408FC0080B762 /* alloca.c */,
-				DD3DAFF5100408FC0080B762 /* alloca.h */,
-				DD3DAFF6100408FC0080B762 /* THINK_C_notes */,
-				DD3DAFF7100408FC0080B762 /* xmalloc.c */,
-			);
-			path = Macintosh;
-			sourceTree = "<group>";
-		};
-		DD3DAFF8100408FC0080B762 /* MSDOS */ = {
-			isa = PBXGroup;
-			children = (
-				DD3DAFF9100408FC0080B762 /* configur.bat */,
-				DD3DAFFA100408FC0080B762 /* djgpp.sed */,
-				DD3DAFFB100408FC0080B762 /* MSC70.make */,
-			);
-			path = MSDOS;
-			sourceTree = "<group>";
-		};
-		DD3DAFFC100408FC0080B762 /* MVS */ = {
-			isa = PBXGroup;
-			children = (
-				DD3DAFFD100408FC0080B762 /* diffs */,
-				DD3DAFFE100408FC0080B762 /* fixit.l */,
-				DD3DAFFF100408FC0080B762 /* initscan-mvs.c */,
-				DD3DB000100408FC0080B762 /* MVS.mail */,
-				DD3DB001100408FC0080B762 /* MVS.todo */,
-				DD3DB002100408FC0080B762 /* MVS.uudecode */,
-				DD3DB003100408FC0080B762 /* README */,
-				DD3DB004100408FC0080B762 /* unfixit.l */,
-			);
-			path = MVS;
-			sourceTree = "<group>";
-		};
-		DD3DB006100408FC0080B762 /* NT */ = {
-			isa = PBXGroup;
-			children = (
-				DD3DB007100408FC0080B762 /* config.h */,
-				DD3DB008100408FC0080B762 /* Makefile */,
-			);
-			path = NT;
-			sourceTree = "<group>";
-		};
-		DD3DB009100408FC0080B762 /* OS2 */ = {
-			isa = PBXGroup;
-			children = (
-				DD3DB00A100408FC0080B762 /* config.h */,
-				DD3DB00B100408FC0080B762 /* Makefile.os2 */,
-			);
-			path = OS2;
-			sourceTree = "<group>";
-		};
-		DD3DB010100408FC0080B762 /* texinfo */ = {
-			isa = PBXGroup;
-			children = (
-				DD3DB011100408FC0080B762 /* flex.info */,
-				DD3DB012100408FC0080B762 /* flex.texi */,
-			);
-			path = texinfo;
-			sourceTree = "<group>";
-		};
-		DD3DB013100408FC0080B762 /* VMS */ = {
-			isa = PBXGroup;
-			children = (
-				DD3DB014100408FC0080B762 /* build.com */,
-				DD3DB015100408FC0080B762 /* descrip.mms */,
-				DD3DB016100408FC0080B762 /* mkskel.tpu */,
-				DD3DB017100408FC0080B762 /* README.VMS */,
-				DD3DB018100408FC0080B762 /* vms-code.c */,
-				DD3DB019100408FC0080B762 /* vms-conf.h */,
-			);
-			path = VMS;
-			sourceTree = "<group>";
-		};
 		DD3DB027100408FC0080B762 /* idl_compiler */ = {
 			isa = PBXGroup;
 			children = (
-				DD3DB028100408FC0080B762 /* acf.h */,
 				DD3DB029100408FC0080B762 /* acf_l.l */,
 				DD3DB02A100408FC0080B762 /* acf_y.y */,
 				DD3DB02B100408FC0080B762 /* ast.h */,
@@ -2507,7 +2081,6 @@
 				DD3DB052100408FC0080B762 /* fe_pvt.h */,
 				DD3DB053100408FC0080B762 /* files.c */,
 				DD3DB054100408FC0080B762 /* files.h */,
-				DD3DB055100408FC0080B762 /* flex_bison_support.h */,
 				DD3DB056100408FC0080B762 /* frontend.c */,
 				DD3DB057100408FC0080B762 /* frontend.h */,
 				DD3DB058100408FC0080B762 /* genpipes.h */,
@@ -2525,7 +2098,6 @@
 				DD3DB064100408FC0080B762 /* irepscp.c */,
 				DD3DB065100408FC0080B762 /* keywds.c */,
 				DD3DB066100408FC0080B762 /* main.c */,
-				DD3DB067100408FC0080B762 /* Makefile.am */,
 				DD3DB068100408FC0080B762 /* marshall.h */,
 				DD3DB069100408FC0080B762 /* message.c */,
 				DD3DB06A100408FC0080B762 /* message.h */,
@@ -2602,7 +2174,6 @@
 				DD3DB0AA100408FD0080B762 /* interpsh.c */,
 				DD3DB0AB100408FD0080B762 /* lapollo.h */,
 				DD3DB0AC100408FD0080B762 /* lsysdep.h */,
-				DD3DB0AD100408FD0080B762 /* Makefile.am */,
 				DD3DB0AE100408FD0080B762 /* marbfman.c */,
 				DD3DB0AF100408FD0080B762 /* nbaseool.c */,
 				DD3DB0B0100408FD0080B762 /* ndrcharp.c */,
@@ -2648,7 +2219,6 @@
 			children = (
 				DD3DB0D2100408FD0080B762 /* compat */,
 				DD3DB0DB100408FD0080B762 /* dce */,
-				DD3DB16A100408FD0080B762 /* Makefile.am */,
 			);
 			name = include;
 			path = dcerpc/include;
@@ -2661,7 +2231,6 @@
 				DD3DB0D4100408FD0080B762 /* dce2msrpc.h */,
 				DD3DB0D5100408FD0080B762 /* dcerpc.h */,
 				DD3DB0D6100408FD0080B762 /* dcerpc.idl.include */,
-				DD3DB0D7100408FD0080B762 /* Makefile.am */,
 				DD3DB0D8100408FD0080B762 /* mswrappers.h */,
 				DD3DB0D9100408FD0080B762 /* rpcfields.h */,
 				DD3DB0DA100408FD0080B762 /* rpcstatus.h */,
@@ -2700,7 +2269,6 @@
 				DD3DB11C100408FD0080B762 /* iovector.idl */,
 				DD3DB11D100408FD0080B762 /* lbase.idl */,
 				DD3DB11E100408FD0080B762 /* linux-gnu */,
-				DD3DB124100408FD0080B762 /* Makefile.am */,
 				DD3DB125100408FD0080B762 /* marshall.h.in */,
 				DD3DB126100408FD0080B762 /* mgmt.acf */,
 				DD3DB127100408FD0080B762 /* mgmt.idl */,
@@ -2741,7 +2309,6 @@
 				DD3DB0DD100408FD0080B762 /* dce.h */,
 				DD3DB0DE100408FD0080B762 /* dce_error.h */,
 				DD3DB0DF100408FD0080B762 /* dce_utils.h */,
-				DD3DB0E0100408FD0080B762 /* Makefile.am */,
 				DD3DB0E1100408FD0080B762 /* sec_authn.h */,
 			);
 			path = aix5.2.0.0;
@@ -2763,7 +2330,6 @@
 				DD3DB0EC100408FD0080B762 /* dce.h */,
 				DD3DB0ED100408FD0080B762 /* dce_error.h */,
 				DD3DB0EE100408FD0080B762 /* dce_utils.h */,
-				DD3DB0EF100408FD0080B762 /* Makefile.am */,
 				DD3DB0F0100408FD0080B762 /* sec_authn.h */,
 			);
 			path = darwin;
@@ -2775,7 +2341,6 @@
 				DD3DB0F9100408FD0080B762 /* dce.h */,
 				DD3DB0FA100408FD0080B762 /* dce_error.h */,
 				DD3DB0FB100408FD0080B762 /* dce_utils.h */,
-				DD3DB0FC100408FD0080B762 /* Makefile.am */,
 				DD3DB0FD100408FD0080B762 /* sec_authn.h */,
 			);
 			path = freebsd6.0;
@@ -2784,7 +2349,6 @@
 		DD3DB0FE100408FD0080B762 /* generic */ = {
 			isa = PBXGroup;
 			children = (
-				DD3DB0FF100408FD0080B762 /* Makefile.am */,
 				DD3DB100100408FD0080B762 /* marshall.h */,
 				DD3DB101100408FD0080B762 /* ndr_rep.h */,
 				DD3DB102100408FD0080B762 /* ndrtypes.h */,
@@ -2795,7 +2359,6 @@
 		DD3DB103100408FD0080B762 /* hppa2.0 */ = {
 			isa = PBXGroup;
 			children = (
-				DD3DB104100408FD0080B762 /* Makefile.am */,
 				DD3DB105100408FD0080B762 /* marshall.h */,
 				DD3DB106100408FD0080B762 /* ndr_rep.h */,
 				DD3DB107100408FD0080B762 /* ndrtypes.h */,
@@ -2809,7 +2372,6 @@
 				DD3DB109100408FD0080B762 /* dce.h */,
 				DD3DB10A100408FD0080B762 /* dce_error.h */,
 				DD3DB10B100408FD0080B762 /* dce_utils.h */,
-				DD3DB10C100408FD0080B762 /* Makefile.am */,
 				DD3DB10D100408FD0080B762 /* sec_authn.h */,
 			);
 			path = hpux11.11;
@@ -2818,7 +2380,6 @@
 		DD3DB10E100408FD0080B762 /* i386 */ = {
 			isa = PBXGroup;
 			children = (
-				DD3DB10F100408FD0080B762 /* Makefile.am */,
 				DD3DB110100408FD0080B762 /* marshall.h */,
 				DD3DB111100408FD0080B762 /* ndr_rep.h */,
 				DD3DB112100408FD0080B762 /* ndrtypes.h */,
@@ -2829,7 +2390,6 @@
 		DD3DB113100408FD0080B762 /* ia64 */ = {
 			isa = PBXGroup;
 			children = (
-				DD3DB114100408FD0080B762 /* Makefile.am */,
 				DD3DB115100408FD0080B762 /* marshall.h */,
 				DD3DB116100408FD0080B762 /* ndr_rep.h */,
 				DD3DB117100408FD0080B762 /* ndrtypes.h */,
@@ -2843,7 +2403,6 @@
 				DD3DB11F100408FD0080B762 /* dce.h */,
 				DD3DB120100408FD0080B762 /* dce_error.h */,
 				DD3DB121100408FD0080B762 /* dce_utils.h */,
-				DD3DB122100408FD0080B762 /* Makefile.am */,
 				DD3DB123100408FD0080B762 /* sec_authn.h */,
 			);
 			path = "linux-gnu";
@@ -2852,7 +2411,6 @@
 		DD3DB12E100408FD0080B762 /* powerpc */ = {
 			isa = PBXGroup;
 			children = (
-				DD3DB12F100408FD0080B762 /* Makefile.am */,
 				DD3DB130100408FD0080B762 /* marshall.h */,
 				DD3DB131100408FD0080B762 /* ndr_rep.h */,
 				DD3DB132100408FD0080B762 /* ndrtypes.h */,
@@ -2863,7 +2421,6 @@
 		DD3DB133100408FD0080B762 /* powerpc64 */ = {
 			isa = PBXGroup;
 			children = (
-				DD3DB134100408FD0080B762 /* Makefile.am */,
 				DD3DB135100408FD0080B762 /* marshall.h */,
 				DD3DB136100408FD0080B762 /* ndr_rep.h */,
 				DD3DB137100408FD0080B762 /* ndrtypes.h */,
@@ -2874,7 +2431,6 @@
 		DD3DB13E100408FD0080B762 /* s390 */ = {
 			isa = PBXGroup;
 			children = (
-				DD3DB13F100408FD0080B762 /* Makefile.am */,
 				DD3DB140100408FD0080B762 /* marshall.h */,
 				DD3DB141100408FD0080B762 /* ndr_rep.h */,
 				DD3DB142100408FD0080B762 /* ndrtypes.h */,
@@ -2885,7 +2441,6 @@
 		DD3DB143100408FD0080B762 /* s390x */ = {
 			isa = PBXGroup;
 			children = (
-				DD3DB144100408FD0080B762 /* Makefile.am */,
 				DD3DB145100408FD0080B762 /* marshall.h */,
 				DD3DB146100408FD0080B762 /* ndr_rep.h */,
 				DD3DB147100408FD0080B762 /* ndrtypes.h */,
@@ -2899,7 +2454,6 @@
 				DD3DB14C100408FD0080B762 /* dce.h */,
 				DD3DB14D100408FD0080B762 /* dce_error.h */,
 				DD3DB14E100408FD0080B762 /* dce_utils.h */,
-				DD3DB14F100408FD0080B762 /* Makefile.am */,
 				DD3DB150100408FD0080B762 /* sec_authn.h */,
 			);
 			path = solaris2.10;
@@ -2911,7 +2465,6 @@
 				DD3DB152100408FD0080B762 /* dce.h */,
 				DD3DB153100408FD0080B762 /* dce_error.h */,
 				DD3DB154100408FD0080B762 /* dce_utils.h */,
-				DD3DB155100408FD0080B762 /* Makefile.am */,
 				DD3DB156100408FD0080B762 /* sec_authn.h */,
 			);
 			path = solaris2.8;
@@ -2923,7 +2476,6 @@
 				DD3DB158100408FD0080B762 /* dce.h */,
 				DD3DB159100408FD0080B762 /* dce_error.h */,
 				DD3DB15A100408FD0080B762 /* dce_utils.h */,
-				DD3DB15B100408FD0080B762 /* Makefile.am */,
 				DD3DB15C100408FD0080B762 /* sec_authn.h */,
 			);
 			path = solaris2.9;
@@ -2932,7 +2484,6 @@
 		DD3DB15D100408FD0080B762 /* sparc */ = {
 			isa = PBXGroup;
 			children = (
-				DD3DB15E100408FD0080B762 /* Makefile.am */,
 				DD3DB15F100408FD0080B762 /* marshall.h */,
 				DD3DB160100408FD0080B762 /* ndr_rep.h */,
 				DD3DB161100408FD0080B762 /* ndrtypes.h */,
@@ -2943,7 +2494,6 @@
 		DD3DB165100408FD0080B762 /* x86_64 */ = {
 			isa = PBXGroup;
 			children = (
-				DD3DB166100408FD0080B762 /* Makefile.am */,
 				DD3DB167100408FD0080B762 /* marshall.h */,
 				DD3DB168100408FD0080B762 /* ndr_rep.h */,
 				DD3DB169100408FD0080B762 /* ndrtypes.h */,
@@ -3033,7 +2583,6 @@
 				DD3DB1B8100408FD0080B762 /* dcethread_unlock_global.c */,
 				DD3DB1B9100408FD0080B762 /* dcethread_write.c */,
 				DD3DB1BA100408FD0080B762 /* dcethread_yield.c */,
-				DD3DB1BB100408FD0080B762 /* Makefile.am */,
 				DD3DB1BC100408FD0080B762 /* test-exception.c */,
 			);
 			name = libdcethread;
@@ -3043,9 +2592,6 @@
 		DD3DB1BD100408FD0080B762 /* m4 */ = {
 			isa = PBXGroup;
 			children = (
-				DD3DB1BE100408FD0080B762 /* acinclude.m4 */,
-				DD3DB1BF100408FD0080B762 /* ax_cflags_gcc_option.m4 */,
-				DD3DB1C0100408FD0080B762 /* rpc_libunistr.m4 */,
 			);
 			name = m4;
 			path = dcerpc/m4;
@@ -3143,10 +2689,8 @@
 				DD3DB218100408FD0080B762 /* include */,
 				DD3DB242100408FD0080B762 /* ipnaf.h */,
 				DD3DB243100408FD0080B762 /* ipnaf_bsd.c */,
-				DD3DB244100408FD0080B762 /* Makefile.am */,
 				DD3DB245100408FD0080B762 /* mgmt.c */,
 				DD3DB246100408FD0080B762 /* mgmtp.h */,
-				DD3DB247100408FD0080B762 /* ncklib.mk */,
 				DD3DB248100408FD0080B762 /* ndrglob.c */,
 				DD3DB249100408FD0080B762 /* ndrglob.h */,
 				DD3DB24A100408FD0080B762 /* ndrp.h */,
@@ -3199,7 +2743,6 @@
 				DD3DB223100408FD0080B762 /* freebsd6.0 */,
 				DD3DB228100408FD0080B762 /* hpux11.11 */,
 				DD3DB22D100408FD0080B762 /* linux-gnu */,
-				DD3DB232100408FD0080B762 /* Makefile.am */,
 				DD3DB233100408FD0080B762 /* solaris2.10 */,
 				DD3DB238100408FD0080B762 /* solaris2.8 */,
 				DD3DB23D100408FD0080B762 /* solaris2.9 */,
@@ -3212,7 +2755,6 @@
 			children = (
 				DD3DB21A100408FD0080B762 /* comsoc_sys.h */,
 				DD3DB21B100408FD0080B762 /* cs_s_conv.c */,
-				DD3DB21C100408FD0080B762 /* Makefile.am */,
 				DD3DB21D100408FD0080B762 /* sysconf.h */,
 			);
 			path = aix5.2.0.0;
@@ -3223,7 +2765,6 @@
 			children = (
 				DD3DB21F100408FD0080B762 /* comsoc_sys.h */,
 				DD3DB220100408FD0080B762 /* cs_s_conv.c */,
-				DD3DB221100408FD0080B762 /* Makefile.am */,
 				DD3DB222100408FD0080B762 /* sysconf.h */,
 			);
 			path = darwin;
@@ -3234,7 +2775,6 @@
 			children = (
 				DD3DB224100408FD0080B762 /* comsoc_sys.h */,
 				DD3DB225100408FD0080B762 /* cs_s_conv.c */,
-				DD3DB226100408FD0080B762 /* Makefile.am */,
 				DD3DB227100408FD0080B762 /* sysconf.h */,
 			);
 			path = freebsd6.0;
@@ -3245,7 +2785,6 @@
 			children = (
 				DD3DB229100408FD0080B762 /* comsoc_sys.h */,
 				DD3DB22A100408FD0080B762 /* cs_s_conv.c */,
-				DD3DB22B100408FD0080B762 /* Makefile.am */,
 				DD3DB22C100408FD0080B762 /* sysconf.h */,
 			);
 			path = hpux11.11;
@@ -3256,7 +2795,6 @@
 			children = (
 				DD3DB22E100408FD0080B762 /* comsoc_sys.h */,
 				DD3DB22F100408FD0080B762 /* cs_s_conv.c */,
-				DD3DB230100408FD0080B762 /* Makefile.am */,
 				DD3DB231100408FD0080B762 /* sysconf.h */,
 			);
 			path = "linux-gnu";
@@ -3267,7 +2805,6 @@
 			children = (
 				DD3DB234100408FD0080B762 /* comsoc_sys.h */,
 				DD3DB235100408FD0080B762 /* cs_s_conv.c */,
-				DD3DB236100408FD0080B762 /* Makefile.am */,
 				DD3DB237100408FD0080B762 /* sysconf.h */,
 			);
 			path = solaris2.10;
@@ -3278,7 +2815,6 @@
 			children = (
 				DD3DB239100408FD0080B762 /* comsoc_sys.h */,
 				DD3DB23A100408FD0080B762 /* cs_s_conv.c */,
-				DD3DB23B100408FD0080B762 /* Makefile.am */,
 				DD3DB23C100408FD0080B762 /* sysconf.h */,
 			);
 			path = solaris2.8;
@@ -3289,7 +2825,6 @@
 			children = (
 				DD3DB23E100408FD0080B762 /* comsoc_sys.h */,
 				DD3DB23F100408FD0080B762 /* cs_s_conv.c */,
-				DD3DB240100408FD0080B762 /* Makefile.am */,
 				DD3DB241100408FD0080B762 /* sysconf.h */,
 			);
 			path = solaris2.9;
@@ -3299,7 +2834,6 @@
 			isa = PBXGroup;
 			children = (
 				DD3DB270100408FD0080B762 /* client.c */,
-				DD3DB271100408FD0080B762 /* Makefile.am */,
 				DD3DB272100408FD0080B762 /* perf.acf */,
 				DD3DB273100408FD0080B762 /* perf.c */,
 				DD3DB274100408FD0080B762 /* perf.idl */,
@@ -3330,7 +2864,6 @@
 				DD3DB286100408FD0080B762 /* dsm.idl */,
 				DD3DB287100408FD0080B762 /* dsm_p.h */,
 				DD3DB288100408FD0080B762 /* dsm_unix.c */,
-				DD3DB289100408FD0080B762 /* Makefile.am */,
 				DD3DB28A100408FD0080B762 /* oxids.cxx */,
 				DD3DB28B100408FD0080B762 /* rc.dce-clean */,
 				DD3DB28C100408FD0080B762 /* rc.dcerpcd */,
@@ -3354,7 +2887,6 @@
 			isa = PBXGroup;
 			children = (
 				DD3DB299100408FD0080B762 /* epstatus.c */,
-				DD3DB29A100408FD0080B762 /* Makefile.am */,
 			);
 			name = tools;
 			path = dcerpc/tools;
@@ -3411,7 +2943,6 @@
 				DD3DB2C9100408FD0080B762 /* gssauthcn.c */,
 				DD3DB2CA100408FD0080B762 /* ipnaf.c */,
 				DD3DB2CB100408FD0080B762 /* ipnaf_linux.c */,
-				DD3DB2CC100408FD0080B762 /* Makefile.am */,
 				DD3DB2CD100408FD0080B762 /* npnaf.c */,
 				DD3DB2CE100408FD0080B762 /* npnaf_linux.c */,
 				DD3DB2CF100408FD0080B762 /* schnauth.c */,
@@ -3428,7 +2959,6 @@
 			isa = PBXGroup;
 			children = (
 				DD3DB2D5100408FD0080B762 /* get_802_addr.c */,
-				DD3DB2D6100408FD0080B762 /* Makefile.am */,
 				DD3DB2D7100408FD0080B762 /* uuid.c */,
 				DD3DB2D8100408FD0080B762 /* uuid_i.h */,
 				DD3DB2D9100408FD0080B762 /* uuidsys.c */,
@@ -3549,13 +3079,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		DDD80AB210756A0D00956CF0 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DDDF30E5106AE4AD00E6A9C2 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3767,24 +3290,22 @@
 			productReference = DD10F8C3106D7357005F1EF3 /* libprot_ncadg_stubs.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		DD21F0B61083D15500696F06 /* dceidl_stubs */ = {
+		DD21F0B61083D15500696F06 /* dceidl_parser */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DD21F0D61083D2D400696F06 /* Build configuration list for PBXNativeTarget "dceidl_stubs" */;
+			buildConfigurationList = DD21F0D61083D2D400696F06 /* Build configuration list for PBXNativeTarget "dceidl_parser" */;
 			buildPhases = (
 				DD21F0B31083D15500696F06 /* Headers */,
 				DD21F0B41083D15500696F06 /* Sources */,
-				DD21F0B51083D15500696F06 /* Frameworks */,
 				DD92D95F1090F87B00B869C1 /* Create idl.cat */,
 			);
 			buildRules = (
-				DD21F0D31083D2D400696F06 /* PBXBuildRule */,
 			);
 			dependencies = (
-				DDAD96E61083F7CD0016A764 /* PBXTargetDependency */,
+				D6E6B60810BCB24600E1DCF5 /* PBXTargetDependency */,
 			);
-			name = dceidl_stubs;
+			name = dceidl_parser;
 			productName = dceidl_stubs;
-			productReference = DD21F0B71083D15500696F06 /* libdceidl_stubs.a */;
+			productReference = DD21F0B71083D15500696F06 /* libdceidl_parser.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		DD7FBDA31074061400B63C2A /* naf_ip */ = {
@@ -3914,42 +3435,6 @@
 			productReference = DDD80AB610756A0D00956CF0 /* libecho_stubs.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		DDDF303C106ADA4D00E6A9C2 /* flex */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = DDDF3046106ADA5F00E6A9C2 /* Build configuration list for PBXNativeTarget "flex" */;
-			buildPhases = (
-				DDDF303A106ADA4D00E6A9C2 /* Sources */,
-				DDDF303B106ADA4D00E6A9C2 /* Frameworks */,
-			);
-			buildRules = (
-				DDD41B6A1072768F0002C71D /* PBXBuildRule */,
-			);
-			dependencies = (
-				DD0FE86C1074D9D3004AB68C /* PBXTargetDependency */,
-			);
-			name = flex;
-			productName = "flex-2.5.4";
-			productReference = DDDF303D106ADA4D00E6A9C2 /* flex */;
-			productType = "com.apple.product-type.tool";
-		};
-		DDDF30E8106AE4AD00E6A9C2 /* fl */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = DDDF30F1106AE4C900E6A9C2 /* Build configuration list for PBXNativeTarget "fl" */;
-			buildPhases = (
-				DDD41A8D107267E70002C71D /* Run buildconf and configure */,
-				DDDF30E5106AE4AD00E6A9C2 /* Headers */,
-				DDDF30E6106AE4AD00E6A9C2 /* Sources */,
-				DDDF30E7106AE4AD00E6A9C2 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = fl;
-			productName = fl;
-			productReference = DDDF30E9106AE4AD00E6A9C2 /* libfl.a */;
-			productType = "com.apple.product-type.library.static";
-		};
 		DDDF3256106BD43400E6A9C2 /* dceidl */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DDDF325B106BD45300E6A9C2 /* Build configuration list for PBXNativeTarget "dceidl" */;
@@ -3958,11 +3443,8 @@
 				DDDF3255106BD43400E6A9C2 /* Frameworks */,
 			);
 			buildRules = (
-				DDAD97121083FB360016A764 /* PBXBuildRule */,
-				DDAD97131083FB360016A764 /* PBXBuildRule */,
 			);
 			dependencies = (
-				DD10F66F106D633D005F1EF3 /* PBXTargetDependency */,
 				DD21F0CE1083D1A800696F06 /* PBXTargetDependency */,
 			);
 			name = dceidl;
@@ -4095,9 +3577,8 @@
 			targets = (
 				DD04350110769FDA0010E492 /* DCERPC */,
 				DDDF310F106AE5F700E6A9C2 /* Aggregrate */,
-				DDDF30E8106AE4AD00E6A9C2 /* fl */,
-				DDDF303C106ADA4D00E6A9C2 /* flex */,
-				DD21F0B61083D15500696F06 /* dceidl_stubs */,
+				D6E6B60310BCB1CE00E1DCF5 /* Generate IDL Parsers */,
+				DD21F0B61083D15500696F06 /* dceidl_parser */,
 				DDDF3256106BD43400E6A9C2 /* dceidl */,
 				DD08161A106C19580007E433 /* dce */,
 				DDE0178E106C2FFD00A5E41A /* idl */,
@@ -4136,6 +3617,60 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		D6E6B60210BCB1CE00E1DCF5 /* Configure */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = Configure;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${SRCROOT}/dcerpc.xc.configurations/buildconf_configure\n";
+		};
+		D6E6B60A10BCB25A00E1DCF5 /* Generate ACF Parser */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/dcerpc/idl_compiler/acf_l.l",
+				"$(SRCROOT)/dcerpc/idl_compiler/acf_y.y",
+			);
+			name = "Generate ACF Parser";
+			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/DerivedSources/acf_l.h",
+				"$(BUILT_PRODUCTS_DIR)/DerivedSources/acf_l.c",
+				"$(BUILT_PRODUCTS_DIR)/DerivedSources/acf_y.h",
+				"$(BUILT_PRODUCTS_DIR)/DerivedSources/acf_y.c",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${SRCROOT}/dcerpc.xc.configurations/generate_parser";
+		};
+		D6E6B60C10BCB26400E1DCF5 /* Generate NIDL Parser */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/dcerpc/idl_compiler/nidl_l.l",
+				"$(SRCROOT)/dcerpc/idl_compiler/nidl_y.y",
+			);
+			name = "Generate NIDL Parser";
+			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/DerivedSources/nidl_l.h",
+				"$(BUILT_PRODUCTS_DIR)/DerivedSources/nidl_l.c",
+				"$(BUILT_PRODUCTS_DIR)/DerivedSources/nidl_y.h",
+				"$(BUILT_PRODUCTS_DIR)/DerivedSources/nidl_y.c",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${SRCROOT}/dcerpc.xc.configurations/generate_parser";
+		};
 		DD81451C1087DAD200EAA9D9 /* Create rpc dir */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 8;
@@ -4209,20 +3744,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "${SRCROOT}/dcerpc.xc.configurations/copy_dce_headers\n";
-		};
-		DDD41A8D107267E70002C71D /* Run buildconf and configure */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Run buildconf and configure";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "${SRCROOT}/dcerpc.xc.configurations/buildconf_configure\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -4431,8 +3952,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD21F0C81083D18A00696F06 /* acf_y.y in Sources */,
-				DD21F0CA1083D18A00696F06 /* nidl_y.y in Sources */,
+				D610EA3910B7575800D0305F /* acf_l.c in Sources */,
+				D610EA3B10B7577F00D0305F /* acf_y.c in Sources */,
+				D62430B610B7596C0092FD35 /* nidl_l.c in Sources */,
+				D62430B810B759790092FD35 /* nidl_y.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4541,41 +4064,10 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DDDF303A106ADA4D00E6A9C2 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DDD41D2C1072C4EF0002C71D /* parse.y in Sources */,
-				DDDF304D106ADA8100E6A9C2 /* ccl.c in Sources */,
-				DDDF304E106ADA9C00E6A9C2 /* dfa.c in Sources */,
-				DDDF304F106ADA9C00E6A9C2 /* ecs.c in Sources */,
-				DDDF3050106ADA9C00E6A9C2 /* gen.c in Sources */,
-				DDD41C3B1072A7FD0002C71D /* main.c in Sources */,
-				DDDF3052106ADA9C00E6A9C2 /* misc.c in Sources */,
-				DDDF3053106ADA9C00E6A9C2 /* nfa.c in Sources */,
-				DDD41B4B107274920002C71D /* initscan.c in Sources */,
-				DDDF305D106ADCA500E6A9C2 /* skel.c in Sources */,
-				DDDF305E106ADCAD00E6A9C2 /* sym.c in Sources */,
-				DDDF3054106ADB1B00E6A9C2 /* tblcmp.c in Sources */,
-				DDDF3055106ADB2300E6A9C2 /* yylex.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DDDF30E6106AE4AD00E6A9C2 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DDDF30EC106AE4C400E6A9C2 /* libmain.c in Sources */,
-				DDDF30ED106AE4C400E6A9C2 /* libyywrap.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		DDDF3254106BD43400E6A9C2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DDAD96FD1083FA680016A764 /* acf_l.l in Sources */,
-				DDAD96FE1083FA680016A764 /* nidl_l.l in Sources */,
 				DDDF3260106BD56500E6A9C2 /* astp_com.c in Sources */,
 				DDDF3261106BD56500E6A9C2 /* astp_cpx.c in Sources */,
 				DDDF3262106BD56500E6A9C2 /* astp_dmp.c in Sources */,
@@ -4744,6 +4236,11 @@
 			target = DD10F5A0106D321F005F1EF3 /* trans */;
 			targetProxy = D6CD490010A24F9200F359CB /* PBXContainerItemProxy */;
 		};
+		D6E6B60810BCB24600E1DCF5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D6E6B60310BCB1CE00E1DCF5 /* Generate IDL Parsers */;
+			targetProxy = D6E6B60710BCB24600E1DCF5 /* PBXContainerItemProxy */;
+		};
 		DD0435121076A0A30010E492 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DD10F5D5106D341E005F1EF3 /* nck */;
@@ -4834,11 +4331,6 @@
 			target = DDCCFFA710740B3A0007183F /* prot_ncacn */;
 			targetProxy = DD0FE8691074D92C004AB68C /* PBXContainerItemProxy */;
 		};
-		DD0FE86C1074D9D3004AB68C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDDF30E8106AE4AD00E6A9C2 /* fl */;
-			targetProxy = DD0FE86B1074D9D3004AB68C /* PBXContainerItemProxy */;
-		};
 		DD10F647106D3C51005F1EF3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DD10F4C8106D2364005F1EF3 /* stubs */;
@@ -4864,11 +4356,6 @@
 			target = DD10F5E9106D3528005F1EF3 /* mgmt_stubs */;
 			targetProxy = DD10F65B106D3E67005F1EF3 /* PBXContainerItemProxy */;
 		};
-		DD10F66F106D633D005F1EF3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDDF303C106ADA4D00E6A9C2 /* flex */;
-			targetProxy = DD10F66E106D633D005F1EF3 /* PBXContainerItemProxy */;
-		};
 		DD10F6B7106D6520005F1EF3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DDDF3256106BD43400E6A9C2 /* dceidl */;
@@ -4876,7 +4363,7 @@
 		};
 		DD21F0CE1083D1A800696F06 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = DD21F0B61083D15500696F06 /* dceidl_stubs */;
+			target = DD21F0B61083D15500696F06 /* dceidl_parser */;
 			targetProxy = DD21F0CD1083D1A800696F06 /* PBXContainerItemProxy */;
 		};
 		DD9B505F107BF2B40074C2F5 /* PBXTargetDependency */ = {
@@ -4888,11 +4375,6 @@
 			isa = PBXTargetDependency;
 			target = DD04350110769FDA0010E492 /* DCERPC */;
 			targetProxy = DD9D32C5107E346600FA8214 /* PBXContainerItemProxy */;
-		};
-		DDAD96E61083F7CD0016A764 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDDF303C106ADA4D00E6A9C2 /* flex */;
-			targetProxy = DDAD96E51083F7CD0016A764 /* PBXContainerItemProxy */;
 		};
 		DDC99981107AB91A00330A72 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5014,11 +4496,6 @@
 			target = DDE017DD106C334200A5E41A /* uuid */;
 			targetProxy = DDEFE69C107E3CCE006B8032 /* PBXContainerItemProxy */;
 		};
-		DDFA60521074FA7E006A660C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDDF303C106ADA4D00E6A9C2 /* flex */;
-			targetProxy = DDFA60511074FA7E006A660C /* PBXContainerItemProxy */;
-		};
 		DDFD948810723CF7008E776F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DDE017DD106C334200A5E41A /* uuid */;
@@ -5059,6 +4536,22 @@
 				USE_HEADERMAP = NO;
 				VALID_ARCHS = "ppc i386 x86_64";
 				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		D6E6B60410BCB1CE00E1DCF5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DDB66DA2107BE3310095CBC1 /* base_config.xcconfig */;
+			buildSettings = {
+				PRODUCT_NAME = Test;
+			};
+			name = Debug;
+		};
+		D6E6B60510BCB1CE00E1DCF5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DDB66DA2107BE3310095CBC1 /* base_config.xcconfig */;
+			buildSettings = {
+				PRODUCT_NAME = Test;
 			};
 			name = Release;
 		};
@@ -5125,16 +4618,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DD88282B10730E5E00FBF62B /* dce.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				INSTALL_PATH = /usr/local/bin;
-				PREBINDING = NO;
 				PRODUCT_NAME = dce;
-				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -5142,16 +4626,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DD88282B10730E5E00FBF62B /* dce.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_MODEL_TUNING = G5;
-				INSTALL_PATH = /usr/local/bin;
-				PREBINDING = NO;
 				PRODUCT_NAME = dce;
-				SKIP_INSTALL = YES;
-				ZERO_LINK = NO;
 			};
 			name = Release;
 		};
@@ -5403,35 +4878,17 @@
 		};
 		DD21F0C21083D15600696F06 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DD88282810730DF600FBF62B /* dceidl.xcconfig */;
+			baseConfigurationReference = DD21F0DB1083D32F00696F06 /* dceidl_stubs.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				INSTALL_PATH = /usr/local/lib;
-				PREBINDING = NO;
-				PRODUCT_NAME = dceidl_stubs;
-				SKIP_INSTALL = YES;
+				PRODUCT_NAME = dceidl_parser;
 			};
 			name = Debug;
 		};
 		DD21F0C31083D15600696F06 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DD88282810730DF600FBF62B /* dceidl.xcconfig */;
+			baseConfigurationReference = DD21F0DB1083D32F00696F06 /* dceidl_stubs.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_MODEL_TUNING = G5;
-				INSTALL_PATH = /usr/local/lib;
-				PREBINDING = NO;
-				PRODUCT_NAME = dceidl_stubs;
-				SKIP_INSTALL = YES;
-				ZERO_LINK = NO;
+				PRODUCT_NAME = dceidl_parser;
 			};
 			name = Release;
 		};
@@ -5675,83 +5132,6 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = echo_stubs;
-				ZERO_LINK = NO;
-			};
-			name = Release;
-		};
-		DDDF303F106ADA4E00E6A9C2 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = DD8828071073058D00FBF62B /* flex.xcconfig */;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				GCC_CW_ASM_SYNTAX = YES;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_PASCAL_STRINGS = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				INSTALL_PATH = /usr/local/bin;
-				OTHER_CFLAGS = "";
-				PREBINDING = NO;
-				PRODUCT_NAME = flex;
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
-		DDDF3040106ADA4E00E6A9C2 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = DD8828071073058D00FBF62B /* flex.xcconfig */;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_CW_ASM_SYNTAX = YES;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_PASCAL_STRINGS = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				INSTALL_PATH = /usr/local/bin;
-				OTHER_CFLAGS = "";
-				PREBINDING = NO;
-				PRODUCT_NAME = flex;
-				SKIP_INSTALL = YES;
-				ZERO_LINK = NO;
-			};
-			name = Release;
-		};
-		DDDF30EA106AE4AD00E6A9C2 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				INSTALL_PATH = /usr/local/lib;
-				PREBINDING = NO;
-				PRODUCT_NAME = fl;
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
-		DDDF30EB106AE4AD00E6A9C2 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_MODEL_TUNING = G5;
-				INSTALL_PATH = /usr/local/lib;
-				PREBINDING = NO;
-				PRODUCT_NAME = fl;
-				SDKROOT = "";
-				SKIP_INSTALL = YES;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -6073,6 +5453,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		D6E6B60610BCB20E00E1DCF5 /* Build configuration list for PBXAggregateTarget "Generate IDL Parsers" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D6E6B60410BCB1CE00E1DCF5 /* Debug */,
+				D6E6B60510BCB1CE00E1DCF5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		DD04350810769FDA0010E492 /* Build configuration list for PBXNativeTarget "DCERPC" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -6154,7 +5543,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DD21F0D61083D2D400696F06 /* Build configuration list for PBXNativeTarget "dceidl_stubs" */ = {
+		DD21F0D61083D2D400696F06 /* Build configuration list for PBXNativeTarget "dceidl_parser" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DD21F0C21083D15600696F06 /* Debug */,
@@ -6222,24 +5611,6 @@
 			buildConfigurations = (
 				DDD80AB710756A0E00956CF0 /* Debug */,
 				DDD80AB810756A0E00956CF0 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		DDDF3046106ADA5F00E6A9C2 /* Build configuration list for PBXNativeTarget "flex" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				DDDF303F106ADA4E00E6A9C2 /* Debug */,
-				DDDF3040106ADA4E00E6A9C2 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		DDDF30F1106AE4C900E6A9C2 /* Build configuration list for PBXNativeTarget "fl" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				DDDF30EA106AE4AD00E6A9C2 /* Debug */,
-				DDDF30EB106AE4AD00E6A9C2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
