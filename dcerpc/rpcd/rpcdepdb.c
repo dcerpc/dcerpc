@@ -325,7 +325,16 @@ error_status_t  *status;
     db_init_lists(h);
 
     db_open(h, pathname, epdb_c_file_version, status);
-    if (! STATUS_OK(status)) return(NULL);
+    if (! STATUS_OK(status))
+    {
+        /* Try deleting and recreating the database */
+        unlink(pathname);
+        db_open(h, pathname, epdb_c_file_version, status);
+        if (! STATUS_OK(status))
+        {
+            return NULL;
+        }
+    }
 
     /*  Database now exists, recreate its lists
      */

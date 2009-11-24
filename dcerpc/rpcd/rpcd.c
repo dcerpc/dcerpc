@@ -760,7 +760,6 @@ error:
     return pid;
 }
 
-#if 0
 static
 void
 delete_pid_file()
@@ -772,7 +771,6 @@ delete_pid_file()
         unlink(RPCD_PID_FILE);
     }
 }
-#endif
 
 INTERNAL void create_pid_file(void)
 {
@@ -916,6 +914,7 @@ INTERNAL void start_as_daemon(void)
         }
     }
 
+    atexit(delete_pid_file);
     create_pid_file();
     attach_log_file();
 }
