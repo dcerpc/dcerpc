@@ -189,6 +189,10 @@ static void cpp
     if (saved_cmd_opt[opt_verbose])
         message_print(NIDL_RUNCPP,cmd);
 
+#if DEBUG
+    printf("CPP - %s\n", cmd);
+#endif
+
     if ((*cpp_output = popen(cmd, "r")) == 0)
         error(NIDL_INVOKECPP);
 }
@@ -214,7 +218,7 @@ static boolean parse_acf        /* Returns true on success */
 )
 
 {
-    FILE *  acf_yyin;
+    FILE *  acf_yyin = NULL;
     char    temp_path_name[max_string_len]; /* Full temp file pathname */
     void *  acf_parser;
 
@@ -254,10 +258,11 @@ static boolean parse_acf        /* Returns true on success */
         log_error(acf_yylineno(acf_parser), NIDL_COMPABORT, NULL);
     }
 
-
+#if defined(CPP)
     if (cmd_opt[opt_cpp])
         PCLOSE(acf_yyin)
     else
+#endif
         fclose(acf_yyin);
 
     if (acf_yynerrs(acf_parser) != 0)
@@ -473,9 +478,11 @@ static boolean parse
 
     nidl_parser_destroy(nidl_parser);
 
+#if defined(CPP)
     if (cmd_opt[opt_cpp])
         PCLOSE(nidl_yyin)
     else
+#endif
         fclose(nidl_yyin);
 
     if (error_count != 0)

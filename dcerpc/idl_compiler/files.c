@@ -170,15 +170,19 @@ boolean FILE_lookup             /* Returns TRUE on success */
      * -I/x is on the command line.
      */
     if (*filespec != BRANCHCHAR && FILE_has_dir_info(filespec))
+    {
         for (i = 0; idir_list[i]; i++)
         {
             sprintf(lookup_spec, "%s%c%s", idir_list[i], BRANCHCHAR, filespec);
             if (stat(lookup_spec, stat_buf) != -1)
                 return TRUE;
         }
+    }
 #else
     error(NIDL_FNUNIXONLY, __FILE__, __LINE__);
 #endif
+
+    return FALSE;
 }
 
 /*
