@@ -1987,6 +1987,8 @@ void nidl_parser_destroy
 )
 {
    FREE(nidl);
+   yyin_p = NULL;
+   yylineno_p = NULL;
 }
 
 void nidl_parser_input
@@ -1999,6 +2001,9 @@ void nidl_parser_input
 
     nidl_yylex_init(&nidl->nidl_yyscanner);
     nidl_yyset_in(in, nidl->nidl_yyscanner);
+
+    yyin_p = in;
+    yylineno_p = &nidl->nidl_location.lineno;
 }
 
 const parser_location_t * nidl_location

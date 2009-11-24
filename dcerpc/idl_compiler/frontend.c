@@ -597,8 +597,10 @@ AST_interface_n_t *FE_parse_import
 
 	 boolean saved_ASTP_parsing_main_idl;
 	 char saved_current_file[ PATH_MAX ];
-	 STRTAB_str_t saved_error_file_name_id;
 	 AST_interface_n_t *int_p;
+
+	 unsigned * saved_yylineno_p = yylineno_p;
+	 FILE * saved_yyin_p = yyin_p;
 
 	 /* Saved interface attributes */
 	 AST_interface_n_t *saved_interface;
@@ -616,7 +618,6 @@ AST_interface_n_t *FE_parse_import
 
 	 saved_ASTP_parsing_main_idl = ASTP_parsing_main_idl;
 	 inq_name_for_errors(saved_current_file, sizeof (saved_current_file));
-	 saved_error_file_name_id = error_file_name_id;
 
 	 /*
 	  * Save interface information
@@ -699,7 +700,9 @@ AST_interface_n_t *FE_parse_import
 	  */
 	 ASTP_parsing_main_idl = saved_ASTP_parsing_main_idl;
 	 set_name_for_errors(saved_current_file);
-	 error_file_name_id = saved_error_file_name_id;
+
+	 yylineno_p = saved_yylineno_p ;
+	 yyin_p = saved_yyin_p;
 
 	 return int_p;
 }
@@ -847,6 +850,8 @@ boolean FE_main                 /* Returns true on success */
 
     /* Cancel filename for error processing because we are done with source */
     set_name_for_errors(NULL);
+    yylineno_p = NULL;
+    yyin_p = NULL;
 
     return status;
 }

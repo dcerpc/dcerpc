@@ -190,7 +190,16 @@ void yywhere
  * Error info to be fillin the fe_info nodes
  */
 extern int          error_count;
-extern STRTAB_str_t error_file_name_id;
+
+/* XXX These globals are set and unset in the NIDL and ACF parsers in
+ * xxx_input() and xxx_parser_destroy(). They should be more-or-less
+ * accurate, but it would be better to continue plumbing the
+ * parser_location_t down into error() and warning() so that we can
+ * get rid of this ugliness.
+ */
+
+extern FILE    *yyin_p;           /* Points to yyin or acf_yyin */
+extern unsigned*yylineno_p;       /* Points to yylineno or acf_yylineno */
 
 #ifdef DUMPERS
 #define INTERNAL_ERROR(string) {printf("Internal Error Diagnostic: %s\n",string);warning(NIDL_INTERNAL_ERROR,__FILE__,__LINE__);}

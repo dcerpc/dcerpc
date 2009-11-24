@@ -79,9 +79,8 @@ typedef struct error_log_rec_t
 
 /* Pointers to IDL parser or ACF parser global variables. */
 
-FILE    **yyin_p;           /* Points to yyin or acf_yyin */
-int     *yylineno_p;        /* Points to yylineno or acf_yylineno */
-char ** yytext_p;
+FILE    *yyin_p;           /* Points to yyin or acf_yyin */
+unsigned*yylineno_p;       /* Points to yylineno or acf_yylineno */
 
 boolean ERR_no_warnings;    /* Global copy of -no_warn command line option */
 
@@ -97,7 +96,7 @@ char const *current_file   = NULL;     /* Current source file name */
 
 error_log_rec_t  *errors = NULL;    /* Tree root for error nodes */
 int     error_count     = 0;        /* Error count */
-STRTAB_str_t    error_file_name_id; /* Id of current source file */
+static STRTAB_str_t error_file_name_id; /* Id of current source file */
 
 extern void sysdep_cleanup_temp ( void );
 
@@ -157,14 +156,14 @@ void yywhere
 
 	if (have_text)
 	{
-		if (feof(*yyin_p))
+		if (yyin_p && feof(yyin_p))
 			msg_id = NIDL_EOFNEAR;
 		else
 			msg_id = NIDL_SYNTAXNEAR;
 	}
 	else
 	{
-		if (feof(*yyin_p))
+		if (yyin_p && feof(yyin_p))
 			msg_id = NIDL_EOF;
 		else
 			msg_id = NIDL_SYNTAXERR;
@@ -854,7 +853,8 @@ void error
 	va_list arglist;
 
     if (current_file)
-        message_print(NIDL_LINEFILE, current_file, *yylineno_p);
+        message_print(NIDL_LINEFILE, current_file,
+				yylineno_p ? *yylineno_p : 0);
 
 	va_start (arglist, msg_id);
 	vmessage_print (msg_id, arglist);
@@ -937,7 +937,8 @@ void warning
         return;
 
     if (current_file)
-        message_print(NIDL_LINEFILE, current_file, *yylineno_p);
+        message_print(NIDL_LINEFILE, current_file,
+				yylineno_p ? *yylineno_p : 0);
 
 	va_start (arglist, msg_id);
 	vmessage_print (msg_id, arglist);

@@ -335,7 +335,7 @@ acf_interface_header:
         /* Store source information. */
         if (the_interface->fe_info != NULL)
         {
-            the_interface->fe_info->acf_file = error_file_name_id;
+            the_interface->fe_info->acf_file = acf->acf_location.fileid;
             the_interface->fe_info->acf_source_line = acf_yylineno(acf);
         }
 
@@ -667,7 +667,7 @@ acf_include_name:
             /* Store source information. */
             if (acf->acf_include_p->fe_info != NULL)
             {
-                acf->acf_include_p->fe_info->acf_file = error_file_name_id;
+                acf->acf_include_p->fe_info->acf_file = acf->acf_location.fileid;
                 acf->acf_include_p->fe_info->acf_source_line = acf_yylineno(acf);
             }
 
@@ -729,7 +729,7 @@ acf_named_type:
             /* Store source information. */
             if (type_p->fe_info != NULL)
             {
-                type_p->fe_info->acf_file = error_file_name_id;
+                type_p->fe_info->acf_file = acf->acf_location.fileid;
                 type_p->fe_info->acf_source_line = acf_yylineno(acf);
             }
 
@@ -887,7 +887,7 @@ acf_operation:
                 /* Store source information. */
                 if (op_p->fe_info != NULL)
                 {
-                    op_p->fe_info->acf_file = error_file_name_id;
+                    op_p->fe_info->acf_file = acf->acf_location.fileid;
                     op_p->fe_info->acf_source_line = acf_yylineno(acf);
                 }
 
@@ -946,7 +946,7 @@ acf_operation:
                         /* Store source information. */
                         if (param_p->fe_info != NULL)
                         {
-                            param_p->fe_info->acf_file = error_file_name_id;
+                            param_p->fe_info->acf_file = acf->acf_location.fileid;
                             param_p->fe_info->acf_source_line = acf_yylineno(acf);
                         }
 
@@ -1315,6 +1315,8 @@ void acf_parser_destroy
     }
 
     FREE(acf);
+    yyin_p = NULL;
+    yylineno_p = NULL;
 }
 
 void acf_parser_input
@@ -1328,6 +1330,9 @@ void acf_parser_input
 
     acf_yylex_init(&acf->acf_yyscanner);
     acf_yyset_in(in, acf->acf_yyscanner);
+
+    yyin_p = in;
+    yylineno_p = &acf->acf_location.lineno;
 }
 
 unsigned acf_yylineno
@@ -1909,7 +1914,7 @@ static void process_rep_as_type
         /* Store source information. */
         if (repas_p->fe_info != NULL)
         {
-            repas_p->fe_info->acf_file = error_file_name_id;
+            repas_p->fe_info->acf_file = acf->acf_location.fileid;
             repas_p->fe_info->acf_source_line = acf_yylineno(acf);
         }
 
@@ -2011,7 +2016,7 @@ static void process_cs_char_type
         /* Store source information. */
         if (cschar_p->fe_info != NULL)
         {
-            cschar_p->fe_info->acf_file = error_file_name_id;
+            cschar_p->fe_info->acf_file = acf->acf_location.fileid;
             cschar_p->fe_info->acf_source_line = acf_yylineno(acf);
         }
 
