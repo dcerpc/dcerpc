@@ -2040,7 +2040,7 @@ static void nidl_yyerror
     struct parser_location_t loc;
 
     loc.lineno = nidl_yyget_lineno(scanner);
-    loc.location = *nidl_yyget_lloc(scanner);
+    loc.location = *yylloc;
     loc.text = nidl_yyget_text(scanner);
 
     idl_yyerror(&loc, message);
