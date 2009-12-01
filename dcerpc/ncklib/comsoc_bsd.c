@@ -617,7 +617,10 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_bind
     {
 	struct sockaddr_un *skun = (struct sockaddr_un *)&addr->sa;
 
-	serr = chmod(skun->sun_path, S_IRUSR | S_IWUSR | S_IXUSR) == -1 ? errno : RPC_C_SOCKET_OK;
+	serr = chmod(skun->sun_path,
+		     S_IRUSR | S_IWUSR | S_IXUSR |
+		     S_IRGRP | S_IWGRP | S_IXGRP |
+		     S_IROTH | S_IWOTH | S_IXOTH) == -1 ? errno : RPC_C_SOCKET_OK;
     }
 
     if (temp_addr != NULL)
