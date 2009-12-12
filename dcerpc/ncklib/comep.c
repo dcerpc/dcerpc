@@ -1168,7 +1168,7 @@ unsigned32                *status;
 
             if (annotation != NULL)
             {
-                asize = strlen((char *) entp->annotation) + 1;
+                asize = (unsigned32)strlen((char *) entp->annotation) + 1;
 
                 RPC_MEM_ALLOC (
                     *annotation,
@@ -1495,7 +1495,7 @@ unsigned32              *status;
 {
     rpc_protseq_vector_t    *protseq_vector;
     unsigned_char_t         protseq_str[64];
-    unsigned32              slen;
+    size_t                  slen;
     unsigned32              i;
     unsigned32              tmp_st;
 

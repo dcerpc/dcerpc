@@ -804,7 +804,7 @@ rpc__smb_socket_connect(
 
     if (rpc__np_is_valid_endpoint(endpoint, &dbg_status))
     {
-        pipename = endpoint + sizeof("\\pipe\\") - 1;
+        pipename = (char *)endpoint + sizeof("\\pipe\\") - 1;
     }
     else
     {
@@ -1433,8 +1433,8 @@ smb_data_do_recv(
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
     rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
-    off_t bytes_requested = 0;
-    off_t bytes_read = 0;
+    size_t bytes_requested = 0;
+    size_t bytes_read = 0;
     NTSTATUS status = NT_STATUS_SUCCESS;
 #if !SMB_NP_NO_TRANSACTIONS
     unsigned char* cursor = smb->sendbuffer.base;
@@ -1522,8 +1522,8 @@ smb_data_do_recv(
             smb->recvbuffer.end_cursor += bytes_read;
         }
 
-        if (((off_t)*count + bytes_read) > SIZE_T_MAX ||
-            ((off_t)*count + bytes_read) < (off_t)*count) {
+        if (((size_t)*count + bytes_read) > SIZE_T_MAX ||
+            ((size_t)*count + bytes_read) < (size_t)*count) {
             serr = RPC_C_SOCKET_ENOSPC;
             goto error;
         }
@@ -1701,7 +1701,7 @@ rpc__smb_socket_sendmsg(
             goto error;
         }
 
-        *cc += iov[i].iov_len;
+        *cc += (int)iov[i].iov_len;
     }
 
     /* Look for the last fragment and do send if we find it */
@@ -1808,13 +1808,13 @@ rpc__smb_socket_recvmsg(
             memcpy(iov[i].iov_base, smb->recvbuffer.start_cursor, iov[i].iov_len);
 
             smb->recvbuffer.start_cursor += iov[i].iov_len;
-            *cc += iov[i].iov_len;
+            *cc += (int)iov[i].iov_len;
         }
         else
         {
             memcpy(iov[i].iov_base, smb->recvbuffer.start_cursor, pending);
 
-            *cc += pending;
+            *cc += (int)pending;
 
             /* Reset buffer because we have emptied it */
             smb->recvbuffer.start_cursor = smb->recvbuffer.end_cursor = smb->recvbuffer.base;

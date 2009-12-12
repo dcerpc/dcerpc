@@ -108,7 +108,7 @@ static void *async_signal_handler(void *dummy ATTRIBUTE_UNUSED)
  * 'handling'.
  */
 void
-dcethread_signal_to_interrupt(sigset_t *sigset, dcethread* thread)
+dcethread_signal_to_interrupt(sigset_t *asigset, dcethread* thread)
 {
     /* 
      * The helper thread will need the thread id of the first thread
@@ -117,7 +117,7 @@ dcethread_signal_to_interrupt(sigset_t *sigset, dcethread* thread)
      * signal is received.
      */
     thread_to_interrupt = thread;
-    async_sigset = *sigset;
+    async_sigset = *asigset;
 
     dcethread_lock_global();
 
