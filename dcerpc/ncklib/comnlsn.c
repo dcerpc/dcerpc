@@ -52,6 +52,10 @@
 **
 */
 
+#ifdef HAVE_SYS_FD_SET_H
+#include <sys/fd_set.h>
+#endif
+
 #include <commonp.h>
 #include <com.h>
 #include <comp.h>

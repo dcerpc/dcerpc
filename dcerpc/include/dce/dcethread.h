@@ -550,27 +550,91 @@ pid_t dcethread_fork(void);
 #define pthread_getprio ($ ERROR $)
 #define pthread_mutexattr_create ($ ERROR $)
 #define pthread_mutexattr_delete ($ ERROR $)
+
+#ifdef pthread_mutex_init
+#undef     pthread_mutex_init
+#endif
 #define pthread_mutex_init ($ ERROR $)
+
+#ifdef pthread_mutex_destroy
+#undef     pthread_mutex_destroy
+#endif
 #define pthread_mutex_destroy ($ ERROR $)
+
+#ifdef pthread_mutex_lock
+#undef     pthread_mutex_lock
+#endif
 #define pthread_mutex_lock ($ ERROR $)
+
+#ifdef pthread_mutex_unlock
+#undef     pthread_mutex_unlock
+#endif
+
+#ifdef pthread_mutex_unlock
+#undef     pthread_mutex_unlock
+#endif
 #define pthread_mutex_unlock ($ ERROR $)
+
+#ifdef pthread_mutex_trylock
+#undef     pthread_mutex_trylock
+#endif
 #define pthread_mutex_trylock ($ ERROR $)
 #define pthread_condattr_create ($ ERROR $)
 #define pthread_condattr_delete ($ ERROR $)
+
+#ifdef pthread_cond_init
+#undef     pthread_cond_init
+#endif
 #define pthread_cond_init ($ ERROR $)
+
+#ifdef pthread_cond_destroy
+#undef    pthread_cond_destroy
+#endif
 #define pthread_cond_destroy ($ ERROR $)
+
+#ifdef pthread_cond_broadcast
+#undef    pthread_cond_broadcast
+#endif
 #define pthread_cond_broadcast ($ ERROR $)
+
+#ifdef pthread_cond_signal
+#undef     pthread_cond_signal
+#endif
 #define pthread_cond_signal ($ ERROR $)
+
+#ifdef pthread_cond_wait
+#undef     pthread_cond_wait
+#endif
 #define pthread_cond_wait ($ ERROR $)
+
+#ifdef pthread_cond_timedwait
+#undef    pthread_cond_timedwait
+#endif
 #define pthread_cond_timedwait ($ ERROR $)
+
+#ifdef pthread_once
+#undef     pthread_once
+#endif
 #define pthread_once ($ ERROR $)
 #define pthread_keycreate ($ ERROR $)
+
+#ifdef pthread_setspecific
+#undef     pthread_setspecific
+#endif
 #define pthread_setspecific ($ ERROR $)
+
+#ifdef pthread_getspecific
+#undef     pthread_getspecific
+#endif
 #define pthread_getspecific ($ ERROR $)
 #define pthread_cancel ($ ERROR $)
 #define pthread_setasynccancel ($ ERROR $)
 #define pthread_setcancel ($ ERROR $)
 #define pthread_kill ($ ERROR $)
+
+#ifdef pthread_exit
+#undef     pthread_exit
+#endif
 #define pthread_exit ($ ERROR $)
 #define DO_NOT_CLOBBER ($ ERROR $)
 #define EXCEPTION ($ ERROR $)
@@ -594,6 +658,10 @@ pid_t dcethread_fork(void);
 #define pthread_initroutine_t ($ ERROR $)
 #define pthread_startroutine_t ($ ERROR $)
 #define pause ($ ERROR $)
+
+#ifdef read
+#    undef read
+#endif
 #define read ($ ERROR $)
 #define write ($ ERROR $)
 #define send ($ ERROR $)

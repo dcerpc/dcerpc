@@ -197,7 +197,7 @@ PUBLIC void twr_np_lower_flrs_from_sa
     gethostname(&hostname[2], MAXHOSTNAMELEN - 3);
     hostname[MAXHOSTNAMELEN - 1] = '\0';
     for (p = &hostname[2]; *p != '\0'; p++)
-        *p = toupper(*p);
+        *p = toupper((int)*p);
     related_data_size[1] = strlen(hostname) + 1;
     related_data_ptr[1] = (unsigned char*) hostname;
 

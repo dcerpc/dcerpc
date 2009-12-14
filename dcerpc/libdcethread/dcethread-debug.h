@@ -9,6 +9,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdarg.h>
 
 #define DCETHREAD_DEBUG(level, ...) (dcethread__debug_printf(__FILE__, __LINE__, level, __VA_ARGS__))
 #define DCETHREAD_ERROR(...) DCETHREAD_DEBUG(DCETHREAD_DEBUG_ERROR, __VA_ARGS__)

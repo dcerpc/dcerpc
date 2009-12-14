@@ -15,7 +15,7 @@
 #endif
 
 /* Horrible Darwin/BSD hack */
-#if (defined(__APPLE__) || defined(__FreeBSD__)) && defined(_POSIX_C_SOURCE)
+#if (defined(__APPLE__) || defined(__FreeBSD__) || defined(__NetBSD__)) && defined(_POSIX_C_SOURCE)
 #undef _POSIX_C_SOURCE
 #endif
 

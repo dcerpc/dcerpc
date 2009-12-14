@@ -39,6 +39,8 @@
 **
 */
 
+#include <sys/types.h>
+
     /*
      * Local data representation.
      *
