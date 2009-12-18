@@ -189,7 +189,7 @@ static void cpp
     if (saved_cmd_opt[opt_verbose])
         message_print(NIDL_RUNCPP,cmd);
 
-#if DEBUG
+#if 0
     printf("CPP - %s\n", cmd);
 #endif
 
