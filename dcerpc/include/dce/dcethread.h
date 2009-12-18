@@ -72,6 +72,10 @@
 #include <sys/select.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #if defined(__GNUC__) && (__GNUC__ >= 3)
 #    define __DCETHREAD_UNUSED__ __attribute__((unused))
 #    define __DCETHREAD_NORETURN__ __attribute__((noreturn))
@@ -611,6 +615,10 @@ pid_t dcethread_fork(void);
 #endif
 #define recvmsg ($ ERROR $)
 #define select ($ ERROR $)
+#endif
+
+#ifdef __cplusplus
+} /* extern "C" */
 #endif
 
 #endif
