@@ -866,22 +866,33 @@ rpc__smb_socket_connect(
 #endif
 
 #if HAVE_SMBCLIENT_FRAMEWORK
-    /* Never have a username or password here. Either we use an already existing
-     authenticated session, or log in as guest, or fail. Never prompt for a
-     username or password so always set kSMBOptionNoPrompt */
+
+#define SMBCLIENT_CONNECTION_FLAGS ( \
+    kSMBOptionNoPrompt		| \
+    kSMBOptionAllowGuestAuth	| \
+    kSMBOptionAllowAnonymousAuth \
+)
+
+    /* Never have a username or password here. Either we use an already
+     * existing authenticated session, or log in as guest, or fail. Never
+     * prompt for a username or password so always set kSMBOptionNoPrompt,
+     * but do allow guest or anonymous logins.
+     */
+
     if (have_mountpath == 0)
     {
         RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
                        ("rpc__smb_socket_connect - SMBOpenServerEx <%s>\n",
                         smbpath));
-        status = SMBOpenServerEx(smbpath, &smb->handle, kSMBOptionNoPrompt);
+        status = SMBOpenServerEx(smbpath, &smb->handle, SMBCLIENT_CONNECTION_FLAGS);
     }
     else
     {
         RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
                        ("rpc__smb_socket_connect - SMBOpenServerWithMountPoint <%s>\n",
                         netaddr));
-        status = SMBOpenServerWithMountPoint(netaddr, NULL, &smb->handle, 0);
+        status = SMBOpenServerWithMountPoint(netaddr, NULL,
+			&smb->handle, SMBCLIENT_CONNECTION_FLAGS);
     }
 
     if (!NT_SUCCESS(status))
