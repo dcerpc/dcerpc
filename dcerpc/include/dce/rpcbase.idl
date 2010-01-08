@@ -85,6 +85,20 @@ const long  rpc_c_binding_max_timeout       = 9;
 const long  rpc_c_binding_infinite_timeout  = 10;
 
 /*
+ * RPC protocol sequence ids
+ */
+const long  rpc_c_protseq_id_ncacn_ip_tcp   = 0;
+const long  rpc_c_protseq_id_ncacn_dnet_nsp = 1;
+const long  rpc_c_protseq_id_ncacn_osi_dna  = 2;
+const long  rpc_c_protseq_id_ncadg_ip_udp   = 3;
+const long  rpc_c_protseq_id_ncadg_dds      = 4;
+const long  rpc_c_protseq_id_ncalrpc        = 5;
+const long  rpc_c_protseq_id_ncacn_np       = 6;
+const long  rpc_c_protseq_id_ncacn_nb       = 7;
+
+const long  rpc_c_invalid_protseq_id        = -1;
+
+/*
  * A transfer syntax representation. The transfer syntax values are
  * architected. 
  */

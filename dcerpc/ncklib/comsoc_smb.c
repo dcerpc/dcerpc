@@ -698,7 +698,7 @@ error:
 INTERNAL
 rpc_socket_error_t
 rpc__smb_socket_destruct(
-    rpc_socket_t sock ATTRIBUTE_UNUSED
+    rpc_socket_t sock
     )
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;

@@ -13,6 +13,8 @@ authsvcidl=schannel.idl
 
 smbidl=smb.idl
 
+lrpcidl=lrpc.idl
+
 commonheaders=codesets_stub.h stubbase.h idl_es.h idlbase.h idlddefs.h \
 	rpcexc.h
 
@@ -28,6 +30,7 @@ authsvcheaders=schannel.h
 IDLHEADERS=$(commonidl:.idl=.h)
 IDLHEADERS+=$(authsvcidl:.idl=.h)
 IDLHEADERS+=$(smbidl:.idl=.h)
+IDLHEADERS+=$(lrpcidl:.idl=.h)
 
 # Publish DCE headers
 dceincludedir = $(includedir)/dce

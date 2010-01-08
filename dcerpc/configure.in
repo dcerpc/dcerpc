@@ -485,6 +485,8 @@ AM_CONDITIONAL(NAF_UXD, test x${rpc_arg_afuxd} = xyes)
 
 RPC_ARG_DEFINE(ifloopback, USE_LOOPBACK, yes,Include loopback interface support)
 
+AC_CHECK_FUNCS(getpeerid)
+
 #####################################################################
 ## COMPONENT: dcelib
 

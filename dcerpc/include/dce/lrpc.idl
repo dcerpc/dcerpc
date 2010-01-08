@@ -24,7 +24,7 @@
 **
 **  NAME:
 **
-**      smb.idl
+**      lrpc.idl
 **
 **  FACILITY:
 **
@@ -32,36 +32,24 @@
 **
 **  ABSTRACT:
 **
-**  SMB (ncacn_np) transport-specific functions
+**  Local procedure calls (ncalrpc) transport-specific functions
 **
 **
 */
 
-[local] interface smb
+[local] interface lrpc
 {
 
     import "dce/lbase.idl";
     import "dce/rpcbase.idl";
 
-    void rpc_smb_transport_info_from_lwio_creds(
-        [in] void* creds,
-        [in] boolean schannel,
-        [out] rpc_transport_info_handle_t* info,
-        [out] unsigned32 *st
-        );
-
-    void rpc_smb_transport_info_free(
+    void rpc_lrpc_transport_info_free(
         [in] rpc_transport_info_handle_t info
         );
 
-    void rpc_smb_transport_info_inq_session_key(
+    void rpc_lrpc_transport_info_inq_peer_eid(
         [in] rpc_transport_info_handle_t info,
-        [out] unsigned char** sess_key,
-        [out] unsigned16* sess_key_len
-        );
-
-    void rpc_smb_transport_info_inq_peer_principal_name(
-        [in] rpc_transport_info_handle_t info,
-        [out] char** principal
+        [out] unsigned32* uid,
+        [out] unsigned32* gid
         );
 }
