@@ -1147,10 +1147,15 @@ int main(int argc, char *argv[])
     /*
      * Ensure permissions on /var/rpc directory
      */
-    if (chmod("/var/rpc", S_IRUSR | S_IWUSR | S_IXUSR) != 0)
+    if (chmod(RPC_C_NP_DIR, S_IRUSR | S_IWUSR | S_IXUSR) != 0)
     {
-        printf("(rpcd) could not change permissions on /var/rpc directory...\n");
-        exit(1);
+        if (errno != ENOENT ||
+            mkdir(RPC_C_NP_DIR, S_IRUSR | S_IWUSR | S_IXUSR) != 0)
+        {
+
+            printf("(rpcd) could not change permissions on " RPC_C_NP_DIR " directory...\n");
+            exit(1);
+        }
     }
 
     /*

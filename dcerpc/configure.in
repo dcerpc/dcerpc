@@ -176,6 +176,11 @@ AC_CHECK_FUNCS(pthread_setugid_np)
 AC_CHECK_HEADERS(sys/kauth.h sys/syscall.h)
 
 
+
+AS_AC_EXPAND(rpc_dir, ["$localstatedir/rpc"])
+AC_DEFINE_UNQUOTED([RPC_C_NP_DIR], ["$rpc_dir"], [named pipes directory])
+AC_DEFINE_UNQUOTED([RPC_C_UXD_DIR], ["$rpc_dir"], [unix domain sockets directory])
+
 #####################################################################
 ## COMPONENT: threads
 
