@@ -39,6 +39,8 @@
 */
 
 #include <gssauth.h>
+#include <lw/base.h>
+#include <lwmapsecurity/lwmapsecurity.h>
 
 /*
  * Size of buffer used when asking for remote server's principal name
@@ -113,6 +115,12 @@ INTERNAL void rpc__gssauth_inq_sec_context (
 	unsigned32			/* out */    * /*stp*/
     );
 
+INTERNAL void rpc__gssauth_inq_access_token(
+    rpc_auth_info_p_t auth_info,
+    rpc_access_token_p_t* token,
+    unsigned32 *stp
+    );
+
 INTERNAL rpc_auth_epv_t rpc_g_gssauth_negotiate_epv =
 {
 	rpc__gssauth_negotiate_bnd_set_auth,
@@ -123,7 +131,8 @@ INTERNAL rpc_auth_epv_t rpc_g_gssauth_negotiate_epv =
 	rpc__gssauth_free_key,
 	rpc__gssauth_resolve_identity,
 	rpc__gssauth_release_identity,
-	rpc__gssauth_inq_sec_context
+	rpc__gssauth_inq_sec_context,
+        rpc__gssauth_inq_access_token
 };
 
 INTERNAL rpc_auth_epv_t rpc_g_gssauth_mskrb_epv =
@@ -136,7 +145,8 @@ INTERNAL rpc_auth_epv_t rpc_g_gssauth_mskrb_epv =
 	rpc__gssauth_free_key,
 	rpc__gssauth_resolve_identity,
 	rpc__gssauth_release_identity,
-	rpc__gssauth_inq_sec_context
+	rpc__gssauth_inq_sec_context,
+        rpc__gssauth_inq_access_token
 };
 
 /*
@@ -632,4 +642,71 @@ INTERNAL void rpc__gssauth_inq_sec_context
 
 	*mech_context = (void*)gssauth_cn_info->gss_ctx;
 	*stp = rpc_s_ok;
+}
+
+INTERNAL void rpc__gssauth_inq_access_token(
+    rpc_auth_info_p_t auth_info,
+    rpc_access_token_p_t* token,
+    unsigned32 *stp
+    )
+{
+    NTSTATUS status = STATUS_SUCCESS;
+    PLW_MAP_SECURITY_CONTEXT context = NULL;
+    OM_uint32 minor_status = 0;
+    int gss_rc = 0;
+    rpc_gssauth_info_p_t gssauth_info = NULL;
+    rpc_gssauth_cn_info_p_t gssauth_cn_info = NULL;
+    gss_name_t src = GSS_C_NO_NAME;
+    gss_OID src_type = GSS_C_NULL_OID;
+    gss_buffer_desc src_name = GSS_C_EMPTY_BUFFER;
+    PSTR principal = NULL;
+
+    gssauth_info = (rpc_gssauth_info_p_t)auth_info;
+    gssauth_cn_info = gssauth_info->cn_info;
+
+    gss_rc = gss_inquire_context(
+        &minor_status,
+        gssauth_cn_info->gss_ctx,
+        &src,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL);
+    if (gss_rc != GSS_S_COMPLETE) goto error;
+
+    gss_rc = gss_display_name(&minor_status, src, &src_name, &src_type);
+    if (gss_rc != GSS_S_COMPLETE) goto error;
+
+    status = LwMapSecurityCreateContext(&context);
+    if (status) goto error;
+
+    status = LwMapSecurityCreateAccessTokenFromCStringUsername(
+        context,
+        token,
+        src_name.value);
+    if (status) goto error;
+
+    *stp = rpc_s_ok;
+
+cleanup:
+
+    if (src_name.value)
+    {
+        gss_release_buffer(&minor_status, &src_name);
+    }
+
+    if (src)
+    {
+        gss_release_name(&minor_status, &src);
+    }
+
+    return;
+
+error:
+
+    *stp = -1;
+
+    goto cleanup;
 }

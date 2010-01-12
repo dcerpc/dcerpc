@@ -291,6 +291,13 @@ void rpc_binding_inq_prot_seq
     [out]       unsigned32                   *st
 );
 
+void rpc_binding_inq_access_token_caller
+(
+    [in]        rpc_binding_handle_t         binding_handle,
+    [out]       rpc_access_token_p_t*        token,
+    [out]       unsigned32                    *st
+);
+
 /*
  * R P C _ B I N D I N G _ S E R V E R _ F R O M _ C L I E N T
  *

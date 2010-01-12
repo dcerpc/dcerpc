@@ -55,6 +55,8 @@
 #include <sys/param.h>
 #include <sys/socket.h>
 #include <cnp.h>
+#include <lw/base.h>
+#include <lwmapsecurity/lwmapsecurity.h>
 
 /* Bizarre hack for HP-UX ia64 where a system header
  * makes reference to a kernel-only data structure
@@ -2207,6 +2209,34 @@ rpc__bsd_socket_transport_info_equal(
     return (info1 == info2);
 }
 
+INTERNAL
+rpc_socket_error_t
+rpc__bsd_socket_transport_inq_access_token(
+    rpc_transport_info_handle_t info,
+    rpc_access_token_p_t* token
+    )
+{
+    rpc_bsd_transport_info_p_t lrpc_info = (rpc_bsd_transport_info_p_t) info;
+    NTSTATUS status = STATUS_SUCCESS;
+    PLW_MAP_SECURITY_CONTEXT context = NULL;
+
+    status = LwMapSecurityCreateContext(&context);
+    if (status) goto error;
+
+    status = LwMapSecurityCreateAccessTokenFromUidGid(
+        context,
+        token,
+        lrpc_info->peer_uid,
+        lrpc_info->peer_gid);
+    if (status) goto error;
+
+error:
+
+    LwMapSecurityFreeContext(&context);
+
+    return LwNtStatusToErrno(status);
+}
+
 PRIVATE const rpc_socket_vtbl_t rpc_g_bsd_socket_vtbl =
 {
     .socket_duplicate = rpc__bsd_socket_duplicate,
@@ -2234,5 +2264,6 @@ PRIVATE const rpc_socket_vtbl_t rpc_g_bsd_socket_vtbl =
     .socket_enum_ifaces = rpc__bsd_socket_enum_ifaces,
     .socket_inq_transport_info = rpc__bsd_socket_inq_transport_info,
     .transport_info_free = rpc_lrpc_transport_info_free,
-    .transport_info_equal = rpc__bsd_socket_transport_info_equal
+    .transport_info_equal = rpc__bsd_socket_transport_info_equal,
+    .transport_inq_access_token = rpc__bsd_socket_transport_inq_access_token
 };

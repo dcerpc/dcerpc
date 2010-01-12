@@ -25,6 +25,7 @@
 #include <SMBClient/smbclient.h>
 #include <nttypes.h>
 #endif
+#include <lwmapsecurity/lwmapsecurity.h>
 
 #define SMB_SOCKET_LOCK(sock) (rpc__smb_socket_lock(sock))
 #define SMB_SOCKET_UNLOCK(sock) (rpc__smb_socket_unlock(sock))
@@ -2177,6 +2178,33 @@ rpc__smb_socket_duplicate(
     return serr;
 }
 
+INTERNAL
+rpc_socket_error_t
+rpc__smb_socket_transport_inq_access_token(
+    rpc_transport_info_handle_t info,
+    rpc_access_token_p_t* token
+    )
+{
+    rpc_smb_transport_info_p_t smb_info = (rpc_smb_transport_info_p_t) info;
+    NTSTATUS status = STATUS_SUCCESS;
+    PLW_MAP_SECURITY_CONTEXT context = NULL;
+
+    status = LwMapSecurityCreateContext(&context);
+    if (status) goto error;
+
+    status = LwMapSecurityCreateAccessTokenFromCStringUsername(
+        context,
+        token,
+        smb_info->peer_principal);
+    if (status) goto error;
+
+error:
+
+    LwMapSecurityFreeContext(&context);
+
+    return LwNtStatusToErrno(status);
+}
+
 rpc_socket_vtbl_t const rpc_g_smb_socket_vtbl =
 {
     .socket_duplicate = rpc__smb_socket_duplicate,
@@ -2204,5 +2232,6 @@ rpc_socket_vtbl_t const rpc_g_smb_socket_vtbl =
     .socket_enum_ifaces = rpc__smb_socket_enum_ifaces,
     .socket_inq_transport_info = rpc__smb_socket_inq_transport_info,
     .transport_info_free = rpc_smb_transport_info_free,
-    .transport_info_equal = rpc__smb_transport_info_equal
+    .transport_info_equal = rpc__smb_transport_info_equal,
+    .transport_inq_access_token = rpc__smb_socket_transport_inq_access_token
 };

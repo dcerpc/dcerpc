@@ -603,6 +603,7 @@ demos/echo_server/Makefile
 demos/echo_number/Makefile
 demos/echo_union/Makefile
 demos/samr_test/Makefile
+demos/access/Makefile
 perf/Makefile
 tools/Makefile
 )

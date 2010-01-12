@@ -51,6 +51,12 @@ GLOBAL unsigned32 rpc_g_schnauth_free_count = 0;
 
 INTERNAL rpc_auth_rpc_prot_epv_p_t rpc_g_schnauth_rpc_prot_epv[RPC_C_PROTOCOL_ID_MAX];
 
+INTERNAL void rpc__schnauth_inq_access_token(
+    rpc_auth_info_p_t auth_info,
+    rpc_access_token_p_t* token,
+    unsigned32 *stp
+    );
+
 INTERNAL rpc_auth_epv_t rpc_g_schnauth_epv =
 {
     rpc__schnauth_bnd_set_auth,
@@ -61,7 +67,8 @@ INTERNAL rpc_auth_epv_t rpc_g_schnauth_epv =
     rpc__schnauth_free_key,
     rpc__schnauth_resolve_identity,
     rpc__schnauth_release_identity,
-    rpc__schnauth_inq_sec_context
+    rpc__schnauth_inq_sec_context,
+    rpc__schnauth_inq_access_token,
 };
 
 
@@ -407,4 +414,16 @@ PRIVATE void rpc__schnauth_inq_sec_context
     *mech_context = NULL;
 
     *st = rpc_s_ok;
+}
+
+INTERNAL void rpc__schnauth_inq_access_token(
+    rpc_auth_info_p_t auth_info,
+    rpc_access_token_p_t* token,
+    unsigned32 *stp
+    )
+{
+    *token = NULL;
+    *stp = rpc_s_ok;
+
+    return;
 }
