@@ -285,6 +285,7 @@ rpc__bsd_socket_set_default_options (
         return errno;
     }
 #endif
+
     return RPC_C_SOCKET_OK;
 }
 
