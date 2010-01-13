@@ -177,7 +177,7 @@ AC_CHECK_HEADERS(sys/kauth.h sys/syscall.h)
 
 
 
-AS_AC_EXPAND(rpc_dir, ["$localstatedir/rpc"])
+AS_AC_EXPAND(rpc_dir, ["$localstatedir/lib/likewise/rpc"])
 
 AC_CACHE_CHECK([for named pipes directory],
 	[rpcd_cv_rpc_c_np_dir],

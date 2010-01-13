@@ -78,7 +78,7 @@ GLOBAL ept_v3_0_epv_t ept_v3_0_mgr_epv =
 
 #ifndef REMOTE_ENDPOINT_ACCESS
 
-INTERNAL int is_remote_handle( handle_t h, error_status_t *st )
+INTERNAL int is_unpriv_handle( handle_t h, error_status_t *st )
 {
 
     error_status_t status,status1;
@@ -88,6 +88,35 @@ INTERNAL int is_remote_handle( handle_t h, error_status_t *st )
     unsigned32 i;
     static unsigned_char_p_t *local_netaddr = NULL;
     static unsigned32 addr_count = 0;
+    unsigned32 prot_seq = 0;
+    rpc_transport_info_handle_t info;
+    unsigned32 uid = (unsigned32) -1;
+    unsigned32 gid = (unsigned32) -1;
+
+    rpc_binding_inq_prot_seq(h, &prot_seq, &status);
+
+    if (! STATUS_OK(&status))
+    {
+        *st = status;
+        return(1);
+    }
+
+    if (prot_seq == rpc_c_protseq_id_ncalrpc)
+    {
+        rpc_binding_inq_transport_info(h, &info, &status);
+
+        if (! STATUS_OK(&status))
+        {
+            *st = status;
+            return(1);
+        }
+
+        rpc_lrpc_transport_info_inq_peer_eid(info, &uid, &gid);
+
+        *st = rpc_s_ok;
+
+        return (uid != 0);
+    }
 
 /* Get client network address from binding handle (client_netaddr) */
 
@@ -275,7 +304,7 @@ PRIVATE void ept_insert(
         return;
 
 #ifndef REMOTE_ENDPOINT_ACCESS
-    if ( is_remote_handle(h,&tmp_st) )
+    if ( is_unpriv_handle(h,&tmp_st) )
     {
         assert(status != NULL);
         *status = ept_s_cant_perform_op;
@@ -324,7 +353,7 @@ PRIVATE void ept_delete(
         return;
 
 #ifndef REMOTE_ENDPOINT_ACCESS
-    if ( is_remote_handle(h,&tmp_st) )
+    if ( is_unpriv_handle(h,&tmp_st) )
     {
         assert(status != NULL);
         *status = ept_s_cant_perform_op;
@@ -457,7 +486,7 @@ PRIVATE void ept_mgmt_delete(
         return;
 
 #ifndef REMOTE_ENDPOINT_ACCESS
-    if ( is_remote_handle(h,&tmp_st) )
+    if ( is_unpriv_handle(h,&tmp_st) )
     {
         assert(status != NULL);
         *status = ept_s_cant_perform_op;

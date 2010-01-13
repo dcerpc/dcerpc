@@ -1096,11 +1096,11 @@ static void
 rpcd_verify_sockets_directory(
 	const char * path)
 {
+    const static mode_t np_dir_mode = 0755;
 
-    if (chmod(path, S_IRUSR | S_IWUSR | S_IXUSR) != 0)
+    if (chmod(path, np_dir_mode) != 0)
     {
-        if (errno != ENOENT ||
-            mkdir(path, S_IRUSR | S_IWUSR | S_IXUSR) != 0)
+        if (errno != ENOENT || mkdir(path, np_dir_mode) != 0)
         {
 
             printf("(rpcd) could not change permissions on %s directory...\n",
@@ -1167,7 +1167,6 @@ int main(int argc, char *argv[])
      * Ensure permissions on pipes directory and on unix sockets
      * directory if it's different.
      */
-
     rpcd_verify_sockets_directory(RPC_C_NP_DIR);
     if (strcmp(RPC_C_NP_DIR, RPC_C_UXD_DIR) != 0)
     {
