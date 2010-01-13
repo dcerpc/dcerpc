@@ -1,6 +1,6 @@
 /* ex: set shiftwidth=4 expandtab: */
 /*
- * 
+ *
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
@@ -18,7 +18,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
  */
@@ -30,7 +30,7 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
@@ -92,11 +92,11 @@ int ioctl(int d, int request, ...);
  * these values can be overridden in a per-system file.
  */
 
-#ifndef RPC_C_SOCKET_MAX_RCVBUF     
+#ifndef RPC_C_SOCKET_MAX_RCVBUF
 #  define RPC_C_SOCKET_MAX_RCVBUF (32 * 1024)
 #endif
 
-#ifndef RPC_C_SOCKET_MAX_SNDBUF     
+#ifndef RPC_C_SOCKET_MAX_SNDBUF
 #  define RPC_C_SOCKET_MAX_SNDBUF (32 * 1024)
 #endif
 
@@ -273,6 +273,20 @@ recvmsg_again:
 	}
 }
 
+INTERNAL rpc_socket_error_t
+rpc__bsd_socket_set_default_options (
+                                     ssize_t sockfd)
+{
+    int on = 1;
+
+    /* Set SO_NOSIGPIPE on the socket */
+    if (setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE, &on, sizeof (on)) == -1) {
+        return errno;
+    }
+
+    return RPC_C_SOCKET_OK;
+}
+
 /* ======================================================================== */
 /*
  * R P C _ _ S O C K E T _ D U P L I C A T E
@@ -300,6 +314,11 @@ rpc__bsd_socket_duplicate(
     RPC_SOCKET_DISABLE_CANCEL;
     sock->data.word = dup(*sockfd);
     serr = ((sock->data.word == -1) ? errno : RPC_C_SOCKET_OK);
+    if (serr == RPC_C_SOCKET_OK) {
+        serr = rpc__bsd_socket_set_default_options(sock->data.word);
+        if (serr != RPC_C_SOCKET_OK)
+            close (sock->data.word);
+    }
     RPC_SOCKET_RESTORE_CANCEL;
 
     return serr;
@@ -329,6 +348,12 @@ rpc__bsd_socket_construct(
         (int) RPC_PROTSEQ_INQ_NET_IF_ID(pseq_id),
         0 /*(int) RPC_PROTSEQ_INQ_NET_PROT_ID(pseq_id)*/);
     serr = ((sock->data.word == -1) ? errno : RPC_C_SOCKET_OK);
+
+    if (serr == RPC_C_SOCKET_OK) {
+        serr = rpc__bsd_socket_set_default_options(sock->data.word);
+        if (serr != RPC_C_SOCKET_OK)
+            close (sock->data.word);
+    }
     RPC_SOCKET_RESTORE_CANCEL;
 
     return serr;
@@ -337,8 +362,8 @@ rpc__bsd_socket_construct(
 /*
  * R P C _ _ S O C K E T _ O P E N _ B A S I C
  *
- * A special version of socket_open that is used *only* by 
- * the low level initialization code when it is trying to 
+ * A special version of socket_open that is used *only* by
+ * the low level initialization code when it is trying to
  * determine what network services are supported by the host OS.
  */
 
@@ -359,6 +384,12 @@ rpc__bsd_socket_open_basic(
     RPC_SOCKET_DISABLE_CANCEL;
     *sock = socket((int) naf, (int) net_if, 0);
     serr = ((*sock == -1) ? errno : RPC_C_SOCKET_OK);
+
+    if (serr == RPC_C_SOCKET_OK) {
+        serr = rpc__bsd_socket_set_default_options(*sock);
+        if (serr != RPC_C_SOCKET_OK)
+            close (*sock);
+    }
     RPC_SOCKET_RESTORE_CANCEL;
 
     return serr;
@@ -460,11 +491,11 @@ rpc_addr_p_t        addr;
         status = rpc_s_ok;
     }
 
-    /* 
-     * If there is no port restriction in this address family, then do a 
-     * simple bind. 
+    /*
+     * If there is no port restriction in this address family, then do a
+     * simple bind.
      */
-   
+
     if (! RPC_PROTSEQ_TEST_PORT_RESTRICTION (addr -> rpc_protseq_id))
     {
         if (!has_endpoint && ncalrpc)
@@ -486,19 +517,19 @@ rpc_addr_p_t        addr;
                 // Ignore any errors from this function.
                 unlink((const char*)addr->sa.data);
             }
-            serr = 
+            serr =
                 (bind(sock->data.word, (struct sockaddr *)&addr->sa, addr->len) == -1) ?
                       errno : RPC_C_SOCKET_OK;
         }
     }                                   /* no port restriction */
 
-    else                          
+    else
     {
-        /* 
-         * Port restriction is in place.  If the address has a well-known 
+        /*
+         * Port restriction is in place.  If the address has a well-known
          * endpoint, then do a simple bind.
          */
-        
+
         if (has_endpoint)
         {
 #if defined(SOL_SOCKET) && defined(SO_REUSEADDR)
@@ -527,23 +558,23 @@ rpc_addr_p_t        addr;
 
 	    else
 	    {
-	        /* 
-	         * Port restriction is in place and the address doesn't have a 
-	         * well-known endpoint.  Try to bind until we hit a good port, 
+	        /*
+	         * Port restriction is in place and the address doesn't have a
+	         * well-known endpoint.  Try to bind until we hit a good port,
 	         * or exhaust the retry count.
-	         * 
-	         * Make a copy of the address to work in; if we hardwire an 
-	         * endpoint into our caller's address, later logic could infer 
-	         * that it is a well-known endpoint. 
+	         *
+	         * Make a copy of the address to work in; if we hardwire an
+	         * endpoint into our caller's address, later logic could infer
+	         * that it is a well-known endpoint.
 	         */
-	    
+
 	        unsigned32 i;
 	        boolean found;
-	    
-	        for (i = 0, found = false; 
+
+	        for (i = 0, found = false;
 		     (i < RPC_PORT_RESTRICTION_INQ_N_TRIES (addr->rpc_protseq_id))
 		     && !found;
-		     i++)   
+		     i++)
 	        {
 		    unsigned_char_p_t port_name;
 
@@ -563,7 +594,7 @@ rpc_addr_p_t        addr;
 		        serr = RPC_C_SOCKET_EIO;
 		        break;
 		    }
-    
+
 		    rpc__naf_addr_set_endpoint (port_name, &temp_addr, &status);
 
 		    if (status != rpc_s_ok)
@@ -674,7 +705,7 @@ connect_again:
  * of addr.sa.  This operation fills in addr.sa and sets addr.len to
  * the new size of the field.  This is used only by Connection oriented
  * Protocol Services.
- * 
+ *
  * (see BSD UNIX accept(2)).
  */
 
@@ -806,7 +837,7 @@ int                 *cc;        /* returned number of bytes actually sent */
  * operation fills in addr.sa and sets addr.len to the new size of the
  * field.  An error status as well as the actual number of bytes received
  * are also returned.
- * 
+ *
  * (see BSD UNIX recvfrom(2)).
  */
 
@@ -842,7 +873,7 @@ int                 *cc;        /* returned number of bytes actually rcvd */
  * set to the actual size of addr.sa.  This operation fills in addr.sa
  * and sets addr.len to the new size of the field.  An error code as
  * well as the actual number of bytes received are also returned.
- * 
+ *
  * (see BSD UNIX recvmsg(2)).
  */
 
@@ -967,7 +998,7 @@ rpc_socket_t        sock;
  */
 
 INTERNAL rpc_socket_error_t rpc__bsd_socket_set_bufs
-    
+
 #ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock,
@@ -1050,11 +1081,11 @@ unsigned32          *nrxsize;
      * detect this by the fact that the new buffer length returned is
      * 0. Return what we think the actually length is.
      */
-    if (rxsize != 0 && *nrxsize == 0) 
+    if (rxsize != 0 && *nrxsize == 0)
     {
         *nrxsize = (8 * 1024);
     }
-    if (txsize != 0 && *ntxsize == 0) 
+    if (txsize != 0 && *ntxsize == 0)
     {
         *ntxsize = (8 * 1024);
     }
@@ -1076,7 +1107,7 @@ unsigned32          *nrxsize;
  * R P C _ _ S O C K E T _ S E T _ N B I O
  *
  * Set a socket to non-blocking mode.
- * 
+ *
  * Return RPC_C_SOCKET_OK on success, otherwise an error value.
  */
 
@@ -1272,7 +1303,7 @@ struct timeval *tmo;
     FD_ZERO (&write_fds);
     FD_SET (sock->data.word, &write_fds);
     nfds = sock->data.word + 1;
-                  
+
     RPC_SOCKET_DISABLE_CANCEL;
     num_found = dcethread_select(nfds, NULL, (void *)&write_fds, NULL, tmo);
     serr = ((num_found < 0) ? errno : RPC_C_SOCKET_OK);
@@ -1459,7 +1490,7 @@ ifconf_again:
     n_ifs = ifc.ifc_len / sizeof (struct ifreq);
     RPC_DBG_PRINTF(rpc_e_dbg_general, 10,
         ("%lu bytes of ifreqs, ifreq is %lu bytes\n",
-         (unsigned long)ifc.ifc_len, 
+         (unsigned long)ifc.ifc_len,
          (unsigned long)sizeof(struct ifreq)));
 
 #ifdef MAX_DEBUG
@@ -1873,7 +1904,6 @@ rpc__bsd_socket_transport_info_equal(
 {
     return (info1 == info2);
 }
-
 
 PRIVATE const rpc_socket_vtbl_t rpc_g_bsd_socket_vtbl =
 {
