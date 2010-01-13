@@ -31,6 +31,8 @@ GCC_WARN_SHADOW = YES
 GCC_WARN_64_TO_32_BIT_CONVERSION = YES
 WARNING_CFLAGS = -Wformat=2 -Wwrite-strings -Wcast-align -Wpointer-arith -Wstrict-prototypes -Wbad-function-cast -Wextra -Wall
 
+GCC_GENERATE_DEBUGGING_SYMBOLS=YES
+DEBUG_INFORMATION_FORMAT=dwarf-with-dsym
 GCC_STRICT_ALIASING = NO
 OTHER_CFLAGS = -fPIC -fstack-protector
 
