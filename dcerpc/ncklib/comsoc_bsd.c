@@ -1491,15 +1491,14 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_sendpeereid
     struct sockaddr_un *endpoint_addr = NULL;
     struct stat endpoint_stat = {0};
     uid_t ep_uid = -1;
-    int pipefd[2] = {0};
-    int fd = -1;
+    int pipefd[2] = {-1, -1};
     char empty_buf[] = {'\0'};
     rpc_socket_iovec_t iovec = {0};
     union
     {
         /* Using union ensures correct alignment on some platforms */
         struct cmsghdr cm;
-        char buf[CMSG_SPACE(sizeof(fd))];
+        char buf[CMSG_SPACE(sizeof(pipefd[0]))];
     } cm_un;
     struct msghdr msg = {0};
     struct cmsghdr *cmsg = NULL;
@@ -1523,8 +1522,6 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_sendpeereid
 	}
     }
 
-    fd = dup(pipefd[0]);
-
     iovec.iov_base     = &empty_buf;
     iovec.iov_len      = sizeof(empty_buf);
 
@@ -1539,9 +1536,9 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_sendpeereid
     cmsg = CMSG_FIRSTHDR(&msg);
     cmsg->cmsg_level = SOL_SOCKET;
     cmsg->cmsg_type  = SCM_RIGHTS;
-    cmsg->cmsg_len   = CMSG_LEN(sizeof(fd));
+    cmsg->cmsg_len   = CMSG_LEN(sizeof(pipefd[0]));
 
-    (CMSG_DATA(cmsg))[0] = fd;
+    memcpy(CMSG_DATA(cmsg), &pipefd[0], sizeof(pipefd[0]));
 
     RPC_SOCKET_DISABLE_CANCEL;
     bytes_sent = sendmsg(lrpc->fd, &msg, 0);
@@ -1553,6 +1550,7 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_sendpeereid
     }
 
 cleanup:
+
     if (pipefd[0] != -1)
     {
         close(pipefd[0]);
@@ -1566,10 +1564,6 @@ cleanup:
     return serr;
 
 error:
-    if (fd > 0)
-    {
-        close(fd);
-    }
 
     goto cleanup;
 }
@@ -1619,15 +1613,24 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_recvpeereid
         goto error;
     }
 
-    cmsg = CMSG_FIRSTHDR(&msg);
-    if (!cmsg ||
-	!cmsg->cmsg_type == SCM_RIGHTS)
+    if (msg.msg_controllen == 0 ||
+        msg.msg_controllen >= sizeof(cm_un))
     {
         serr = RPC_C_SOCKET_EACCESS;
         goto error;
     }
 
-    fd = (CMSG_DATA(cmsg))[0];
+    cmsg = CMSG_FIRSTHDR(&msg);
+    if (!cmsg ||
+	!(cmsg->cmsg_type == SCM_RIGHTS) ||
+        cmsg->cmsg_len - CMSG_ALIGN(sizeof(*cmsg)) != sizeof(fd))
+    {
+        serr = RPC_C_SOCKET_EACCESS;
+        goto error;
+    }
+
+    memcpy(&fd, CMSG_DATA(cmsg), sizeof(fd));
+
     if (fstat(fd, &pipe_stat))
     {
         serr = errno;
@@ -1645,6 +1648,7 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_recvpeereid
     *egid = pipe_stat.st_gid;
 
 cleanup:
+
     if (fd > 0)
     {
         close(fd);
@@ -1653,6 +1657,7 @@ cleanup:
     return serr;
 
 error:
+
     *euid = -1;
     *egid = -1;
 
