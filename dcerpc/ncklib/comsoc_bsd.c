@@ -4,7 +4,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2009 Apple Inc. All rights reserved.
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -275,15 +275,16 @@ recvmsg_again:
 
 INTERNAL rpc_socket_error_t
 rpc__bsd_socket_set_default_options (
-                                     ssize_t sockfd)
+                                     rpc_socket_basic_t sockfd)
 {
+#ifdef SO_NOSIGPIPE
     int on = 1;
 
     /* Set SO_NOSIGPIPE on the socket */
     if (setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE, &on, sizeof (on)) == -1) {
         return errno;
     }
-
+#endif
     return RPC_C_SOCKET_OK;
 }
 
