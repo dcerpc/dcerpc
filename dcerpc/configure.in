@@ -175,9 +175,12 @@ AM_CONDITIONAL(TARGET_OS_DARWIN, test x$target_os = xdarwin)
 AC_CHECK_FUNCS(pthread_setugid_np)
 AC_CHECK_HEADERS(sys/kauth.h sys/syscall.h)
 
-
-
-AS_AC_EXPAND(rpc_dir, ["$localstatedir/lib/likewise/rpc"])
+if test x"$localstatedir" = x"/var"; then
+    rpccachedir="$localstatedir/lib/likewise"
+else
+    rpccachedir="$localstatedir"
+fi
+AS_AC_EXPAND(rpc_dir, ["$rpccachedir/rpc"])
 
 AC_CACHE_CHECK([for named pipes directory],
 	[rpcd_cv_rpc_c_np_dir],
