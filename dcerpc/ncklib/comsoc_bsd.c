@@ -52,6 +52,8 @@
 #include <sys/un.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/param.h>
+#include <sys/socket.h>
 #include <cnp.h>
 
 /* Bizarre hack for HP-UX ia64 where a system header
