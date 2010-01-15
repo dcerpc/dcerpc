@@ -1481,7 +1481,6 @@ INTERNAL void receive_packet
                 SWAB_INPLACE_16 (frag_length);
             }
 
-#ifdef DEBUG
             /*
              * Sanity check the protocol versions in the header.
              * Except for BIND and BIND_NAK packets.
@@ -1562,7 +1561,6 @@ INTERNAL void receive_packet
                    return;
                 }
             }
-#endif
         }
 
         /*
