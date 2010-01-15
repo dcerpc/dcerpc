@@ -3,6 +3,7 @@
  * (c) Copyright 1990 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1990 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1990 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -66,7 +67,6 @@
 /*                                                                           */
 /*****************************************************************************/
 static void rpc_ss_create_caller_context
-#ifdef IDL_PROTOTYPES
 (
     ndr_context_handle *p_wire_context,
               /* Pointer to the wire representation of the context_handle */
@@ -74,13 +74,6 @@ static void rpc_ss_create_caller_context
     rpc_ss_context_t *p_caller_context, /* Pointer to caller's context handle */
     error_status_t *p_st
 )
-#else
-( p_wire_context, caller_handle, p_caller_context,p_st )
-    ndr_context_handle *p_wire_context;
-    handle_t caller_handle;    /* Handle on which the call was made */
-    rpc_ss_context_t *p_caller_context;/* Pointer to caller's context handle */
-    error_status_t *p_st;
-#endif
 {
     rpc_ss_caller_context_element_t *p_created_context;
 
@@ -125,7 +118,6 @@ static void rpc_ss_create_caller_context
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_er_ctx_from_wire
-#ifdef IDL_PROTOTYPES
 (
     ndr_context_handle      *p_wire_context,
     rpc_ss_context_t        *p_caller_context, /* Pointer to application context */
@@ -133,14 +125,6 @@ void rpc_ss_er_ctx_from_wire
     ndr_boolean             in_out,            /* TRUE for [in,out], FALSE for [out] */
     volatile error_status_t *p_st
 )
-#else
-(p_wire_context, p_caller_context, caller_handle, in_out, p_st)
-    ndr_context_handle *p_wire_context;
-    rpc_ss_context_t   *p_caller_context;
-    handle_t           caller_handle;
-    ndr_boolean        in_out;
-    error_status_t     *p_st;
-#endif
 {
 #ifdef DEBUGCTX
     debug_context_uuid(&p_wire_context->context_handle_uuid, "N");
@@ -229,7 +213,6 @@ void rpc_ss_er_ctx_from_wire
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_er_ctx_to_wire
-#ifdef IDL_PROTOTYPES
 (
     rpc_ss_context_t   caller_context,  /* The context handle the caller is using */
     ndr_context_handle *p_wire_context, /* Where to put data to be marshalled */
@@ -237,14 +220,6 @@ void rpc_ss_er_ctx_to_wire
     ndr_boolean        in_out,          /* TRUE for [in,out] param, FALSE for [in] */
     volatile error_status_t     *p_st
 )
-#else
-(caller_context, p_wire_context, assoc_handle, in_out, p_st)
-    rpc_ss_context_t   caller_context;
-    ndr_context_handle *p_wire_context;
-    handle_t           assoc_handle;
-    ndr_boolean        in_out;
-    volatile error_status_t     *p_st;
-#endif
 {
 
 #ifdef PERFMON
@@ -318,14 +293,9 @@ static int debug_context_uuid(uuid_p, prefix)
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_destroy_client_context
-#ifdef IDL_PROTOTYPES
 (
     rpc_ss_context_t *p_unusable_context_handle
 )
-#else
-( p_unusable_context_handle )
-    rpc_ss_context_t *p_unusable_context_handle;
-#endif
 {
 
 #ifdef PERFMON

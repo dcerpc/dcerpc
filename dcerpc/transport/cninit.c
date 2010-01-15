@@ -3,7 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2009 Apple Inc. All rights reserved.
+ * Portions Copyright (c) 2009-2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -51,7 +51,7 @@
 #include <cnpkt.h>	/* NCA connection packet layout */
 #include <cnassoc.h>    /* NCA connection association service */
 
-void rpc__cn_minute_system_time _DCE_PROTOTYPE_ ((void));
+void rpc__cn_minute_system_time (void);
 
 /*
  * INTERNAL variables.
@@ -166,7 +166,6 @@ void rpc__module_init_func(void)
 **/
 
 void rpc__ncacn_init 
-#ifdef _DCE_PROTO_
 (
     rpc_prot_call_epv_p_t           *call_epv,
     rpc_prot_mgmt_epv_p_t           *mgmt_epv,
@@ -175,15 +174,6 @@ void rpc__ncacn_init
     rpc_prot_fork_handler_fn_t      *fork_handler,
     unsigned32                      *st
 )
-#else
-(call_epv, mgmt_epv, binding_epv, network_epv, fork_handler, st)
-rpc_prot_call_epv_p_t           *call_epv;
-rpc_prot_mgmt_epv_p_t           *mgmt_epv;
-rpc_prot_binding_epv_p_t        *binding_epv;
-rpc_prot_network_epv_p_t        *network_epv;
-rpc_prot_fork_handler_fn_t      *fork_handler;
-unsigned32                      *st;
-#endif
 {
 
     CODING_ERROR (st);

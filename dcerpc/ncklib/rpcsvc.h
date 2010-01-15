@@ -3,6 +3,7 @@
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -203,8 +204,8 @@
  * debug message.  (This routine is what EPRINTF
  * now evaluates to.)
  *
- * Since we need stdarg and all DCE code is now
- * supposed to be ANSI, no need for _DCE_PROTOTYPE_.
+ * We need stdarg and all DCE code is now
+ * supposed to be ANSI.
  */
 
 #include <stdarg.h>
@@ -220,9 +221,8 @@ int rpc__svc_eprintf (
  */
 
 /*
- * Requires ANSI prototype for stdargs, so no
- * point in using _DCE_PROTOTYPE_ ... DCE is
- * supposed to be pure ANSI now anyway ...
+ * Requires ANSI prototype for stdargs
+ * DCE is supposed to be pure ANSI now anyway ...
  *
  * Called only by RPC_DBG_PRINTF macro.
  */

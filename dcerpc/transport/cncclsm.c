@@ -1,8 +1,9 @@
 /*
- * 
+ *
  * (c) Copyright 1990 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1990 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1990 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -16,7 +17,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
  */
@@ -28,7 +29,7 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
@@ -90,29 +91,29 @@ GLOBAL const char     *rpc_g_cn_call_client_states [] =
 /*
 ** C L I E N T   C A L L   P R E D I C A T E   T A B L E
 **/
-/*  
+/*
  * The predicates.
  * As a performance enhancement,
  * we have revamped many predicate routines as macros and have absorbed
  * the predicates into the actions.  Thus, there is no longer a need
  * for the predicate table;  the predicate declarations too, are
- * modified. 
+ * modified.
  */
-/* 
+/*
 #define MAYBE_SEMANTICS_PRED    0
 #define LAST_RECV_FRAG_PRED     1
-*/ 
-/*  
+*/
+/*
  * The predicate routine prototypes.
  */
-INTERNAL unsigned8 maybe_semantics_pred_rtn _DCE_PROTOTYPE_ ((
-        pointer_t /*spc_struct*/, 
+INTERNAL unsigned8 maybe_semantics_pred_rtn (
+        pointer_t /*spc_struct*/,
         pointer_t /*event_param*/
-    )) ATTRIBUTE_UNUSED;
-INTERNAL unsigned8 last_recv_frag_pred_rtn _DCE_PROTOTYPE_ ((
-        pointer_t /*spc_struct*/, 
+    ) ATTRIBUTE_UNUSED;
+INTERNAL unsigned8 last_recv_frag_pred_rtn (
+        pointer_t /*spc_struct*/,
         pointer_t /*event_param*/
-    )) ATTRIBUTE_UNUSED;
+    ) ATTRIBUTE_UNUSED;
 
 
 /***********************************************************************/
@@ -122,7 +123,7 @@ INTERNAL unsigned8 last_recv_frag_pred_rtn _DCE_PROTOTYPE_ ((
 
 /***********************************************************************/
 
-/*  
+/*
  * The actions.
  *
  * The QueueAlertTimeout action routine in the NCA CN arch spec
@@ -147,51 +148,51 @@ INTERNAL unsigned8 last_recv_frag_pred_rtn _DCE_PROTOTYPE_ ((
 #define SEND_LAST_FRAG          7
 #define PROTOCOL_ERROR          8
 
-/*  
+/*
  * The Action routine prototypes.
  */
-INTERNAL unsigned32     transmit_req_action_rtn _DCE_PROTOTYPE_ (( 
-        pointer_t /*spc_struct*/, 
+INTERNAL unsigned32     transmit_req_action_rtn (
+        pointer_t /*spc_struct*/,
         pointer_t /*event_param*/,
         pointer_t /*sm*/
-    ));
-INTERNAL unsigned32     handle_recv_frag_action_rtn _DCE_PROTOTYPE_ (( 
-        pointer_t /*spc_struct*/, 
+    );
+INTERNAL unsigned32     handle_recv_frag_action_rtn (
+        pointer_t /*spc_struct*/,
         pointer_t /*event_param*/,
         pointer_t /*sm*/
-    ));
-INTERNAL unsigned32     raise_fault_action_rtn _DCE_PROTOTYPE_ ((
-        pointer_t /*spc_struct*/, 
+    );
+INTERNAL unsigned32     raise_fault_action_rtn (
+        pointer_t /*spc_struct*/,
         pointer_t /*event_param*/,
         pointer_t /*sm*/
-    ));
-INTERNAL unsigned32     forward_alert_action_rtn _DCE_PROTOTYPE_ ((  
-        pointer_t /*spc_struct*/, 
+    );
+INTERNAL unsigned32     forward_alert_action_rtn (
+        pointer_t /*spc_struct*/,
         pointer_t /*event_param*/,
         pointer_t /*sm*/
-    ));
-INTERNAL unsigned32     allocate_assoc_action_rtn _DCE_PROTOTYPE_ (( 
-        pointer_t /*spc_struct*/, 
+    );
+INTERNAL unsigned32     allocate_assoc_action_rtn (
+        pointer_t /*spc_struct*/,
         pointer_t /*event_param*/,
         pointer_t /*sm*/
-    ));
-INTERNAL unsigned32     abort_send_action_rtn _DCE_PROTOTYPE_ ((
-        pointer_t /*spc_struct*/, 
+    );
+INTERNAL unsigned32     abort_send_action_rtn (
+        pointer_t /*spc_struct*/,
         pointer_t /*event_param*/,
         pointer_t /*sm*/
-    ));
-INTERNAL unsigned32     abort_recv_action_rtn _DCE_PROTOTYPE_ ((
-        pointer_t /*spc_struct*/, 
+    );
+INTERNAL unsigned32     abort_recv_action_rtn (
+        pointer_t /*spc_struct*/,
         pointer_t /*event_param*/,
         pointer_t /*sm*/
-    ));
-INTERNAL unsigned32     send_last_frag_action_rtn _DCE_PROTOTYPE_ (( 
-        pointer_t /*spc_struct*/, 
+    );
+INTERNAL unsigned32     send_last_frag_action_rtn (
+        pointer_t /*spc_struct*/,
         pointer_t /*event_param*/,
         pointer_t /*sm*/
-    ));
+    );
 
-/*  
+/*
  * The action table itself.
  */
 GLOBAL rpc_cn_sm_action_fn_t  rpc_g_cn_client_call_action_tbl [] =
@@ -204,7 +205,7 @@ GLOBAL rpc_cn_sm_action_fn_t  rpc_g_cn_client_call_action_tbl [] =
     abort_send_action_rtn,
     abort_recv_action_rtn,
     send_last_frag_action_rtn,
-    rpc__cn_call_sm_protocol_error 
+    rpc__cn_call_sm_protocol_error
 };
 
 /***********************************************************************/
@@ -350,7 +351,6 @@ INTERNAL rpc_cn_sm_state_tbl_entry_t call_failed_state =
         ILLEGAL_TRANSITION                  /* event 11 */
     };
 
-
 GLOBAL rpc_cn_sm_state_entry_p_t rpc_g_cn_client_call_sm [] =
 {
     init_state,                     /* state 0 - init */
@@ -382,7 +382,7 @@ GLOBAL rpc_cn_sm_state_entry_p_t rpc_g_cn_client_call_sm [] =
 **  SCOPE:              INTERNAL
 **
 **  DESCRIPTION:
-**      
+**
 **  Predicate routine invoked from the Call Active State.
 **
 **  INPUTS:
@@ -412,17 +412,11 @@ GLOBAL rpc_cn_sm_state_entry_p_t rpc_g_cn_client_call_sm [] =
 **--
 **/
 
-INTERNAL unsigned8 maybe_semantics_pred_rtn 
-#ifdef _DCE_PROTO_
+INTERNAL unsigned8 maybe_semantics_pred_rtn
 (
   pointer_t       spc_struct,
   pointer_t       event_param ATTRIBUTE_UNUSED
 )
-#else
-(spc_struct, event_param)
-pointer_t       spc_struct;
-pointer_t       event_param;
-#endif
 {
     rpc_cn_packet_p_t   header_p;
 
@@ -449,12 +443,12 @@ pointer_t       event_param;
 /*
 **++
 **
-**  MACRO NAME:		MAYBE_SEMANTICS_PRED        
+**  MACRO NAME:		MAYBE_SEMANTICS_PRED
 **
 **  SCOPE:              INTERNAL
 **
 **  DESCRIPTION:
-**      
+**
 **  This is a macro version of maybe_semantics_pred_rtn, introduced  for
 **  performance reasons.  The macro lets us avoid overhead associated with
 **  calling the predicate routine from within the action routine.
@@ -476,13 +470,13 @@ pointer_t       event_param;
 **			status.  Status' scope includes the routine
 **			calling the macro.  Check status in the calling
 **			routine to determine next state and in cases,
-**			flow through the action routine. 
-** 
+**			flow through the action routine.
+**
 **  INPUTS/OUTPUTS:     none
 **
-**  OUTPUTS:            
+**  OUTPUTS:
 **
-**	status		See explanation above.  
+**	status		See explanation above.
 **
 **  IMPLICIT INPUTS:    none
 **
@@ -510,7 +504,6 @@ pointer_t       event_param;
     }\
 }
 
-
 
 /*
 **++
@@ -520,20 +513,20 @@ pointer_t       event_param;
 **  SCOPE:              INTERNAL
 **
 **  DESCRIPTION:
-**      
+**
 **  Predicate routine invoked from the Call Response state when an
 **  RPCConf event occurs.
 **
 **  INPUTS:
 **
-**      spc_struct      The callrep.  This is passed as the 
+**      spc_struct      The callrep.  This is passed as the
 **                      special structure which is passed to the
 **                      state machine event evaluation routine.
 **                      This argument is ignored.
 **
 **      event_param     The received packet contained in a fragment
-**                      buffer.  This is passed in as the special 
-**                      event related parameter by the state machine 
+**                      buffer.  This is passed in as the special
+**                      event related parameter by the state machine
 **                      event evaluation routine.
 **
 **  INPUTS/OUTPUTS:     none
@@ -552,18 +545,11 @@ pointer_t       event_param;
 **--
 **/
 
-
-INTERNAL unsigned8 last_recv_frag_pred_rtn 
-#ifdef _DCE_PROTO_
+INTERNAL unsigned8 last_recv_frag_pred_rtn
 (
   pointer_t       spc_struct,
   pointer_t       event_param
 )
-#else
-(spc_struct, event_param)
-pointer_t       spc_struct;
-pointer_t       event_param;
-#endif
 {
     rpc_cn_call_rep_p_t     call_rep;
     rpc_cn_fragbuf_p_t      fragbuf;
@@ -573,8 +559,8 @@ pointer_t       event_param;
     call_rep = (rpc_cn_call_rep_p_t) spc_struct;
     fragbuf = (rpc_cn_fragbuf_p_t) event_param;
 
-    /* 
-     * The [unpacked] packet header starts off in the header_overhead 
+    /*
+     * The [unpacked] packet header starts off in the header_overhead
      * area.
      */
     header_p = (rpc_cn_packet_p_t) fragbuf->data_p;
@@ -596,7 +582,6 @@ pointer_t       event_param;
  */
 /***********************************************************************/
 
-
 /*
 **++
 **
@@ -605,7 +590,7 @@ pointer_t       event_param;
 **  SCOPE:              INTERNAL
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to allocate an association from the current
 **  association group.
 **
@@ -619,7 +604,7 @@ pointer_t       event_param;
 **                      special event related parameter which was
 **                      passed to the state machine evaluation routine.
 **
-**  INPUTS/OUTPUTS: 
+**  INPUTS/OUTPUTS:
 **
 **	sm              The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -642,43 +627,34 @@ pointer_t       event_param;
 **
 **--
 **/
-INTERNAL unsigned32     allocate_assoc_action_rtn 
-#ifdef _DCE_PROTO_
+INTERNAL unsigned32     allocate_assoc_action_rtn
 (
   pointer_t       spc_struct,
   pointer_t       event_param,
   pointer_t       sm
 )
-#else
-(spc_struct, event_param, sm)
-
-pointer_t       spc_struct;
-pointer_t       event_param;
-pointer_t       sm;
-
-#endif
 {
     rpc_cn_assoc_p_t        assoc_p ATTRIBUTE_UNUSED;
     rpc_cn_call_rep_p_t     call_rep_p;
     rpc_cn_sm_event_entry_t event_entry;
     unsigned32              status;
     rpc_cn_sm_ctlblk_t 	    *sm_p;
- 
+
     RPC_CN_DBG_RTN_PRINTF(CLIENT allocate_assoc_action_rtn);
 
     call_rep_p = (rpc_cn_call_rep_p_t) spc_struct;
 
-    /* 
+    /*
      * Allocate the association.  Pass in the binding rep,
      * and interface spec rep and get back an association, it
      * negotiated transfer syntax and its context id.
      */
-    if ((call_rep_p->assoc = rpc__cn_assoc_request 
+    if ((call_rep_p->assoc = rpc__cn_assoc_request
          (call_rep_p,
           (rpc_cn_binding_rep_t *) call_rep_p->binding_rep,
-          (rpc_if_rep_t *) event_param, 
+          (rpc_if_rep_t *) event_param,
           &call_rep_p->transfer_syntax,
-          &call_rep_p->context_id, 
+          &call_rep_p->context_id,
           &call_rep_p->sec,
           &status)) != NULL)
     {
@@ -692,7 +668,7 @@ pointer_t       sm;
         event_entry.event_id = RPC_C_CALL_ALLOC_ASSOC_NAK;
         event_entry.event_param = (pointer_t) NULL;
 
-        /* 
+        /*
          * We will return the status returned by assoc_request.
          * This status will be returned by the eval routine since
          * we will invoke no action routine when we transtion to
@@ -700,14 +676,14 @@ pointer_t       sm;
          */
     }
 
-    /* 
+    /*
      * Insert the new event on the event queue for our state
      * machine.
      */
     rpc__cn_sm_insert_event (&event_entry, &(call_rep_p->call_state));
-    sm_p = (rpc_cn_sm_ctlblk_t *)sm; 
+    sm_p = (rpc_cn_sm_ctlblk_t *)sm;
     sm_p->cur_state = RPC_C_CLIENT_CALL_ASSOC_ALLOC_WAIT;
-    return (status); 
+    return (status);
 }
 
 
@@ -719,7 +695,7 @@ pointer_t       sm;
 **  SCOPE:              INTERNAL
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to send the call request PDU(s) to the server.
 **
 **  INPUTS:
@@ -733,7 +709,7 @@ pointer_t       sm;
 **                      parameter passed to the state machine event
 **                      evaluator.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **	sm              The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -754,21 +730,12 @@ pointer_t       sm;
 **--
 **/
 
-INTERNAL unsigned32     transmit_req_action_rtn 
-#ifdef _DCE_PROTO_
+INTERNAL unsigned32     transmit_req_action_rtn
 (
   pointer_t       spc_struct,
   pointer_t       event_param,
   pointer_t       sm
 )
-#else
-(spc_struct, event_param, sm)
-
-pointer_t       spc_struct;
-pointer_t       event_param;
-pointer_t       sm;
-
-#endif
 {
 
     rpc_cn_call_rep_p_t     call_rep;
@@ -778,7 +745,7 @@ pointer_t       sm;
     unsigned32              i;
     unsigned32              status;
     boolean                 found_reusable;
-    rpc_cn_sm_ctlblk_t	    *sm_p; 
+    rpc_cn_sm_ctlblk_t	    *sm_p;
 
     RPC_CN_DBG_RTN_PRINTF(CLIENT transmit_req_action_rtn);
 
@@ -786,12 +753,12 @@ pointer_t       sm;
 
     call_rep = (rpc_cn_call_rep_p_t) spc_struct;
     stub_data_p = (rpc_iovector_p_t) event_param;
-    sm_p = (rpc_cn_sm_ctlblk_t *)sm; 
-    
+    sm_p = (rpc_cn_sm_ctlblk_t *)sm;
+
     /*
      * We set call_executed to true at this point.
      * This is somewhat conservative; but it is correct.
-     * We will reset call_executed if we get back a 
+     * We will reset call_executed if we get back a
      * fault_dne.
      */
     call_rep->call_executed = true;
@@ -826,7 +793,7 @@ pointer_t       sm;
                     (iov_elt_p->buff_dealloc) (iov_elt_p->buff_addr);
                 }
             }
-            else 
+            else
             {
                 /*
                  * If the number of bytes < our bcopy_lim,
@@ -843,7 +810,7 @@ pointer_t       sm;
                         (iov_elt_p->buff_dealloc) (iov_elt_p->buff_addr);
                     }
                 }
-                else 
+                else
                 {
                     /*
                      * If the buffer must be made immediately reusable, copy
@@ -912,7 +879,7 @@ done:
 **  SCOPE:              INTERNAL
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to send the last call request fragment to the server.
 **
 **  INPUTS:
@@ -928,7 +895,7 @@ done:
 **                      This parameter can be null for a transceive
 **                      with no input arguments.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **	sm              The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -949,46 +916,37 @@ done:
 **--
 **/
 
-INTERNAL unsigned32     send_last_frag_action_rtn 
-#ifdef _DCE_PROTO_
+INTERNAL unsigned32     send_last_frag_action_rtn
 (
   pointer_t       spc_struct,
   pointer_t       event_param,
   pointer_t       sm
 )
-#else
-(spc_struct, event_param, sm)
-
-pointer_t       spc_struct;
-pointer_t       event_param;
-pointer_t       sm;
-
-#endif
 {
 
     rpc_cn_call_rep_p_t     call_rep;
     rpc_iovector_p_t        stub_data_p;
     rpc_cn_packet_p_t       header_p;
     unsigned32              status;
-    rpc_cn_sm_ctlblk_t	    *sm_p; 
-    unsigned8		    n_state; 
+    rpc_cn_sm_ctlblk_t	    *sm_p;
+    unsigned8		    n_state;
 
     RPC_CN_DBG_RTN_PRINTF(CLIENT send_last_frag_action_rtn);
 
-    sm_p = (rpc_cn_sm_ctlblk_t *)sm; 
+    sm_p = (rpc_cn_sm_ctlblk_t *)sm;
     status = rpc_s_ok;
     call_rep = (rpc_cn_call_rep_p_t) spc_struct;
     header_p = (rpc_cn_packet_p_t) (RPC_CN_CREP_SEND_HDR (call_rep));
-   
-    /* 
+
+    /*
      * Status contains the result of the macro.
-     */  
+     */
     MAYBE_SEMANTICS_PRED(spc_struct, event_param, status);
-    if (status == 0)  /* MaybeSemantics is false */  
+    if (status == 0)  /* MaybeSemantics is false */
     {
-   	n_state = RPC_C_CLIENT_CALL_RESPONSE;  
+        n_state = RPC_C_CLIENT_CALL_RESPONSE;
     }
-    else  /* MaybeSemantics is true */ 
+    else  /* MaybeSemantics is true */
     {
         n_state = RPC_C_CLIENT_CALL_CALL_COMPLETED;
     }
@@ -1004,19 +962,19 @@ pointer_t       sm;
      */
     if ((stub_data_p != NULL) && (stub_data_p->num_elt > 0))
     {
-   	/* 
+    /*
 	 * Note that since we are calling action routines from
 	 * within action routines, we need to update state as
 	 * a final step here.  Otherwise, the action routines
 	 * would update sm->cur_state inappropriately for
 	 * the calling routine.
-	 */   
-        status = 
+	 */
+        status =
 		transmit_req_action_rtn (spc_struct, event_param, sm);
         if (status != rpc_s_ok)
         {
-		sm_p->cur_state = n_state; 
-		return (status);    
+		sm_p->cur_state = n_state;
+		return (status);
         }
     }
 
@@ -1038,8 +996,8 @@ pointer_t       sm;
         RPC_CN_CREP_IOVLEN (call_rep) = 1;
         if (status != rpc_s_ok)
         {
-		sm_p->cur_state = n_state; 
-		return (status);    
+		sm_p->cur_state = n_state;
+		return (status);
         }
     }
     else
@@ -1061,8 +1019,8 @@ pointer_t       sm;
 	    "send_last_frag_action_rtn" ));
     }
 
-    sm_p->cur_state = n_state; 
-    return (rpc_s_ok);    
+    sm_p->cur_state = n_state;
+    return (rpc_s_ok);
 
 }
 
@@ -1075,7 +1033,7 @@ pointer_t       sm;
 **  SCOPE:              INTERNAL
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to make the (received) fragment data available
 **  to the stub for unmarshalling.
 **
@@ -1086,11 +1044,11 @@ pointer_t       sm;
 **                      state machine event evaluation routine.
 **
 **      event_param     The fragment buffer containing the response
-**                      message.  This is passed in as the special 
+**                      message.  This is passed in as the special
 **                      event related parameter which was passed to
 **                      the state machine event evaluation routine.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **	sm              The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -1111,69 +1069,59 @@ pointer_t       sm;
 **
 **--
 **/
-INTERNAL unsigned32     handle_recv_frag_action_rtn 
-#ifdef _DCE_PROTO_
+INTERNAL unsigned32     handle_recv_frag_action_rtn
 (
   pointer_t       spc_struct,
   pointer_t       event_param,
   pointer_t       sm
 )
-#else
-(spc_struct, event_param, sm)
-
-pointer_t       spc_struct;
-pointer_t       event_param;
-pointer_t       sm;
-
-#endif
 {
     unsigned32              status ATTRIBUTE_UNUSED;
     rpc_cn_fragbuf_p_t      fragbuf;
     rpc_cn_packet_p_t       header_p;
     rpc_cn_call_rep_p_t     call_rep;
     rpc_cn_sm_ctlblk_t	    *sm_p;
-    unsigned8		    n_state = 0;  
-    
+    unsigned8		    n_state = 0;
+
     RPC_CN_DBG_RTN_PRINTF(CLIENT handle_recv_frag_action_rtn);
-    
+
     call_rep = (rpc_cn_call_rep_p_t) spc_struct;
     fragbuf = (rpc_cn_fragbuf_p_t) event_param;
-    sm_p = (rpc_cn_sm_ctlblk_t *)sm; 
+    sm_p = (rpc_cn_sm_ctlblk_t *)sm;
     header_p = (rpc_cn_packet_p_t) fragbuf->data_p;
 
     /*
-     * We've got a proper response.  Adjust data_size to describe 
+     * We've got a proper response.  Adjust data_size to describe
      * the stub data.
      * Note that we do not need to adjust data_p since that will
-     * be done by rpc__cn_call_receive. 
+     * be done by rpc__cn_call_receive.
      */
     fragbuf->data_size = RPC_CN_PKT_FRAG_LEN (header_p) -
                          RPC_CN_PKT_AUTH_TLR_LEN (header_p) -
                          RPC_CN_PKT_SIZEOF_RESP_HDR;
-
 
     /*
      * Determine whether this is the last response fragment.
      */
     if (RPC_CN_PKT_FLAGS (header_p) & RPC_C_CN_FLAGS_LAST_FRAG)
     {
-        
+
         /*
-         * The predicate associated with this routine, 
+         * The predicate associated with this routine,
 	 * last_recv_frag_pred_rtn, checks the same
 	 * flags checked above in the if statement.
 	 * If RPC_CN_PKT_FLAGS & rpc_c_cn_flags_lastfrag
          * are 0, then set state to rpc_c_client_call
 	 * response, else set state to rpc_c_client_call_
          * call_complete.
-         */ 
+         */
         n_state = RPC_C_CLIENT_CALL_CALL_COMPLETED;
         /*
          * If there is a timer running stop it since we've heard from
          * the server.
          */
         rpc__cn_call_stop_cancel_timer (call_rep);
-        
+
         /*
          * Record whether the server finished with a pending alert. Note
          * that the alert count in the packet does not include the
@@ -1203,7 +1151,7 @@ pointer_t       sm;
             else
             {
                 RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                ("(handle_recv_frag_action_rtn) call_rep->%p number alerts forwarded (%d) > alert count in header (%d)\n", 
+                ("(handle_recv_frag_action_rtn) call_rep->%p number alerts forwarded (%d) > alert count in header (%d)\n",
                  call_rep,
                  call_rep->u.client.cancel.server_count,
                  RPC_CN_PKT_ALERT_COUNT (header_p)));
@@ -1213,8 +1161,8 @@ pointer_t       sm;
     }
     else
     {
-	n_state = RPC_C_CLIENT_CALL_RESPONSE; 
-    } 
+	n_state = RPC_C_CLIENT_CALL_RESPONSE;
+    }
     /*
      * We are currently executing in the receiver thread.
      *
@@ -1241,11 +1189,10 @@ pointer_t       sm;
      * determining when to check for pending cancels.
      */
     call_rep->num_pkts++;
-    
+
     sm_p->cur_state = n_state;
     return (rpc_s_ok);
 }
-
 
 
 /*
@@ -1256,9 +1203,9 @@ pointer_t       sm;
 **  SCOPE:              INTERNAL
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to deallocate the current association and raise
-**  fault.  Operationally, this will store the address of the 
+**  fault.  Operationally, this will store the address of the
 **  fragment buffer in the callrep (for later retrieval via the
 **  rpc__receive_fault).
 **
@@ -1270,8 +1217,8 @@ pointer_t       sm;
 **
 **      event_param     The fault packet.  This is passed in as the
 **                      event specific structure.
-** 
-**  INPUTS/OUTPUTS:     
+**
+**  INPUTS/OUTPUTS:
 **
 **	sm              The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -1291,27 +1238,18 @@ pointer_t       sm;
 **
 **--
 **/
-INTERNAL unsigned32     raise_fault_action_rtn 
-#ifdef _DCE_PROTO_
+INTERNAL unsigned32     raise_fault_action_rtn
 (
   pointer_t       spc_struct,
   pointer_t       event_param,
   pointer_t       sm
 )
-#else
-(spc_struct, event_param, sm)
-
-pointer_t       spc_struct;
-pointer_t       event_param;
-pointer_t       sm;
-
-#endif
 {
     unsigned32              status ATTRIBUTE_UNUSED;
     rpc_cn_fragbuf_p_t      fragbuf;
     rpc_cn_packet_p_t       header_p;
     rpc_cn_call_rep_p_t     call_rep;
-    rpc_cn_sm_ctlblk_t	    *sm_p; 
+    rpc_cn_sm_ctlblk_t	    *sm_p;
 
     RPC_CN_DBG_RTN_PRINTF(CLIENT raise_fault_action_rtn);
 
@@ -1321,7 +1259,7 @@ pointer_t       sm;
     sm_p = (rpc_cn_sm_ctlblk_t *)sm;
 
     /*
-     * We've got a proper response.  Adjust data_size to describe 
+     * We've got a proper response.  Adjust data_size to describe
      * the stub data.
      * Note that we do not need to adjust data_p since that will
      * be done by rpc__cn_call_receive.
@@ -1400,17 +1338,17 @@ pointer_t       sm;
         (* fragbuf->fragbuf_dealloc) (fragbuf);
     }
 
-    /* 
+    /*
      * There is no predicate associated with this routine but the
      * new value of sm->cur_state is determined by the value of
-     * sm->cur_event coming into the routine.  Note that 
+     * sm->cur_event coming into the routine.  Note that
      * 2+statebase is event fault_dns;  3+statebase is event
      * fault.
-     */  
-    if (sm_p->cur_event == (2 + RPC_C_CN_STATEBASE )) 	
+     */
+    if (sm_p->cur_event == (2 + RPC_C_CN_STATEBASE ))
     	sm_p->cur_state =  RPC_C_CLIENT_CALL_CFDNE;
-    else if (sm_p->cur_event == (3 + RPC_C_CN_STATEBASE ))	
-	sm_p->cur_state = RPC_C_CLIENT_CALL_CALL_FAILED; 
+    else if (sm_p->cur_event == (3 + RPC_C_CN_STATEBASE ))
+	sm_p->cur_state = RPC_C_CLIENT_CALL_CALL_FAILED;
     return (rpc_s_ok);
 }
 
@@ -1423,7 +1361,7 @@ pointer_t       sm;
 **  SCOPE:              INTERNAL
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to forward an alert. The first alert that is
 **  forwarded will start the alert timer. This timer will run until
 **  either the call is completed or a reponse is received from the
@@ -1440,12 +1378,12 @@ pointer_t       sm;
 **                      the special structure which is passed to the
 **                      state machine event evaluation routine.
 **
-**      event_param     The error_status to return. This is passed in 
-**                      as the special event related parameter which 
-**                      was passed to the state machine event 
+**      event_param     The error_status to return. This is passed in
+**                      as the special event related parameter which
+**                      was passed to the state machine event
 **                      evaluation routine.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **	sm              The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -1465,21 +1403,12 @@ pointer_t       sm;
 **
 **--
 **/
-INTERNAL unsigned32     forward_alert_action_rtn 
-#ifdef _DCE_PROTO_
+INTERNAL unsigned32     forward_alert_action_rtn
 (
   pointer_t       spc_struct,
   pointer_t       event_param ATTRIBUTE_UNUSED,
   pointer_t       sm
 )
-#else
-(spc_struct, event_param, sm)
-
-pointer_t       spc_struct;
-pointer_t       event_param;
-pointer_t       sm;
-
-#endif
 {
     rpc_cn_call_rep_p_t         call_rep;
     rpc_cn_packet_p_t           header_p;
@@ -1490,12 +1419,12 @@ pointer_t       sm;
     } pdu;
     unsigned32                  status;
     unsigned8                   prev_ptype;
-    rpc_cn_sm_ctlblk_t		*sm_p; 
+    rpc_cn_sm_ctlblk_t		*sm_p;
 
     RPC_CN_DBG_RTN_PRINTF(CLIENT forward_alert_action_rtn);
 
     call_rep = (rpc_cn_call_rep_p_t) spc_struct;
-    sm_p = (rpc_cn_sm_ctlblk_t *)sm; 
+    sm_p = (rpc_cn_sm_ctlblk_t *)sm;
     header_p = (rpc_cn_packet_p_t) RPC_CN_CREP_SEND_HDR (call_rep);
 
     /*
@@ -1518,26 +1447,26 @@ pointer_t       sm;
     }
     else
     {
-        RPC_CN_PKT_FRAG_LEN (header_p) = 
-            RPC_CN_PKT_SIZEOF_ALERT_HDR + 
-            call_rep->prot_tlr->data_size - 
+        RPC_CN_PKT_FRAG_LEN (header_p) =
+            RPC_CN_PKT_SIZEOF_ALERT_HDR +
+            call_rep->prot_tlr->data_size -
             RPC_CN_CREP_SIZEOF_TLR_PAD (call_rep);
         pdu.iov.num_elt = 2;
         pdu.elt_1.buff_dealloc = NULL;
         pdu.elt_1.data_addr = (byte_p_t) call_rep->prot_tlr->data_p;
-        pdu.elt_1.data_len = 
-            call_rep->prot_tlr->data_size - 
+        pdu.elt_1.data_len =
+            call_rep->prot_tlr->data_size -
             RPC_CN_CREP_SIZEOF_TLR_PAD (call_rep);
     }
-    
-    /* 
+
+    /*
      * Send the packet over.
      */
     pdu.iov.elt[0].buff_dealloc = NULL;
     pdu.iov.elt[0].data_addr = (byte_p_t) header_p;
     pdu.iov.elt[0].data_len = RPC_CN_PKT_SIZEOF_ALERT_HDR;
     rpc__cn_assoc_send_frag (call_rep->assoc, &pdu.iov, call_rep->sec, &status);
-    
+
     /*
      * Restore the previous packet type.
      */
@@ -1548,25 +1477,25 @@ pointer_t       sm;
      */
     call_rep->u.client.cancel.server_count++;
     RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                ("(forward_alert_action_rtn) call_rep->%p forwarding cancel total so far = %d\n", 
+                ("(forward_alert_action_rtn) call_rep->%p forwarding cancel total so far = %d\n",
                  call_rep,
                  call_rep->u.client.cancel.server_count));
 
-    /* 
+    /*
      * There is no predicate associated with this routine but the
      * new value of sm->cur_state is determined by the value of
      * sm->cur_state  coming into the routine.  In otherwords,
      * this action routine is called from 2 different states
      * and the value of that state determines the new value
-     * for sm->cur_state.  Note that 3+statebase is call_request;  
+     * for sm->cur_state.  Note that 3+statebase is call_request;
      * 4+statebase is call_response.  rpc_c_cn_statebase is
      * set to 100 to distinguish it from action routine
-     * indexes used in the rpc__cn_sm_event_eval() routine. 
-     */  
-    if (sm_p->cur_state == (3 + RPC_C_CN_STATEBASE))	
+     * indexes used in the rpc__cn_sm_event_eval() routine.
+     */
+    if (sm_p->cur_state == (3 + RPC_C_CN_STATEBASE))
 	sm_p->cur_state = RPC_C_CLIENT_CALL_REQUEST;
-    else if (sm_p->cur_state == (4 + RPC_C_CN_STATEBASE))	
-	sm_p->cur_state = RPC_C_CLIENT_CALL_RESPONSE; 
+    else if (sm_p->cur_state == (4 + RPC_C_CN_STATEBASE))
+	sm_p->cur_state = RPC_C_CLIENT_CALL_RESPONSE;
     return (status);
 }
 
@@ -1579,9 +1508,9 @@ pointer_t       sm;
 **  SCOPE:              INTERNAL
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to abort a send.
-**  It sends an orphaned message, and then raises a fault by 
+**  It sends an orphaned message, and then raises a fault by
 **  returning the error status back to the caller.
 **
 **  INPUTS:
@@ -1590,12 +1519,12 @@ pointer_t       sm;
 **                      the special structure which is passed to the
 **                      state machine event evaluation routine.
 **
-**      event_param     This parameter is ignored.  It is passed in 
-**                      as the special event related parameter which 
-**                      was passed to the state machine event 
+**      event_param     This parameter is ignored.  It is passed in
+**                      as the special event related parameter which
+**                      was passed to the state machine event
 **                      evaluation routine.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **	sm              The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -1615,21 +1544,12 @@ pointer_t       sm;
 **
 **--
 **/
-INTERNAL unsigned32     abort_send_action_rtn 
-#ifdef _DCE_PROTO_
+INTERNAL unsigned32     abort_send_action_rtn
 (
   pointer_t       spc_struct,
   pointer_t       event_param ATTRIBUTE_UNUSED,
   pointer_t       sm
 )
-#else
-(spc_struct, event_param, sm)
-
-pointer_t       spc_struct;
-pointer_t       event_param;
-pointer_t       sm;
-
-#endif
 {
     rpc_cn_call_rep_p_t         call_rep;
     rpc_cn_packet_p_t           header_p;
@@ -1655,7 +1575,7 @@ pointer_t       sm;
     RPC_CN_PKT_PTYPE (header_p) = RPC_C_CN_PKT_ORPHANED;
     RPC_CN_PKT_FLAGS (header_p) |= RPC_C_CN_FLAGS_LAST_FRAG;
     RPC_DBG_PRINTF (rpc_e_dbg_orphan, RPC_C_CN_DBG_ORPHAN,
-                    ("(abort_send_action_rtn) call_rep->%p sending orphan packet ... call id = %x\n", 
+                    ("(abort_send_action_rtn) call_rep->%p sending orphan packet ... call id = %x\n",
                      call_rep,
                      RPC_CN_PKT_CALL_ID (header_p)));
 
@@ -1672,24 +1592,24 @@ pointer_t       sm;
     {
         RPC_CN_PKT_FRAG_LEN (header_p) =
             RPC_CN_PKT_SIZEOF_ORPHANED_HDR +
-            call_rep->prot_tlr->data_size - 
+            call_rep->prot_tlr->data_size -
             RPC_CN_CREP_SIZEOF_TLR_PAD (call_rep);
         RPC_CN_CREP_IOVLEN (call_rep) = 2;
         RPC_CN_CREP_IOV (call_rep)[1].data_addr = (byte_p_t) call_rep->prot_tlr->data_p;
         RPC_CN_CREP_IOV (call_rep)[1].data_len =
-            call_rep->prot_tlr->data_size - 
+            call_rep->prot_tlr->data_size -
             RPC_CN_CREP_SIZEOF_TLR_PAD (call_rep);
         RPC_CN_CREP_IOV (call_rep)[1].buff_dealloc = NULL;
     }
 
-    /* 
+    /*
      * Send the packet over.  Note that the returned status is
      * ignored.
      */
     RPC_CN_CREP_IOV (call_rep)[0].data_addr = (byte_p_t) header_p;
     RPC_CN_CREP_IOV (call_rep)[0].data_len = RPC_CN_PKT_SIZEOF_ORPHANED_HDR;
-    rpc__cn_assoc_send_frag (call_rep->assoc, 
-                             &(call_rep->buffered_output.iov), 
+    rpc__cn_assoc_send_frag (call_rep->assoc,
+                             &(call_rep->buffered_output.iov),
                              call_rep->sec,
                              &status);
     /*
@@ -1708,7 +1628,7 @@ pointer_t       sm;
 **  SCOPE:              INTERNAL
 **
 **  DESCRIPTION:
-**      
+**
 **  Action routine to abort a receive.
 **
 **  INPUTS:
@@ -1719,10 +1639,10 @@ pointer_t       sm;
 **
 **      event_param     The fault data.
 **                      This is passed in as the special event related
-**                      parameter which was passed to the state machine 
+**                      parameter which was passed to the state machine
 **                      event evaluation routine.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **	sm              The control block from the event evaluation
 **                      routine.  Input is the current state and
@@ -1743,32 +1663,23 @@ pointer_t       sm;
 **
 **--
 **/
-INTERNAL unsigned32     abort_recv_action_rtn 
-#ifdef _DCE_PROTO_
+INTERNAL unsigned32     abort_recv_action_rtn
 (
   pointer_t       spc_struct,
   pointer_t       event_param,
   pointer_t       sm
 )
-#else
-(spc_struct, event_param, sm)
-
-pointer_t       spc_struct;
-pointer_t       event_param;
-pointer_t       sm;
-
-#endif
 {
     unsigned32      status;
     rpc_cn_sm_ctlblk_t *sm_p;
 
     RPC_CN_DBG_RTN_PRINTF(CLIENT abort_recv_action_rtn);
-    sm_p = (rpc_cn_sm_ctlblk_t *)sm; 
-    /* 
+    sm_p = (rpc_cn_sm_ctlblk_t *)sm;
+    /*
      * Note that we are getting state from raise_fault_action_rtn().  Also
      * note that it does not seem that we are actually using abort_recv_
      * action_rtn in the state tables.
-     *   
+     *
      * Note, we don't need to chase down our receiver thread.
      * We will shortly deallocate the association.  The receiver
      * thread will automatically discard fragments for non-existent
@@ -1783,9 +1694,8 @@ pointer_t       sm;
      */
     rpc__cn_assoc_abort (((rpc_cn_call_rep_p_t) spc_struct)->assoc, &status);
 
-    /* 
+    /*
      * Raise the fault.
      */
     return (raise_fault_action_rtn (spc_struct, event_param, sm ));
 }
-

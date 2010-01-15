@@ -3,7 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2009 Apple Inc. All rights reserved.
+ * Portions Copyright (c) 2009-2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -300,18 +300,18 @@ static boolean got_address = FALSE;
  * Startup initialization routine for UUID module.
  */
 
-static void init _DCE_PROTOTYPE_ (( unsigned32 * /*st*/ ));
+static void init ( unsigned32 * /*st*/ );
 
 /*
  * T R U E _ R A N D O M _ I N I T
  */
 
-static void true_random_init _DCE_PROTOTYPE_ ((void));
+static void true_random_init (void);
 
 /*
  * T R U E _ R A N D O M
  */
-static unsigned16 true_random _DCE_PROTOTYPE_ ((void));
+static unsigned16 true_random (void);
 
 /*
  * N E W _ C L O C K _ S E Q
@@ -322,24 +322,24 @@ static unsigned16 true_random _DCE_PROTOTYPE_ ((void));
  *       I've put it in here as 16-bits since there isn't a
  *       14-bit unsigned integer type (yet)
  */
-static void new_clock_seq _DCE_PROTOTYPE_(( unsigned16 * /*clock_seq*/));
+static void new_clock_seq ( unsigned16 * /*clock_seq*/);
 
 /*
  * S T R U C T U R E _ I S _ K N O W N
  *
  * Does the UUID have the known standard structure layout?
  */
-boolean structure_is_known _DCE_PROTOTYPE_(( uuid_p_t /*uuid*/));
+boolean structure_is_known ( uuid_p_t /*uuid*/);
 
 /*
  * T I M E _ C M P
  *
  * Compares two UUID times (64-bit DEC UID UTC values)
  */
-static uuid_compval_t time_cmp _DCE_PROTOTYPE_ ((
+static uuid_compval_t time_cmp (
         uuid_time_p_t        /*time1*/,
         uuid_time_p_t        /*time2*/
-    ));
+    );
 
 /*
  * U U I D _ G E T _ A D D R E S S
@@ -347,10 +347,10 @@ static uuid_compval_t time_cmp _DCE_PROTOTYPE_ ((
  * Get our IEEE 802 address (calls uuid__get_os_address)
  */
 
-void uuid_get_address _DCE_PROTOTYPE_ ((
+void uuid_get_address (
         uuid_address_t      * /*address*/,
         unsigned32          * /*st*/
-    ));
+    );
 
 
 /*****************************************************************************
@@ -461,14 +461,9 @@ static boolean uuid_init_done = FALSE;
 **/
 
 static void init
-#ifdef _DCE_PROTO_
 (
     unsigned32              *status
 )
-#else
-(status)
-unsigned32              *status;
-#endif
 {
 #ifdef CMA_INCLUDE
     /*
@@ -540,16 +535,10 @@ unsigned32              *status;
 **/
 
 void uuid_create
-#ifdef _DCE_PROTO_
 (
     idl_uuid_t                  *uuid,
     unsigned32              *status
 )
-#else
-(uuid, status)
-idl_uuid_t                  *uuid;
-unsigned32              *status;
-#endif
 {
     uuid_address_t          eaddr;      /* our IEEE 802 hardware address */
     boolean32               got_no_time = FALSE;
@@ -677,16 +666,10 @@ unsigned32              *status;
 **/
 
 void uuid_create_nil
-#ifdef _DCE_PROTO_
 (
     idl_uuid_t              *uuid,
     unsigned32          *status
 )
-#else
-(uuid, status)
-idl_uuid_t              *uuid;
-unsigned32          *status;
-#endif
 {
     CODING_ERROR (status);
     UUID_VERIFY_INIT (EmptyArg);
@@ -734,18 +717,11 @@ unsigned32          *status;
 **/
 
 void uuid_to_string
-#ifdef _DCE_PROTO_
 (
     uuid_p_t                uuid,
     unsigned_char_p_t       *uuid_string,
     unsigned32              *status
 )
-#else
-(uuid, uuid_string, status)
-uuid_p_t                uuid;
-unsigned_char_p_t       *uuid_string;
-unsigned32              *status;
-#endif
 {
 
     CODING_ERROR (status);
@@ -834,18 +810,11 @@ unsigned32              *status;
 **/
 
 void uuid_from_string
-#ifdef _DCE_PROTO_
 (
     unsigned_char_p_t       uuid_string,
     idl_uuid_t                  *uuid,
     unsigned32              *status
 )
-#else
-(uuid_string, uuid, status)
-unsigned_char_p_t       uuid_string;
-idl_uuid_t                  *uuid;
-unsigned32              *status;
-#endif
 {
     idl_uuid_t              uuid_new;       /* used for sscanf for new uuid's */
     uuid_old_t          uuid_old;       /* used for sscanf for old uuid's */
@@ -1027,18 +996,11 @@ unsigned32              *status;
 **/
 
 boolean32 uuid_equal
-#ifdef _DCE_PROTO_
 (
     register uuid_p_t                uuid1,
     register uuid_p_t                uuid2,
     register unsigned32              *status
 )
-#else
-(uuid1, uuid2, status)
-register uuid_p_t                uuid1;
-register uuid_p_t                uuid2;
-register unsigned32              *status;
-#endif
 {
     CODING_ERROR (status);
     UUID_VERIFY_INIT (FALSE);
@@ -1107,16 +1069,10 @@ register unsigned32              *status;
 **/
 
 boolean32 uuid_is_nil
-#ifdef _DCE_PROTO_
 (
     uuid_p_t            uuid,
     unsigned32          *status
 )
-#else
-(uuid, status)
-uuid_p_t            uuid;
-unsigned32          *status;
-#endif
 {
     CODING_ERROR (status);
     UUID_VERIFY_INIT (FALSE);
@@ -1191,18 +1147,11 @@ unsigned32          *status;
 **/
 
 signed32 uuid_lexcompare
-#ifdef _DCE_PROTO_
 (
     uuid_p_t                uuid1,
     uuid_p_t                uuid2,
     unsigned32              *status
 )
-#else
-(uuid1, uuid2, status)
-uuid_p_t                uuid1;
-uuid_p_t                uuid2;
-unsigned32              *status;
-#endif
 {
     int                 i;
 
@@ -1345,16 +1294,10 @@ unsigned32              *status;
 **/
 
 unsigned16 uuid_hash
-#ifdef _DCE_PROTO_
 (
     uuid_p_t                uuid,
     unsigned32              *status
 )
-#else
-(uuid, status)
-uuid_p_t                uuid;
-unsigned32              *status;
-#endif
 {
     short               c0, c1;
     short               x, y;
@@ -1455,16 +1398,10 @@ unsigned32              *status;
 **/
 
 static uuid_compval_t time_cmp
-#ifdef _DCE_PROTO_
 (
     uuid_time_p_t           time1,
     uuid_time_p_t           time2
 )
-#else
-(time1, time2)
-uuid_time_p_t           time1;
-uuid_time_p_t           time2;
-#endif
 {
     /*
      * first check the hi parts
@@ -1506,18 +1443,11 @@ uuid_time_p_t           time2;
 **/
 
 void uuid__uemul
-#ifdef _DCE_PROTO_
 (
     unsigned32          u,
     unsigned32          v,
     unsigned64_t        *prodPtr
 )
-#else
-(u, v, prodPtr)
-unsigned32          u;
-unsigned32          v;
-unsigned64_t        *prodPtr;
-#endif
 {
     /*
      * following the notation in Knuth, Vol. 2
@@ -1666,14 +1596,9 @@ static unsigned16 true_random (void)
 **/
 
 static void new_clock_seq
-#ifdef _DCE_PROTO_
 (
     unsigned16              *clkseq
 )
-#else
-(clkseq)
-unsigned16              *clkseq;
-#endif
 {
     /*
      * A clkseq value of 0 indicates that it hasn't been initialized.
@@ -1745,16 +1670,10 @@ unsigned16              *clkseq;
 **/
 
 void uuid_get_address
-#ifdef _DCE_PROTO_
 (
     uuid_address_p_t        addr,
     unsigned32              *status
 )
-#else
-(addr, status)
-uuid_address_p_t        addr;
-unsigned32              *status;
-#endif
 {
     /*
      * just return address we determined previously if we've

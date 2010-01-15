@@ -3,6 +3,7 @@
  * (c) Copyright 1993 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1993 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1993 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -63,16 +64,10 @@ extern AST_cpp_quote_n_t * global_cppquotes_post;
  * Maps a single character into a string suitable for emission
  */
 const char *mapchar
-#ifdef PROTO
 (
     AST_constant_n_t *cp,   /* Constant node with kind == AST_char_const_k */
     boolean warning_flag ATTRIBUTE_UNUSED   /* unused */
 )
-#else
-(cp, warning_flag)
-    AST_constant_n_t *cp;   /* Constant node with kind == AST_char_const_k */
-    boolean warning_flag;   /* unused */
-#endif
 {
     char c = cp->value.char_val;
     static char buf[10];
@@ -99,18 +94,11 @@ const char *mapchar
 }
 
 static void CSPELL_constant_def
-#ifdef PROTO
 (
     FILE *fid,
     AST_constant_n_t *cp,
     const char *cast
 )
-#else
-(fid, cp, cast)
-    FILE *fid;
-    AST_constant_n_t *cp;
-    const char *cast;
-#endif
 {
     char const *s;
 
@@ -163,16 +151,10 @@ static void CSPELL_constant_def
 
 
 static void CSPELL_operation_def
-#ifdef PROTO
 (
     FILE *fid,
     AST_operation_n_t *op
 )
-#else
-(fid, op)
-    FILE *fid;
-    AST_operation_n_t *op;
-#endif
 {
     AST_type_n_t       func_type_node;
 
@@ -187,18 +169,11 @@ static void CSPELL_operation_def
 
 
 void CSPELL_type_def
-#ifdef PROTO
 (
     FILE *fid,
     AST_type_n_t *tp,
     boolean spell_tag
 )
-#else
-(fid, tp, spell_tag)
-    FILE *fid;
-    AST_type_n_t *tp;
-    boolean spell_tag;
-#endif
 {
     fprintf (fid, "typedef ");
     CSPELL_typed_name (fid, tp, tp->name, tp, false, spell_tag, false);
@@ -210,15 +185,15 @@ void CSPELL_type_def
     {
         fprintf (fid, "handle_t ");
         spell_name (fid, tp->name);
-        fprintf (fid, "_bind(\n#ifdef IDL_PROTOTYPES\n");
+        fprintf (fid, "_bind(\n");
         spell_name (fid, tp->name);
-        fprintf (fid, " h\n#endif\n);\n");
+        fprintf (fid, " h\n);\n");
 
         fprintf (fid, "void ");
         spell_name (fid, tp->name);
-        fprintf (fid, "_unbind(\n#ifdef IDL_PROTOTYPES\n");
+        fprintf (fid, "_unbind(\n");
         spell_name (fid, tp->name);
-        fprintf (fid, " uh,\nhandle_t h\n#endif\n);\n");
+        fprintf (fid, " uh,\nhandle_t h\n);\n");
     }
 }
 
@@ -251,16 +226,10 @@ unescape_string(const char* str)
 
 //centeris wfu
 static void CPPQUOTES_exports
-#ifdef PROTO
 (
     FILE *fid,
     AST_cpp_quote_n_t *cpps
 )
-#else
-(fid, cpps)
-    FILE           *fid;
-    AST_cpp_quote_n_t *cpps;
-#endif
 {
     const char* str;
     for (; cpps; cpps = cpps->next) {        
@@ -278,16 +247,10 @@ static void CPPQUOTES_exports
 
 
 static void CSPELL_exports
-#ifdef PROTO
 (
     FILE *fid,
     AST_export_n_t *ep
 )
-#else
-(fid, ep)
-    FILE           *fid;
-    AST_export_n_t *ep;
-#endif
 {
     const char* str;
     for (; ep; ep = ep->next) {
@@ -317,16 +280,10 @@ static void CSPELL_exports
 }
 
 static void CSPELL_epv_field
-#ifdef PROTO
 (
     FILE *fid,
     AST_operation_n_t *op
 )
-#else
-(fid, op)
-    FILE   *fid;
-    AST_operation_n_t *op;
-#endif
 {
     AST_type_n_t       type_node_a, type_node_b;
     AST_pointer_n_t    pointer_node;
@@ -428,7 +385,6 @@ void BE_gen_orpc_defs(FILE * fid, AST_interface_n_t * ifp, enum orpc_class_def_t
 }
 
 static void CSPELL_epv_type_and_var
-#ifdef PROTO
 (
     FILE *fid,
     NAMETABLE_id_t if_name,
@@ -436,14 +392,6 @@ static void CSPELL_epv_type_and_var
     AST_export_n_t *ep,
     boolean declare_cepv
 )
-#else
-(fid, if_name, if_version, ep, declare_cepv)
-    FILE *fid;
-    NAMETABLE_id_t if_name;
-    unsigned long int if_version;
-    AST_export_n_t *ep;
-    boolean declare_cepv;
-#endif
 {
 	AST_operation_n_t *op;
 
@@ -474,18 +422,11 @@ static void CSPELL_epv_type_and_var
 }
 
 static void CSPELL_if_spec_refs
-#ifdef PROTO
 (
     FILE *fid,
     NAMETABLE_id_t if_name,
     unsigned long int if_version
 )
-#else
-(fid, if_name, if_version)
-    FILE *fid;
-    NAMETABLE_id_t if_name;
-    unsigned long int if_version;
-#endif
 {
     fprintf (fid, "extern rpc_if_handle_t ");
     spell_name (fid, if_name);
@@ -497,16 +438,10 @@ static void CSPELL_if_spec_refs
 }
 
 static void CSPELL_user_prototypes
-#ifdef PROTO
 (
     FILE *fid,
     AST_interface_n_t *ifp
 )
-#else
-(fid, ifp)
-    FILE *fid;
-    AST_interface_n_t *ifp;
-#endif
 {
     AST_export_n_t *ep;
     AST_type_p_n_t *tpp;
@@ -525,8 +460,8 @@ static void CSPELL_user_prototypes
 
         fprintf(fid, "void ");
         spell_name(fid, tp->name);
-        fprintf(fid, "_rundown(\n#ifdef IDL_PROTOTYPES\n");
-        fprintf(fid, "    rpc_ss_context_t context_handle\n#endif\n);\n");
+        fprintf(fid, "_rundown(\n");
+        fprintf(fid, "    rpc_ss_context_t context_handle\n);\n");
     }
 
     /*
@@ -543,31 +478,31 @@ static void CSPELL_user_prototypes
 
         fprintf (fid, "void ");
         spell_name (fid, tp->name);
-        fprintf (fid, "_from_xmit(\n#ifdef IDL_PROTOTYPES\n");
+        fprintf (fid, "_from_xmit(\n");
         CSPELL_type_exp_simple (fid, tp->xmit_as_type);
         fprintf (fid, " *xmit_object,\n");
         spell_name (fid, tp->name);
-        fprintf (fid, " *object\n#endif\n);\n");
+        fprintf (fid, " *object\n);\n");
 
         fprintf (fid, "void ");
         spell_name (fid, tp->name);
-        fprintf (fid, "_to_xmit(\n#ifdef IDL_PROTOTYPES\n");
+        fprintf (fid, "_to_xmit(\n");
         spell_name (fid, tp->name);
         fprintf (fid, " *object,\n");
         CSPELL_type_exp_simple (fid, tp->xmit_as_type);
-        fprintf (fid, " **xmit_object\n#endif\n);\n");
+        fprintf (fid, " **xmit_object\n);\n");
 
         fprintf (fid, "void ");
         spell_name (fid, tp->name);
-        fprintf (fid, "_free_inst(\n#ifdef IDL_PROTOTYPES\n");
+        fprintf (fid, "_free_inst(\n");
         spell_name (fid, tp->name);
-        fprintf (fid, " *object\n#endif\n);\n");
+        fprintf (fid, " *object\n);\n");
 
         fprintf (fid, "void ");
         spell_name (fid, tp->name);
-        fprintf (fid, "_free_xmit(\n#ifdef IDL_PROTOTYPES\n");
+        fprintf (fid, "_free_xmit(\n");
         CSPELL_type_exp_simple (fid, tp->xmit_as_type);
-        fprintf (fid, " *xmit_object\n#endif\n);\n");
+        fprintf (fid, " *xmit_object\n);\n");
     }
 
     /*
@@ -581,31 +516,31 @@ static void CSPELL_user_prototypes
 
         fprintf (fid, "void ");
         spell_name (fid, tp->name);
-        fprintf (fid, "_from_local(\n#ifdef IDL_PROTOTYPES\n");
+        fprintf (fid, "_from_local(\n");
         spell_name (fid, tp->rep_as_type->type_name);
         fprintf (fid, " *local_object,\n");
         spell_name (fid, tp->name);
-        fprintf (fid, " **net_object\n#endif\n);\n");
+        fprintf (fid, " **net_object\n);\n");
 
         fprintf (fid, "void ");
         spell_name (fid, tp->name);
-        fprintf (fid, "_to_local(\n#ifdef IDL_PROTOTYPES\n");
+        fprintf (fid, "_to_local(\n");
         spell_name (fid, tp->name);
         fprintf (fid, " *net_object,\n");
         spell_name (fid, tp->rep_as_type->type_name);
-        fprintf (fid, " *local_object\n#endif\n);\n");
+        fprintf (fid, " *local_object\n);\n");
 
         fprintf (fid, "void ");
         spell_name (fid, tp->name);
-        fprintf (fid, "_free_local(\n#ifdef IDL_PROTOTYPES\n");
+        fprintf (fid, "_free_local(\n");
         spell_name (fid, tp->rep_as_type->type_name);
-        fprintf (fid, " *local_object\n#endif\n);\n");
+        fprintf (fid, " *local_object\n);\n");
 
         fprintf (fid, "void ");
         spell_name (fid, tp->name);
-        fprintf (fid, "_free_inst(\n#ifdef IDL_PROTOTYPES\n");
+        fprintf (fid, "_free_inst(\n");
         spell_name (fid, tp->name);
-        fprintf (fid, " *net_object\n#endif\n);\n");
+        fprintf (fid, " *net_object\n);\n");
     }
 
     /*
@@ -621,10 +556,10 @@ static void CSPELL_user_prototypes
         {
             fprintf(fid, "void ");
             spell_name(fid, ifp->binding_callout_name);
-            fprintf(fid, "(\n#ifdef IDL_PROTOTYPES\n");
+            fprintf(fid, "(\n");
             fprintf(fid, "rpc_binding_handle_t *p_binding,\n");
             fprintf(fid, "rpc_if_handle_t interface_handle,\n");
-            fprintf(fid, "error_status_t *p_st\n#endif\n);\n");
+            fprintf(fid, "error_status_t *p_st\n);\n");
         }
 
     }
@@ -634,16 +569,10 @@ static void CSPELL_user_prototypes
  *  Spell "extern" statements for user exceptions
  */
 void BE_spell_extern_user_excs
-#ifdef PROTO
 (
     FILE *fid,              /* Handle for emitted C text */
     AST_interface_n_t *ifp /* Ptr to AST interface node */
 )
-#else
-(fid, ifp)
-FILE                *fid;
-AST_interface_n_t   *ifp;
-#endif
 {
     AST_exception_n_t *p_exception;
 
@@ -674,16 +603,10 @@ AST_interface_n_t   *ifp;
  *  Spell prototypes for I-char machinery
  */
 static void BE_spell_ichar_prototypes
-#ifdef PROTO
 (
     FILE *fid,              /* Handle for emitted C text */
     AST_interface_n_t *ifp  /* Ptr to AST interface node */
 )
-#else
-(fid, ifp)
-FILE                *fid;
-AST_interface_n_t   *ifp;
-#endif
 {
     AST_type_p_n_t *cstpp; /* Pointer to chain of [cs_char] types */
     AST_type_n_t *cstp;     /* Pointer to [cs_char] type */
@@ -695,17 +618,17 @@ AST_interface_n_t   *ifp;
 
         fprintf(fid, "void ");
         spell_name(fid, cstp->cs_char_type->type_name);
-        fprintf(fid, "_net_size(\n#ifdef IDL_PROTOTYPES\n");
+        fprintf(fid, "_net_size(\n");
         fprintf(fid, "rpc_binding_handle_t h,\n");
         fprintf(fid, "idl_ulong_int tag,\n");
         fprintf(fid, "idl_ulong_int l_storage_len,\n");
         fprintf(fid, "idl_cs_convert_t *p_convert_type,\n");
         fprintf(fid, "idl_ulong_int *p_w_storage_len,\n");
-        fprintf(fid, "error_status_t *p_st\n#endif\n);\n");
+        fprintf(fid, "error_status_t *p_st\n);\n");
 
         fprintf(fid, "void ");
         spell_name(fid, cstp->cs_char_type->type_name);
-        fprintf(fid, "_to_netcs(\n#ifdef IDL_PROTOTYPES\n");
+        fprintf(fid, "_to_netcs(\n");
         fprintf(fid, "rpc_binding_handle_t h,\n");
         fprintf(fid, "idl_ulong_int tag,\n");
         spell_name(fid, cstp->cs_char_type->type_name);
@@ -714,21 +637,21 @@ AST_interface_n_t   *ifp;
         spell_name(fid, cstp->name);
         fprintf(fid, " *wdata,\n");
         fprintf(fid, "idl_ulong_int *p_w_data_len,\n");
-        fprintf(fid, "error_status_t *p_st\n#endif\n);\n");
+        fprintf(fid, "error_status_t *p_st\n);\n");
 
         fprintf(fid, "void ");
         spell_name(fid, cstp->cs_char_type->type_name);
-        fprintf(fid, "_local_size(\n#ifdef IDL_PROTOTYPES\n");
+        fprintf(fid, "_local_size(\n");
         fprintf(fid, "rpc_binding_handle_t h,\n");
         fprintf(fid, "idl_ulong_int tag,\n");
         fprintf(fid, "idl_ulong_int w_storage_len,\n");
         fprintf(fid, "idl_cs_convert_t *p_convert_type,\n");
         fprintf(fid, "idl_ulong_int *p_l_storage_len,\n");
-        fprintf(fid, "error_status_t *p_st\n#endif\n);\n");
+        fprintf(fid, "error_status_t *p_st\n);\n");
 
         fprintf(fid, "void ");
         spell_name(fid, cstp->cs_char_type->type_name);
-        fprintf(fid, "_from_netcs(\n#ifdef IDL_PROTOTYPES\n");
+        fprintf(fid, "_from_netcs(\n");
         fprintf(fid, "rpc_binding_handle_t h,\n");
         fprintf(fid, "idl_ulong_int tag,\n");
         spell_name(fid, cstp->name);
@@ -738,20 +661,20 @@ AST_interface_n_t   *ifp;
         spell_name(fid, cstp->cs_char_type->type_name);
         fprintf(fid, " *ldata,\n");
         fprintf(fid, "idl_ulong_int *p_l_data_len,\n");
-        fprintf(fid, "error_status_t *p_st\n#endif\n);\n");
+        fprintf(fid, "error_status_t *p_st\n);\n");
     }
 
     for (rnp = ifp->cs_tag_rtns; rnp != NULL; rnp = rnp->next)
     {
         fprintf(fid, "void ");
         spell_name(fid, rnp->name);
-        fprintf(fid, "(\n#ifdef IDL_PROTOTYPES\n");
+        fprintf(fid, "(\n");
         fprintf(fid, "rpc_binding_handle_t h,\n");
         fprintf(fid, "idl_boolean server_side,\n");
         fprintf(fid, "idl_ulong_int *p_stag,\n");
         fprintf(fid, "idl_ulong_int *p_drtag,\n");
         fprintf(fid, "idl_ulong_int *p_rtag,\n");
-        fprintf(fid, "error_status_t *p_st\n#endif\n);\n");
+        fprintf(fid, "error_status_t *p_st\n);\n");
     }
 }
 

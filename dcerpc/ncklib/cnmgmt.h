@@ -3,6 +3,7 @@
  * (c) Copyright 1990 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1990 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1990 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -39,39 +40,34 @@
 **
 */
 
-
-#ifndef _DCE_PROTOTYPE_
-#include <dce/dce.h>
-#endif
-
 /*
  * R P C _ _ C N _ M G M T _ I N I T
  */
 
-PRIVATE void rpc__cn_mgmt_init _DCE_PROTOTYPE_ ((void));
+PRIVATE void rpc__cn_mgmt_init (void);
 
 /*
  * R P C _ _ C N _ M G M T _ I N Q _ C A L L S _ S E N T
  */
 
-PRIVATE unsigned32 rpc__cn_mgmt_inq_calls_sent _DCE_PROTOTYPE_ ((void));
+PRIVATE unsigned32 rpc__cn_mgmt_inq_calls_sent (void);
 
 /*
  * R P C _ _ C N _ M G M T _ I N Q _ C A L L S _ R C V D 
  */
 
-PRIVATE unsigned32 rpc__cn_mgmt_inq_calls_rcvd _DCE_PROTOTYPE_ ((void));
+PRIVATE unsigned32 rpc__cn_mgmt_inq_calls_rcvd (void);
 
 /*
  * R P C _ _ C N _ M G M T _ I N Q _ P K T S _ S E N T
  */
 
-PRIVATE unsigned32 rpc__cn_mgmt_inq_pkts_sent _DCE_PROTOTYPE_ ((void));
+PRIVATE unsigned32 rpc__cn_mgmt_inq_pkts_sent (void);
 
 /*
  * R P C _ _ C N _ M G M T _ I N Q _ P K T S _ R C V D
  */
 
-PRIVATE unsigned32 rpc__cn_mgmt_inq_pkts_rcvd _DCE_PROTOTYPE_ ((void));
+PRIVATE unsigned32 rpc__cn_mgmt_inq_pkts_rcvd (void);
 
 #endif /* _CNMGMT_H */

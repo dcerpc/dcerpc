@@ -3,6 +3,7 @@
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -99,7 +100,6 @@
 */
 
 PUBLIC void cs_byte_to_netcs
-#ifdef _DCE_PROTO_
 (
 	rpc_binding_handle_t	h,
 	unsigned32		tag,
@@ -109,16 +109,6 @@ PUBLIC void cs_byte_to_netcs
 	unsigned32		*p_w_data_len, 
 	error_status_t		*status
 )
-#else
-(h, tag, ldata, l_data_len, wdata, p_w_data_len, status)
-	rpc_binding_handle_t	h;
-	unsigned32		tag;
-	idl_byte		*ldata;
-	unsigned32		l_data_len;
-	idl_byte		*wdata;
-	unsigned32		*p_w_data_len;
-	error_status_t		*status;
-#endif
 {
 	char			*current_codeset;
 	unsigned32		current_rgy_codeset;
@@ -338,7 +328,6 @@ PUBLIC void cs_byte_to_netcs
 */
 
 PUBLIC void wchar_t_to_netcs
-#ifdef _DCE_PROTO_
 (
 	rpc_binding_handle_t	h,
 	unsigned32		tag,
@@ -348,16 +337,6 @@ PUBLIC void wchar_t_to_netcs
 	unsigned32		*p_w_data_len, 
 	error_status_t		*status
 )
-#else
-(h, tag, ldata, l_data_len, wdata, p_w_data_len, status)
-	rpc_binding_handle_t	h;
-	unsigned32		tag;
-	wchar_t			*ldata;
-	unsigned32		l_data_len;
-	idl_byte		*wdata;
-	unsigned32		*p_w_data_len;
-	error_status_t		*status;
-#endif
 {
 	char			*current_codeset;
 	unsigned32		current_rgy_codeset;
@@ -585,7 +564,6 @@ PUBLIC void wchar_t_to_netcs
 */
 
 PUBLIC void cs_byte_from_netcs
-#ifdef _DCE_PROTO_
 (
 	rpc_binding_handle_t	h,
 	unsigned32		tag,
@@ -596,17 +574,6 @@ PUBLIC void cs_byte_from_netcs
 	unsigned32		*p_l_data_len, 
 	error_status_t		*status
 )
-#else
-(h, tag, wdata, w_data_len, l_storage_len, ldata, p_l_data_len, status)
-	rpc_binding_handle_t	h;
-	unsigned32		tag;
-	idl_byte		*wdata;
-	unsigned32		w_data_len;
-	unsigned32		l_storage_len;
-	idl_byte		*ldata;
-	unsigned32		*p_l_data_len;
-	error_status_t		*status;
-#endif
 {
 	char			*current_codeset;
 	unsigned32		current_rgy_codeset;
@@ -823,7 +790,6 @@ PUBLIC void cs_byte_from_netcs
 */
 
 PUBLIC void wchar_t_from_netcs
-#ifdef _DCE_PROTO_
 (
 	rpc_binding_handle_t	h,
 	unsigned32		tag,
@@ -834,17 +800,6 @@ PUBLIC void wchar_t_from_netcs
 	unsigned32		*p_l_data_len, 
 	error_status_t		*status
 )
-#else
-(h, tag, wdata, w_data_len, l_storage_len, ldata, p_l_data_len, status)
-	rpc_binding_handle_t	h;
-	unsigned32		tag;
-	idl_byte		*wdata;
-	unsigned32		w_data_len;
-	unsigned32		l_storage_len;
-	wchar_t			*ldata;
-	unsigned32		*p_l_data_len;
-	error_status_t		*status;
-#endif
 {
 	char			*current_codeset;
 	unsigned32		current_rgy_codeset;
@@ -1132,7 +1087,6 @@ PUBLIC void wchar_t_from_netcs
 */
 
 PUBLIC void cs_byte_net_size
-#ifdef _DCE_PROTO_
 (
 	rpc_binding_handle_t	h,
 	unsigned32		tag,		/* wire encoding */
@@ -1141,15 +1095,6 @@ PUBLIC void cs_byte_net_size
 	unsigned32		*p_w_storage_len, 
 	error_status_t		*status
 )
-#else
-(h, tag, l_storage_len, p_convert_type, p_w_storage_len, status)
-	rpc_binding_handle_t	h;
-	unsigned32		tag;		/* wire encoding */
-	unsigned32		l_storage_len;
-	idl_cs_convert_t	*p_convert_type;
-	unsigned32		*p_w_storage_len;
-	error_status_t		*status;
-#endif
 {
 	char			*current_codeset;
 	unsigned32		current_rgy_codeset;
@@ -1466,7 +1411,6 @@ PUBLIC void cs_byte_net_size
 */
 
 PUBLIC void wchar_t_net_size
-#ifdef _DCE_PROTO_
 (
 	rpc_binding_handle_t	h,
 	unsigned32		tag,			/* wire encoding */
@@ -1475,15 +1419,6 @@ PUBLIC void wchar_t_net_size
 	unsigned32		*p_w_storage_len, 
 	error_status_t		*status
 )
-#else
-(h, tag, l_storage_len, p_convert_type, p_w_storage_len, status)
-	rpc_binding_handle_t	h;
-	unsigned32		tag;			/* wire encoding */
-	unsigned32		l_storage_len;		/* wchar_t length */ 
-	idl_cs_convert_t	*p_convert_type;
-	unsigned32		*p_w_storage_len;
-	error_status_t		*status;
-#endif
 {
 	char			*current_codeset;
 	unsigned32		current_rgy_codeset;
@@ -1643,7 +1578,6 @@ PUBLIC void wchar_t_net_size
 */
 
 PUBLIC void cs_byte_local_size
-#ifdef _DCE_PROTO_
 (
 	rpc_binding_handle_t	h,
 	unsigned32		tag,		/* wire encoding */
@@ -1652,15 +1586,6 @@ PUBLIC void cs_byte_local_size
 	unsigned32		*p_l_storage_len, 
 	error_status_t		*status
 )
-#else
-(h, tag, w_storage_len, p_convert_type, p_l_storage_len, status)
-	rpc_binding_handle_t	h;
-	unsigned32		tag;		/* wire encoding */
-	unsigned32		w_storage_len;
-	idl_cs_convert_t	*p_convert_type;
-	unsigned32		*p_l_storage_len;
-	error_status_t		*status;
-#endif
 {
 	char			*current_codeset;
 	unsigned32		current_rgy_codeset;
@@ -1957,7 +1882,6 @@ PUBLIC void cs_byte_local_size
 */
 
 PUBLIC void wchar_t_local_size
-#ifdef _DCE_PROTO_
 (
 	rpc_binding_handle_t	h,
 	unsigned32		tag,			/* wire encoding */
@@ -1966,15 +1890,6 @@ PUBLIC void wchar_t_local_size
 	unsigned32		*p_l_storage_len,	/* wchar_t size */ 
 	error_status_t		*status
 )
-#else
-(h, tag, w_storage_len, p_convert_type, p_l_storage_len, status)
-	rpc_binding_handle_t	h;
-	unsigned32		tag;			/* wire encoding */
-	unsigned32		w_storage_len;
-	idl_cs_convert_t	*p_convert_type;
-	unsigned32		*p_l_storage_len;	/* wchar_t size */ 
-	error_status_t		*status;
-#endif
 {
 	char			*current_codeset;
 	unsigned32		current_rgy_codeset;
@@ -2129,7 +2044,6 @@ PUBLIC void wchar_t_local_size
 */
 
 PUBLIC void rpc_cs_get_tags
-#ifdef _DCE_PROTO_
 (
 	rpc_binding_handle_t	h,
 	idl_boolean		server_side,
@@ -2138,15 +2052,6 @@ PUBLIC void rpc_cs_get_tags
 	unsigned32		*p_rtag, 
 	error_status_t		*status
 )
-#else
-(h, server_side, p_stag, p_drtag, p_rtag, status)
-	rpc_binding_handle_t	h;
-	idl_boolean		server_side;
-	unsigned32		*p_stag;
-	unsigned32		*p_drtag;
-	unsigned32		*p_rtag;
-	error_status_t		*status;
-#endif
 {
 	rpc_binding_rep_p_t	bind_p;
 	rpc_cs_method_eval_p_t	method_p;

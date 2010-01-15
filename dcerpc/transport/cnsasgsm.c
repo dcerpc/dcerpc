@@ -3,6 +3,7 @@
  * (c) Copyright 1990 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1990 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1990 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -107,13 +108,13 @@ GLOBAL const char     *rpc_g_cn_grp_server_states [] =
 /*  
  * The predicate routine prototypes.
  */
-INTERNAL unsigned8 server_refs_pred_rtn _DCE_PROTOTYPE_ ((
+INTERNAL unsigned8 server_refs_pred_rtn (
     pointer_t spc_struct, 
-    pointer_t event_param));
+    pointer_t event_param);
 
-INTERNAL unsigned8 server_assoc_count_pred_rtn _DCE_PROTOTYPE_ ((
+INTERNAL unsigned8 server_assoc_count_pred_rtn (
     pointer_t spc_struct, 
-    pointer_t event_param)) ATTRIBUTE_UNUSED;
+    pointer_t event_param) ATTRIBUTE_UNUSED;
 
 
 
@@ -134,25 +135,25 @@ INTERNAL unsigned8 server_assoc_count_pred_rtn _DCE_PROTOTYPE_ ((
 /*  
  * The action routine prototypes.
  */
-INTERNAL unsigned32     create_group_id_action_rtn _DCE_PROTOTYPE_ ((
+INTERNAL unsigned32     create_group_id_action_rtn (
     pointer_t  /*spc_struct*/, 
     pointer_t  /*event_param*/,
-    pointer_t  /*sm*/));
+    pointer_t  /*sm*/);
 
-INTERNAL unsigned32     incr_assoc_count_action_rtn _DCE_PROTOTYPE_ ((
+INTERNAL unsigned32     incr_assoc_count_action_rtn (
     pointer_t  /*spc_struct*/, 
     pointer_t  /*event_param*/,
-    pointer_t  /*sm*/));
+    pointer_t  /*sm*/);
 
-INTERNAL unsigned32     decr_assoc_count_action_rtn _DCE_PROTOTYPE_ ((
+INTERNAL unsigned32     decr_assoc_count_action_rtn (
     pointer_t  /*spc_struct*/, 
     pointer_t  /*event_param*/,
-    pointer_t  /*sm*/));
+    pointer_t  /*sm*/);
 
-INTERNAL unsigned32     rundown_handles_action_rtn _DCE_PROTOTYPE_ ((
+INTERNAL unsigned32     rundown_handles_action_rtn (
     pointer_t  /*spc_struct*/, 
     pointer_t  /*event_param*/,
-    pointer_t  /*sm*/));
+    pointer_t  /*sm*/);
 
 
 /*  
@@ -317,16 +318,10 @@ GLOBAL rpc_cn_sm_state_entry_p_t rpc_g_cn_server_grp_sm [] =
 **/
 
 INTERNAL unsigned8 server_refs_pred_rtn
-#ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
   pointer_t       event_param ATTRIBUTE_UNUSED
 )
-#else
-(spc_struct, event_param)
-pointer_t       spc_struct;
-pointer_t       event_param;
-#endif
 {
 
     rpc_cn_assoc_grp_t          *assoc_grp;
@@ -453,16 +448,10 @@ pointer_t       event_param;
 **/
 
 INTERNAL unsigned8 server_assoc_count_pred_rtn 
-#ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
   pointer_t       event_param
 )
-#else
-(spc_struct, event_param)
-pointer_t       spc_struct;
-pointer_t       event_param;
-#endif
 {
     rpc_cn_assoc_grp_t          *assoc_grp;
 
@@ -619,18 +608,11 @@ pointer_t       event_param;
 **/
 
 INTERNAL unsigned32     create_group_id_action_rtn
-#ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
   pointer_t       event_param ATTRIBUTE_UNUSED,
   pointer_t       sm 
 )
-#else
-(spc_struct, event_param, sm)
-pointer_t       spc_struct;
-pointer_t       event_param;
-pointer_t       sm;
-#endif
 {
     rpc_cn_assoc_grp_t          *assoc_grp;
     rpc_cn_sm_ctlblk_t		*sm_p;
@@ -689,18 +671,11 @@ pointer_t       sm;
 **/
 
 INTERNAL unsigned32     incr_assoc_count_action_rtn 
-#ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
   pointer_t       event_param,
   pointer_t       sm 
 )
-#else
-(spc_struct, event_param, sm)
-pointer_t       spc_struct;
-pointer_t       event_param;
-pointer_t       sm;
-#endif
 {
     rpc_cn_assoc_grp_t          *assoc_grp;
     rpc_cn_sm_ctlblk_t		*sm_p;
@@ -768,18 +743,11 @@ pointer_t       sm;
 **/
 
 INTERNAL unsigned32     decr_assoc_count_action_rtn 
-#ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
   pointer_t       event_param,
   pointer_t       sm 
 )
-#else
-(spc_struct, event_param, sm)
-pointer_t       spc_struct;
-pointer_t       event_param;
-pointer_t       sm;
-#endif
 {
     rpc_cn_assoc_grp_t          *assoc_grp;
     rpc_cn_assoc_t              *assoc;
@@ -871,18 +839,11 @@ pointer_t       sm;
 **/
 
 INTERNAL unsigned32     rundown_handles_action_rtn
-#ifdef _DCE_PROTO_
 (
   pointer_t       spc_struct,
   pointer_t       event_param,
   pointer_t       sm 
 )
-#else
-(spc_struct, event_param, sm)
-pointer_t       spc_struct;
-pointer_t       event_param;
-pointer_t       sm;
-#endif
 {
     rpc_cn_assoc_grp_t          *assoc_grp;
     rpc_cn_sm_ctlblk_t		*sm_p;

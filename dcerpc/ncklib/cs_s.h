@@ -3,6 +3,7 @@
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -111,11 +112,9 @@ typedef struct codeset_i14y_data {
  * to be used by application developers.  Only runtime uses it.
  */
 extern void rpc_cs_binding_set_method (
-#ifdef IDL_PROTOTYPES
     /* [in, out] */ rpc_binding_handle_t *h,
     /* [in] */ rpc_cs_method_eval_p_t method_p,
     /* [out] */ error_status_t *status
-#endif
 );
 
 
@@ -123,7 +122,7 @@ extern void rpc_cs_binding_set_method (
  * prototype declarations for locally defined routines
  */
 extern void stub_conversion
-    _DCE_PROTOTYPE_ ((
+    (
 	rpc_binding_handle_t	h,
 	boolean32		server_side,
 	unsigned32		from_tag,
@@ -133,7 +132,7 @@ extern void stub_conversion
 	byte_t			*conv_wdata,
 	unsigned32		*conv_p_w_data_len,
 	error_status_t		*status
-    ));
+    );
 
 /*
  * Well-known UUID for code set attribute

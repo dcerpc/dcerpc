@@ -3,7 +3,7 @@
  * (c) Copyright 1993 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1993 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1993 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2009 Apple Inc. All rights reserved.
+ * Portions Copyright (c) 2009-2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -72,14 +72,9 @@ typedef struct {
 } type_tail_t;
 
 static void CSPELL_add_paren_to_tail
-#ifdef PROTO
 (
  type_tail_t *tail
 )
-#else
-(tail)
-	type_tail_t *tail;
-#endif
 {
 	int i;
 
@@ -89,18 +84,11 @@ static void CSPELL_add_paren_to_tail
 }
 
 static void CSPELL_add_array_to_tail
-#ifdef PROTO
 (
  type_tail_t *tail,
  AST_array_n_t *array,
  boolean in_typedef_or_struct
 )
-#else
-(tail, array, in_typedef_or_struct)
-	type_tail_t *tail;
-	AST_array_n_t *array;
-	boolean in_typedef_or_struct;
-#endif
 {
 	int i;
 
@@ -113,18 +101,11 @@ static void CSPELL_add_array_to_tail
 }
 
 static void CSPELL_add_func_to_tail
-#ifdef PROTO
 (
  type_tail_t *tail,
  AST_parameter_n_t *pl,
  boolean function_def
 )
-#else
-(tail, pl, function_def)
-	type_tail_t *tail;
-	AST_parameter_n_t *pl;
-	boolean function_def;
-#endif
 {
 	int i;
 
@@ -136,35 +117,24 @@ static void CSPELL_add_func_to_tail
 }
 
 static void CSPELL_array_bounds (
-#ifdef PROTO
 		FILE *fid,
 		AST_array_n_t *array,
 		boolean in_typedef_or_struct
-#endif
 		);
 
 static void CSPELL_function_sig (
-#ifdef PROTO
 		FILE *fid,
 		AST_parameter_n_t *pp,
 		boolean func_def,
 		boolean encoding_services
-#endif
 		);
 
 static void CSPELL_type_tail
-#ifdef PROTO
 (
  FILE *fid,
  type_tail_t *tail,
  boolean encoding_services   /* TRUE => [encode] or [decode] on operation */
 )
-#else
-(fid, tail, encoding_services)
-	FILE *fid;
-	type_tail_t *tail;
-	boolean encoding_services;
-#endif
 {
 	int i;
 
@@ -198,16 +168,10 @@ static void CSPELL_type_tail
  * Output an identifier to the file specified
  */
 void spell_name
-#ifdef PROTO
 (
  FILE *fid,
  NAMETABLE_id_t name
 )
-#else
-(fid, name)
-	FILE *fid;
-	NAMETABLE_id_t name;
-#endif
 {
 	char const *str;
 
@@ -217,7 +181,6 @@ void spell_name
 
 
 static void CSPELL_type_exp (
-#ifdef PROTO
 		FILE *fid,
 		AST_type_n_t *tp,
 		type_tail_t *tail,
@@ -225,23 +188,16 @@ static void CSPELL_type_exp (
 		boolean in_struct,
 		boolean func_def,
 		boolean spell_tag
-#endif
 		);
 
 /*
  * C S P E L L _ s c a l a r _ t y p e _ s u f f i x
  */
 boolean CSPELL_scalar_type_suffix
-#ifdef PROTO
 (
  FILE *fid,
  AST_type_n_t *tp
 )
-#else
-(fid, tp)
-	FILE         *fid;
-	AST_type_n_t *tp;
-#endif
 {
 	boolean result = true;
 
@@ -313,16 +269,10 @@ boolean CSPELL_scalar_type_suffix
  * s p e l l _ i d l _ s c a l a r _ t y p e _ n a m e
  */
 static void spell_idl_scalar_type_name
-#ifdef PROTO
 (
  FILE *fid,
  AST_type_n_t *tp
 )
-#else
-(fid, tp)
-	FILE         *fid;
-	AST_type_n_t *tp;
-#endif
 {
 
 	fprintf(fid, "idl_");
@@ -339,54 +289,16 @@ static void spell_idl_scalar_type_name
  * Spell a function's parameter list
  */
 static void CSPELL_function_sig
-#ifdef PROTO
 (
  FILE *fid,
  AST_parameter_n_t *pp,
- boolean func_def,
+ boolean func_def ATTRIBUTE_UNUSED,
  boolean encoding_services   /* TRUE => [encode] or [decode] on operation */
 )
-#else
-(fid, pp, func_def, encoding_services)
-	FILE *fid;
-	AST_parameter_n_t *pp;
-	boolean func_def;
-	boolean encoding_services;
-#endif
 {
-	boolean            first = true;
-
-	if (!func_def)
-	{
-		fprintf (fid, "(\n#ifdef IDL_PROTOTYPES\n");
-		CSPELL_parameter_list (fid, pp, encoding_services);
-		fprintf (fid, "\n#endif\n)");
-	}
-	else
-	{
-		fprintf (fid, "\n#ifdef IDL_PROTOTYPES\n(\n");
-		CSPELL_parameter_list (fid, pp, encoding_services);
-		fprintf (fid, "\n)\n#else\n(");
-		for (; pp != NULL; pp = pp->next)
-		{
-			if (AST_HIDDEN_SET(pp))
-			{
-				/* Parameter does not appear in signature delivered to user */
-				continue;
-			}
-			if (first)
-				first = false;
-			else
-				fprintf (fid, ", ");
-#ifndef MIA
-			if (pp->be_info.param)
-				spell_name(fid, pp->be_info.param->name);
-			else
-#endif
-				spell_name (fid, pp->name);
-		}
-		fprintf (fid, ")\n#endif\n");
-	}
+    fprintf (fid, "(\n");
+    CSPELL_parameter_list (fid, pp, encoding_services);
+    fprintf (fid, "\n)");
 }
 
 /*
@@ -395,14 +307,9 @@ static void CSPELL_function_sig
  * Returns TRUE if there is a natural C mapping for an array
  */
 static boolean DDBE_array_is_C_like
-#ifdef PROTO
 (
  AST_array_n_t *array
 )
-#else
-( array )
-	AST_array_n_t *array;
-#endif
 {
 	int i;
 	AST_array_index_n_t *index_array_ptr;
@@ -428,18 +335,11 @@ static boolean DDBE_array_is_C_like
  *
  */
 static void CSPELL_array_bounds
-#ifdef PROTO
 (
  FILE *fid,
  AST_array_n_t *array,
  boolean in_typedef_or_struct
 )
-#else
-(fid, array, in_typedef_or_struct)
-	FILE *fid;
-	AST_array_n_t *array;
-	boolean in_typedef_or_struct;
-#endif
 {
 	int i;
 	AST_array_index_n_t *index_array_ptr;
@@ -479,20 +379,12 @@ static void CSPELL_array_bounds
  * Spell one function pointer type of a pipe's rep type
  */
 void CSPELL_pipe_struct_routine_decl
-#ifdef PROTO
 (
  FILE *fid,
  AST_type_n_t *p_pipe_type,
  BE_pipe_routine_k_t routine_kind,
  boolean cast
 )
-#else
-( fid, p_pipe_type, routine_kind, cast )
-	FILE *fid;
-	AST_type_n_t *p_pipe_type;
-	BE_pipe_routine_k_t routine_kind;
-	boolean cast;
-#endif
 {
 	type_tail_t tail;
 	const char *name = "";
@@ -505,7 +397,6 @@ void CSPELL_pipe_struct_routine_decl
 	}
 
 	fprintf( fid, "void (* %s)(\n",name);
-	fprintf (fid, "#ifdef IDL_PROTOTYPES\n" );
 	fprintf (fid, "rpc_ss_pipe_state_t state,\n" );
 	if ( routine_kind == BE_pipe_alloc_k )
 	{
@@ -526,7 +417,7 @@ void CSPELL_pipe_struct_routine_decl
 	fprintf( fid, "idl_ulong_int %c%ccount\n",
 			((routine_kind == BE_pipe_push_k) ? ' ' : '*'),
 			((routine_kind == BE_pipe_alloc_k) ? 'b' : 'e') );
-	fprintf (fid, "#endif\n)" );
+	fprintf (fid, ")" );
 	if (!cast) fprintf (fid, ";\n");
 }
 
@@ -536,16 +427,10 @@ void CSPELL_pipe_struct_routine_decl
  * Spell a pipe's concrete rep type
  */
 static void CSPELL_pipe_def
-#ifdef PROTO
 (
  FILE *fid,
  AST_type_n_t *p_pipe_type
 )
-#else
-( fid, p_pipe_type )
-	FILE *fid;
-	AST_type_n_t *p_pipe_type;
-#endif
 {
 	/* Declare the structure that represents the pipe */
 	fprintf( fid, "struct " );
@@ -567,7 +452,6 @@ static void CSPELL_pipe_def
  * in the tail data structure.
  */
 static void CSPELL_type_exp
-#ifdef PROTO
 (
  FILE *fid,
  AST_type_n_t *tp,
@@ -577,16 +461,6 @@ static void CSPELL_type_exp
  boolean func_def,
  boolean spell_tag
 )
-#else
-(fid, tp, tail, in_typedef, in_struct, func_def, spell_tag)
-	FILE *fid;
-	AST_type_n_t *tp;
-	type_tail_t *tail;
-	AST_type_n_t *in_typedef;
-	boolean in_struct;
-	boolean func_def;
-	boolean spell_tag;
-#endif
 {
 	AST_field_n_t           *fp;
 	AST_arm_n_t             *cp;
@@ -881,7 +755,6 @@ static void CSPELL_type_exp
  * CSPELL_typed_name
  */
 void CSPELL_typed_name
-#ifdef PROTO
 (
  FILE *fid,
  AST_type_n_t *type,
@@ -891,16 +764,6 @@ void CSPELL_typed_name
  boolean spell_tag,
  boolean encoding_services   /* TRUE => [encode] or [decode] on operation */
 )
-#else
-(fid, type, name, in_typedef, in_struct, spell_tag, encoding_services)
-	FILE   *fid;
-	AST_type_n_t *type;
-	NAMETABLE_id_t name;
-	AST_type_n_t *in_typedef;
-	boolean in_struct;
-	boolean spell_tag;
-	boolean encoding_services;
-#endif
 {
 	type_tail_t tail;
 
@@ -915,18 +778,11 @@ void CSPELL_typed_name
  * CSPELL_function_def_header
  */
 void CSPELL_function_def_header
-#ifdef PROTO
 (
  FILE *fid,
  AST_operation_n_t *oper,
  NAMETABLE_id_t name
 )
-#else
-(fid, oper, name)
-	FILE   *fid;
-	AST_operation_n_t *oper;
-	NAMETABLE_id_t name;
-#endif
 {
 	type_tail_t tail;
 	AST_type_n_t func_type_node;
@@ -946,16 +802,10 @@ void CSPELL_function_def_header
  * CSPELL_type_exp_simple
  */
 void CSPELL_type_exp_simple
-#ifdef PROTO
 (
  FILE *fid,
  AST_type_n_t *tp
 )
-#else
-(fid, tp)
-	FILE *fid;
-	AST_type_n_t *tp;
-#endif
 {
 	CSPELL_typed_name(fid, tp, NAMETABLE_NIL_ID, NULL, false, true, false);
 }
@@ -966,18 +816,11 @@ void CSPELL_type_exp_simple
  * Spell a variable declaration
  */
 void CSPELL_var_decl
-#ifdef PROTO
 (
  FILE *fid,
  AST_type_n_t *type,
  NAMETABLE_id_t name
 )
-#else
-(fid, type, name)
-	FILE *fid;
-	AST_type_n_t *type;
-	NAMETABLE_id_t name;
-#endif
 {
 	CSPELL_typed_name (fid, type, name, NULL, false, true, false);
 	fprintf (fid, ";\n");
@@ -988,16 +831,10 @@ void CSPELL_var_decl
  * CSPELL_cast_exp
  */
 void CSPELL_cast_exp
-#ifdef PROTO
 (
  FILE *fid,
  AST_type_n_t *tp
 )
-#else
-(fid, tp)
-	FILE   *fid;
-	AST_type_n_t *tp;
-#endif
 {
 	fprintf (fid, "(");
 	CSPELL_typed_name (fid, tp, NAMETABLE_NIL_ID, NULL, false, true, false);
@@ -1008,16 +845,10 @@ void CSPELL_cast_exp
  * CSPELL_ptr_cast_exp
  */
 void CSPELL_ptr_cast_exp
-#ifdef PROTO
 (
  FILE *fid,
  AST_type_n_t *tp
 )
-#else
-(fid, tp)
-	FILE   *fid;
-	AST_type_n_t *tp;
-#endif
 {
 	AST_type_n_t    pointer_type;
 	AST_pointer_n_t pointer;
@@ -1045,16 +876,10 @@ void CSPELL_ptr_cast_exp
 *  pointer to the array base type
 */
 void DDBE_spell_manager_param_cast
-#ifdef PROTO
 (
  FILE *fid,
  AST_type_n_t *tp
 )
-#else
-(fid, tp)
-	FILE   *fid;
-	AST_type_n_t *tp;
-#endif
 {
 	type_tail_t tail;
 	AST_type_n_t *tp_for_type_exp;
@@ -1098,14 +923,9 @@ void DDBE_spell_manager_param_cast
  * CSPELL_midl_compatibility_allocators
  */
 void CSPELL_midl_compatibility_allocators
-#ifdef PROTO
 (
  FILE *fid
 )
-#else
-(fid)
-	FILE   *fid;
-#endif
 {
 	fprintf (fid,
 	    "static inline idl_void_p_t IDL_midl_user_allocate(\n"
@@ -1130,14 +950,9 @@ void CSPELL_midl_compatibility_allocators
  * levels.
  */
 void CSPELL_suppress_stub_warnings
-#ifdef PROTO
 (
  FILE *fid
 )
-#else
-(fid)
-	FILE   *fid;
-#endif
 {
     fprintf(fid, "#if __GNUC__\n");
     fprintf(fid, "#pragma GCC diagnostic ignored \"-Wmissing-field-initializers\"\n");
@@ -1146,14 +961,9 @@ void CSPELL_suppress_stub_warnings
 }
 
 void CSPELL_restore_stub_warnings
-#ifdef PROTO
 (
- FILE *fid
+ FILE *fid ATTRIBUTE_UNUSED
 )
-#else
-(fid)
-	FILE   *fid;
-#endif
 {
 }
 

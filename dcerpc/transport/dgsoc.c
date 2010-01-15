@@ -1,8 +1,9 @@
 /*
- * 
+ *
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -16,7 +17,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
  */
@@ -28,7 +29,7 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
@@ -43,18 +44,18 @@
 
 /* ========================================================================= */
 
-INTERNAL void sock_free _DCE_PROTOTYPE_((
+INTERNAL void sock_free (
         rpc_dg_sock_pool_elt_p_t * /*sp_elt*/
-    ));
+    );
 
-INTERNAL void use_protseq _DCE_PROTOTYPE_((
+INTERNAL void use_protseq (
         boolean32  /*is_server*/,
         rpc_protseq_id_t  /*pseq_id*/,
         rpc_addr_p_t  /*rpc_addr*/,
         unsigned_char_p_t  /*endpoint*/,
         rpc_dg_sock_pool_elt_p_t * /*sock_pool_elt*/,
         unsigned32 * /*st*/
-    )); 
+    );
 
 /* ========================================================================= */
 
@@ -65,21 +66,16 @@ INTERNAL void use_protseq _DCE_PROTOTYPE_((
  */
 
 INTERNAL void sock_free
-#ifdef _DCE_PROTO_
 (
     rpc_dg_sock_pool_elt_p_t *sp
 )
-#else
-(sp)
-rpc_dg_sock_pool_elt_p_t *sp;
-#endif
 {
     rpc_socket_error_t serr;
     rpc_dg_sock_pool_elt_p_t eltp, *peltp;
     boolean32 is_private_socket = (*sp)->is_private;
 
     RPC_DG_SOCK_POOL_LOCK_ASSERT(0);
-           
+
     /*
      * Close the socket desc.
      */
@@ -129,7 +125,7 @@ rpc_dg_sock_pool_elt_p_t *sp;
     }
 
     rpc_g_dg_sock_pool.num_entries--;
-    
+
     /*
      * Free up the elt's memory.
      */
@@ -138,7 +134,6 @@ rpc_dg_sock_pool_elt_p_t *sp;
     *sp = NULL;
 }
 
-           
 /*
  * U S E _ P R O T S E Q
  *
@@ -147,7 +142,6 @@ rpc_dg_sock_pool_elt_p_t *sp;
  */
 
 INTERNAL void use_protseq
-#ifdef _DCE_PROTO_
 (
     boolean32 is_server,
     rpc_protseq_id_t pseq_id,
@@ -156,15 +150,6 @@ INTERNAL void use_protseq
     rpc_dg_sock_pool_elt_p_t *sock_pool_elt,
     unsigned32 *st
 )
-#else
-(is_server, pseq_id, rpc_addr, endpoint, sock_pool_elt, st)
-boolean32 is_server;
-rpc_protseq_id_t pseq_id;
-rpc_addr_p_t rpc_addr;
-unsigned_char_p_t endpoint;
-rpc_dg_sock_pool_elt_p_t *sock_pool_elt;
-unsigned32 *st;
-#endif
 {
     boolean32 sock_open = false;
     boolean32 creating_private_socket = false;
@@ -174,17 +159,17 @@ unsigned32 *st;
     unsigned32 sndbuf, rcvbuf;
     unsigned32 priv_sock_count = 0;
     unsigned32 desired_sndbuf, desired_rcvbuf;
-    
+
     *st = rpc_s_ok;
 
     RPC_DG_SOCK_POOL_LOCK(0);
-    
+
     /*
      * For clients, first see if there's already an open socket of the
      * correct type and if so, return a ref to it. Note: servers always
      * create new entries.
      */
-                                    
+
     if (! is_server)
     {
         unsigned32 max_priv_socks = RPC_C_DG_SOCK_MAX_PRIV_SOCKS;
@@ -261,20 +246,19 @@ unsigned32 *st;
                 }
             }
         }
-    }  
-    
+    }
 
     RPC_DBG_PRINTF(rpc_e_dbg_dg_sockets, 3, (
             "(use_protseq) allocating a %s socket\n",
             creating_private_socket ? "private" : "shared"));
 
-    /* 
+    /*
      * Allocate a new pool entry and initialize it.
-     */ 
-    RPC_MEM_ALLOC(eltp, rpc_dg_sock_pool_elt_p_t, 
-        sizeof(rpc_dg_sock_pool_elt_t), RPC_C_MEM_DG_SOCK_POOL_ELT, 
+     */
+    RPC_MEM_ALLOC(eltp, rpc_dg_sock_pool_elt_p_t,
+        sizeof(rpc_dg_sock_pool_elt_t), RPC_C_MEM_DG_SOCK_POOL_ELT,
         RPC_C_MEM_NOWAIT);
-    
+
     /*
      * Create a network descriptor for this RPC Protocol Sequence.
      */
@@ -288,10 +272,10 @@ unsigned32 *st;
         goto CLEANUP;
     }
     sock_open = true;
-     
+
     /*
      * Bind the socket (Network descriptor) to the RPC address.
-     */ 
+     */
 
     rpc_addr->rpc_protseq_id = pseq_id;
 
@@ -323,7 +307,7 @@ unsigned32 *st;
     serr = rpc__socket_set_bufs(socket_desc,
                                 desired_sndbuf, desired_rcvbuf,
                                 &sndbuf, &rcvbuf);
-            
+
     if (RPC_SOCKET_IS_ERR(serr))
     {
         RPC_DBG_GPRINTF((
@@ -337,7 +321,7 @@ unsigned32 *st;
     RPC_DBG_PRINTF(rpc_e_dbg_general, 3, (
         "(use_protseq) actual sndbuf %u, actual rcvbuf %u\n",
         sndbuf, rcvbuf));
-      
+
     /*
      * For shared sockets, set the socket to do non-blocking IO.
      */
@@ -387,7 +371,7 @@ unsigned32 *st;
         eltp->rqe->more_data  = NULL;
         eltp->rqe->frag_len   = 0;
         eltp->rqe->hdrp   = NULL;
- 
+
         pkt->u.rqe.sock_ref = eltp;
         eltp->rqe_available = true;
     }
@@ -477,15 +461,13 @@ CLEANUP:
     return;
 }
 
-         
 /*
  * R P C _ _ D G _ N E T W O R K _ U S E _ P R O T S E Q _ S V
  *
- * Server side entry point into socket pool allocation routine. 
+ * Server side entry point into socket pool allocation routine.
  */
 
 PRIVATE void rpc__dg_network_use_protseq_sv
-#ifdef _DCE_PROTO_
 (
     rpc_protseq_id_t pseq_id,
     unsigned32 max_calls ATTRIBUTE_UNUSED,
@@ -493,46 +475,31 @@ PRIVATE void rpc__dg_network_use_protseq_sv
     unsigned_char_p_t endpoint,
     unsigned32 *st
 )
-#else
-(pseq_id, max_calls, rpc_addr, endpoint, st)
-rpc_protseq_id_t pseq_id;
-unsigned32 max_calls;
-rpc_addr_p_t rpc_addr;
-unsigned_char_p_t endpoint;
-unsigned32 *st;
-#endif
-{   
+{
     rpc_dg_sock_pool_elt_p_t sp_elt;
-        
+
     use_protseq(true, pseq_id, rpc_addr, endpoint, &sp_elt, st);
     if (*st == rpc_s_ok)
         rpc__dg_network_sock_release(&sp_elt);
 }
 
-
 /*
  * R P C _ _ D G _ N E T W O R K _ U S E _ P R O T S E Q _ C L
  *
- * Client side entry point into socket pool allocation routine. 
+ * Client side entry point into socket pool allocation routine.
  * Create a NULL address for the bind, and call the internal
  * use_protseq routine.
  */
 
 PRIVATE void rpc__dg_network_use_protseq_cl
-#ifdef _DCE_PROTO_
 (
     rpc_protseq_id_t pseq_id,
     rpc_dg_sock_pool_elt_p_t *sp
 )
-#else
-(pseq_id, sp)
-rpc_protseq_id_t pseq_id;
-rpc_dg_sock_pool_elt_p_t *sp;
-#endif
-{                          
+{
     rpc_addr_il_t addr;
     unsigned32 st;
-        
+
     *sp = NULL;
 
     /*
@@ -542,12 +509,11 @@ rpc_dg_sock_pool_elt_p_t *sp;
     addr.len = sizeof addr.sa;
     memset((char *) &addr.sa, 0, addr.len);
     addr.sa.family = rpc_g_protseq_id[pseq_id].naf_id;
-        
+
     use_protseq(false, pseq_id, (rpc_addr_p_t) &addr, NULL, sp, &st);
 }
 
-
-/* 
+/*
  * R P C _ _ D G _ N E T W O R K _ D I S A B L E _ D E S C
  *
  * This routine is responsible for removing a socket from the pool of
@@ -558,19 +524,14 @@ rpc_dg_sock_pool_elt_p_t *sp;
  */
 
 PRIVATE void rpc__dg_network_disable_desc
-#ifdef _DCE_PROTO_
 (
     rpc_dg_sock_pool_elt_p_t sp
 )
-#else
-(sp)
-rpc_dg_sock_pool_elt_p_t sp;
-#endif
-{                                               
+{
     unsigned32 st;
     boolean is_private;
 
-    RPC_DG_SOCK_POOL_LOCK(0); 
+    RPC_DG_SOCK_POOL_LOCK(0);
 
     is_private = sp->is_private;
 
@@ -579,16 +540,16 @@ rpc_dg_sock_pool_elt_p_t sp;
      */
     if (sp->is_disabled)
     {
-        RPC_DG_SOCK_POOL_UNLOCK(0); 
+        RPC_DG_SOCK_POOL_UNLOCK(0);
         return;
     }
-       
+
     RPC_DBG_GPRINTF(("(rpc__dg_network_disable_desc) Disabing socket %p\n",
         sp->sock));
 
     sp->is_disabled = true;
 
-    RPC_DG_SOCK_POOL_UNLOCK(0); 
+    RPC_DG_SOCK_POOL_UNLOCK(0);
 
     /*
      * For shared sockets, remove the sock from the listener's database
@@ -604,11 +565,10 @@ rpc_dg_sock_pool_elt_p_t sp;
     }
 }
 
-
 /*
  * R P C _ _ D G _ N E T W O R K _ I N I T
  *
- * This routine is called as part of the rpc__init startup 
+ * This routine is called as part of the rpc__init startup
  * initializations.  It creates the mutex that protects the
  * socket pool.
  */
@@ -617,23 +577,17 @@ PRIVATE void rpc__dg_network_init(void)
     RPC_MUTEX_INIT(rpc_g_dg_sock_pool.sp_mutex);
 }
 
-
 /*
  * R P C _ _ D G _ N E T W O R K _ F O R K _ H A N D L E R
- * 
+ *
  * This routine handles socket pool related fork processing.
  */
 
 PRIVATE void rpc__dg_network_fork_handler
-#ifdef _DCE_PROTO_
 (
     rpc_fork_stage_id_t stage
 )
-#else
-(stage)
-rpc_fork_stage_id_t stage;
-#endif
-{ 
+{
     rpc_dg_sock_pool_elt_p_t eltp, neltp;
     rpc_socket_error_t serr;
 
@@ -643,7 +597,7 @@ rpc_fork_stage_id_t stage;
             break;
         case RPC_C_POSTFORK_PARENT:
             break;
-        case RPC_C_POSTFORK_CHILD:  
+        case RPC_C_POSTFORK_CHILD:
             /*
              * In the child of a fork, scan the socket pool
              * for in_use socket descriptors.
@@ -675,20 +629,18 @@ rpc_fork_stage_id_t stage;
     }
 }
 
-
 /*
  * R P C _ _ D G _ N E T W O R K _ S O C K _ R E F E R E N C E
  *
  * Increment the reference count associated with an entry in the socket pool.
  */
 PRIVATE void rpc__dg_network_sock_reference(sp)
-rpc_dg_sock_pool_elt_p_t sp;  
-{  
-    RPC_DG_SOCK_POOL_LOCK(0); 
-    sp->refcnt++; 
-    RPC_DG_SOCK_POOL_UNLOCK(0); 
+rpc_dg_sock_pool_elt_p_t sp;
+{
+    RPC_DG_SOCK_POOL_LOCK(0);
+    sp->refcnt++;
+    RPC_DG_SOCK_POOL_UNLOCK(0);
 }
-
 
 /*
  * R P C _ _ D G _ N E T W O R K _ S O C K _ R E L E A S E
@@ -699,23 +651,17 @@ rpc_dg_sock_pool_elt_p_t sp;
  */
 
 PRIVATE void rpc__dg_network_sock_release
-#ifdef _DCE_PROTO_
 (
     rpc_dg_sock_pool_elt_p_t *sp
 )
-#else
-(sp)
-rpc_dg_sock_pool_elt_p_t *sp;  
-#endif
-{  
-    RPC_DG_SOCK_POOL_LOCK(0); 
+{
+    RPC_DG_SOCK_POOL_LOCK(0);
 
     if (--((*sp)->refcnt) == 1 && (*sp)->is_disabled)
-        sock_free(sp); 
+        sock_free(sp);
     else
         (*sp)->ccall = NULL;
 
-    RPC_DG_SOCK_POOL_UNLOCK(0); 
+    RPC_DG_SOCK_POOL_UNLOCK(0);
     *sp = NULL;
 }
-

@@ -3,6 +3,7 @@
  * (c) Copyright 1993 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1993 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1993 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -65,14 +66,9 @@ static AST_cpp_quote_n_t * global_cppquotes_post = NULL;
 /*                                                                            */
 /******************************************************************************/
 void CSPELL_test_status
-#ifdef PROTO
 (
     FILE *fid
 )
-#else
-    (fid)
-    FILE *fid;
-#endif
 {
     fprintf(fid,
              "if (IDL_ms.IDL_status != error_status_ok) goto IDL_closedown;\n");
@@ -84,14 +80,9 @@ void CSPELL_test_status
 /*                                                                            */
 /******************************************************************************/
 void CSPELL_test_transceive_status
-#ifdef PROTO
 (
     FILE *fid
 )
-#else
-    (fid)
-    FILE *fid;
-#endif
 {
     fprintf(fid, "if (IDL_ms.IDL_status != error_status_ok)\n{\n");
     fprintf(fid, "IDL_ms.IDL_elt_p = NULL;\n");
@@ -612,7 +603,6 @@ void DDBE_spell_pickling_stub
 /*                                                                            */
 /******************************************************************************/
 void DDBE_gen_cstub
-#ifdef PROTO
 (
     FILE *fid,                      /* Handle for emitted C text */
     AST_interface_n_t *p_interface, /* Ptr to AST interface node */
@@ -622,16 +612,6 @@ void DDBE_gen_cstub
     void **cmd_val,
     DDBE_vectors_t *dd_vip    /* Data driven BE vector information ptr */
 )
-#else
-(fid, p_interface, language, header_name, cmd_opt, cmd_val, dd_vip)
-    FILE *fid;
-    AST_interface_n_t *p_interface;
-    language_k_t language;
-    char header_name[];
-    boolean *cmd_opt;
-    void **cmd_val;
-    DDBE_vectors_t *dd_vip;
-#endif
 {
     AST_export_n_t *p_export;
     AST_operation_n_t *p_operation;

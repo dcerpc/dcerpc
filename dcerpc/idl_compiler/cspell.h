@@ -3,6 +3,7 @@
  * (c) Copyright 1993 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1993 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1993 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -40,31 +41,24 @@
 #define CSPELL_H
 
 void CSPELL_std_include(
-#ifdef PROTO
     FILE *fid,
     char header_name[],
     BE_output_k_t filetype,
     int op_count
-#endif
 );
 
 void spell_name(
-#ifdef PROTO
     FILE *fid,
     NAMETABLE_id_t name
-#endif
 );
 
 void CSPELL_var_decl(
-#ifdef PROTO
     FILE *fid,
     AST_type_n_t *type,
     NAMETABLE_id_t name
-#endif
 );
 
 void CSPELL_typed_name(
-#ifdef PROTO
     FILE *fid,
     AST_type_n_t *type,
     NAMETABLE_id_t name,
@@ -72,89 +66,66 @@ void CSPELL_typed_name(
     boolean in_struct,
     boolean spell_tag,
     boolean encoding_services
-#endif
 );
 
 void CSPELL_function_def_header(
-#ifdef PROTO
     FILE *fid,
     AST_operation_n_t *oper,
     NAMETABLE_id_t name
-#endif
 );
 
 void CSPELL_cast_exp(
-#ifdef PROTO
     FILE *fid,
     AST_type_n_t *tp
-#endif
 );
 
 void CSPELL_ptr_cast_exp(
-#ifdef PROTO
     FILE *fid,
     AST_type_n_t *tp
-#endif
 );
 
 void CSPELL_type_exp_simple(
-#ifdef PROTO
     FILE *fid,
     AST_type_n_t *tp
-#endif
 );
 
 boolean CSPELL_scalar_type_suffix(
-#ifdef PROTO
     FILE *fid,
     AST_type_n_t *tp
-#endif
 );
 
 void CSPELL_pipe_struct_routine_decl
 (
-#ifdef PROTO
     FILE *fid,
     AST_type_n_t *p_pipe_type,
     BE_pipe_routine_k_t routine_kind,
     boolean cast
-#endif
 );
 
 void CSPELL_midl_compatibility_allocators
 (
-#ifdef PROTO
     FILE *fid
-#endif
 );
 
 void CSPELL_suppress_stub_warnings
 (
-#ifdef PROTO
  FILE *fid
-#endif
 );
 
 void CSPELL_restore_stub_warnings
 (
-#ifdef PROTO
  FILE *fid
-#endif
 );
 
 void CSPELL_restore_stub_warnings
 (
-#ifdef PROTO
  FILE *fid
-#endif
 );
 
 void DDBE_spell_manager_param_cast
 (
-#ifdef PROTO
     FILE *fid,
     AST_type_n_t *tp
-#endif
 );
 
 #endif

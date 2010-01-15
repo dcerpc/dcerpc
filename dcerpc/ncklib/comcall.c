@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -111,7 +112,6 @@
 **/
 
 PUBLIC void rpc_call_start 
-#ifdef _DCE_PROTO_
 (
     rpc_binding_handle_t    binding_h,
     unsigned32              flags,
@@ -121,16 +121,6 @@ PUBLIC void rpc_call_start
     rpc_transfer_syntax_t   *xfer_syntax,
     unsigned32              *status
 )
-#else
-(binding_h, flags, ifspec_h, opnum, call_handle, xfer_syntax, status)
-rpc_binding_handle_t    binding_h;
-unsigned32              flags;
-rpc_if_handle_t         ifspec_h;
-unsigned32              opnum;
-rpc_call_handle_t       *call_handle;
-rpc_transfer_syntax_t   *xfer_syntax;
-unsigned32              *status;
-#endif
 {
     rpc_binding_rep_p_t     binding_rep = (rpc_binding_rep_p_t) binding_h;
     rpc_call_rep_p_t        call_rep;
@@ -217,18 +207,11 @@ unsigned32              *status;
 **/
 
 PUBLIC void rpc_call_transmit 
-#ifdef _DCE_PROTO_
 (
     rpc_call_handle_t       call_h,
     rpc_iovector_p_t        call_args,
     unsigned32              *status
 )
-#else
-(call_h, call_args, status)
-rpc_call_handle_t       call_h;
-rpc_iovector_p_t        call_args;
-unsigned32              *status;
-#endif
 { 
     RPC_LOG_CALL_TRANSMIT_NTR;
     CODING_ERROR (status);
@@ -292,7 +275,6 @@ unsigned32              *status;
 **/
 
 PUBLIC void rpc_call_transceive 
-#ifdef _DCE_PROTO_
 (
     rpc_call_handle_t       call_h,
     rpc_iovector_p_t        in_call_args,
@@ -300,14 +282,6 @@ PUBLIC void rpc_call_transceive
     ndr_format_t            *remote_ndr_fmt,
     unsigned32              *status
 )
-#else
-(call_h, in_call_args, out_call_args, remote_ndr_fmt, status)
-rpc_call_handle_t       call_h;
-rpc_iovector_p_t        in_call_args;
-rpc_iovector_elt_t      *out_call_args;
-ndr_format_t            *remote_ndr_fmt;
-unsigned32              *status;
-#endif
 { 
     RPC_LOG_CALL_TRANSCEIVE_NTR;
     CODING_ERROR (status);
@@ -363,18 +337,11 @@ unsigned32              *status;
 **/
 
 PUBLIC void rpc_call_receive 
-#ifdef _DCE_PROTO_
 (
     rpc_call_handle_t       call_h,
     rpc_iovector_elt_t      *call_args,
     unsigned32              *status
 )
-#else
-(call_h, call_args, status)
-rpc_call_handle_t       call_h;
-rpc_iovector_elt_t      *call_args;
-unsigned32              *status;
-#endif
 {
     RPC_LOG_CALL_RECEIVE_NTR;
     CODING_ERROR (status);
@@ -428,16 +395,10 @@ unsigned32              *status;
 **/
 
 PUBLIC void rpc_call_block_until_free 
-#ifdef _DCE_PROTO_
 (
     rpc_call_handle_t       call_h,
     unsigned32              *status
 )
-#else
-(call_h, status)
-rpc_call_handle_t       call_h;
-unsigned32              *status;
-#endif
 { 
     CODING_ERROR (status);
     
@@ -485,16 +446,10 @@ unsigned32              *status;
 **/
 
 PUBLIC void rpc_call_cancel 
-#ifdef _DCE_PROTO_
 (
     rpc_call_handle_t       call_h,
     unsigned32              *status
 )
-#else
-(call_h, status)
-rpc_call_handle_t       call_h;
-unsigned32              *status;
-#endif
 { 
     CODING_ERROR (status);
     
@@ -544,16 +499,10 @@ unsigned32              *status;
 **/
 
 PUBLIC void rpc_call_end 
-#ifdef _DCE_PROTO_
 (
     rpc_call_handle_t       *call_h,
     unsigned32              *status
 )
-#else
-(call_h, status)
-rpc_call_handle_t       *call_h;
-unsigned32              *status;
-#endif
 { 
     RPC_LOG_CALL_END_NTR;
     CODING_ERROR (status);
@@ -607,18 +556,11 @@ unsigned32              *status;
 **/
 
 PUBLIC void rpc_call_transmit_fault 
-#ifdef _DCE_PROTO_
 (
     rpc_call_handle_t       call_h,
     rpc_iovector_p_t        call_fault_info,
     unsigned32              *status
 )
-#else
-(call_h, call_fault_info, status)
-rpc_call_handle_t       call_h;
-rpc_iovector_p_t        call_fault_info;
-unsigned32              *status;
-#endif
 { 
     CODING_ERROR (status);
     
@@ -734,16 +676,10 @@ unsigned32              *status;
 **/
 
 PUBLIC boolean32 rpc_call_did_mgr_execute 
-#ifdef _DCE_PROTO_
 (
     rpc_call_handle_t       call_h,
     unsigned32              *status
 )
-#else
-(call_h, status)
-rpc_call_handle_t       call_h;
-unsigned32              *status;
-#endif
 {
     CODING_ERROR (status);
     

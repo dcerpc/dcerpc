@@ -3,7 +3,7 @@
  * (c) Copyright 1993 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1993 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1993 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2009 Apple Inc. All rights reserved.
+ * Portions Copyright (c) 2009-2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -50,9 +50,7 @@
 #include <message.h>    /* reporting functions */
 
 extern const char *acf_keyword_lookup(
-#ifdef PROTO
     int token_value     /* Numeric value of keyword token */
-#endif
 );
 
 extern int  error_count;        /* Count of semantic errors */
@@ -65,11 +63,9 @@ static void    **cmd_val;  /* Array of command option values */
 /* Necessary forward function declarations. */
 
 static void type_check(
-#ifdef PROTO
     AST_type_n_t        *type_p,        /* [in] Ptr to AST type node */
     ASTP_node_t         *node_p,        /* [in] Parent node of type node */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
-#endif
 );
 
 /*
@@ -85,14 +81,9 @@ static void type_check(
 */
 
 boolean CHK_struct_is_all_byte_fields
-#ifdef PROTO
 (
     AST_structure_n_t   *struct_p       /* [in] Ptr to AST structure node */
 )
-#else
-(struct_p)
-    AST_structure_n_t   *struct_p;      /* [in] Ptr to AST structure node */
-#endif
 
 {
     AST_field_n_t       *field_p;       /* A field in the structure */
@@ -120,15 +111,9 @@ boolean CHK_struct_is_all_byte_fields
 */
 
 static boolean type_is_string
-#ifdef PROTO
 (
     AST_type_n_t        *type_p         /* [in] Ptr to AST type node */
 )
-#else
-(type_p)
-    AST_type_n_t        *type_p;        /* [in] Ptr to AST type node */
-#endif
-
 {
     unsigned short      index_count;    /* Number of array dimensions */
     AST_type_n_t        *base_type_p;   /* Base type of array */
@@ -169,15 +154,9 @@ static boolean type_is_string
 */
 
 static boolean type_is_v1_string
-#ifdef PROTO
 (
     AST_type_n_t        *type_p         /* [in] Ptr to AST type node */
 )
-#else
-(type_p)
-    AST_type_n_t        *type_p;        /* [in] Ptr to AST type node */
-#endif
-
 {
     AST_array_n_t       *array_p;       /* Ptr to array node */
     AST_array_index_n_t *index_p;       /* Array index node for minor dim */
@@ -211,15 +190,9 @@ static boolean type_is_v1_string
 */
 
 static AST_type_n_t * type_xmit_type
-#ifdef PROTO
 (
     AST_type_n_t        *type_p         /* [in] Ptr to AST type node */
 )
-#else
-(type_p)
-    AST_type_n_t        *type_p;        /* [in] Ptr to AST type node */
-#endif
-
 {
     while (type_p->xmit_as_type != NULL)
         type_p = type_p->xmit_as_type;
@@ -241,15 +214,9 @@ static AST_type_n_t * type_xmit_type
 */
 
 static boolean array_is_conformant_upper
-#ifdef PROTO
 (
     AST_array_n_t       *array_p        /* [in] Ptr to AST array node */
 )
-#else
-(array_p)
-    AST_array_n_t       *array_p;       /* [in] Ptr to AST array node */
-#endif
-
 {
     AST_array_index_n_t *index_p;       /* Ptr to array index node */
     int                 i;              /* Integer array dimension 0..N-1 */
@@ -275,15 +242,9 @@ static boolean array_is_conformant_upper
 */
 
 static boolean array_is_large
-#ifdef PROTO
 (
     AST_array_n_t       *array_p        /* [in] Ptr to AST array node */
 )
-#else
-(array_p)
-    AST_array_n_t       *array_p;       /* [in] Ptr to AST array node */
-#endif
-
 {
     AST_array_index_n_t *index_p;       /* Ptr to array index node */
     int                 i;              /* Integer array dimension 0..N-1 */
@@ -334,15 +295,9 @@ static boolean array_is_large
 */
 
 static boolean array_has_open_lb
-#ifdef PROTO
 (
     AST_array_n_t       *array_p        /* [in] Ptr to AST array node */
 )
-#else
-(array_p)
-    AST_array_n_t       *array_p;       /* [in] Ptr to AST array node */
-#endif
-
 {
     AST_array_index_n_t *index_p;       /* Ptr to array index node */
     int                 i;              /* Integer array dimension 0..N-1 */
@@ -381,17 +336,10 @@ static boolean array_has_open_lb
 */
 
 AST_type_n_t * param_follow_ref_ptr     /* Returns ptr to type node */
-#ifdef PROTO
 (
     AST_parameter_n_t   *param_p,       /* [in] Ptr to AST parameter node */
     CHK_follow_t        mode            /* [in] Follow mode */
 )
-#else
-(param_p, mode)
-    AST_parameter_n_t   *param_p;       /* [in] Ptr to AST parameter node */
-    CHK_follow_t        mode;           /* [in] Follow mode */
-#endif
-
 {
     AST_type_n_t        *type_p;        /* Ptr to AST type node */
     AST_type_n_t        *ptee_type_p;   /* Pointee type */
@@ -446,17 +394,10 @@ AST_type_n_t * param_follow_ref_ptr     /* Returns ptr to type node */
 static int def_auto_handle = 0;
 
 static void default_to_auto_handle
-#ifdef PROTO
 (
     AST_operation_n_t   *op_p,          /* [in] Ptr to AST operation node */
     int                 message_id      /* [in] message it display */
 )
-#else
-(op_p, message_id)
-    AST_operation_n_t   *op_p;          /* [in] Ptr to AST operation node */
-    int                 message_id;     /* [in] message it display */
-#endif
-
 {
     char const *id_name;   /* Operation name */
 
@@ -481,17 +422,10 @@ static void default_to_auto_handle
 */
 
 static boolean instance_is_varying_upper
-#ifdef PROTO
 (
     AST_array_n_t       *array_p,       /* [in] Ptr to AST array node */
     AST_field_attr_n_t  *fattr_p        /* [in] Ptr to AST field attr. node */
 )
-#else
-(array_p, fattr_p)
-    AST_array_n_t       *array_p;       /* [in] Ptr to AST array node */
-    AST_field_attr_n_t  *fattr_p;       /* [in] Ptr to AST field attr. node */
-#endif
-
 {
     AST_field_ref_n_t   *first_p;       /* first_is ref for a dimension */
     AST_field_ref_n_t   *last_p;        /* last_is ref for a dimension */
@@ -541,19 +475,11 @@ static boolean instance_is_varying_upper
 */
 
 static void fattr_switch_is
-#ifdef PROTO
 (
     AST_field_attr_n_t  *fattr_p,       /* [in] Ptr to AST field attr. node */
     ASTP_node_t         *node_p,        /* [in] Ptr to field or param node */
     AST_type_n_t        *type_p         /* [in] Ptr to field/param data type */
 )
-#else
-(fattr_p, node_p, type_p)
-    AST_field_attr_n_t  *fattr_p;       /* [in] Ptr to AST field attr. node */
-    ASTP_node_t         *node_p;        /* [in] Ptr to field or param node */
-    AST_type_n_t        *type_p;        /* [in] Ptr to field/param data type */
-#endif
-
 {
     AST_type_n_t        *ref_type_p;    /* Ptr to size info field/param type */
     AST_type_n_t        *deref_type_p;  /* Dereferenced field/param type */
@@ -637,7 +563,6 @@ static void fattr_switch_is
 */
 
 static void fattr_check_size
-#ifdef PROTO
 (
     AST_field_attr_n_t  *fattr_p,       /* [in] Ptr to AST field attr. node */
     ASTP_node_t         *node_p,        /* [in] Ptr to field or param node */
@@ -645,15 +570,6 @@ static void fattr_check_size
     AST_interface_n_t   *int_p,         /* [in] Ptr to interface node */
     unsigned short      dim             /* [in] Array dimension to check */
 )
-#else
-(fattr_p, node_p, type_p, int_p, dim)
-    AST_field_attr_n_t  *fattr_p;       /* [in] Ptr to AST field attr. node */
-    ASTP_node_t         *node_p;        /* [in] Ptr to field or param node */
-    AST_type_n_t        *type_p;        /* [in] Ptr to field data type node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-    unsigned short      dim;            /* [in] Array dimension to check */
-#endif
-
 {
     AST_array_n_t       *array_p;       /* Ptr to array node */
     AST_array_index_n_t *index_p = NULL;       /* Ptr to array index node */
@@ -780,19 +696,11 @@ static void fattr_check_size
 */
 
 static void fattr_first_is
-#ifdef PROTO
 (
     AST_field_attr_n_t  *fattr_p,       /* [in] Ptr to AST field attr. node */
     ASTP_node_t         *node_p,        /* [in] Ptr to field or param node */
     unsigned short      dim             /* [in] Array dimension to check */
 )
-#else
-(fattr_p, node_p, dim)
-    AST_field_attr_n_t  *fattr_p;       /* [in] Ptr to AST field attr. node */
-    ASTP_node_t         *node_p;        /* [in] Ptr to field or param node */
-    unsigned short      dim;            /* [in] Array dimension to check */
-#endif
-
 {
     AST_type_n_t        *ref_type_p;    /* Ptr to size info field/param type */
     AST_type_n_t        *deref_type_p = NULL;  /* Dereferenced field/param type */
@@ -866,19 +774,11 @@ static void fattr_first_is
 */
 
 static void fattr_last_is
-#ifdef PROTO
 (
     AST_field_attr_n_t  *fattr_p,       /* [in] Ptr to AST field attr. node */
     ASTP_node_t         *node_p,        /* [in] Ptr to field or param node */
     unsigned short      dim             /* [in] Array dimension to check */
 )
-#else
-(fattr_p, node_p, dim)
-    AST_field_attr_n_t  *fattr_p;       /* [in] Ptr to AST field attr. node */
-    ASTP_node_t         *node_p;        /* [in] Ptr to field or param node */
-    unsigned short      dim;            /* [in] Array dimension to check */
-#endif
-
 {
     AST_type_n_t        *ref_type_p;    /* Ptr to size info field/param type */
     AST_type_n_t        *deref_type_p = NULL;  /* Dereferenced field/param type */
@@ -952,19 +852,11 @@ static void fattr_last_is
 */
 
 static void fattr_length_is
-#ifdef PROTO
 (
     AST_field_attr_n_t  *fattr_p,       /* [in] Ptr to AST field attr. node */
     ASTP_node_t         *node_p,        /* [in] Ptr to field or param node */
     unsigned short      dim             /* [in] Array dimension to check */
 )
-#else
-(fattr_p, node_p, dim)
-    AST_field_attr_n_t  *fattr_p;       /* [in] Ptr to AST field attr. node */
-    ASTP_node_t         *node_p;        /* [in] Ptr to field or param node */
-    unsigned short      dim;            /* [in] Array dimension to check */
-#endif
-
 {
     AST_type_n_t        *ref_type_p;    /* Ptr to size info field/param type */
     AST_type_n_t        *deref_type_p = NULL;  /* Dereferenced field/param type */
@@ -1038,21 +930,12 @@ static void fattr_length_is
 */
 
 static void fattr_min_is
-#ifdef PROTO
 (
     AST_field_attr_n_t  *fattr_p,       /* [in] Ptr to AST field attr. node */
     ASTP_node_t         *node_p,        /* [in] Ptr to field or param node */
     AST_type_n_t        *type_p,        /* [in] Ptr to field/param data type */
     unsigned short      dim             /* [in] Array dimension to check */
 )
-#else
-(fattr_p, node_p, type_p, dim)
-    AST_field_attr_n_t  *fattr_p;       /* [in] Ptr to AST field attr. node */
-    ASTP_node_t         *node_p;        /* [in] Ptr to field or param node */
-    AST_type_n_t        *type_p;        /* [in] Ptr to field/param data type */
-    unsigned short      dim;            /* [in] Array dimension to check */
-#endif
-
 {
     AST_array_n_t       *array_p;       /* Ptr to array node */
     AST_array_index_n_t *index_p = NULL;       /* Ptr to array index node */
@@ -1173,21 +1056,12 @@ static void fattr_min_is
 */
 
 static void fattr_max_is
-#ifdef PROTO
 (
     AST_field_attr_n_t  *fattr_p,       /* [in] Ptr to AST field attr. node */
     ASTP_node_t         *node_p,        /* [in] Ptr to field or param node */
     AST_type_n_t        *type_p,        /* [in] Ptr to field/param data type */
     unsigned short      dim             /* [in] Array dimension to check */
 )
-#else
-(fattr_p, node_p, type_p, dim)
-    AST_field_attr_n_t  *fattr_p;       /* [in] Ptr to AST field attr. node */
-    ASTP_node_t         *node_p;        /* [in] Ptr to field or param node */
-    AST_type_n_t        *type_p;        /* [in] Ptr to field/param data type */
-    unsigned short      dim;            /* [in] Array dimension to check */
-#endif
-
 {
     AST_array_n_t       *array_p;       /* Ptr to array node */
     AST_array_index_n_t *index_p = NULL;       /* Ptr to array index node */
@@ -1296,21 +1170,12 @@ static void fattr_max_is
 */
 
 static void fattr_size_is
-#ifdef PROTO
 (
     AST_field_attr_n_t  *fattr_p,       /* [in] Ptr to AST field attr. node */
     ASTP_node_t         *node_p,        /* [in] Ptr to field or param node */
     AST_type_n_t        *type_p,        /* [in] Ptr to field/param data type */
     unsigned short      dim             /* [in] Array dimension to check */
 )
-#else
-(fattr_p, node_p, type_p, dim)
-    AST_field_attr_n_t  *fattr_p;       /* [in] Ptr to AST field attr. node */
-    ASTP_node_t         *node_p;        /* [in] Ptr to field or param node */
-    AST_type_n_t        *type_p;        /* [in] Ptr to field/param data type */
-    unsigned short      dim;            /* [in] Array dimension to check */
-#endif
-
 {
     AST_array_n_t       *array_p;       /* Ptr to array node */
     AST_array_index_n_t *index_p = NULL;       /* Ptr to array index node */
@@ -1421,21 +1286,12 @@ static void fattr_size_is
 */
 
 static void fattr_param_conformant
-#ifdef PROTO
 (
     AST_field_attr_n_t  *fattr_p,       /* [in] Ptr to AST field attr. node */
     AST_parameter_n_t   *param_p,       /* [in] Ptr to associated param node */
     AST_interface_n_t   *int_p,         /* [in] Ptr to interface node */
     unsigned short      dim             /* [in] Array dimension */
 )
-#else
-(fattr_p, param_p, int_p, dim)
-    AST_field_attr_n_t  *fattr_p;       /* [in] Ptr to AST field attr. node */
-    AST_parameter_n_t   *param_p;       /* [in] Ptr to associated param node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-    unsigned short      dim;            /* [in] Array dimension */
-#endif
-
 {
     /* [min_is] parameter must have [in] attribute */
 
@@ -1480,21 +1336,12 @@ static void fattr_param_conformant
 */
 
 static void fattr_param_varying
-#ifdef PROTO
 (
     AST_field_attr_n_t  *fattr_p,       /* [in] Ptr to AST field attr. node */
     AST_parameter_n_t   *param_p,       /* [in] Ptr to associated param node */
     AST_interface_n_t   *int_p,         /* [in] Ptr to interface node */
     unsigned short      dim             /* [in] Array dimension */
 )
-#else
-(fattr_p, param_p, int_p, dim)
-    AST_field_attr_n_t  *fattr_p;       /* [in] Ptr to AST field attr. node */
-    AST_parameter_n_t   *param_p;       /* [in] Ptr to associated param node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-    unsigned short      dim;            /* [in] Array dimension */
-#endif
-
 {
     /* [first_is] parameter must have [in] attribute */
 
@@ -1539,19 +1386,11 @@ static void fattr_param_varying
 */
 
 static void fattr_param_check
-#ifdef PROTO
 (
     AST_field_attr_n_t  *fattr_p,       /* [in] Ptr to AST field attr. node */
     AST_parameter_n_t   *param_p,       /* [in] Ptr to associated param node */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(fattr_p, param_p, int_p)
-    AST_field_attr_n_t  *fattr_p;       /* [in] Ptr to AST field attr. node */
-    AST_parameter_n_t   *param_p;       /* [in] Ptr to associated param node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     unsigned short      dim;            /* Array dimension */
     unsigned short      max_dim;        /* Maximum dimension */
@@ -1585,21 +1424,12 @@ static void fattr_param_check
 */
 
 static void fattr_check
-#ifdef PROTO
 (
     AST_field_attr_n_t  *fattr_p,       /* [in] Ptr to AST field attr. node */
     ASTP_node_t         *node_p,        /* [in] Ptr to field or param node */
     AST_type_n_t        *type_p,        /* [in] Ptr to field/param data type */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(fattr_p, node_p, type_p, int_p)
-    AST_field_attr_n_t  *fattr_p;       /* [in] Ptr to AST field attr. node */
-    ASTP_node_t         *node_p;        /* [in] Ptr to field or param node */
-    AST_type_n_t        *type_p;        /* [in] Ptr to field/param data type */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     unsigned short      dim;            /* Array dimension */
     unsigned short      max_dim;        /* Maximum dimension */
@@ -1642,15 +1472,9 @@ static void fattr_check
 */
 
 static void index_const_type
-#ifdef PROTO
 (
     AST_array_index_n_t *index_p        /* [in] Ptr to AST array index node */
 )
-#else
-(index_p)
-    AST_array_index_n_t *index_p;       /* [in] Ptr to AST array index node */
-#endif
-
 {
     /* Invalid array index type */
 
@@ -1669,15 +1493,9 @@ static void index_const_type
 */
 
 static void index_bounds
-#ifdef PROTO
 (
     AST_array_index_n_t *index_p        /* [in] Ptr to AST array index node */
 )
-#else
-(index_p)
-    AST_array_index_n_t *index_p;       /* [in] Ptr to AST array index node */
-#endif
-
 {
     /* Lower bound must not be greater than upper bound */
 
@@ -1702,15 +1520,9 @@ static void index_bounds
 */
 
 static void index_check
-#ifdef PROTO
 (
     AST_array_index_n_t *index_p        /* [in] Ptr to AST array index node */
 )
-#else
-(index_p)
-    AST_array_index_n_t *index_p;       /* [in] Ptr to AST array index node */
-#endif
-
 {
     index_const_type(index_p);
     index_bounds(index_p);
@@ -1723,7 +1535,6 @@ static void index_check
 */
 
 static void array_element_type
-#ifdef PROTO
 (
     ASTP_node_t         *node_p,        /* [in] Ptr to array or pointer node */
     AST_type_n_t        *type_p,        /* [in] Ptr to array elem type node */
@@ -1731,15 +1542,6 @@ static void array_element_type
     AST_interface_n_t   *int_p,          /* [in] Ptr to interface node */
     boolean             arrayified      /* [in] true if arrayified pointer */
 )
-#else
-(node_p, type_p, arr_type_p, int_p, arrayified)
-    ASTP_node_t         *node_p;        /* [in] Ptr to array or pointer node */
-    AST_type_n_t        *type_p;        /* [in] Ptr to array elem type node */
-    AST_type_n_t        *arr_type_p;    /* [in] Ptr to array | ptr type node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-    boolean             arrayified;     /* [in] true if arrayified pointer */
-#endif
-
 {
 	AST_type_n_t        *etype_p;       /* Array element presented type */
 
@@ -1820,7 +1622,6 @@ static void array_element_type
 */
 
 static void array_check
-#ifdef PROTO
 (
     ASTP_node_t         *node_p,        /* [in] Ptr to array or pointer node */
     AST_type_n_t        *arr_type_p,    /* [in] Array or ptr type node */
@@ -1829,16 +1630,6 @@ static void array_check
     AST_interface_n_t   *int_p,         /* [in] Ptr to interface node */
     boolean             arrayified      /* [in] true if arrayified pointer */
 )
-#else
-(node_p, arr_type_p, parent_p, type_p, int_p, arrayified)
-    ASTP_node_t         *node_p;        /* [in] Ptr to array or pointer node */
-    AST_type_n_t        *arr_type_p;    /* [in] Array or ptr type node */
-    ASTP_node_t         *parent_p;      /* [in] Parent of array or ptr type */
-    AST_type_n_t        *type_p;        /* [in] Ptr to array elem type node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-    boolean             arrayified;     /* [in] true if arrayified pointer */
-#endif
-
 {
     unsigned short      dim;            /* Array dimension */
 
@@ -1891,21 +1682,12 @@ static void array_check
 */
 
 static void param_type
-#ifdef PROTO
 (
     AST_parameter_n_t   *param_p,       /* [in] Ptr to AST parameter node */
     AST_type_n_t        *top_type_p,    /* [in] Top-level parameter type */
     AST_type_n_t        *type_p,        /* [in] Parameter type */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(param_p, top_type_p, type_p, int_p)
-    AST_parameter_n_t   *param_p;       /* [in] Ptr to AST parameter node */
-    AST_type_n_t        *top_type_p;    /* [in] Top-level parameter type */
-    AST_type_n_t        *type_p;        /* [in] Parameter type */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
 #if 0
     AST_type_n_t        *btype_p;       /* Base type */
@@ -1991,21 +1773,12 @@ static void param_type
 */
 
 static void param_size
-#ifdef PROTO
 (
     AST_parameter_n_t   *param_p,       /* [in] Ptr to AST parameter node */
     AST_type_n_t        *top_type_p,    /* [in] Top-level parameter type */
     AST_type_n_t        *type_p,        /* [in] Parameter type */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(param_p, top_type_p, type_p, int_p)
-    AST_parameter_n_t   *param_p;       /* [in] Ptr to AST parameter node */
-    AST_type_n_t        *top_type_p;    /* [in] Top-level parameter type */
-    AST_type_n_t        *type_p;        /* [in] Parameter type */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     AST_field_attr_n_t  *fattr_p;       /* Field attributes */
 
@@ -2190,19 +1963,11 @@ static void param_struct
 */
 
 static void param_pipe
-#ifdef PROTO
 (
     AST_parameter_n_t   *param_p,       /* [in] Ptr to AST parameter node */
     AST_type_n_t        *top_type_p ATTRIBUTE_UNUSED,    /* [in] Top-level parameter type */
     AST_type_n_t        *type_p         /* [in] Parameter type */
 )
-#else
-(param_p, top_type_p, type_p)
-    AST_parameter_n_t   *param_p;       /* [in] Ptr to AST parameter node */
-    AST_type_n_t        *top_type_p;    /* [in] Top-level parameter type */
-    AST_type_n_t        *type_p;        /* [in] Parameter type */
-#endif
-
 {
     type_p = type_xmit_type(type_p);    /* Pick up transmissible type */
 
@@ -2226,17 +1991,10 @@ static void param_pipe
 */
 
 static void param_in_line
-#ifdef PROTO
 (
     AST_parameter_n_t   *param_p,       /* [in] Ptr to AST parameter node */
     AST_type_n_t        *type_p         /* [in] Parameter type */
 )
-#else
-(param_p, type_p)
-    AST_parameter_n_t   *param_p;       /* [in] Ptr to AST parameter node */
-    AST_type_n_t        *type_p;        /* [in] Parameter type */
-#endif
-
 {
     /* Can't have both [in_line] and [out_of_line] parameter attributes */
 
@@ -2268,17 +2026,10 @@ static void param_in_line
 */
 
 static void param_string
-#ifdef PROTO
 (
     AST_parameter_n_t   *param_p,       /* [in] Ptr to AST parameter node */
     AST_type_n_t        *type_p         /* [in] Parameter type */
 )
-#else
-(param_p, type_p)
-    AST_parameter_n_t   *param_p;       /* [in] Ptr to AST parameter node */
-    AST_type_n_t        *type_p;        /* [in] Parameter type */
-#endif
-
 {
     /* A [v1_string] must be an array of char with fixed bounds */
 
@@ -2344,21 +2095,12 @@ static void param_string
 */
 
 static void param_pointer
-#ifdef PROTO
 (
     AST_parameter_n_t   *param_p,       /* [in] Ptr to AST parameter node */
     AST_type_n_t        *top_type_p,    /* [in] Top-level parameter type */
     AST_type_n_t        *type_p,        /* [in] Parameter type */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(param_p, top_type_p, type_p, int_p)
-    AST_parameter_n_t   *param_p;       /* [in] Ptr to AST parameter node */
-    AST_type_n_t        *top_type_p;    /* [in] Top-level parameter type */
-    AST_type_n_t        *type_p;        /* [in] Parameter type */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     boolean pointer_attr_valid = FALSE;
 
@@ -2465,19 +2207,11 @@ static void param_pointer
 */
 
 static void param_small
-#ifdef PROTO
 (
     AST_parameter_n_t   *param_p,       /* [in] Ptr to AST parameter node */
     AST_type_n_t        *top_type_p,    /* [in] Top-level parameter type */
-    AST_type_n_t        *type_p         /* [in] Parameter type */
+    AST_type_n_t        *type_p        /* [in] Parameter type */
 )
-#else
-(param_p, top_type_p, type_p)
-    AST_parameter_n_t   *param_p;       /* [in] Ptr to AST parameter node */
-    AST_type_n_t        *top_type_p;    /* [in] Top-level parameter type */
-    AST_type_n_t        *type_p;        /* [in] Parameter type */
-#endif
-
 {
     AST_array_n_t       *array_p;       /* Ptr to array node */
     AST_field_attr_n_t  *fattr_p;       /* Ptr to field attribute node */
@@ -2538,19 +2272,11 @@ static void param_small
 */
 
 static void param_context
-#ifdef PROTO
 (
     AST_parameter_n_t   *param_p,       /* [in] Ptr to AST parameter node */
     AST_type_n_t        *top_type_p,    /* [in] Top-level parameter type */
     AST_type_n_t        *type_p         /* [in] Parameter type */
 )
-#else
-(param_p, top_type_p, type_p)
-    AST_parameter_n_t   *param_p;       /* [in] Ptr to AST parameter node */
-    AST_type_n_t        *top_type_p;    /* [in] Top-level parameter type */
-    AST_type_n_t        *type_p;        /* [in] Parameter type */
-#endif
-
 {
     AST_type_n_t        *deref_type_p;  /* Explicit pointer's pointee type */
     boolean             type_is_pointer;/* Type is real pointer, not void* */
@@ -2600,19 +2326,11 @@ static void param_context
 */
 
 static void param_varying
-#ifdef PROTO
 (
     AST_parameter_n_t   *param_p,       /* [in] Ptr to AST parameter node */
     AST_type_n_t        *type_p,        /* [in] Parameter type */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(param_p, type_p, int_p)
-    AST_parameter_n_t   *param_p;       /* [in] Ptr to AST parameter node */
-    AST_type_n_t        *type_p;        /* [in] Parameter type */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     /*
      * Assume that if the varying attribute is set, the parameter is an
@@ -2641,21 +2359,12 @@ static void param_varying
 */
 
 static void param_direction
-#ifdef PROTO
 (
     AST_parameter_n_t   *param_p,       /* [in] Ptr to AST parameter node */
     AST_type_n_t        *top_type_p,    /* [in] Top-level parameter type */
     AST_type_n_t        *type_p,        /* [in] Parameter type */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(param_p, top_type_p, type_p, int_p)
-    AST_parameter_n_t   *param_p;       /* [in] Ptr to AST parameter node */
-    AST_type_n_t        *top_type_p;    /* [in] Top-level parameter type */
-    AST_type_n_t        *type_p;        /* [in] Parameter type */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     type_p = type_xmit_type(type_p);    /* Pick up transmissible type */
 
@@ -2747,17 +2456,10 @@ static void param_direction
 */
 
 static void param_comm_status
-#ifdef PROTO
 (
     AST_parameter_n_t   *param_p,       /* [in] Ptr to AST parameter node */
     AST_type_n_t        *type_p         /* [in] Parameter type */
 )
-#else
-(param_p, type_p)
-    AST_parameter_n_t   *param_p;       /* [in] Ptr to AST parameter node */
-    AST_type_n_t        *type_p;        /* [in] Parameter type */
-#endif
-
 {
     char const *type_name;     /* Data type name */
 
@@ -2816,17 +2518,10 @@ static void param_comm_status
             acf_keyword_lookup(FAULT_STATUS_KW));
 }
 static void param_switch_is
-#ifdef PROTO
 (
     AST_parameter_n_t   *param_p,       /* [in] Ptr to AST parameter node */
     AST_type_n_t        *type_p         /* [in] Parameter type */
 )
-#else
-(param_p, type_p)
-    AST_parameter_n_t   *param_p;       /* [in] Ptr to AST parameter node */
-    AST_type_n_t        *type_p;        /* [in] Parameter type */
-#endif
-
 {
     if (type_p->kind == AST_pointer_k)
         type_p = ASTP_chase_ptr_to_kind(type_p, AST_disc_union_k);
@@ -2849,17 +2544,10 @@ static void param_switch_is
 */
 
 static void param_first_handle
-#ifdef PROTO
 (
     AST_parameter_n_t   *param_p,       /* [in] Ptr to AST parameter node */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(param_p, int_p)
-    AST_parameter_n_t   *param_p;       /* [in] Ptr to AST parameter node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     AST_operation_n_t   *op_p;          /* Operation containing the parameter */
     AST_type_n_t        *type_p;        /* Param type (deref'd if necess.) */
@@ -2963,17 +2651,10 @@ static void param_first_handle
 */
 
 static void param_check_first
-#ifdef PROTO
 (
     AST_parameter_n_t   *param_p,       /* [in] Ptr to AST parameter node */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(param_p, int_p)
-    AST_parameter_n_t   *param_p;       /* [in] Ptr to AST parameter node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     param_first_handle(param_p, int_p);
 }
@@ -2986,17 +2667,10 @@ static void param_check_first
 */
 
 static void param_check_non_handle
-#ifdef PROTO
 (
     AST_parameter_n_t   *param_p,       /* [in] Ptr to AST parameter node */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(param_p, int_p)
-    AST_parameter_n_t   *param_p;       /* [in] Ptr to AST parameter node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     AST_type_n_t        *type_p;        /* Param type (deref'd if necess.) */
 
@@ -3023,17 +2697,10 @@ static void param_check_non_handle
 */
 
 static void param_check
-#ifdef PROTO
 (
     AST_parameter_n_t   *param_p,       /* [in] Ptr to AST parameter node */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(param_p, int_p)
-    AST_parameter_n_t   *param_p;       /* [in] Ptr to AST parameter node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     AST_field_attr_n_t  *fattr_p;       /* Field attributes assoc. with param */
     AST_type_n_t        *top_type_p;    /* Top-level parameter type */
@@ -3094,17 +2761,10 @@ static void param_check
 */
 
 static void op_handle
-#ifdef PROTO
 (
     AST_operation_n_t   *op_p,          /* [in] Ptr to AST operation node */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(op_p, int_p)
-    AST_operation_n_t   *op_p;          /* [in] Ptr to AST operation node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     /* No binding handle parameter for 'operation' - auto_handle assumed. */
 
@@ -3123,15 +2783,9 @@ static void op_handle
 */
 
 static void op_comm_status
-#ifdef PROTO
 (
     AST_operation_n_t   *op_p           /* [in] Ptr to AST operation node */
 )
-#else
-(op_p)
-    AST_operation_n_t   *op_p;          /* [in] Ptr to AST operation node */
-#endif
-
 {
     AST_parameter_n_t   *param_p;       /* A parameter in the operation */
     int     comm_status_count;          /* Number [comm_status] parameters */
@@ -3173,15 +2827,9 @@ static void op_comm_status
 */
 
 static void op_broadcast
-#ifdef PROTO
 (
     AST_operation_n_t   *op_p           /* [in] Ptr to AST operation node */
 )
-#else
-(op_p)
-    AST_operation_n_t   *op_p;          /* [in] Ptr to AST operation node */
-#endif
-
 {
     /* Can't have [broadcast] attribute on operation with pipes */
 
@@ -3197,15 +2845,9 @@ static void op_broadcast
 */
 
 static void op_maybe
-#ifdef PROTO
 (
     AST_operation_n_t   *op_p           /* [in] Ptr to AST operation node */
 )
-#else
-(op_p)
-    AST_operation_n_t   *op_p;          /* [in] Ptr to AST operation node */
-#endif
-
 {
     /* [maybe] operations cannot have [out] parameters */
 
@@ -3221,15 +2863,9 @@ static void op_maybe
 */
 
 static void op_code
-#ifdef PROTO
 (
     AST_operation_n_t   *op_p           /* [in] Ptr to AST operation node */
 )
-#else
-(op_p)
-    AST_operation_n_t   *op_p;          /* [in] Ptr to AST operation node */
-#endif
-
 {
     /* Can't have both [code] and [nocode] operation attributes */
 
@@ -3252,15 +2888,9 @@ static void op_code
 */
 
 static void op_idempotent
-#ifdef PROTO
 (
     AST_operation_n_t   *op_p           /* [in] Ptr to AST operation node */
 )
-#else
-(op_p)
-    AST_operation_n_t   *op_p;          /* [in] Ptr to AST operation node */
-#endif
-
 {
     /* Can't have [idempotent] attribute on operation with pipes */
 
@@ -3277,15 +2907,9 @@ static void op_idempotent
 */
 
 static void op_encode
-#ifdef PROTO
 (
     AST_operation_n_t   *op_p           /* [in] Ptr to AST operation node */
 )
-#else
-(op_p)
-    AST_operation_n_t   *op_p;          /* [in] Ptr to AST operation node */
-#endif
-
 {
     AST_parameter_n_t   *param_p;       /* A parameter in the operation */
     AST_parameter_n_t   *p1;            /* First parameter in the operation */
@@ -3425,17 +3049,10 @@ static void op_encode
 */
 
 static void operation_check
-#ifdef PROTO
 (
     AST_operation_n_t   *op_p,          /* [in] Ptr to AST operation node */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(op_p, int_p)
-    AST_operation_n_t   *op_p;          /* [in] Ptr to AST operation node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     AST_parameter_n_t   *param_p;       /* A parameter in the operation */
 
@@ -3511,17 +3128,10 @@ static void operation_check
 */
 
 static void field_type
-#ifdef PROTO
 (
     AST_field_n_t       *field_p,       /* [in] Ptr to AST field node */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(field_p, int_p)
-    AST_field_n_t       *field_p;       /* [in] Ptr to AST field node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     AST_type_n_t        *type_p;        /* Data type of the field */
 
@@ -3629,17 +3239,10 @@ static void field_type
 */
 
 static void field_size
-#ifdef PROTO
 (
     AST_field_n_t       *field_p,       /* [in] Ptr to AST field node */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(field_p, int_p)
-    AST_field_n_t       *field_p;       /* [in] Ptr to AST field node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     AST_type_n_t        *type_p;        /* Data type of the field */
     AST_field_attr_n_t  *fattr_p;       /* Field attributes */
@@ -3767,15 +3370,9 @@ static void field_size
 */
 
 static void field_in_line
-#ifdef PROTO
 (
     AST_field_n_t       *field_p        /* [in] Ptr to AST field node */
 )
-#else
-(field_p)
-    AST_field_n_t       *field_p;       /* [in] Ptr to AST field node */
-#endif
-
 {
     AST_type_n_t        *type_p;        /* Data type of the field */
 
@@ -3811,15 +3408,9 @@ static void field_in_line
 */
 
 static void field_string
-#ifdef PROTO
 (
     AST_field_n_t       *field_p        /* [in] Ptr to AST field node */
 )
-#else
-(field_p)
-    AST_field_n_t       *field_p;       /* [in] Ptr to AST field node */
-#endif
-
 {
     AST_type_n_t        *type_p;        /* Data type of the field */
 
@@ -3889,17 +3480,10 @@ static void field_string
 */
 
 static void field_pointer
-#ifdef PROTO
 (
     AST_field_n_t       *field_p,       /* [in] Ptr to AST field node */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(field_p, int_p)
-    AST_field_n_t       *field_p;       /* [in] Ptr to AST field node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     AST_type_n_t        *type_p;        /* Data type of the field */
     boolean pointer_attr_valid = FALSE;
@@ -3973,15 +3557,9 @@ static void field_pointer
 */
 
 static void field_small
-#ifdef PROTO
 (
     AST_field_n_t       *field_p        /* [in] Ptr to AST field node */
 )
-#else
-(field_p)
-    AST_field_n_t       *field_p;       /* [in] Ptr to AST field node */
-#endif
-
 {
     AST_type_n_t        *type_p;        /* Data type of the field */
     AST_array_n_t       *array_p;       /* Ptr to array node */
@@ -4044,15 +3622,9 @@ static void field_small
 */
 
 static void field_context
-#ifdef PROTO
 (
     AST_field_n_t       *field_p        /* [in] Ptr to AST field node */
 )
-#else
-(field_p)
-    AST_field_n_t       *field_p;       /* [in] Ptr to AST field node */
-#endif
-
 {
     AST_type_n_t        *type_p;        /* Data type of the field */
 
@@ -4089,17 +3661,10 @@ static void field_context
 */
 
 static void field_varying
-#ifdef PROTO
 (
     AST_field_n_t       *field_p,       /* [in] Ptr to AST field node */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(field_p, int_p)
-    AST_field_n_t       *field_p;       /* [in] Ptr to AST field node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     AST_type_n_t        *type_p;        /* Field data type */
 
@@ -4132,15 +3697,9 @@ static void field_varying
 */
 
 static void field_ignore
-#ifdef PROTO
 (
     AST_field_n_t       *field_p        /* [in] Ptr to AST field node */
 )
-#else
-(field_p)
-    AST_field_n_t       *field_p;       /* [in] Ptr to AST field node */
-#endif
-
 {
     AST_type_n_t        *type_p;        /* Field data type */
 
@@ -4153,15 +3712,9 @@ static void field_ignore
         CHECKER_error(field_p, NIDL_IGNATTRPTR);
 }
 static void field_switch_is
-#ifdef PROTO
 (
     AST_field_n_t       *field_p        /* [in] Ptr to AST field node */
 )
-#else
-(field_p)
-    AST_field_n_t       *field_p;       /* [in] Ptr to AST field node */
-#endif
-
 {
     AST_type_n_t        *type_p;        /* Field data type */
 
@@ -4187,17 +3740,10 @@ static void field_switch_is
 */
 
 static void field_check
-#ifdef PROTO
 (
     AST_field_n_t       *field_p,       /* [in] Ptr to AST field node */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(field_p, int_p)
-    AST_field_n_t       *field_p;       /* [in] Ptr to AST field node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     AST_field_attr_n_t  *fattr_p;       /* Ptr to field attribute node */
 
@@ -4229,17 +3775,10 @@ static void field_check
 */
 
 static void struct_check
-#ifdef PROTO
 (
     AST_structure_n_t   *struct_p,      /* [in] Ptr to AST structure node */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(struct_p, int_p)
-    AST_structure_n_t   *struct_p;      /* [in] Ptr to AST structure node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     AST_field_n_t       *field_p;       /* A field of the structure */
 
@@ -4261,19 +3800,11 @@ static void struct_check
 */
 
 static void fp_param_handle
-#ifdef PROTO
 (
     AST_parameter_n_t   *param_p,       /* [in] Ptr to AST parameter node */
     AST_type_n_t        *type_p,        /* [in] Parameter type */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(param_p, type_p, int_p)
-    AST_parameter_n_t   *param_p;       /* [in] Ptr to AST parameter node */
-    AST_type_n_t        *type_p;        /* [in] Parameter type */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     type_p = type_xmit_type(type_p);    /* Pick up transmissible type */
 
@@ -4300,17 +3831,10 @@ static void fp_param_handle
 */
 
 static void fp_param_check
-#ifdef PROTO
 (
     AST_parameter_n_t   *param_p,       /* [in] Ptr to AST parameter node */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(param_p, int_p)
-    AST_parameter_n_t   *param_p;       /* [in] Ptr to AST parameter node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     AST_field_attr_n_t  *fattr_p;       /* Field attributes assoc. with param */
     AST_type_n_t        *top_type_p;    /* Top-level parameter type */
@@ -4356,19 +3880,11 @@ static void fp_param_check
 */
 
 static void function_ptr_check
-#ifdef PROTO
 (
     AST_operation_n_t   *op_p,          /* [in] Ptr to operation node */
     AST_type_n_t        *type_p,        /* [in] Ptr to type node of pointer */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(op_p, type_p, int_p)
-    AST_operation_n_t   *op_p;          /* [in] Ptr to operation node */
-    AST_type_n_t        *type_p;        /* [in] Ptr to type node of pointer */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     AST_parameter_n_t   *param_p;       /* A parameter in the operation */
 
@@ -4401,21 +3917,12 @@ static void function_ptr_check
 */
 
 static void ptr_pointee_type
-#ifdef PROTO
 (
     AST_pointer_n_t     *ptr_p,         /* [in] Ptr to AST pointer node */
     AST_type_n_t        *ptr_type_p,    /* [in] Pointer type node */
     ASTP_node_t         *node_p,        /* [in] Parent node of ptr type node */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(ptr_p, ptr_type_p, node_p, int_p)
-    AST_pointer_n_t     *ptr_p;         /* [in] Ptr to AST pointer node */
-    AST_type_n_t        *ptr_type_p;    /* [in] Pointer type node */
-    ASTP_node_t         *node_p;        /* [in] Parent node of ptr type node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     AST_type_n_t        *type_p;        /* Pointee data type node */
 
@@ -4487,21 +3994,12 @@ static void ptr_pointee_type
 */
 
 static void ptr_check
-#ifdef PROTO
 (
     AST_pointer_n_t     *ptr_p,         /* [in] Ptr to AST pointer node */
     AST_type_n_t        *ptr_type_p,    /* [in] Pointer type node */
     ASTP_node_t         *node_p,        /* [in] Parent node of ptr type node */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(ptr_p, ptr_type_p, node_p, int_p)
-    AST_pointer_n_t     *ptr_p;         /* [in] Ptr to AST pointer node */
-    AST_type_n_t        *ptr_type_p;    /* [in] Pointer type node */
-    ASTP_node_t         *node_p;        /* [in] Parent node of ptr type node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     ptr_pointee_type(ptr_p, ptr_type_p, node_p, int_p);
 }
@@ -4513,17 +4011,10 @@ static void ptr_check
 */
 
 static void pipe_base_type
-#ifdef PROTO
 (
     AST_pipe_n_t        *pipe_p,        /* [in] Ptr to AST pipe node */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(pipe_p, int_p)
-    AST_pipe_n_t        *pipe_p;        /* [in] Ptr to AST pipe node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     AST_type_n_t        *type_p;        /* Pipe base data type node */
 
@@ -4601,19 +4092,11 @@ static void pipe_base_type
 */
 
 static void pipe_check
-#ifdef PROTO
 (
     AST_pipe_n_t        *pipe_p,        /* [in] Ptr to AST pipe node */
     AST_type_n_t        *type_p,        /* [in] Ptr to pipe data type node */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(pipe_p, type_p, int_p)
-    AST_pipe_n_t        *pipe_p;        /* [in] Ptr to AST pipe node */
-    AST_type_n_t        *type_p;        /* [in] Ptr to pipe data type node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     /* A pipe may not have a [transmit_as] type */
 
@@ -4635,17 +4118,10 @@ static void pipe_check
 */
 
 static void enum_check
-#ifdef PROTO
 (
     AST_enumeration_n_t *enum_p,        /* [in] Ptr to AST enumeration node */
     AST_type_n_t        *type_p         /* [in] Ptr to enum data type node */
 )
-#else
-(enum_p, type_p)
-    AST_enumeration_n_t *enum_p;        /* [in] Ptr to AST enumeration node */
-    AST_type_n_t        *type_p;        /* [in] Ptr to enum data type node */
-#endif
-
 {
     /* Use of anonymous enum may not be portable across C compilers */
     if (type_is_anonymous(type_p))
@@ -4659,17 +4135,10 @@ static void enum_check
 */
 
 static void clabel_value
-#ifdef PROTO
 (
     AST_case_label_n_t  *clabel_p,      /* [in] Ptr to AST case label node */
     AST_type_n_t        *type_p         /* [in] Union discriminator data type */
 )
-#else
-(clabel_p, type_p)
-    AST_case_label_n_t  *clabel_p;      /* [in] Ptr to AST case label node */
-    AST_type_n_t        *type_p;        /* [in] Union discriminator data type */
-#endif
-
 {
     AST_constant_n_t    *const_p;       /* Constant value in case label */
 
@@ -4747,17 +4216,10 @@ static void clabel_value
 */
 
 static void clabel_check
-#ifdef PROTO
 (
     AST_case_label_n_t  *clabel_p,      /* [in] Ptr to AST case label node */
     AST_type_n_t        *type_p         /* [in] Union discriminator data type */
 )
-#else
-(clabel_p, type_p)
-    AST_case_label_n_t  *clabel_p;      /* [in] Ptr to AST case label node */
-    AST_type_n_t        *type_p;        /* [in] Union discriminator data type */
-#endif
-
 {
     clabel_value(clabel_p, type_p);
 }
@@ -4769,17 +4231,10 @@ static void clabel_check
 */
 
 static void arm_type
-#ifdef PROTO
 (
     AST_arm_n_t         *arm_p,         /* [in] Ptr to AST arm node */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(arm_p, int_p)
-    AST_arm_n_t         *arm_p;         /* [in] Ptr to AST arm node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     AST_type_n_t        *type_p;        /* Data type of the arm */
 
@@ -4885,15 +4340,9 @@ static void arm_type
 */
 
 static void arm_string
-#ifdef PROTO
 (
     AST_arm_n_t         *arm_p          /* [in] Ptr to AST arm node */
 )
-#else
-(arm_p)
-    AST_arm_n_t         *arm_p;         /* [in] Ptr to AST arm node */
-#endif
-
 {
     AST_type_n_t        *type_p;        /* Data type of the arm */
 
@@ -4950,17 +4399,10 @@ static void arm_string
 */
 
 static void arm_pointer
-#ifdef PROTO
 (
     AST_arm_n_t         *arm_p,         /* [in] Ptr to AST arm node */
     AST_interface_n_t   *int_p ATTRIBUTE_UNUSED         /* [in] Ptr to interface node */
 )
-#else
-(arm_p, int_p)
-    AST_arm_n_t         *arm_p;         /* [in] Ptr to AST arm node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     AST_type_n_t        *type_p;        /* Data type of the arm */
     boolean pointer_attr_valid = FALSE;
@@ -5044,15 +4486,9 @@ static void arm_pointer
 */
 
 static void arm_small
-#ifdef PROTO
 (
     AST_arm_n_t         *arm_p          /* [in] Ptr to AST arm node */
 )
-#else
-(arm_p)
-    AST_arm_n_t         *arm_p;         /* [in] Ptr to AST arm node */
-#endif
-
 {
     AST_type_n_t        *type_p;        /* Data type of the arm */
     AST_array_n_t       *array_p;       /* Ptr to array node */
@@ -5081,15 +4517,9 @@ static void arm_small
 */
 
 static void arm_context
-#ifdef PROTO
 (
     AST_arm_n_t         *arm_p          /* [in] Ptr to AST arm node */
 )
-#else
-(arm_p)
-    AST_arm_n_t         *arm_p;         /* [in] Ptr to AST arm node */
-#endif
-
 {
     AST_type_n_t        *type_p;        /* Data type of the arm */
 
@@ -5128,19 +4558,11 @@ static void arm_context
 */
 
 static void arm_check
-#ifdef PROTO
 (
     AST_arm_n_t         *arm_p,         /* [in] Ptr to AST arm node */
     AST_type_n_t        *type_p,        /* [in] Discriminator data type */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(arm_p, type_p, int_p)
-    AST_arm_n_t         *arm_p;         /* [in] Ptr to AST arm node */
-    AST_type_n_t        *type_p;        /* [in] Discriminator data type */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     AST_case_label_n_t  *clabel_p;      /* List of case labels for this arm */
 
@@ -5169,15 +4591,9 @@ static void arm_check
 */
 
 static void union_discrim_type
-#ifdef PROTO
 (
     AST_disc_union_n_t  *union_p        /* [in] Ptr to AST discr. union node */
 )
-#else
-(union_p)
-    AST_disc_union_n_t  *union_p;       /* [in] Ptr to AST discr. union node */
-#endif
-
 {
     AST_type_n_t        *type_p;        /* Discriminator data type */
 
@@ -5200,15 +4616,9 @@ static void union_discrim_type
 */
 
 static void union_case_labels
-#ifdef PROTO
 (
     AST_disc_union_n_t  *union_p        /* [in] Ptr to AST discr. union node */
 )
-#else
-(union_p)
-    AST_disc_union_n_t  *union_p;       /* [in] Ptr to AST discr. union node */
-#endif
-
 {
     AST_arm_n_t         *arm_p;         /* Ptr to one arm node of the union */
     AST_case_label_n_t  *clabel_p;      /* Ptr to one case label of the arm */
@@ -5308,17 +4718,10 @@ static void union_case_labels
 */
 
 static void union_check
-#ifdef PROTO
 (
     AST_disc_union_n_t  *union_p,       /* [in] Ptr to AST discr. union node */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(union_p, int_p)
-    AST_disc_union_n_t  *union_p;       /* [in] Ptr to AST discr. union node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     AST_arm_n_t         *arm_p;         /* Ptr to one arm node of the union */
 
@@ -5474,15 +4877,9 @@ static void type_name_len
 */
 
 static void type_in_line
-#ifdef PROTO
 (
     AST_type_n_t        *type_p         /* [in] Ptr to AST type node */
 )
-#else
-(type_p)
-    AST_type_n_t        *type_p;        /* [in] Ptr to AST type node */
-#endif
-
 {
     /* Can't have both [in_line] and [out_of_line] type attributes */
 
@@ -5514,15 +4911,9 @@ static void type_in_line
 */
 
 static void type_string
-#ifdef PROTO
 (
     AST_type_n_t        *type_p         /* [in] Ptr to AST type node */
 )
-#else
-(type_p)
-    AST_type_n_t        *type_p;        /* [in] Ptr to AST type node */
-#endif
-
 {
     /* A [v1_string] must be an array of char with fixed bounds */
 
@@ -5562,15 +4953,9 @@ static void type_string
 */
 
 static void type_pointer
-#ifdef PROTO
 (
     AST_type_n_t        *type_p         /* [in] Ptr to AST type node */
 )
-#else
-(type_p)
-    AST_type_n_t        *type_p;        /* [in] Ptr to AST type node */
-#endif
-
 {
     boolean pointer_attr_valid = FALSE;
 
@@ -5633,15 +5018,9 @@ static void type_pointer
 */
 
 static void type_small
-#ifdef PROTO
 (
     AST_type_n_t        *type_p         /* [in] Ptr to AST type node */
 )
-#else
-(type_p)
-    AST_type_n_t        *type_p;        /* [in] Ptr to AST type node */
-#endif
-
 {
     AST_array_n_t       *array_p;       /* Ptr to array node */
 
@@ -5688,15 +5067,9 @@ static void type_small
 */
 
 static void type_context
-#ifdef PROTO
 (
     AST_type_n_t        *type_p         /* [in] Ptr to AST type node */
 )
-#else
-(type_p)
-    AST_type_n_t        *type_p;        /* [in] Ptr to AST type node */
-#endif
-
 {
     /* [context_handle] attribute only applies to void * types */
 
@@ -5762,17 +5135,10 @@ static void type_context
 */
 
 static void type_conformant
-#ifdef PROTO
 (
     AST_type_n_t        *type_p,        /* [in] Ptr to AST type node */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(type_p, int_p)
-    AST_type_n_t        *type_p;        /* [in] Ptr to AST type node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     AST_array_n_t       *array_p;       /* Ptr to array node */
 
@@ -5799,15 +5165,9 @@ static void type_conformant
 */
 
 static void type_ignore
-#ifdef PROTO
 (
     AST_type_n_t        *type_p         /* [in] Ptr to AST type node */
 )
-#else
-(type_p)
-    AST_type_n_t        *type_p;        /* [in] Ptr to AST type node */
-#endif
-
 {
     /* The [ignore] attribute is valid only for pointers */
 
@@ -5823,15 +5183,9 @@ static void type_ignore
 */
 
 static void type_switch_type
-#ifdef PROTO
 (
     AST_type_n_t        *type_p         /* [in] Ptr to AST type node */
 )
-#else
-(type_p)
-    AST_type_n_t        *type_p;        /* [in] Ptr to AST type node */
-#endif
-
 {
     /* A non-encapsulated union type must have a [switch_type] attribute */
 
@@ -5848,17 +5202,10 @@ static void type_switch_type
 */
 
 static void type_transmit_as
-#ifdef PROTO
 (
     AST_type_n_t        *top_type_p,    /* [in] Top-level presented type */
     AST_type_n_t        *type_p         /* [in] Ptr to AST type node */
 )
-#else
-(top_type_p, type_p)
-    AST_type_n_t        *top_type_p;    /* [in] Top-level presented type */
-    AST_type_n_t        *type_p;        /* [in] Ptr to AST type node */
-#endif
-
 {
     if (top_type_p->xmit_as_type == NULL)   /* Presented type = transmit type */
         return;
@@ -5952,17 +5299,10 @@ static void type_transmit_as
 */
 
 static void type_represent_as
-#ifdef PROTO
 (
     AST_type_n_t        *type_p,        /* [in] Top-level presented type */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(type_p, int_p)
-    AST_type_n_t        *type_p;        /* [in] Top-level presented type */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     if (type_p->rep_as_type == NULL)   /* Presented type = Net type */
         return;
@@ -6044,19 +5384,11 @@ static void type_represent_as
 */
 
 static void type_check
-#ifdef PROTO
 (
     AST_type_n_t        *type_p,        /* [in] Ptr to AST type node */
     ASTP_node_t         *node_p,        /* [in] Parent node of type node */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(type_p, node_p, int_p)
-    AST_type_n_t        *type_p;        /* [in] Ptr to AST type node */
-    ASTP_node_t         *node_p;        /* [in] Parent node of type node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     AST_type_n_t        *xmit_type_p;   /* Transmissible type */
 	char const * id_name;
@@ -6160,15 +5492,9 @@ static void type_check
 */
 
 static void constant_check
-#ifdef PROTO
 (
     AST_constant_n_t    *const_p ATTRIBUTE_UNUSED       /* [in] Ptr to AST constant node */
 )
-#else
-(const_p)
-    AST_constant_n_t    *const_p;       /* [in] Ptr to AST constant node */
-#endif
-
 {
 }
 
@@ -6179,19 +5505,11 @@ static void constant_check
 */
 
 static void export_check
-#ifdef PROTO
 (
     AST_export_n_t      *export_p,      /* [in] Ptr to AST export node */
     AST_interface_n_t   *int_p,         /* [in] Ptr to interface node */
     AST_interface_n_t   *parent_int_p   /* [in] Parent interface node */
 )
-#else
-(export_p, int_p, parent_int_p)
-    AST_export_n_t      *export_p;      /* [in] Ptr to AST export node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-    AST_interface_n_t   *parent_int_p;  /* [in] Parent interface node */
-#endif
-
 {
 
     switch (export_p->kind)
@@ -6250,15 +5568,9 @@ static void int_name_len
 */
 
 static void int_in_line
-#ifdef PROTO
 (
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(int_p)
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     /* Can't have both [in_line] and [out_of_line] interface attributes */
 
@@ -6274,17 +5586,10 @@ static void int_in_line
 */
 
 static void int_code
-#ifdef PROTO
 (
     AST_interface_n_t   *int_p,         /* [in] Ptr to interface node */
     AST_interface_n_t   *parent_int_p   /* [in] Parent interface node */
 )
-#else
-(int_p, parent_int_p)
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-    AST_interface_n_t   *parent_int_p;  /* [in] Parent interface node */
-#endif
-
 {
     /* Can't have both [code] and [nocode] interface attributes */
 
@@ -6329,15 +5634,9 @@ static void int_code
 */
 
 static void int_handle
-#ifdef PROTO
 (
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(int_p)
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
-
 {
     /* Can't have both [auto_handle] and [implicit_handle] interface attrs */
 
@@ -6362,17 +5661,10 @@ static void int_handle
 */
 
 static void int_local
-#ifdef PROTO
 (
     AST_interface_n_t   *int_p,         /* [in] Ptr to interface node */
     AST_interface_n_t   *parent_int_p   /* [in] Parent interface node */
 )
-#else
-(int_p, parent_int_p)
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-    AST_interface_n_t   *parent_int_p;  /* [in] Parent interface node */
-#endif
-
 {
     boolean             uuid_null;
 
@@ -6431,17 +5723,10 @@ static void int_inherit(AST_interface_n_t * int_p)
 */
 
 static void interface_check
-#ifdef PROTO
 (
     AST_interface_n_t   *int_p,         /* [in] Ptr to interface node */
     AST_interface_n_t   *parent_int_p   /* [in] Parent interface node */
 )
-#else
-(int_p, parent_int_p)
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-    AST_interface_n_t   *parent_int_p;  /* [in] Parent interface node */
-#endif
-
 {
     AST_export_n_t      *export_p;      /* Ptr to export node */
     AST_import_n_t      *import_p;      /* Ptr to import node */
@@ -6517,19 +5802,11 @@ static void interface_check
 */
 
 boolean CHECKER_main            /* Returns TRUE on success */
-#ifdef PROTO
 (
     boolean     *cmd_opt_arr,   /* [in] Array of command option flags */
     void        **cmd_val_arr,  /* [in] Array of command option values */
     AST_interface_n_t *int_p    /* [in] Ptr to AST interface node */
 )
-#else
-
-    boolean     *cmd_opt_arr;   /* [in] Array of command option flags */
-    void        **cmd_val_arr;  /* [in] Array of command option values */
-    AST_interface_n_t *int_p;   /* [in] Ptr to AST interface node */
-#endif
-
 {
     /* Save passed command array addresses in static storage. */
     cmd_opt = cmd_opt_arr;
@@ -6682,14 +5959,9 @@ void CHECKER_acf_warning
 */
 
 boolean type_is_base
-#ifdef PROTO
 (
     AST_type_n_t *type_p    /* [in] Ptr to AST type node */
 )
-#else
-(type_p)
-    AST_type_n_t *type_p;    /* [in] Ptr to AST type node */
-#endif
 {
     return      ((type_p) == ASTP_char_ptr
         ||  (type_p) == ASTP_boolean_ptr

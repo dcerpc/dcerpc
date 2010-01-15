@@ -3,7 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2009 Apple Inc. All rights reserved.
+ * Portions Copyright (c) 2009-2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -106,11 +106,11 @@ INTERNAL volatile signed32 active_clients = 0;
  * forward declarations of internal (static) functions
  */
 
-INTERNAL void bv_alloc _DCE_PROTOTYPE_ ((
+INTERNAL void bv_alloc (
         rpc_binding_vector_p_t      /*old_vec*/,
         rpc_binding_vector_p_t      * /*new_vec*/,
         unsigned32                  * /*status*/
-    ));
+    );
 
 /*
 **++
@@ -149,16 +149,10 @@ INTERNAL void bv_alloc _DCE_PROTOTYPE_ ((
 **/
 
 PUBLIC void rpc_server_inq_bindings 
-#ifdef _DCE_PROTO_
 (
     rpc_binding_vector_p_t  *binding_vec,
     unsigned32              *status
 )
-#else
-(binding_vec, status)
-rpc_binding_vector_p_t  *binding_vec;
-unsigned32              *status;
-#endif
 {
     unsigned int                     nd_index;       /* network info table index    */
     unsigned int                     bv_index;       /* binding vector index        */
@@ -342,16 +336,10 @@ unsigned32              *status;
 **/
 
 PUBLIC void rpc_server_listen 
-#ifdef _DCE_PROTO_
 (
     unsigned32              max_calls,
     unsigned32              *status
 )
-#else
-(max_calls, status)
-unsigned32              max_calls;
-unsigned32              *status;
-#endif
 {
     int                     i;
 
@@ -550,14 +538,9 @@ unsigned32              *status;
 **/
 
 PRIVATE void rpc__server_stop_listening 
-#ifdef _DCE_PROTO_
 (
     unsigned32              *status
 )
-#else
-(status)
-unsigned32              *status;
-#endif
 {
     CODING_ERROR (status);
 
@@ -670,16 +653,10 @@ PRIVATE void rpc__server_decr_clients (void)
 **/
 
 PRIVATE void rpc__server_set_idle_timeout
-#ifdef _DCE_PROTO_
 (
     unsigned32                  idle_secs,
     unsigned32                  *status
 )
-#else
-(idle_secs, status)
-unsigned32                  idle_secs;
-unsigned32                  *status;
-#endif
 {
 
     CODING_ERROR (status);
@@ -772,16 +749,10 @@ PRIVATE unsigned32 rpc__server_inq_idle_timeout (void)
 **/
 
 PUBLIC void rpc_server_use_all_protseqs 
-#ifdef _DCE_PROTO_
 (
     unsigned32                  max_calls,
     unsigned32                  *status
 )
-#else
-(max_calls, status)
-unsigned32                  max_calls;
-unsigned32                  *status;
-#endif
 {
     unsigned int                         i;
     rpc_protseq_vector_p_t      psvp;
@@ -870,18 +841,11 @@ unsigned32                  *status;
 **/
 
 PUBLIC void rpc_server_use_protseq 
-#ifdef _DCE_PROTO_
 (
     unsigned_char_p_t       rpc_protseq,
     unsigned32              max_calls,
     unsigned32              *status
 )
-#else
-(rpc_protseq, max_calls, status)
-unsigned_char_p_t       rpc_protseq;
-unsigned32              max_calls;
-unsigned32              *status;
-#endif
 {
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
@@ -1006,18 +970,11 @@ unsigned32              *status;
 **/
 
 PUBLIC void rpc_server_use_all_protseqs_if 
-#ifdef _DCE_PROTO_
 (
     unsigned32              max_calls,
     rpc_if_handle_t         ifspec_h,
     unsigned32              *status
 )
-#else
-(max_calls, ifspec_h, status)
-unsigned32              max_calls;
-rpc_if_handle_t         ifspec_h;
-unsigned32              *status;
-#endif
 {
     unsigned int                         i;
     rpc_protseq_vector_p_t      psvp;
@@ -1127,16 +1084,10 @@ unsigned32              *status;
 **/
 
 PRIVATE void rpc__server_register_fwd_map 
-#ifdef _DCE_PROTO_
 (
   rpc_fwd_map_fn_t    map_fn,
   unsigned32          *status
 )
-#else
-(map_fn, status)
-rpc_fwd_map_fn_t    map_fn;
-unsigned32          *status;
-#endif
 {
     CODING_ERROR (status);
 
@@ -1412,20 +1363,12 @@ unsigned32              *status;
 **/
 
 PUBLIC void rpc_network_monitor_liveness 
-#ifdef _DCE_PROTO_
 (
     rpc_binding_handle_t    binding_h,
     rpc_client_handle_t     client_handle,
     rpc_network_rundown_fn_t rundown_fn,
     unsigned32              *status
 )
-#else
-(binding_h, client_handle, rundown_fn, status)
-rpc_binding_handle_t    binding_h;
-rpc_client_handle_t     client_handle;
-rpc_network_rundown_fn_t rundown_fn;
-unsigned32              *status;
-#endif
 {
     rpc_protocol_id_t       protid;
     rpc_prot_network_epv_p_t net_epv;
@@ -1633,16 +1576,10 @@ unsigned32              *status;
 **/
 
 PUBLIC void rpc_network_stop_maintaining 
-#ifdef _DCE_PROTO_
 (
     rpc_binding_handle_t    binding_h,
     unsigned32              *status
 )
-#else
-(binding_h, status)
-rpc_binding_handle_t    binding_h;
-unsigned32              *status;
-#endif
 {
     rpc_protocol_id_t       protid;
     rpc_prot_network_epv_p_t net_epv;
@@ -1708,16 +1645,10 @@ unsigned32              *status;
 **/
 
 PUBLIC void rpc_network_close 
-#ifdef _DCE_PROTO_
 (
     rpc_binding_handle_t    binding_h,
     unsigned32              *status
 )
-#else
-(binding_h, status)
-rpc_binding_handle_t    binding_h;
-unsigned32              *status;
-#endif
 {
     rpc_protocol_id_t       protid;
     rpc_prot_network_epv_p_t net_epv;
@@ -1790,7 +1721,6 @@ unsigned32              *status;
 **/
 
 PRIVATE void rpc__network_add_desc 
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t            desc,
     boolean32               is_server,
@@ -1799,15 +1729,6 @@ PRIVATE void rpc__network_add_desc
     pointer_t               priv_info,
     unsigned32              *status
 )
-#else
-(desc, is_server, is_dynamic, rpc_protseq_id, priv_info, status)
-rpc_socket_t            desc;
-boolean32               is_server;
-boolean32               is_dynamic;
-rpc_protseq_id_t        rpc_protseq_id;
-pointer_t               priv_info;
-unsigned32              *status;
-#endif
 {
     int                     nd, old_hiwat;
     rpc_listener_sock_p_t   lsock;
@@ -1930,16 +1851,10 @@ unsigned32              *status;
 **/
 
 PRIVATE void rpc__network_remove_desc 
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t            desc,
     unsigned32              *status
 )
-#else
-(desc, status)
-rpc_socket_t            desc;
-unsigned32              *status;
-#endif
 {
     int                     nd, found_nd, maxnd; 
     boolean                 found_server_socket = false;
@@ -2036,14 +1951,9 @@ unsigned32              *status;
 **/
 
 PRIVATE void rpc__network_init 
-#ifdef _DCE_PROTO_
 (
     unsigned32              *status
 )
-#else
-(status)
-unsigned32              *status;
-#endif
 {
     int                     pseq_id;    /* protocol sequence id/index   */
 
@@ -2141,18 +2051,11 @@ unsigned32              *status;
 **/
 
 PRIVATE void rpc__network_set_priv_info 
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t            desc,
     pointer_t               priv_info,
     unsigned32              *status
 )
-#else
-(desc, priv_info, status)
-rpc_socket_t            desc;
-pointer_t               priv_info;
-unsigned32              *status;
-#endif
 {
     int                     i;
 
@@ -2215,18 +2118,11 @@ unsigned32              *status;
 **/
 
 PRIVATE void rpc__network_inq_priv_info 
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t            desc,
     pointer_t               *priv_info,
     unsigned32              *status
 )
-#else
-(desc, priv_info, status)
-rpc_socket_t            desc;
-pointer_t               *priv_info;
-unsigned32              *status;
-#endif
 {
     int                     i;
 
@@ -2293,7 +2189,6 @@ unsigned32              *status;
 **/
 
 PRIVATE void rpc__network_inq_prot_version 
-#ifdef _DCE_PROTO_
 (
     rpc_protseq_id_t        rpc_protseq_id,
     unsigned8               *prot_id,
@@ -2301,14 +2196,6 @@ PRIVATE void rpc__network_inq_prot_version
     unsigned32		*version_minor,
     unsigned32              *status
 )
-#else
-( rpc_protseq_id, prot_id, version_major, version_minor, status)
-rpc_protseq_id_t        rpc_protseq_id;
-unsigned8               *prot_id;
-unsigned32		*version_major;
-unsigned32		*version_minor;
-unsigned32              *status;
-#endif
 {
     rpc_protocol_id_t           rpc_prot_id;
     rpc_prot_network_epv_p_t    net_epv;
@@ -2372,16 +2259,10 @@ unsigned32              *status;
 **/
 
 PRIVATE rpc_protocol_id_t rpc__network_pseq_id_from_pseq 
-#ifdef _DCE_PROTO_
 (
     unsigned_char_p_t       rpc_protseq,
     unsigned32              *status
 )
-#else
-(rpc_protseq, status)
-unsigned_char_p_t       rpc_protseq;
-unsigned32              *status;
-#endif
 {
     rpc_protocol_id_t       pseqid;
 
@@ -2507,18 +2388,11 @@ unsigned32              *status;
 **/
 
 PRIVATE void rpc__network_pseq_from_pseq_id 
-#ifdef _DCE_PROTO_
 (
     rpc_protseq_id_t    protseq_id,
     unsigned_char_p_t   *protseq,
     unsigned32          *status
 )
-#else
-(protseq_id, protseq, status)
-rpc_protseq_id_t    protseq_id;
-unsigned_char_p_t   *protseq;
-unsigned32          *status;
-#endif
 {
     CODING_ERROR (status);
 
@@ -2566,20 +2440,12 @@ unsigned32          *status;
 **/
 
 PRIVATE void rpc__network_inq_local_addr 
-#ifdef _DCE_PROTO_
 (
     rpc_protseq_id_t    pseq_id,
     unsigned_char_p_t   endpoint,
     rpc_addr_p_t        *rpc_addr,
     unsigned32          *status
 )
-#else
-(pseq_id, endpoint, rpc_addr, status)
-rpc_protseq_id_t    pseq_id;
-unsigned_char_p_t   endpoint;
-rpc_addr_p_t        *rpc_addr;
-unsigned32          *status;
-#endif
 {
     rpc_socket_error_t      serr;
     rpc_socket_t            desc;
@@ -2737,20 +2603,12 @@ CLEANUP:
 **/
 
 PUBLIC void rpc_server_use_protseq_ep
-#ifdef _DCE_PROTO_
 (
     unsigned_char_p_t       rpc_protseq,
     unsigned32              max_calls,
     unsigned_char_p_t       endpoint,
     unsigned32              *status
 )
-#else
-(rpc_protseq, max_calls, endpoint, status)
-unsigned_char_p_t       rpc_protseq;
-unsigned32              max_calls;
-unsigned_char_p_t       endpoint;
-unsigned32              *status;
-#endif
 {
     rpc_protseq_id_t        pseq_id;
     rpc_naf_id_t            naf_id;
@@ -2922,20 +2780,12 @@ unsigned32              *status;
 **--
 **/
 extern void rpc_server_use_protseq_socket
-#ifdef _DCE_PROTO_
 (
     unsigned_char_p_t rpc_protseq,
     unsigned32 max_calls,
     void *sockrep,
     unsigned32 *status
 )
-#else
-(rpc_protseq, max_calls, sockrep, status)
-unsigned_char_p_t rpc_protseq;
-unsigned32 max_calls;
-void *sockrep;
-unsigned32 *status;
-#endif
 {
     rpc_protseq_id_t        pseq_id;
     rpc_protocol_id_t       prot_id;
@@ -3145,14 +2995,9 @@ unsigned32              *status;
 **/
 
 PRIVATE void rpc__network_fork_handler
-#ifdef _DCE_PROTO_
 (
   rpc_fork_stage_id_t stage
 )
-#else
-(stage)
-rpc_fork_stage_id_t stage;
-#endif
 {   
     switch ((int)stage)
     {

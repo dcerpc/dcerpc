@@ -3,6 +3,7 @@
  * (c) Copyright 1990 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1990 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1990 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -54,14 +55,9 @@
 /*                                                                            */
 /******************************************************************************/
 idl_void_p_t rpc_ss_allocate
-#ifdef IDL_PROTOTYPES
 (
     idl_size_t size
 )
-#else
-( size )
-    idl_size_t size;
-#endif
 {
     rpc_ss_thread_support_ptrs_t *p_support_ptrs;
     rpc_void_p_t                 p_new_node;
@@ -92,14 +88,9 @@ idl_void_p_t rpc_ss_allocate
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_free
-#ifdef IDL_PROTOTYPES
 (
     idl_void_p_t node_to_free
 )
-#else
-(node_to_free)
-    idl_void_p_t node_to_free;
-#endif
 {
     rpc_ss_thread_support_ptrs_t *p_support_ptrs;
 

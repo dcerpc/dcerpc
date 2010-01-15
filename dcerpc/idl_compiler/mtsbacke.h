@@ -3,6 +3,7 @@
  * (c) Copyright 1993 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1993 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1993 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -44,10 +45,8 @@ extern void    **BE_cmd_val;
 
 void CSPELL_mts_includes
 (
-#ifdef PROTO
     FILE *fid,
     char header_name[]
-#endif
 );
 
 

@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -37,9 +38,6 @@
 **
 */
 
-#ifndef _DCE_PROTOTYPE_
-#include <dce/dce.h>
-#endif
 
 /* 
  * Number of times per second the clock ticks (LSB weight for time values).
@@ -71,15 +69,15 @@ extern "C" {
  * of tracking the age of a data structure.
  */                                          
 
-PRIVATE rpc_clock_t rpc__clock_stamp _DCE_PROTOTYPE_ ((void));
+PRIVATE rpc_clock_t rpc__clock_stamp (void);
 
 /*
  * A routine to determine whether a specified time interval has passed.
  */
-PRIVATE boolean rpc__clock_aged    _DCE_PROTOTYPE_ ((
+PRIVATE boolean rpc__clock_aged    (
         rpc_clock_t          /*time*/,
         rpc_clock_t          /*interval*/
-    ));
+    );
 
 /*
  * Update the current tick count.  This routine is the only one that
@@ -90,25 +88,25 @@ PRIVATE boolean rpc__clock_aged    _DCE_PROTOTYPE_ ((
  * tick count.  The value returned is the current tick count just
  * calculated.
  */
-PRIVATE void rpc__clock_update _DCE_PROTOTYPE_ (( void ));
+PRIVATE void rpc__clock_update ( void );
 
 /*
  * Determine if a UNIX absolute time has expired
  * (relative to the system's current time).
  */
 
-PRIVATE boolean rpc__clock_unix_expired _DCE_PROTOTYPE_ ((
+PRIVATE boolean rpc__clock_unix_expired (
         rpc_clock_unix_t    /*time*/
-    ));
+    );
 
 /*
  * Convert an rpc_clock_t back to a "struct timespec".
  */
 
-PRIVATE void rpc__clock_timespec _DCE_PROTOTYPE_((
+PRIVATE void rpc__clock_timespec (
 	rpc_clock_t  /*clock*/,
 	struct timespec * /*ts*/
-    ));
+    );
       
 #ifdef __cplusplus
 }

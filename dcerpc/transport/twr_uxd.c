@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -101,18 +102,11 @@
 
 
 PUBLIC void twr_uxd_lower_flrs_from_sa 
-#ifdef _DCE_PROTO_
 (
     sockaddr_p_t      sa,
     twr_p_t           *lower_flrs,
     unsigned32        *status
 )
-#else
-(sa, lower_flrs, status)
-sockaddr_p_t      sa;
-twr_p_t           *lower_flrs;
-unsigned32        *status;
-#endif
 {
     unsigned8   protocol_id[TWR_C_NUM_UXD_LOWER_FLRS];
     unsigned16  id_size = TWR_C_TOWER_PROT_ID_SIZE,
@@ -306,20 +300,12 @@ unsigned32        *status;
 **/
 
 PUBLIC void twr_uxd_lower_flrs_to_sa 
-#ifdef _DCE_PROTO_
 (
     byte_p_t          tower_octet_string, 
     sockaddr_p_t      *sa,
     unsigned32        *sa_len,
     unsigned32        *status
 )
-#else
-( tower_octet_string, sa, sa_len, status )
-byte_p_t          tower_octet_string; 
-sockaddr_p_t      *sa;
-unsigned32        *sa_len;
-unsigned32        *status;
-#endif
 {
     unsigned8   id;
     byte_p_t    tower;

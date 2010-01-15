@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -68,15 +69,9 @@ extern NAMETABLE_temp_name_t * NAMETABLE_temp_chain;
  */
 
 static void NAMETABLE_dump_bindings_4_node
-#ifdef PROTO
 (
     NAMETABLE_binding_n_t * pp
 )
-#else
-(pp)
-    NAMETABLE_binding_n_t * pp;
-#endif
-
 {
     NAMETABLE_binding_n_t * p;
 

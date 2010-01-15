@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -227,10 +228,10 @@ typedef rpc_cn_sm_state_entry_t         rpc_cn_sm_state_tbl_entry_t[];
  * R P C _ C N _ S M _ A C T I O N _ F N _ T
  */
 
-typedef unsigned32     (*rpc_cn_sm_action_fn_t) _DCE_PROTOTYPE_((
+typedef unsigned32     (*rpc_cn_sm_action_fn_t) (
     pointer_t   /*spc_struct*/,
     pointer_t   /*event_parameter*/,
-    pointer_t   /*sm*/));
+    pointer_t   /*sm*/);
 
 typedef rpc_cn_sm_action_fn_t      *rpc_cn_sm_action_fn_p_t;
 
@@ -238,9 +239,9 @@ typedef rpc_cn_sm_action_fn_t      *rpc_cn_sm_action_fn_p_t;
  * R P C _ C N _ S M _ P R E D I C A T E _ F N _ T
  */
 
-typedef unsigned8 (*rpc_cn_sm_predicate_fn_t) _DCE_PROTOTYPE_((
+typedef unsigned8 (*rpc_cn_sm_predicate_fn_t) (
     pointer_t   /*spc_struct*/,
-    pointer_t   /*event_parameter*/));
+    pointer_t   /*event_parameter*/);
 
 typedef rpc_cn_sm_predicate_fn_t   *rpc_cn_sm_predicate_fn_p_t;
 
@@ -501,7 +502,7 @@ typedef struct
  * R P C _ C N _ S Y N T A X _ T
  */
 
-typedef void    (*rpc_cn_marshal_fn_t) _DCE_PROTOTYPE_((void));
+typedef void    (*rpc_cn_marshal_fn_t) (void);
 
 typedef struct rpc_cn_syntax_s_t
 {

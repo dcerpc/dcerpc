@@ -3,6 +3,7 @@
  * (c) Copyright 1990 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1990 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1990 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -85,20 +86,12 @@
 */
 
 PRIVATE void rpc__tower_ref_add_floor 
-#ifdef _DCE_PROTO_
 (
     unsigned32          floor_number,
     rpc_tower_floor_p_t floor,
     rpc_tower_ref_t     *tower_ref,
     unsigned32          *status
 )
-#else
-(floor_number, floor, tower_ref, status)
-unsigned32          floor_number;
-rpc_tower_floor_p_t floor;
-rpc_tower_ref_t     *tower_ref;
-unsigned32          *status;
-#endif
 {
 
     CODING_ERROR (status);
@@ -173,7 +166,6 @@ unsigned32          *status;
 */
 
 PRIVATE void rpc__tower_ref_alloc 
-#ifdef _DCE_PROTO_
 (
     byte_p_t            tower_octet_string,
     unsigned32          num_flrs,
@@ -181,14 +173,6 @@ PRIVATE void rpc__tower_ref_alloc
     rpc_tower_ref_p_t   *tower_ref,
     unsigned32          *status
 )
-#else
-(tower_octet_string, num_flrs, start_flr, tower_ref, status)
-byte_p_t            tower_octet_string;
-unsigned32          num_flrs;
-unsigned32          start_flr;
-rpc_tower_ref_p_t   *tower_ref;
-unsigned32          *status;
-#endif
 {
 
     byte_p_t        tower_floor;
@@ -342,19 +326,11 @@ unsigned32          *status;
 */
 
 PRIVATE void rpc__tower_ref_copy 
-#ifdef _DCE_PROTO_
 (
     rpc_tower_ref_p_t   source_tower,
     rpc_tower_ref_p_t   *dest_tower,
     unsigned32          *status
 )
-#else
-(source_tower, dest_tower, status)
-rpc_tower_ref_p_t   source_tower;
-rpc_tower_ref_p_t   *dest_tower;
-unsigned32          *status;
-
-#endif
 {
     unsigned32      i,
                     tower_ref_size;
@@ -448,16 +424,10 @@ unsigned32          *status;
 */
 
 PRIVATE void rpc__tower_ref_free 
-#ifdef _DCE_PROTO_
 (
     rpc_tower_ref_p_t       *tower_ref,
     unsigned32              *status
 )
-#else
-(tower_ref, status)
-rpc_tower_ref_p_t       *tower_ref;
-unsigned32              *status;
-#endif
 {
     unsigned32      i;
 
@@ -531,19 +501,11 @@ unsigned32              *status;
 */
 
 PRIVATE void rpc__tower_ref_inq_protseq_id 
-#ifdef _DCE_PROTO_
 (
     rpc_tower_ref_p_t   tower_ref,
     rpc_protseq_id_t    *protseq_id,
     unsigned32          *status
 )
-#else
-(tower_ref, protseq_id, status)
-rpc_tower_ref_p_t   tower_ref;
-rpc_protseq_id_t    *protseq_id;
-unsigned32          *status;
-
-#endif
 {
     boolean             match;
     rpc_flr_prot_id_t   *tower_prot_ids,
@@ -836,18 +798,11 @@ CLEANUP:
 */
 
 PRIVATE boolean rpc__tower_ref_is_compatible 
-#ifdef _DCE_PROTO_
 (
     rpc_if_rep_p_t          if_spec,
     rpc_tower_ref_p_t       tower_ref,
     unsigned32              *status
 )
-#else
-(if_spec, tower_ref, status)
-rpc_if_rep_p_t          if_spec;
-rpc_tower_ref_p_t       tower_ref;
-unsigned32              *status;
-#endif
 {
     boolean                 match;
     unsigned32              if_spec_syntax_count,
@@ -1052,16 +1007,10 @@ unsigned32              *status;
 */
 
 PRIVATE void rpc__tower_ref_vec_free 
-#ifdef _DCE_PROTO_
 (
     rpc_tower_ref_vector_p_t    *tower_vector,
     unsigned32                  *status
 )
-#else
-(tower_vector, status)
-rpc_tower_ref_vector_p_t    *tower_vector;
-unsigned32                  *status;
-#endif
 {
     unsigned32      i;
 
@@ -1147,21 +1096,12 @@ unsigned32                  *status;
 */
 
 PRIVATE void rpc__tower_ref_vec_from_binding 
-#ifdef _DCE_PROTO_
 (
     rpc_if_rep_p_t              if_spec,
     rpc_binding_handle_t        binding,
     rpc_tower_ref_vector_p_t    *tower_vector,
     unsigned32                  *status
 )
-#else
-(if_spec, binding, tower_vector, status)
-rpc_if_rep_p_t              if_spec;
-rpc_binding_handle_t        binding;
-rpc_tower_ref_vector_p_t    *tower_vector;
-unsigned32                  *status;
-
-#endif
 {
     unsigned16              lower_flr_count;
     unsigned32              i,

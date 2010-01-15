@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -92,23 +93,23 @@ INTERNAL int rpc_g_dg_cct_timeout = CCTE_TIMEOUT_INTERVAL;
 
 /* ========================================================================= */
 
-INTERNAL void update_ccall_from_ccte _DCE_PROTOTYPE_((
+INTERNAL void update_ccall_from_ccte (
         rpc_dg_ccall_p_t /*ccall*/,
         rpc_dg_cct_elt_p_t  /*ccte*/
-    ));
+    );
 
-INTERNAL rpc_dg_cct_elt_p_t ccte_create _DCE_PROTOTYPE_((
+INTERNAL rpc_dg_cct_elt_p_t ccte_create (
         rpc_auth_info_p_t /*auth_info*/,
         unsigned32  /*probe*/
-    ));
+    );
 
-INTERNAL void cct_timer_fn _DCE_PROTOTYPE_((
+INTERNAL void cct_timer_fn (
         pointer_t  /*p*/
-    ));
+    );
 
-INTERNAL void create_activity_uuid _DCE_PROTOTYPE_((
+INTERNAL void create_activity_uuid (
         idl_uuid_t * /*uuid*/
-    ));
+    );
 
 /* ========================================================================= */
 
@@ -119,16 +120,10 @@ INTERNAL void create_activity_uuid _DCE_PROTOTYPE_((
  */
 
 INTERNAL void update_ccall_from_ccte
-#ifdef _DCE_PROTO_
 (
     rpc_dg_ccall_p_t ccall,
     rpc_dg_cct_elt_p_t ccte
 )
-#else
-(ccall, ccte)
-rpc_dg_ccall_p_t ccall;
-rpc_dg_cct_elt_p_t ccte;
-#endif
 {
     ccall->ccte_ref.ccte      = ccte;
     ccall->ccte_ref.gc_count  = rpc_g_dg_cct.gc_count;
@@ -167,16 +162,10 @@ rpc_dg_cct_elt_p_t ccte;
  */
 
 INTERNAL rpc_dg_cct_elt_p_t ccte_create
-#ifdef _DCE_PROTO_
 (
     rpc_auth_info_p_t auth_info,
     unsigned32 probe
 )
-#else
-(auth_info, probe)
-rpc_auth_info_p_t auth_info;
-unsigned32 probe;
-#endif
 {
     rpc_dg_cct_elt_p_t ccte;
 
@@ -281,16 +270,10 @@ unsigned32 probe;
  */
 
 PRIVATE void rpc__dg_cct_get
-#ifdef _DCE_PROTO_
 (
     rpc_auth_info_p_t auth_info,
     rpc_dg_ccall_p_t ccall
 )
-#else
-(auth_info, ccall)
-rpc_auth_info_p_t auth_info;
-rpc_dg_ccall_p_t ccall;
-#endif
 {
     unsigned32 probe;
     rpc_dg_cct_elt_p_t ccte;
@@ -347,14 +330,9 @@ rpc_dg_ccall_p_t ccall;
  */
 
 INTERNAL void cct_timer_fn
-#ifdef _DCE_PROTO_
 (
     pointer_t junk ATTRIBUTE_UNUSED
 )
-#else
-(junk)
-pointer_t junk;
-#endif
 {
     rpc_dg_cct_elt_p_t ccte, prev_ccte, next_ccte;
     unsigned32 i;
@@ -534,14 +512,9 @@ pointer_t junk;
  */
 
 INTERNAL void create_activity_uuid
-#ifdef _DCE_PROTO_
 (
     idl_uuid_t *uuid
 )
-#else
-(uuid)
-idl_uuid_t *uuid;
-#endif
 {
     unsigned32 st;
     unsigned16 tmp;
@@ -576,14 +549,9 @@ idl_uuid_t *uuid;
  * Handle fork related processing for this module.
  */
 PRIVATE void rpc__dg_cct_fork_handler
-#ifdef _DCE_PROTO_
 (
     rpc_fork_stage_id_t stage
 )
-#else
-(stage)
-rpc_fork_stage_id_t stage;
-#endif
 {                           
     unsigned32 i;
 

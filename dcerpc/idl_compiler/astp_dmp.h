@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -50,58 +51,44 @@
 
 void AST_dump_interface
 (
-#ifdef PROTO
     AST_interface_n_t *if_n_p
-#endif
 );
 
 void AST_dump_operation
 (
-#ifdef PROTO
     AST_operation_n_t *operation_node_ptr,
     int indentation
-#endif
 );
 
 void AST_dump_parameter
 (
-#ifdef PROTO
     AST_parameter_n_t *parameter_node_ptr,
     int indentation
-#endif
 );
 
 void AST_dump_nametable_id
 (
-#ifdef PROTO
     const char   *format_string,
     NAMETABLE_id_t id
-#endif
 );
 
 void AST_dump_parameter
 (
-#ifdef PROTO
     AST_parameter_n_t *param_node_ptr,
     int     indentation
-#endif
 );
 
 void AST_dump_type(
-#ifdef PROTO
     AST_type_n_t *type_n_p,
     char *format,
     int indentation
-#endif
 );
 
 
 void AST_dump_constant
 (
-#ifdef PROTO
     AST_constant_n_t *constant_node_ptr,
     int indentation
-#endif
 );
 
 void AST_enable_hex_dump(void);

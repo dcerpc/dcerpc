@@ -3,6 +3,7 @@
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -440,10 +441,8 @@ typedef struct {
 #define IR_in_pipe(ctx_p)       IR_in_scope(ctx_p, IR_SCP_PIPE)
 
 extern int IR_in_scope(                 /* Returns data kind nesting level */
-#ifdef PROTO
     IR_scope_ctx_t      *ctx_p,         /* [in] Scope context */
     IR_scope_k_t        scope           /* [in] Scope data kind */
-#endif
 );
 
 /*
@@ -469,18 +468,14 @@ extern int IR_in_scope(                 /* Returns data kind nesting level */
     IR_under_scope_under_scope(ctx_p, IR_SCP_POINTER, IR_SCP_STRUCT)
 
 extern boolean IR_under_scope(          /* Returns TRUE if under scope kind */
-#ifdef PROTO
     IR_scope_ctx_t      *ctx_p,         /* [in] Scope context */
     IR_scope_k_t        scope           /* [in] Scope data kind */
-#endif
 );
 
 extern boolean IR_under_scope_under_scope(  /* Ret. TRUE if under scope kinds */
-#ifdef PROTO
     IR_scope_ctx_t      *ctx_p,         /* [in] Scope context */
     IR_scope_k_t        cscope,         /* [in] Child scope data kind */
     IR_scope_k_t        pscope          /* [in] Parent scope data kind */
-#endif
 );
 
 /*
@@ -490,10 +485,8 @@ extern boolean IR_under_scope_under_scope(  /* Ret. TRUE if under scope kinds */
 **  Useful for detecting self-pointing data structures.
 */
 extern int IR_under_type(               /* Returns type nesting level */
-#ifdef PROTO
     IR_scope_ctx_t      *ctx_p,         /* [in] Scope context */
     AST_type_n_t        *type_p         /* [in] Ptr to AST type node */
-#endif
 );
 
 /*
@@ -502,9 +495,7 @@ extern int IR_under_type(               /* Returns type nesting level */
 **  Allocates and initializes a scope context and returns its address.
 */
 extern IR_scope_ctx_t *IR_init_scope(   /* Returns ptr to new scope context */
-#ifdef PROTO
     struct AST_parameter_n_t *param_p   /* [in] Ptr to AST parameter node */
-#endif
 );
 
 /*
@@ -513,9 +504,7 @@ extern IR_scope_ctx_t *IR_init_scope(   /* Returns ptr to new scope context */
 **  Cleans up a scope context.
 */
 extern void IR_finish_scope(
-#ifdef PROTO
     IR_scope_ctx_t      *ctx_p          /* [in] Scope context */
-#endif
 );
 
 /*
@@ -524,10 +513,8 @@ extern void IR_finish_scope(
 **  Processes tuple and maintains scoping data.
 */
 extern void IR_process_tup(
-#ifdef PROTO
     IR_scope_ctx_t      *ctx_p,         /* [in] Scope context */
     IR_tup_n_t          *tup_p          /* [in] Irep tuple */
-#endif
 );
 
 /*
@@ -536,10 +523,8 @@ extern void IR_process_tup(
 **  Constructs a field expression for a toplevel or nested field reference.
 */
 extern STRTAB_str_t IR_field_expr(      /* Returns field expression */
-#ifdef PROTO
     IR_scope_ctx_t      *ctx_p,         /* [in] Scope context */
     struct AST_field_n_t *field_p       /* [in] Ptr to AST field node */
-#endif
 );
 
 /**************************/
@@ -547,11 +532,9 @@ extern STRTAB_str_t IR_field_expr(      /* Returns field expression */
 /**************************/
 
 extern boolean IR_gen_irep(         /* Returns TRUE on success */
-#ifdef PROTO
     boolean             *cmd_opt,   /* [in] array of cmd option flags */
     void                **cmd_val,  /* [in] array of cmd option values */
     struct AST_interface_n_t *int_p /* [in] ptr to interface node */
-#endif
 );
 
 #endif

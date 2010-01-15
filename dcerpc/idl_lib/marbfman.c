@@ -3,6 +3,7 @@
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -52,18 +53,11 @@
 #endif
 
 void rpc_ss_marsh_change_buff
-#ifdef IDL_PROTOTYPES
 (
     rpc_ss_marsh_state_t    *msp,  /* Pointer to marshalling state block */
     unsigned long size_next_structure
                             /* Size of next structure to be marshalled */
 )
-#else
-( msp, size_next_structure )
-    rpc_ss_marsh_state_t    *msp;  /* Pointer to marshalling state block */
-    unsigned long size_next_structure;
-                            /* Size of next structure to be marshalled */
-#endif
 {
     ndr_byte *wp_buff;
     unsigned long req_buff_size;

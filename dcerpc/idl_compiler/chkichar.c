@@ -3,6 +3,7 @@
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -54,16 +55,10 @@
 **  parameter is passed by reference.
 */
 void CHK_param_cs
-#ifdef PROTO
 (
     AST_parameter_n_t   *param_p,       /* [in] Ptr to AST parameter node */
     AST_type_n_t        *type_p         /* [in] Parameter type */
 )
-#else
-(param_p, type_p)
-    AST_parameter_n_t   *param_p;       /* [in] Ptr to AST parameter node */
-    AST_type_n_t        *type_p;        /* [in] Parameter type */
-#endif
 {
     AST_parameter_n_t   *pp;
     AST_field_attr_n_t  *fattr_p;
@@ -220,14 +215,9 @@ void CHK_param_cs
 **  relating to I-char support.
 */
 void CHK_op_cs
-#ifdef PROTO
 (
     AST_operation_n_t   *op_p           /* [in] Ptr to AST operation node */
 )
-#else
-(op_p)
-    AST_operation_n_t   *op_p;          /* [in] Ptr to AST operation node */
-#endif
 {
     AST_parameter_n_t   *param_p;
     int s=0, d=0, r=0;
@@ -273,14 +263,9 @@ void CHK_op_cs
 **  Checks a structure field node's I-char ([cs_*]) attributes.
 */
 void CHK_field_cs
-#ifdef PROTO
 (
     AST_field_n_t       *field_p        /* [in] Ptr to AST field node */
 )
-#else
-(field_p)
-    AST_field_n_t       *field_p;       /* [in] Ptr to AST field node */
-#endif
 {
     AST_type_n_t        *type_p;
     AST_field_attr_n_t  *fattr_p;
@@ -319,16 +304,10 @@ void CHK_field_cs
 **  Checks a pipe node's base data type for [cs_char] attribute.
 */
 void CHK_pipe_base_type_cs
-#ifdef PROTO
 (
     AST_pipe_n_t        *pipe_p,        /* [in] Ptr to AST pipe node */
-    AST_interface_n_t   *int_p ATTRIBUTE_UNUSED         /* [in] Ptr to interface node */
+    AST_interface_n_t   *int_p ATTRIBUTE_UNUSED /* [in] Ptr to interface node */
 )
-#else
-(pipe_p, int_p)
-    AST_pipe_n_t        *pipe_p;        /* [in] Ptr to AST pipe node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
 {
     AST_type_n_t        *type_p;        /* Pipe base data type node */
 
@@ -347,18 +326,11 @@ void CHK_pipe_base_type_cs
 **  Checks a type node's [cs_char] attribute.
 */
 void CHK_type_cs
-#ifdef PROTO
 (
     AST_type_n_t        *top_type_p,    /* [in] Top-level presented type */
     AST_type_n_t        *type_p,        /* [in] Ptr to AST type node */
     AST_interface_n_t   *int_p          /* [in] Ptr to interface node */
 )
-#else
-(top_type_p, type_p, int_p)
-    AST_type_n_t        *top_type_p;    /* [in] Top-level presented type */
-    AST_type_n_t        *type_p;        /* [in] Ptr to AST type node */
-    AST_interface_n_t   *int_p;         /* [in] Ptr to interface node */
-#endif
 {
     char const          *type_name;     /* Type name */
     int                 type_len;       /* Length of type name */

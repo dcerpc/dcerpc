@@ -3,7 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2009 Apple Inc. All rights reserved.
+ * Portions Copyright (c) 2009-2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -226,9 +226,7 @@
 */
 
 extern boolean CHK_struct_is_all_byte_fields(
-#ifdef PROTO
     AST_structure_n_t   *struct_p       /* [in] Ptr to AST structure node */
-#endif
 );
 
 /*
@@ -273,10 +271,8 @@ CHK_follow_ref_arr_siz, /* Follow [ref] but not [unique] or [ptr] pointers   */
 } CHK_follow_t;
 
 extern AST_type_n_t * param_follow_ref_ptr( /* Returns ptr to type node */
-#ifdef PROTO
     AST_parameter_n_t   *param_p,       /* [in] Ptr to AST parameter node */
     CHK_follow_t        mode            /* [in] Follow mode (see above) */
-#endif
 );
 
 /*
@@ -286,9 +282,7 @@ extern AST_type_n_t * param_follow_ref_ptr( /* Returns ptr to type node */
 */
 
 extern boolean type_is_base(
-#ifdef PROTO
     AST_type_n_t *type_p    /* [in] Ptr to AST type node */
-#endif
 );
 
 /*
@@ -300,43 +294,33 @@ extern boolean type_is_base(
 */
 
 extern boolean CHECKER_main(    /* Returns true on success */
-#ifdef PROTO
     boolean     *cmd_opt_arr,   /* [in] Array of command option flags */
     void        **cmd_val_arr,  /* [in] Array of command option values */
     AST_interface_n_t *int_p    /* [in] Ptr to AST interface node */
-#endif
 );
 
 extern void CHECKER_error(
-#ifdef PROTO
 	void *in_node_p,
 	long msg_id,
 	...
-#endif
 );
 
 extern void CHECKER_warning(
-#ifdef PROTO
  void *in_node_p,
  long msg_id,
  ...
-#endif
 );
 
 extern void CHECKER_acf_error(
-#ifdef PROTO
  void *in_node_p,
  long msg_id,
  ...
-#endif
 );
 
 extern void CHECKER_acf_warning(
-#ifdef PROTO
  void *in_node_p,
  long msg_id,
  ...
-#endif
 );
 
 #endif

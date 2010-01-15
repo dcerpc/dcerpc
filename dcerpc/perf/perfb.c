@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -59,16 +60,10 @@ perfb_v1_0_epv_t perfb_mgr_epv =
 /***************************************************************************/
 
 void perfb_init 
-#ifdef IDL_PROTOTYPES
 (
     handle_t                h,
     idl_char                *name
 )
-#else
-    (h, name)
-    handle_t                h;
-    idl_char                *name;
-#endif
 {
     print_binding_info ("perfb_init", h);
     gethostname(name, 256);
@@ -77,7 +72,6 @@ void perfb_init
 /***************************************************************************/
 
 void perfb_in 
-#ifdef IDL_PROTOTYPES
 (
     handle_t                h,
     perf_data_t             d,
@@ -85,14 +79,6 @@ void perfb_in
     idl_boolean             verify,
     unsigned32           *sum
 )
-#else
-    (h, d, l, verify, sum)
-    handle_t                h;
-    perf_data_t             d;
-    unsigned32              l;
-    idl_boolean             verify;
-    unsigned32              *sum;
-#endif
 {
     print_binding_info ("perfb_in", h);
     perf_in(h, d, l, verify, sum);
@@ -101,16 +87,10 @@ void perfb_in
 /***************************************************************************/
 
 void perfb_brd 
-#ifdef IDL_PROTOTYPES
 (
     handle_t                h,
     idl_char                *name
 )
-#else
-    (h, name)
-    handle_t                h;
-    idl_char                *name;
-#endif
 {
     print_binding_info ("perfb_brd", h);
     gethostname(name, 256);
@@ -119,28 +99,18 @@ void perfb_brd
 /***************************************************************************/
 
 void perfb_null
-#ifdef IDL_PROTOTYPES
 (
-    handle_t                h __attribute__((unused))
+    handle_t                h __attribute__(unused)
 )
-#else
-    (h)
-    handle_t                h;
-#endif
 {
 }
 
 /***************************************************************************/
 
 void perfb_null_idem
-#ifdef IDL_PROTOTYPES
 (
-    handle_t                h __attribute__((unused))
+    handle_t                h __attribute__(unused)
 )
-#else
-    (h)
-    handle_t                h;
-#endif
 {
 }
 

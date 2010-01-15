@@ -3,6 +3,7 @@
  * (c) Copyright 1992 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1992 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1992 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -34,21 +35,16 @@
 */
 void CSPELL_test_status
 (
-#ifdef PROTO
     FILE *fid
-#endif
 );
 
 void CSPELL_test_transceive_status
 (
-#ifdef PROTO
     FILE *fid
-#endif
 );
 
 void DDBE_gen_cstub
 (
-#ifdef PROTO
     FILE *fid,                      /* Handle for emitted C text */
     AST_interface_n_t *p_interface, /* Ptr to AST interface node */
     language_k_t language,          /* Language stub is to interface to */
@@ -56,7 +52,6 @@ void DDBE_gen_cstub
     boolean *cmd_opt,
     void **cmd_val,
     DDBE_vectors_t *dd_vip    /* Data driven BE vector information ptr */
-#endif
 );
 
 void CSPELL_csr_header

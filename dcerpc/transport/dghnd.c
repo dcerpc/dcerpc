@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -50,19 +51,14 @@
  * Release any client call binding we might have in the binding binding.
  */
 
-INTERNAL void release_cached_ccall _DCE_PROTOTYPE_((
+INTERNAL void release_cached_ccall (
         rpc_dg_binding_client_p_t /*h*/
-    ));
+    );
 
 INTERNAL void release_cached_ccall
-#ifdef _DCE_PROTO_
 (
     rpc_dg_binding_client_p_t h                       
 )
-#else
-(h)
-rpc_dg_binding_client_p_t h;                       
-#endif
 {
     if (h->ccall == NULL) 
         return;
@@ -81,16 +77,10 @@ rpc_dg_binding_client_p_t h;
  */
 
 PRIVATE rpc_binding_rep_p_t rpc__dg_binding_alloc
-#ifdef _DCE_PROTO_
 (
     boolean32 is_server,
     unsigned32 *st
 )
-#else
-(is_server, st)
-boolean32 is_server;
-unsigned32 *st;
-#endif
 {
     rpc_binding_rep_p_t h;
 
@@ -118,16 +108,10 @@ unsigned32 *st;
  */
 
 PRIVATE void rpc__dg_binding_init
-#ifdef _DCE_PROTO_
 (
     rpc_binding_rep_p_t h_,
     unsigned32 *st
 )
-#else
-(h_, st)
-rpc_binding_rep_p_t h_;
-unsigned32 *st;
-#endif
 {
     *st = rpc_s_ok;
 
@@ -158,16 +142,10 @@ unsigned32 *st;
  */
 
 PRIVATE void rpc__dg_binding_free
-#ifdef _DCE_PROTO_
 (
     rpc_binding_rep_p_t *h_,
     unsigned32 *st
 )
-#else
-(h_, st)
-rpc_binding_rep_p_t *h_;
-unsigned32 *st;
-#endif
 {
     /*
      * The binding and the call binding are public at this point (remember
@@ -199,16 +177,10 @@ unsigned32 *st;
  */
 
 PRIVATE void rpc__dg_binding_changed
-#ifdef _DCE_PROTO_
 (
     rpc_binding_rep_p_t h,
     unsigned32 *st
 )
-#else
-(h, st)
-rpc_binding_rep_p_t h;
-unsigned32 *st;
-#endif
 {
     RPC_LOCK(0);    /* !!! this should really be done in common code */
 
@@ -226,18 +198,11 @@ unsigned32 *st;
  */
 
 PRIVATE void rpc__dg_binding_inq_addr
-#ifdef _DCE_PROTO_
 (
     rpc_binding_rep_p_t h ATTRIBUTE_UNUSED,
     rpc_addr_p_t *addr ATTRIBUTE_UNUSED,
     unsigned32 *st ATTRIBUTE_UNUSED
 )
-#else
-(h, addr, st)
-rpc_binding_rep_p_t h;
-rpc_addr_p_t *addr;
-unsigned32 *st;
-#endif
 {
     /*
      * rpc_m_unimp_call
@@ -259,16 +224,10 @@ unsigned32 *st;
  */
 
 PRIVATE void rpc__dg_binding_reset
-#ifdef _DCE_PROTO_
 (
     rpc_binding_rep_p_t h_,
     unsigned32 *st
 )
-#else
-(h_, st)
-rpc_binding_rep_p_t h_;
-unsigned32 *st;
-#endif
 {
     rpc_dg_binding_client_p_t h = (rpc_dg_binding_client_p_t) h_;
 
@@ -289,18 +248,11 @@ unsigned32 *st;
  */
 
 PRIVATE void rpc__dg_binding_copy
-#ifdef _DCE_PROTO_
 (
     rpc_binding_rep_p_t src_h_,
     rpc_binding_rep_p_t dst_h_,
     unsigned32 *st
 )
-#else
-(src_h_, dst_h_, st)
-rpc_binding_rep_p_t src_h_;
-rpc_binding_rep_p_t dst_h_;
-unsigned32 *st;
-#endif
 {
     rpc_dg_binding_client_p_t src_h = (rpc_dg_binding_client_p_t) src_h_;
     rpc_dg_binding_client_p_t dst_h = (rpc_dg_binding_client_p_t) dst_h_;
@@ -325,16 +277,10 @@ unsigned32 *st;
  */ 
 
 PRIVATE rpc_dg_binding_client_p_t rpc__dg_binding_srvr_to_client
-#ifdef _DCE_PROTO_
 (
     rpc_dg_binding_server_p_t shand,                                               
     unsigned32 *st
 )
-#else
-(shand, st)
-rpc_dg_binding_server_p_t shand;                                               
-unsigned32 *st;
-#endif
 {                        
     rpc_dg_binding_client_p_t chand;
     rpc_addr_p_t   client_addr;
@@ -382,16 +328,10 @@ unsigned32 *st;
  */
 
 PRIVATE void rpc__dg_binding_cross_fork
-#ifdef _DCE_PROTO_
 (
     rpc_binding_rep_p_t h_,
     unsigned32 *st
 )
-#else
-(h_, st)
-rpc_binding_rep_p_t h_;
-unsigned32 *st;
-#endif
 {   
     rpc_dg_binding_client_p_t h = (rpc_dg_binding_client_p_t) h_;
 
@@ -446,17 +386,10 @@ unsigned32 *st;
 **/
 
 PRIVATE void rpc__cn_binding_cross_fork 
-#ifdef _DCE_PROTO_
 (
   rpc_binding_rep_p_t     binding_r ATTRIBUTE_UNUSED,
   unsigned32              *st
 )
-#else
-(binding_r, st)
-
-rpc_binding_rep_p_t     binding_r;
-unsigned32              *st;
-#endif
 {
     CODING_ERROR (st);
 

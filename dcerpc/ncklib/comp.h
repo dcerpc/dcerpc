@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -42,11 +43,6 @@
 
 
 /***********************************************************************/
-
-#ifndef _DCE_PROTOTYPE_
-#include <dce/dce.h>
-#endif
-
 #include <comprot.h>    /* Externals for Protocol Services sub-component*/
 #include <comnaf.h>     /* Externals for NAF Services sub-component     */
 #include <comauth.h>    /* Externals for Auth. Services sub-component   */
@@ -386,12 +382,12 @@ EXTERNAL dcethread_attr     rpc_g_server_dcethread_attr;
 extern "C" {
 #endif
 
-PRIVATE void rpc__if_inq_endpoint _DCE_PROTOTYPE_ ((
+PRIVATE void rpc__if_inq_endpoint (
         rpc_if_rep_p_t          /*ifspec*/,
         rpc_protseq_id_t        /*protseq_id*/,
         unsigned_char_t         ** /*endpoint*/,
         unsigned32              * /*status*/
-    ));
+    );
 
 #include <comimage.h>
 

@@ -1237,7 +1237,7 @@ static unsigned long callback_passes, callback_count;
 
 void perfc_init (h, p)
 
-handle_t            h __attribute__((unused));
+handle_t            h __attribute__(unused);
 unsigned32       *p;
 
 {
@@ -1247,7 +1247,7 @@ unsigned32       *p;
 
 void perfc_cb (h, c)
 
-handle_t            h __attribute__((unused));
+handle_t            h __attribute__(unused);
 unsigned32       *c;
 
 {
@@ -1257,7 +1257,7 @@ unsigned32       *c;
 
 void perfc_cb_idem (h, c)
 
-handle_t            h __attribute__((unused));
+handle_t            h __attribute__(unused);
 unsigned32       *c;
 
 {
@@ -2373,7 +2373,7 @@ struct task_info_t
 static void multi_task (info, len)
 
 struct task_info_t  *info;
-int                 len __attribute__((unused));
+int                 len __attribute__(unused);
 
 {
     unsigned32  st;

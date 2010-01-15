@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -69,21 +70,21 @@
 
 
 INTERNAL void sliv_task1
-    _DCE_PROTOTYPE_((
+    (
         void    *arg
-    ));
+    );
 
 INTERNAL void sliv_task2
-    _DCE_PROTOTYPE_((
+    (
         void    *arg
-    ));
+    );
 
 INTERNAL boolean32 ping_server
-    _DCE_PROTOTYPE_((
+    (
         db_entry_t      *entp,
         unsigned32      timeout,
         error_status_t  *status
-    ));
+    );
 
 
 

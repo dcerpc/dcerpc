@@ -3,6 +3,7 @@
  * (c) Copyright 1993 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1993 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1993 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -68,17 +69,17 @@ INTERNAL struct atfork_user_data_t
 
 /* ========================================================================= */
 
-INTERNAL void _pre_fork _DCE_PROTOTYPE_((
+INTERNAL void _pre_fork (
         cma_t_address   /*arg*/
-    ));
+    );
 
-INTERNAL void _post_fork_child _DCE_PROTOTYPE_((
+INTERNAL void _post_fork_child (
         cma_t_address   /*arg*/
-    ));
+    );
 
-INTERNAL void _post_fork_parent _DCE_PROTOTYPE_((
+INTERNAL void _post_fork_parent (
         cma_t_address   /*arg*/
-    ));
+    );
 
 /* ========================================================================= */
 
@@ -89,21 +90,16 @@ INTERNAL void _post_fork_parent _DCE_PROTOTYPE_((
  * the fork/vfork system call.
  */         
 INTERNAL void _pre_fork
-#ifdef _DCE_PROTO_
 (
   cma_t_address arg 
 )
-#else
-(arg)
-cma_t_address arg;
-#endif
 {                      
     RPC_DBG_PRINTF(rpc_e_dbg_atfork, 1,
                ("(_pre_fork) entering, pid %d, pre %d, post_p %d, post_c %d\n",
                     ((struct atfork_user_data_t *) arg)->pid,
                     ((struct atfork_user_data_t *) arg)->pre,
                     ((struct atfork_user_data_t *) arg)->post_p,
-                    ((struct atfork_user_data_t *) arg)->post_c));
+                    ((struct atfork_user_data_t *) arg)->post_c);
 
     ((struct atfork_user_data_t *) arg)->pre++;
 
@@ -115,7 +111,7 @@ cma_t_address arg;
                     ((struct atfork_user_data_t *) arg)->pid,
                     ((struct atfork_user_data_t *) arg)->pre,
                     ((struct atfork_user_data_t *) arg)->post_p,
-                    ((struct atfork_user_data_t *) arg)->post_c));
+                    ((struct atfork_user_data_t *) arg)->post_c);
 }
 
 /*
@@ -126,21 +122,16 @@ cma_t_address arg;
  */         
 
 INTERNAL void _post_fork_child
-#ifdef _DCE_PROTO_
 (
   cma_t_address arg
 )
-#else
-(arg)
-cma_t_address arg;
-#endif
 {
     RPC_DBG_PRINTF(rpc_e_dbg_atfork, 1,
         ("(_post_fork_child) entering, pid %d, pre %d, post_p %d, post_c %d\n",
                     ((struct atfork_user_data_t *) arg)->pid,
                     ((struct atfork_user_data_t *) arg)->pre,
                     ((struct atfork_user_data_t *) arg)->post_p,
-                    ((struct atfork_user_data_t *) arg)->post_c));
+                    ((struct atfork_user_data_t *) arg)->post_c);
 
     ((struct atfork_user_data_t *) arg)->post_c++;
 
@@ -152,7 +143,7 @@ cma_t_address arg;
                     ((struct atfork_user_data_t *) arg)->pid,
                     ((struct atfork_user_data_t *) arg)->pre,
                     ((struct atfork_user_data_t *) arg)->post_p,
-                    ((struct atfork_user_data_t *) arg)->post_c));
+                    ((struct atfork_user_data_t *) arg)->post_c);
 }
 
 /*
@@ -164,21 +155,16 @@ cma_t_address arg;
 
 
 INTERNAL void _post_fork_parent
-#ifdef _DCE_PROTO_
 (
   cma_t_address arg
 )
-#else 
-(arg)
-cma_t_address arg;
-#endif
 {
     RPC_DBG_PRINTF(rpc_e_dbg_atfork, 1,
        ("(_post_fork_parent) entering, pid %d, pre %d, post_p %d, post_c %d\n",
                     ((struct atfork_user_data_t *) arg)->pid,
                     ((struct atfork_user_data_t *) arg)->pre,
                     ((struct atfork_user_data_t *) arg)->post_p,
-                    ((struct atfork_user_data_t *) arg)->post_c));
+                    ((struct atfork_user_data_t *) arg)->post_c);
 
     ((struct atfork_user_data_t *) arg)->post_p++;
 
@@ -190,19 +176,14 @@ cma_t_address arg;
                     ((struct atfork_user_data_t *) arg)->pid,
                     ((struct atfork_user_data_t *) arg)->pre,
                     ((struct atfork_user_data_t *) arg)->post_p,
-                    ((struct atfork_user_data_t *) arg)->post_c));
+                    ((struct atfork_user_data_t *) arg)->post_c);
 }
 
 
 PRIVATE void rpc__cma_atfork
-#ifdef _DCE_PROTO_
 (
  void *handler
 )
-#else 
-(handler)
-void *handler;
-#endif
 {
     if (handler == NULL)
         return;

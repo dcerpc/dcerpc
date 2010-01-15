@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -165,25 +166,19 @@ extern const char *CMD_def_cpp_cmd;   /* Default cpp command */
 /* Functions exported by command.c */
 
 extern boolean CMD_parse_args(
-#ifdef PROTO
     int             argc,
     char            **argv,
     boolean         **p_cmd_opt,
     void            ***p_cmd_val,
     STRTAB_str_t    *idl_sid
-#endif
 );
 
 extern void CMD_explain_args(
-#ifdef PROTO
     void
-#endif
 );
 
 extern boolean add_def_string(
-#ifdef PROTO
     const char *def_string
-#endif
 );
 
 extern boolean CMD_DCL_interface;

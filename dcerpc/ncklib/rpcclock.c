@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -79,16 +80,10 @@ PRIVATE rpc_clock_t rpc__clock_stamp(void)
  */
 
 PRIVATE boolean rpc__clock_aged
-#ifdef _DCE_PROTO_
 (
     rpc_clock_t      time,
     rpc_clock_t      interval
 )
-#else
-( time, interval )
-rpc_clock_t      time;
-rpc_clock_t      interval;
-#endif
 {
     return( rpc_g_clock_curr >= (time + interval) );
 }
@@ -101,14 +96,9 @@ rpc_clock_t      interval;
  */
 
 PRIVATE boolean rpc__clock_unix_expired 
-#ifdef _DCE_PROTO_
 (
     rpc_clock_unix_t time
 )
-#else
-( time )
-rpc_clock_unix_t time;
-#endif
 {
     return( rpc_g_clock_unix_curr >= time );
 }
@@ -204,16 +194,10 @@ PRIVATE void rpc__clock_update(void)
  */
 
 PRIVATE void rpc__clock_timespec 
-#ifdef _DCE_PROTO_
 (
         rpc_clock_t clock,
         struct timespec *ts
 )
-#else
-(clock, ts)
-    rpc_clock_t clock;
-    struct timespec *ts;
-#endif
 {
     int whole_secs;
     int remaining_ticks;

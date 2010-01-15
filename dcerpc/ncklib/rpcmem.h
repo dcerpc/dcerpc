@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -39,9 +40,6 @@
 **
 */
 
-#ifndef _DCE_PROTOTYPE_
-#include <dce/dce.h>
-#endif
 
 /*
  * Memory Allocation.
@@ -366,22 +364,22 @@ EXTERNAL rpc_mem_stats_elt_t rpc_g_mem_stats[];
 }
 
 
-PRIVATE pointer_t rpc__mem_alloc _DCE_PROTOTYPE_ ((
+PRIVATE pointer_t rpc__mem_alloc (
         unsigned32 /*size*/,
         unsigned32 /*type*/,
         unsigned32  /*flags*/
-    ));
+    );
 
-PRIVATE pointer_t rpc__mem_realloc _DCE_PROTOTYPE_ ((
+PRIVATE pointer_t rpc__mem_realloc (
         pointer_t  /*addr*/,
         unsigned32 /*size*/,
         unsigned32 /*type*/,
         unsigned32  /*flags*/
-    ));
+    );
 
-PRIVATE void rpc__mem_free _DCE_PROTOTYPE_ ((
+PRIVATE void rpc__mem_free (
         pointer_t   /*addr*/,
         unsigned32  /*type*/
-    ));
+    );
 
 #endif /* _RPCMEM_H */

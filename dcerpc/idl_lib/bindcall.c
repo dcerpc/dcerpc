@@ -3,6 +3,7 @@
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -45,18 +46,11 @@
 #include <dce/stubbase.h>
 
 void rpc_ss_bind_authn_client
-#ifdef IDL_PROTOTYPES
 (
     rpc_binding_handle_t    *p_bh,      /* [io] Binding handle */
     rpc_if_handle_t         if_h,       /* [in] Interface handle */
     error_status_t          *p_st       /*[out] Return status */
 )
-#else
-(p_bh, if_h, p_st)
-    rpc_binding_handle_t    *p_bh;      /* [io] Binding handle */
-    rpc_if_handle_t         if_h;       /* [in] Interface handle */
-    error_status_t          *p_st;      /*[out] Return status */
-#endif
 {
     unsigned_char_t *princ_name;        /* Server principal name */
 

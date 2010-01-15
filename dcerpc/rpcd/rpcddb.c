@@ -1,8 +1,9 @@
 /*
- * 
+ *
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -16,7 +17,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
  */
@@ -33,7 +34,7 @@
 **  ABSTRACT:
 **
 **      Hash table management, list management, context handle management,
-**      database concurrency control (lock/unlock) routines. Basic database 
+**      database concurrency control (lock/unlock) routines. Basic database
 **      open and update routine.
 **
 **
@@ -48,7 +49,6 @@
 #include <rpcdp.h>
 #include <rpcddb.h>
 
-
 typedef struct {
     struct db           *db_handle;
     db_list_type_t      list_type;
@@ -56,24 +56,23 @@ typedef struct {
     unsigned32          pass;
 }   db_contexth_t, *db_contexth_p_t;
 
-
 INTERNAL void list_add
-    _DCE_PROTOTYPE_((
+    (
         db_list_t   *list,
         db_list_t   *elp
-    ));
+    );
 
 INTERNAL void list_remove
-    _DCE_PROTOTYPE_((
+    (
         db_list_t   *list,
         db_list_t   *elp
-    ));
+    );
 
 INTERNAL boolean32 db_bad_context
-    _DCE_PROTOTYPE_ ((
+    (
         struct db           *h,
         ept_lookup_handle_t *entry_handle
-    )); 
+    );
 
 /*
  * Setup the persistent database image.
@@ -94,15 +93,15 @@ error_status_t  *status;
     if (STATUS_OK(status))
     {
         /* read and check the file header info */
-        dsm_get_info(h->dsh,&hdr,sizeof(hdr),status); 
-        if (! STATUS_OK(status)) 
+        dsm_get_info(h->dsh,&hdr,sizeof(hdr),status);
+        if (! STATUS_OK(status))
         {
             if (dflag) show_st("Error reading endpoint database", status);
             db_to_ept_ecode(status);
             return;
         }
 
-        if (hdr.version != version) 
+        if (hdr.version != version)
         {
             /*  Bad database version
              *  Close database
@@ -113,7 +112,7 @@ error_status_t  *status;
             dsm_close((dsm_handle_t *) &h->dsh, &tmp_st);
             h->dsh = NULL;
 
-            if (hdr.version < version) 
+            if (hdr.version < version)
             {
                 remove((char *)database_file);
             }
@@ -131,7 +130,7 @@ error_status_t  *status;
     if (*status != dsm_err_open_failed)
     {
         /* file exists but couldn't open it */
-        if (dflag) 
+        if (dflag)
             show_st("Error opening endpoint database", status);
         db_to_ept_ecode(status);
         return;
@@ -139,12 +138,12 @@ error_status_t  *status;
 
     if (h->dsh == NULL)
     {
-        /*  Create and initialize file 
+        /*  Create and initialize file
          */
         dsm_create(database_file, (dsm_handle_t *) &h->dsh, status);
         if (! STATUS_OK(status))
         {
-            if (dflag) 
+            if (dflag)
                 show_st("Error creating endpoint database", status);
             db_to_ept_ecode(status);
             return;
@@ -155,9 +154,9 @@ error_status_t  *status;
         hdr.version = version;
         hdr.object = h->object;
         dsm_set_info(h->dsh, &hdr, sizeof(hdr), status);
-        if (! STATUS_OK(status)) 
+        if (! STATUS_OK(status))
         {
-            if (dflag) 
+            if (dflag)
                 show_st("Error writing to endpoint database", status);
             db_to_ept_ecode(status);
             return;
@@ -165,10 +164,10 @@ error_status_t  *status;
     }
 
     return;
-} 
+}
 
 /*  db_update_entry
- *  Update an existing record in the disk copy 
+ *  Update an existing record in the disk copy
  *  of a database.
  *  DSM update is really a delete and add so
  *  if the process crashes between dsm_detach
@@ -176,7 +175,7 @@ error_status_t  *status;
  *
  *  dsm_detach marks an entry as free on disk, used
  *  in volatile memory (so it won't be given out to anyone
- *  else during this process's lifetime but it will be 
+ *  else during this process's lifetime but it will be
  *  lost in a crash)
  */
 
@@ -192,14 +191,13 @@ error_status_t  *status;
     if (! STATUS_OK(status)) return;
 }
 
-
 
 /*
  *  Each entry is on 3 lists: the entry list (of all entries), a list that is
  *  keyed by the entry's object uuid, and a list that is keyed by the entry's
  *  interface uuid.  An entry's object list and interface list are accessed
  *  via uuid hash into a hash table which marks the beginning of a list for
- *  all uuids that hash to the same value.  Separate hash tables are used for 
+ *  all uuids that hash to the same value.  Separate hash tables are used for
  *  the object lists and the interface lists.
  *
  *  The entry lists are not stably stored.  They are recreated at startup
@@ -207,11 +205,11 @@ error_status_t  *status;
  *
  *  A database's lists are accessed via its struct db.lists_mgmt field.
  *  The lists contain forward and back pointers with the last entry on
- *  a list having its fwd ptr = NULL.  
+ *  a list having its fwd ptr = NULL.
  *
- *  The procedures that traverse lists (db_list_first, db_list_next) return a pointer 
- *  to the beginning of an entry (assuming that db_lists_t is at the beginning of 
- *  db_entry_t).  To get a pointer to the beginning of the entry, these procedures 
+ *  The procedures that traverse lists (db_list_first, db_list_next) return a pointer
+ *  to the beginning of an entry (assuming that db_lists_t is at the beginning of
+ *  db_entry_t).  To get a pointer to the beginning of the entry, these procedures
  *  subtract a pre-inited offset from the entry's object or interface list ptr.
  */
 INTERNAL unsigned32  db_c_object_list_offset;
@@ -219,10 +217,10 @@ INTERNAL unsigned32  db_c_interface_list_offset;
 
 PRIVATE void db_init_lists(h)
 struct db           *h;
-{   
+{
     int             i;
     db_lists_mgmt_t *lists_mgmt;
-    db_lists_t      lists; 
+    db_lists_t      lists;
 
     lists_mgmt = &h->lists_mgmt;
 
@@ -247,10 +245,10 @@ db_entry_t      *entp;
 {
     db_list_add(&h->lists_mgmt.entry_list, db_c_entry_list, (db_lists_t *) entp);
 
-    db_htable_add(h->lists_mgmt.object_table, db_c_object_list, &entp->object, 
+    db_htable_add(h->lists_mgmt.object_table, db_c_object_list, &entp->object,
         (db_lists_t *) entp);
 
-    db_htable_add(h->lists_mgmt.interface_table, db_c_interface_list, &entp->interface.uuid, 
+    db_htable_add(h->lists_mgmt.interface_table, db_c_interface_list, &entp->interface.uuid,
         (db_lists_t *) entp);
 }
 
@@ -260,10 +258,10 @@ db_entry_t      *entp;
 {
     db_list_remove(&h->lists_mgmt.entry_list, db_c_entry_list, (db_lists_t *) entp);
 
-    db_htable_remove(h->lists_mgmt.object_table, db_c_object_list, &entp->object, 
+    db_htable_remove(h->lists_mgmt.object_table, db_c_object_list, &entp->object,
         (db_lists_t *) entp);
 
-    db_htable_remove(h->lists_mgmt.interface_table, db_c_interface_list, &entp->interface.uuid, 
+    db_htable_remove(h->lists_mgmt.interface_table, db_c_interface_list, &entp->interface.uuid,
         (db_lists_t *) entp);
 }
 
@@ -469,8 +467,8 @@ db_lists_t          *xentp;
 }
 
 /*  Save context
- *  epdb_lookup, fwd, map take an ept_entry_handle_t context handle 
- *  argument which supports iterative search of the database.  The list 
+ *  epdb_lookup, fwd, map take an ept_entry_handle_t context handle
+ *  argument which supports iterative search of the database.  The list
  *  type, list entry pointer, and pass number are saved so the search
  *  can resume where it left off.
  */
@@ -489,8 +487,8 @@ unsigned32          pass;
      *  job is done - just delete the context (if one has been
      *  established) and return
      */
-    if (lp == NULL) 
-    { 
+    if (lp == NULL)
+    {
         db_delete_context(h, entry_handle);
         return;
     }
@@ -502,7 +500,7 @@ unsigned32          pass;
 
     /*  If the context already exists, decrement the number of
      *  read references in the entry to which the old context
-     *  points; this context won't point to the entry any more.  
+     *  points; this context won't point to the entry any more.
      *  If the context does not exist, malloc space for it.
      *
      *  Set chp and *entry_handle to the context's address.
@@ -519,14 +517,14 @@ unsigned32          pass;
         if (*entry_handle == NULL)
             return;
         chp = (db_contexth_t *) (*entry_handle);
-    } 
+    }
 
     /*  Increment read ref count of the entry to which context will point.
-     *  Check for read refs overflow 
+     *  Check for read refs overflow
      */
     entp = (db_entry_t *) lp;
     entp->read_nrefs++;
-    if (entp->read_nrefs >= db_c_max_read_nrefs) 
+    if (entp->read_nrefs >= db_c_max_read_nrefs)
     {
         db_delete_context(h, entry_handle);
         return;
@@ -583,7 +581,7 @@ error_status_t      *status;
     SET_STATUS_OK(status);
 }
 
-/*  Check whether this entry_handle's context 
+/*  Check whether this entry_handle's context
  *  points to the dbase denoted by h.
  *  Return true and status = ept_s_invalid_context
  *  if entry_handle's db_handle field != h arg.
@@ -598,10 +596,10 @@ error_status_t      *status;
 
     SET_STATUS_OK(status);
 
-    if (entry_handle == NULL) 
+    if (entry_handle == NULL)
         return(false);
 
-    if (*entry_handle != NULL) 
+    if (*entry_handle != NULL)
     {
         chp = (db_contexth_t *) *entry_handle;
         if (chp->db_handle != h)
@@ -616,8 +614,8 @@ error_status_t      *status;
 
 /*  return true if entry_handle is a "bad" context
  *  handle - ie.
- *      there's no place to pass the handle back 
- *          to the caller (ie. he really didn't want to 
+ *      there's no place to pass the handle back
+ *          to the caller (ie. he really didn't want to
  *          save context)
  *      the context handle doesn't point to this database
  *  return false if entry_handle appears to be ok
@@ -628,10 +626,10 @@ ept_lookup_handle_t *entry_handle;
 {
     db_contexth_t   *chp;
 
-    if (entry_handle == NULL) 
+    if (entry_handle == NULL)
         return(true);
 
-    if (*entry_handle != NULL) 
+    if (*entry_handle != NULL)
     {
         chp = (db_contexth_t *) *entry_handle;
         if (chp->db_handle != h)
@@ -673,7 +671,7 @@ struct db *h;
 PRIVATE void db_to_ept_ecode(status)
 error_status_t  *status;
 {
-    switch ((int)*status) 
+    switch ((int)*status)
     {
         case dsm_err_create_failed:
             *status = ept_s_cant_create;
@@ -718,4 +716,3 @@ error_status_t  *status;
             break;
     }
 }
-

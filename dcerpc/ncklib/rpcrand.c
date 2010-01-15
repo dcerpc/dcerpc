@@ -3,6 +3,7 @@
  * (c) Copyright 1990 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1990 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1990 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -45,14 +46,9 @@
  */
 
 PRIVATE void rpc__random_init
-#ifdef _DCE_PROTO_
 (
     unsigned32 seed
 )
-#else
-(seed)
-unsigned32 seed;
-#endif
 {
     srandom ((int) seed);
 }
@@ -62,16 +58,10 @@ unsigned32 seed;
  */
 
 PRIVATE unsigned32 rpc__random_get
-#ifdef _DCE_PROTO_
 (
     unsigned32 lower ATTRIBUTE_UNUSED,
     unsigned32 upper ATTRIBUTE_UNUSED
 )
-#else
-(lower, upper)
-unsigned32 lower;
-unsigned32 upper;
-#endif
 {
     return (random ());
 }

@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -42,11 +43,6 @@
 /*
  * The max number of socket that the listener can keep track of.
  */
-
-#ifndef _DCE_PROTOTYPE_
-#include <dce/dce.h>
-#endif
-
 
 #ifndef RPC_C_SERVER_MAX_SOCKETS
 #  define RPC_C_SERVER_MAX_SOCKETS      64
@@ -98,22 +94,22 @@ extern "C" {
 #endif
 
 
-PRIVATE void rpc__nlsn_activate_desc _DCE_PROTOTYPE_((
+PRIVATE void rpc__nlsn_activate_desc (
         rpc_listener_state_p_t  /*lstate*/,
         unsigned32              /*idx*/,
         unsigned32              * /*status*/
-    ));
+    );
 
-PRIVATE void rpc__nlsn_deactivate_desc _DCE_PROTOTYPE_((
+PRIVATE void rpc__nlsn_deactivate_desc (
         rpc_listener_state_p_t  /*lstate*/,
         unsigned32              /*idx*/,
         unsigned32              * /*status*/
-    ));
+    );
 
-PRIVATE void rpc__nlsn_fork_handler _DCE_PROTOTYPE_((
+PRIVATE void rpc__nlsn_fork_handler (
         rpc_listener_state_p_t  /*lstate*/,
         rpc_fork_stage_id_t /*stage*/
-    ));
+    );
 
 #ifdef __cplusplus
 }

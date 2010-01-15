@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -88,11 +89,11 @@ typedef struct
     unsigned        copied_mepv: 1; /* 1 = mepv copied at registration time  */
 } rpc_if_type_info_t, *rpc_if_type_info_p_t;
 
-INTERNAL void unregister_if_entry _DCE_PROTOTYPE_ ((
+INTERNAL void unregister_if_entry (
         rpc_if_rgy_entry_p_t    /*if_entry*/,
         uuid_p_t                /*mgr_type_uuid*/,
         unsigned32              * /*status*/
-    ));
+    );
 
 /*
 **++
@@ -125,14 +126,9 @@ INTERNAL void unregister_if_entry _DCE_PROTOTYPE_ ((
 **/
 
 PRIVATE void rpc__if_init
-#ifdef _DCE_PROTO_
 (
     unsigned32 * status
 )
-#else
-(status)
-unsigned32                  *status;
-#endif
 {
     RPC_MUTEX_INIT (if_mutex);
     *status = rpc_s_ok;
@@ -168,14 +164,9 @@ unsigned32                  *status;
 **/
 
 PRIVATE void rpc__if_fork_handler
-#ifdef _DCE_PROTO_
 (
   rpc_fork_stage_id_t stage
 )
-#else
-(stage)
-rpc_fork_stage_id_t stage;
-#endif
 {
     unsigned32 i;
 
@@ -240,20 +231,12 @@ rpc_fork_stage_id_t stage;
 **/
 
 PUBLIC void rpc_server_register_if
-#ifdef _DCE_PROTO_
 (
     rpc_if_handle_t             ifspec_h,
     uuid_p_t                    mgr_type_uuid,
     rpc_mgr_epv_t               mgr_epv,
     unsigned32                  *status
 )
-#else
-(ifspec_h, mgr_type_uuid, mgr_epv, status)
-rpc_if_handle_t             ifspec_h;
-uuid_p_t                    mgr_type_uuid;
-rpc_mgr_epv_t               mgr_epv;
-unsigned32                  *status;
-#endif
 {
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
@@ -322,7 +305,6 @@ unsigned32                  *status;
 **/
 
 PRIVATE void rpc__server_register_if_int
-#ifdef _DCE_PROTO_
 (
     rpc_if_handle_t             ifspec_h,
     uuid_p_t                    mgr_type_uuid,
@@ -334,18 +316,6 @@ PRIVATE void rpc__server_register_if_int
     boolean32                   is_internal,
     unsigned32                  *status
 )
-#else
-(ifspec_h, mgr_type_uuid, mgr_epv, flags, max_calls, max_rpc_size, is_internal, status)
-rpc_if_handle_t             ifspec_h;
-uuid_p_t                    mgr_type_uuid;
-rpc_mgr_epv_t               mgr_epv;
-unsigned32                  flags;
-unsigned32                  max_calls;
-unsigned32                  max_rpc_size;
-rpc_if_callback_fn_t        if_callback;
-boolean32                   is_internal;
-unsigned32                  *status;
-#endif
 {
     rpc_if_rep_p_t              if_rep = (rpc_if_rep_p_t) ifspec_h;
     rpc_mgr_epv_t               mepv;
@@ -648,20 +618,12 @@ ERROR_AND_LOCKED:
 **/
 
 PRIVATE void rpc__server_unregister_if_int
-#ifdef _DCE_PROTO_
 (
     rpc_if_handle_t             ifspec_h,
     uuid_p_t                    mgr_type_uuid,
     rpc_if_handle_t             *rtn_ifspec_h,
     unsigned32                  *status
 )
-#else
-(ifspec_h, mgr_type_uuid, rtn_ifspec_h, status)
-rpc_if_handle_t             ifspec_h;
-uuid_p_t                    mgr_type_uuid;
-rpc_if_handle_t             *rtn_ifspec_h;
-unsigned32                  *status;
-#endif
 {
     rpc_if_rep_p_t              if_rep = (rpc_if_rep_p_t) ifspec_h;
     unsigned32                  index;
@@ -862,18 +824,11 @@ unsigned32                  *status;
 **/
 
 PUBLIC void rpc_server_unregister_if
-#ifdef _DCE_PROTO_
 (
     rpc_if_handle_t             ifspec_h,
     uuid_p_t                    mgr_type_uuid,
     unsigned32                  *status
 )
-#else
-(ifspec_h, mgr_type_uuid, status)
-rpc_if_handle_t             ifspec_h;
-uuid_p_t                    mgr_type_uuid;
-unsigned32                  *status;
-#endif
 {
     rpc_if_handle_t             rtn_ifspec_h;
 
@@ -889,18 +844,11 @@ unsigned32                  *status;
 **/
 
 INTERNAL void unregister_if_entry
-#ifdef _DCE_PROTO_
 (
     rpc_if_rgy_entry_p_t    if_entry,
     uuid_p_t                mgr_type_uuid,
     unsigned32              *status
 )
-#else
-(if_entry, mgr_type_uuid, status)
-rpc_if_rgy_entry_p_t    if_entry;
-uuid_p_t                mgr_type_uuid;
-unsigned32              *status;
-#endif
 {
     rpc_if_type_info_p_t        type_info;
     rpc_if_type_info_p_t        current_type_info;
@@ -1099,7 +1047,6 @@ unsigned32              *status;
 **/
 
 PRIVATE void rpc__if_lookup
-#ifdef _DCE_PROTO_
 (
     uuid_p_t                    if_uuid,
     unsigned32                  if_vers,
@@ -1110,17 +1057,6 @@ PRIVATE void rpc__if_lookup
     rpc_mgr_epv_t               *mepv,
     unsigned32                  *status
 )
-#else
-(if_uuid, if_vers, mgr_type_uuid, ihint, ifspec, sepv, mepv, status)
-uuid_p_t                    if_uuid;
-unsigned32                  if_vers;
-uuid_p_t                    mgr_type_uuid;
-unsigned16                  *ihint;
-rpc_if_rep_p_t              *ifspec;
-rpc_v2_server_stub_epv_t    *sepv;
-rpc_mgr_epv_t               *mepv;
-unsigned32                  *status;
-#endif
 {
     return rpc__if_lookup2 (if_uuid, if_vers, mgr_type_uuid,
                             ihint, ifspec, sepv, mepv,
@@ -1207,7 +1143,6 @@ unsigned32                  *status;
 **/
 
 PRIVATE void rpc__if_lookup2
-#ifdef _DCE_PROTO_
 (
     uuid_p_t                    if_uuid,
     unsigned32                  if_vers,
@@ -1222,22 +1157,6 @@ PRIVATE void rpc__if_lookup2
     rpc_if_callback_fn_t        *if_callback,
     unsigned32                  *status
 )
-#else
-(if_uuid, if_vers, mgr_type_uuid, ihint, ifspec, sepv, mepv, flags,
- max_calls, max_rpc_size, if_callback, status)
-uuid_p_t                    if_uuid;
-unsigned32                  if_vers;
-uuid_p_t                    mgr_type_uuid;
-unsigned16                  *ihint;
-rpc_if_rep_p_t              *ifspec;
-rpc_v2_server_stub_epv_t    *sepv;
-rpc_mgr_epv_t               *mepv;
-unsigned32                  *flags;
-unsigned32                  *max_calls;
-unsigned32                  *max_rpc_size;
-rpc_if_callback_fn_t        *if_callback;
-unsigned32                  *status;
-#endif
 {
     rpc_if_rgy_entry_p_t        if_entry = NULL;
     rpc_if_type_info_p_t        type_info;
@@ -1475,18 +1394,11 @@ unsigned32                  *status;
 **/
 
 PUBLIC void rpc_if_inq_id
-#ifdef _DCE_PROTO_
 (
     rpc_if_handle_t             ifspec_h,
     rpc_if_id_t                 *if_id,
     unsigned32                  *status
 )
-#else
-(ifspec_h, if_id, status)
-rpc_if_handle_t             ifspec_h;
-rpc_if_id_t                 *if_id;
-unsigned32                  *status;
-#endif
 {
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
@@ -1555,20 +1467,12 @@ unsigned32                  *status;
 **/
 
 PRIVATE boolean rpc__if_id_compare
-#ifdef _DCE_PROTO_
 (
     rpc_if_id_p_t           if_id_ref,
     rpc_if_id_p_t           if_id,
     unsigned32              if_vers_option,
     unsigned32              *status
 )
-#else
-(if_id_ref, if_id, if_vers_option, status)
-rpc_if_id_p_t           if_id_ref;
-rpc_if_id_p_t           if_id;
-unsigned32              if_vers_option;
-unsigned32              *status;
-#endif
 {
     *status = rpc_s_ok;
 
@@ -1709,16 +1613,10 @@ unsigned32              *status;
 **/
 
 PUBLIC void rpc_if_id_vector_free
-#ifdef _DCE_PROTO_
 (
     rpc_if_id_vector_p_t    *if_id_vector,
     unsigned32              *status
 )
-#else
-(if_id_vector, status)
-rpc_if_id_vector_p_t    *if_id_vector;
-unsigned32              *status;
-#endif
 {
     unsigned32              i;
 
@@ -1807,20 +1705,12 @@ unsigned32              *status;
 **/
 
 PRIVATE void rpc__if_inq_endpoint
-#ifdef _DCE_PROTO_
 (
     rpc_if_rep_p_t              ifspec,
     rpc_protseq_id_t            protseq_id,
     unsigned_char_t             **endpoint,
     unsigned32                  *status
 )
-#else
-(ifspec, protseq_id, endpoint, status)
-rpc_if_rep_p_t              ifspec;
-rpc_protseq_id_t            protseq_id;
-unsigned_char_t             **endpoint;
-unsigned32                  *status;
-#endif
 {
     unsigned16              ctr;
     rpc_protseq_id_t        pseq_id;
@@ -1915,18 +1805,11 @@ unsigned32                  *status;
 **/
 
 PRIVATE void rpc__if_set_wk_endpoint
-#ifdef _DCE_PROTO_
 (
   rpc_if_rep_p_t          ifspec,
   rpc_addr_p_t            *rpc_addr,
   unsigned32              *status
 )
-#else
-(ifspec, rpc_addr, status)
-rpc_if_rep_p_t          ifspec;
-rpc_addr_p_t            *rpc_addr;
-unsigned32              *status;
-#endif
 {
     unsigned_char_p_t       endpoint;
     unsigned32              temp_status;
@@ -2073,16 +1956,10 @@ PRIVATE unsigned32 rpc__if_mgmt_inq_num_registered( void )
 **/
 
 PRIVATE void rpc__if_mgmt_inq_if_ids
-#ifdef _DCE_PROTO_
 (
     rpc_if_id_vector_p_t    *if_id_vector,
     unsigned32              *status
 )
-#else
-(if_id_vector, status)
-rpc_if_id_vector_p_t    *if_id_vector;
-unsigned32              *status;
-#endif
 {
     rpc_if_rgy_entry_p_t    if_entry;
     unsigned32              if_count;
@@ -2214,20 +2091,12 @@ unsigned32              *status;
 **/
 
 PUBLIC void rpc_server_inq_if
-#ifdef _DCE_PROTO_
 (
     rpc_if_handle_t             ifspec_h,
     uuid_p_t                    mgr_type_uuid,
     rpc_mgr_epv_t               *mgr_epv,
     unsigned32                  *status
 )
-#else
-(ifspec_h, mgr_type_uuid, mgr_epv, status)
-rpc_if_handle_t             ifspec_h;
-uuid_p_t                    mgr_type_uuid;
-rpc_mgr_epv_t               *mgr_epv;
-unsigned32                  *status;
-#endif
 {
     rpc_if_rep_p_t              ifspec = (rpc_if_rep_p_t) ifspec_h;
     unsigned16                  ihint = RPC_C_INVALID_IHINT;
@@ -2288,7 +2157,6 @@ unsigned32                  *status;
 **/
 
 PUBLIC void rpc_server_register_if_ex
-#ifdef _DCE_PROTO_
 (
     rpc_if_handle_t             ifspec_h,
     uuid_p_t                    mgr_type_uuid,
@@ -2298,16 +2166,6 @@ PUBLIC void rpc_server_register_if_ex
     rpc_if_callback_fn_t        if_callback,
     unsigned32                  *status
 )
-#else
-(ifspec_h, mgr_type_uuid, mgr_epv, flags, max_calls, if_callback, status)
-rpc_if_handle_t             ifspec_h;
-uuid_p_t                    mgr_type_uuid;
-rpc_mgr_epv_t               mgr_epv;
-unsigned32                  flags;
-unsigned32                  max_calls;
-rpc_if_callback_fn_t        if_callback;
-unsigned32                  *status;
-#endif
 {
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
@@ -2367,7 +2225,6 @@ unsigned32                  *status;
 **/
 
 PUBLIC void rpc_server_register_if_2
-#ifdef _DCE_PROTO_
 (
     rpc_if_handle_t             ifspec_h,
     uuid_p_t                    mgr_type_uuid,
@@ -2378,17 +2235,6 @@ PUBLIC void rpc_server_register_if_2
     rpc_if_callback_fn_t        if_callback,
     unsigned32                  *status
 )
-#else
-(ifspec_h, mgr_type_uuid, mgr_epv, flags, max_calls, if_callback, status)
-rpc_if_handle_t             ifspec_h;
-uuid_p_t                    mgr_type_uuid;
-rpc_mgr_epv_t               mgr_epv;
-unsigned32                  flags;
-unsigned32                  max_calls;
-unsigned32                  max_rpc_size;
-rpc_if_callback_fn_t        if_callback;
-unsigned32                  *status;
-#endif
 {
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();

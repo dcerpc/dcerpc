@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -40,16 +41,10 @@
 #include <driver.h>             /* Main driver defs */
 
 int main
-#ifdef PROTO
 (
     int  argc,
     char **argv
 )
-#else
-(argc, argv)
-    int  argc;
-    char **argv;
-#endif
 {
     if (!DRIVER_main(argc, argv))
         exit(pgm_error);

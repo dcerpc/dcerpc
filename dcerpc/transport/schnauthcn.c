@@ -3,6 +3,7 @@
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -43,30 +44,30 @@
 
 #include <schnauthcn.h>
 
-INTERNAL boolean32 rpc__schnauth_cn_three_way _DCE_PROTOTYPE_((void));
+INTERNAL boolean32 rpc__schnauth_cn_three_way (void);
 
-INTERNAL boolean32 rpc__schnauth_cn_context_valid _DCE_PROTOTYPE_((
+INTERNAL boolean32 rpc__schnauth_cn_context_valid (
         rpc_cn_sec_context_p_t           /*sec*/,
         unsigned32                      * /*st*/
-    ));
+    );
 
-INTERNAL void rpc__schnauth_cn_create_info _DCE_PROTOTYPE_((
+INTERNAL void rpc__schnauth_cn_create_info (
        rpc_authn_level_t                 /*authn_level*/,
        rpc_auth_info_p_t                * /*auth_info*/,
        unsigned32                       * /*st*/
-    ));
+    );
 
-INTERNAL boolean32 rpc__schnauth_cn_cred_changed _DCE_PROTOTYPE_((
+INTERNAL boolean32 rpc__schnauth_cn_cred_changed (
         rpc_cn_sec_context_p_t           /*sec*/,
         unsigned32                      * /*st*/
-    ));
+    );
 
-INTERNAL void rpc__schnauth_cn_cred_refresh _DCE_PROTOTYPE_((
+INTERNAL void rpc__schnauth_cn_cred_refresh (
         rpc_auth_info_p_t                /*auth_info*/,
         unsigned32                      * /*st*/
-    ));
+    );
 
-INTERNAL void rpc__schnauth_cn_fmt_client_req _DCE_PROTOTYPE_((
+INTERNAL void rpc__schnauth_cn_fmt_client_req (
         rpc_cn_assoc_sec_context_p_t      /* assoc_sec */,
         rpc_cn_sec_context_p_t            /* sec */,
         pointer_t                         /* auth_value */,
@@ -75,9 +76,9 @@ INTERNAL void rpc__schnauth_cn_fmt_client_req _DCE_PROTOTYPE_((
         unsigned32                      * /* auth_len_remain */,
         unsigned32                        /* old_server */,
         unsigned32                      * /* st */
-    ));
+    );
 
-INTERNAL void rpc__schnauth_cn_fmt_srvr_resp _DCE_PROTOTYPE_((
+INTERNAL void rpc__schnauth_cn_fmt_srvr_resp (
         unsigned32                       /*verify_st*/,
         rpc_cn_assoc_sec_context_p_t     /*assoc_sec*/,
         rpc_cn_sec_context_p_t           /*sec*/,
@@ -85,37 +86,37 @@ INTERNAL void rpc__schnauth_cn_fmt_srvr_resp _DCE_PROTOTYPE_((
         unsigned32                       /*req_auth_value_len*/,
         pointer_t                        /*auth_value*/,
         unsigned32                      * /*auth_value_len*/
-    ));
+    );
 
-INTERNAL void rpc__schnauth_cn_free_prot_info _DCE_PROTOTYPE_((
+INTERNAL void rpc__schnauth_cn_free_prot_info (
         rpc_auth_info_p_t                /*info*/,
         rpc_cn_auth_info_p_t            * /*cn_info*/
-    ));
+    );
 
-INTERNAL void rpc__schnauth_cn_get_prot_info _DCE_PROTOTYPE_((
+INTERNAL void rpc__schnauth_cn_get_prot_info (
         rpc_auth_info_p_t                /*info*/,
         rpc_cn_auth_info_p_t            * /*cn_info*/,
         unsigned32                      * /*st*/
-    ));
+    );
 
-INTERNAL void rpc__schnauth_cn_pre_call _DCE_PROTOTYPE_((
+INTERNAL void rpc__schnauth_cn_pre_call (
         rpc_cn_assoc_sec_context_p_t     /*assoc_sec*/,
         rpc_cn_sec_context_p_t           /*sec*/,
         pointer_t                        /*auth_value*/,
         unsigned32                      * /*auth_value_len*/,
         unsigned32                      * /*st*/
-    ));
+    );
 
-INTERNAL void rpc__schnauth_cn_pre_send _DCE_PROTOTYPE_((
+INTERNAL void rpc__schnauth_cn_pre_send (
         rpc_cn_assoc_sec_context_p_t     /*assoc_sec*/,
         rpc_cn_sec_context_p_t           /*sec*/,
         rpc_socket_iovec_p_t             /*iov*/,
         unsigned32                       /*iovlen*/,
 	rpc_socket_iovec_p_t             /*out_iov*/,
         unsigned32                      * /*st*/
-    ));
+    );
 
-INTERNAL void rpc__schnauth_cn_recv_check _DCE_PROTOTYPE_((
+INTERNAL void rpc__schnauth_cn_recv_check (
         rpc_cn_assoc_sec_context_p_t     /*assoc_sec*/,
         rpc_cn_sec_context_p_t           /*sec*/,
         rpc_cn_common_hdr_p_t            /*pdu*/,
@@ -124,36 +125,36 @@ INTERNAL void rpc__schnauth_cn_recv_check _DCE_PROTOTYPE_((
         rpc_cn_auth_tlr_p_t              /*auth_tlr*/,
         boolean32                        /*unpack_ints*/,
         unsigned32                      * /*st*/
-    ));
+    );
 
-INTERNAL void rpc__schnauth_cn_tlr_uuid_crc _DCE_PROTOTYPE_((
+INTERNAL void rpc__schnauth_cn_tlr_uuid_crc (
         pointer_t                /*auth_value*/,
         unsigned32               /*auth_value_len*/,
         unsigned32              * /*uuid_crc*/
-    ));
+    );
 
-INTERNAL void rpc__schnauth_cn_tlr_unpack _DCE_PROTOTYPE_((
+INTERNAL void rpc__schnauth_cn_tlr_unpack (
         rpc_cn_packet_p_t        /*pkt_p*/,
         unsigned32               /*auth_value_len*/,
         unsigned8               * /*packed_drep*/
-    ));
+    );
 
-INTERNAL void rpc__schnauth_cn_vfy_client_req _DCE_PROTOTYPE_((
+INTERNAL void rpc__schnauth_cn_vfy_client_req (
         rpc_cn_assoc_sec_context_p_t    /* assoc_sec */,
         rpc_cn_sec_context_p_t          /* sec */,
         pointer_t                       /* auth_value */,
         unsigned32                      /* auth_value_len */,
 	unsigned32		        /* old_client */,
         unsigned32                      * /* st */
-    ));
+    );
 
-INTERNAL void rpc__schnauth_cn_vfy_srvr_resp _DCE_PROTOTYPE_((
+INTERNAL void rpc__schnauth_cn_vfy_srvr_resp (
         rpc_cn_assoc_sec_context_p_t     /*assoc_sec*/,
         rpc_cn_sec_context_p_t           /*sec*/,
         pointer_t                        /*auth_value*/,
         unsigned32                       /*auth_value_len*/,
         unsigned32                      * /*st*/
-    ));
+    );
 
 GLOBAL rpc_cn_auth_epv_t rpc_g_schnauth_cn_epv =
 {
@@ -266,16 +267,10 @@ INTERNAL boolean32 rpc__schnauth_cn_three_way (void)
 **/
 
 INTERNAL boolean32 rpc__schnauth_cn_context_valid 
-#ifdef _DCE_PROTO_
 (
     rpc_cn_sec_context_p_t          sec,
     unsigned32                      *st
 )
-#else
-(sec, st)
-rpc_cn_sec_context_p_t          sec;
-unsigned32                      *st;
-#endif
 {
     CODING_ERROR (st);
 
@@ -346,18 +341,11 @@ unsigned32                      *st;
 **/
 
 INTERNAL void rpc__schnauth_cn_create_info 
-#ifdef _DCE_PROTO_
 (
     rpc_authn_level_t                authn_level,
     rpc_auth_info_p_t                *auth_info,
     unsigned32                       *st
 )
-#else
-(authn_level, auth_info, st)
-rpc_authn_level_t                authn_level;
-rpc_auth_info_p_t                *auth_info;
-unsigned32                       *st;
-#endif
 {
     rpc_schnauth_info_p_t schnauth_info;
 
@@ -458,16 +446,10 @@ unsigned32                       *st;
 **/
 
 INTERNAL boolean32 rpc__schnauth_cn_cred_changed 
-#ifdef _DCE_PROTO_
 (
     rpc_cn_sec_context_p_t          sec,
     unsigned32                      *st
 )
-#else
-(sec, st)
-rpc_cn_sec_context_p_t          sec;
-unsigned32                      *st;
-#endif
 {
     rpc_schnauth_cn_info_t *schnauth_cn_info ATTRIBUTE_UNUSED;
     rpc_schnauth_info_p_t   schnuth_info ATTRIBUTE_UNUSED;
@@ -539,16 +521,10 @@ unsigned32                      *st;
 **/
 
 INTERNAL void rpc__schnauth_cn_cred_refresh 
-#ifdef _DCE_PROTO_
 (
     rpc_auth_info_p_t               auth_info,
     unsigned32                      *st
 )
-#else
-(auth_info, st)
-rpc_auth_info_p_t               auth_info;
-unsigned32                      *st;
-#endif
 {
     rpc_schnauth_info_p_t schnauth_info;
 
@@ -626,7 +602,6 @@ unsigned32                      *st;
 **/
 
 INTERNAL void rpc__schnauth_cn_fmt_client_req 
-#ifdef _DCE_PROTO_
 (
    rpc_cn_assoc_sec_context_p_t      assoc_sec,
    rpc_cn_sec_context_p_t            sec,
@@ -637,17 +612,6 @@ INTERNAL void rpc__schnauth_cn_fmt_client_req
    unsigned32                        old_server ATTRIBUTE_UNUSED,
    unsigned32                      * st
 )
-#else
-(assoc_sec, sec, auth_value, auth_value_len, last_auth_pos, auth_len_remain, old_server, st)
-rpc_cn_assoc_sec_context_p_t      /* assoc_sec */,
-rpc_cn_sec_context_p_t            /* sec */,
-pointer_t                         /* auth_value */,
-unsigned32                      * /* auth_value_len */,
-pointer_t                       * /* last_auth_pos */,
-unsigned32                      * /* auth_len_remain */,
-unsigned32                        /* old_server */,
-unsigned32                      * /* st */
-#endif
 {
     rpc_cn_bind_auth_value_priv_t       *priv_auth_value ATTRIBUTE_UNUSED;
     rpc_cn_auth_info_t                  *auth_info;
@@ -750,7 +714,6 @@ unsigned32                      * /* st */
 **/
 
 INTERNAL void rpc__schnauth_cn_fmt_srvr_resp 
-#ifdef _DCE_PROTO_
 (
     unsigned32                      verify_st,
     rpc_cn_assoc_sec_context_p_t    assoc_sec,
@@ -760,16 +723,6 @@ INTERNAL void rpc__schnauth_cn_fmt_srvr_resp
     pointer_t                       auth_value,
     unsigned32                      *auth_value_len
 )
-#else
-(verify_st, assoc_sec, sec, req_auth_value, req_auth_value_len, auth_value, auth_value_len)
-unsigned32                      verify_st;
-rpc_cn_assoc_sec_context_p_t    assoc_sec;
-rpc_cn_sec_context_p_t          sec;
-pointer_t                       req_auth_value;
-unsigned32                      req_auth_value_len;
-pointer_t                       auth_value;
-unsigned32                      *auth_value_len;
-#endif
 {
     rpc_cn_bind_auth_value_priv_t       *priv_auth_value;
 
@@ -843,16 +796,10 @@ unsigned32                      *auth_value_len;
 **/
 
 INTERNAL void rpc__schnauth_cn_free_prot_info 
-#ifdef _DCE_PROTO_
 (
     rpc_auth_info_p_t               info,    
     rpc_cn_auth_info_p_t            *cn_info
 )
-#else
-(info, cn_info)
-rpc_auth_info_p_t               info;    
-rpc_cn_auth_info_p_t            *cn_info;
-#endif
 {
 
     RPC_DBG_PRINTF (rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_ROUTINE_TRACE,
@@ -909,18 +856,11 @@ rpc_cn_auth_info_p_t            *cn_info;
 **/
 
 INTERNAL void rpc__schnauth_cn_get_prot_info 
-#ifdef _DCE_PROTO_
 (
     rpc_auth_info_p_t               info,
     rpc_cn_auth_info_p_t            *cn_info,
     unsigned32                      *st
 )
-#else
-(info, cn_info, st)
-rpc_auth_info_p_t               info;
-rpc_cn_auth_info_p_t            *cn_info;
-unsigned32                      *st;
-#endif
 {
     rpc_schnauth_info_t           *schnauth_info;
     rpc_schnauth_cn_info_t        *schnauth_cn_info;
@@ -1026,7 +966,6 @@ unsigned32                      *st;
 **/
 
 INTERNAL void rpc__schnauth_cn_pre_call 
-#ifdef _DCE_PROTO_
 (
     rpc_cn_assoc_sec_context_p_t    assoc_sec,
     rpc_cn_sec_context_p_t          sec,
@@ -1034,14 +973,6 @@ INTERNAL void rpc__schnauth_cn_pre_call
     unsigned32                      *auth_value_len,
     unsigned32                      *st
 )
-#else
-(assoc_sec, sec, auth_value, auth_value_len, st)
-rpc_cn_assoc_sec_context_p_t    assoc_sec;
-rpc_cn_sec_context_p_t          sec;
-pointer_t                       auth_value;
-unsigned32                      *auth_value_len;
-unsigned32                      *st;
-#endif
 {
     rpc_cn_auth_value_priv_t    *priv_auth_value ATTRIBUTE_UNUSED;
     unsigned32 ptype;
@@ -1082,7 +1013,6 @@ unsigned32                      *st;
  */
 
 INTERNAL void rpc__schnauth_cn_wrap_pdu
-#ifdef _DCE_PROTO_
 (
     rpc_cn_assoc_sec_context_p_t    assoc_sec ATTRIBUTE_UNUSED,
     rpc_cn_sec_context_p_t          sec,
@@ -1091,15 +1021,6 @@ INTERNAL void rpc__schnauth_cn_wrap_pdu
     rpc_socket_iovec_p_t            out_iov,
     unsigned32                      *st
 )
-#else
-(assoc_sec, sec, iov, iovlen, out_iov, st)
-rpc_cn_assoc_sec_context_p_t    assoc_sec;
-rpc_cn_sec_context_p_t          sec;
-rpc_socket_iovec_p_t            iov;
-unsigned32                      iovlen;
-rpc_socket_iovec_p_t            out_iov;
-unsigned32                      *st;
-#endif
 {
     const unsigned32 hdr_idx = 0;
     unsigned32 status = rpc_s_ok;
@@ -1297,7 +1218,6 @@ unsigned32                      *st;
 **/
 
 INTERNAL void rpc__schnauth_cn_pre_send 
-#ifdef _DCE_PROTO_
 (
     rpc_cn_assoc_sec_context_p_t    assoc_sec,
     rpc_cn_sec_context_p_t          sec,
@@ -1306,15 +1226,6 @@ INTERNAL void rpc__schnauth_cn_pre_send
     rpc_socket_iovec_p_t            out_iov,
     unsigned32                      *st
 )
-#else
-(assoc_sec, sec, iov, iovlen, out_iov, st)
-rpc_cn_assoc_sec_context_p_t    assoc_sec;
-rpc_cn_sec_context_p_t          sec;
-rpc_socket_iovec_p_t            iov;
-unsigned32                      iovlen;
-rpc_socket_iovec_p_t            out_iov;
-unsigned32                      *st;
-#endif
 {
     unsigned32          ptype;
 
@@ -1377,7 +1288,6 @@ unsigned32                      *st;
 
 
 INTERNAL void rpc__schnauth_cn_unwrap_pdu
-#ifdef _DCE_PROTO_
 (
     rpc_cn_assoc_sec_context_p_t    assoc_sec ATTRIBUTE_UNUSED,
     rpc_cn_sec_context_p_t          sec,
@@ -1388,17 +1298,6 @@ INTERNAL void rpc__schnauth_cn_unwrap_pdu
     boolean32                       unpack_ints ATTRIBUTE_UNUSED,
     unsigned32                      *st
 )
-#else
-(assoc_sec, sec, pdu, pdu_len, cred_len, auth_tlr, unpack_ints, st)
-rpc_cn_assoc_sec_context_p_t    assoc_sec;
-rpc_cn_sec_context_p_t          sec;
-rpc_cn_common_hdr_p_t           pdu;
-unsigned32                      pdu_len;
-unsigned32                      cred_len;
-rpc_cn_auth_tlr_p_t             auth_tlr;
-boolean32                       unpack_ints;
-unsigned32                      *st;
-#endif
 {
     unsigned32 status = rpc_s_ok;
     rpc_schnauth_cn_info_p_t schn_auth;
@@ -1498,7 +1397,6 @@ unsigned32                      *st;
 **/
 
 INTERNAL void rpc__schnauth_cn_recv_check 
-#ifdef _DCE_PROTO_
 (
     rpc_cn_assoc_sec_context_p_t    assoc_sec,
     rpc_cn_sec_context_p_t          sec,
@@ -1509,17 +1407,6 @@ INTERNAL void rpc__schnauth_cn_recv_check
     boolean32                       unpack_ints ATTRIBUTE_UNUSED,
     unsigned32                      *st
 )
-#else
-(assoc_sec, sec, pdu, pdu_len, cred_len, auth_tlr, unpack_ints, st)
-rpc_cn_assoc_sec_context_p_t    assoc_sec;
-rpc_cn_sec_context_p_t          sec;
-rpc_cn_common_hdr_p_t           pdu;
-unsigned32                      pdu_len;
-unsigned32                      cred_len;
-rpc_cn_auth_tlr_p_t             auth_tlr;
-boolean32                       unpack_ints;
-unsigned32                      *st;
-#endif
 {
     rpc_cn_auth_value_priv_t    *priv_auth_value;
     unsigned32                  ptype;
@@ -1632,18 +1519,11 @@ unsigned32                      *st;
 **/
 
 INTERNAL void rpc__schnauth_cn_tlr_uuid_crc 
-#ifdef _DCE_PROTO_
 (
     pointer_t               auth_value,
     unsigned32              auth_value_len,
     unsigned32              *uuid_crc
 )
-#else
-(auth_value, auth_value_len, uuid_crc)
-pointer_t               auth_value;
-unsigned32              auth_value_len;
-unsigned32              *uuid_crc;
-#endif
 {
     rpc_cn_bind_auth_value_priv_t       *priv_auth_value;
 
@@ -1699,18 +1579,11 @@ unsigned32              *uuid_crc;
 **/
 
 INTERNAL void rpc__schnauth_cn_tlr_unpack 
-#ifdef _DCE_PROTO_
 (
     rpc_cn_packet_p_t       pkt_p ATTRIBUTE_UNUSED,
     unsigned32              auth_value_len ATTRIBUTE_UNUSED,
     unsigned8               *packed_drep ATTRIBUTE_UNUSED
 )
-#else
-(pkt_p, auth_value_len, packed_drep) 
-rpc_cn_packet_p_t       pkt_p;
-unsigned32              auth_value_len;
-unsigned8               *packed_drep;
-#endif
 {
     RPC_DBG_PRINTF (rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_ROUTINE_TRACE,
                     ("(rpc__schnauth_cn_tlr_unpack)\n"));
@@ -1765,7 +1638,6 @@ unsigned8               *packed_drep;
 **/
 
 INTERNAL void rpc__schnauth_cn_vfy_client_req 
-#ifdef _DCE_PROTO_
 (
     rpc_cn_assoc_sec_context_p_t    assoc_sec,
     rpc_cn_sec_context_p_t          sec,
@@ -1774,15 +1646,6 @@ INTERNAL void rpc__schnauth_cn_vfy_client_req
     unsigned32		            old_client ATTRIBUTE_UNUSED,
     unsigned32                      *st
 )
-#else
-(assoc_sec, sec, auth_value, auth_value_len, old_client, st)
-rpc_cn_assoc_sec_context_p_t    /* assoc_sec */,
-rpc_cn_sec_context_p_t          /* sec */,
-pointer_t                       /* auth_value */,
-unsigned32                      /* auth_value_len */,
-unsigned32		        /* old_client */,
-unsigned32                      * /* st */
-#endif
 {
     rpc_cn_bind_auth_value_priv_t       *priv_auth_value;
 
@@ -1863,7 +1726,6 @@ unsigned32                      * /* st */
 **/
 
 INTERNAL void rpc__schnauth_cn_vfy_srvr_resp 
-#ifdef _DCE_PROTO_
 (
     rpc_cn_assoc_sec_context_p_t    assoc_sec,
     rpc_cn_sec_context_p_t          sec,
@@ -1871,14 +1733,6 @@ INTERNAL void rpc__schnauth_cn_vfy_srvr_resp
     unsigned32                      auth_value_len ATTRIBUTE_UNUSED,
     unsigned32                      *st
 )
-#else
-(assoc_sec, sec, auth_value, auth_value_len, st) 
-rpc_cn_assoc_sec_context_p_t    assoc_sec;
-rpc_cn_sec_context_p_t          sec;
-pointer_t                       auth_value;
-unsigned32                      auth_value_len;
-unsigned32                      *st;
-#endif
 {
     CODING_ERROR (st);
 
@@ -1909,16 +1763,10 @@ unsigned32                      *st;
 
 
 PRIVATE rpc_protocol_id_t       rpc__schnauth_cn_init 
-#ifdef _DCE_PROTO_
 (
     rpc_auth_rpc_prot_epv_p_t       *epv,
     unsigned32                      *st
 )
-#else
-(epv, st)
-rpc_auth_rpc_prot_epv_p_t       *epv;
-unsigned32                      *st;
-#endif
 {
     CODING_ERROR (st);
     RPC_DBG_PRINTF (rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_ROUTINE_TRACE,

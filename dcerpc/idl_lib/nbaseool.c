@@ -3,6 +3,7 @@
  * (c) Copyright 1990 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1990 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1990 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -54,16 +55,10 @@
 #endif
 
 void rpc_ss_m_uuid
-#ifdef IDL_PROTOTYPES
 (
 idl_uuid_t *p_node,
 rpc_ss_marsh_state_t *NIDL_msp
 )
-#else
-( p_node, NIDL_msp )
-idl_uuid_t *p_node;
-rpc_ss_marsh_state_t *NIDL_msp;
-#endif
 {
   
   /* local variables */
@@ -118,16 +113,10 @@ rpc_ss_marsh_state_t *NIDL_msp;
 }
 
 void rpc_ss_u_uuid
-#ifdef IDL_PROTOTYPES
 (
 idl_uuid_t *p_node,
 rpc_ss_marsh_state_t *p_unmar_params
 )
-#else
-( p_node, p_unmar_params )
-idl_uuid_t *p_node;
-rpc_ss_marsh_state_t *p_unmar_params;
-#endif
 {
   
   /* local variables */

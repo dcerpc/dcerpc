@@ -3,6 +3,7 @@
  * (c) Copyright 1993 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1993 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1993 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -61,9 +62,7 @@
 ndr_boolean rpc_ss_server_is_set_up = ndr_false;
 
 void rpc_ss_init_server_once(
-#ifdef IDL_PROTOTYPES
     void
-#endif
 )
 {
 
@@ -90,16 +89,10 @@ void rpc_ss_init_server_once(
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_send_server_exception
-#ifdef IDL_PROTOTYPES
 (
     rpc_call_handle_t h,
     dcethread_exc *e
 )
-#else
-( h, e )
-    rpc_call_handle_t h;
-    dcethread_exc *e;
-#endif
 {
     ndr_ulong_int mapped_code;
     ndr_ulong_int fault_buff;
@@ -179,7 +172,6 @@ void rpc_ss_send_server_exception
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_send_server_exception_2
-#ifdef IDL_PROTOTYPES
 (
     rpc_call_handle_t h,
     dcethread_exc *e,
@@ -187,14 +179,6 @@ void rpc_ss_send_server_exception_2
     dcethread_exc *user_exception_pointers[],
     IDL_msp_t IDL_msp ATTRIBUTE_UNUSED
 )
-#else
-( h, e, num_user_exceptions, user_exception_pointers, IDL_msp )
-    rpc_call_handle_t h;
-    dcethread_exc *e;
-    idl_long_int num_user_exceptions;
-    dcethread_exc *user_exception_pointers[];
-    IDL_msp_t IDL_msp;
-#endif
 {
     ndr_ulong_int mapped_code;
     ndr_ulong_int fault_buff[2];

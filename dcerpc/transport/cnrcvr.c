@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -115,19 +116,19 @@ INTERNAL rpc_cn_pkt_info_t packet_info_table[] =
 /*
  * R E C E I V E _ D I S P A T C H
  */
-INTERNAL void receive_dispatch _DCE_PROTOTYPE_ ((
+INTERNAL void receive_dispatch (
         rpc_cn_assoc_p_t        /*assoc*/
-    ));
+    );
 
 /*
  * R E C E I V E _ P A C K E T
  */
-INTERNAL void receive_packet _DCE_PROTOTYPE_ ((
+INTERNAL void receive_packet (
         rpc_cn_assoc_p_t        /*assoc*/,
         rpc_cn_fragbuf_p_t      * /*fragbuf_p*/,
         rpc_cn_fragbuf_p_t      * /*ovf_fragbuf_p*/,
         unsigned32              * /*st*/
-    ));
+    );
 
 /*
  * R P C _ C N _ S E N D _ F A U L T 
@@ -185,14 +186,9 @@ INTERNAL void receive_packet _DCE_PROTOTYPE_ ((
 */
 
 PRIVATE void rpc__cn_network_receiver 
-#ifdef _DCE_PROTO_
 (
   rpc_cn_assoc_p_t        assoc
 )
-#else
-(assoc)
-rpc_cn_assoc_p_t        assoc;
-#endif
 {
     rpc_socket_error_t  serr;
     volatile boolean    done = false;
@@ -502,14 +498,9 @@ rpc_cn_assoc_p_t        assoc;
 **/
 
 INTERNAL void receive_dispatch 
-#ifdef _DCE_PROTO_
 (
   rpc_cn_assoc_p_t        assoc
 )
-#else
-(assoc)
-rpc_cn_assoc_p_t        assoc;
-#endif
 {
     rpc_cn_fragbuf_p_t          fragbuf_p;
     rpc_cn_fragbuf_p_t          ovf_fragbuf_p;
@@ -1205,20 +1196,12 @@ rpc_cn_assoc_p_t        assoc;
 **/
 
 INTERNAL void receive_packet 
-#ifdef _DCE_PROTO_
 (
   rpc_cn_assoc_p_t        assoc,
   rpc_cn_fragbuf_p_t      *fragbuf_p,
   rpc_cn_fragbuf_p_t      *ovf_fragbuf_p,
   unsigned32              *st
 )
-#else
-(assoc, fragbuf_p, ovf_fragbuf_p, st)
-rpc_cn_assoc_p_t        assoc;
-rpc_cn_fragbuf_p_t      *fragbuf_p;
-rpc_cn_fragbuf_p_t      *ovf_fragbuf_p;
-unsigned32              *st;
-#endif
 {
     rpc_cn_fragbuf_t    * volatile fbp;
     volatile unsigned16 frag_length;

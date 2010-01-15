@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -126,19 +127,11 @@ static long attempt_to_print_errors(void)
 */
 
 static boolean open_fe_files
-#ifdef PROTO
 (
     boolean     *cmd_opt ATTRIBUTE_UNUSED,       /* [in] Array of command option flags */
     void        **cmd_val ATTRIBUTE_UNUSED,      /* [in] Array of command option values */
     FILE        **lis_fid       /*[out] Listing file handle */
 )
-#else
-(cmd_opt, cmd_val, lis_fid)
-    boolean     *cmd_opt;       /* [in] Array of command option flags */
-    void        **cmd_val;      /* [in] Array of command option values */
-    FILE        **lis_fid;      /*[out] Listing file handle */
-#endif
-
 {
     /* Set up default return values. */
     *lis_fid = NULL;
@@ -169,7 +162,6 @@ static boolean open_fe_files
 */
 
 static boolean open_be_files
-#ifdef PROTO
 (
     boolean     *cmd_opt,       /* [in] Array of command option flags */
     void        **cmd_val,      /* [in] Array of command option values */
@@ -180,19 +172,6 @@ static boolean open_be_files
     FILE        **sstub_fid,    /*[out] Server stub file handle */
     AST_interface_n_t *int_p    /* [in] Ptr to interface node */
 )
-#else
-(cmd_opt, cmd_val, h_fid, caux_fid, saux_fid,
- cstub_fid, sstub_fid, int_p)
-    boolean     *cmd_opt;       /* [in] Array of command option flags */
-    void        **cmd_val;      /* [in] Array of command option values */
-    FILE        **h_fid;        /*[out] Header file handle */
-    FILE        **caux_fid;     /*[out] Client auxiliary file handle */
-    FILE        **saux_fid;     /*[out] Server auxiliary file handle */
-    FILE        **cstub_fid;    /*[out] Client stub file handle */
-    FILE        **sstub_fid;    /*[out] Server stub file handle */
-    AST_interface_n_t *int_p;   /* [in] Ptr to interface node */
-#endif
-
 {
     AST_export_n_t  *export_p;          /* Ptr to export node */
     boolean         stubs_required;     /* TRUE if stub generation required */
@@ -342,7 +321,6 @@ static boolean open_be_files
 */
 
 static int stub_compile
-#ifdef PROTO
 (
     boolean     *cmd_opt,       /* [in] Array of command option flags */
     void        **cmd_val,      /* [in] Array of command option values */
@@ -350,15 +328,6 @@ static int stub_compile
     FILE        *fid,           /* [in] File handle of stub file */
     char        *compile_cmd    /* [in] Base command to compile stub */
 )
-#else
-(cmd_opt, cmd_val, opt_file, fid, compile_cmd)
-    boolean     *cmd_opt;       /* [in] Array of command option flags */
-    void        **cmd_val;      /* [in] Array of command option values */
-    int         opt_file;       /* [in] Index of stub file to process */
-    FILE        *fid;           /* [in] File handle of stub file */
-    char        *compile_cmd;   /* [in] Base command to compile stub */
-#endif
-
 {
     char    compile_opt[max_string_len];
     char    filespec[PATH_MAX];
@@ -410,7 +379,6 @@ static int stub_compile
 */
 
 static void close_files
-#ifdef PROTO
 (
     FILE        *lis_fid,       /* [in] Listing file handle */
     FILE        *h_fid,         /* [in] Header file handle */
@@ -419,16 +387,6 @@ static void close_files
     FILE        *cstub_fid,     /* [in] Client stub file handle */
     FILE        *sstub_fid      /* [in] Server stub file handle */
 )
-#else
-(lis_fid, h_fid, caux_fid, saux_fid, cstub_fid, sstub_fid)
-    FILE        *lis_fid;       /* [in] Listing file handle */
-    FILE        *h_fid;         /* [in] Header file handle */
-    FILE        *caux_fid;      /* [in] Client auxiliary file handle */
-    FILE        *saux_fid;      /* [in] Server auxiliary file handle */
-    FILE        *cstub_fid;     /* [in] Client stub file handle */
-    FILE        *sstub_fid;     /* [in] Server stub file handle */
-#endif
-
 {
     if (lis_fid     != NULL) fclose(lis_fid);
     if (h_fid       != NULL) fclose(h_fid);
@@ -446,13 +404,7 @@ static void close_files
 **  initialization function for that component.
 */
 
-#ifdef PROTO
 static boolean init(char *image_name)       /* Returns TRUE on success */
-#else
-static boolean init(image_name)           /* Returns TRUE on success */
-      char *image_name;
-#endif
-
 {
     /* Open error message database. */
     message_open(image_name);
@@ -469,12 +421,7 @@ static boolean init(image_name)           /* Returns TRUE on success */
 **  cleanup function for that component.
 */
 
-#ifdef PROTO
 static boolean cleanup(void)    /* Returns TRUE on success */
-#else
-static boolean cleanup()        /* Returns TRUE on success */
-#endif
-
 {
     /* Close error message database. */
     message_close();
@@ -490,17 +437,10 @@ static boolean cleanup()        /* Returns TRUE on success */
 */
 
 boolean DRIVER_main
-#ifdef PROTO
 (
     int         argc,           /* Command line argument count */
     char        **argv          /* Array of command line arguments */
 )
-#else
-(argc, argv)
-    int         argc;           /* Command line argument count */
-    char        **argv;         /* Array of command line arguments */
-#endif
-
 {
     boolean     *cmd_opt;       /* Array of command option flags */
     void        **cmd_val;      /* Array of command option values */

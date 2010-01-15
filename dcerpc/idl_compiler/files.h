@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -55,17 +56,13 @@ typedef enum                    /* Filespec kinds: */
 } FILE_k_t;
 
 extern boolean FILE_open(
-#ifdef PROTO
     char *filespec,
     FILE **fid
-#endif
 );
 
 extern boolean FILE_create(
-#ifdef PROTO
     char *filespec,
     FILE **fid
-#endif
 );
 
 extern boolean FILE_lookup(
@@ -100,9 +97,7 @@ extern boolean FILE_has_dir_info(
 );
 
 extern boolean FILE_is_cwd(
-#ifdef PROTO
     char *filespec
-#endif
 );
 
 extern boolean FILE_kind(
@@ -111,18 +106,14 @@ extern boolean FILE_kind(
 );
 
 extern int FILE_execute_cmd(
-#ifdef PROTO
     char        *cmd_string,
     char        *p1,
     char        *p2,
     long        msg_id
-#endif
 );
 
 extern void FILE_delete(
-#ifdef PROTO
     char        *filename
-#endif
 );
 
 #endif /* files_incl */

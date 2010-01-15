@@ -3,7 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2009 Apple Inc. All rights reserved.
+ * Portions Copyright (c) 2009-2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -78,22 +78,22 @@ static unsigned32	rpc_g_cn_socket_write_buffer=0;
 /*
  * Local routines
  */
-INTERNAL void rpc__cn_network_desc_inq_ep _DCE_PROTOTYPE_ ((
+INTERNAL void rpc__cn_network_desc_inq_ep (
     rpc_socket_t             /*desc*/,
     rpc_protseq_id_t         /*pseq_id*/,
     unsigned_char_p_t       * /*endpoint*/,
-    unsigned32              *status));
+    unsigned32              *status);
 
-INTERNAL void rpc__cn_network_serr_to_status _DCE_PROTOTYPE_ ((
+INTERNAL void rpc__cn_network_serr_to_status (
     rpc_socket_error_t       /*serr*/,
-    unsigned32              *st));
+    unsigned32              *st);
 
-INTERNAL pointer_t rpc__cn_network_init_desc _DCE_PROTOTYPE_ ((
+INTERNAL pointer_t rpc__cn_network_init_desc (
     rpc_socket_t                * /*desc*/,
     boolean32                    /*spawned*/,
     rpc_protseq_id_t             /*pseq_id*/,
     unsigned32                   /*backlog*/,
-    unsigned32                  *st));
+    unsigned32                  *st);
 
 
 /***********************************************************************/
@@ -135,20 +135,12 @@ INTERNAL pointer_t rpc__cn_network_init_desc _DCE_PROTOTYPE_ ((
 **/
 
 INTERNAL void rpc__cn_network_desc_inq_ep
-#ifdef _DCE_PROTO_
 (
   rpc_socket_t            desc,
   rpc_protseq_id_t        pseq_id,
   unsigned_char_p_t       *endpoint,
   unsigned32              *status
 )
-#else
-(desc, pseq_id, endpoint, status)
-rpc_socket_t            desc;
-rpc_protseq_id_t        pseq_id;
-unsigned_char_p_t       *endpoint;
-unsigned32              *status;
-#endif
 {
     rpc_addr_vector_p_t rpc_addr_vec;
     unsigned32          temp_status;
@@ -225,18 +217,11 @@ unsigned32              *status;
 **/
 
 PRIVATE void rpc__cn_network_use_socket
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t    rpc_sock,
     unsigned32	    max_calls ATTRIBUTE_UNUSED,
     unsigned32	    *status
 )
-#else
-(rpc_sock, max_calls, status)
-rpc_socket_t    rpc_sock;
-unsigned32	max_calls;
-unsigned32	*status;
-#endif
 {
 
     pointer_t priv_info;
@@ -318,7 +303,6 @@ unsigned32	*status;
 **/
 
 PRIVATE void rpc__cn_network_use_protseq
-#ifdef _DCE_PROTO_
 (
   rpc_protseq_id_t        pseq_id,
   unsigned32              max_calls,
@@ -326,14 +310,6 @@ PRIVATE void rpc__cn_network_use_protseq
   unsigned_char_p_t       endpoint,
   unsigned32              *status
 )
-#else
-(pseq_id, max_calls, rpc_addr, endpoint, status)
-rpc_protseq_id_t        pseq_id;
-unsigned32              max_calls;
-rpc_addr_p_t            rpc_addr;
-unsigned_char_p_t       endpoint;
-unsigned32              *status;
-#endif
 {
     unsigned32          i;
     unsigned32          num_socks;
@@ -663,7 +639,6 @@ unsigned32              *status;
 **/
 
 INTERNAL pointer_t rpc__cn_network_init_desc
-#ifdef _DCE_PROTO_
 (
   rpc_socket_t            *desc,
   boolean32               spawned,
@@ -671,14 +646,6 @@ INTERNAL pointer_t rpc__cn_network_init_desc
   unsigned32              backlog,
   unsigned32              *status
 )
-#else
-(desc, spawned, pseq_id, backlog, status)
-rpc_socket_t            *desc;
-boolean32               spawned;
-rpc_protseq_id_t        pseq_id;
-unsigned32              backlog;
-unsigned32              *status;
-#endif
 {
     rpc_socket_t        connected_desc = RPC_SOCKET_INVALID;
     rpc_addr_vector_p_t rpc_addr_vec;
@@ -889,20 +856,12 @@ unsigned32              *status;
 **/
 
 PRIVATE void rpc__cn_network_inq_prot_vers
-#ifdef _DCE_PROTO_
 (
   unsigned8               *prot_id,
   unsigned32		*version_major,
   unsigned32		*version_minor,
   unsigned32              *status
 )
-#else
-(prot_id, version_major, version_minor, status)
-unsigned8               *prot_id;
-unsigned32		*version_major;
-unsigned32		*version_minor;
-unsigned32              *status;
-#endif
 {
     CODING_ERROR (status);
 
@@ -960,20 +919,12 @@ unsigned32              *status;
 **/
 
 PRIVATE void rpc__cn_network_select_dispatch
-#ifdef _DCE_PROTO_
 (
   rpc_socket_t            desc,
   pointer_t               priv_info,
   boolean32               is_active,
   unsigned32              *st
 )
-#else
-(desc, priv_info, is_active, st)
-rpc_socket_t            desc;
-pointer_t               priv_info;
-boolean32               is_active;
-unsigned32              *st;
-#endif
 {
     rpc_socket_t        newdesc;
     rpc_cn_assoc_t      *assoc;
@@ -1190,18 +1141,11 @@ unsigned32              *st;
 **/
 
 PRIVATE void rpc__cn_network_req_connect
-#ifdef _DCE_PROTO_
 (
   rpc_addr_p_t            rpc_addr,
   rpc_cn_assoc_p_t        assoc,
   unsigned32              *st
 )
-#else
-(rpc_addr, assoc, st)
-rpc_addr_p_t            rpc_addr;
-rpc_cn_assoc_p_t        assoc;
-unsigned32              *st;
-#endif
 {
     volatile rpc_socket_error_t  serr;
     volatile boolean32  retry_op;
@@ -1598,16 +1542,10 @@ unsigned32              *st;
 **/
 
 PRIVATE void rpc__cn_network_close_connect
-#ifdef _DCE_PROTO_
 (
   rpc_cn_assoc_p_t        assoc,
   unsigned32              *st
 )
-#else
-(assoc, st)
-rpc_cn_assoc_p_t        assoc;
-unsigned32              *st;
-#endif
 {
 
     RPC_CN_DBG_RTN_PRINTF (rpc__cn_network_close_connect);
@@ -1680,20 +1618,12 @@ unsigned32              *st;
 **/
 
 PRIVATE void rpc__cn_network_mon
-#ifdef _DCE_PROTO_
 (
   rpc_binding_rep_p_t     binding_r ATTRIBUTE_UNUSED,
   rpc_client_handle_t     client_h,
   rpc_network_rundown_fn_t rundown,
   unsigned32              *st
 )
-#else
-(binding_r, client_h, rundown, st)
-rpc_binding_rep_p_t     binding_r;
-rpc_client_handle_t     client_h;
-rpc_network_rundown_fn_t rundown;
-unsigned32              *st;
-#endif
 {
     rpc_cn_assoc_grp_t  *assoc_grp;
     rpc_cn_local_id_t   grp_id;
@@ -1770,18 +1700,11 @@ unsigned32              *st;
 **/
 
 PRIVATE void rpc__cn_network_stop_mon
-#ifdef _DCE_PROTO_
 (
   rpc_binding_rep_p_t     binding_r ATTRIBUTE_UNUSED,
   rpc_client_handle_t     client_h,
   unsigned32              *st
 )
-#else
-(binding_r, client_h, st)
-rpc_binding_rep_p_t     binding_r;
-rpc_client_handle_t     client_h;
-unsigned32              *st;
-#endif
 {
     rpc_cn_assoc_grp_t  *assoc_grp;
     rpc_cn_local_id_t   grp_id;
@@ -1857,16 +1780,10 @@ unsigned32              *st;
 **/
 
 PRIVATE void rpc__cn_network_maint
-#ifdef _DCE_PROTO_
 (
   rpc_binding_rep_p_t     binding_r,
   unsigned32              *st
 )
-#else
-(binding_r, st)
-rpc_binding_rep_p_t     binding_r;
-unsigned32              *st;
-#endif
 {
     rpc_cn_assoc_grp_t          *assoc_grp;
     rpc_cn_local_id_t           grp_id;
@@ -1940,16 +1857,10 @@ unsigned32              *st;
 **/
 
 PRIVATE void rpc__cn_network_stop_maint
-#ifdef _DCE_PROTO_
 (
   rpc_binding_rep_p_t     binding_r,
   unsigned32              *st
 )
-#else
-(binding_r, st)
-rpc_binding_rep_p_t     binding_r;
-unsigned32              *st;
-#endif
 {
     rpc_cn_assoc_grp_t  *assoc_grp;
     rpc_cn_local_id_t   grp_id;
@@ -2022,14 +1933,9 @@ unsigned32              *st;
 **/
 
 PRIVATE boolean32 rpc__cn_network_connect_fail
-#ifdef _DCE_PROTO_
 (
 unsigned32              st
 )
-#else
-(st)
-unsigned32              st;
-#endif
 {
     switch ((int)st)
     {
@@ -2097,16 +2003,10 @@ unsigned32              st;
 **/
 
 INTERNAL void rpc__cn_network_serr_to_status
-#ifdef _DCE_PROTO_
 (
   rpc_socket_error_t      serr,
   unsigned32              *st
 )
-#else
-(serr, st)
-rpc_socket_error_t      serr;
-unsigned32              *st;
-#endif
 {
     switch (serr)
     {
@@ -2311,16 +2211,10 @@ rpc__cn_set_sock_buffsize(
 **/
 
 PRIVATE void rpc__cn_network_close
-#ifdef _DCE_PROTO_
 (
   rpc_binding_rep_p_t     binding_r,
   unsigned32              *st
 )
-#else
-(binding_r, st)
-rpc_binding_rep_p_t     binding_r;
-unsigned32              *st;
-#endif
 {
     rpc_cn_assoc_grp_t  *assoc_grp;
     rpc_cn_local_id_t   grp_id;
@@ -2398,20 +2292,12 @@ unsigned32              *st;
  **/
 
 PUBLIC void rpc__cn_network_getpeereid
-#ifdef _DCE_PROTO_
 (
  rpc_binding_rep_p_t    binding_r,
  uid_t                  *euid,
  gid_t                  *egid,
  unsigned32             *status
  )
-#else
-(binding_h, status)
-rpc_binding_rep_p_t    binding_r;
-uid_t                  *euid,
-gid_t                  *egid,
-unsigned32             *status;
-#endif
 {
     unsigned32          type;
     rpc_cn_local_id_t   grp_id;

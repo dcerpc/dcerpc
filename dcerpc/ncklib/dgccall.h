@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -39,10 +40,6 @@
 
 #ifndef _DGCCALL_H
 #define _DGCCALL_H	1
-
-#ifndef _DCE__DCE_PROTOTYPE__
-#include <dce/dce.h>
-#endif
 
 #include <dgccallt.h>
 
@@ -103,40 +100,40 @@ extern "C" {
 #endif
 
 
-PRIVATE void rpc__dg_ccall_lsct_inq_scall _DCE_PROTOTYPE_((
+PRIVATE void rpc__dg_ccall_lsct_inq_scall (
         rpc_dg_ccall_p_t  /*ccall*/,
         rpc_dg_scall_p_t * /*scallp*/
-    ));
+    );
 
-PRIVATE void rpc__dg_ccall_lsct_new_call _DCE_PROTOTYPE_((
+PRIVATE void rpc__dg_ccall_lsct_new_call (
         rpc_dg_ccall_p_t  /*ccall*/,
         rpc_dg_sock_pool_elt_p_t  /*si*/,
         rpc_dg_recvq_elt_p_t  /*rqe*/,
         rpc_dg_scall_p_t * /*scallp*/
-    ));
+    );
 
-PRIVATE void rpc__dg_ccall_ack _DCE_PROTOTYPE_((
+PRIVATE void rpc__dg_ccall_ack (
         rpc_dg_ccall_p_t /*ccall*/
-    ));
+    );
 
-PRIVATE void rpc__dg_ccall_free _DCE_PROTOTYPE_((
+PRIVATE void rpc__dg_ccall_free (
         rpc_dg_ccall_p_t /*ccall*/
-    ));
+    );
 
-PRIVATE void rpc__dg_ccall_free_prep _DCE_PROTOTYPE_((
+PRIVATE void rpc__dg_ccall_free_prep (
         rpc_dg_ccall_p_t /*ccall*/
-    ));
+    );
 
-PRIVATE void rpc__dg_ccall_timer _DCE_PROTOTYPE_(( pointer_t /*p*/ ));
+PRIVATE void rpc__dg_ccall_timer ( pointer_t /*p*/ );
 
-PRIVATE void rpc__dg_ccall_xmit_cancel_quit _DCE_PROTOTYPE_((
+PRIVATE void rpc__dg_ccall_xmit_cancel_quit (
         rpc_dg_ccall_p_t  /*ccall*/,
         unsigned32 /*cancel_id*/
-    ));
+    );
 
-PRIVATE void rpc__dg_ccall_setup_cancel_tmo _DCE_PROTOTYPE_((
+PRIVATE void rpc__dg_ccall_setup_cancel_tmo (
         rpc_dg_ccall_p_t /*ccall*/
-    ));
+    );
 
 #ifdef __cplusplus
 }

@@ -3,6 +3,7 @@
  * (c) Copyright 1990 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1990 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1990 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -51,18 +52,11 @@ void
 
 
 rpc_ss_mr_short_float
-#ifdef IDL_PROTOTYPES
 (
     idl_short_float *p_node,
     rpc_ss_node_type_k_t NIDL_node_type,
     rpc_ss_marsh_state_t *NIDL_msp
 )
-#else
-( p_node, NIDL_node_type, NIDL_msp)
-    idl_short_float *p_node;
-    rpc_ss_node_type_k_t NIDL_node_type;
-    rpc_ss_marsh_state_t *NIDL_msp;
-#endif
 {
   long NIDL_already_marshalled;
   unsigned long space_for_node;
@@ -93,18 +87,11 @@ void
 
 
 rpc_ss_ur_short_float
-#ifdef IDL_PROTOTYPES
 (
     idl_short_float **p_referred_to_by,
     rpc_ss_node_type_k_t NIDL_node_type,
     rpc_ss_marsh_state_t *p_unmar_params
 )
-#else
-( p_referred_to_by,NIDL_node_type,p_unmar_params )
-    idl_short_float **p_referred_to_by;
-    rpc_ss_node_type_k_t NIDL_node_type;
-    rpc_ss_marsh_state_t *p_unmar_params;
-#endif
 {
   idl_short_float  *p_node = NULL;
   long NIDL_already_unmarshalled = 0;

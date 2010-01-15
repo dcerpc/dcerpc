@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -145,136 +146,136 @@ typedef struct
 
 
 PRIVATE void db_open
-    _DCE_PROTOTYPE_((
+    (
         struct db           *h,
         unsigned char       *database_file,
         unsigned32          version,
         error_status_t      *status
-    ));
+    );
 
 /*  
  * Update entry in place on disk
  */
 PRIVATE void db_update_entry
-    _DCE_PROTOTYPE_((
+    (
         struct db       *h,
         db_entry_p_t    entp,
         error_status_t  *status
-    ));
+    );
 
 
 PRIVATE void db_init_lists
-    _DCE_PROTOTYPE_((
+    (
         struct db           *h
-    ));
+    );
 
 PRIVATE void db_lists_add
-    _DCE_PROTOTYPE_((
+    (
         struct db       *h,
         db_entry_t      *entp
-    ));
+    );
         
 PRIVATE void db_lists_remove
-    _DCE_PROTOTYPE_((
+    (
         struct db       *h,
         db_entry_t      *entp
-    ));
+    );
         
 PRIVATE void db_htable_add
-    _DCE_PROTOTYPE_((
+    (
         db_hash_table_t     htable,
         db_list_type_t      table_type,
         uuid_p_t            id,
         db_lists_t          *entp
-    ));
+    );
 
 PRIVATE void db_htable_remove
-    _DCE_PROTOTYPE_((
+    (
         db_hash_table_t     htable,
         db_list_type_t      table_type,
         uuid_p_t            id,
         db_lists_t          *entp
-    ));
+    );
 
 PRIVATE void db_list_add
-    _DCE_PROTOTYPE_((
+    (
         db_list_t           *list,
         db_list_type_t      list_type,
         db_lists_t          *entp
-    ));
+    );
 
 PRIVATE void db_list_remove
-    _DCE_PROTOTYPE_((
+    (
         db_list_t           *list,
         db_list_type_t      list_type,
         db_lists_t          *entp
-    ));
+    );
 
 PRIVATE db_lists_t *db_list_first
-    _DCE_PROTOTYPE_((
+    (
         db_lists_mgmt_t     *lists_mgmt,
         db_list_type_t      list_type,
         uuid_p_t            id
-    ));
+    );
 
 PRIVATE db_lists_t *db_list_next
-    _DCE_PROTOTYPE_((
+    (
         db_list_type_t      list_type,
         db_lists_t          *entp
-    ));
+    );
 
 
 PRIVATE void db_save_context
-    _DCE_PROTOTYPE_ ((
+    (
         struct db           *h,
         ept_lookup_handle_t *entry_handle,
         db_list_type_t      list_type,
         db_lists_t          *lp, 
         unsigned32          pass
-    ));
+    );
 
 PRIVATE void db_delete_context
-    _DCE_PROTOTYPE_ ((
+    (
         struct db           *h,
         ept_lookup_handle_t *entry_handle
-    ));
+    );
 
 PRIVATE void db_get_context
-    _DCE_PROTOTYPE_ ((
+    (
         struct db           *h,
         ept_lookup_handle_t *entry_handle,
         db_list_type_t      *list_type,
         db_lists_t          **lp,
         unsigned32          *pass,
         error_status_t      *status
-    ));
+    );
 
 PRIVATE boolean32 db_different_context
-    _DCE_PROTOTYPE_ ((
+    (
         struct db           *h,
         ept_lookup_handle_t *entry_handle,
         error_status_t      *status
-    ));
+    );
 
 PRIVATE void db_lock
-    _DCE_PROTOTYPE_ ((
+    (
         struct db *h
-    ));
+    );
 
 PRIVATE void db_unlock
-    _DCE_PROTOTYPE_ ((
+    (
         struct db *h
-    ));
+    );
 
 PRIVATE void db_init_lock
-    _DCE_PROTOTYPE_ ((
+    (
         struct db *h
-    ));
+    );
 
 
 PRIVATE void db_to_ept_ecode
-    _DCE_PROTOTYPE_ ((
+    (
         error_status_t      *status
-    ));
+    );
 
 #endif

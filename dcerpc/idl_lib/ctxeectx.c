@@ -3,6 +3,7 @@
  * (c) Copyright 1992 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1992 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1992 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -79,9 +80,7 @@ static RPC_SS_THREADS_ONCE_T context_once = RPC_SS_THREADS_ONCE_INIT;
 RPC_SS_THREADS_MUTEX_T rpc_ss_context_table_mutex;
 
 static void rpc_ss_init_context(
-#ifdef IDL_PROTOTYPES
     void
-#endif
 )
 {
     /* Create mutex for context handle tables */
@@ -91,9 +90,7 @@ static void rpc_ss_init_context(
 }
 
 void rpc_ss_init_context_once(
-#ifdef IDL_PROTOTYPES
     void
-#endif
 )
 {
     RPC_SS_THREADS_INIT;
@@ -110,9 +107,7 @@ static callee_context_entry_t *context_table = NULL;
 /*  Allocate and initialize callee context and client lookup tables.
 */
 void rpc_ss_init_callee_ctx_tables(
-#ifdef IDL_PROTOTYPES
     void
-#endif
 )
 {
 
@@ -156,7 +151,6 @@ void rpc_ss_init_callee_ctx_tables(
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_create_callee_context
-#ifdef IDL_PROTOTYPES
 (
     rpc_ss_context_t callee_context,/* The user's local form of the context */
     idl_uuid_t    *p_uuid,              /* Pointer to the equivalent UUID */
@@ -164,14 +158,6 @@ void rpc_ss_create_callee_context
     ctx_rundown_fn_p_t ctx_rundown, /* Pointer to context rundown routine */
     error_status_t *result     /* Function result */
 )
-#else
-(callee_context, p_uuid, h, ctx_rundown, result)
-    rpc_ss_context_t callee_context;/* The user's local form of the context */
-    idl_uuid_t    *p_uuid;              /* Pointer to the equivalent UUID */
-    handle_t h;                     /* Binding handle */
-    ctx_rundown_fn_p_t ctx_rundown; /* Pointer to context rundown routine */
-    error_status_t *result;    /* Function result */
-#endif
 {
     rpc_client_handle_t  ctx_client;         /* ID of client owning context */
     callee_context_entry_t *this_link, *next_link, * volatile new_link;
@@ -249,18 +235,11 @@ void rpc_ss_create_callee_context
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_update_callee_context
-#ifdef IDL_PROTOTYPES
 (
     rpc_ss_context_t    callee_context, /* The user's local form of the context */
     idl_uuid_t              *p_uuid,        /* Pointer to the equivalent UUID */
     error_status_t      *result         /* Function result */
 )
-#else
-(callee_context, p_uuid, result)
-    rpc_ss_context_t    callee_context; /* The user's local form of the context */
-    idl_uuid_t              *p_uuid;        /* Pointer to the equivalent UUID */
-    error_status_t      *result;        /* Function result */
-#endif
 {
     callee_context_entry_t *this_link;
 
@@ -301,18 +280,11 @@ void rpc_ss_update_callee_context
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_ee_ctx_from_wire
-#ifdef IDL_PROTOTYPES
 (
     ndr_context_handle      *p_wire_context,
     rpc_ss_context_t        *p_context,         /* The application context */
     volatile error_status_t *p_st
 )
-#else
-(p_wire_context, p_context, p_st)
-    ndr_context_handle      *p_wire_context;
-    rpc_ss_context_t        *p_context;         /* The application context */
-    volatile error_status_t *p_st;
-#endif
 {
     idl_uuid_t *p_uuid;    /* Pointer to the UUID that has come off the wire */
     callee_context_entry_t *this_link;
@@ -376,18 +348,11 @@ void rpc_ss_ee_ctx_from_wire
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_destroy_callee_context
-#ifdef IDL_PROTOTYPES
 (
     idl_uuid_t *p_uuid,             /* Pointer to UUID of context to be destroyed */
     handle_t  h,                /* Binding handle */
     error_status_t *result /* Function result */
 )    /* Returns error_status_ok unless the UUID is not in the lookup table */
-#else
-(p_uuid, h, result)
-    idl_uuid_t *p_uuid;             /* Pointer to UUID of context to be destroyed */
-    handle_t  h;                /* Binding handle */
-    error_status_t *result;/* Function result */
-#endif
 {
     rpc_client_handle_t close_client;   /* NULL or client to stop monitoring */
 
@@ -417,20 +382,12 @@ void rpc_ss_destroy_callee_context
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_lkddest_callee_context
-#ifdef IDL_PROTOTYPES
 (
     idl_uuid_t *p_uuid,    /* Pointer to UUID of context to be destroyed */
     rpc_client_handle_t *p_close_client,
                                 /* Ptr to NULL or client to stop monitoring */
     error_status_t *result /* Function result */
 )    /* Returns error_status_ok unless the UUID is not in the lookup table */
-#else
-(p_uuid, p_close_client, result)
-    idl_uuid_t *p_uuid;    /* Pointer to UUID of context to be destroyed */
-    rpc_client_handle_t *p_close_client;
-                                /* Ptr to NULL or client to stop monitoring */
-    error_status_t *result;/* Function result */
-#endif
 {
     callee_context_entry_t *this_link, *next_link, *last_link;
 
@@ -644,7 +601,6 @@ static int debug_context_table()
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_ee_ctx_to_wire
-#ifdef IDL_PROTOTYPES
 (
     rpc_ss_context_t        callee_context,   /* The application context */
     ndr_context_handle      *p_wire_context,  /* Pointer to wire form of context */
@@ -653,15 +609,6 @@ void rpc_ss_ee_ctx_to_wire
     ndr_boolean             in_out,           /* TRUE for [in,out], FALSE for [out] */
     volatile error_status_t *p_st
 )
-#else
-(callee_context,p_wire_context,h,ctx_rundown,in_out,p_st)
-    rpc_ss_context_t        callee_context;
-    ndr_context_handle      *p_wire_context;
-    handle_t                h;
-    ctx_rundown_fn_p_t      ctx_rundown;
-    ndr_boolean             in_out;
-    error_status_t          *p_st;
-#endif
 {
 #ifdef DEBUGCTX
     debug_context_add(callee_context);

@@ -1,6 +1,7 @@
 /* ex: set shiftwidth=4 expandtab: */
 /*
  * Copyright (c) 2007, Novell, Inc.
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -108,7 +109,7 @@
  *  Routine Prototypes for the Internet Extension service routines.
  */
 
-INTERNAL void addr_alloc _DCE_PROTOTYPE_ ((
+INTERNAL void addr_alloc (
         rpc_protseq_id_t             /*rpc_protseq_id*/,
         rpc_naf_id_t                 /*naf_id*/,
         unsigned_char_p_t            /*endpoint*/,
@@ -116,140 +117,140 @@ INTERNAL void addr_alloc _DCE_PROTOTYPE_ ((
         unsigned_char_p_t            /*network_options*/,
         rpc_addr_p_t                * /*rpc_addr*/,
         unsigned32                  * /*status*/
-    ));
+    );
 
-INTERNAL void addr_copy _DCE_PROTOTYPE_ ((
+INTERNAL void addr_copy (
         rpc_addr_p_t                 /*srpc_addr*/,
         rpc_addr_p_t                * /*drpc_addr*/,
         unsigned32                  * /*status*/
-    ));
+    );
 
-INTERNAL void addr_free _DCE_PROTOTYPE_ ((
+INTERNAL void addr_free (
         rpc_addr_p_t                * /*rpc_addr*/,
         unsigned32                  * /*status*/
-    ));
+    );
 
-INTERNAL void addr_set_endpoint _DCE_PROTOTYPE_ ((
+INTERNAL void addr_set_endpoint (
         unsigned_char_p_t            /*endpoint*/,
         rpc_addr_p_t                * /*rpc_addr*/,
         unsigned32                  * /*status*/
-    ));
+    );
 
-INTERNAL void addr_inq_endpoint _DCE_PROTOTYPE_ ((
+INTERNAL void addr_inq_endpoint (
         rpc_addr_p_t                 /*rpc_addr*/,
         unsigned_char_t             ** /*endpoint*/,
         unsigned32                  * /*status*/
-    ));
+    );
 
-INTERNAL void addr_set_netaddr _DCE_PROTOTYPE_ ((
+INTERNAL void addr_set_netaddr (
         unsigned_char_p_t            /*netaddr*/,
         rpc_addr_p_t                * /*rpc_addr*/,
         unsigned32                  * /*status*/
-    ));
+    );
 
-INTERNAL void addr_inq_netaddr _DCE_PROTOTYPE_ ((
+INTERNAL void addr_inq_netaddr (
         rpc_addr_p_t                 /*rpc_addr*/,
         unsigned_char_t             ** /*netaddr*/,
         unsigned32                  * /*status*/
-    ));
+    );
 
-INTERNAL void addr_set_options _DCE_PROTOTYPE_ ((
+INTERNAL void addr_set_options (
         unsigned_char_p_t            /*network_options*/,
         rpc_addr_p_t                * /*rpc_addr*/,
         unsigned32                  * /*status*/
-    ));
+    );
 
-INTERNAL void addr_inq_options _DCE_PROTOTYPE_ ((
+INTERNAL void addr_inq_options (
         rpc_addr_p_t                 /*rpc_addr*/,
         unsigned_char_t             ** /*network_options*/,
         unsigned32                  * /*status*/
-    ));
+    );
 
-INTERNAL void desc_inq_network _DCE_PROTOTYPE_ ((
+INTERNAL void desc_inq_network (
         rpc_socket_t                 /*desc*/,
         rpc_network_if_id_t         * /*socket_type*/,
         rpc_network_protocol_id_t   * /*protocol_id*/,
         unsigned32                  * /*status*/
-    ));
+    );
 
-INTERNAL void inq_max_tsdu _DCE_PROTOTYPE_ ((
+INTERNAL void inq_max_tsdu (
         rpc_naf_id_t                 /*naf_id*/,
         rpc_network_if_id_t          /*iftype*/,
         rpc_network_protocol_id_t    /*protocol*/,
         unsigned32                  * /*max_tsdu*/,
         unsigned32                  * /*status*/
-    ));
+    );
 
-INTERNAL boolean addr_compare _DCE_PROTOTYPE_ ((
+INTERNAL boolean addr_compare (
         rpc_addr_p_t                 /*addr1*/,
         rpc_addr_p_t                 /*addr2*/,
         unsigned32                  * /*status*/
-    ));
+    );
       
-INTERNAL void inq_max_pth_unfrag_tpdu _DCE_PROTOTYPE_ ((
+INTERNAL void inq_max_pth_unfrag_tpdu (
         rpc_addr_p_t                 /*rpc_addr*/,
         rpc_network_if_id_t          /*iftype*/,
         rpc_network_protocol_id_t    /*protocol*/,
         unsigned32                  * /*max_tpdu*/,
         unsigned32                  * /*status*/
-    ));
+    );
 
-INTERNAL void inq_max_loc_unfrag_tpdu _DCE_PROTOTYPE_ ((
+INTERNAL void inq_max_loc_unfrag_tpdu (
         rpc_naf_id_t                 /*naf_id*/,
         rpc_network_if_id_t          /*iftype*/,
         rpc_network_protocol_id_t    /*protocol*/,
         unsigned32                  * /*max_tpdu*/,
         unsigned32                  * /*status*/
-    ));
+    );
 
-INTERNAL void set_pkt_nodelay _DCE_PROTOTYPE_ ((
+INTERNAL void set_pkt_nodelay (
         rpc_socket_t                 /*desc*/,
         unsigned32                  * /*status*/
-    ));
+    );
               
-INTERNAL boolean is_connect_closed _DCE_PROTOTYPE_ ((
+INTERNAL boolean is_connect_closed (
         rpc_socket_t                 /*desc*/,
         unsigned32                  * /*status*/
-    ));
+    );
 
-INTERNAL void tower_flrs_from_addr _DCE_PROTOTYPE_ ((
+INTERNAL void tower_flrs_from_addr (
         rpc_addr_p_t                 /*rpc_addr*/,
         twr_p_t                     * /*lower_flrs*/,
         unsigned32                  * /*status*/
-    ));
+    );
 
-INTERNAL void tower_flrs_to_addr _DCE_PROTOTYPE_ ((
+INTERNAL void tower_flrs_to_addr (
         byte_p_t                     /*tower_octet_string*/,
         rpc_addr_p_t                * /*rpc_addr*/,
         unsigned32                  * /*status*/
-    ));
+    );
 
-INTERNAL void desc_inq_peer_addr _DCE_PROTOTYPE_ ((
+INTERNAL void desc_inq_peer_addr (
         rpc_protseq_id_t             /*protseq_id*/,
         rpc_socket_t                 /*desc*/,
         rpc_addr_p_t                * /*rpc_addr*/,
         unsigned32                  * /*status*/
-    ));
+    );
 
-INTERNAL void set_port_restriction _DCE_PROTOTYPE_ ((
+INTERNAL void set_port_restriction (
         rpc_protseq_id_t             /*protseq_id*/,
         unsigned32                   /*n_elements*/,
         unsigned_char_p_t           * /*first_port_name_list*/,
         unsigned_char_p_t           * /*last_port_name_list*/,
         unsigned32                  * /*status*/
-    ));
+    );
 
-INTERNAL void get_next_restricted_port _DCE_PROTOTYPE_ ((
+INTERNAL void get_next_restricted_port (
         rpc_protseq_id_t             /*protseq_id*/,
         unsigned_char_p_t           * /*port_name*/,
         unsigned32                  * /*status*/
-    ));
+    );
 
-INTERNAL void inq_max_frag_size _DCE_PROTOTYPE_ ((
+INTERNAL void inq_max_frag_size (
         rpc_addr_p_t                 /*rpc_addr*/,
         unsigned32                  * /*max_frag_size*/,
         unsigned32                  * /*status*/
-    ));
+    );
 
 
 /*
@@ -369,16 +370,10 @@ PRIVATE void rpc__module_init_func(void)
 #endif
 
 PRIVATE void  rpc__np_init 
-#ifdef _DCE_PROTO_
 (
     rpc_naf_epv_p_t         *naf_epv,
     unsigned32              *status
 )
-#else
-(naf_epv, status)  
-rpc_naf_epv_p_t         *naf_epv;
-unsigned32              *status;
-#endif
 {
     /*  
      * The Internal Entry Point Vectors for the Internet Protocol Family
@@ -488,7 +483,6 @@ unsigned32              *status;
 **/
 
 INTERNAL void addr_alloc 
-#ifdef _DCE_PROTO_
 (
     rpc_protseq_id_t        rpc_protseq_id,
     rpc_naf_id_t            naf_id,
@@ -498,16 +492,6 @@ INTERNAL void addr_alloc
     rpc_addr_p_t            *rpc_addr,
     unsigned32              *status
 )
-#else
-(rpc_protseq_id, naf_id, endpoint, netaddr, network_options, rpc_addr, status)
-rpc_protseq_id_t        rpc_protseq_id;
-rpc_naf_id_t            naf_id;
-unsigned_char_p_t       endpoint;
-unsigned_char_p_t       netaddr;
-unsigned_char_p_t       network_options;
-rpc_addr_p_t            *rpc_addr;
-unsigned32              *status;
-#endif
 {
     CODING_ERROR (status);
     
@@ -612,18 +596,11 @@ unsigned32              *status;
 **/
 
 INTERNAL void addr_copy 
-#ifdef _DCE_PROTO_
 (
     rpc_addr_p_t            src_rpc_addr,
     rpc_addr_p_t            *dst_rpc_addr,
     unsigned32              *status
 )
-#else
-(src_rpc_addr, dst_rpc_addr, status)
-rpc_addr_p_t            src_rpc_addr;
-rpc_addr_p_t            *dst_rpc_addr;
-unsigned32              *status;
-#endif
 {
     CODING_ERROR (status);
     
@@ -705,16 +682,10 @@ unsigned32              *status;
 **/
 
 INTERNAL void addr_free 
-#ifdef _DCE_PROTO_
 (
     rpc_addr_p_t            *rpc_addr,
     unsigned32              *status
 )
-#else
-(rpc_addr, status)
-rpc_addr_p_t            *rpc_addr;
-unsigned32              *status;
-#endif
 {
     CODING_ERROR (status);
     
@@ -781,18 +752,11 @@ unsigned32              *status;
 **/
 
 INTERNAL void addr_set_endpoint 
-#ifdef _DCE_PROTO_
 (
     unsigned_char_p_t       endpoint,
     rpc_addr_p_t            *rpc_addr,
     unsigned32              *status
 )
-#else
-(endpoint, rpc_addr, status)
-unsigned_char_p_t       endpoint;
-rpc_addr_p_t            *rpc_addr;
-unsigned32              *status;
-#endif
 {
     rpc_np_addr_p_t     np_addr = (rpc_np_addr_p_t) *rpc_addr;
     unsigned_char_p_t   p;
@@ -904,18 +868,11 @@ unsigned32              *status;
 **/
 
 INTERNAL void addr_inq_endpoint 
-#ifdef _DCE_PROTO_
 (
     rpc_addr_p_t            rpc_addr,
     unsigned_char_t         **endpoint,
     unsigned32              *status
 )
-#else
-(rpc_addr, endpoint, status)
-rpc_addr_p_t            rpc_addr;
-unsigned_char_t         **endpoint;
-unsigned32              *status;
-#endif
 {
     rpc_np_addr_p_t     np_addr = (rpc_np_addr_p_t) rpc_addr;
     char          *sun_path;
@@ -1021,18 +978,11 @@ unsigned32              *status;
 **/
 
 INTERNAL void addr_set_netaddr 
-#ifdef _DCE_PROTO_
 (
     unsigned_char_p_t       netaddr,
     rpc_addr_p_t            *rpc_addr,
     unsigned32              *status
 )
-#else
-(netaddr, rpc_addr, status)
-unsigned_char_p_t       netaddr;
-rpc_addr_p_t            *rpc_addr;
-unsigned32              *status;
-#endif
 {
     rpc_np_addr_p_t     np_addr = (rpc_np_addr_p_t) *rpc_addr;
 
@@ -1097,18 +1047,11 @@ unsigned32              *status;
 **/
 
 INTERNAL void addr_inq_netaddr 
-#ifdef _DCE_PROTO_
 (
     rpc_addr_p_t            rpc_addr,
     unsigned_char_t         **p_netaddr,
     unsigned32              *status
 )
-#else
-(rpc_addr, netaddr, status)
-rpc_addr_p_t            rpc_addr;
-unsigned_char_t         **p_netaddr;
-unsigned32              *status;
-#endif
 {
     rpc_np_addr_p_t     np_addr = (rpc_np_addr_p_t) rpc_addr;
     unsigned_char_p_t netaddr;
@@ -1184,18 +1127,11 @@ unsigned32              *status;
 
 
 INTERNAL void addr_set_options 
-#ifdef _DCE_PROTO_
 (
     unsigned_char_p_t       network_options ATTRIBUTE_UNUSED,
     rpc_addr_p_t            *rpc_addr ATTRIBUTE_UNUSED,
     unsigned32              *status
 )
-#else
-(network_options, rpc_addr, status)
-unsigned_char_p_t       network_options;
-rpc_addr_p_t            *rpc_addr;
-unsigned32              *status;
-#endif
 {
     *status = rpc_s_ok;
 }
@@ -1245,18 +1181,11 @@ unsigned32              *status;
 **/
 
 INTERNAL void addr_inq_options 
-#ifdef _DCE_PROTO_
 (
     rpc_addr_p_t            rpc_addr ATTRIBUTE_UNUSED,
     unsigned_char_t         **network_options,
     unsigned32              *status
 )
-#else
-(rpc_addr, network_options, status)
-rpc_addr_p_t            rpc_addr;
-unsigned_char_t         **network_options;
-unsigned32              *status;
-#endif
 {
     RPC_MEM_ALLOC(
         *network_options,
@@ -1307,7 +1236,6 @@ unsigned32              *status;
 **/
 
 INTERNAL void inq_max_tsdu 
-#ifdef _DCE_PROTO_
 (
     rpc_naf_id_t            naf_id ATTRIBUTE_UNUSED,
     rpc_network_if_id_t     iftype,
@@ -1315,14 +1243,6 @@ INTERNAL void inq_max_tsdu
     unsigned32              *max_tsdu,
     unsigned32              *status
 )
-#else
-(naf_id, iftype, protocol, max_tsdu, status)
-rpc_naf_id_t            naf_id;
-rpc_network_if_id_t     iftype;
-rpc_network_protocol_id_t protocol;
-unsigned32              *max_tsdu;
-unsigned32              *status;
-#endif
 {
     *max_tsdu = RPC_C_NP_MAX_LOCAL_FRAG_SIZE;
 	iftype = 0;
@@ -1376,17 +1296,11 @@ unsigned32              *status;
 **/
 
 INTERNAL boolean addr_compare 
-#ifdef _DCE_PROTO_
 (
     rpc_addr_p_t            addr1, 
     rpc_addr_p_t            addr2,
     unsigned32              *status ATTRIBUTE_UNUSED
 )
-#else
-(addr1, addr2, status)
-rpc_addr_p_t            addr1, addr2;
-unsigned32              *status;
-#endif
 {
     rpc_np_addr_p_t     np_addr1 = (rpc_np_addr_p_t) addr1;
     rpc_np_addr_p_t     np_addr2 = (rpc_np_addr_p_t) addr2;
@@ -1444,7 +1358,6 @@ unsigned32              *status;
 **/
 
 INTERNAL void inq_max_pth_unfrag_tpdu 
-#ifdef _DCE_PROTO_
 (
     rpc_addr_p_t            rpc_addr ATTRIBUTE_UNUSED,
     rpc_network_if_id_t     iftype,
@@ -1452,14 +1365,6 @@ INTERNAL void inq_max_pth_unfrag_tpdu
     unsigned32              *max_tpdu,
     unsigned32              *status
 )
-#else
-(rpc_addr, iftype, protocol, max_tpdu, status)
-rpc_addr_p_t            rpc_addr;
-rpc_network_if_id_t     iftype;
-rpc_network_protocol_id_t protocol;
-unsigned32              *max_tpdu;
-unsigned32              *status;
-#endif
 {
 	iftype = 0;
 	protocol = 0;
@@ -1514,7 +1419,6 @@ unsigned32              *status;
 **/
 
 INTERNAL void inq_max_loc_unfrag_tpdu 
-#ifdef _DCE_PROTO_
 (
     rpc_naf_id_t            naf_id ATTRIBUTE_UNUSED,
     rpc_network_if_id_t     iftype,
@@ -1522,14 +1426,6 @@ INTERNAL void inq_max_loc_unfrag_tpdu
     unsigned32              *max_tpdu,
     unsigned32              *status
 )
-#else
-(naf_id, iftype, protocol, max_tpdu, status)
-rpc_naf_id_t            naf_id;
-rpc_network_if_id_t     iftype;
-rpc_network_protocol_id_t protocol;
-unsigned32              *max_tpdu;
-unsigned32              *status;
-#endif
 {
 	iftype = 0;
 	protocol = 0;
@@ -1586,20 +1482,12 @@ unsigned32              *status;
 **/
 
 INTERNAL void desc_inq_network 
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t              desc,
     rpc_network_if_id_t       *socket_type,
     rpc_network_protocol_id_t *protocol_id,
     unsigned32                *status
 )
-#else
-(desc, socket_type, protocol_id, status)
-rpc_socket_t              desc;
-rpc_network_if_id_t       *socket_type;
-rpc_network_protocol_id_t *protocol_id;
-unsigned32                *status;
-#endif
 {
     rpc_socket_error_t serr;
     rpc_np_addr_t addr;
@@ -1701,16 +1589,10 @@ unsigned32                *status;
 **/
 
 INTERNAL void set_pkt_nodelay 
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t            desc,
     unsigned32              *status
 )
-#else
-(desc, status)
-rpc_socket_t            desc;
-unsigned32              *status;
-#endif
 {
 	desc = 0;
     *status = rpc_s_ok;
@@ -1756,16 +1638,10 @@ unsigned32              *status;
 **/
 
 INTERNAL boolean is_connect_closed 
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t            desc ATTRIBUTE_UNUSED,
     unsigned32              *status
 )
-#else
-(desc, status)
-rpc_socket_t            desc;
-unsigned32              *status;
-#endif
 {
     *status = rpc_s_ok;
     return (true);
@@ -1807,18 +1683,11 @@ unsigned32              *status;
 **/
 
 INTERNAL void tower_flrs_from_addr 
-#ifdef _DCE_PROTO_
 (
     rpc_addr_p_t       rpc_addr,
     twr_p_t            *lower_flrs,
     unsigned32         *status
 )
-#else
-(rpc_addr, lower_flrs, status)
-rpc_addr_p_t       rpc_addr;
-twr_p_t            *lower_flrs;
-unsigned32         *status;
-#endif
 {
     unsigned32    net_prot_id;
 
@@ -1953,18 +1822,11 @@ unsigned32         *status;
 **/
 
 INTERNAL void tower_flrs_to_addr 
-#ifdef _DCE_PROTO_
 (
     byte_p_t           tower_octet_string,
     rpc_addr_p_t       *rpc_addr,
     unsigned32         *status
 )
-#else
-(tower_octet_string, rpc_addr, status)
-byte_p_t           tower_octet_string;
-rpc_addr_p_t       *rpc_addr;
-unsigned32         *status;
-#endif
 {
     sockaddr_t    *sa;
     unsigned32    sa_len;
@@ -2073,20 +1935,12 @@ unsigned32         *status;
 **/
 
 INTERNAL void desc_inq_peer_addr 
-#ifdef _DCE_PROTO_
 (
     rpc_protseq_id_t        protseq_id,
     rpc_socket_t            desc,
     rpc_addr_p_t            *rpc_addr,
     unsigned32              *status
 )
-#else
-(protseq_id, desc, rpc_addr, status)
-rpc_protseq_id_t        protseq_id;
-rpc_socket_t            desc;
-rpc_addr_p_t            *rpc_addr;
-unsigned32              *status;
-#endif
 {
     rpc_socket_error_t  serr;
     rpc_np_addr_p_t np_addr;
@@ -2193,7 +2047,6 @@ unsigned32              *status;
 
 
 INTERNAL void set_port_restriction
-#ifdef _DCE_PROTO_
 (
      rpc_protseq_id_t            protseq_id,
      unsigned32                  n_elements,
@@ -2201,14 +2054,6 @@ INTERNAL void set_port_restriction
      unsigned_char_p_t           *last_port_name_list,
      unsigned32                  *status
 )
-#else 
-(protseq_id, n_elements, first_port_name_list, last_port_name_list, status)
-rpc_protseq_id_t            protseq_id;
-unsigned32                  n_elements;
-unsigned_char_p_t           *first_port_name_list;
-unsigned_char_p_t           *last_port_name_list;
-unsigned32                  *status;
-#endif
 {
     CODING_ERROR (status);
 
@@ -2258,18 +2103,11 @@ unsigned32                  *status;
 **/
 
 INTERNAL void get_next_restricted_port
-#ifdef _DCE_PROTO_
 (
     rpc_protseq_id_t           protseq_id,
      unsigned_char_p_t          *port_name,
      unsigned32                 *status
 )
-#else
-(protseq_id, port_name, status)
-rpc_protseq_id_t           protseq_id;
-unsigned_char_p_t          *port_name;
-unsigned32                 *status;
-#endif
 {
     CODING_ERROR (status);
 
@@ -2323,18 +2161,11 @@ unsigned32                 *status;
 **/
 
 INTERNAL void inq_max_frag_size
-#ifdef _DCE_PROTO_
 (
  rpc_addr_p_t rpc_addr,
  unsigned32   *max_frag_size,
  unsigned32   *status
 )
-#else
-(rpc_addr, max_frag_size, status)
-rpc_addr_p_t rpc_addr;
-unsigned32   *max_frag_size;
-unsigned32   *status;
-#endif
 {
     rpc_addr = 0;
 

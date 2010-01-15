@@ -3,6 +3,7 @@
  * (c) Copyright 1993 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1993 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1993 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -844,7 +845,6 @@ typedef struct rpc_ss_pvt_node_table_t {
 **--
 */
 static void rpc_ss_expand_array
-#ifdef IDL_PROTOTYPES
 (
     rpc_ss_ptr_array_p_t * array,
     long *currently_mapped,
@@ -852,14 +852,6 @@ static void rpc_ss_expand_array
     long num,
     rpc_ss_mem_handle * p_mem_h
 )
-#else
-(array, currently_mapped, depth, num, p_mem_h)
-    rpc_ss_ptr_array_p_t * array;
-    long *currently_mapped;
-    long *depth;
-    long num;
-    rpc_ss_mem_handle * p_mem_h;
-#endif
 {
     /*
     ** This routine is called when we need to make the node number to pointer
@@ -933,7 +925,6 @@ static void rpc_ss_expand_array
 **--
 */
 static void rpc_ss_register_node_num
-#ifdef IDL_PROTOTYPES
 (
     rpc_ss_ptr_array_p_t *root_array,
     long *currently_mapped,
@@ -942,15 +933,6 @@ static void rpc_ss_register_node_num
     byte_p_t ptr,
     rpc_ss_mem_handle * p_mem_h
 )
-#else
-(root_array, currently_mapped, root_depth, num, ptr, p_mem_h)
-    rpc_ss_ptr_array_p_t *root_array;
-    long *currently_mapped;
-    long *root_depth;
-    long num;
-    byte_p_t ptr;
-    rpc_ss_mem_handle * p_mem_h;
-#endif
 {
     rpc_ss_ptr_array_p_t array;
     rpc_ss_ptr_array_p_t t_array;
@@ -1022,16 +1004,10 @@ static void rpc_ss_register_node_num
 **--
 */
 static rpc_ss_hash_entry_t *rpc_ss_find_hash_entry
-#ifdef IDL_PROTOTYPES
 (
     rpc_ss_pvt_node_table_t *str,
     byte_p_t ptr
 )
-#else
-(str, ptr)
-    rpc_ss_pvt_node_table_t *str;
-    byte_p_t ptr;
-#endif
 {
     rpc_ss_hash_entry_t *hash_entry;
 
@@ -1073,18 +1049,11 @@ static rpc_ss_hash_entry_t *rpc_ss_find_hash_entry
 **--
 */
 static void rpc_ss_register_node_by_num
-#ifdef IDL_PROTOTYPES
 (
     rpc_ss_node_table_t tab,
     long num,
     byte_p_t ptr
 )
-#else
-(tab, num, ptr)
-    rpc_ss_node_table_t tab;
-    long num;
-    byte_p_t ptr;
-#endif
 {
     rpc_ss_hash_entry_t *temp;
     rpc_ss_hash_entry_t *hash_entry;
@@ -1166,18 +1135,11 @@ static void rpc_ss_register_node_by_num
 **--
 */
 static long rpc_ss_lookup_node_by_ptr
-#ifdef IDL_PROTOTYPES
 (
     rpc_ss_node_table_t tab,
     byte_p_t ptr,
     rpc_ss_hash_entry_t **p_p_hash_entry
 )
-#else
-( tab, ptr, p_p_hash_entry )
-    rpc_ss_node_table_t tab;
-    byte_p_t ptr;
-    rpc_ss_hash_entry_t **p_p_hash_entry;
-#endif
 {
     rpc_ss_hash_entry_t *hash_entry;
     long node;
@@ -1211,16 +1173,10 @@ static long rpc_ss_lookup_node_by_ptr
 /*                                                                            */
 /******************************************************************************/
 static void rpc_ss_add_delete_to_list
-#ifdef IDL_PROTOTYPES
 (
     idl_ulong_int node_number,
     rpc_ss_pvt_node_table_t *p_node_table
 )
-#else
-(node_number, p_node_table)
-    idl_ulong_int node_number;
-    rpc_ss_pvt_node_table_t *p_node_table;
-#endif
 {
     rpc_ss_deleted_nodes_t *p_delete_block;
 
@@ -1268,14 +1224,9 @@ static void rpc_ss_add_delete_to_list
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_enable_reflect_deletes
-#ifdef IDL_PROTOTYPES
 (
     rpc_ss_node_table_t tab
 )
-#else
-( tab )
-    rpc_ss_node_table_t tab;
-#endif
 {
     rpc_ss_pvt_node_table_t * str;
 
@@ -1290,14 +1241,9 @@ void rpc_ss_enable_reflect_deletes
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_ndr_marsh_deletes
-#ifdef IDL_PROTOTYPES
 (
     IDL_msp_t IDL_msp
 )
-#else
-(IDL_msp)
-    IDL_msp_t IDL_msp;
-#endif
 {
     rpc_ss_pvt_node_table_t *p_node_table;
     idl_ulong_int delete_count = 0;
@@ -1345,14 +1291,9 @@ void rpc_ss_ndr_marsh_deletes
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_ndr_unmar_deletes
-#ifdef IDL_PROTOTYPES
 (
     IDL_msp_t IDL_msp
 )
-#else
-(IDL_msp)
-    IDL_msp_t IDL_msp;
-#endif
 {
     idl_ulong_int delete_count = 0;
     idl_ulong_int *delete_list;
@@ -1407,16 +1348,10 @@ void rpc_ss_ndr_unmar_deletes
 **--
 */
 byte_p_t rpc_ss_lookup_node_by_num
-#ifdef IDL_PROTOTYPES
 (
     rpc_ss_node_table_t tab,
     unsigned long num
 )
-#else
-( tab, num )
-    rpc_ss_node_table_t tab;
-    unsigned long num;
-#endif
 {
     unsigned long mapped;
     long depth;
@@ -1516,20 +1451,12 @@ byte_p_t rpc_ss_lookup_node_by_num
 **--
 */
 long rpc_ss_register_node
-#ifdef IDL_PROTOTYPES
 (
     rpc_ss_node_table_t tab,
     byte_p_t ptr,
     long marshalling,
     long *has_been_marshalled
 )
-#else
-( tab, ptr, marshalling, has_been_marshalled )
-    rpc_ss_node_table_t tab;
-    byte_p_t ptr;
-    long marshalling;
-    long *has_been_marshalled;
-#endif
 {
     long num;
     rpc_ss_pvt_node_table_t * str;
@@ -1622,16 +1549,10 @@ long rpc_ss_register_node
 **--
 */
 void rpc_ss_unregister_node
-#ifdef IDL_PROTOTYPES
 (
     rpc_ss_node_table_t tab,
     byte_p_t ptr
 )
-#else
-( tab, ptr )
-    rpc_ss_node_table_t tab;
-    byte_p_t ptr;
-#endif
 {
     rpc_ss_pvt_node_table_t * str;
     rpc_ss_hash_entry_t *hash_entry;
@@ -1708,18 +1629,11 @@ it in the future.
 **--
 */
 void rpc_ss_replace_address
-#ifdef IDL_PROTOTYPES
 (
     rpc_ss_node_table_t tab,
     byte_p_t oldptr,
     byte_p_t newptr
 )
-#else
-( tab, oldptr, newptr )
-    rpc_ss_node_table_t tab;
-    byte_p_t oldptr;
-    byte_p_t newptr;
-#endif
 {
     rpc_ss_pvt_node_table_t * str;
     rpc_ss_hash_entry_t *hash_entry;
@@ -1822,7 +1736,6 @@ void rpc_ss_replace_address
 **--
 */
 byte_p_t rpc_ss_return_pointer_to_node
-#ifdef IDL_PROTOTYPES
 (
     rpc_ss_node_table_t tab,
     unsigned long       num,
@@ -1831,15 +1744,6 @@ byte_p_t rpc_ss_return_pointer_to_node
     long                *has_been_unmarshalled,
     long                *new_node               /* NULL or addr of return flag */
 )
-#else
-(tab, num, size, p_allocate, has_been_unmarshalled, new_node)
-    rpc_ss_node_table_t tab;
-    unsigned long       num;
-    long                size;
-    rpc_ss_allocator_t *p_allocator;
-    long                *has_been_unmarshalled;
-    long                *new_node;              /* NULL or addr of return flag */
-#endif
 {
     byte_p_t p;
     rpc_ss_pvt_node_table_t * str;
@@ -1930,18 +1834,11 @@ byte_p_t rpc_ss_return_pointer_to_node
 **--
 */
 byte_p_t rpc_ss_lookup_pointer_to_node
-#ifdef IDL_PROTOTYPES
 (
     rpc_ss_node_table_t tab,
     unsigned long num,
     long *has_been_unmarshalled
 )
-#else
-(tab, num, has_been_unmarshalled)
-    rpc_ss_node_table_t tab;
-    unsigned long num;
-    long *has_been_unmarshalled;
-#endif
 {
     byte_p_t p;
     rpc_ss_pvt_node_table_t * str;
@@ -2003,18 +1900,11 @@ byte_p_t rpc_ss_lookup_pointer_to_node
 **--
 */
 byte_p_t rpc_ss_inquire_pointer_to_node
-#ifdef IDL_PROTOTYPES
 (
     rpc_ss_node_table_t tab,
     unsigned long num,
     long *has_been_unmarshalled
 )
-#else
-(tab, num, has_been_unmarshalled)
-    rpc_ss_node_table_t tab;
-    unsigned long num;
-    long *has_been_unmarshalled;
-#endif
 {
     byte_p_t p;
     rpc_ss_pvt_node_table_t * str;
@@ -2067,16 +1957,10 @@ byte_p_t rpc_ss_inquire_pointer_to_node
 **--
 */
 void rpc_ss_init_node_table
-#ifdef IDL_PROTOTYPES
 (
     volatile rpc_ss_node_table_t *p_node_str,
     rpc_ss_mem_handle *p_mem_h
 )
-#else
-(p_node_str, p_mem_h)
-    volatile rpc_ss_node_table_t *p_node_str;
-    rpc_ss_mem_handle *p_mem_h;
-#endif
 {
 /*
 ** Allocate a node table and initialize it.

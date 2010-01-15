@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -48,21 +49,21 @@ INTERNAL rpc_dg_fpkt_hdr_t fhdr;
 
 /* ======= */
 
-INTERNAL void fwd_reject _DCE_PROTOTYPE_((
+INTERNAL void fwd_reject (
         rpc_dg_sock_pool_elt_p_t  /*sp*/,
         rpc_dg_recvq_elt_p_t  /*rqe*/
-    ));
+    );
 
-INTERNAL void fwd_forward _DCE_PROTOTYPE_((
+INTERNAL void fwd_forward (
         rpc_dg_sock_pool_elt_p_t  /*sp*/,
         rpc_dg_recvq_elt_p_t  /*rqe*/,
         rpc_addr_p_t  /*fwd_addr*/
-    ));
+    );
 
-INTERNAL void fwd_delayed _DCE_PROTOTYPE_((
+INTERNAL void fwd_delayed (
     rpc_dg_sock_pool_elt_p_t /*sp*/,
     rpc_dg_recvq_elt_p_t /*rqe*/
-    ));
+    );
 
 /* ======= */
 

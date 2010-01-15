@@ -3,6 +3,7 @@
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -58,14 +59,9 @@ static rpc_syntax_id_t ndr_transfer_syntax_id = {
 /*                                                                            */
 /******************************************************************************/
 static error_status_t idl_es_add_state_to_handle
-#ifdef IDL_PROTOTYPES
 (
     IDL_es_state_t *p_es_state
 )
-#else
-(p_es_state)
-    IDL_es_state_t *p_es_state;
-#endif
 {
     IDL_msp_t IDL_msp;
 
@@ -87,7 +83,6 @@ static error_status_t idl_es_add_state_to_handle
 /*                                                                            */
 /******************************************************************************/
 void idl_es_encode_incremental
-#ifdef IDL_PROTOTYPES
 (
     idl_void_p_t	    state,  /* [in] user state */
     idl_es_allocate_fn_t    alloc,  /* [in] alloc routine */
@@ -95,14 +90,6 @@ void idl_es_encode_incremental
     idl_es_handle_t	    *h,	    /* [out] encoding handle */
     error_status_t	    *st	    /* [out] status */
 )
-#else
-(state, alloc, writefn, h, st)
-    idl_void_p_t	    state;
-    idl_es_allocate_fn_t    alloc;
-    idl_es_write_fn_t	    writefn;
-    idl_es_handle_t	    *h;
-    error_status_t	    *st;
-#endif
 {
     IDL_es_state_t *p_es_state;
 
@@ -138,7 +125,6 @@ void idl_es_encode_incremental
 /*                                                                            */
 /******************************************************************************/
 void idl_es_encode_fixed_buffer
-#ifdef IDL_PROTOTYPES
 (
     idl_byte		    *ep,    /* [out] buffer to   */
 				    /* receive the encoding (must   */
@@ -150,14 +136,6 @@ void idl_es_encode_fixed_buffer
     idl_es_handle_t	    *h,	    /* [out] encoding handle */
     error_status_t	    *st	    /* [out] status */
 )
-#else
-(ep, bsize, esize, h, st)
-    idl_byte		    *ep;
-    idl_ulong_int	    bsize;
-    idl_ulong_int	    *esize;
-    idl_es_handle_t	    *h;
-    error_status_t	    *st;
-#endif
 {
     IDL_es_state_t *p_es_state;
 
@@ -213,7 +191,6 @@ void idl_es_encode_fixed_buffer
 /*                                                                            */
 /******************************************************************************/
 void idl_es_encode_dyn_buffer
-#ifdef IDL_PROTOTYPES
 (
     idl_byte		    **ep,   /* [out] pointer to receive the */
 				    /* dynamically allocated buffer */
@@ -224,13 +201,6 @@ void idl_es_encode_dyn_buffer
     idl_es_handle_t	    *h,	    /* [out] decoding handle */
     error_status_t	    *st	    /* [out] status */
 )
-#else
-( ep, esize, h, st)
-    idl_byte		    **ep;
-    idl_ulong_int	    *esize;
-    idl_es_handle_t	    *h;
-    error_status_t	    *st;
-#endif
 {
     IDL_es_state_t *p_es_state;
 
@@ -269,20 +239,12 @@ void idl_es_encode_dyn_buffer
 /*                                                                            */
 /******************************************************************************/
 void idl_es_decode_incremental
-#ifdef IDL_PROTOTYPES
 (
     idl_void_p_t	    state,  /* [in] user state */
     idl_es_read_fn_t	    readfn,   /* [in] routine to supply buffers */
     idl_es_handle_t	    *h,	    /* [out] decoding handle */
     error_status_t	    *st	    /* [out] status */
 )
-#else
-(state, readfn, h, st)
-    idl_void_p_t	    state;
-    idl_es_read_fn_t	    readfn;
-    idl_es_handle_t	    *h;
-    error_status_t	    *st;
-#endif
 {
     IDL_es_state_t *p_es_state;
     IDL_msp_t IDL_msp;
@@ -320,7 +282,6 @@ void idl_es_decode_incremental
 /*                                                                            */
 /******************************************************************************/
 void idl_es_decode_buffer
-#ifdef IDL_PROTOTYPES
 (
     idl_byte		    *ep,    /* [in] pointer to buffer	    */
 				    /* containing the encoding	    */
@@ -328,13 +289,6 @@ void idl_es_decode_buffer
     idl_es_handle_t	    *h,	    /* [out] decoding handle */
     error_status_t	    *st	    /* [out] status */
 )
-#else
-(ep, size, h, st)
-    idl_byte		    *ep;
-    idl_ulong_int	    size;
-    idl_es_handle_t	    *h;
-    error_status_t	    *st;
-#endif
 {
     IDL_es_state_t *p_es_state;
     IDL_msp_t IDL_msp;
@@ -399,19 +353,12 @@ void idl_es_decode_buffer
 /*                                                                            */
 /******************************************************************************/
 void idl_es_set_transfer_syntax
-#ifdef IDL_PROTOTYPES
 (
     idl_es_handle_t h,      /* [in,out] User's encoding handle */
     idl_es_transfer_syntax_t es_transfer_syntax,
                             /* [in] requested transfer syntax */
     error_status_t *st
 )
-#else
-(h, es_transfer_syntax, st)
-    idl_es_handle_t h;
-    idl_es_transfer_syntax_t es_transfer_syntax;
-    error_status_t *st;
-#endif
 {
     IDL_es_state_t *p_es_state;
 
@@ -437,7 +384,6 @@ void idl_es_set_transfer_syntax
 /*                                                                            */
 /******************************************************************************/
 static void idl_es_check_transfer_syntax
-#ifdef IDL_PROTOTYPES
 (
     rpc_if_rep_t *p_if_spec,    /* [in] Pointer to stub's if_spec */
     IDL_es_state_t *p_es_state, /* [in] State block containing transfer syntax
@@ -446,13 +392,6 @@ static void idl_es_check_transfer_syntax
                             /* [out] Transfer syntax to use for encoding */
     IDL_msp_t IDL_msp
 )
-#else
-(p_if_spec, p_es_state, p_es_transfer_syntax, IDL_msp)
-    rpc_if_rep_t *p_if_spec;
-    IDL_es_state_t *p_es_state;
-    idl_es_transfer_syntax_t *p_es_transfer_syntax;
-    IDL_msp_t IDL_msp;
-#endif
 {
     unsigned32 i;
 
@@ -486,7 +425,6 @@ static void idl_es_check_transfer_syntax
 /*                                                                            */
 /******************************************************************************/
 static void idl_es_encode_get_xfer_syntax
-#ifdef IDL_PROTOTYPES
 (
     idl_es_handle_t h,      /* [in] User's encoding handle */
     rpc_if_handle_t ifp,    /* [in] Pointer to stub's ifspec */
@@ -494,13 +432,6 @@ static void idl_es_encode_get_xfer_syntax
                             /* [out] Transfer syntax to use for encoding */
     IDL_msp_t IDL_msp
 )
-#else
-(h, ifp, p_es_transfer_syntax, IDL_msp)
-    idl_es_handle_t h;
-    rpc_if_handle_t ifp;
-    idl_es_transfer_syntax_t *p_es_transfer_syntax;
-    IDL_msp_t IDL_msp;
-#endif
 {
     IDL_es_state_t *p_es_state;
     rpc_if_rep_t *p_if_spec;
@@ -540,16 +471,10 @@ static void idl_es_encode_get_xfer_syntax
 /*                                                                            */
 /******************************************************************************/
 error_status_t idl_es_encode_new_dyn_buff
-#ifdef IDL_PROTOTYPES
 (
     idl_ulong_int *p_buff_size,     /* [out] Size of buffer returned */
     IDL_msp_t IDL_msp
 )
-#else
-(p_buff_size, IDL_msp)
-    idl_ulong_int *p_buff_size;
-    IDL_msp_t IDL_msp;
-#endif
 {
     IDL_dyn_buff_link_t *p_new_link;
     rpc_iovector_elt_t *p_new_iovec_elt;
@@ -632,16 +557,10 @@ error_status_t idl_es_encode_new_dyn_buff
 /*                                                                            */
 /******************************************************************************/
 void idl_es_encode_init_buffer
-#ifdef IDL_PROTOTYPES
 (
     idl_ulong_int *p_buff_size,     /* [out] Size of buffer returned */
     IDL_msp_t IDL_msp
 )
-#else
-(p_buff_size, IDL_msp)
-    idl_ulong_int *p_buff_size;
-    IDL_msp_t IDL_msp;
-#endif
 {
     IDL_es_state_t *p_es_state;
 
@@ -691,14 +610,9 @@ void idl_es_encode_init_buffer
 /*                                                                            */
 /******************************************************************************/
 void idl_es_encode_attach_buff
-#ifdef IDL_PROTOTYPES
 (
     IDL_msp_t IDL_msp
 )
-#else
-(IDL_msp)
-    IDL_msp_t IDL_msp;
-#endif
 {
     IDL_es_state_t *p_es_state;
     rpc_iovector_elt_t *p_iovec_elt;
@@ -735,16 +649,10 @@ void idl_es_encode_attach_buff
 /*                                                                            */
 /******************************************************************************/
 static void idl_es_put_encoding_uuid
-#ifdef IDL_PROTOTYPES
 (
     idl_uuid_t *p_uuid,     /* [in] Address of UUID */
     IDL_msp_t IDL_msp
 )
-#else
-(p_uuid, IDL_msp)
-    idl_uuid_t *p_uuid;
-    IDL_msp_t IDL_msp;
-#endif
 {
     int i;
 
@@ -766,7 +674,6 @@ static void idl_es_put_encoding_uuid
 /*                                                                            */
 /******************************************************************************/
 static void idl_es_put_encoding_header
-#ifdef IDL_PROTOTYPES
 (
     rpc_if_handle_t ifp,    /* [in] Pointer to stub's ifspec */
     idl_ulong_int op_num,   /* [in] operation number */
@@ -774,13 +681,6 @@ static void idl_es_put_encoding_header
                          /* [in] Transfer syntax user data will be encoded in */
     IDL_msp_t IDL_msp
 )
-#else
-(ifp, op_num, es_transfer_syntax, IDL_msp)
-    rpc_if_handle_t ifp;
-    idl_ulong_int op_num;
-    idl_es_transfer_syntax_t es_transfer_syntax;
-    IDL_msp_t IDL_msp;
-#endif
 {
     idl_usmall_int version = IDL_ES_HEADER_VERSION;
     idl_usmall_int fill = 0;
@@ -834,16 +734,10 @@ static void idl_es_put_encoding_header
 /*                                                                            */
 /******************************************************************************/
 static void idl_es_get_encoding_uuid
-#ifdef IDL_PROTOTYPES
 (
     idl_uuid_t *p_uuid,     /* [in] Address of UUID */
     IDL_msp_t IDL_msp
 )
-#else
-(p_uuid, IDL_msp)
-    idl_uuid_t *p_uuid;
-    IDL_msp_t IDL_msp;
-#endif
 {
     int i;
 
@@ -865,17 +759,11 @@ static void idl_es_get_encoding_uuid
 /*                                                                            */
 /******************************************************************************/
 static void idl_es_get_encoding_header
-#ifdef IDL_PROTOTYPES
 (
     idl_es_pvt_header_t *p_pickle_header,       /* [out] local copy of pickle 
                                                          header */
     IDL_msp_t IDL_msp
 )
-#else
-(p_pickle_header, IDL_msp)
-    idl_es_pvt_header_t *p_pickle_header;
-    IDL_msp_t IDL_msp;
-#endif
 {
     IDL_es_state_t *p_es_state;
 
@@ -916,14 +804,9 @@ static void idl_es_get_encoding_header
  * Support for Microsoft Encoding Services (MES).
  */
 static void idl_mes_put_encoding_header
-#ifdef IDL_PROTOTYPES
 (
     IDL_msp_t IDL_msp
 )
-#else
-(length, IDL_msp)
-    IDL_msp_t IDL_msp;
-#endif
 {
     idl_es_type_pvt_header_t common_header;
     int i;
@@ -956,16 +839,10 @@ static void idl_mes_put_encoding_header
 }
 
 static void idl_mes_get_encoding_header
-#ifdef IDL_PROTOTYPES
 (
     idl_es_pvt_header_t *p_pickle_header,
     IDL_msp_t IDL_msp
 )
-#else
-(p_pickle_header, IDL_msp)
-    idl_es_pvt_header_t *p_pickle_header;
-    IDL_msp_t IDL_msp;
-#endif
 {
     idl_es_type_pvt_header_t common_header;
     IDL_es_state_t *p_es_state;
@@ -1025,16 +902,10 @@ static void idl_mes_get_encoding_header
 }
 
 static void idl_mes_forge_encoding_header
-#ifdef IDL_PROTOTYPES
 (
     idl_es_pvt_header_t *p_pickle_header,
     IDL_msp_t IDL_msp
 )
-#else
-(p_pickle_header, IDL_msp)
-    idl_es_pvt_header_t *p_pickle_header;
-    IDL_msp_t IDL_msp;
-#endif
 {
     IDL_es_state_t *p_es_state;
     unsigned32 status;
@@ -1068,7 +939,6 @@ static void idl_mes_forge_encoding_header
 /*                                                                            */
 /******************************************************************************/
 void idl_es_before_interp_call
-#ifdef IDL_PROTOTYPES
 (
     idl_es_handle_t h,      /* [in] User's encoding handle */
     rpc_if_handle_t ifp,    /* [in] Pointer to stub's ifspec */
@@ -1080,16 +950,6 @@ void idl_es_before_interp_call
                             /* [out] Transfer syntax to use for encoding */
     IDL_msp_t IDL_msp
 )
-#else
-(h, ifp, IDL_type_vec, op_num, stub_action, p_es_transfer_syntax, IDL_msp)
-    idl_es_handle_t h;
-    rpc_if_handle_t ifp;
-    idl_byte IDL_type_vec[];
-    idl_ulong_int op_num;
-    IDL_es_action_type_k_t stub_action;
-    idl_es_transfer_syntax_t *p_es_transfer_syntax;
-    IDL_msp_t IDL_msp;
-#endif
 {
     IDL_es_state_t * volatile p_es_state;
     rpc_if_rep_t *p_if_spec;
@@ -1201,17 +1061,11 @@ void idl_es_before_interp_call
 /*                                                                            */
 /******************************************************************************/
 static void idl_es_encode_dyn_size
-#ifdef IDL_PROTOTYPES
 (
     IDL_dyn_buff_link_t *p_list_elt,    /* [in] pointer to list of 
                                                     intermediate buffers */
     idl_ulong_int *p_dyn_size           /* [out] size of encoding */
 )
-#else
-(p_list_elt, p_dyn_size)
-    IDL_dyn_buff_link_t *p_list_elt;
-    idl_ulong_int *p_dyn_size;
-#endif
 {
     idl_ulong_int dyn_size = 0;
 
@@ -1230,19 +1084,12 @@ static void idl_es_encode_dyn_size
 /*                                                                            */
 /******************************************************************************/
 static void idl_es_encode_dyn_copy_rel
-#ifdef IDL_PROTOTYPES
 (
     IDL_dyn_buff_link_t *p_list_elt,    /* [in] pointer to list of 
                                                     intermediate buffers */
     idl_byte *dyn_buff,      /* [out] location to copy intermediate buffer to */
     IDL_msp_t IDL_msp
 )
-#else
-(p_list_elt, dyn_buff, IDL_msp)
-    IDL_dyn_buff_link_t *p_list_elt;
-    idl_byte *dyn_buff;
-    IDL_msp_t IDL_msp;
-#endif
 {
     rpc_iovector_elt_t *p_iovec_elt;
     idl_ulong_int inter_data_len;   /* Length of data in intermediate buffer */
@@ -1272,14 +1119,9 @@ static void idl_es_encode_dyn_copy_rel
 /*                                                                            */
 /******************************************************************************/
 void idl_es_after_interp_call
-#ifdef IDL_PROTOTYPES
 (
     IDL_msp_t IDL_msp
 )
-#else
-(IDL_msp)
-    IDL_msp_t IDL_msp;
-#endif
 {
     IDL_es_state_t *p_es_state;
     rpc_iovector_elt_t *p_iovec_elt;
@@ -1393,14 +1235,9 @@ void idl_es_after_interp_call
 /*                                                                            */
 /******************************************************************************/
 void idl_es_clean_up
-#ifdef IDL_PROTOTYPES
 (
     IDL_msp_t IDL_msp
 )
-#else
-(IDL_msp)
-    IDL_msp_t IDL_msp;
-#endif
 {
     IDL_es_state_t *p_es_state;
     IDL_dyn_buff_link_t *p_list_elt;
@@ -1449,14 +1286,9 @@ void idl_es_clean_up
 /*                                                                            */
 /******************************************************************************/
 void idl_es_decode_check_buffer
-#ifdef IDL_PROTOTYPES
 (
     IDL_msp_t IDL_msp
 )
-#else
-(IDL_msp)
-    IDL_msp_t IDL_msp;
-#endif
 {
     IDL_es_state_t *p_es_state;
 
@@ -1488,7 +1320,6 @@ void idl_es_decode_check_buffer
 /*                                                                            */
 /******************************************************************************/
 void idl_es_inq_encoding_id
-#ifdef IDL_PROTOTYPES
 (
     idl_es_handle_t	    h,	    /* [in] decoding handle */
     rpc_if_id_t		    * volatile if_id, /* [out] RPC interface	    */
@@ -1497,13 +1328,6 @@ void idl_es_inq_encoding_id
     idl_ulong_int	    *op,    /* [out] operation number */
     error_status_t	    *st	    /* [out] status */
 )
-#else
-(h, if_id, op, st)
-    idl_es_handle_t	    h;
-    rpc_if_id_t		    *if_id;
-    idl_ulong_int	    *op;
-    error_status_t	    *st;
-#endif
 {
     IDL_es_state_t *p_es_state;
 
@@ -1539,16 +1363,10 @@ void idl_es_inq_encoding_id
 /*                                                                            */
 /******************************************************************************/
 void idl_es_handle_free
-#ifdef IDL_PROTOTYPES
 (
     idl_es_handle_t	*h,	    /* [in,out] handle to free */
     error_status_t	*st	    /* [out] status */
 )
-#else
-(h, st)
-    idl_es_handle_t	*h;
-    error_status_t	*st;
-#endif
 {
     IDL_es_state_t *p_es_state;
 

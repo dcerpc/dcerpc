@@ -3,6 +3,7 @@
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -51,16 +52,10 @@
 /*                                                                            */
 /******************************************************************************/
 static char *BE_ifspec_name
-#ifdef PROTO
 (
     AST_interface_n_t *ifp,
     BE_output_k_t kind
 )
-#else
-(ifp, kind)
-    AST_interface_n_t *ifp;
-    BE_output_k_t kind;
-#endif
 {
     static char retval[100];
 
@@ -77,16 +72,10 @@ static char *BE_ifspec_name
 /*                                                                            */
 /******************************************************************************/
 void CSPELL_manager_epv
-#ifdef PROTO
 (
     FILE *fid,
     AST_interface_n_t *ifp
 )
-#else
-( fid, ifp )
-    FILE *fid;
-    AST_interface_n_t *ifp;
-#endif
 {
     AST_export_n_t *p_export;
     boolean first_op = true;
@@ -116,20 +105,12 @@ void CSPELL_manager_epv
 /*                                                                            */
 /******************************************************************************/
 void CSPELL_interface_def
-#ifdef PROTO
 (
     FILE *fid,
     AST_interface_n_t *ifp,
     BE_output_k_t kind,
     boolean generate_mepv
 )
-#else
-(fid, ifp, kind, generate_mepv)
-    FILE *fid;
-    AST_interface_n_t *ifp;
-    BE_output_k_t kind;
-    boolean generate_mepv;
-#endif
 {
     boolean     first;
     long        i, endpoints;

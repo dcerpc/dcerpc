@@ -97,7 +97,7 @@ idl_boolean shut_ok = true;
 
 static boolean32 mgmt_auth_fn (h, op, st)
 
-handle_t            h __attribute__((unused));
+handle_t            h __attribute__(unused);
 unsigned32          op;
 unsigned32          *st;
 

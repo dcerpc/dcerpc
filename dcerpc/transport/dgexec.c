@@ -1,8 +1,9 @@
 /*
- * 
+ *
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -16,7 +17,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
  */
@@ -28,14 +29,14 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
-**  DG protocol service routines.  
+**  DG protocol service routines.
 **
 **
-*/                
+*/
 
 /* ========================================================================= */
 
@@ -54,16 +55,16 @@
 
 /* ========================================================================= */
 
-INTERNAL void queue_mapped_reject _DCE_PROTOTYPE_ (( 
+INTERNAL void queue_mapped_reject (
         rpc_dg_scall_p_t  /*scall*/,
         unsigned32        /*st*/
-    ));
+    );
 
 /* ========================================================================= */
 /*
- * Declare a global pointer to a routine that can handle calls to 
+ * Declare a global pointer to a routine that can handle calls to
  * pre-v2 server stubs.  If the compatibility library is used to
- * register pre-v2 interfaces, then it will initialize this 
+ * register pre-v2 interfaces, then it will initialize this
  * pointer to the appropriate routine.
  */
 
@@ -85,17 +86,11 @@ GLOBAL  rpc__dg_pre_v2_server_fn_t rpc_g_dg_pre_v2_server_call_p = NULL;
  */
 
 INTERNAL void queue_mapped_reject
-#ifdef _DCE_PROTO_
 (
     rpc_dg_scall_p_t scall,
     unsigned32 st
 )
-#else
-(scall, st)
-rpc_dg_scall_p_t scall;
-unsigned32 st;
-#endif
-{     
+{
     rpc_iovector_t iovec;
     unsigned32 tst, mst;
 
@@ -112,9 +107,9 @@ unsigned32 st;
         case rpc_s_call_orphaned:       mst = nca_s_unspec_reject;       break;
         case rpc_s_unknown_reject:      mst = nca_s_unspec_reject;       break;
         case rpc_s_unknown_mgr_type:    mst = nca_s_unsupported_type;    break;
-        default:                        
+        default:
             RPC_DBG_GPRINTF(("(queue_mapped_reject) unknown status; st=0x%x\n", st));
-            mst = nca_s_unspec_reject;       
+            mst = nca_s_unspec_reject;
             break;
     }
 
@@ -149,26 +144,26 @@ unsigned32 st;
      * generating a new one while the server still thinks the call is
      * not complete (thinking it must have dropped an ack,...).  The
      * fault is really just a special response pkt.
-     * 
+     *
      * This routine is called by the sstub (the thread executing the
      * call) so there's no need to signal the call.  We don't actually
      * want the call's status to be set to a error value; the server
      * runtime wants to still complete processing the call which involves
      * sending the fault response to the client (instead of any further
      * data response).
-     * 
+     *
      * Subsequent fault response retransmissions will occur just as if
      * this were a "normal" call response as well as in reply to a ping.
      * Of course, faults for idempotent calls don't get remembered or
      * retransmitted.
      */
 
-    RPC_DBG_GPRINTF(("(queue_mapped_reject) st=0x%x => 0x%x [%s]\n", 
+    RPC_DBG_GPRINTF(("(queue_mapped_reject) st=0x%x => 0x%x [%s]\n",
         st, mst, rpc__dg_act_seq_string(&scall->c.xq.hdr)));
 
     RPC_DG_XMITQ_REINIT(&scall->c.xq, &scall->c);
     RPC_DG_HDR_SET_PTYPE(&scall->c.xq.hdr, RPC_C_DG_PT_REJECT);
-    
+
     rpc__dg_call_transmit_int(&scall->c, &iovec, &tst);
     /*
      * The transmit may fail because the call is already orphaned.
@@ -178,26 +173,19 @@ unsigned32 st;
      */
 }
 
-
 /*
- * R P C _ _ D G _ E X E C U T E _ C A L L 
- * 
+ * R P C _ _ D G _ E X E C U T E _ C A L L
+ *
  * Perform final validation of the request (including a callback if
  * necessary).  If everything checks out, do what's necessary to dispatch
  * to the server stub.
  */
 
 PRIVATE void rpc__dg_execute_call
-#ifdef _DCE_PROTO_
 (
     pointer_t scall_,
     boolean32 call_was_queued ATTRIBUTE_UNUSED
 )
-#else
-(scall_, call_was_queued)
-pointer_t scall_;
-boolean32 call_was_queued;
-#endif
 {
     ndr_format_t drep;
     unsigned32 st, reject_st;
@@ -236,9 +224,9 @@ boolean32 call_was_queued;
      * a cancel pending).
      *
      * Any "reject response" to the client must be robust (at least for
-     * Non-Idempotent calls).  This is necessary because the client may 
-     * have already received a fack causing it to free some pkts that it 
-     * would need to "rerun" the call (assuming the stub was never entered) 
+     * Non-Idempotent calls).  This is necessary because the client may
+     * have already received a fack causing it to free some pkts that it
+     * would need to "rerun" the call (assuming the stub was never entered)
      * in the event that a reject was lost.
      *
      * Client's recover from lost responses to idempotent calls (including
@@ -265,7 +253,7 @@ boolean32 call_was_queued;
      * things based on the proper state of the iove.
      */
 
-    iove.buff_dealloc = NULL; 
+    iove.buff_dealloc = NULL;
 
     /*
      * Initialize the "called_stub" flag to false.  If a call gets
@@ -294,7 +282,7 @@ boolean32 call_was_queued;
      * If this call does not yet have a reservation, make one now.  Any
      * call that was queued will not have a reservation; also, even if
      * a executor thread was initially available for the call, there
-     * might not have been any reservations available at that time.  
+     * might not have been any reservations available at that time.
      * (Note that the call to make the reservation may block until a
      * reservation becomes available.)
      *
@@ -305,7 +293,7 @@ boolean32 call_was_queued;
      */
 
     if (scall->c.n_resvs < scall->c.max_resvs)
-    {                                  
+    {
         RPC_DG_CALL_UNLOCK(&scall->c);
         RPC_LOCK(0);
         RPC_DG_CALL_LOCK(&scall->c);
@@ -313,7 +301,7 @@ boolean32 call_was_queued;
         {
             RPC_UNLOCK(0);
             goto END_OF_CALL;
-        }             
+        }
 
         /*
          * We always start with the maximum reservation because we no longer
@@ -332,11 +320,11 @@ boolean32 call_was_queued;
          */
         rpc__dg_pkt_adjust_reservation(&scall->c, scall->c.max_resvs, true);
 
-        RPC_UNLOCK(0); 
-         
+        RPC_UNLOCK(0);
+
         /*
          * Since the call's been opened up, we need to check its status.
-         */ 
+         */
         if (scall->c.state != rpc_e_dg_cs_recv)
         {
             RPC_DBG_GPRINTF((
@@ -379,7 +367,7 @@ boolean32 call_was_queued;
         RPC_DG_BINDING_SERVER_REINIT(h);
     }
     else
-    {                   
+    {
         rpc_addr_p_t addr;
 
         rpc__naf_addr_copy(scall->c.addr, &addr, &st);
@@ -393,7 +381,7 @@ boolean32 call_was_queued;
         }
 
         RPC_DG_CALL_REFERENCE(&scall->c);
-        h->scall = scall;  
+        h->scall = scall;
 
         if (!scall->c.is_cbk)
         {
@@ -404,7 +392,7 @@ boolean32 call_was_queued;
                 h->c.c.auth_info = auth_info;
                 RPC_DG_AUTH_REFERENCE(auth_info); /* for the handle */
             }
-        }       
+        }
 
         scall->h = h;
     }
@@ -421,22 +409,22 @@ boolean32 call_was_queued;
      * We're supposed to be in the init state until we know we're accepting
      * the call (that means after a WAY callback if one is necessary).
      * Make certain this is the case following the receive.
-     * 
-     * WARNING 2: Note that this call verifies the authenticity of the 
+     *
+     * WARNING 2: Note that this call verifies the authenticity of the
      * packet it reads *except* in two cases:
-     * 
+     *
      *  - When the packet is from a call on an activity the server doesn't
      * currently know about (in which case we notice later on that the
      * authn_proto field in the header is non-zero).
-     * 
+     *
      *  - When the authentication check fails with a status code of
      * "rpc_s_dg_need_way_auth".  Note that in this event, the
      * "receive_int" is still viewed as having succeeded, albeit with
      * a non-zero status code.
-     * 
-     * In either of these cases, a way_auth callback is made, and, 
-     * if it is successful, the authenticity check is retried 
-     * (further down in this function).  
+     *
+     * In either of these cases, a way_auth callback is made, and,
+     * if it is successful, the authenticity check is retried
+     * (further down in this function).
      */
 
     rpc__dg_call_receive_int(&scall->c, &iove, &st);
@@ -466,8 +454,8 @@ boolean32 call_was_queued;
 
     if (scall->c.is_cbk)
     {
-        RPC_DBG_PRINTF(rpc_e_dbg_general, 3, 
-            ("(rpc__dg_execute_call) Callback [%s]\n", 
+        RPC_DBG_PRINTF(rpc_e_dbg_general, 3,
+            ("(rpc__dg_execute_call) Callback [%s]\n",
                 rpc__dg_act_seq_string(hdrp)));
     }
 
@@ -493,7 +481,7 @@ boolean32 call_was_queued;
     {
         rpc_authn_protocol_id_t authn_protocol;
         rpc_auth_info_p_t auth_info;
-        
+
         assert(scall->c.key_info == NULL);
 
         /*
@@ -507,7 +495,7 @@ boolean32 call_was_queued;
             reject_st = rpc_s_unknown_reject;
             goto AFTER_CALL_TO_STUB;
         }
-        auth_epv = (rpc_dg_auth_epv_p_t) 
+        auth_epv = (rpc_dg_auth_epv_p_t)
                         rpc__auth_rpc_prot_epv
                             (authn_protocol, RPC_C_PROTOCOL_ID_NCADG);
         if (auth_epv == NULL)
@@ -516,15 +504,15 @@ boolean32 call_was_queued;
             goto AFTER_CALL_TO_STUB;
         }
 
-        /* 
+        /*
          * Call into auth service to create an auth info.
-         * 
+         *
          * This generates an auth_info and a key_info.  The auth_info
          * gets attached to the handle, while the key_info gets
          * attached to the scte and scall.
          */
         key_info = (*auth_epv->create) (&st);
-        if (st != rpc_s_ok) 
+        if (st != rpc_s_ok)
         {
             reject_st = rpc_s_unknown_reject;
             goto AFTER_CALL_TO_STUB;
@@ -550,7 +538,7 @@ boolean32 call_was_queued;
     if (! (st == rpc_s_ok || st == rpc_s_object_not_found))
     {
         RPC_DBG_GPRINTF((
-            "(rpc__dg_execute_call) rpc_object_inq_type failed, st=0x%x [%s]\n", 
+            "(rpc__dg_execute_call) rpc_object_inq_type failed, st=0x%x [%s]\n",
             st, rpc__dg_act_seq_string(hdrp)));
         reject_st = st;
         goto AFTER_CALL_TO_STUB;
@@ -565,7 +553,7 @@ boolean32 call_was_queued;
     if (st != rpc_s_ok)
     {
         RPC_DBG_GPRINTF((
-            "(rpc__dg_execute_call) rpc__if_lookup failed, st=0x%x [%s]\n", 
+            "(rpc__dg_execute_call) rpc__if_lookup failed, st=0x%x [%s]\n",
             st, rpc__dg_act_seq_string(hdrp)));
         reject_st = st;
         goto AFTER_CALL_TO_STUB;
@@ -578,7 +566,7 @@ boolean32 call_was_queued;
     scall->c.call_ihint = ihint;
 
     /*
-     * Extract a copy of the opnum from the packet header, and check to see that 
+     * Extract a copy of the opnum from the packet header, and check to see that
      * it's appropriate for this interface.
      */
 
@@ -586,7 +574,7 @@ boolean32 call_was_queued;
     if (opnum >= ifspec->opcnt)
     {
         RPC_DBG_GPRINTF((
-            "(rpc__dg_execute_call) Opnum (%u) out of range [%s]\n", 
+            "(rpc__dg_execute_call) Opnum (%u) out of range [%s]\n",
             opnum, rpc__dg_act_seq_string(hdrp)));
         reject_st = rpc_s_op_rng_error;
         goto AFTER_CALL_TO_STUB;
@@ -596,12 +584,12 @@ boolean32 call_was_queued;
      * To guarantee at-most-once semantics for non-idempotent RPCs, we
      * must ensure that the call is filtered based on a WAY validated
      * sequence number.  If we don't have such a sequence number, then
-     * call back to client to get one (the returned WAY validated seq 
+     * call back to client to get one (the returned WAY validated seq
      * must match this RPC's seq - i.e. it must be the RPC that the client
      * is currently performing).  Note that we may do a way_auth
      * callback even when we wouldn't otherwise do it because the
      * underlying authentication layers decided one was needed.
-     * 
+     *
      * The analogous processing for non-idempotent callbacks (from a
      * server manager to the client originating the call, who needs to
      * validate the callback's seq) was previously taken care of in the
@@ -611,7 +599,7 @@ boolean32 call_was_queued;
      * Note also that maybe calls with large-INs are tagged as
      * non-idempotent but do not need to be protected against re-runs.
      * (The architecture specifies that maybe calls can *not* have
-     * at-most-once semantics, but the implementation finds it more 
+     * at-most-once semantics, but the implementation finds it more
      * convenient to use the non-idempotent code paths for handling
      * calls with large-INs.)  For this reason, avoid doing a WAY for
      * maybe calls (the client may not even be still running!).
@@ -623,10 +611,10 @@ boolean32 call_was_queued;
      * The RPC prologue is suppose to be transparent and clients can
      * orphan the call if they get tired of waiting around.
      */
-    
+
     if (! maybe &&
          (force_way_auth || key_info != NULL ||
-         (! idem && ! scall->c.is_cbk))) 
+         (! idem && ! scall->c.is_cbk)))
     {
         if (!force_way_auth && RPC_DG_SCT_IS_WAY_VALIDATED(scall->scte))
         {
@@ -640,7 +628,7 @@ boolean32 call_was_queued;
              */
             if (scall->c.call_seq != scall->scte->high_seq)
             {
-                RPC_DBG_PRINTF(rpc_e_dbg_general, 2, 
+                RPC_DBG_PRINTF(rpc_e_dbg_general, 2,
                     ("(execute_call) Old sequence, previous=%u [%s]\n",
                     scall->scte->high_seq, rpc__dg_act_seq_string(hdrp)));
                 goto END_OF_CALL;
@@ -699,7 +687,7 @@ boolean32 call_was_queued;
             {
                 if (scall->c.call_seq != scall->scte->high_seq)
                 {
-                    RPC_DBG_PRINTF(rpc_e_dbg_general, 2, 
+                    RPC_DBG_PRINTF(rpc_e_dbg_general, 2,
                         ("(rpc__dg_execute_call) Old sequence, previous=%u [%s]\n",
                         scall->scte->high_seq, rpc__dg_act_seq_string(hdrp)));
                     goto END_OF_CALL;
@@ -756,7 +744,7 @@ boolean32 call_was_queued;
                 {
                     st = nca_s_proto_error;
                 }
-                else 
+                else
                 {
                     /*
                      * Adjust the packet buffer's pkt_len,
@@ -771,7 +759,7 @@ boolean32 call_was_queued;
                         ("(rpc__dg_execute_call) calling recv_ck now\n"));
                     (*auth_epv->recv_ck) (key_info, rqe, cksum, &st);
                 }
-                if (st != rpc_s_ok) 
+                if (st != rpc_s_ok)
                 {
                     RPC_DBG_PRINTF(rpc_e_dbg_general, 2,
                         ("(rpc__dg_execute_call) pkt didn't verify -- %x\n", st));
@@ -814,7 +802,7 @@ boolean32 call_was_queued;
      */
 
     RPC_DG_HDR_INQ_DREP(&drep, hdrp);
- 
+
     /*
      * The packet rationing code needs to know that we no longer need
      * to worry about  doing WAYs.
@@ -844,7 +832,7 @@ boolean32 call_was_queued;
 
     if (iove.data_len == 0 && iove.buff_dealloc != NULL)
         RPC_FREE_IOVE_BUFFER(&iove);
-    
+
     switch (ifspec->stub_rtl_if_vers)
     {
         /*
@@ -868,17 +856,17 @@ boolean32 call_was_queued;
 
             prev_cancel_state = dcethread_enableinterrupt_throw(0);
             (*rpc_g_dg_pre_v2_server_call_p)(
-                ifspec, 
+                ifspec,
                 opnum,
-                (handle_t) h, 
-                (rpc_call_handle_t) scall, 
-                &iove, 
-                drep,        
+                (handle_t) h,
+                (rpc_call_handle_t) scall,
+                &iove,
+                drep,
                 ss_epv,
                 mgr_epv,
                 &reject_st);
             dcethread_enableinterrupt_throw(prev_cancel_state);
-            break;       
+            break;
 
         /*
          * This is the v2 (new) stub runtime interface.
@@ -886,12 +874,12 @@ boolean32 call_was_queued;
         case RPC_C_STUB_RTL_IF_VERS_DCE_1_0:
             prev_cancel_state = dcethread_enableinterrupt_throw(0);
             (*(ss_epv[opnum]))(
-                    (handle_t) h, 
-                    (rpc_call_handle_t) scall, 
-                    &iove, 
+                    (handle_t) h,
+                    (rpc_call_handle_t) scall,
+                    &iove,
                     &drep,
                     &ndr_g_transfer_syntax,
-                    mgr_epv, 
+                    mgr_epv,
                     &reject_st);
             dcethread_enableinterrupt_throw(prev_cancel_state);
             break;
@@ -902,7 +890,7 @@ boolean32 call_was_queued;
 
         default:
             RPC_DBG_GPRINTF((
-                "(rpc__dg_execute_call) Unknown rtl/if version. 0x%x\n", 
+                "(rpc__dg_execute_call) Unknown rtl/if version. 0x%x\n",
                ifspec->stub_rtl_if_vers));
             RPC_DG_CALL_LOCK(&scall->c);
 
@@ -930,7 +918,7 @@ boolean32 call_was_queued;
      */
 
     RPC_DG_CALL_LOCK(&scall->c);
-    if (scall->c.state != rpc_e_dg_cs_recv 
+    if (scall->c.state != rpc_e_dg_cs_recv
         && scall->c.state != rpc_e_dg_cs_xmit)
     {
         goto END_OF_CALL;
@@ -949,8 +937,8 @@ AFTER_CALL_TO_STUB:
      * or the call faulted, just skip to the end.
      */
 
-    if (broadcast && 
-        (reject_st != rpc_s_ok || 
+    if (broadcast &&
+        (reject_st != rpc_s_ok ||
          RPC_DG_HDR_INQ_PTYPE(&scall->c.xq.hdr) == RPC_C_DG_PT_FAULT))
     {
         goto END_OF_CALL;
@@ -960,12 +948,12 @@ AFTER_CALL_TO_STUB:
      * The stub was obligated to call the iove's dealloc routine,
      * so we don't have to free that.  We don't need the recvq anymore.
      * In normal cases, the list will already be empty, so having this
-     * in the fast path doesn't hurt and (in the error cases) it frees 
+     * in the fast path doesn't hurt and (in the error cases) it frees
      * up resources while we potentially wait in xmitq_push() (or
      * awaiting a xqe for a reject or no [outs] response).
      */
 
-    if (scall->c.rq.head != NULL) 
+    if (scall->c.rq.head != NULL)
         rpc__dg_recvq_free(&scall->c.rq);
 
     /*
@@ -987,15 +975,15 @@ AFTER_CALL_TO_STUB:
          * If we are forced to do WAY auth and havn't done it so, don't free
          * it because we don't own the rqe.
          */
-    
+
         if (! called_stub && !force_way_auth && iove.buff_dealloc != NULL)
             RPC_FREE_IOVE_BUFFER(&iove);
-    
+
         queue_mapped_reject(scall, reject_st);
     }
     else
     {
-        if (scall->c.state == rpc_e_dg_cs_recv && !maybe) 
+        if (scall->c.state == rpc_e_dg_cs_recv && !maybe)
         {
             rpc_iovector_t  xmit_data;
 
@@ -1018,9 +1006,9 @@ AFTER_CALL_TO_STUB:
      * state.  This is the single point where the "send response"
      * path ensures that it has flushed any pending cancels from the
      * call executor thread; this includes cancels generated by
-     * a received cancel-request or a cancel induced by orphan call 
+     * a received cancel-request or a cancel induced by orphan call
      * processing.
-     * 
+     *
      * We could have stopped accepting cancels as soon as the stub
      * returned, but we really wanted to wait till here before setting
      * up the return cancel_pending status.  After this, we shouldn't
@@ -1035,11 +1023,11 @@ AFTER_CALL_TO_STUB:
 
     if (rpc__cthread_cancel_caf(&scall->c.c))
     {
-        RPC_DBG_PRINTF(rpc_e_dbg_cancel, 5, 
+        RPC_DBG_PRINTF(rpc_e_dbg_cancel, 5,
             ("(rpc__dg_execute_call) setting cancel_pending\n"));
         scall->c.xq.base_flags2 |= RPC_C_DG_PF2_CANCEL_PENDING;
     }
-    
+
     /*
      * Assuming that the call isn't already orphaned, finally push
      * out the remainder of the response.  The push may fail
@@ -1052,7 +1040,7 @@ AFTER_CALL_TO_STUB:
     if (scall->c.state != rpc_e_dg_cs_orphan)
     {
         rpc__dg_call_xmitq_push(&scall->c, &st);
-        if (st == rpc_s_ok) 
+        if (st == rpc_s_ok)
             sent_response = true;
         else
             RPC_DBG_GPRINTF((
@@ -1109,7 +1097,7 @@ END_OF_CALL:
      */
 
     if ((! idem || RPC_DG_FLAG_IS_SET(scall->c.xq.base_flags, RPC_C_DG_PF_FRAG))
-        && sent_response) 
+        && sent_response)
     {
         RPC_DG_CALL_SET_STATE(&scall->c, rpc_e_dg_cs_final);
     }
@@ -1118,16 +1106,16 @@ END_OF_CALL:
         /*
          * It's really the end of the call, so we can free the xmitq.
          */
-    
-        if (scall->c.xq.head != NULL) 
+
+        if (scall->c.xq.head != NULL)
             rpc__dg_xmitq_free(&scall->c.xq, &scall->c);
-    
+
         /*
          * Typically, the call goes back to the idle state, ready to
          * handle the next call.  First, If this was a callback, update
          * the callback sequence number in the associated client callback
          * handle.
-         * 
+         *
          * If the call was orphaned, we can't to do either of the above
          * (we just want to let the scall's timer complete the job of
          * destroying the scall).

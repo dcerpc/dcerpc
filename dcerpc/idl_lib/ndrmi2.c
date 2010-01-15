@@ -3,6 +3,7 @@
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -44,25 +45,21 @@
 
 static void rpc_ss_ndr_m_f_or_c_arr_ptees
 (
-#ifdef IDL_PROTOTYPES
     rpc_void_p_t array_addr,
     idl_ulong_int dimensionality,
     IDL_bound_pair_t *bounds_list,
     idl_byte *defn_vec_ptr,
     IDL_msp_t IDL_msp
-#endif
 );
 
 static void rpc_ss_ndr_m_v_or_o_arr_ptees
 (
-#ifdef IDL_PROTOTYPES
     rpc_void_p_t array_addr,
     idl_ulong_int *Z_values,
     idl_ulong_int dimensionality,
     IDL_bound_pair_t *range_list,
     idl_byte *defn_vec_ptr,
     IDL_msp_t IDL_msp
-#endif
 );
 
 /******************************************************************************/
@@ -72,7 +69,6 @@ static void rpc_ss_ndr_m_v_or_o_arr_ptees
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_ndr_marsh_pointee
-#ifdef IDL_PROTOTYPES
 (
     idl_byte *defn_vec_ptr,         /* On entry points at type of pointee */
     rpc_void_p_t pointee_addr,      /* address of pointee */
@@ -83,14 +79,6 @@ void rpc_ss_ndr_marsh_pointee
                                                 or non-encapsulated union */
     IDL_msp_t IDL_msp
 )
-#else
-( defn_vec_ptr, pointee_addr, register_node, p_pointee_desc, IDL_msp )
-    idl_byte *defn_vec_ptr;
-    rpc_void_p_t pointee_addr;
-    idl_boolean register_node;
-    IDL_pointee_desc_t *p_pointee_desc;
-    IDL_msp_t IDL_msp;
-#endif
 {
     long already_marshalled;
     idl_byte pointee_type;
@@ -407,20 +395,12 @@ void rpc_ss_ndr_marsh_pointee
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_ndr_m_struct_pointees
-#ifdef IDL_PROTOTYPES
 (
     /* [in] */  idl_byte struct_type,   /* DT_FIXED_STRUCT or DT_CONF_STRUCT */
     /* [in] */  idl_ulong_int defn_index,  /* Index of structure dedecription */
     /* [in] */  rpc_void_p_t struct_addr,
     IDL_msp_t IDL_msp
 )
-#else
-(struct_type, defn_index, struct_addr, IDL_msp)
-    idl_byte struct_type;
-    idl_ulong_int defn_index;
-    rpc_void_p_t struct_addr;
-    IDL_msp_t IDL_msp;
-#endif
 {
     idl_ulong_int offset_index;
     idl_byte *defn_vec_ptr;
@@ -708,7 +688,6 @@ void rpc_ss_ndr_m_struct_pointees
 /*                                                                            */
 /******************************************************************************/
 static void rpc_ss_ndr_m_f_or_c_arr_ptees
-#ifdef IDL_PROTOTYPES
 (
     /* [in] */  rpc_void_p_t array_addr,
     /* [in] */  idl_ulong_int dimensionality,
@@ -716,14 +695,6 @@ static void rpc_ss_ndr_m_f_or_c_arr_ptees
     /* [in] */  idl_byte *defn_vec_ptr, /* On entry points to array base info */
     IDL_msp_t IDL_msp
 )
-#else
-( array_addr, dimensionality, bounds_list, defn_vec_ptr, IDL_msp )
-    rpc_void_p_t array_addr;
-    idl_ulong_int dimensionality;
-    IDL_bound_pair_t *bounds_list;
-    idl_byte *defn_vec_ptr;
-    IDL_msp_t IDL_msp;
-#endif
 {
     idl_byte base_type;
     idl_ulong_int element_count;
@@ -803,7 +774,6 @@ static void rpc_ss_ndr_m_f_or_c_arr_ptees
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_ndr_m_dfc_arr_ptees
-#ifdef IDL_PROTOTYPES
 (
     /* [in] */  idl_ulong_int defn_index,   /* Index of array description */
     /* [in] */  rpc_void_p_t array_addr,
@@ -814,15 +784,6 @@ void rpc_ss_ndr_m_dfc_arr_ptees
     /* [in] */  idl_ulong_int flags,
     IDL_msp_t IDL_msp
 )
-#else
-(defn_index, array_addr, struct_addr, struct_offset_vec_ptr, flags, IDL_msp)
-    idl_ulong_int defn_index;
-    rpc_void_p_t array_addr;
-    idl_ulong_int *struct_offset_vec_ptr;
-    rpc_void_p_t struct_addr;
-    idl_ulong_int flags;
-    IDL_msp_t IDL_msp;
-#endif
 {
     idl_byte *defn_vec_ptr;
     idl_ulong_int dimensionality;
@@ -865,7 +826,6 @@ void rpc_ss_ndr_m_dfc_arr_ptees
 /*                                                                            */
 /******************************************************************************/
 static void rpc_ss_ndr_m_v_or_o_arr_ptees
-#ifdef IDL_PROTOTYPES
 (
     /* [in] */  rpc_void_p_t array_addr,
     /* [in] */  idl_ulong_int *Z_values,
@@ -874,15 +834,6 @@ static void rpc_ss_ndr_m_v_or_o_arr_ptees
     /* [in] */  idl_byte *defn_vec_ptr, /* On entry points at base type */
     IDL_msp_t IDL_msp
 )
-#else
-( array_addr, Z_values, dimensionality, range_list, defn_vec_ptr, IDL_msp )
-    rpc_void_p_t array_addr;
-    idl_ulong_int *Z_values;
-    idl_ulong_int dimensionality;
-    IDL_bound_pair_t *range_list;
-    idl_byte *defn_vec_ptr;
-    IDL_msp_t IDL_msp;
-#endif
 {
     idl_ulong_int element_defn_index;
     idl_ulong_int element_size;
@@ -986,7 +937,6 @@ static void rpc_ss_ndr_m_v_or_o_arr_ptees
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_ndr_m_dvo_arr_ptees
-#ifdef IDL_PROTOTYPES
 (
     /* [in] */  idl_ulong_int defn_index,   /* Index of array description */
     /* [in] */  rpc_void_p_t array_addr,
@@ -997,15 +947,6 @@ void rpc_ss_ndr_m_dvo_arr_ptees
     /* [in] */  idl_ulong_int flags,
     IDL_msp_t IDL_msp
 )
-#else
-(defn_index, array_addr, struct_addr, struct_offset_vec_ptr, flags, IDL_msp)
-    idl_ulong_int defn_index;
-    rpc_void_p_t array_addr;
-    idl_ulong_int *struct_offset_vec_ptr;
-    rpc_void_p_t struct_addr;
-    idl_ulong_int flags;
-    IDL_msp_t IDL_msp;
-#endif
 {
     idl_byte *defn_vec_ptr;
     idl_ulong_int dimensionality;
@@ -1064,7 +1005,6 @@ void rpc_ss_ndr_m_dvo_arr_ptees
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_pointee_desc_from_data
-#ifdef IDL_PROTOTYPES
 (
     /* [in] */  idl_byte *defn_vec_ptr, /* Points at definition of pointee */
     /* [in] */  rpc_void_p_t array_addr,    /* Need only be non-NULL if pointee
@@ -1077,16 +1017,6 @@ void rpc_ss_pointee_desc_from_data
                                      to be filled in with pointee description */
     IDL_msp_t IDL_msp
 )
-#else
-( defn_vec_ptr, array_addr, struct_addr, struct_offset_vec_ptr, p_pointee_desc,
-  IDL_msp )
-    idl_byte *defn_vec_ptr;
-    rpc_void_p_t array_addr;
-    rpc_void_p_t struct_addr;
-    idl_ulong_int *struct_offset_vec_ptr;
-    IDL_pointee_desc_t *p_pointee_desc;
-    IDL_msp_t IDL_msp;
-#endif
 {
     idl_ulong_int array_defn_index;
     idl_byte *array_defn_ptr;

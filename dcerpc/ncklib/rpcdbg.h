@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -190,10 +191,10 @@ EXTERNAL unsigned8 rpc_g_dbg_switches[];
  * R P C _ _ D B G _ S E T _ S W I T C H E S
  */
 
-PUBLIC void rpc__dbg_set_switches    _DCE_PROTOTYPE_ ((
+PUBLIC void rpc__dbg_set_switches (
         const char      * /*s*/,
         unsigned32      * /*st*/
-    ));
+    );
 
 
 #ifndef	DCE_RPC_SVC
@@ -220,7 +221,7 @@ PUBLIC void rpc__dbg_set_switches    _DCE_PROTOTYPE_ ((
 
 #include <stdarg.h>
 
-PRIVATE int rpc__printf _DCE_PROTOTYPE_ (( const char * /*format*/, ...))
+PRIVATE int rpc__printf ( const char * /*format*/, ...)
 #if __GNUC__
 __attribute__((__format__ (__printf__, 1, 2)))
 #endif
@@ -234,25 +235,25 @@ __attribute__((__format__ (__printf__, 1, 2)))
  * R P C _ _ D I E
  */
 
-PRIVATE void rpc__die _DCE_PROTOTYPE_ ((
+PRIVATE void rpc__die (
         char            * /*text*/,
         char            * /*file*/,
         int              /*line*/
-    ));
+    );
 
 /*
  * R P C _ _ U U I D _ S T R I N G
  */
 
-PRIVATE char *rpc__uuid_string _DCE_PROTOTYPE_(( idl_uuid_t */*uuid*/));
+PRIVATE char *rpc__uuid_string ( idl_uuid_t */*uuid*/);
 
 /*
  * R P C _ _ P R I N T _ S O U R C E
  */
 
-PRIVATE void rpc__print_source _DCE_PROTOTYPE_((
+PRIVATE void rpc__print_source (
         const char      * /*file*/,
         int             /*line*/
-    ));
+    );
 
 #endif /* _RPCDBG_H */

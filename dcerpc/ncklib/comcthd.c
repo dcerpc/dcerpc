@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -303,64 +304,64 @@ INTERNAL boolean                cthread_invoke_enabled;
 INTERNAL rpc_thread_pool_fn_t   cthread_pool_lookup_fn;
 
 
-INTERNAL void cthread_create _DCE_PROTOTYPE_ ((
+INTERNAL void cthread_create (
         cthread_elt_p_t          /*cthread*/,
         unsigned32              * /*status*/
-    ));
+    );
 
-INTERNAL void cthread_call_executor _DCE_PROTOTYPE_ ((
+INTERNAL void cthread_call_executor (
         cthread_elt_p_t        /*cthread*/
-    ));
+    );
 
-INTERNAL void cthread_reaper _DCE_PROTOTYPE_ ((
+INTERNAL void cthread_reaper (
         pointer_t    /*arg*/
-    ));
+    );
 
-INTERNAL cthread_pool_elt_p_t cthread_pool_alloc _DCE_PROTOTYPE_ ((
+INTERNAL cthread_pool_elt_p_t cthread_pool_alloc (
         unsigned32   /*n_threads*/,
         boolean32    /*is_default_pool*/,
         unsigned32  * /*status*/
-    ));
+    );
 
-INTERNAL void cthread_pool_set_threadcnt _DCE_PROTOTYPE_ ((
+INTERNAL void cthread_pool_set_threadcnt (
         cthread_pool_elt_p_t  /*p*/,
         unsigned32   /*n_threads*/,
         unsigned32  * /*status*/
-    ));
+    );
 
-INTERNAL void cthread_pool_free _DCE_PROTOTYPE_ ((
+INTERNAL void cthread_pool_free (
         cthread_pool_elt_p_t  /*p*/,
         unsigned32  * /*status*/
-    ));
+    );
 
-INTERNAL void cthread_pool_start _DCE_PROTOTYPE_ ((
+INTERNAL void cthread_pool_start (
         cthread_pool_elt_p_t  /*p*/,
         unsigned32  * /*status*/
-    ));
+    );
 
-INTERNAL void cthread_pool_stop _DCE_PROTOTYPE_ ((
+INTERNAL void cthread_pool_stop (
         cthread_pool_elt_p_t  /*p*/,
         unsigned32  /*wait_flag*/,
         unsigned32  * /*status*/
-    ));
+    );
 
-INTERNAL cthread_elt_p_t cthread_pool_assign_thread _DCE_PROTOTYPE_ ((
+INTERNAL cthread_elt_p_t cthread_pool_assign_thread (
         cthread_pool_elt_p_t     /*p*/
-    ));
+    );
 
-INTERNAL void cthread_pool_queue_call _DCE_PROTOTYPE_ ((
+INTERNAL void cthread_pool_queue_call (
         cthread_pool_elt_p_t     /*p*/,
         rpc_call_rep_p_t         /*call_rep*/,
         unsigned32              * /*status*/
-    ));
+    );
 
-INTERNAL rpc_call_rep_p_t cthread_pool_dequeue_first _DCE_PROTOTYPE_ ((
+INTERNAL rpc_call_rep_p_t cthread_pool_dequeue_first (
         cthread_pool_elt_p_t     /*p*/
-    ));
+    );
 
-INTERNAL boolean32 cthread_call_dequeue _DCE_PROTOTYPE_ ((
+INTERNAL boolean32 cthread_call_dequeue (
         rpc_call_rep_p_t         /*call_rep*/
-    ));
+    );
 
 
 /*
@@ -398,16 +399,10 @@ INTERNAL boolean32 cthread_call_dequeue _DCE_PROTOTYPE_ ((
 **/
 
 INTERNAL void cthread_create 
-#ifdef _DCE_PROTO_
 (
     cthread_elt_p_t volatile cthread,
     unsigned32              *status
 )
-#else
-(cthread, status)
-cthread_elt_p_t         cthread;
-unsigned32              *status;
-#endif
 { 
     dcethread*               handle_copy;
 
@@ -475,14 +470,9 @@ unsigned32              *status;
 **/
 
 INTERNAL void cthread_call_executor 
-#ifdef _DCE_PROTO_
 (
   cthread_elt_p_t cthread
 )
-#else
-(cthread)
-cthread_elt_p_t cthread;
-#endif
 {
     rpc_call_rep_t          *call_rep = NULL;
     rpc_cthread_pvt_info_p_t pvt = NULL;
@@ -664,14 +654,9 @@ cthread_elt_p_t cthread;
 **/
 
 INTERNAL void cthread_reaper
-#ifdef _DCE_PROTO_
 (
   pointer_t   unused_arg ATTRIBUTE_UNUSED
 )
-#else
-(unused_arg)
-pointer_t   unused_arg;
-#endif
 {
     cthread_pool_elt_p_t    p, np;
     unsigned32              i;
@@ -780,18 +765,11 @@ pointer_t   unused_arg;
 **/
 
 INTERNAL cthread_pool_elt_p_t cthread_pool_alloc 
-#ifdef _DCE_PROTO_
 (
     unsigned32  n_threads,
     boolean32   is_default_pool,
     unsigned32  *status
 )
-#else
-(n_threads, is_default_pool, status)
-unsigned32  n_threads;
-boolean32   is_default_pool;
-unsigned32  *status;
-#endif
 {
     cthread_pool_elt_p_t    p = NULL;
 
@@ -902,18 +880,11 @@ CLEANUP:
 **/
 
 INTERNAL void cthread_pool_set_threadcnt 
-#ifdef _DCE_PROTO_
 (
     cthread_pool_elt_p_t p,
     unsigned32  n_threads,
     unsigned32  *status
 )
-#else
-(p, n_threads, status)
-cthread_pool_elt_p_t p;
-unsigned32  n_threads;
-unsigned32  *status;
-#endif
 {
     CODING_ERROR (status);
 
@@ -976,16 +947,10 @@ unsigned32  *status;
 **/
 
 INTERNAL void cthread_pool_free 
-#ifdef _DCE_PROTO_
 (
     cthread_pool_elt_p_t p,
     unsigned32  *status
 )
-#else
-(p, status)
-cthread_pool_elt_p_t p;
-unsigned32  *status;
-#endif
 {
     unsigned32              i;
     cthread_elt_p_t         cthread;
@@ -1068,16 +1033,10 @@ unsigned32  *status;
 **/
 
 INTERNAL void cthread_pool_start 
-#ifdef _DCE_PROTO_
 (
     cthread_pool_elt_p_t p,
     unsigned32  *status
 )
-#else
-(p, status)
-cthread_pool_elt_p_t p;
-unsigned32  *status;
-#endif
 {
     unsigned32              i;
     cthread_elt_p_t         cthread;
@@ -1238,18 +1197,11 @@ CLEANUP:
 **/
 
 INTERNAL void cthread_pool_stop 
-#ifdef _DCE_PROTO_
 (
     cthread_pool_elt_p_t p,
     unsigned32 wait_flag,
     unsigned32  *status
 )
-#else
-(p, wait_flag, status)
-cthread_pool_elt_p_t p;
-unsigned32 wait_flag;
-unsigned32  *status;
-#endif
 {
     int                     cs;
     unsigned32              i;
@@ -1393,14 +1345,9 @@ unsigned32  *status;
 **/
 
 INTERNAL cthread_elt_p_t cthread_pool_assign_thread 
-#ifdef _DCE_PROTO_
 (
     cthread_pool_elt_p_t    p
 )
-#else
-(p)
-cthread_pool_elt_p_t    p;
-#endif
 {
     cthread_elt_p_t cthread = NULL;
 
@@ -1478,18 +1425,11 @@ cthread_pool_elt_p_t    p;
 **/
 
 INTERNAL void cthread_pool_queue_call 
-#ifdef _DCE_PROTO_
 (
     cthread_pool_elt_p_t    p,
     rpc_call_rep_p_t        call_rep,
     unsigned32              *status
 )
-#else
-(p, call_rep, status)
-cthread_pool_elt_p_t    p;
-rpc_call_rep_p_t        call_rep;
-unsigned32              *status;
-#endif
 {
     rpc_cthread_pvt_info_p_t    pvt = &call_rep->u.server.cthread;
     boolean                     is_default_pool = (p == cthread_default_pool);
@@ -1583,14 +1523,9 @@ unsigned32              *status;
 **/
 
 INTERNAL rpc_call_rep_p_t cthread_pool_dequeue_first 
-#ifdef _DCE_PROTO_
 (
     cthread_pool_elt_p_t    p
 )
-#else
-(p)
-cthread_pool_elt_p_t    p;
-#endif
 {
     rpc_call_rep_p_t            call_rep;
     boolean                     is_default_pool = (p == cthread_default_pool);
@@ -1670,14 +1605,9 @@ cthread_pool_elt_p_t    p;
 **/
 
 INTERNAL boolean32 cthread_call_dequeue 
-#ifdef _DCE_PROTO_
 (
     rpc_call_rep_p_t        call_rep
 )
-#else
-(call_rep)
-rpc_call_rep_p_t        call_rep;
-#endif
 {
     rpc_cthread_pvt_info_p_t    pvt = &call_rep->u.server.cthread;
     cthread_queue_elt_p_t       qelt = (cthread_queue_elt_p_t)pvt->qelt;
@@ -1780,14 +1710,9 @@ rpc_call_rep_p_t        call_rep;
 **/
 
 PRIVATE void rpc__cthread_init 
-#ifdef _DCE_PROTO_
 (
     unsigned32  *status
 )
-#else
-(status)
-unsigned32  *status;
-#endif
 {
     CODING_ERROR (status);
 
@@ -1833,18 +1758,11 @@ unsigned32  *status;
 **/
 
 PUBLIC void rpc_server_create_thread_pool
-#ifdef _DCE_PROTO_
 (
     unsigned32      n_threads,
     rpc_thread_pool_handle_t *phandle,
     unsigned32      *status
 )
-#else
-(n_threads, phandle, status)
-unsigned32      n_threads;
-rpc_thread_pool_handle_t *phandle;
-unsigned32      *status;
-#endif
 {
     cthread_pool_elt_p_t    p;
 
@@ -1916,18 +1834,11 @@ CLEANUP:
 **/
 
 PUBLIC void rpc_server_free_thread_pool 
-#ifdef _DCE_PROTO_
 (
     rpc_thread_pool_handle_t *phandle,
     boolean32       wait_flag,
     unsigned32      *status
 )
-#else
-(phandle, wait_flag, status)
-rpc_thread_pool_handle_t *phandle;
-boolean32       wait_flag;
-unsigned32      *status;
-#endif
 {
     cthread_pool_elt_p_t    p = (cthread_pool_elt_p_t) *phandle;
 
@@ -2012,16 +1923,10 @@ CLEANUP:
 **/
 
 PUBLIC void rpc_server_set_thread_pool_fn 
-#ifdef _DCE_PROTO_
 (
     rpc_thread_pool_fn_t pool_fn,
     unsigned32      *status
 )
-#else
-(pool_fn, status)
-rpc_thread_pool_fn_t pool_fn;
-unsigned32      *status;
-#endif
 {
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
@@ -2080,18 +1985,11 @@ CLEANUP:
 **/
 
 PUBLIC void rpc_server_set_thread_pool_qlen 
-#ifdef _DCE_PROTO_
 (
     rpc_thread_pool_handle_t phandle,
     unsigned32 queue_size,
     unsigned32 * status 
 )
-#else
-(phandle, queue_size, status)
-rpc_thread_pool_handle_t phandle;
-unsigned32 queue_size;
-unsigned32 *status;
-#endif
 {
     cthread_pool_elt_p_t pool = (cthread_pool_elt_p_t) phandle;
 
@@ -2225,16 +2123,10 @@ unsigned32 *status;
 **/
 
 PRIVATE void rpc__cthread_start_all 
-#ifdef _DCE_PROTO_
 (
     unsigned32              default_pool_cthreads,
     unsigned32              *status
 )
-#else
-(default_pool_cthreads, status)
-unsigned32              default_pool_cthreads;
-unsigned32              *status;
-#endif
 {
     cthread_pool_elt_p_t    p;
 
@@ -2323,14 +2215,9 @@ CLEANUP:
 **/
 
 PRIVATE void rpc__cthread_stop_all 
-#ifdef _DCE_PROTO_
 (
     unsigned32              *status
 )
-#else
-(status)
-unsigned32              *status;
-#endif
 { 
 
     cthread_pool_elt_p_t    p;
@@ -2429,7 +2316,6 @@ CLEANUP:
 **/
 
 PRIVATE void rpc__cthread_invoke_null 
-#ifdef _DCE_PROTO_
 (
     rpc_call_rep_p_t        call_rep,
     uuid_p_t                object,
@@ -2440,17 +2326,6 @@ PRIVATE void rpc__cthread_invoke_null
     pointer_t               args,
     unsigned32              *status
 )
-#else
-(call_rep, object, if_uuid, if_ver, if_opnum, cthread_executor, args, status)
-rpc_call_rep_p_t        call_rep;
-uuid_p_t                object;
-uuid_p_t                if_uuid;
-unsigned32              if_ver;
-unsigned32              if_opnum;
-rpc_prot_cthread_executor_fn_t cthread_executor;
-pointer_t               args;
-unsigned32              *status;
-#endif
 { 
     rpc_cthread_pvt_info_p_t    pvt = &call_rep->u.server.cthread;
     unsigned32                  lookup_fn_st;
@@ -2582,14 +2457,9 @@ CLEANUP:
 **/
 
 PRIVATE boolean32 rpc__cthread_dequeue 
-#ifdef _DCE_PROTO_
 (
   rpc_call_rep_p_t        call_rep
 )
-#else
-(call_rep)
-rpc_call_rep_p_t        call_rep;
-#endif
 {
     boolean32                   was_dequeued;
 
@@ -2633,14 +2503,9 @@ rpc_call_rep_p_t        call_rep;
 **/
 
 PRIVATE void rpc__cthread_cancel 
-#ifdef _DCE_PROTO_
 (
   rpc_call_rep_p_t        call
 )
-#else
-(call)
-rpc_call_rep_p_t        call;
-#endif
 {
     RPC_CALL_LOCK_ASSERT(call);
 
@@ -2695,14 +2560,9 @@ rpc_call_rep_p_t        call;
 **/
 
 PRIVATE boolean32 rpc__cthread_cancel_caf 
-#ifdef _DCE_PROTO_
 (
   rpc_call_rep_p_t        call
 )
-#else
-(call)
-rpc_call_rep_p_t        call;
-#endif
 {
     int oc;
 
@@ -2790,14 +2650,9 @@ rpc_call_rep_p_t        call;
 **/
 
 PRIVATE void rpc__cthread_cancel_enable_post 
-#ifdef _DCE_PROTO_
 (
   rpc_call_rep_p_t        call
 )
-#else
-(call)
-rpc_call_rep_p_t        call;
-#endif
 {
     rpc_cthread_pvt_info_p_t    pvt = &call->u.server.cthread;
     unsigned16 cancel_cnt;

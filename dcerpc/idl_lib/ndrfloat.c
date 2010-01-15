@@ -3,6 +3,7 @@
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -476,19 +477,11 @@
 
 #if IEEE_FLOAT || defined(DEBUG)
 INTERNAL void cvt_vax_f_to_ieee_single
-#ifdef IDL_PROTOTYPES
 (
     CVT_VAX_F input_value,
     CVT_SIGNED_INT options,
     CVT_IEEE_SINGLE output_value
 )
-#else
-( input_value, options, output_value )
-    CVT_VAX_F input_value;
-    CVT_SIGNED_INT options;
-    CVT_IEEE_SINGLE output_value;
-#endif
-
 {
     int i, round_bit_position;
     UNPACKED_REAL r;
@@ -554,19 +547,11 @@ INTERNAL void cvt_vax_f_to_ieee_single
 
 #if IEEE_FLOAT || defined(DEBUG)
 INTERNAL void cvt_vax_g_to_ieee_double
-#ifdef IDL_PROTOTYPES
 (
     CVT_VAX_G input_value,
     CVT_SIGNED_INT options,
     CVT_IEEE_DOUBLE output_value
 )
-#else
-( input_value, options, output_value )
-    CVT_VAX_G input_value;
-    CVT_SIGNED_INT options;
-    CVT_IEEE_DOUBLE output_value;
-#endif
-
 {
     int i, round_bit_position;
     UNPACKED_REAL r;
@@ -632,19 +617,11 @@ INTERNAL void cvt_vax_g_to_ieee_double
 
 #if IEEE_FLOAT || defined(DEBUG)
 INTERNAL void cvt_cray_to_ieee_single
-#ifdef IDL_PROTOTYPES
 (
     CVT_CRAY input_value,
     CVT_SIGNED_INT options,
     CVT_IEEE_SINGLE output_value
 )
-#else
-( input_value, options, output_value )
-    CVT_CRAY input_value;
-    CVT_SIGNED_INT options;
-    CVT_IEEE_SINGLE output_value;
-#endif
-
 {
     int i, round_bit_position;
     UNPACKED_REAL r;
@@ -675,17 +652,10 @@ INTERNAL void cvt_cray_to_ieee_single
  * it directly.
  */
 int ndr_cray64_to_ieee32
-#ifdef IDL_PROTOTYPES
 (
     unsigned32 *cray_flt,   /* 64 bit entities */
     unsigned32 *ieee_flt
 )
-#else
-(cray_flt, ieee_flt)
-    unsigned32 *cray_flt;   /* 64 bit entities */
-    unsigned32 *ieee_flt;
-#endif
-
 {
     /*
      * Cray does not have a 32 bit floating point format so ndr_short_floats
@@ -745,19 +715,11 @@ int ndr_cray64_to_ieee32
 
 #if IEEE_FLOAT || defined(DEBUG)
 INTERNAL void cvt_cray_to_ieee_double
-#ifdef IDL_PROTOTYPES
 (
     CVT_CRAY input_value,
     CVT_SIGNED_INT options,
     CVT_IEEE_DOUBLE output_value
 )
-#else
-( input_value, options, output_value )
-    CVT_CRAY input_value;
-    CVT_SIGNED_INT options;
-    CVT_IEEE_DOUBLE output_value;
-#endif
-
 {
     int i, round_bit_position;
     UNPACKED_REAL r;
@@ -823,19 +785,11 @@ INTERNAL void cvt_cray_to_ieee_double
 
 #if IEEE_FLOAT || defined(DEBUG)
 INTERNAL void cvt_ibm_short_to_ieee_single
-#ifdef IDL_PROTOTYPES
 (
     CVT_IBM_SHORT input_value,
     CVT_SIGNED_INT options,
     CVT_IEEE_SINGLE output_value
 )
-#else
-( input_value, options, output_value )
-    CVT_IBM_SHORT input_value;
-    CVT_SIGNED_INT options;
-    CVT_IEEE_SINGLE output_value;
-#endif
-
 {
     int i, round_bit_position;
     UNPACKED_REAL r;
@@ -904,19 +858,11 @@ INTERNAL void cvt_ibm_short_to_ieee_single
 
 #if IEEE_FLOAT || defined(DEBUG)
 INTERNAL void cvt_ibm_long_to_ieee_double
-#ifdef IDL_PROTOTYPES
 (
     CVT_IBM_LONG input_value,
     CVT_SIGNED_INT options,
     CVT_IEEE_DOUBLE output_value
 )
-#else
-( input_value, options, output_value )
-    CVT_IBM_LONG input_value;
-    CVT_SIGNED_INT options;
-    CVT_IEEE_DOUBLE output_value;
-#endif
-
 {
     int i, round_bit_position;
     UNPACKED_REAL r;
@@ -980,19 +926,11 @@ INTERNAL void cvt_ibm_long_to_ieee_double
 
 #if VAX_FLOAT || defined(DEBUG)
 INTERNAL void cvt_ieee_single_to_vax_f
-#ifdef IDL_PROTOTYPES
 (
     CVT_IEEE_SINGLE input_value,
     CVT_SIGNED_INT options,
     CVT_VAX_F output_value
 )
-#else
-( input_value, options, output_value )
-    CVT_IEEE_SINGLE input_value;
-    CVT_SIGNED_INT options;
-    CVT_VAX_F output_value;
-#endif
-
 {
     int i, round_bit_position;
     UNPACKED_REAL r;
@@ -1052,19 +990,11 @@ INTERNAL void cvt_ieee_single_to_vax_f
 
 #if VAX_FLOAT || defined(DEBUG)
 INTERNAL void cvt_ieee_double_to_vax_g
-#ifdef IDL_PROTOTYPES
 (
     CVT_IEEE_DOUBLE input_value,
     CVT_SIGNED_INT options,
     CVT_VAX_G output_value
 )
-#else
-( input_value, options, output_value )
-    CVT_IEEE_DOUBLE input_value;
-    CVT_SIGNED_INT options;
-    CVT_VAX_G output_value;
-#endif
-
 {
     int i, round_bit_position;
     UNPACKED_REAL r;
@@ -1129,19 +1059,11 @@ INTERNAL void cvt_ieee_double_to_vax_g
 
 #if VAX_FLOAT || defined(DEBUG)
 INTERNAL void cvt_cray_to_vax_f
-#ifdef IDL_PROTOTYPES
 (
     CVT_CRAY input_value,
     CVT_SIGNED_INT options,
     CVT_VAX_F output_value
 )
-#else
-( input_value, options, output_value )
-    CVT_CRAY input_value;
-    CVT_SIGNED_INT options;
-    CVT_VAX_F output_value;
-#endif
-
 {
     int i, round_bit_position;
     UNPACKED_REAL r;
@@ -1200,19 +1122,11 @@ INTERNAL void cvt_cray_to_vax_f
 
 #if VAX_FLOAT || defined(DEBUG)
 INTERNAL void cvt_cray_to_vax_g
-#ifdef IDL_PROTOTYPES
 (
     CVT_CRAY input_value,
     CVT_SIGNED_INT options,
     CVT_VAX_G output_value
 )
-#else
-( input_value, options, output_value )
-    CVT_CRAY input_value;
-    CVT_SIGNED_INT options;
-    CVT_VAX_G output_value;
-#endif
-
 {
     int i, round_bit_position;
     UNPACKED_REAL r;
@@ -1271,19 +1185,11 @@ INTERNAL void cvt_cray_to_vax_g
 
 #if VAX_FLOAT || defined(DEBUG)
 INTERNAL void cvt_ibm_short_to_vax_f
-#ifdef IDL_PROTOTYPES
 (
     CVT_IBM_SHORT input_value,
     CVT_SIGNED_INT options,
     CVT_VAX_F output_value
 )
-#else
-( input_value, options, output_value )
-    CVT_IBM_SHORT input_value;
-    CVT_SIGNED_INT options;
-    CVT_VAX_F output_value;
-#endif
-
 {
     int i, round_bit_position;
     UNPACKED_REAL r;
@@ -1351,19 +1257,11 @@ INTERNAL void cvt_ibm_short_to_vax_f
 
 #if VAX_FLOAT || defined(DEBUG)
 INTERNAL void cvt_ibm_long_to_vax_g
-#ifdef IDL_PROTOTYPES
 (
     CVT_IBM_LONG input_value,
     CVT_SIGNED_INT options,
     CVT_VAX_G output_value
 )
-#else
-( input_value, options, output_value )
-    CVT_IBM_LONG input_value;
-    CVT_SIGNED_INT options;
-    CVT_VAX_G output_value;
-#endif
-
 {
     int i, round_bit_position;
     UNPACKED_REAL r;
@@ -1427,19 +1325,11 @@ INTERNAL void cvt_ibm_long_to_vax_g
 
 #if CRAY_FLOAT || defined(DEBUG)
 INTERNAL void cvt_ieee_single_to_cray
-#ifdef IDL_PROTOTYPES
 (
     CVT_IEEE_SINGLE input_value,
     CVT_SIGNED_INT options,
     CVT_CRAY output_value
 )
-#else
-( input_value, options, output_value )
-    CVT_IEEE_SINGLE input_value;
-    CVT_SIGNED_INT options;
-    CVT_CRAY output_value;
-#endif
-
 {
     int i, round_bit_position;
     UNPACKED_REAL r;
@@ -1466,17 +1356,10 @@ INTERNAL void cvt_ieee_single_to_cray
  * it directly.
  */
 int ndr_ieee32_to_cray64
-#ifdef IDL_PROTOTYPES
 (
     unsigned32 *ieee_flt,   /* 64 bit entities */
     unsigned32 *cray_flt
 )
-#else
-(ieee_flt, cray_flt)
-    unsigned32 *ieee_flt;   /* 64 bit entities */
-    unsigned32 *cray_flt;
-#endif
-
 {
     /*
      * Cray does not have a 32 bit floating point format so ndr_short_floats
@@ -1541,19 +1424,11 @@ int ndr_ieee32_to_cray64
 
 #if CRAY_FLOAT || defined(DEBUG)
 INTERNAL void cvt_ieee_double_to_cray
-#ifdef IDL_PROTOTYPES
 (
     CVT_IEEE_DOUBLE input_value,
     CVT_SIGNED_INT options,
     CVT_CRAY output_value
 )
-#else
-( input_value, options, output_value )
-    CVT_IEEE_DOUBLE input_value;
-    CVT_SIGNED_INT options;
-    CVT_CRAY output_value;
-#endif
-
 {
     int i, round_bit_position;
     UNPACKED_REAL r;
@@ -1612,19 +1487,11 @@ INTERNAL void cvt_ieee_double_to_cray
 
 #if CRAY_FLOAT || defined(DEBUG)
 INTERNAL void cvt_vax_f_to_cray
-#ifdef IDL_PROTOTYPES
 (
     CVT_VAX_F input_value,
     CVT_SIGNED_INT options,
     CVT_CRAY output_value
 )
-#else
-( input_value, options, output_value )
-    CVT_VAX_F input_value;
-    CVT_SIGNED_INT options;
-    CVT_CRAY output_value;
-#endif
-
 {
     int i, round_bit_position;
     UNPACKED_REAL r;
@@ -1693,19 +1560,11 @@ INTERNAL void cvt_vax_f_to_cray
 
 #if CRAY_FLOAT || defined(DEBUG)
 INTERNAL void cvt_vax_g_to_cray
-#ifdef IDL_PROTOTYPES
 (
     CVT_VAX_G input_value,
     CVT_SIGNED_INT options,
     CVT_CRAY output_value
 )
-#else
-( input_value, options, output_value )
-    CVT_VAX_G input_value;
-    CVT_SIGNED_INT options;
-    CVT_CRAY output_value;
-#endif
-
 {
     int i, round_bit_position;
     UNPACKED_REAL r;
@@ -1759,19 +1618,11 @@ INTERNAL void cvt_vax_g_to_cray
 
 #if CRAY_FLOAT
 INTERNAL void cvt_ibm_short_to_cray
-#ifdef IDL_PROTOTYPES
 (
     CVT_IBM_SHORT input_value,
     CVT_SIGNED_INT options,
     CVT_CRAY output_value
 )
-#else
-( input_value, options, output_value )
-    CVT_IBM_SHORT input_value;
-    CVT_SIGNED_INT options;
-    CVT_CRAY output_value;
-#endif
-
 {
     int i, round_bit_position;
     UNPACKED_REAL r;
@@ -1825,19 +1676,11 @@ INTERNAL void cvt_ibm_short_to_cray
 
 #if CRAY_FLOAT 
 INTERNAL void cvt_ibm_long_to_cray
-#ifdef IDL_PROTOTYPES
 (
     CVT_IBM_LONG input_value,
     CVT_SIGNED_INT options,
     CVT_CRAY output_value
 )
-#else
-( input_value, options, output_value )
-    CVT_IBM_LONG input_value;
-    CVT_SIGNED_INT options;
-    CVT_CRAY output_value;
-#endif
-
 {
     int i, round_bit_position;
     UNPACKED_REAL r;
@@ -1910,19 +1753,11 @@ INTERNAL void cvt_ibm_long_to_cray
 
 #if IBM_FLOAT || defined(DEBUG)
 INTERNAL void cvt_ieee_single_to_ibm_short
-#ifdef IDL_PROTOTYPES
 (
     CVT_IEEE_SINGLE input_value,
     CVT_SIGNED_INT options,
     CVT_IBM_SHORT output_value
 )
-#else
-( input_value, options, output_value )
-    CVT_IEEE_SINGLE input_value;
-    CVT_SIGNED_INT options;
-    CVT_IBM_SHORT output_value;
-#endif
-
 {
     int i, j, round_bit_position;
     UNPACKED_REAL r;
@@ -1982,19 +1817,11 @@ INTERNAL void cvt_ieee_single_to_ibm_short
 
 #if IBM_FLOAT || defined(DEBUG)
 INTERNAL void cvt_ieee_double_to_ibm_long
-#ifdef IDL_PROTOTYPES
 (
     CVT_IEEE_DOUBLE input_value,
     CVT_SIGNED_INT options,
     CVT_IBM_LONG output_value
 )
-#else
-( input_value, options, output_value )
-    CVT_IEEE_DOUBLE input_value;
-    CVT_SIGNED_INT options;
-    CVT_IBM_LONG output_value;
-#endif
-
 {
     int i, j, round_bit_position;
     UNPACKED_REAL r;
@@ -2062,19 +1889,11 @@ INTERNAL void cvt_ieee_double_to_ibm_long
 
 #if IBM_FLOAT || defined(DEBUG)
 INTERNAL void cvt_vax_f_to_ibm_short
-#ifdef IDL_PROTOTYPES
 (
     CVT_VAX_F input_value,
     CVT_SIGNED_INT options,
     CVT_IBM_SHORT output_value
 )
-#else
-( input_value, options, output_value )
-    CVT_VAX_F input_value;
-    CVT_SIGNED_INT options;
-    CVT_IBM_SHORT output_value;
-#endif
-
 {
     int i, j, round_bit_position;
     UNPACKED_REAL r;
@@ -2133,19 +1952,11 @@ INTERNAL void cvt_vax_f_to_ibm_short
 
 #if IBM_FLOAT || defined(DEBUG)
 INTERNAL void cvt_vax_g_to_ibm_long
-#ifdef IDL_PROTOTYPES
 (
     CVT_VAX_G input_value,
     CVT_SIGNED_INT options,
     CVT_IBM_LONG output_value
 )
-#else
-( input_value, options, output_value )
-    CVT_VAX_G input_value;
-    CVT_SIGNED_INT options;
-    CVT_IBM_LONG output_value;
-#endif
-
 {
     int i, j, round_bit_position;
     UNPACKED_REAL r;
@@ -2198,19 +2009,11 @@ INTERNAL void cvt_vax_g_to_ibm_long
 
 #if IBM_FLOAT
 INTERNAL void cvt_cray_to_ibm_short
-#ifdef IDL_PROTOTYPES
 (
     CVT_CRAY input_value,
     CVT_SIGNED_INT options,
     CVT_IBM_SHORT output_value
 )
-#else
-( input_value, options, output_value )
-    CVT_CRAY input_value;
-    CVT_SIGNED_INT options;
-    CVT_IBM_SHORT output_value;
-#endif
-
 {
     int i, j, round_bit_position;
     UNPACKED_REAL r;
@@ -2263,19 +2066,11 @@ INTERNAL void cvt_cray_to_ibm_short
 
 #if IBM_FLOAT
 INTERNAL void cvt_cray_to_ibm_long
-#ifdef IDL_PROTOTYPES
 (
     CVT_CRAY input_value,
     CVT_SIGNED_INT options,
     CVT_IBM_LONG output_value
 )
-#else
-( input_value, options, output_value )
-    CVT_CRAY input_value;
-    CVT_SIGNED_INT options;
-    CVT_IBM_LONG output_value;
-#endif
-
 {
     int i, j, round_bit_position;
     UNPACKED_REAL r;
@@ -2304,7 +2099,6 @@ INTERNAL void cvt_cray_to_ibm_long
  */
 
 INTERNAL void cvt_float
-#ifdef IDL_PROTOTYPES
 (
     ndr_format_t sdrep,
     ndr_format_t ddrep,
@@ -2312,15 +2106,6 @@ INTERNAL void cvt_float
     unsigned_char_t *dstp,
     ndr_boolean longf
 )
-#else
-(sdrep, ddrep, srcp, dstp, longf)
-    ndr_format_t sdrep;
-    ndr_format_t ddrep;
-    unsigned_char_t *srcp;
-    unsigned_char_t *dstp;
-    ndr_boolean longf;
-#endif
-
 {
     unsigned_char_t buff[8];
     CVT_SIGNED_INT  cvt_options = 0;
@@ -2689,21 +2474,12 @@ INTERNAL void cvt_float
  */
 
 PUBLIC void ndr_cvt_short_float
-#ifdef IDL_PROTOTYPES
 (
     ndr_format_t source_drep,
     ndr_format_t dst_drep,
     short_float_p_t srcp,
     short_float_p_t dstp
 )
-#else
-(source_drep, dst_drep, srcp, dstp)
-    ndr_format_t source_drep;
-    ndr_format_t dst_drep;
-    short_float_p_t srcp;
-    short_float_p_t dstp;
-#endif
-
 {
     cvt_float(source_drep, dst_drep,
               (unsigned_char_t *)srcp, (unsigned_char_t *)dstp,
@@ -2718,21 +2494,12 @@ PUBLIC void ndr_cvt_short_float
  */
 
 PUBLIC void ndr_cvt_long_float
-#ifdef IDL_PROTOTYPES
 (
     ndr_format_t source_drep,
     ndr_format_t dst_drep,
     long_float_p_t srcp,
     long_float_p_t dstp
 )
-#else
-(source_drep, dst_drep, srcp, dstp)
-    ndr_format_t source_drep;
-    ndr_format_t dst_drep;
-    long_float_p_t srcp;
-    long_float_p_t dstp;
-#endif
-
 {
     cvt_float(source_drep, dst_drep,
               (unsigned_char_t *)srcp, (unsigned_char_t *)dstp,

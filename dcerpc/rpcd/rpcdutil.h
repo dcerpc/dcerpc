@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -53,43 +54,43 @@ typedef struct
 
 
 PRIVATE void tower_to_fields
-    _DCE_PROTOTYPE_((
+    (
         twr_p_t         tower,
         twr_fields_t    *tfp,
         error_status_t  *status
-    ));
+    );
         
 PRIVATE void tower_to_addr
-    _DCE_PROTOTYPE_((
+    (
         twr_p_t         tower,
         rpc_addr_p_t    *addr,
         error_status_t  *status
-    ));
+    );
         
 PRIVATE void tower_to_if_id
-    _DCE_PROTOTYPE_((
+    (
         twr_p_t         tower,
         rpc_if_id_t     *if_id,
         error_status_t  *status
-    ));
+    );
 
 PRIVATE void tower_ss_copy
-    _DCE_PROTOTYPE_((
+    (
         twr_p_t         src_tower,
         twr_p_t         *dest_tower,
         error_status_t  *status
-    ));
+    );
 
 
 PRIVATE void ru_sleep_until
-    _DCE_PROTOTYPE_((
+    (
         struct timeval  *starttime, 
         unsigned32      nsecs
-    ));
+    );
 
 PRIVATE void ru_sleep
-    _DCE_PROTOTYPE_((
+    (
         unsigned32      nsecs
-    ));
+    );
 
 #endif

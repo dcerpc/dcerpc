@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -104,44 +105,32 @@ typedef struct options
 
 
 void printflags (
-#ifdef PROTO
     const OPTIONS table[]
-#endif
 );
 
 void getflags (
-#ifdef PROTO
     int argc,
     char **argv,
     const OPTIONS table[]
-#endif
 );
 
 void flags_incr_count (
-#ifdef PROTO
     const OPTIONS table[],
     const char *option,
     int delta
-#endif
 );
 
 int flags_option_count (
-#ifdef PROTO
     const OPTIONS table[],
     const char *option
-#endif
 );
 
 int flags_other_count (
-#ifdef PROTO
     void
-#endif
 );
 
 char *flags_other (
-#ifdef PROTO
     int index
-#endif
 );
 
 

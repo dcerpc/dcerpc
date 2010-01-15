@@ -3,6 +3,7 @@
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
 *                 permission to use, copy, modify, and distribute this
@@ -91,14 +92,9 @@ static void IR_gen_type_rep(
 *  Returns a pointer to the most recently created tuple in the current scope.
 */
 static IR_tup_n_t *IR_cur_tup_p
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p      /* [in] Scope context */
 )
-#else
-(ctx_p)
-	IR_scope_ctx_t      *ctx_p;     /* [in] Scope context */
-#endif
 {
 	IR_type_scope_t *type_s_p;
 
@@ -120,16 +116,10 @@ static IR_tup_n_t *IR_cur_tup_p
 *  pointer to point at the newly inserted tuple.
 */
 static void IR_insert_irep_tup
-#ifdef PROTO
 (
  IR_tup_n_t      *tup_p,         /* [in] Ptr to irep tuple to insert */
  IR_tup_n_t      **p_insert_p    /* [io] Ptr to tuple to insert after */
 )
-#else
-(tup_p, p_insert_p)
-	IR_tup_n_t      *tup_p;         /* [in] Ptr to irep tuple to insert */
-	IR_tup_n_t      **p_insert_p;   /* [io] Ptr to tuple to insert after */
-#endif
 {
 	tup_p->next = (*p_insert_p)->next;
 	(*p_insert_p)->next = tup_p;
@@ -145,16 +135,10 @@ static void IR_insert_irep_tup
 *  off a type node which is referenced by the parameter.
 */
 static IR_tup_n_t *IR_gen_irep_tup  /* Returns ptr to generated tuple */
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p,     /* [io] Scope context */
  IR_opcode_k_t       opcode      /* [in] irep opcode */
 )
-#else
-(ctx_p, opcode)
-	IR_scope_ctx_t      *ctx_p;     /* [io] Scope context */
-	IR_opcode_k_t       opcode;     /* [in] irep opcode */
-#endif
 {
 	IR_tup_n_t          *tup_p;     /* Ptr to irep tuple and args */
 
@@ -188,20 +172,12 @@ static IR_tup_n_t *IR_gen_irep_tup  /* Returns ptr to generated tuple */
 *  additional references to the freed tuple hanging around.
 */
 static void IR_free_irep_tup
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p,     /* [io] Scope context */
  IR_tup_n_t          *tup_p,     /* [in] Ptr to irep tuple to free */
  IR_tup_n_t          *pred_tup_p /* [io] Non-NULL => Ptr to predecessor */
  /* irep tuple; used to unlink from list  */
 )
-#else
-(ctx_p, tup_p, pred_tup_p)
-	IR_scope_ctx_t      *ctx_p;     /* [io] Scope context */
-	IR_tup_n_t          *tup_p;     /* [in] Ptr to irep tuple to free */
-	IR_tup_n_t          *pred_tup_p;/* [io] Non-NULL => Ptr to predecessor */
-	/* irep tuple; used to unlink from list  */
-#endif
 {
 	if (pred_tup_p != NULL)
 	{
@@ -249,16 +225,10 @@ static void IR_free_irep_tup
 *  Returns tuple address if tuple was generated, NULL otherwise.
 */
 static IR_tup_n_t *IR_gen_alignment /* Returns tuple ptr or NULL */
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p,     /* [io] Scope context */
  int                 alignment   /* [in] Required alignment */
 )
-#else
-(ctx_p, alignment)
-	IR_scope_ctx_t      *ctx_p;     /* [io] Scope context */
-	int                 alignment;  /* [in] Required alignment */
-#endif
 {
 	IR_tup_n_t          *tup_p;     /* Ptr to irep tuple and args */
 
@@ -279,14 +249,9 @@ static IR_tup_n_t *IR_gen_alignment /* Returns tuple ptr or NULL */
 *  numbered starting with 1; the function result is parameter 0.
 */
 static unsigned long IR_param_num   /* Returns parameter number */
-#ifdef PROTO
 (
  AST_parameter_n_t   *lookup_p   /* [in] Ptr to AST parameter node */
 )
-#else
-(lookup_p)
-	AST_parameter_n_t   *lookup_p;  /* [in] Ptr to AST parameter node */
-#endif
 {
 	AST_operation_n_t   *oper_p;    /* Ptr to AST operation node */
 	AST_parameter_n_t   *param_p;   /* Ptr to a parameter node to test */
@@ -318,18 +283,11 @@ static unsigned long IR_param_num   /* Returns parameter number */
 *  the nested structure plus one, or 1 if the first field.
 */
 static unsigned long IR_field_num   /* Returns field number */
-#ifdef PROTO
 (
  IR_scope_ctx_t  *ctx_p ATTRIBUTE_UNUSED,         /* [in] Scope context */
  AST_field_n_t   *attr_field_p,  /* [in] Field with a field attribute */
  AST_field_n_t   *lookup_p       /* [in] Field referenced by attribute */
 )
-#else
-(ctx_p, attr_field_p, lookup_p)
-	IR_scope_ctx_t  *ctx_p;         /* [in] Scope context */
-	AST_field_n_t   *attr_field_p;  /* [in] Field with a field attribute */
-	AST_field_n_t   *lookup_p;      /* [in] Field referenced by attribute */
-#endif
 {
 	AST_field_n_t       *field_p;   /* Ptr to a field node to test */
 	unsigned long       field_num;  /* Field number */
@@ -367,7 +325,6 @@ static unsigned long IR_field_num   /* Returns field number */
 *  subsequent references are to the already completed definition.
 */
 static void IR_gen_struct_type_rep
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p,     /* [io] Scope context */
  AST_type_n_t        *type_p,    /* [io] AST struct type node */
@@ -376,15 +333,6 @@ static void IR_gen_struct_type_rep
  boolean         *has_nf_cs_array/* [io] TRUE => struct or a nested struct */
  /* has non-fixed array of [cs_char] field */
 )
-#else
-(ctx_p, type_p, inst_p, field_num_p, has_nf_cs_array)
-	IR_scope_ctx_t      *ctx_p;     /* [io] Scope context */
-	AST_type_n_t        *type_p;    /* [io] AST struct type node */
-	AST_instance_n_t    *inst_p;    /* [in] Ptr to AST instance node */
-	unsigned long       *field_num_p;/*[io] Starting field number */
-	boolean         *has_nf_cs_array;/*[io] TRUE => struct or a nested struct */
-	/* has non-fixed array of [cs_char] field */
-#endif
 {
 	IR_tup_n_t          *tup_p;     /* Ptr to generated IREP tuple */
 	IR_tup_n_t          *cs_tup_p = NULL;  /* Ptr to codeset shadow tuple */
@@ -546,18 +494,11 @@ static void IR_gen_struct_type_rep
 *  type has not yet been processed, generates tuples for the type.
 */
 static void IR_gen_struct_rep
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p,     /* [io] Scope context */
  AST_type_n_t        *type_p,    /* [io] AST type node */
  AST_instance_n_t    *inst_p     /* [in] Ptr to AST instance node */
 )
-#else
-(ctx_p, type_p, inst_p)
-	IR_scope_ctx_t      *ctx_p;     /* [io] Scope context */
-	AST_type_n_t        *type_p;    /* [io] AST type node */
-	AST_instance_n_t    *inst_p;    /* [in] Ptr to AST instance node */
-#endif
 {
 	IR_tup_n_t          *tup_p;     /* Ptr to generated IREP tuple */
 	unsigned long       start_num;  /* Starting field number */
@@ -625,16 +566,10 @@ static void IR_gen_struct_rep
 *  Assumption: first argument is never equal to second argument.
 */
 static int IR_case_info_compare
-#ifdef PROTO
 (
  IR_case_info_n_t    *p1,        /* [io] Ptr to first case info node */
  IR_case_info_n_t    *p2         /* [io] Ptr to second case info node */
 )
-#else
-(p1, p2)
-	IR_case_info_n_t    *p1;        /* [io] Ptr to first case info node */
-	IR_case_info_n_t    *p2;        /* [io] Ptr to second case info node */
-#endif
 {
 	if (p1->value < p2->value)
 		return -1;
@@ -650,18 +585,11 @@ static int IR_case_info_compare
 *  subsequent references are to the already completed definition.
 */
 static void IR_gen_union_type_rep
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p,     /* [io] Scope context */
  AST_type_n_t        *type_p,    /* [io] AST struct type node */
  AST_instance_n_t    *inst_p ATTRIBUTE_UNUSED     /* [in] Ptr to AST instance node */
 )
-#else
-(ctx_p, type_p, inst_p)
-	IR_scope_ctx_t      *ctx_p;     /* [io] Scope context */
-	AST_type_n_t        *type_p;    /* [io] AST struct type node */
-	AST_instance_n_t    *inst_p;    /* [in] Ptr to AST instance node */
-#endif
 {
 	IR_tup_n_t          *tup_p;     /* Ptr to generated IREP tuple */
 	IR_tup_n_t          *beg_tup_p; /* Ptr to 'union begin' tuple */
@@ -755,7 +683,7 @@ static void IR_gen_union_type_rep
 		}
 		/* Sort the array in ascending order of case value. */
 		qsort(array_p, num_arms, sizeof(IR_case_info_n_t),
-#if defined(PROTO) && !(defined(mips) && defined(ultrix))
+#if !(defined(mips) && defined(ultrix))
 				(int (*)(const void *, const void *))
 #endif
 				IR_case_info_compare);
@@ -819,18 +747,11 @@ static void IR_gen_union_type_rep
 *  type has not yet been processed, generates tuples for the type.
 */
 static void IR_gen_disc_union_rep
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p,     /* [io] Scope context */
  AST_type_n_t        *type_p,    /* [io] AST type node */
  AST_instance_n_t    *inst_p     /* [in] Ptr to AST instance node */
 )
-#else
-(ctx_p, type_p, inst_p)
-	IR_scope_ctx_t      *ctx_p;     /* [io] Scope context */
-	AST_type_n_t        *type_p;    /* [io] AST type node */
-	AST_instance_n_t    *inst_p;    /* [in] Ptr to AST instance node */
-#endif
 {
 	IR_tup_n_t          *tup_p;     /* Ptr to generated IREP tuple */
 	AST_field_attr_n_t  *fattr_p;   /* Ptr to AST field attributes node */
@@ -901,18 +822,11 @@ static void IR_gen_disc_union_rep
 *  Generates an IR_op_interface_k tuple.
 */
 static void IR_gen_interface_rep
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p,     /* [io] Scope context */
  AST_type_n_t        *type_p,    /* [io] AST type node */
  AST_instance_n_t    *inst_p     /* [in] Ptr to AST instance node */
 )
-#else
-(ctx_p, type_p, inst_p)
-	IR_scope_ctx_t      *ctx_p;     /* [io] Scope context */
-	AST_type_n_t        *type_p;    /* [io] AST type node */
-	AST_instance_n_t    *inst_p;    /* [in] Ptr to AST instance node */
-#endif
 {
 	IR_tup_n_t          *tup_p;     /* Ptr to generated IREP tuple */
 
@@ -928,18 +842,11 @@ static void IR_gen_interface_rep
 *  Generates an IR_op_*_ptr_k or IR_op_passed_by_ref_k tuple.
 */
 static IR_tup_n_t *IR_gen_ptr_tup   /* Returns ptr to generated tuple */
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p,     /* [io] Scope context */
  AST_type_n_t        *type_p,    /* [in] Ptr to AST type node */
  AST_instance_n_t    *inst_p     /* [in] Ptr to AST instance node */
 )
-#else
-(ctx_p, type_p, inst_p)
-	IR_scope_ctx_t      *ctx_p;     /* [io] Scope context */
-	AST_type_n_t        *type_p;    /* [in] Ptr to AST type node */
-	AST_instance_n_t    *inst_p;    /* [in] Ptr to AST instance node */
-#endif
 {
 	IR_tup_n_t          *tup_p;     /* Ptr to irep tuple and args */
 
@@ -1009,7 +916,6 @@ static IR_tup_n_t *IR_gen_ptr_tup   /* Returns ptr to generated tuple */
 *  Generates an IR_op_*_array_k tuple.
 */
 static IR_tup_n_t *IR_gen_array_tup /* Returns ptr to generated tuple */
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p,     /* [io] Scope context */
  AST_type_n_t        *type_p,    /* [in] Ptr to AST type node */
@@ -1018,15 +924,6 @@ static IR_tup_n_t *IR_gen_array_tup /* Returns ptr to generated tuple */
  /*     object is a [string] array         */
  /*     IR_CS_CHAR iff base type [cs_char] */
 )
-#else
-(ctx_p, type_p, inst_p, flags)
-	IR_scope_ctx_t      *ctx_p;     /* [io] Scope context */
-	AST_type_n_t        *type_p;    /* [in] Ptr to AST type node */
-	AST_instance_n_t    *inst_p;    /* [in] Ptr to AST instance node */
-	IR_flags_t          flags;      /* [in] IREP flags: IR_STRING set iff     */
-	/*     object is a [string] array         */
-	/*     IR_CS_CHAR iff base type [cs_char] */
-#endif
 {
 	IR_tup_n_t          *tup_p;     /* Ptr to irep tuple and args */
 	boolean conformant, varying, string;
@@ -1064,18 +961,11 @@ static IR_tup_n_t *IR_gen_array_tup /* Returns ptr to generated tuple */
  *  we can enable in-line correlation checking
  */
 static boolean IR_bound_early
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p,     /* [io] Scope context */
  AST_instance_n_t    *inst_p,    /* [in] Ptr to AST instance node */
  unsigned long       attribute_index /* [in] index of field attribute */
 )
-#else
-(ctx_p, inst_p, attribute_index)
-	IR_scope_ctx_t      *ctx_p;     /* [io] Scope context */
-	AST_instance_n_t    *inst_p;    /* [in] Ptr to AST instance node */
-	unsigned long       attribute_index; /* [in] index of field attribute */
-#endif
 {
 	unsigned long pf_index;
 
@@ -1099,7 +989,6 @@ static boolean IR_bound_early
  *  of an array.
  */
 static IR_tup_n_t *IR_gen_bound_tups    /* Returns ptr to last tuple gen'd */
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p,     /* [io] Scope context */
  AST_type_n_t        *type_p,    /* [in] Ptr to AST array type node */
@@ -1108,15 +997,6 @@ static IR_tup_n_t *IR_gen_bound_tups    /* Returns ptr to last tuple gen'd */
  /*     object is a [string] array         */
  /*     IR_CS_CHAR iff base type [cs_char] */
 )
-#else
-(ctx_p, type_p, inst_p, flags)
-	IR_scope_ctx_t      *ctx_p;     /* [io] Scope context */
-	AST_type_n_t        *type_p;    /* [in] Ptr to AST array type node */
-	AST_instance_n_t    *inst_p;    /* [in] Ptr to AST instance node */
-	IR_flags_t          flags;      /* [in] IREP flags: IR_STRING set iff     */
-	/*     object is a [string] array         */
-	/*     IR_CS_CHAR iff base type [cs_char] */
-#endif
 {
 	IR_tup_n_t          *tup_p = NULL;     /* Ptr to irep tuple and args */
 	IR_tup_n_t          *lower_tup_p = NULL;
@@ -1305,7 +1185,6 @@ static IR_tup_n_t *IR_gen_bound_tups    /* Returns ptr to last tuple gen'd */
 *  of an array.
 */
 static IR_tup_n_t *IR_gen_limit_tups    /* Returns ptr to last tuple gen'd */
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p,     /* [io] Scope context */
  AST_type_n_t        *type_p,    /* [in] Ptr to AST array type node */
@@ -1314,15 +1193,6 @@ static IR_tup_n_t *IR_gen_limit_tups    /* Returns ptr to last tuple gen'd */
  /*     object is a [string] array         */
  /*     IR_CS_CHAR iff base type [cs_char] */
 )
-#else
-(ctx_p, type_p, inst_p, flags)
-	IR_scope_ctx_t      *ctx_p;     /* [io] Scope context */
-	AST_type_n_t        *type_p;    /* [in] Ptr to AST array type node */
-	AST_instance_n_t    *inst_p;    /* [in] Ptr to AST instance node */
-	IR_flags_t          flags;      /* [in] IREP flags: IR_STRING set iff     */
-	/*     object is a [string] array         */
-	/*     IR_CS_CHAR iff base type [cs_char] */
-#endif
 {
 	IR_tup_n_t          *tup_p = NULL;     /* Ptr to irep tuple and args */
 	IR_tup_n_t          *lower_tup_p = NULL;
@@ -1593,18 +1463,11 @@ static IR_tup_n_t *IR_gen_limit_tups    /* Returns ptr to last tuple gen'd */
 *  of an array of array [of array]... reference.
 */
 static void IR_gen_flat_array_rep
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p,     /* [io] Scope context */
  AST_type_n_t        *type_p,    /* [in] Ptr to AST type node */
  AST_instance_n_t    *inst_p     /* [in] Ptr to AST instance node */
 )
-#else
-(ctx_p, type_p, inst_p)
-	IR_scope_ctx_t      *ctx_p;     /* [io] Scope context */
-	AST_type_n_t        *type_p;    /* [in] Ptr to AST type node */
-	AST_instance_n_t    *inst_p;    /* [in] Ptr to AST instance node */
-#endif
 {
 	IR_tup_n_t          *tup_p;     /* Ptr to irep tuple and args */
 	AST_type_n_t        *atype_p;   /* Ptr to an array type */
@@ -1706,7 +1569,6 @@ static void IR_gen_flat_array_rep
 *  Generates tuples for an array reference.
 */
 static void IR_gen_array_rep
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p,     /* [io] Scope context */
  AST_type_n_t        *type_p,    /* [in] Ptr to AST type node */
@@ -1714,14 +1576,6 @@ static void IR_gen_array_rep
  IR_flags_t          flags       /* [in] IREP flags: IR_STRING set iff */
  /*      object is a [string] array    */
 )
-#else
-(ctx_p, type_p, inst_p, flags)
-	IR_scope_ctx_t      *ctx_p;     /* [io] Scope context */
-	AST_type_n_t        *type_p;    /* [in] Ptr to AST type node */
-	AST_instance_n_t    *inst_p;    /* [in] Ptr to AST instance node */
-	IR_flags_t          flags;      /* [in] IREP flags: IR_STRING set iff */
-	/*      object is a [string] array    */
-#endif
 {
 	IR_tup_n_t          *tup_p;     /* Ptr to irep tuple and args */
 	AST_array_n_t       *array_p;   /* Ptr to AST array node */
@@ -1843,18 +1697,11 @@ static void IR_gen_array_rep
 *  representation of the multidimensional array.
 */
 static void IR_gen_multid_aos
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p,     /* [io] Scope context */
  AST_type_n_t        *type_p,    /* [in] Ptr to AST type node */
  AST_instance_n_t    *inst_p     /* [in] Ptr to AST instance node */
 )
-#else
-(ctx_p, type_p, inst_p)
-	IR_scope_ctx_t      *ctx_p;     /* [io] Scope context */
-	AST_type_n_t        *type_p;    /* [in] Ptr to AST type node */
-	AST_instance_n_t    *inst_p;    /* [in] Ptr to AST instance node */
-#endif
 {
 	AST_array_n_t       *array_p;       /* Ptr to AST array node */
 	AST_array_index_n_t *index_p;       /* Ptr to AST array index node */
@@ -1924,18 +1771,11 @@ static void IR_gen_multid_aos
 *  Generates tuples for a pointer/pointee reference.
 */
 static void IR_gen_pointer_rep
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p,     /* [io] Scope context */
  AST_type_n_t        *type_p,    /* [in] Ptr to AST type node */
  AST_instance_n_t    *inst_p     /* [in] Ptr to AST instance node */
 )
-#else
-(ctx_p, type_p, inst_p)
-	IR_scope_ctx_t      *ctx_p;     /* [io] Scope context */
-	AST_type_n_t        *type_p;    /* [in] Ptr to AST type node */
-	AST_instance_n_t    *inst_p;    /* [in] Ptr to AST instance node */
-#endif
 {
 	IR_tup_n_t          *tup_p;     /* Ptr to irep tuple and args */
 	AST_type_n_t    *arr_rep_type_p;/* Array rep type for arrayified pointer */
@@ -2052,18 +1892,11 @@ static void IR_gen_pointer_rep
 *  Generates tuples for a [transmit_as] type definition.
 */
 static void IR_gen_xmit_as_type_rep
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p,     /* [io] Scope context */
  AST_type_n_t        *type_p,    /* [io] AST type node */
  AST_instance_n_t    *inst_p ATTRIBUTE_UNUSED    /* [in] Ptr to AST instance node */
 )
-#else
-(ctx_p, type_p, inst_p)
-	IR_scope_ctx_t      *ctx_p;     /* [io] Scope context */
-	AST_type_n_t        *type_p;    /* [io] AST type node */
-	AST_instance_n_t    *inst_p;    /* [in] Ptr to AST instance node */
-#endif
 {
 	IR_tup_n_t          *tup_p;     /* Ptr to irep tuple and args */
 
@@ -2110,18 +1943,11 @@ static void IR_gen_xmit_as_type_rep
 *  type has not yet been processed, generates tuples for the type.
 */
 static void IR_gen_xmit_as_rep
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p,     /* [io] Scope context */
  AST_type_n_t        *type_p,    /* [io] AST type node */
  AST_instance_n_t    *inst_p     /* [in] Ptr to AST instance node */
 )
-#else
-(ctx_p, type_p, inst_p)
-	IR_scope_ctx_t      *ctx_p;     /* [io] Scope context */
-	AST_type_n_t        *type_p;    /* [io] AST type node */
-	AST_instance_n_t    *inst_p;    /* [in] Ptr to AST instance node */
-#endif
 {
 	IR_tup_n_t          *tup_p;     /* Ptr to irep tuple and args */
 
@@ -2166,18 +1992,11 @@ static void IR_gen_xmit_as_rep
 *  Generates tuples for a [represent_as] type definition.
 */
 static void IR_gen_repr_as_type_rep
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p,     /* [io] Scope context */
  AST_type_n_t        *type_p,    /* [io] AST type node */
  AST_instance_n_t    *inst_p ATTRIBUTE_UNUSED    /* [in] Ptr to AST instance node */
 )
-#else
-(ctx_p, type_p, inst_p)
-	IR_scope_ctx_t      *ctx_p;     /* [io] Scope context */
-	AST_type_n_t        *type_p;    /* [io] AST type node */
-	AST_instance_n_t    *inst_p;    /* [in] Ptr to AST instance node */
-#endif
 {
 	IR_tup_n_t          *tup_p;     /* Ptr to irep tuple and args */
 
@@ -2223,18 +2042,11 @@ static void IR_gen_repr_as_type_rep
 *  Generates tuples for a [represent_as] type.
 */
 static void IR_gen_repr_as_rep
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p,     /* [io] Scope context */
  AST_type_n_t        *type_p,    /* [io] AST type node */
  AST_instance_n_t    *inst_p     /* [in] Ptr to AST instance node */
 )
-#else
-(ctx_p, type_p, inst_p)
-	IR_scope_ctx_t      *ctx_p;     /* [io] Scope context */
-	AST_type_n_t        *type_p;    /* [io] AST type node */
-	AST_instance_n_t    *inst_p;    /* [in] Ptr to AST instance node */
-#endif
 {
 	IR_tup_n_t          *tup_p;     /* Ptr to irep tuple and args */
 	AST_rep_as_n_t      *rep_p;     /* Ptr to AST represent_as node */
@@ -2284,18 +2096,11 @@ static void IR_gen_repr_as_rep
 *  Generates tuples for a [cs_char] type definition.
 */
 static void IR_gen_cs_char_type_rep
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p,     /* [io] Scope context */
  AST_type_n_t        *type_p,    /* [io] AST type node */
  AST_instance_n_t    *inst_p ATTRIBUTE_UNUSED    /* [in] Ptr to AST instance node */
 )
-#else
-(ctx_p, type_p, inst_p)
-	IR_scope_ctx_t      *ctx_p;     /* [io] Scope context */
-	AST_type_n_t        *type_p;    /* [io] AST type node */
-	AST_instance_n_t    *inst_p;    /* [in] Ptr to AST instance node */
-#endif
 {
 	IR_tup_n_t          *tup_p;     /* Ptr to irep tuple and args */
 
@@ -2331,18 +2136,11 @@ static void IR_gen_cs_char_type_rep
 *  Generates tuples for a [cs_char] type.
 */
 static void IR_gen_cs_char_rep
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p,     /* [io] Scope context */
  AST_type_n_t        *type_p,    /* [io] AST type node */
  AST_instance_n_t    *inst_p     /* [in] Ptr to AST instance node */
 )
-#else
-(ctx_p, type_p, inst_p)
-	IR_scope_ctx_t      *ctx_p;     /* [io] Scope context */
-	AST_type_n_t        *type_p;    /* [io] AST type node */
-	AST_instance_n_t    *inst_p;    /* [in] Ptr to AST instance node */
-#endif
 {
 	IR_tup_n_t          *tup_p;     /* Ptr to irep tuple and args */
 	AST_cs_char_n_t     *ichar_p;   /* Ptr to AST cs_char node */
@@ -2388,18 +2186,11 @@ static void IR_gen_cs_char_rep
 *  Generates tuples for a pipe type definition.
 */
 static void IR_gen_pipe_type_rep
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p,     /* [io] Scope context */
  AST_type_n_t        *type_p,    /* [io] AST type node */
  AST_instance_n_t    *inst_p ATTRIBUTE_UNUSED    /* [in] Ptr to AST instance node */
 )
-#else
-(ctx_p, type_p, inst_p)
-	IR_scope_ctx_t      *ctx_p;     /* [io] Scope context */
-	AST_type_n_t        *type_p;    /* [io] AST type node */
-	AST_instance_n_t    *inst_p;    /* [in] Ptr to AST instance node */
-#endif
 {
 	IR_tup_n_t          *tup_p;     /* Ptr to irep tuple and args */
 	AST_pipe_n_t        *pipe_p;    /* Ptr to AST pipe node */
@@ -2435,18 +2226,11 @@ static void IR_gen_pipe_type_rep
 *  not yet been processed, generates tuples for the type.
 */
 static void IR_gen_pipe_rep
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p,     /* [io] Scope context */
  AST_type_n_t        *type_p,    /* [io] AST type node */
  AST_instance_n_t    *inst_p     /* [in] Ptr to AST instance node */
 )
-#else
-(ctx_p, type_p, inst_p)
-	IR_scope_ctx_t      *ctx_p;     /* [io] Scope context */
-	AST_type_n_t        *type_p;    /* [io] AST type node */
-	AST_instance_n_t    *inst_p;    /* [in] Ptr to AST instance node */
-#endif
 {
 	IR_tup_n_t          *tup_p;     /* Ptr to irep tuple and args */
 
@@ -2487,18 +2271,11 @@ static void IR_gen_pipe_rep
 *  Generates tuples for a [context_handle] type.
 */
 static void IR_gen_context_rep
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p,     /* [io] Scope context */
  AST_type_n_t        *type_p,    /* [in] Ptr to AST type node */
  AST_parameter_n_t   *param_p    /* [in] Ptr to AST parameter node */
 )
-#else
-(ctx_p, type_p, param_p)
-	IR_scope_ctx_t      *ctx_p;     /* [io] Scope context */
-	AST_type_n_t        *type_p;    /* [in] Ptr to AST type node */
-	AST_parameter_n_t   *param_p;   /* [in] Ptr to AST parameter node */
-#endif
 {
 	IR_tup_n_t          *tup_p;     /* Ptr to irep tuple and args */
 
@@ -2517,18 +2294,11 @@ static void IR_gen_context_rep
 *  Generates tuples for a scalar type.
 */
 static void IR_gen_scalar_rep
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p,     /* [io] Scope context */
  AST_type_n_t        *type_p,    /* [in] Ptr to AST type node */
  AST_instance_n_t    *inst_p     /* [in] Ptr to AST instance node */
 )
-#else
-(ctx_p, type_p, inst_p)
-	IR_scope_ctx_t      *ctx_p;     /* [io] Scope context */
-	AST_type_n_t        *type_p;    /* [in] Ptr to AST type node */
-	AST_instance_n_t    *inst_p;    /* [in] Ptr to AST instance node */
-#endif
 {
 	IR_tup_n_t          *tup_p;     /* Ptr to irep tuple and args */
 
@@ -2570,20 +2340,12 @@ static void IR_gen_scalar_rep
 *  Generates tuples for a type reference.
 */
 static void IR_gen_type_rep
-#ifdef PROTO
 (
  IR_scope_ctx_t      *ctx_p,     /* [io] Scope context */
  AST_type_n_t        *type_p,    /* [in] Ptr to AST type node */
  AST_instance_n_t    *inst_p,    /* [in] Ptr to AST instance node */
  IR_flags_t          flags       /* [in] IREP flags */
 )
-#else
-(ctx_p, type_p, inst_p, flags)
-	IR_scope_ctx_t      *ctx_p;     /* [io] Scope context */
-	AST_type_n_t        *type_p;    /* [in] Ptr to AST type node */
-	AST_instance_n_t    *inst_p;    /* [in] Ptr to AST instance node */
-	IR_flags_t          flags;      /* [in] IREP flags */
-#endif
 {
 	/*
 	 * Must test for [represent_as] before [transmit_as].  Types with both
@@ -2716,14 +2478,9 @@ static void IR_gen_type_rep
 *  Generates tuples to describe an operation parameter.
 */
 void IR_gen_param_rep
-#ifdef PROTO
 (
  AST_parameter_n_t   *param_p    /* [io] AST parameter node */
 )
-#else
-(param_p)
-	AST_parameter_n_t   *param_p;   /* [io] AST parameter node */
-#endif
 {
 	IR_scope_ctx_t      *ctx_p;     /* Scope context */
 	IR_tup_n_t          *tup_p;     /* Ptr to generated IREP tuple */
@@ -2780,18 +2537,11 @@ void IR_gen_param_rep
 *  Tuples that describe the irep are hung off AST parameter and type nodes.
 */
 boolean IR_gen_irep                 /* Returns TRUE on success */
-#ifdef PROTO
 (
  boolean             *cmd_opt ATTRIBUTE_UNUSED,   /* [in] array of cmd option flags */
  void                **cmd_val ATTRIBUTE_UNUSED,  /* [in] array of cmd option values */
  struct AST_interface_n_t *int_p /* [io] interface abstract syntax tree */
 )
-#else
-(cmd_opt, cmd_val, int_p)
-	boolean             *cmd_opt;   /* [in] array of cmd option flags */
-	void                **cmd_val;  /* [in] array of cmd option values */
-	struct AST_interface_n_t *int_p;/* [io] interface abstract syntax tree */
-#endif
 {
 	AST_export_n_t      *export_p;
 	AST_operation_n_t   *oper_p;

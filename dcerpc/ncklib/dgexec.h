@@ -1,8 +1,9 @@
 /*
- * 
+ *
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -16,7 +17,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
  */
@@ -28,11 +29,11 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
-**  DG protocol service routines.  
+**  DG protocol service routines.
 **
 **
 */
@@ -40,14 +41,10 @@
 #ifndef _DGEXEC_H
 #define _DGEXEC_H
 
-#ifndef _DCE_PROTOTYPE_
-#include <dce/dce.h>
-#endif
-
-PRIVATE void rpc__dg_execute_call    _DCE_PROTOTYPE_((
+PRIVATE void rpc__dg_execute_call    (
         pointer_t  /*scall_*/,
         boolean32  /*call_was_queued*/
-    ));
+    );
 
 /*
  * To implement backward compatibilty, declare a pointer to a routine
@@ -62,7 +59,7 @@ PRIVATE void rpc__dg_execute_call    _DCE_PROTOTYPE_((
  * compatibilty code.
  */
 
-typedef void (*rpc__dg_pre_v2_server_fn_t) _DCE_PROTOTYPE_ ((
+typedef void (*rpc__dg_pre_v2_server_fn_t) (
         rpc_if_rep_p_t  /*ifspec*/,
         unsigned32  /*opnum*/,
         handle_t  /*h*/,
@@ -72,6 +69,6 @@ typedef void (*rpc__dg_pre_v2_server_fn_t) _DCE_PROTOTYPE_ ((
         rpc_v2_server_stub_epv_t  /*server_stub_epv*/,
         rpc_mgr_epv_t  /*mgr_epv*/,
         unsigned32 * /*st*/
-    )); 
-                                                               
+    );
+
 #endif /* _DGEXEC_H */

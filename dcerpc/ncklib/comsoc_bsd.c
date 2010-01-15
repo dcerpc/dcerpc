@@ -4,7 +4,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
+ * Portions Copyright (c) 2009-2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -422,14 +422,9 @@ rpc__bsd_socket_close_basic(
  */
 
 INTERNAL rpc_socket_error_t rpc__bsd_socket_destruct
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock
 )
-#else
-(sock)
-rpc_socket_t        sock;
-#endif
 {
     rpc_socket_error_t  serr;
 
@@ -451,16 +446,10 @@ rpc_socket_t        sock;
  */
 
 INTERNAL rpc_socket_error_t rpc__bsd_socket_bind
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock,
     rpc_addr_p_t        addr
 )
-#else
-(sock, addr)
-rpc_socket_t        sock;
-rpc_addr_p_t        addr;
-#endif
 {
     rpc_socket_error_t  serr = EINVAL;
     unsigned32 status;
@@ -648,18 +637,11 @@ rpc_addr_p_t        addr;
  */
 
 INTERNAL rpc_socket_error_t rpc__bsd_socket_connect
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock,
     rpc_addr_p_t        addr,
     rpc_cn_assoc_t      *assoc ATTRIBUTE_UNUSED
 )
-#else
-(sock, addr, binding_rep)
-rpc_socket_t        sock;
-rpc_addr_p_t        addr;
-rpc_cn_assoc_t     *assoc;
-#endif
 {
     rpc_socket_error_t  serr;
     //rpc_binding_rep_t *binding_rep;
@@ -711,18 +693,11 @@ connect_again:
  */
 
 INTERNAL rpc_socket_error_t rpc__bsd_socket_accept
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock,
     rpc_addr_p_t        addr,
     rpc_socket_t        *newsock
 )
-#else
-(sock, addr, newsock)
-rpc_socket_t        sock;
-rpc_addr_p_t        addr;
-rpc_socket_t        *newsock;
-#endif
 {
     rpc_socket_error_t  serr;
 
@@ -775,16 +750,10 @@ accept_again:
  */
 
 INTERNAL rpc_socket_error_t rpc__bsd_socket_listen
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock,
     int                 backlog
 )
-#else
-(sock, backlog)
-rpc_socket_t        sock;
-int                 backlog;
-#endif
 {
     rpc_socket_error_t  serr;
 
@@ -806,7 +775,6 @@ int                 backlog;
  */
 
 INTERNAL rpc_socket_error_t rpc__bsd_socket_sendmsg
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock,
     rpc_socket_iovec_p_t iov,       /* array of bufs of data to send */
@@ -814,14 +782,6 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_sendmsg
     rpc_addr_p_t        addr,       /* addr of receiver */
     int                 *cc        /* returned number of bytes actually sent */
 )
-#else
-(sock, iov, iov_len, addr, cc)
-rpc_socket_t        sock;
-rpc_socket_iovec_p_t iov;       /* array of bufs of data to send */
-int                 iov_len;    /* number of bufs */
-rpc_addr_p_t        addr;       /* addr of receiver */
-int                 *cc;        /* returned number of bytes actually sent */
-#endif
 {
     rpc_socket_error_t serr;
 
@@ -843,7 +803,6 @@ int                 *cc;        /* returned number of bytes actually sent */
  */
 
 INTERNAL rpc_socket_error_t rpc__bsd_socket_recvfrom
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock,
     byte_p_t            buf,        /* buf for rcvd data */
@@ -851,14 +810,6 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_recvfrom
     rpc_addr_p_t        from,       /* addr of sender */
     int                 *cc        /* returned number of bytes actually rcvd */
 )
-#else
-(sock, buf, len, from, cc)
-rpc_socket_t        sock;
-byte_p_t            buf;        /* buf for rcvd data */
-int                 len;        /* len of above buf */
-rpc_addr_p_t        from;       /* addr of sender */
-int                 *cc;        /* returned number of bytes actually rcvd */
-#endif
 {
     rpc_socket_error_t serr;
 
@@ -879,7 +830,6 @@ int                 *cc;        /* returned number of bytes actually rcvd */
  */
 
 INTERNAL rpc_socket_error_t rpc__bsd_socket_recvmsg
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock,
     rpc_socket_iovec_p_t iov,       /* array of bufs for rcvd data */
@@ -887,14 +837,6 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_recvmsg
     rpc_addr_p_t        addr,       /* addr of sender */
     int                 *cc        /* returned number of bytes actually rcvd */
 )
-#else
-(sock, iov, iov_len, addr, cc)
-rpc_socket_t        sock;
-rpc_socket_iovec_p_t iov;       /* array of bufs for rcvd data */
-int                 iov_len;    /* number of bufs */
-rpc_addr_p_t        addr;       /* addr of sender */
-int                 *cc;        /* returned number of bytes actually rcvd */
-#endif
 {
     rpc_socket_error_t serr;
 
@@ -922,16 +864,10 @@ int                 *cc;        /* returned number of bytes actually rcvd */
  */
 
 INTERNAL rpc_socket_error_t rpc__bsd_socket_inq_endpoint
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock,
     rpc_addr_p_t        addr
 )
-#else
-(sock, addr)
-rpc_socket_t        sock;
-rpc_addr_p_t        addr;
-#endif
 {
     rpc_socket_error_t  serr;
 
@@ -953,14 +889,9 @@ rpc_addr_p_t        addr;
  */
 
 INTERNAL rpc_socket_error_t rpc__bsd_socket_set_broadcast
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock
 )
-#else
-(sock)
-rpc_socket_t        sock;
-#endif
 {
 #ifdef SO_BROADCAST
     int                 setsock_val = 1;
@@ -999,8 +930,6 @@ rpc_socket_t        sock;
  */
 
 INTERNAL rpc_socket_error_t rpc__bsd_socket_set_bufs
-
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock,
     unsigned32          txsize,
@@ -1008,14 +937,6 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_set_bufs
     unsigned32          *ntxsize,
     unsigned32          *nrxsize
 )
-#else
-(sock, txsize, rxsize, ntxsize, nrxsize)
-rpc_socket_t        sock;
-unsigned32          txsize;
-unsigned32          rxsize;
-unsigned32          *ntxsize;
-unsigned32          *nrxsize;
-#endif
 {
     socklen_t sizelen;
     int e;
@@ -1113,14 +1034,9 @@ unsigned32          *nrxsize;
  */
 
 INTERNAL rpc_socket_error_t rpc__bsd_socket_set_nbio
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock
 )
-#else
-(sock)
-rpc_socket_t        sock;
-#endif
 {
     rpc_socket_error_t  serr;
 
@@ -1146,14 +1062,9 @@ rpc_socket_t        sock;
  */
 
 INTERNAL rpc_socket_error_t rpc__bsd_socket_set_close_on_exec
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock
 )
-#else
-(sock)
-rpc_socket_t        sock;
-#endif
 {
     rpc_socket_error_t  serr;
 
@@ -1177,16 +1088,10 @@ rpc_socket_t        sock;
  */
 
 INTERNAL rpc_socket_error_t rpc__bsd_socket_getpeername
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t sock,
     rpc_addr_p_t addr
 )
-#else
-(sock, addr)
-rpc_socket_t sock;
-rpc_addr_p_t addr;
-#endif
 {
     rpc_socket_error_t serr;
 
@@ -1208,16 +1113,10 @@ rpc_addr_p_t addr;
  */
 
 INTERNAL rpc_socket_error_t rpc__bsd_socket_get_if_id
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock,
     rpc_network_if_id_t *network_if_id
 )
-#else
-(sock, network_if_id)
-rpc_socket_t        sock;
-rpc_network_if_id_t *network_if_id;
-#endif
 {
     socklen_t optlen;
     rpc_socket_error_t serr;
@@ -1247,14 +1146,9 @@ rpc_network_if_id_t *network_if_id;
  */
 
 INTERNAL rpc_socket_error_t rpc__bsd_socket_set_keepalive
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock
 )
-#else
-(sock)
-rpc_socket_t        sock;
-#endif
 {
 #ifdef SO_KEEPALIVE
     int                 setsock_val = 1;
@@ -1286,16 +1180,10 @@ rpc_socket_t        sock;
  */
 
 INTERNAL rpc_socket_error_t rpc__bsd_socket_nowriteblock_wait
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t sock,
     struct timeval *tmo
 )
-#else
-(sock, tmo)
-rpc_socket_t sock;
-struct timeval *tmo;
-#endif
 {
     fd_set  write_fds;
     int     nfds, num_found;
@@ -1336,16 +1224,10 @@ struct timeval *tmo;
  */
 
 INTERNAL rpc_socket_error_t rpc__bsd_socket_set_rcvtimeo
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t        sock,
     struct timeval      *tmo
 )
-#else
-(sock)
-rpc_socket_t        sock;
-struct timeval      *tmo;
-#endif
 {
 #ifdef SO_RCVTIMEO
     rpc_socket_error_t  serr;
@@ -1372,18 +1254,11 @@ struct timeval      *tmo;
  */
 
 INTERNAL rpc_socket_error_t rpc__bsd_socket_getpeereid
-#ifdef _DCE_PROTO_
 (
     ATTRIBUTE_UNUSED rpc_socket_t        sock,
     ATTRIBUTE_UNUSED uid_t		*euid,
     ATTRIBUTE_UNUSED gid_t		*egid
 )
-#else
-(sock, euid, egid)
-ATTRIBUTE_UNUSED rpc_socket_t        sock;
-ATTRIBUTE_UNUSED uid_t		    *euid;
-ATTRIBUTE_UNUSED gid_t		    *egid;
-#endif
 {
     rpc_socket_error_t  serr = RPC_C_SOCKET_ENOTSUP;
 

@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -62,89 +63,89 @@
 
 /* ========================================================================= */
 
-INTERNAL void swab_hdr _DCE_PROTOTYPE_((
+INTERNAL void swab_hdr (
         rpc_dg_recvq_elt_p_t  /*rqe*/
-    ));
+    );
 
-INTERNAL unsigned32 recv_pkt _DCE_PROTOTYPE_((
+INTERNAL unsigned32 recv_pkt (
         rpc_dg_sock_pool_elt_p_t  /*sp*/,
         rpc_dg_recvq_elt_p_t  /*rqe*/
-    ));
+    );
 
-INTERNAL unsigned32 recv_pkt_private _DCE_PROTOTYPE_((
+INTERNAL unsigned32 recv_pkt_private (
         rpc_dg_sock_pool_elt_p_t  /*sp*/,
         rpc_dg_recvq_elt_p_t  /*rqe*/
-    ));
+    );
 
-INTERNAL void do_selective_ack _DCE_PROTOTYPE_((
+INTERNAL void do_selective_ack (
         rpc_dg_recvq_elt_p_t  /*rqe*/,
         rpc_dg_call_p_t  /*call*/,
         unsigned32 * /*window_incr*/,
         unsigned32 * /*rexmit_cnt*/,
         unsigned32  /*curr_serial*/
-    ));
+    );
 
-INTERNAL void do_fack_body _DCE_PROTOTYPE_((
+INTERNAL void do_fack_body (
         rpc_dg_recvq_elt_p_t  /*rqe*/,
         rpc_dg_call_p_t  /*call*/,
         unsigned32 * /*window_incr*/,
         unsigned32 * /*rexmit_cnt*/,
         unsigned32  /*curr_serial*/
-    ));
+    );
 
-INTERNAL boolean do_fack _DCE_PROTOTYPE_((
+INTERNAL boolean do_fack (
         rpc_dg_sock_pool_elt_p_t  /*sp*/,
         rpc_dg_recvq_elt_p_t  /*rqe*/
-    ));
+    );
 
-INTERNAL void marshall_uuid _DCE_PROTOTYPE_((
+INTERNAL void marshall_uuid (
         char * /*p*/,
         uuid_p_t  /*uuid*/
-    ));
+    );
 
 /* ========================================================================= */
 
-INTERNAL void conv_stub_who_are_you _DCE_PROTOTYPE_((
+INTERNAL void conv_stub_who_are_you (
         rpc_dg_recvq_elt_p_t  /*rqe*/,
         rpc_dg_pkt_hdr_p_t  /*resp_hdrp*/,
         uuid_p_t  /*clt_actid*/,
         unsigned32  /*clt_boot*/
-    ));
+    );
 
-INTERNAL void conv_stub_who_are_you2 _DCE_PROTOTYPE_((
+INTERNAL void conv_stub_who_are_you2 (
         rpc_dg_recvq_elt_p_t  /*rqe*/,
         rpc_dg_pkt_hdr_p_t  /*resp_hdrp*/,
         uuid_p_t  /*clt_actid*/,
         unsigned32  /*clt_boot*/
-    ));
+    );
 
-INTERNAL void conv_stub_are_you_there _DCE_PROTOTYPE_((
+INTERNAL void conv_stub_are_you_there (
         rpc_dg_recvq_elt_p_t  /*rqe*/,
         rpc_dg_pkt_hdr_p_t  /*resp_hdrp*/,
         uuid_p_t  /*clt_actid*/,
         unsigned32  /*clt_boot*/
-    ));
+    );
 
-INTERNAL void conv_stub_who_are_you_auth _DCE_PROTOTYPE_((
+INTERNAL void conv_stub_who_are_you_auth (
         rpc_dg_recvq_elt_p_t  /*rqe*/,
         rpc_dg_pkt_hdr_p_t  /*resp_hdrp*/,
         uuid_p_t  /*clt_actid*/,
         unsigned32  /*clt_boot*/
-    ));
+    );
 
-typedef void (*conv_stub_t) _DCE_PROTOTYPE_((
+typedef void (*conv_stub_t) (
         rpc_dg_recvq_elt_p_t  /*rqe*/,
         rpc_dg_pkt_hdr_p_t  /*resp_hdrp*/,
         uuid_p_t  /*clt_actid*/,
         unsigned32  /*clt_boot*/
-    ));
+    );
 
-INTERNAL void conv_stub_who_are_you_auth_more _DCE_PROTOTYPE_((
+INTERNAL void conv_stub_who_are_you_auth_more (
         rpc_dg_recvq_elt_p_t /*rqe*/,
         rpc_dg_pkt_hdr_p_t /*resp_hdrp*/,
         uuid_p_t /*clt_actid*/,
         unsigned32 /*clt_boot*/
-    ));
+    );
 
 /* ================================================================ */
 
@@ -248,14 +249,9 @@ INTERNAL unsigned32 saved_rqe_list_len = 0;
  */
 
 INTERNAL void swab_hdr
-#ifdef _DCE_PROTO_
 (
     rpc_dg_recvq_elt_p_t rqe
 )
-#else
-(rqe)
-rpc_dg_recvq_elt_p_t rqe;
-#endif
 {
     rpc_dg_pkt_hdr_p_t shdr = (rpc_dg_pkt_hdr_p_t) &rqe->pkt->hdr;
     rpc_dg_pkt_hdr_p_t dhdr = &rqe->hdr;
@@ -313,14 +309,9 @@ rpc_dg_recvq_elt_p_t rqe;
 #ifdef MISPACKED_HDR
 
 INTERNAL void unpack_hdr
-#ifdef _DCE_PROTO_
 (
     rpc_dg_recvq_elt_p_t rqe
 )
-#else
-(rqe)
-rpc_dg_recvq_elt_p_t rqe;
-#endif
 {
     /* !!! Unpack the header !!! */
 
@@ -337,16 +328,10 @@ rpc_dg_recvq_elt_p_t rqe;
  */
 
 INTERNAL void marshall_uuid
-#ifdef _DCE_PROTO_
 (
     char *p,
     uuid_p_t uuid
 )
-#else
-(p, uuid)
-char *p;
-uuid_p_t uuid;
-#endif
 {
     *((unsigned32 *) (p +  0)) = uuid->time_low;
     *((unsigned16 *) (p +  4)) = uuid->time_mid;
@@ -370,16 +355,10 @@ uuid_p_t uuid;
  */
 
 PRIVATE void rpc__dg_get_epkt_body_st
-#ifdef _DCE_PROTO_
 (
     rpc_dg_recvq_elt_p_t rqe,
     unsigned32 *st
 )
-#else
-(rqe, st)
-rpc_dg_recvq_elt_p_t rqe;
-unsigned32 *st;
-#endif
 {
     u_long st_all;
     rpc_dg_pkt_hdr_p_t hdrp = rqe->hdrp;
@@ -423,22 +402,22 @@ INTERNAL dcethread* conv_thread;
 INTERNAL boolean convq_running = false, convq_was_running = false;
 INTERNAL boolean convq_stop = false;
 
-INTERNAL boolean32 convq_add _DCE_PROTOTYPE_ ((
+INTERNAL boolean32 convq_add (
         rpc_dg_recvq_elt_p_t  /*rqe*/
-    ));
+    );
 
-INTERNAL void convq_remove _DCE_PROTOTYPE_ ((void));
+INTERNAL void convq_remove (void);
 
-INTERNAL void convq_loop _DCE_PROTOTYPE_ ((void));
+INTERNAL void convq_loop (void);
 
 
-INTERNAL boolean32 convq_has_act _DCE_PROTOTYPE_ (( uuid_p_t  /*actuid*/));
+INTERNAL boolean32 convq_has_act ( uuid_p_t  /*actuid*/);
 
         
-INTERNAL boolean32 handle_conv_int _DCE_PROTOTYPE_ ((
+INTERNAL boolean32 handle_conv_int (
         rpc_socket_t  /*sock*/,
         rpc_dg_recvq_elt_p_t  /*rqe1*/
-    ));
+    );
 
 
 /*
@@ -483,14 +462,9 @@ PRIVATE void rpc__dg_conv_init(void)
  */
 
 INTERNAL boolean32 convq_add
-#ifdef _DCE_PROTO_
 (
     rpc_dg_recvq_elt_p_t rqe
 )
-#else
-(rqe)
-rpc_dg_recvq_elt_p_t rqe;
-#endif
 {
     boolean added;
 
@@ -624,14 +598,9 @@ INTERNAL void convq_loop(void)
  */
 
 PRIVATE void rpc__dg_conv_fork_handler 
-#ifdef _DCE_PROTO_
 (
         rpc_fork_stage_id_t stage
 )
-#else
-(stage)
-    rpc_fork_stage_id_t stage;
-#endif
 {
     error_status_t st;
     rpc_dg_recvq_elt_p_t rqe;
@@ -730,16 +699,10 @@ PRIVATE void rpc__dg_conv_fork_handler
  */
 
 INTERNAL boolean32 handle_conv_int
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t sock,
     rpc_dg_recvq_elt_p_t rqe1
 )
-#else
-(sock, rqe1)
-rpc_socket_t sock;
-rpc_dg_recvq_elt_p_t rqe1;
-#endif
 {
     idl_uuid_t clt_actid1;
     unsigned32 clt_boot1;
@@ -866,16 +829,10 @@ rpc_dg_recvq_elt_p_t rqe1;
  */
 
 PRIVATE boolean32 rpc__dg_handle_conv
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t sock,
     rpc_dg_recvq_elt_p_t rqe1
 )
-#else
-(sock, rqe1)
-rpc_socket_t sock;
-rpc_dg_recvq_elt_p_t rqe1;
-#endif
 {
     rpc_dg_pkt_hdr_p_t hdrp = rqe1->hdrp;
     rpc_dg_pkt_hdr_t resp_hdr;
@@ -978,20 +935,12 @@ rpc_dg_recvq_elt_p_t rqe1;
  */
 
 INTERNAL void conv_stub_who_are_you
-#ifdef _DCE_PROTO_
 (
     rpc_dg_recvq_elt_p_t rqe,
     rpc_dg_pkt_hdr_p_t resp_hdrp,
     uuid_p_t clt_actid,
     unsigned32 clt_boot
 )
-#else
-(rqe, resp_hdrp, clt_actid, clt_boot)
-rpc_dg_recvq_elt_p_t rqe;
-rpc_dg_pkt_hdr_p_t resp_hdrp;
-uuid_p_t clt_actid;
-unsigned32 clt_boot;
-#endif
 {
     rpc_dg_raw_pkt_p_t rawpkt = rqe->pkt;
     unsigned32 way_status;
@@ -1035,20 +984,12 @@ unsigned32 clt_boot;
  */
 
 INTERNAL void conv_stub_who_are_you2
-#ifdef _DCE_PROTO_
 (
     rpc_dg_recvq_elt_p_t rqe,
     rpc_dg_pkt_hdr_p_t resp_hdrp,
     uuid_p_t clt_actid,
     unsigned32 clt_boot
 )
-#else
-(rqe, resp_hdrp, clt_actid, clt_boot)
-rpc_dg_recvq_elt_p_t rqe;
-rpc_dg_pkt_hdr_p_t resp_hdrp;
-uuid_p_t clt_actid;
-unsigned32 clt_boot;
-#endif
 {
     rpc_dg_raw_pkt_p_t rawpkt = rqe->pkt;
     unsigned32 way_status;
@@ -1110,20 +1051,12 @@ unsigned32 clt_boot;
  */
 
 INTERNAL void conv_stub_are_you_there
-#ifdef _DCE_PROTO_
 (
     rpc_dg_recvq_elt_p_t rqe,
     rpc_dg_pkt_hdr_p_t resp_hdrp,
     uuid_p_t clt_actid,
     unsigned32 clt_boot
 )
-#else
-(rqe, resp_hdrp, clt_actid, clt_boot)
-rpc_dg_recvq_elt_p_t rqe;
-rpc_dg_pkt_hdr_p_t resp_hdrp;
-uuid_p_t clt_actid;
-unsigned32 clt_boot;
-#endif
 {
     rpc_dg_raw_pkt_p_t rawpkt = rqe->pkt;
     unsigned32 way_status;
@@ -1163,20 +1096,12 @@ unsigned32 clt_boot;
  */
 
 INTERNAL void conv_stub_who_are_you_auth
-#ifdef _DCE_PROTO_
 (
     rpc_dg_recvq_elt_p_t rqe,
     rpc_dg_pkt_hdr_p_t resp_hdrp,
     uuid_p_t clt_actid,
     unsigned32 clt_boot
 )
-#else
-(rqe, resp_hdrp, clt_actid, clt_boot)
-rpc_dg_recvq_elt_p_t rqe;
-rpc_dg_pkt_hdr_p_t resp_hdrp;
-uuid_p_t clt_actid;
-unsigned32 clt_boot;
-#endif
 {
     rpc_dg_pkt_hdr_p_t rqst_hdrp = rqe->hdrp;
     rpc_dg_raw_pkt_p_t rawpkt = rqe->pkt;
@@ -1436,14 +1361,9 @@ unsigned32 clt_boot;
  */
 
 PRIVATE void rpc__dg_handle_convc
-#ifdef _DCE_PROTO_
 (
     rpc_dg_recvq_elt_p_t rqe
 )
-#else
-(rqe)
-rpc_dg_recvq_elt_p_t rqe;
-#endif
 {
     idl_uuid_t cas_uuid;
     rpc_dg_pkt_hdr_p_t hdrp = rqe->hdrp;
@@ -1515,16 +1435,10 @@ rpc_dg_recvq_elt_p_t rqe;
  */
 
 INTERNAL unsigned32 recv_pkt
-#ifdef _DCE_PROTO_
 (
     rpc_dg_sock_pool_elt_p_t sp,
     rpc_dg_recvq_elt_p_t rqe
 )
-#else
-(sp, rqe)
-rpc_dg_sock_pool_elt_p_t sp;
-rpc_dg_recvq_elt_p_t rqe;
-#endif
 {
     rpc_socket_error_t serr;
     int recv_len;
@@ -1916,7 +1830,6 @@ rpc_dg_recvq_elt_p_t rqe;
  */
 
 INTERNAL void do_selective_ack
-#ifdef _DCE_PROTO_
 (
     rpc_dg_recvq_elt_p_t rqe,
     rpc_dg_call_p_t call,
@@ -1924,14 +1837,6 @@ INTERNAL void do_selective_ack
     unsigned32 *rexmit_cnt, 
     unsigned32 serial_cnt
 )
-#else
-(rqe, call, window_incr, rexmit_cnt, serial_cnt)
-rpc_dg_recvq_elt_p_t rqe;
-rpc_dg_call_p_t call;
-unsigned32 *window_incr;
-unsigned32 *rexmit_cnt; 
-unsigned32 serial_cnt;
-#endif
 {
     rpc_dg_fackpkt_body_p_t bodyp = (rpc_dg_fackpkt_body_p_t) &rqe->pkt->body;
     rpc_dg_xmitq_elt_p_t xq_curr, xq_prev, rexmitq_tail = NULL;
@@ -2176,7 +2081,6 @@ unsigned32 serial_cnt;
  */
 
 INTERNAL void do_fack_body
-#ifdef _DCE_PROTO_
 (
     rpc_dg_recvq_elt_p_t rqe,
     rpc_dg_call_p_t call,
@@ -2184,12 +2088,6 @@ INTERNAL void do_fack_body
     unsigned32 *rexmit_cnt, 
     unsigned32 curr_serial
 )
-#else
-(rqe, call, window_incr, rexmit_cnt, curr_serial)
-rpc_dg_recvq_elt_p_t rqe;
-rpc_dg_call_p_t call;
-unsigned32 *window_incr, *rexmit_cnt, curr_serial;
-#endif
 {
 #ifndef MISPACKED_HDR
 
@@ -2338,16 +2236,10 @@ unsigned32 *window_incr, *rexmit_cnt, curr_serial;
  */
 
 INTERNAL boolean do_fack
-#ifdef _DCE_PROTO_
 (
     rpc_dg_sock_pool_elt_p_t sp,
     rpc_dg_recvq_elt_p_t rqe
 )
-#else
-(sp, rqe)
-rpc_dg_sock_pool_elt_p_t sp;
-rpc_dg_recvq_elt_p_t rqe;
-#endif
 {
     rpc_dg_pkt_hdr_p_t hdrp = rqe->hdrp;
     rpc_dg_call_p_t call;
@@ -2492,20 +2384,12 @@ rpc_dg_recvq_elt_p_t rqe;
  */
 
 PRIVATE void rpc__dg_fack_common
-#ifdef _DCE_PROTO_
 (
     rpc_dg_sock_pool_elt_p_t sp ATTRIBUTE_UNUSED,
     rpc_dg_recvq_elt_p_t rqe,
     rpc_dg_call_p_t call,
     boolean *sent_data
 )
-#else
-(sp, rqe, call, sent_data)
-rpc_dg_sock_pool_elt_p_t sp;
-rpc_dg_recvq_elt_p_t rqe;
-rpc_dg_call_p_t call;
-boolean *sent_data;
-#endif
 {
 #define CHECK_INITIALIZED(var) \
 	do {\
@@ -2793,22 +2677,16 @@ boolean *sent_data;
  * Packet handler for packets with bogus packet types.
  */
 
-INTERNAL rpc_dg_rd_flags_t do_bad_pkt _DCE_PROTOTYPE_((
+INTERNAL rpc_dg_rd_flags_t do_bad_pkt (
         rpc_dg_sock_pool_elt_p_t /*sp*/,
         rpc_dg_recvq_elt_p_t /*rqe*/
-    ));
+    );
 
 INTERNAL rpc_dg_rd_flags_t do_bad_pkt
-#ifdef _DCE_PROTO_
 (
     rpc_dg_sock_pool_elt_p_t sp ATTRIBUTE_UNUSED,
     rpc_dg_recvq_elt_p_t rqe ATTRIBUTE_UNUSED
 )
-#else
-(sp, rqe)
-rpc_dg_sock_pool_elt_p_t sp;
-rpc_dg_recvq_elt_p_t rqe;
-#endif
 {
     RPC_DBG_GPRINTF(("(do_bad_pkt) Bad packet; ptype = %u\n", 
                 (unsigned int) RPC_DG_HDR_INQ_PTYPE(rqe->hdrp)));
@@ -2823,22 +2701,16 @@ rpc_dg_recvq_elt_p_t rqe;
  * Returns "dispatch flags".  See "rpc_dg_rd_flags_t" in "dg.h".
  */
 
-INTERNAL rpc_dg_rd_flags_t recv_dispatch _DCE_PROTOTYPE_((
+INTERNAL rpc_dg_rd_flags_t recv_dispatch (
         rpc_dg_sock_pool_elt_p_t  /*sp*/,
         rpc_dg_recvq_elt_p_t  /*rqe*/
-    ));
+    );
 
 INTERNAL unsigned32 recv_dispatch
-#ifdef _DCE_PROTO_
 (
     rpc_dg_sock_pool_elt_p_t sp,
     rpc_dg_recvq_elt_p_t rqe
 )
-#else
-(sp, rqe)
-rpc_dg_sock_pool_elt_p_t sp;
-rpc_dg_recvq_elt_p_t rqe;
-#endif
 {
     rpc_dg_pkt_hdr_p_t hdrp = rqe->hdrp;
     unsigned16 ihint = hdrp->ihint;
@@ -3229,20 +3101,12 @@ rpc_dg_recvq_elt_p_t rqe;
  */
 
 PRIVATE void rpc__dg_network_select_dispatch
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t sock ATTRIBUTE_UNUSED,
     pointer_t sp_,
     boolean32 is_active,
     unsigned32 *st
 )
-#else
-(sock, sp_, is_active, st)
-rpc_socket_t sock;
-pointer_t sp_;
-boolean32 is_active;
-unsigned32 *st;
-#endif
 {
     rpc_dg_sock_pool_elt_p_t sp = (rpc_dg_sock_pool_elt_p_t) sp_;
     rpc_dg_recvq_elt_p_t rqe;

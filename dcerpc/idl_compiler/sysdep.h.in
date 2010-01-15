@@ -206,15 +206,6 @@ Porting Message:  You must provide definitions for the files suffixes to
 #endif
 
 /*
-** Define PROTO if the system compiler supports ANSI prototypes
-*/
-#ifndef PROTO
-#if defined __STDC__ || defined VAXC || defined mips || defined _AIX || defined __alpha
-#define PROTO
-#endif
-#endif
-
-/*
 ** Define macros for NLS entry points used only in message.c
 */
 #if defined(_AIX)

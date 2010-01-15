@@ -3,7 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2009 Apple Inc. All rights reserved.
+ * Portions Copyright (c) 2009-2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -70,7 +70,6 @@ void rpc__module_init_func(void)
 
 
 void rpc__ncadg_init
-#ifdef _DCE_PROTO_
 (
     rpc_prot_call_epv_t **call_epv,
     rpc_prot_mgmt_epv_t **mgmt_epv,
@@ -79,15 +78,6 @@ void rpc__ncadg_init
     rpc_prot_fork_handler_fn_t *fork_handler,
     unsigned32 *st
 )
-#else
-(call_epv, mgmt_epv, binding_epv, network_epv, fork_handler, st)
-rpc_prot_call_epv_t **call_epv;
-rpc_prot_mgmt_epv_t **mgmt_epv;
-rpc_prot_binding_epv_t **binding_epv;
-rpc_prot_network_epv_t **network_epv; 
-rpc_prot_fork_handler_fn_t *fork_handler;
-unsigned32 *st;
-#endif
 {
     static rpc_prot_call_epv_t dg_call_epv =
     {
@@ -209,14 +199,9 @@ unsigned32 *st;
 
 
 void rpc__ncadg_fork_handler
-#ifdef _DCE_PROTO_
 (
     rpc_fork_stage_id_t stage
 )
-#else
-(stage)
-rpc_fork_stage_id_t stage;
-#endif
 {                          
     /*
      * Pre-fork handlers are called in reverse order of rpc__ncadg_init().

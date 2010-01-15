@@ -3,6 +3,7 @@
  * (c) Copyright 1993 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1993 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1993 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -68,23 +69,16 @@ globalref rpc_trans_tab_t ndr_g_def_ebcdic_to_ascii;
  */
 static error_status_t rpc_ss_map_fault_code
 (
-#ifdef IDL_PROTOTYPES
     ndr_ulong_int fault_code
-#endif
 );
 
 /* rpc_ss_call_free is needed because we can't use 'free' as a procedure argument
     or in an assignment, because CMA has redefined free to be
     a macro with an argument */
 void rpc_ss_call_free
-#ifdef IDL_PROTOTYPES
 (
     rpc_void_p_t address
 )
-#else
-( address )
-    rpc_void_p_t address;
-#endif
 {
     free( address );
 }
@@ -99,14 +93,9 @@ void rpc_ss_call_free
 /*                                                                            */
 /******************************************************************************/
 char * safe_getenv
-#ifdef IDL_PROTOTYPES
 (
     char *variable
 )
-#else
-(variable)
-    char *variable;
-#endif
 {
     char *result;
     cma_lock_global ();
@@ -123,9 +112,7 @@ char * safe_getenv
  * That guarantees that it will only be invoked once per address space.
  **************************************************************************/
 void rpc_ss_trans_table_init(
-#ifdef IDL_PROTOTYPES
     void
-#endif
 )
 {
 char *filename;
@@ -327,9 +314,7 @@ globaldef dcethread_exc rpc_x_unknown_stub_rtl_if_vers;
 globaldef dcethread_exc rpc_x_ss_codeset_conv_error;
 
 static void rpc_ss_init_client(
-#ifdef IDL_PROTOTYPES
     void
-#endif
 )
 {
     /* Initialize exceptions */
@@ -604,9 +589,7 @@ static void rpc_ss_init_client(
 }
 
 void rpc_ss_init_client_once(
-#ifdef IDL_PROTOTYPES
     void
-#endif
 )
 {
     RPC_SS_THREADS_INIT;
@@ -641,14 +624,9 @@ void rpc_ss_init_client_once(
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_map_dce_to_local_status
-#ifdef IDL_PROTOTYPES
 (
     error_status_t *status_code_p   /* [in,out] pointer to DCE status -> local status */
 )
-#else
-(status_code_p)
-    error_status_t *status_code_p;  /* [in,out] pointer to DCE status -> local status */
-#endif
 {
     unsigned long facility_and_comp_code;
     unsigned short  status_code;
@@ -670,14 +648,9 @@ void rpc_ss_map_dce_to_local_status
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_map_local_to_dce_status
-#ifdef IDL_PROTOTYPES
 (
     error_status_t *status_code_p   /* [in,out] pointer to local status -> DCE status */
 )
-#else
-(status_code_p)
-    error_status_t *status_code_p;  /* [in,out] pointer to local status -> DCE status */
-#endif
 {
 	/* XXX todo? */
 }
@@ -689,16 +662,10 @@ void rpc_ss_map_local_to_dce_status
 /*                                                                            */
 /******************************************************************************/
 static void rpc_ss_raise_arch_exception
-#ifdef IDL_PROTOTYPES
 (
     ndr_ulong_int fault_code,
     RPC_SS_THREADS_CANCEL_STATE_T async_cancel_state
 )
-#else
-(fault_code,async_cancel_state)
-    ndr_ulong_int fault_code;
-    RPC_SS_THREADS_CANCEL_STATE_T async_cancel_state;
-#endif
 {
     dcethread_exc *p_exception;
 
@@ -777,14 +744,9 @@ static void rpc_ss_raise_arch_exception
 /*                                                                            */
 /******************************************************************************/
 static error_status_t rpc_ss_map_fault_code
-#ifdef IDL_PROTOTYPES
 (
     ndr_ulong_int fault_code
 )
-#else
-(fault_code)
-    ndr_ulong_int fault_code;
-#endif
 {
     switch (fault_code) {
         case nca_s_fault_addr_error:
@@ -840,16 +802,10 @@ static error_status_t rpc_ss_map_fault_code
 /*                                                                            */
 /******************************************************************************/
 static void rpc_ss_raise_impl_exception
-#ifdef IDL_PROTOTYPES
 (
     ndr_ulong_int result_code,
     RPC_SS_THREADS_CANCEL_STATE_T async_cancel_state
 )
-#else
-(result_code,async_cancel_state)
-    ndr_ulong_int result_code;
-    RPC_SS_THREADS_CANCEL_STATE_T async_cancel_state;
-#endif
 {
     dcethread_exc *p_exception;
 
@@ -1219,7 +1175,6 @@ static void rpc_ss_raise_impl_exception
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_report_error_2
-#ifdef IDL_PROTOTYPES
 (
     ndr_ulong_int fault_code,
     ndr_ulong_int user_fault_id,
@@ -1230,18 +1185,6 @@ void rpc_ss_report_error_2
     dcethread_exc *user_exception_pointers[],
     IDL_msp_t IDL_msp ATTRIBUTE_UNUSED
 )
-#else
-(fault_code, user_fault_id, result_code, p_async_cancel_state, p_comm_status,
- p_fault_status, user_exception_pointers, IDL_msp)
-    ndr_ulong_int fault_code;
-    ndr_ulong_int user_fault_id;
-    ndr_ulong_int result_code;
-    RPC_SS_THREADS_CANCEL_STATE_T *p_async_cancel_state;
-    error_status_t *p_comm_status;
-    error_status_t *p_fault_status;
-    dcethread_exc *user_exception_pointers[];
-    IDL_msp_t IDL_msp;
-#endif
 {
     if (p_comm_status != NULL) *p_comm_status = error_status_ok;
     if (p_fault_status != NULL) *p_fault_status = error_status_ok;
@@ -1283,7 +1226,6 @@ void rpc_ss_report_error_2
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_report_error
-#ifdef IDL_PROTOTYPES
 (
     ndr_ulong_int fault_code,
     ndr_ulong_int result_code,
@@ -1291,15 +1233,6 @@ void rpc_ss_report_error
     error_status_t *p_comm_status,
     error_status_t *p_fault_status
 )
-#else
-(fault_code, result_code, async_cancel_state, p_comm_status,
- p_fault_status)
-    ndr_ulong_int fault_code;
-    ndr_ulong_int result_code;
-    RPC_SS_THREADS_CANCEL_STATE_T async_cancel_state;
-    error_status_t *p_comm_status;
-    error_status_t *p_fault_status;
-#endif
 {
     rpc_ss_report_error_2(fault_code, 0, result_code, &async_cancel_state,
                             p_comm_status, p_fault_status, NULL, NULL);
@@ -1312,20 +1245,12 @@ void rpc_ss_report_error
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_call_end_2
-#ifdef IDL_PROTOTYPES
 (
     volatile rpc_call_handle_t *p_call_h,
     volatile ndr_ulong_int *p_fault_code,
     volatile ndr_ulong_int *p_user_fault_id,
     volatile error_status_t *p_st
 )
-#else
-( p_call_h, p_fault_code, p_user_fault_id, p_st )
-    volatile rpc_call_handle_t *p_call_h;
-    volatile ndr_ulong_int *p_fault_code;
-    volatile ndr_ulong_int *p_user_fault_id;
-    volatile error_status_t *p_st;
-#endif
 {
     rpc_iovector_elt_t iovec_elt;
     ndr_format_t drep;
@@ -1382,18 +1307,11 @@ void rpc_ss_call_end_2
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_call_end
-#ifdef IDL_PROTOTYPES
 (
     volatile rpc_call_handle_t *p_call_h,
     volatile ndr_ulong_int *p_fault_code,
     volatile error_status_t *p_st
 )
-#else
-( p_call_h, p_fault_code, p_st )
-    volatile rpc_call_handle_t *p_call_h;
-    volatile ndr_ulong_int *p_fault_code;
-    volatile error_status_t *p_st;
-#endif
 {
     ndr_ulong_int user_fault_id;    /* Discarded argument */
 
@@ -1406,20 +1324,12 @@ void rpc_ss_call_end
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_new_recv_buff
-#ifdef IDL_PROTOTYPES
 (
     rpc_iovector_elt_t *elt,
     rpc_call_handle_t call_h,
     rpc_mp_t *p_mp,
     volatile error_status_t *st
 )
-#else
-( elt, call_h, p_mp, st )
-    rpc_iovector_elt_t *elt;
-    rpc_call_handle_t call_h;
-    rpc_mp_t *p_mp;
-    volatile error_status_t *st;
-#endif
 {
     if (elt->buff_dealloc && (elt->data_len != 0))
     {

@@ -3,6 +3,7 @@
  * (c) Copyright 1990 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1990 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1990 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -69,15 +70,11 @@
  * Prototype for the private 'c' routines used by the RPC_RANDOM macros.
  */
 
-#ifndef _DCE_PROTOTYPE_
-#include <dce/dce.h>
-#endif
+PRIVATE void rpc__random_init ( unsigned32  /*seed*/ );
 
-PRIVATE void rpc__random_init _DCE_PROTOTYPE_ (( unsigned32  /*seed*/ ));
-
-PRIVATE unsigned32 rpc__random_get _DCE_PROTOTYPE_ ((
+PRIVATE unsigned32 rpc__random_get (
         unsigned32  /*lower*/,
         unsigned32  /*upper*/
-    ));
+    );
 
 #endif /* _RPCRAND_H */

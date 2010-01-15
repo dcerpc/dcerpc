@@ -1,8 +1,9 @@
 /*
- * 
+ *
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -16,7 +17,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
  */
@@ -30,7 +31,7 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
@@ -60,13 +61,13 @@
  * C_lookup
  *      means look something up in the "C" collection.  If a matching
  *      element is found, return the element.  Otherwise return NULL.
- * 
- * C_insert 
+ *
+ * C_insert
  *      means insert an element into the "C" collection.
  *
  * C_remove
  *      means remove an element from the "C" collection.
- * 
+ *
  * C_get
  *      means look something up in the "C" collection.  If a matching
  *      element is found, return the element.  Otherwise, create an
@@ -78,22 +79,22 @@
  *      a collection, the object is an element in the collection previously
  *      obtained via either "C_lookup" or "C_get".)  See "Reference Counts"
  *      comment below.
- * 
- * O_reference  
+ *
+ * O_reference
  *      means establish another reference to an "O" object.  (If "O"
  *      refers to a collection, the object is an element in the collection
  *      previously obtained via either "C_lookup" or "C_get".)  See
  *      "Reference Counts" comment below.
- * 
+ *
  * O_alloc
  *      means allocate and return (a reference to) an "O" object.
- *      
+ *
  * O_free
  *      means deallocate an "O" object.
- *      
+ *
  * O_init
  *      means initialize an "O" object.
- *      
+ *
  * O_reinit
  *      means re-initialize an "O" object.
  *
@@ -106,42 +107,42 @@
 
 /* ========================================================================= */
 
-/* 
+/*
  * Reference Counts
  * ----------------
- * 
+ *
  * Various data structures have a reference count field named ".refcnt".
  * Reference counting augments (does not replace) mutex locking in situations
  * where (a) a lock would have to be held for "too long", (b) the data
  * structure is heap allocated, and (c) the data structure should not be
  * freed until all the logical users of the structure are done with it.
  * The paradigmatic code sequence that requires reference counts is:
- * 
+ *
  *      (1) Lock data structure
  *      (2) Look at interesting parts of structure
  *      (3) Do something for a long time
  *      (4) Look at interesting parts of structure
  *      (5) Unlock structure
- * 
+ *
  * We avoid the "holding a lock for too long" problem in the above code
  * by doing:
- * 
+ *
  *      (1) Lock data structure
  *      (2) Look at interesting parts of structure
- *      (3) "reference" 
+ *      (3) "reference"
  *      (4) Unlock structure
  *      (5) Do something for a long time
  *      (6) Lock data structure
  *      (7) Look at interesting parts of structure
  *      (8) "release"
- * 
+ *
  * "Reference" means increment the structure's reference count; "release"
  * means decrement the structure's reference count and if the count becomes
  * zero then free the structure, otherwise just unlock the structure.  In
  * this model no one directly calls a "free" function; they call a "release"
  * function instead (which in turn does a "free" if the reference count
  * drops to zero).
- * 
+ *
  * Note that the code above is really an execution flow and does not
  * necessarily reflect code structure.  I.e., steps (1)-(4) might be in
  * one place, step (5) in another, and steps (6)-(8) in yet another.  The
@@ -150,10 +151,10 @@
  * you "pass" a pointer to another thread somehow) and you unlock the
  * structure and you want the structure to be there later, you must increment
  * the reference count.
- * 
+ *
  * Routines that look things up and return references to entries should
  * return with the entry locked and the reference count already incremented.
- * 
+ *
  * To establish or release a reference or to free a structure, you must
  * have the structure locked.
  *
@@ -181,7 +182,7 @@
  * value of the constant MAX_NETADDR_LENGTH, which can be defined in
  * the system specific include file for any system which does not want
  * to use the default value (defined below).
- */    
+ */
 
 #ifndef MAX_NETADDR_LENGTH
 # define MAX_NETADDR_LENGTH 14
@@ -191,10 +192,10 @@ typedef struct
 {
     rpc_protseq_id_t        rpc_protseq_id;
     unsigned32          len;
-    struct 
+    struct
     {
         unsigned16          family;
-        unsigned8           data[MAX_NETADDR_LENGTH]; 
+        unsigned8           data[MAX_NETADDR_LENGTH];
     } sa;
 } rpc_addr_il_t, *rpc_addr_il_p_t;
 
@@ -218,7 +219,6 @@ typedef struct
  */
 
 #define RPC_C_DG_PROTO_VERS 4
-
 
 /*
  * Max packet size
@@ -303,13 +303,13 @@ typedef unsigned32 rpc_dg_ptype_t;
  * --------
  * Sequence and fragment numbers can wrap.  Non-equality comparisons
  * between such objects must use the comparison macros below.
- * 
+ *
  * Fragment numbers
  * ----------------
  * In requests, "fragnum" is the number of the frag sent.  In facks,
  * "fragnum" is the number of the highest in-order frag received; if
  * frag 0 hasn't been received, the fack contains a "fragnum" of 0xffff.
- * 
+ *
  *
  * Packet lengths
  * --------------
@@ -322,7 +322,7 @@ typedef unsigned32 rpc_dg_ptype_t;
  * property for the stubs.)  We make it easy to meet this demand by making
  * packets of length 0 MOD 8, meaning we can simply return (pointer to)
  * packets as received data buffers to the stubs.
- * 
+ *
  * Storage layout
  * --------------
  * Not all C compilers (esp. those for machines whose smallest addressible
@@ -332,7 +332,7 @@ typedef unsigned32 rpc_dg_ptype_t;
  * machines "rpc_dg_pkt_hdr_t" can not simply be used on incoming packets
  * (or used to set up outgoing packets).  We call machines that have
  * this problem "mispacked header machines".
- * 
+ *
  * To fix this problem, on mispacked header machine, when a packet arrives
  * we expand the header bits so they correspond to the actual storage
  * layout of "rpc_dg_pkt_hdr_t".  Analogously, before sending a packet,
@@ -416,7 +416,7 @@ typedef struct {
  * in the future of flags meaning one thing in one direction and another
  * thing in the other, all flags that are currently used in only one
  * direction must be set to zero when sent in the other direction.
- * 
+ *
  * Note on rpc_c_dg_pf_blast_outs:  Early versions of NCK did not blast
  * large ins/outs but were designed to work with senders that did blast
  * large ins/outs.  (I.e. early versions supported the rpc_c_dg_pf_no_fack
@@ -425,7 +425,7 @@ typedef struct {
  * Old clients have a bug in handling blasted outs.  So by default, new
  * servers won't blast large outs.  The rpc_c_dg_pf_blast_outs flag is
  * set by new clients to tell the server that the client can handle blasts.
- * 
+ *
  * Note on forwarding:  Forwarding is a purely intra-machine function;
  * i.e. The rpc_c_dg_pf_forwarded and rpc_c_dg_pf2_forwarded2 bits should
  * never be set on packets sent on the wire.  It's pretty sleazy to be
@@ -473,7 +473,7 @@ typedef struct {
  * general and specifically packet fragment and sequence numbers.  These
  * macros are useful when the numbers being compared are allowed to wrap
  * (e.g. we really want 0xfffffffe to be less than 0x00000002).
- * 
+ *
  * To perform such a comparison, we count the fact that the number space
  * for a given data type / object is large enough that we can assert:
  * if the unsigned difference A - B is "negative", A is < B.  We define
@@ -594,7 +594,7 @@ typedef struct
 /*
  * Error packet body structure
  *
- * Used for packets with a body that only consist of an error status 
+ * Used for packets with a body that only consist of an error status
  * (i.e. reject and fault packets).
  */
 
@@ -610,13 +610,12 @@ typedef struct
     u_char body[RPC_C_DG_RAW_EPKT_BODY_SIZE];
 } rpc_dg_raw_epkt_body_t, *rpc_dg_raw_epkt_body_p_t;
 
-
 /*
  * Quit packet body structure.  This is currently used for
  * NCS 2.0 "cancel-requests".
  */
 
-typedef struct 
+typedef struct
 {
     unsigned32  vers;       /* quit body format version */
     unsigned32  cancel_id;  /* id of a cancel-request event */
@@ -632,13 +631,12 @@ typedef struct
     u_char body[RPC_C_DG_RAW_QUITPKT_BODY_SIZE];
 } rpc_dg_raw_quitpkt_body_t, *rpc_dg_raw_quitpkt_body_p_t;
 
-
 /*
  * Quack packet body structure.  This is currently used for
  * NCS 2.0 "cancel-request" acknowlegements.
  */
 
-typedef struct 
+typedef struct
 {
     unsigned32  vers;       /* cancel-request body format version */
     unsigned32  cancel_id;  /* id of a cancel-request event being ack'd */
@@ -655,9 +653,8 @@ typedef struct
     u_char body[RPC_C_DG_RAW_QUACKPKT_BODY_SIZE];
 } rpc_dg_raw_quackpkt_body_t, *rpc_dg_raw_quackpkt_body_p_t;
 
-
 /*
- * Fack packet body structure. 
+ * Fack packet body structure.
  *
  * Pre-v2 NCK facks always had zero length bodies.  V2 fack bodies
  * contain useful information.
@@ -692,8 +689,8 @@ typedef struct
  * number prior to transmission, the sender can always determine exactly
  * which packet induced the ack.  Serial numbers play the role of logical
  * clocks, which allow the sender to determine which packets should have
- * been received given an ack for a packet sent at time n.  This is 
- * especially useful in the face of multiple retransmissions, when 
+ * been received given an ack for a packet sent at time n.  This is
+ * especially useful in the face of multiple retransmissions, when
  * fragment numbers don't provide any ordering information.
  *
  * The selective ack fields provide information about what additional
@@ -734,13 +731,13 @@ typedef struct
 } rpc_dg_raw_fackpkt_body_t, *rpc_dg_raw_fackpkt_body_p_t;
 
 /*
- * Forwarding 
+ * Forwarding
  *
  * So that clients don't need to know the actual port a server is using,
  * we provide for a "forwarder" process on the server's machine.  A
  * client that doesn't know the server's port sends to the forwarder's
  * well-known port instead.
- * 
+ *
  * When a packet is received by the forwarder process, it is forwarded
  * to the correct server process on the machine.  The server must know
  * the original sender.  However, what the server "sees" as a result
@@ -752,7 +749,7 @@ typedef struct
  * (The original body is slid down.)  The rpc_c_dg_pf_forwarded bit is
  * set in the header.  When the server receives such a packet, it just
  * picks up the address from the body and slides the real body back up.
- * 
+ *
  * In the case of a full packet body, the packet must be forwarded in
  * two packets.  The forwarder makes body of the first packet contains
  * only the original client address and sets the rpc_c_dg_pf2_forwarded2
@@ -802,7 +799,7 @@ typedef enum {
 #ifdef NON_REENTRANT_SOCKETS
     rpc_e_dg_recv_reentered,
 #endif
-    rpc_e_dg_recv_ok 
+    rpc_e_dg_recv_ok
 } rpc_dg_recv_status_t;
 
 /* =============================================================================== */
@@ -837,13 +834,13 @@ typedef enum {
  * given client address space.
  */
 typedef struct rpc_dg_client_rep_t
-{   
+{
     struct rpc_dg_client_rep_t *next;
     idl_uuid_t                     cas_uuid;         /* UUID uniquely identifying client    */
-    rpc_network_rundown_fn_t   rundown;          /* routine to call if client dies      */  
-    rpc_clock_t                last_update;      /* last time we heard from this client */  
-    unsigned32                 refcnt;           /* # of references to this element     */ 
-} rpc_dg_client_rep_t, *rpc_dg_client_rep_p_t;  
+    rpc_network_rundown_fn_t   rundown;          /* routine to call if client dies      */
+    rpc_clock_t                last_update;      /* last time we heard from this client */
+    unsigned32                 refcnt;           /* # of references to this element     */
+} rpc_dg_client_rep_t, *rpc_dg_client_rep_p_t;
 
 /* ========================================================================= */
 
@@ -895,7 +892,7 @@ typedef struct rpc_dg_xmitq_elt_t {
  * transmit window availability.  Since encryption is based on a packet
  * worth of data (including a complete pkt header), encryption must be
  * delayed until the complete packet is "assembled".
- * 
+ *
  * Periodically, some of the "packets" on the queue may need to be
  * retransmitted because they've timed out.  They may also need to be
  * retransmitted in response to a nocall or fack receipt.  After some
@@ -921,7 +918,7 @@ typedef struct rpc_dg_xmitq_elt_t {
  * to decide when to declare the receiver dead.
  *
  * The queue is empty when 'head' == NULL.
- *            
+ *
  * Several fields within the queue are used for adjusting the blast size.
  * This mechanism is not present for "fine tuning" the blast size; it
  * is for the case where we have a very reliable connection to a fast
@@ -941,7 +938,7 @@ typedef struct rpc_dg_xmitq_elt_t {
  * as a multiplier for ".xq_timer".  That is, the periods between
  * considering a change to the blast size become longer and longer, to
  * prevent oscillating around the blast size limit.
- * 
+ *
  * The entire xmitq inherits the containing structure's locking
  * requirements and is protected by that structure's lock.
  */
@@ -982,7 +979,7 @@ typedef struct {
  * The initial value of ".window_size".  The window size we will believe
  * the receiver is offering until we hear otherwise.
  */
-#define RPC_C_DG_INITIAL_WINDOW_SIZE        8   
+#define RPC_C_DG_INITIAL_WINDOW_SIZE        8
 
 /*
  * The initial blast size, used when (re)starting a cwindow.
@@ -993,36 +990,36 @@ typedef struct {
  * The default maximum blast size.  For some conversations, the actual
  * blast size used may be greater.
  */
-#define RPC_C_DG_INITIAL_MAX_BLAST_SIZE     4   
+#define RPC_C_DG_INITIAL_MAX_BLAST_SIZE     4
 
 /*
  * The absolute maximum blast size allowable under any circumstances.
- * Any increase in this value will require revisiting the code which determines 
+ * Any increase in this value will require revisiting the code which determines
  * when fack requests are sent out (rpc__dg_call_xmit).
  */
 #define RPC_C_DG_MAX_BLAST_SIZE             8
-                                            
+
 /*
  * The initial value of the xq_timer field.  This is the number of "good" facks
  * we must see before considering an adjustment to the blast size.
  */
-#define RPC_C_DG_INITIAL_XQ_TIMER           8    
-            
+#define RPC_C_DG_INITIAL_XQ_TIMER           8
+
 /*
  * The initial value of ".max_pkt_size".  The size of the largest datagrams
  * we will send unless the receiver tells us we can send larger ones.  We
  * start small to deal with pre-v2 receivers, which deal exclusively in
  * 1024 byte packets.
- */  
+ */
 #define RPC_C_DG_INITIAL_MAX_PKT_SIZE       1024
 
-/* 
+/*
  * Since the sockets used by the DG protocol are non-blocking, it is always
  * possible to receive an EWOULDBLOCK error status when trying to transmit
  * data.  Since this condition should be short-lived, what we'd like to do
  * is put the thread to sleep until the transmission can be done successfully.
  * This is fine when the send is being done from a client/call thread, since
- * the thread has nothing better to do at the time.  It *is* a problem if the 
+ * the thread has nothing better to do at the time.  It *is* a problem if the
  * send is being done from the listener or timer threads;  in these cases,
  * there is other work that the thread could be doing for other threads.
  *
@@ -1034,16 +1031,16 @@ typedef struct {
  * client.  In the worst case, the client could exit without returning
  * an ACK, and the server call thread would be hung up for 30 seconds
  * before it timed out.
- * 
+ *
  * To avoid tieing up the thread, we will allow transmissions to be made
  * from the listener/timer thread in cases where the call has transitioned
  * to the final state.  However, if an EWOULDBLOCK error occurs, it will be
  * ignored, and the packet will have to wait for the next timeout to be resent.
- * This solution was deemed acceptable based on the following observations:  
+ * This solution was deemed acceptable based on the following observations:
  *
  *      1) All packets have been successfully sent atleast once (w/o EWOULDBLOCK)
  *      2) On a timeout, there could be at most 4 packets left to send.  The
- *         transport algorithm would restart the congestion window by sending 
+ *         transport algorithm would restart the congestion window by sending
  *         out two packets, both requesting facks.  Hopefully, at least one will
  *         get through.
  */
@@ -1052,7 +1049,7 @@ typedef struct {
             rpc__dg_call_xmit(call, false); \
         else \
             rpc__dg_call_signal(call);
-                  
+
 /*
  * And here's a macro to help decide if you should call the macro above.
  */
@@ -1080,8 +1077,8 @@ typedef struct {
  *
  * ".hdrp" can point to either ".hdr" or ".pkt->hdr", depending on whether
  * the original header is usable.  This allows us to save data copies
- * in case the original header is usable.  
- * 
+ * in case the original header is usable.
+ *
  * A private rqelt (i.e. not on a recvq) has no locking requirements.
  * A rqelt that is a member of a recvq essentially becomes part of that
  * data structure and inherits the recvq's locking requirements.
@@ -1102,19 +1099,19 @@ typedef struct rpc_dg_recvq_elt_t {
                                          * 0 mod 8 boundary) */
     rpc_dg_raw_pkt_p_t pkt_real;        /* the real start of the raw packet */
 } rpc_dg_recvq_elt_t, *rpc_dg_recvq_elt_p_t;
-                            
+
 /*
  * Receive packet queue (RECVQ or RQ).
  *
  * Packets are removed off the head of the list (only in-sequence fragments
  * are given to stubs).  The packets are kept in fragment number order.
- * 
+ *
  * As an optimization, a pointer tracks the "last inorder" packet on
  * the list to avoid scanning the entire list from the head to the tail
  * for the appropriate insertion point.  A queue length count is maintained
  * for resource utilization control (if the queue becomes too full,
  * received packets will just be ignored).
- * 
+ *
  * If ".last_inorder" is NULL, then there is a "gap" at the beginning
  * of the queue or there are no pkts in the queue.
  *
@@ -1141,7 +1138,7 @@ typedef struct {
     unsigned all_pkts_recvd: 1;         /* T => we've recv'd all data pkts */
     unsigned is_way_validated: 1;       /* T => we've passed the WAY check */
 } rpc_dg_recvq_t, *rpc_dg_recvq_p_t;
-  
+
 /*
  * Maximum number of packets we'll queue for any receiver.  This limit
  * is imposed in the interest of providing all threads with fair access
@@ -1159,7 +1156,7 @@ typedef struct {
  * Keeps track of all "connections" from the local client address space
  * to remote servers.  The CCT is keyed by authentication info.  The
  * CCT is a hash table with separate chaining.
- * 
+ *
  * A client wanting to make a call picks a connection to use by looking
  * up a non-inuse CCTE that has a matching authentication information
  * handle.  If it finds an entry, it uses that entry's activity ID (actid)
@@ -1170,37 +1167,37 @@ typedef struct {
  * the chains in "oldest first" order.  This will cause older available
  * entries to be reused before newer entries thereby naturally limiting
  * the ccte (actid) selection to a smaller set.
- * 
+ *
  * The CCT is garbage collectable -- slots containing entries that are
  * not "in use" can be re-assigned to new auth's.  Any deletions in the
  * CCT *must* increment the CCT's GC counter.
- * 
+ *
  * See "dgglob.h" for definition of the table itself.
- * 
+ *
  * A CCTE that is not inuse is "owned" by the CCT and inherits its locking
  * requirements.  When a CCTE is inuse (".refcnt" > 1 -- note that the
  * CCT's reference itself counts as a reference), all fields except the
  * next field are "owned" by the call that is using this connection.
  * The next field is always "owned" by the CCT.
- * 
+ *
  * The relationship between the CCTEs, activity ids, auth-infos, call
  * handles, and binding handles is important (to make things work at
  * all, as well as work efficiently).  So, here's more info on the topic:
  *
  *      Actids are the cornerstone of all client / server conversations.
  *      Servers identify clients by an actid.
- * 
+ *
  *      Actids have an associated non-decreasing RPC Call Sequence Number.
- * 
+ *
  *      A single actid may be used by a single RPC at a time.
- * 
+ *
  *      Actids have an associated authentication identity which is fixed
  *      for the lifetime of the actid.  If for no other reason, this
  *      mapping of an actid to an auth-info is an artifact of the NCA
  *      DG protocol.  (There is no free space in the DG packet header,
  *      so the actid is "overloaded" to allow the server to determine
  *      the client's auth-info.)
- * 
+ *
  *      A single auth-info may be bound to any number of NCS binding
  *      handles (handle_t) subject to the auth package and application
  *      restrictions.  (I.e., the authentication package decides whether
@@ -1210,7 +1207,7 @@ typedef struct {
  *      Servers cache state across RPCs based on actid to lessen the
  *      need for the server to callback a client to validate the RPC
  *      sequence number or learn the auth session key.
- * 
+ *
  *      For clients to take advantage of server caching, they are
  *      encouraged to reuse actids on subsequent RPCs to a server that
  *      already knows that actid.
@@ -1223,10 +1220,10 @@ typedef struct {
  * before making a call.  Doing so ensures that the server does a WAY
  * callback to the client and that the client acquires the boot time.
  * The problem case we're trying to avoid is as follows:
- * 
+ *
  * - Client creates a binding to a server and calls it.
- * - The server calls back to client (WAY) causing the binding to acquire 
- *   the server's boot time.  
+ * - The server calls back to client (WAY) causing the binding to acquire
+ *   the server's boot time.
  * - The client creates a NEW binding to the same server and calls it
  *   using the same actid as in previous call.
  *
@@ -1236,7 +1233,7 @@ typedef struct {
  * a duplicate WAY from a rebooted instance of a server that's already
  * executed our call once).  (See "conv_who_are_you" in "conv.c" for
  * background.)
- * 
+ *
  * What's going on here is that on the one hand we're trying to minimize
  * the number of actids we create (in an attempt to minimize the number
  * of WAY callbacks that happen) and we can't (easily) keep track of
@@ -1283,7 +1280,7 @@ typedef struct rpc_dg_cct_t {
     struct {
         rpc_dg_cct_elt_p_t first;
         rpc_dg_cct_elt_p_t last;
-    } t[RPC_DG_CCT_SIZE]; 
+    } t[RPC_DG_CCT_SIZE];
 } rpc_dg_cct_t;
 
 /*
@@ -1329,7 +1326,7 @@ typedef struct rpc_dg_cct_elt_ref_t {
  *  handle        transceive()     non-maybe         idempotent w/large outs
  *  created       transmit()       call              call
  *    |   +------+         +------+         +------+         +------+
- *    +-->| init |-------->| xmit |-------->| recv |-------->|final |---+     
+ *    +-->| init |-------->| xmit |-------->| recv |-------->|final |---+
  *        +------+         +------+         +------+         +------+   |
  *         ^  ^           / |end_call() end_call()| \           |       |
  *         |  |          /  |quit             quit|  \          |       |
@@ -1346,9 +1343,9 @@ typedef struct rpc_dg_cct_elt_ref_t {
  *         |  +-----------------------+  +----------------------+       |
  *         |        start call()                     ack sent           |
  *         +------------------------------------------------------------+
- *                             start_call() - new call 
- * 
- * 
+ *                             start_call() - new call
+ *
+ *
  * Server Call Handle State Transitions:
  *
  *                                                   stub returns
@@ -1356,7 +1353,7 @@ typedef struct rpc_dg_cct_elt_ref_t {
  *  handle         stub is                           idempotent w/large outs
  *  created        being called    transmit()        call
  *    |   +------+(*)      +------+         +------+         +------+
- *    +-->| init |-------->| recv |-------->| xmit |-------->|final |---+     
+ *    +-->| init |-------->| recv |-------->| xmit |-------->|final |---+
  *        +------+         +------+         +------+         +------+   |
  *         ^  ^ | WAY     / |quit rcvd   quit rcvd| \           |       |
  *         |  | | rejects/  |                     |  \          |       |
@@ -1373,9 +1370,9 @@ typedef struct rpc_dg_cct_elt_ref_t {
  *         |  +-------------------------             ack rcvd           |
  *         |        new call rcvd                                       |
  *         +------------------------------------------------------------+
- *                              new call rcvd  
- * 
- * (*) Server calls leave the "orphan" state by exiting.  
+ *                              new call rcvd
+ *
+ * (*) Server calls leave the "orphan" state by exiting.
  */
 typedef enum {
     rpc_e_dg_cs_init,       /* call initialized and in use */
@@ -1395,14 +1392,14 @@ typedef enum {
  * (see below).  Note that we're using the transmit queue's prototype
  * packet header as the repository for various per-call state (e.g. seq
  * #, interface ID).
- * 
+ *
  * The mutex (".mutex") protects fields in the composite call handles
  * (i.e., CCALLs and SCALLs).  The call handle mutex is a level 2 lock.
- * 
+ *
  * The condition variable (".cv") is used to wait for changes in the
  * call handle (typically, changes to the transmit and receive queues)
  * and is partnered with the handle's mutex.
- *        
+ *
  * The high_seq field is used to keep track of the sequence number space
  * in the event of callbacks.  This can get updated in two ways.  First,
  * by receiving a response with a bumped-up sequence number, as in the
@@ -1496,9 +1493,9 @@ typedef struct rpc_dg_call_t {
 #define RPC_DG_CALL_COND_DELETE(call)   RPC_COND_DELETE((call)->cv, (call)->c.m)
 #define RPC_DG_CALL_COND_WAIT(call)     RPC_COND_WAIT((call)->cv, (call)->c.m)
 #define RPC_DG_CALL_COND_SIGNAL(call)   RPC_COND_SIGNAL((call)->cv, (call)->c.m)
-                                             
+
 #define RPC_DG_CALL_IS_SERVER(call)     RPC_CALL_IS_SERVER(&(call)->c)
-#define RPC_DG_CALL_IS_CLIENT(call)     RPC_CALL_IS_CLIENT(&(call)->c)     
+#define RPC_DG_CALL_IS_CLIENT(call)     RPC_CALL_IS_CLIENT(&(call)->c)
 
 /*
  * A common function for changing the call handle state.
@@ -1512,13 +1509,13 @@ typedef struct rpc_dg_call_t {
         (call)->state_timestamp = rpc__clock_stamp(); \
     } \
 }
-    
+
 /* ========================================================================= */
 
 /*
  * Server call handle (SCALL).
  *
- * Defines the dg-specific, server-specific structure referred to 
+ * Defines the dg-specific, server-specific structure referred to
  * from an rpc_call_rep_t.
  *
  * To support normal callbacks, an SCALL is linked with its paired CCALL
@@ -1528,13 +1525,13 @@ typedef struct rpc_dg_call_t {
  * is for the rpc__dg_execute_call() processing.  This flag was introduced
  * for orphan processing since orphaned scalls can't have their final cleanup
  * performed until the call executor processing has completed.
- * 
+ *
  * Callbacks
  * --------
  *
  * Callback CCALLs linger around (cached on the paired scall) until the
  * paired scall processing frees them.
- * 
+ *
  * The following shows the relationships among the SCT, CCALLs, and SCALLs
  * in the case of callback processing in the original server process
  * (i.e. the process where the server manager is calling back to the
@@ -1587,7 +1584,7 @@ typedef struct rpc_dg_scall_t {
 /*
  * Client call handle (CCALL).
  *
- * Defines the dg-specific, client-specific structure referred to 
+ * Defines the dg-specific, client-specific structure referred to
  * from an rpc_call_rep_t.
  *
  * CCALLs are entered into the CCALL table (CCALLT); see below.
@@ -1600,18 +1597,18 @@ typedef struct rpc_dg_scall_t {
  * require that the call handle be appropriatly updated.  On every call,
  * the call handle's per call state (e.g. interface id, ihint, opn) must
  * be properly initialized.
- * 
+ *
  * An in-progress call increments its associated CCTE's reference count
  * for the duration of the call (thereby reserving the CCTE's actid).
  * The reference count should not be decremented until the call no longer
  * requires the exclusive use of that actid.
- * 
+ *
  * A call handle may be re-associated with a new CCTE (if the last one
  * it used happens to be "inuse" or has been freed and a call is starting
  * up).  If such a re-association occurs, cached activity related info in
  * the call handle (e.g., the actid and the ahint) need to be reinitialized.
  *
- * Callbacks 
+ * Callbacks
  * ---------
  *
  * The server call handle (".cbk_scall") refers to the handle of a callback
@@ -1620,15 +1617,15 @@ typedef struct rpc_dg_scall_t {
  * the activity ID in the request must match the activity ID being used
  * by the client making the call.  (Requests packets with non-matching
  * activity IDs received on client sockets are discarded.)
- * 
+ *
  * When a callback request is received, the request packet handling code
  * sets ".cbk_start" and awakens the application client thread to let
  * it know to start executing the callback.
- * 
+ *
  * Callback SCALLs linger around for a while (cached on the paired ccall)
  * in the case of a non-idempotent callback that is awaiting a response
  * ack.  The callback SCALL is freed when the original call completes.
- * 
+ *
  * The following shows the relationships among the CCALLT, CCALLs, and
  * SCALLs in the case of callback processing in the original client
  * processing (i.e. where the callback manager is executing).  Note the
@@ -1660,9 +1657,9 @@ typedef struct rpc_dg_scall_t {
  * Note the special case of the "conv_who_are_you" (WAY) callback used
  * to do "connection management".  For protocol correctness reasons,
  * the request packet in this callback does not have the same activity
- * ID as the client.  We handle this case specially (no cbk scall is used); 
+ * ID as the client.  We handle this case specially (no cbk scall is used);
  * see comments above "rpc__dg_handle_conv" for details.
- * 
+ *
  *
  * Proxy Calls
  * -----------
@@ -1676,7 +1673,7 @@ typedef struct rpc_dg_scall_t {
  * manage this activities sequence number space in the face of such calls.
  * When the original call completes, the value of the response sequence
  * number is stored back into the CCTE.
- * 
+ *
  * All fields are protected by the common call handle lock.
  *
  * LOCKING HIERARCHY:
@@ -1689,7 +1686,7 @@ typedef struct rpc_dg_scall_t {
  *  a ccall and need to get the associated is_cbk scall.  In the original
  *  server process the listener will have a scall and will need to get
  *  the associated is_cbk ccall.  See the above for a visual description.
- *  
+ *
  *  So, the locking hierarchy order is (first, second):
  *      ccall, is_cbk scall
  *      scall, is_cbk ccall
@@ -1721,7 +1718,7 @@ typedef struct rpc_dg_ping_info_t {
     (ping)->count++; \
 }
 
-/* 
+/*
  * Quit information (part of CCALL).
  */
 
@@ -1730,7 +1727,7 @@ typedef struct rpc_dg_quit_info_t {
     unsigned quack_rcvd: 1;         /* quack received notification flag */
 } rpc_dg_quit_info_t;
 
-/* 
+/*
  * Cancel information (part of CCALL).
  */
 
@@ -1797,7 +1794,7 @@ typedef struct rpc_dg_ccall_t {
  * connection sockets to the appropriate server call handle.  Additionally
  * the SCT holds "inter-call history" about remote clients (seq and
  * auth_info).
- * 
+ *
  * The SCT is roughly the server-side analog to the CCALLT and CCT.  It's
  * like the CCALLT in that it's the database for demultiplexing packets
  * to call handles based on the packet's activity ID.  It's like the
@@ -1839,7 +1836,7 @@ typedef struct rpc_dg_ccall_t {
  * the actual execution (stub dispatch) of a tentatively accepted
  * Non-idempotent RPC.
  *
- * Note that in the case of maybe-calls, it is not necessary for the 
+ * Note that in the case of maybe-calls, it is not necessary for the
  * call's sequence number to be greater that the SCTE ".high_seq", since
  * the call's request packet could have been (legally) reordered wrt a
  * packet from a subsequent call; in this case the maybe call will not
@@ -1860,7 +1857,7 @@ typedef struct rpc_dg_ccall_t {
  * in paralel.
  *
  * See the dgsct.[ch] for the operations available for the SCT.
- * 
+ *
  * Each SCTE is reference counted.  The SCALLs reference to the SCTE
  * counts as a reference.  Lookup and get functions increment the ref
  * count since they are returning a reference.  The SCT reference to the
@@ -1868,7 +1865,7 @@ typedef struct rpc_dg_ccall_t {
  *
  * The SCT is garbage collectable -- SCTEs that are not "inuse" (i.e.
  * refcnt == 1; only referenced by the SCT) can be freed.
- * 
+ *
  * See "dgglob.h" for definition of the table itself.
  *
  * The SCT and all it's elements are protected by the global lock.
@@ -2001,7 +1998,6 @@ typedef struct rpc_dg_binding_server_t {
 #error RPC_C_DG_MAX_NUM_PKTS_IN_FRAG greater than RPC_C_MAX_IOVEC_LEN!
 #endif
 
-
 /* =============================================================================== */
 
 /*
@@ -2105,23 +2101,23 @@ typedef struct rpc_dg_binding_server_t {
  * and receiving respectively).  The single difference in the interfaces is that
  * these recvfrom macros expect a buf of type rpc_dg_raw_pkt_p_t (the socket
  * versions expect a byte_p_t).
- * 
+ *
  * Pkt receive processing is the same regardless of whether or not lossy
  * capability is present (lossy currently only affects pkt transmission).
- * 
+ *
  * If RPC_DG_PLOG is defined, pkt logging capability exists (if not compiled
  * for pkt logging capability the plog operations are a no-op; i.e. doesn't
  * even involve a subroutine call).  Note that even if RPC_DG_PLOG is
  * defined, nothing bad will happen unless the rpc_e_dbg_dg_plog debug
  * switch is set appropriately.  See "dgutl.c" for more info.
- * 
+ *
  * If RPC_DG_LOSSY is defined, lossy mode capability exists and all xmits
  * are mapped to the dg lossy xmit routine.  The lossy xmit routine
  * performs the necessary pkt logging.  It will also do bad stuff every
  * once in a while.  Used for testing.  Note that even if RPC_DG_LOSSY
  * is defined, nothing bad will happen unless the rpc_e_dbg_dg_lossy
  * debug switch is set appropriately.  See "dglossy.c" for more info.
- * 
+ *
  * Note that we don't (currently) use rpc__socket_sendto() (or
  * RPC_SOCKET_SENDTO) but just in case, we alias them here.
  */
@@ -2181,14 +2177,11 @@ typedef struct rpc_dg_binding_server_t {
 #  define RPC_DG_SOCKET_SENDTO_OOL  rpc__dg_socket_sendto_not_impl
 #  define RPC_DG_SOCKET_SENDTO      rpc__dg_socket_sendto_not_impl
 
-
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-
-PRIVATE rpc_socket_error_t rpc__dg_lossy_socket_sendmsg _DCE_PROTOTYPE_((
+PRIVATE rpc_socket_error_t rpc__dg_lossy_socket_sendmsg ((
         rpc_socket_t /*sock*/,
         rpc_socket_iovec_p_t /*iov*/,
         int /*iov_len*/,
@@ -2201,7 +2194,6 @@ PRIVATE rpc_socket_error_t rpc__dg_lossy_socket_sendmsg _DCE_PROTOTYPE_((
 #ifdef __cplusplus
 }
 #endif
-
 
 /* ======================================================================== */
 
@@ -2234,50 +2226,46 @@ PRIVATE rpc_socket_error_t rpc__dg_lossy_socket_sendmsg _DCE_PROTOTYPE_((
 
 #define RPC_DG_AUTH_REFERENCE(info) \
     rpc__auth_info_reference(info)
-    
+
 #define RPC_DG_AUTH_RELEASE(info) \
     rpc__auth_info_release(&(info))
 
 #define RPC_DG_KEY_REFERENCE(key) \
     rpc__key_info_reference(key)
-    
+
 #define RPC_DG_KEY_RELEASE(key) \
     rpc__key_info_release(&(key))
 
-    
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-
-/* 
- * invoked on server to create new auth_t for a new client 
+/*
+ * invoked on server to create new auth_t for a new client
  */
-typedef rpc_key_info_p_t (*rpc_dg_auth_create_fn_t) _DCE_PROTOTYPE_((
+typedef rpc_key_info_p_t (*rpc_dg_auth_create_fn_t) (
         unsigned32 * /*st*/
-    ));
+    );
 
-/* 
- * invoked before each call 
+/*
+ * invoked before each call
  */
-typedef void (*rpc_dg_auth_pre_call_fn_t) _DCE_PROTOTYPE_((
+typedef void (*rpc_dg_auth_pre_call_fn_t) (
         rpc_key_info_p_t                /*info*/,
         handle_t                         /*h*/,
         unsigned32                      * /*st*/
-    ));
+    );
 
-
-typedef void (*rpc_dg_auth_encrypt_fn_t) _DCE_PROTOTYPE_((
+typedef void (*rpc_dg_auth_encrypt_fn_t) (
         rpc_key_info_p_t                /*info*/,
         rpc_dg_xmitq_elt_p_t            ,
         unsigned32                      * /*st*/
-    ));
+    );
 
-    
-/* 
- * invoked after header is packed   
+/*
+ * invoked after header is packed
  */
-typedef void (*rpc_dg_auth_pre_send_fn_t) _DCE_PROTOTYPE_((
+typedef void (*rpc_dg_auth_pre_send_fn_t) (
         rpc_key_info_p_t                /*info*/,
         rpc_dg_xmitq_elt_p_t            ,
         rpc_dg_pkt_hdr_p_t              ,
@@ -2285,24 +2273,22 @@ typedef void (*rpc_dg_auth_pre_send_fn_t) _DCE_PROTOTYPE_((
         int                              /*iovlen*/,
         pointer_t                        /*cksum*/,
         unsigned32                      * /*st*/
-    ));
+    );
 
-        
-
-/* 
+/*
  * invoked after header in unpacked
  */
-typedef void (*rpc_dg_auth_recv_ck_fn_t) _DCE_PROTOTYPE_((
+typedef void (*rpc_dg_auth_recv_ck_fn_t) (
         rpc_key_info_p_t                /*info*/,
         rpc_dg_recvq_elt_p_t             /*pkt*/,
         pointer_t                        /*cksum*/,
         unsigned32                      * /*st*/
-    ));
+    );
 
-/* 
- * called on server side 
+/*
+ * called on server side
  */
-typedef void (*rpc_dg_auth_way_fn_t) _DCE_PROTOTYPE_((
+typedef void (*rpc_dg_auth_way_fn_t) (
         rpc_key_info_p_t               /* in */   /*info*/,
         handle_t                        /* in */   /*h*/,
         idl_uuid_t                          /* in */  * /*actuid*/,
@@ -2310,13 +2296,12 @@ typedef void (*rpc_dg_auth_way_fn_t) _DCE_PROTOTYPE_((
         unsigned32                      /* out */ * /*seqno*/,
         idl_uuid_t                          /* out */ * /*cas_uuid*/,
         unsigned32                      /* out */ * /*st*/
-    ));
+    );
 
-    
-/* 
- * called on client side 
+/*
+ * called on client side
  */
-typedef void (*rpc_dg_auth_way_handler_fn_t) _DCE_PROTOTYPE_((
+typedef void (*rpc_dg_auth_way_handler_fn_t) (
         rpc_key_info_p_t                /*info*/,
         ndr_byte                        * /*in_data*/,
         signed32                         /*in_len*/,
@@ -2324,17 +2309,16 @@ typedef void (*rpc_dg_auth_way_handler_fn_t) _DCE_PROTOTYPE_((
         ndr_byte                        ** /*out_data*/,
         signed32                        * /*out_len*/,
         unsigned32                      * /*st*/
-     ));
-
+     );
 
 /*
  * Generate new keyblock backed by info.
  * Note that this theoretically "can't fail".
  */
 
-typedef rpc_key_info_p_t (*rpc_dg_auth_new_key_fn_t) _DCE_PROTOTYPE_ ((
+typedef rpc_key_info_p_t (*rpc_dg_auth_new_key_fn_t) (
         rpc_auth_info_p_t               /*info*/
-    ));
+    );
 
 typedef struct rpc_dg_auth_epv_t
 {
@@ -2350,8 +2334,6 @@ typedef struct rpc_dg_auth_epv_t
     rpc_dg_auth_way_handler_fn_t way_handler;
     rpc_dg_auth_new_key_fn_t new_key;
 } rpc_dg_auth_epv_t, *rpc_dg_auth_epv_p_t;
-
-
 
 /* =============================================================================== */
 
@@ -2370,7 +2352,7 @@ typedef struct
     unsigned32 dups_rcvd;           /* # of duplicate frags rcvd */
     unsigned32 oo_rcvd;             /* # of out or order pkts rcvd */
     struct dg_pkt_stats_t              /* Breakdown of pkts sent/rcvd by pkt type */
-    {                               
+    {
         unsigned32 sent;
         unsigned32 rcvd;
     } pstats[RPC_C_DG_PT_MAX_TYPE + 1];
@@ -2379,7 +2361,7 @@ typedef struct
 
 #define RPC_DG_STATS_INCR(s) (rpc_g_dg_stats.s++)
 
-PRIVATE void rpc__dg_stats_print _DCE_PROTOTYPE_(( void ));
+PRIVATE void rpc__dg_stats_print ( void );
 
 /* ========================================================================= */
 
@@ -2400,69 +2382,68 @@ typedef unsigned32 rpc_dg_rd_flags_t;
 #define RPC_C_DG_RDF_YIELD     0x00000002   /* Yield before processing socket again */
 
 /* =============================================================================== */
-                           
+
 /*
  * Prototype of the DG fork handling routine.
  */
-void rpc__ncadg_fork_handler _DCE_PROTOTYPE_ (( rpc_fork_stage_id_t /*stage*/));
-
+void rpc__ncadg_fork_handler ( rpc_fork_stage_id_t /*stage*/);
 
 /*
  * Prototypes of routines used in the DG RPC Protocol Service (call)
  */
 
-PRIVATE rpc_call_rep_p_t rpc__dg_call_start _DCE_PROTOTYPE_((
+PRIVATE rpc_call_rep_p_t rpc__dg_call_start (
         rpc_binding_rep_p_t  /*h*/,
         unsigned32  /*options*/,
-        rpc_if_rep_p_t  /*ifspec*/, 
-        unsigned32  /*opn*/, 
+        rpc_if_rep_p_t  /*ifspec*/,
+        unsigned32  /*opn*/,
         rpc_transfer_syntax_t * /*transfer_syntax*/,
         unsigned32 * /*st*/
-    ));
-PRIVATE void rpc__dg_call_transmit _DCE_PROTOTYPE_((
-        rpc_call_rep_p_t  /*call*/, 
-        rpc_iovector_p_t  /*data*/, 
+    );
+PRIVATE void rpc__dg_call_transmit (
+        rpc_call_rep_p_t  /*call*/,
+        rpc_iovector_p_t  /*data*/,
         unsigned32 * /*st*/
-    ));
-PRIVATE void rpc__dg_call_transceive _DCE_PROTOTYPE_((
-        rpc_call_rep_p_t  /*call*/, 
-        rpc_iovector_p_t  /*send_data*/, 
-        rpc_iovector_elt_t * /*recv_data*/, 
-        ndr_format_t * /*ndr_format*/, 
+    );
+PRIVATE void rpc__dg_call_transceive (
+        rpc_call_rep_p_t  /*call*/,
+        rpc_iovector_p_t  /*send_data*/,
+        rpc_iovector_elt_t * /*recv_data*/,
+        ndr_format_t * /*ndr_format*/,
         unsigned32 * /*st*/
-    ));
-PRIVATE void rpc__dg_call_receive _DCE_PROTOTYPE_((
-        rpc_call_rep_p_t  /*call*/, 
-        rpc_iovector_elt_t * /*data*/, 
+    );
+PRIVATE void rpc__dg_call_receive (
+        rpc_call_rep_p_t  /*call*/,
+        rpc_iovector_elt_t * /*data*/,
         unsigned32 * /*st*/
-    ));
-PRIVATE void rpc__dg_call_end _DCE_PROTOTYPE_((
+    );
+PRIVATE void rpc__dg_call_end (
         rpc_call_rep_p_t * /*call*/,
         unsigned32 * /*st*/
-    ));
-PRIVATE void rpc__dg_call_block_until_free _DCE_PROTOTYPE_((
+    );
+PRIVATE void rpc__dg_call_block_until_free (
         rpc_call_rep_p_t  /*call*/,
         unsigned32 * /*st*/
-    ));
-PRIVATE void rpc__dg_call_alert _DCE_PROTOTYPE_((
+    );
+PRIVATE void rpc__dg_call_alert (
         rpc_call_rep_p_t  /*call*/,
         unsigned32 * /*st*/
-    ));
-PRIVATE void rpc__dg_call_fault _DCE_PROTOTYPE_((
+    );
+PRIVATE void rpc__dg_call_fault (
         rpc_call_rep_p_t  /*call*/,
         rpc_iovector_p_t  /*fault_info*/,
         unsigned32 * /*st*/
-    ));
-PRIVATE void rpc__dg_call_receive_fault _DCE_PROTOTYPE_((
-        rpc_call_rep_p_t  /*call*/, 
-        rpc_iovector_elt_t * /*data*/, 
+    );
+PRIVATE void rpc__dg_call_receive_fault (
+        rpc_call_rep_p_t  /*call*/,
+        rpc_iovector_elt_t * /*data*/,
         ndr_format_t * /*remote_ndr_format*/,
         unsigned32 * /*st*/
-    ));
-PRIVATE boolean32 rpc__dg_call_did_mgr_execute _DCE_PROTOTYPE_((
+    );
+PRIVATE boolean32 rpc__dg_call_did_mgr_execute (
         rpc_call_rep_p_t  /*call*/,
         unsigned32 * /*st*/
-    ));
+    );
 
 /* =============================================================================== */
 
@@ -2470,53 +2451,53 @@ PRIVATE boolean32 rpc__dg_call_did_mgr_execute _DCE_PROTOTYPE_((
  * Prototypes of routines used in the DG RPC Protocol Service (network).
  */
 
-PRIVATE pointer_t rpc__dg_network_init_desc _DCE_PROTOTYPE_((
+PRIVATE pointer_t rpc__dg_network_init_desc (
         rpc_socket_t * /*sock*/,
         rpc_protseq_id_t  /*pseq_id*/,
         unsigned32 * /*st*/
-    ));
-PRIVATE void rpc__dg_network_use_protseq _DCE_PROTOTYPE_((
+    );
+PRIVATE void rpc__dg_network_use_protseq (
         rpc_protseq_id_t  /*pseq_id*/,
         unsigned32  /*max_calls*/,
         rpc_addr_p_t  /*rpc_addr*/,
         unsigned_char_p_t  /*endpoint*/,
         unsigned32 * /*st*/
-    ));
-PRIVATE void rpc__dg_network_mon _DCE_PROTOTYPE_((
+    );
+PRIVATE void rpc__dg_network_mon (
         rpc_binding_rep_p_t  /*binding_r*/,
         rpc_client_handle_t  /*client_h*/,
         rpc_network_rundown_fn_t  /*rundown*/,
         unsigned32 * /*st*/
-    ));
-PRIVATE void rpc__dg_network_stop_mon _DCE_PROTOTYPE_((
+    );
+PRIVATE void rpc__dg_network_stop_mon (
         rpc_binding_rep_p_t  /*binding_r*/,
         rpc_client_handle_t  /*client_h*/,
         unsigned32 * /*st*/
-    ));
-PRIVATE void rpc__dg_network_maint _DCE_PROTOTYPE_((
+    );
+PRIVATE void rpc__dg_network_maint (
         rpc_binding_rep_p_t  /*binding_r*/,
         unsigned32 * /*st*/
-    ));
-PRIVATE void rpc__dg_network_stop_maint _DCE_PROTOTYPE_((
+    );
+PRIVATE void rpc__dg_network_stop_maint (
         rpc_binding_rep_p_t  /*binding_r*/,
         unsigned32 * /*st*/
-    ));
-PRIVATE void rpc__dg_network_close _DCE_PROTOTYPE_((
+    );
+PRIVATE void rpc__dg_network_close (
         rpc_binding_rep_p_t  /*binding_r*/,
         unsigned32 * /*st*/
-    ));
-PRIVATE void rpc__dg_network_select_dispatch _DCE_PROTOTYPE_((
+    );
+PRIVATE void rpc__dg_network_select_dispatch (
         rpc_socket_t  /*desc*/,
         pointer_t  /*si*/,
         boolean32  /*is_active*/,
         unsigned32 * /*st*/
-    ));
-PRIVATE void rpc__dg_network_inq_prot_vers _DCE_PROTOTYPE_((
+    );
+PRIVATE void rpc__dg_network_inq_prot_vers (
         unsigned8 * /*prot_id*/,
         unsigned32 * /*vers_major*/,
         unsigned32 * /*vers_minor*/,
         unsigned32 * /*st*/
-    ));
+    );
 
 /* =============================================================================== */
 
@@ -2524,60 +2505,59 @@ PRIVATE void rpc__dg_network_inq_prot_vers _DCE_PROTOTYPE_((
  * Prototypes of routines used in the DG RPC Protocol Service (mgmt)
  */
 
-PRIVATE unsigned32 rpc__dg_mgmt_inq_calls_sent _DCE_PROTOTYPE_(( void ));
-PRIVATE unsigned32 rpc__dg_mgmt_inq_calls_rcvd _DCE_PROTOTYPE_(( void ));
-PRIVATE unsigned32 rpc__dg_mgmt_inq_pkts_sent _DCE_PROTOTYPE_(( void ));
-PRIVATE unsigned32 rpc__dg_mgmt_inq_pkts_rcvd _DCE_PROTOTYPE_(( void ));
+PRIVATE unsigned32 rpc__dg_mgmt_inq_calls_sent ( void );
+PRIVATE unsigned32 rpc__dg_mgmt_inq_calls_rcvd ( void );
+PRIVATE unsigned32 rpc__dg_mgmt_inq_pkts_sent ( void );
+PRIVATE unsigned32 rpc__dg_mgmt_inq_pkts_rcvd ( void );
 
 /* ========================================================================= */
 
-PRIVATE void rpc__dg_monitor_init _DCE_PROTOTYPE_((void));
+PRIVATE void rpc__dg_monitor_init (void);
 
-PRIVATE void rpc__dg_monitor_fork_handler _DCE_PROTOTYPE_((
+PRIVATE void rpc__dg_monitor_fork_handler (
         rpc_fork_stage_id_t /*stage*/
-    ));
+    );
 
-PRIVATE void rpc__dg_maintain_init _DCE_PROTOTYPE_((void));
+PRIVATE void rpc__dg_maintain_init (void);
 
-PRIVATE void rpc__dg_maintain_fork_handler _DCE_PROTOTYPE_((
+PRIVATE void rpc__dg_maintain_fork_handler (
         rpc_fork_stage_id_t /*stage*/
-    ));
+    );
 
-PRIVATE void rpc__dg_call_transmit_int _DCE_PROTOTYPE_((
+PRIVATE void rpc__dg_call_transmit_int (
         rpc_dg_call_p_t  /*call*/,
-        rpc_iovector_p_t  /*data*/, 
+        rpc_iovector_p_t  /*data*/,
         unsigned32 * /*st*/
-    ));
+    );
 
-PRIVATE void rpc__dg_call_receive_int _DCE_PROTOTYPE_((
+PRIVATE void rpc__dg_call_receive_int (
         rpc_dg_call_p_t  /*call*/,
-        rpc_iovector_elt_t * /*data*/, 
+        rpc_iovector_elt_t * /*data*/,
         unsigned32 * /*st*/
-    ));
+    );
 
-PRIVATE boolean32 rpc__dg_handle_conv _DCE_PROTOTYPE_((
+PRIVATE boolean32 rpc__dg_handle_conv (
         rpc_socket_t  /*sock*/,
         rpc_dg_recvq_elt_p_t /*rqe*/
-    ));
+    );
 
-PRIVATE void rpc__dg_convc_indy _DCE_PROTOTYPE_(( uuid_p_t /*cas_uuid*/));
+PRIVATE void rpc__dg_convc_indy ( uuid_p_t /*cas_uuid*/);
 
-
-PRIVATE void rpc__dg_handle_convc _DCE_PROTOTYPE_(( 
+PRIVATE void rpc__dg_handle_convc (
         rpc_dg_recvq_elt_p_t /*rqe*/
-    ));
+    );
 
 #ifdef PASSWD_ETC
-PRIVATE void rpc__dg_handle_rgy _DCE_PROTOTYPE_((
+PRIVATE void rpc__dg_handle_rgy (
         rpc_socket_t  /*sock*/,
         rpc_dg_recvq_elt_p_t /*rqe*/
-    ));
+    );
 #endif
 
-PRIVATE void rpc__dg_get_epkt_body_st _DCE_PROTOTYPE_((
+PRIVATE void rpc__dg_get_epkt_body_st (
         rpc_dg_recvq_elt_p_t  /*rqe*/,
         unsigned32 * /*st*/
-    ));
+    );
 
 /* ========================================================================= */
 
@@ -2587,18 +2567,18 @@ PRIVATE void rpc__dg_get_epkt_body_st _DCE_PROTOTYPE_((
 
 /* ========================================================================= */
 
-PRIVATE void rpc__dg_conv_init _DCE_PROTOTYPE_(( void ));
+PRIVATE void rpc__dg_conv_init ( void );
 
-PRIVATE void rpc__dg_conv_fork_handler _DCE_PROTOTYPE_(( 
+PRIVATE void rpc__dg_conv_fork_handler (
     rpc_fork_stage_id_t /*stage*/
-    ));
+    );
 
-PRIVATE void rpc__dg_fack_common    _DCE_PROTOTYPE_((
+PRIVATE void rpc__dg_fack_common    (
         rpc_dg_sock_pool_elt_p_t  /*sp*/,
         rpc_dg_recvq_elt_p_t  /*rqe*/,
         rpc_dg_call_p_t  /*call*/,
         boolean * /*sent_data*/
-    ));
+    );
 
 /* ======================================================================== */
 
@@ -2606,6 +2586,4 @@ PRIVATE void rpc__dg_fack_common    _DCE_PROTOTYPE_((
 }
 #endif
 
-
 #endif /* _DG_H */
-

@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -70,24 +71,24 @@ GLOBAL rpc_cn_common_hdr_t rpc_g_cn_common_hdr =
 };
 
 
-INTERNAL rpc_cn_pres_result_list_p_t unpack_port_any _DCE_PROTOTYPE_ ((
+INTERNAL rpc_cn_pres_result_list_p_t unpack_port_any (
         rpc_cn_port_any_t       * /*port_any_p*/,
         unsigned8               * /*drepp*/
-        ));
+        );
 
-INTERNAL rpc_cn_auth_tlr_p_t unpack_pres_context_list _DCE_PROTOTYPE_ ((
+INTERNAL rpc_cn_auth_tlr_p_t unpack_pres_context_list (
         rpc_cn_pres_cont_list_p_t /*pcontp*/,
         boolean32               /*swap*/
-        ));
+        );
 
-INTERNAL rpc_cn_auth_tlr_p_t unpack_pres_result_list _DCE_PROTOTYPE_ ((
+INTERNAL rpc_cn_auth_tlr_p_t unpack_pres_result_list (
         rpc_cn_pres_result_list_p_t /*presp*/,
         boolean32               /*swap*/
-        ));
+        );
 
-INTERNAL rpc_cn_auth_tlr_p_t unpack_versions_supported _DCE_PROTOTYPE_ ((
+INTERNAL rpc_cn_auth_tlr_p_t unpack_versions_supported (
         rpc_cn_versions_supported_p_t /*versp*/
-        ));
+        );
 
 /*
 **++
@@ -125,16 +126,10 @@ INTERNAL rpc_cn_auth_tlr_p_t unpack_versions_supported _DCE_PROTOTYPE_ ((
 **/
 
 INTERNAL rpc_cn_pres_result_list_p_t unpack_port_any 
-#ifdef _DCE_PROTO_
 (
   rpc_cn_port_any_t       *port_any_p,
   unsigned8               *drepp
 )
-#else
-(port_any_p, drepp)
-rpc_cn_port_any_t       *port_any_p;
-unsigned8               *drepp;
-#endif
 {
     union
     {                                  /* a "proper" union to shut up lint */
@@ -208,16 +203,10 @@ unsigned8               *drepp;
 **/
 
 INTERNAL rpc_cn_auth_tlr_p_t unpack_pres_context_list 
-#ifdef _DCE_PROTO_
 (
   rpc_cn_pres_cont_list_p_t       pcontp,
   boolean32                       swap
 )
-#else 
-(pcontp, swap)
-rpc_cn_pres_cont_list_p_t       pcontp;
-boolean32                       swap;
-#endif
 {
     unsigned8 n;                       /* presentation context list element
                                         * loop count */
@@ -321,16 +310,10 @@ boolean32                       swap;
 **/
 
 INTERNAL rpc_cn_auth_tlr_p_t unpack_pres_result_list 
-#ifdef _DCE_PROTO_
 (
   rpc_cn_pres_result_list_p_t     presp,
   boolean32                       swap
 )
-#else
-(presp, swap)
-rpc_cn_pres_result_list_p_t     presp;
-boolean32                       swap;
-#endif
 {
     unsigned8 n;		/* presentation result list element loop
                                         * count */
@@ -390,14 +373,9 @@ boolean32                       swap;
 **/
 
 INTERNAL rpc_cn_auth_tlr_p_t unpack_versions_supported 
-#ifdef _DCE_PROTO_
 (
   rpc_cn_versions_supported_p_t versions_p
 )
-#else
-(versions_p)
-rpc_cn_versions_supported_p_t versions_p;
-#endif
 {
     union
     {
@@ -451,16 +429,10 @@ rpc_cn_versions_supported_p_t versions_p;
 **/
 
 INTERNAL void force_alignment 
-#ifdef _DCE_PROTO_
 (
   unsigned32 boundary,
   unsigned8 **ptr
 )
-#else
-(boundary, ptr)
-unsigned32 boundary;
-unsigned8 **ptr;
-#endif
 {
     union
     {
@@ -509,14 +481,9 @@ unsigned8 **ptr;
 **/
 
 INTERNAL rpc_cn_auth_tlr_p_t end_of_stub_data 
-#ifdef _DCE_PROTO_
 (
   rpc_cn_packet_p_t pkt_p
 )
-#else
-(pkt_p)
-rpc_cn_packet_p_t pkt_p;
-#endif
 {
     union
     {
@@ -618,14 +585,9 @@ rpc_cn_packet_p_t pkt_p;
 **/
 
 PRIVATE void rpc__cn_unpack_hdr 
-#ifdef _DCE_PROTO_
 (
   rpc_cn_packet_p_t pkt_p
 )
-#else
-(pkt_p)
-rpc_cn_packet_p_t pkt_p;
-#endif
 {
     rpc_cn_auth_tlr_p_t authp;           /* ptr to pkt authentication data */
     rpc_cn_pres_cont_list_p_t pconp;     /* ptr to pkt presentation context lists */
@@ -875,7 +837,6 @@ rpc_cn_packet_p_t pkt_p;
 **/
 
 PRIVATE void rpc__cn_pkt_format_common 
-#ifdef _DCE_PROTO_
 (
   rpc_cn_packet_p_t       pkt_p,
   unsigned32              ptype,
@@ -885,16 +846,6 @@ PRIVATE void rpc__cn_pkt_format_common
   unsigned32              call_id,
   unsigned8               minor_version
 )
-#else
-(pkt_p, ptype, flags, frag_len, auth_len, call_id, minor_version)
-rpc_cn_packet_p_t       pkt_p;
-unsigned32              ptype;
-unsigned32              flags;
-unsigned32              frag_len;
-unsigned32              auth_len;
-unsigned32              call_id;
-unsigned8               minor_version;
-#endif
 {
     /*
      * First copy the template common packet header.
@@ -1019,14 +970,9 @@ PRIVATE void rpc__cn_stats_print (void)
 **/
 
 PRIVATE const char *rpc__cn_pkt_name
-#ifdef _DCE_PROTO_
 (
   unsigned32      ptype ATTRIBUTE_UNUSED
 )
-#else
-(ptype)
-unsigned32      ptype;
-#endif
 {
 #ifndef DEBUG
 
@@ -1141,16 +1087,10 @@ unsigned32      ptype;
 **/
 
 PRIVATE unsigned32      rpc__cn_pkt_crc_compute 
-#ifdef _DCE_PROTO_
 (
   unsigned8       *block,
   unsigned32      block_len
 )
-#else
-(block, block_len)
-unsigned8       *block;
-unsigned32      block_len;
-#endif
 {
     register unsigned_char_t    *data;
     register unsigned32         c = 0;

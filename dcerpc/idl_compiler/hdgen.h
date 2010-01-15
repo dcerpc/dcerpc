@@ -3,6 +3,7 @@
  * (c) Copyright 1990 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1990 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1990 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -47,19 +48,15 @@ void BE_gen_c_header(
 
 void CSPELL_type_def
 (
-#ifdef PROTO
     FILE *fid,
     AST_type_n_t *tp,
     boolean spell_tag
-#endif
 );
 
 const char *mapchar
 (
-#ifdef PROTO
     AST_constant_n_t *cp,   /* Constant node with kind == AST_char_const_k */
     boolean warning_flag    /* TRUE => log warning on nonportable escape char */
-#endif
 );
 int BE_is_handle_param(AST_parameter_n_t * p);
 enum orpc_class_def_type { class_def, proxy_def, stub_def };

@@ -3,6 +3,7 @@
  * (c) Copyright 1990 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1990 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1990 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -51,14 +52,9 @@ static int temp_count = 0;
 static char *temp_names[MAX_INCLUSION_DEPTH];
 
 char *sysdep_save_temp
-#ifdef PROTO
 (
     char *old_name
 )
-#else
-(old_name)
-    char *old_name;
-#endif
 {
         char new_name[64];
         char *new_name_ptr;
@@ -74,11 +70,7 @@ char *sysdep_save_temp
 }
 
 void sysdep_cleanup_temp
-#ifdef PROTO
 ()
-#else
-()
-#endif
 {
         int i;
         char *name;
@@ -145,15 +137,9 @@ static FILE * previous_fid = NULL;      /* File id from previous call */
 */
 
 void flush_output_line
-#ifdef PROTO
 (
     FILE * fid                  /* [in] File handle */
 )
-#else
-(fid)
-    FILE * fid;                 /* [in] File handle */
-#endif
-
 {
     /*
     ** If fid does not match fid from last call to output_line, this is a noop
@@ -189,19 +175,11 @@ void flush_output_line
 */
 
 int output_line
-#ifdef PROTO
 (
     FILE * fid,                 /* [in] File handle */
     char *format,               /* [in] Format string */
     ...                         /* [in] 0-N format arguments */
 )
-#else
-(fid, format, va_alist)
-    FILE * fid;                 /* [in] File handle */
-    char *format;               /* [in] Format string */
-    va_dcl                      /* [in] 0-N format arguments */
-#endif
-
 {
     va_list args;
     char *buff, *obuff, *cp, *pcp;

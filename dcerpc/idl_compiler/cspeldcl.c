@@ -3,6 +3,7 @@
  * (c) Copyright 1993 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1993 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1993 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -47,16 +48,10 @@
 /*                                                                            */
 /******************************************************************************/
 void CSPELL_constant_val_to_string
-#ifdef PROTO
 (
     AST_constant_n_t *cp,
     char *str
 )
-#else
-(cp, str)
-    AST_constant_n_t *cp;
-    char *str;
-#endif
 {
     char const *str2;
 
@@ -92,16 +87,10 @@ void CSPELL_constant_val_to_string
 /*                                                                            */
 /******************************************************************************/
 void CSPELL_constant_val
-#ifdef PROTO
 (
     FILE *fid,
     AST_constant_n_t *cp
 )
-#else
-(fid, cp)
-    FILE *fid;
-    AST_constant_n_t *cp;
-#endif
 {
     char str[max_string_len];
 
@@ -115,16 +104,10 @@ void CSPELL_constant_val
 /*                                                                            */
 /******************************************************************************/
 void CSPELL_labels
-#ifdef PROTO
 (
     FILE *fid,
     AST_case_label_n_t *clp
 )
-#else
-(fid, clp)
-    FILE  *fid;
-    AST_case_label_n_t *clp;
-#endif
 {
     boolean first = true;
 
@@ -148,18 +131,11 @@ void CSPELL_labels
 /*                                                                            */
 /******************************************************************************/
 void CSPELL_parameter_list
-#ifdef PROTO
 (
     FILE *fid,
     AST_parameter_n_t *pp,
     boolean encoding_services   /* TRUE => [encode] or [decode] on operation */
 )
-#else
-(fid, pp, encoding_services)
-    FILE *fid;
-    AST_parameter_n_t *pp;
-    boolean encoding_services;
-#endif
 {
     boolean            first = true;
 
@@ -219,30 +195,10 @@ void CSPELL_parameter_list
 /*                                                                            */
 /******************************************************************************/
 void CSPELL_finish_synopsis
-#ifdef PROTO
 (
-    FILE *fid,
-    AST_parameter_n_t *paramlist
+    FILE *fid ATTRIBUTE_UNUSED,
+    AST_parameter_n_t *paramlist ATTRIBUTE_UNUSED
 )
-#else
-(fid, paramlist)
-    FILE *fid;
-    AST_parameter_n_t *paramlist;
-#endif
 {
-    AST_parameter_n_t *pp;
-
-    fprintf (fid, "\n#ifndef IDL_PROTOTYPES\n");
-    for (pp = paramlist; pp != NULL; pp = pp->next)
-    {
-        if (AST_HIDDEN_SET(pp))
-        {
-            /* Parameter does not appear in signature delivered to user */
-            continue;
-        }
-	fprintf(fid,"    ");
-            CSPELL_var_decl (fid, pp->type, pp->name);
-    }
-    fprintf (fid, "#endif\n");
 }
 

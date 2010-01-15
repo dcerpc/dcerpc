@@ -3,6 +3,7 @@
  * (c) Copyright 1992 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1992 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1992 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -43,11 +44,9 @@
 
 void DDBE_init_server_pipes
 (
-#ifdef PROTO
     FILE *fid,
     AST_operation_n_t *p_operation,
     long *p_first_pipe      /* ptr to index and direction of first pipe */
-#endif
 );
 
 #endif

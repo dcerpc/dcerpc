@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -144,7 +145,7 @@
 
 #define ATFORK(handler) rpc__atfork(handler)
 
-extern void rpc__cma_atfork _DCE_PROTOTYPE_((void *));
+extern void rpc__cma_atfork (void *);
 
 /****************************************************************************/
 

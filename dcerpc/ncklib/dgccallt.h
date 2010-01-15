@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -40,31 +41,27 @@
 #ifndef _DGCCALLT_H
 #define _DGCCALLT_H	1	
 
-#ifndef _DCE_PROTOTYPE_
-#include <dce/dce.h>
-#endif
-
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-PRIVATE void rpc__dg_ccallt_insert _DCE_PROTOTYPE_((
+PRIVATE void rpc__dg_ccallt_insert (
         rpc_dg_ccall_p_t /*ccall*/
-    ));
+    );
 
-PRIVATE void rpc__dg_ccallt_remove _DCE_PROTOTYPE_((
+PRIVATE void rpc__dg_ccallt_remove (
         rpc_dg_ccall_p_t /*ccall*/
-    ));
+    );
 
-PRIVATE rpc_dg_ccall_p_t rpc__dg_ccallt_lookup _DCE_PROTOTYPE_((
+PRIVATE rpc_dg_ccall_p_t rpc__dg_ccallt_lookup (
         uuid_p_t /*actid*/,
         unsigned32 /*probe_hint*/
-    ));
+    );
 
-PRIVATE void rpc__dg_ccallt_fork_handler _DCE_PROTOTYPE_((
+PRIVATE void rpc__dg_ccallt_fork_handler (
         rpc_fork_stage_id_t /*stage*/
-   ));
+   );
 
 #ifdef __cplusplus
 }

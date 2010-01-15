@@ -3,6 +3,7 @@
  * (c) Copyright 1993 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1993 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1993 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -90,9 +91,7 @@ static callee_client_entry_t *client_table = NULL;
 /*  Allocate callee client lookup table and initialize pointers to NULL.
 */
 void rpc_ss_init_callee_client_table(
-#ifdef IDL_PROTOTYPES
     void
-#endif
 )
 {
 #ifdef PERFMON
@@ -126,7 +125,6 @@ void rpc_ss_init_callee_client_table(
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_add_to_callee_client
-#ifdef IDL_PROTOTYPES
 (
     /* [in] */ rpc_client_handle_t ctx_client,
                              /* Client for whom there is or will be a context */
@@ -137,13 +135,6 @@ void rpc_ss_add_to_callee_client
                                           /* TRUE => first context for client */
     error_status_t *result         /* Function result */
 )
-#else
-(ctx_client, p_context, p_is_new_client, result)
-    rpc_client_handle_t ctx_client;
-    callee_context_entry_t *p_context;
-    ndr_boolean *p_is_new_client;
-    error_status_t *result;
-#endif
 {
     int slot;    /* Index of the slot in the lookup table the client
                     should be in */
@@ -262,14 +253,9 @@ void rpc_ss_add_to_callee_client
 /*                                                                            */
 /******************************************************************************/
 static void rpc_ss_ctx_remove_client_entry
-#ifdef IDL_PROTOTYPES
 (
     /* [in] */callee_client_entry_t *this_client
 )
-#else
-(this_client)
-    callee_client_entry_t *this_client;
-#endif
 {
     callee_client_entry_t *next_client, *prev_client;
 
@@ -303,20 +289,12 @@ static void rpc_ss_ctx_remove_client_entry
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_take_from_callee_client
-#ifdef IDL_PROTOTYPES
 (
     /* [in] */ callee_context_entry_t *p_context,  /* Pointer to the context */
     /* [out] */ rpc_client_handle_t *p_close_client,
                                 /* Ptr to NULL or client to stop monitoring */
     /* [out] */ error_status_t *result /* Function result */
 )
-#else
-(p_context, p_close_client, result)
-    callee_context_entry_t *p_context;  /* Pointer to the context */
-    rpc_client_handle_t *p_close_client;
-                                /* Ptr to NULL or client to stop monitoring */
-    error_status_t *result;/* Function result */
-#endif
 {
     callee_client_entry_t *this_client;
 
@@ -381,14 +359,9 @@ void rpc_ss_take_from_callee_client
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_rundown_client
-#ifdef IDL_PROTOTYPES
 (
     /* [in] */ rpc_client_handle_t failed_client
 )
-#else
-(failed_client)
-    rpc_client_handle_t failed_client;
-#endif
 {
     error_status_t result;
     callee_client_entry_t *this_client;
@@ -512,16 +485,10 @@ void rpc_ss_rundown_client
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_ctx_client_ref_count_inc
-#ifdef IDL_PROTOTYPES
 (
     handle_t h,
     error_status_t *p_st
 )
-#else
-(h, p_st)
-    handle_t h;
-    error_status_t *p_st;
-#endif
 {
     rpc_client_handle_t client_id;     /* ID of client */
     callee_client_entry_t *this_client;
@@ -561,16 +528,10 @@ void rpc_ss_ctx_client_ref_count_inc
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_ctx_client_ref_count_dec
-#ifdef IDL_PROTOTYPES
 (
     handle_t h,
     error_status_t *p_st
 )
-#else
-(h, p_st)
-    handle_t h;
-    error_status_t *p_st;
-#endif
 {
     rpc_client_handle_t client_id;     /* ID of client */
     callee_client_entry_t *this_client;
@@ -617,18 +578,11 @@ void rpc_ss_ctx_client_ref_count_dec
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_ctx_client_ref_count_i_2
-#ifdef IDL_PROTOTYPES
 (
     handle_t h,
     rpc_client_handle_t *p_client_id,     /* [out] ID of client, or NULL */
     error_status_t *p_st
 )
-#else
-(h, p_client_id, p_st)
-    handle_t h;
-    rpc_client_handle_t *p_client_id;
-    error_status_t *p_st;
-#endif
 {
     rpc_client_handle_t client_id;     /* ID of client */
     callee_client_entry_t *this_client;
@@ -672,16 +626,10 @@ void rpc_ss_ctx_client_ref_count_i_2
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_ctx_client_ref_count_d_2
-#ifdef IDL_PROTOTYPES
 (
     handle_t h ATTRIBUTE_UNUSED,
     rpc_client_handle_t client_id     /* [in] ID of client, or NULL */
 )
-#else
-(h, client_id)
-    handle_t h;
-    rpc_client_handle_t client_id;
-#endif
 {
     callee_client_entry_t *this_client;
 
@@ -715,14 +663,9 @@ void rpc_ss_ctx_client_ref_count_d_2
 
 #ifdef CTXEETEST
 void show_client_context_chain
-#ifdef IDL_PROTOTYPES
 (
     callee_client_entry_t *p_client_entry
 )
-#else
-( p_client_entry )
-    callee_client_entry_t *p_client_entry;
-#endif
 {
     callee_context_entry_t *this_context;
 
@@ -749,9 +692,7 @@ void show_client_context_chain
 }
 
 void dump_client_table(
-#ifdef IDL_PROTOTYPES
     void
-#endif
 )
 {
     int i;

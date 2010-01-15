@@ -3,6 +3,7 @@
  * (c) Copyright 1992 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1992 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1992 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -72,18 +73,11 @@ static void rpc_ss_free_ex
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_build_indirection_struct
-#ifdef IDL_PROTOTYPES
 (
     rpc_ss_thread_support_ptrs_t *p_thread_support_ptrs,
     rpc_ss_mem_handle *p_mem_handle,
     idl_boolean free_referents
 )
-#else
-(p_thread_support_ptrs,p_mem_handle,free_referents)
-    rpc_ss_thread_support_ptrs_t *p_thread_support_ptrs;
-    rpc_ss_mem_handle *p_mem_handle;
-    idl_boolean free_referents;
-#endif
 {
     rpc_ss_thread_indirection_t *helper_thread_indirection_ptr;
 
@@ -116,16 +110,10 @@ void rpc_ss_build_indirection_struct
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_create_support_ptrs
-#ifdef IDL_PROTOTYPES
 (
     rpc_ss_thread_support_ptrs_t *p_thread_support_ptrs,
     rpc_ss_mem_handle *p_mem_handle
 )
-#else
-(p_thread_support_ptrs,p_mem_handle)
-    rpc_ss_thread_support_ptrs_t *p_thread_support_ptrs;
-    rpc_ss_mem_handle *p_mem_handle;
-#endif
 {
     rpc_ss_build_indirection_struct(p_thread_support_ptrs, p_mem_handle,
                                     idl_false);
@@ -137,14 +125,9 @@ void rpc_ss_create_support_ptrs
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_get_support_ptrs
-#ifdef IDL_PROTOTYPES
 (
     rpc_ss_thread_support_ptrs_t **p_p_thread_support_ptrs
 )
-#else
-(p_p_thread_support_ptrs )
-    rpc_ss_thread_support_ptrs_t **p_p_thread_support_ptrs;
-#endif
 {
     rpc_ss_thread_indirection_t *helper_thread_indirection_ptr;
 
@@ -160,9 +143,7 @@ void rpc_ss_get_support_ptrs
 /*                                                                            */
 /******************************************************************************/
 void rpc_ss_destroy_support_ptrs(
-#ifdef IDL_PROTOTYPES
     void
-#endif
 )
 {
     rpc_ss_thread_indirection_t *helper_thread_indirection_ptr;
@@ -197,16 +178,10 @@ void rpc_ss_destroy_support_ptrs(
 /*                                                                            */
 /******************************************************************************/
 idl_void_p_t rpc_sm_allocate
-#ifdef IDL_PROTOTYPES
 (
     idl_size_t size,
     error_status_t *p_st
 )
-#else
-( size, p_st )
-    idl_size_t size;
-    error_status_t *p_st;
-#endif
 {
     idl_void_p_t volatile result = NULL;
 
@@ -229,16 +204,10 @@ idl_void_p_t rpc_sm_allocate
 /*                                                                          */
 /****************************************************************************/
 void rpc_sm_client_free
-#ifdef IDL_PROTOTYPES
 (
     rpc_void_p_t p_mem,
     error_status_t *p_st
 )
-#else
-( p_mem, p_st )
-    rpc_void_p_t p_mem;
-    error_status_t *p_st;
-#endif
 {
     *p_st = error_status_ok;
     rpc_ss_client_free(p_mem);
@@ -250,16 +219,10 @@ void rpc_sm_client_free
 /*                                                                            */
 /******************************************************************************/
 void rpc_sm_destroy_client_context
-#ifdef IDL_PROTOTYPES
 (
     rpc_ss_context_t *p_unusable_context_handle,
     error_status_t *p_st
 )
-#else
-( p_unusable_context_handle, p_st )
-    rpc_ss_context_t *p_unusable_context_handle;
-    error_status_t *p_st;
-#endif
 {
     *p_st = error_status_ok;
     DCETHREAD_TRY
@@ -275,12 +238,7 @@ void rpc_sm_destroy_client_context
 /*                                                                            */
 /******************************************************************************/
 void rpc_sm_disable_allocate
-#ifdef IDL_PROTOTYPES
 (error_status_t *p_st )
-#else
-(p_st)
-    error_status_t *p_st;
-#endif
 {
     *p_st = error_status_ok;
     rpc_ss_disable_allocate();
@@ -292,12 +250,7 @@ void rpc_sm_disable_allocate
 /*                                                                            */
 /******************************************************************************/
 void rpc_sm_enable_allocate
-#ifdef IDL_PROTOTYPES
 (error_status_t *p_st)
-#else
-(p_st)
-    error_status_t *p_st;
-#endif
 {
     *p_st = error_status_ok;
     DCETHREAD_TRY
@@ -313,16 +266,10 @@ void rpc_sm_enable_allocate
 /*                                                                            */
 /******************************************************************************/
 void rpc_sm_free
-#ifdef IDL_PROTOTYPES
 (
     rpc_void_p_t node_to_free,
     error_status_t *p_st
 )
-#else
-(node_to_free, p_st)
-    rpc_void_p_t node_to_free;
-    error_status_t *p_st;
-#endif
 {
     *p_st = error_status_ok;
     rpc_ss_free(node_to_free);
@@ -334,12 +281,7 @@ void rpc_sm_free
 /*                                                                            */
 /******************************************************************************/
 rpc_ss_thread_handle_t rpc_sm_get_thread_handle
-#ifdef IDL_PROTOTYPES
 ( error_status_t *p_st )
-#else
-(p_st)
-    error_status_t *p_st;
-#endif
 {
     *p_st = error_status_ok;
     return rpc_ss_get_thread_handle();
@@ -351,18 +293,11 @@ rpc_ss_thread_handle_t rpc_sm_get_thread_handle
 /*                                                                            */
 /******************************************************************************/
 void rpc_sm_set_client_alloc_free
-#ifdef IDL_PROTOTYPES
 (
     rpc_ss_p_alloc_t p_allocate,
     rpc_ss_p_free_t p_free,
     error_status_t *p_st
 )
-#else
-( p_allocate, p_free, p_st )
-    rpc_ss_p_alloc_t p_allocate;
-    rpc_ss_p_free_t p_free;
-    error_status_t *p_st;
-#endif
 {
     *p_st = error_status_ok;
     DCETHREAD_TRY
@@ -378,16 +313,10 @@ void rpc_sm_set_client_alloc_free
 /*                                                                            */
 /******************************************************************************/
 void rpc_sm_set_thread_handle
-#ifdef IDL_PROTOTYPES
 (
     rpc_ss_thread_handle_t thread_handle,
     error_status_t *p_st
 )
-#else
-( thread_handle, p_st )
-    rpc_ss_thread_handle_t thread_handle;
-    error_status_t *p_st;
-#endif
 {
     *p_st = error_status_ok;
     DCETHREAD_TRY
@@ -403,7 +332,6 @@ void rpc_sm_set_thread_handle
 /*                                                                            */
 /******************************************************************************/
 void rpc_sm_swap_client_alloc_free
-#ifdef IDL_PROTOTYPES
 (
     rpc_ss_p_alloc_t p_allocate,
     rpc_ss_p_free_t p_free,
@@ -411,14 +339,6 @@ void rpc_sm_swap_client_alloc_free
     rpc_ss_p_free_t  * p_p_old_free,
     error_status_t *p_st
 )
-#else
-( p_allocate, p_free, p_p_old_allocate, p_p_old_free, p_st )
-    rpc_ss_p_alloc_t p_allocate;
-    rpc_ss_p_free_t p_free;
-    rpc_ss_p_alloc_t * p_p_old_allocate;
-    rpc_ss_p_free_t  * p_p_old_free;
-    error_status_t *p_st;
-#endif
 {
     *p_st = error_status_ok;
     DCETHREAD_TRY

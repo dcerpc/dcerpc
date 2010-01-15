@@ -1,8 +1,9 @@
 /*
- * 
+ *
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -16,11 +17,11 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
 **  Copyright (c) 1989 by
-**      Hewlett-Packard Company, Palo Alto, Ca. & 
+**      Hewlett-Packard Company, Palo Alto, Ca. &
 **      Digital Equipment Corporation, Maynard, Mass.
 **
 **
@@ -30,7 +31,7 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
@@ -72,19 +73,19 @@ int ioctl(int d, int request, ...);
  *  Internal prototypes and typedefs.
  */
 
-INTERNAL boolean get_addr _DCE_PROTOTYPE_ ((
+INTERNAL boolean get_addr (
         rpc_socket_t          /*sock*/,
         rpc_addr_p_t          /*ip_addr*/,
         rpc_addr_p_t          /*netmask_addr*/,
         rpc_addr_p_t          /*broadcast_addr*/
-    ));                            
+    );
 
-INTERNAL boolean get_broadcast_addr _DCE_PROTOTYPE_ ((
+INTERNAL boolean get_broadcast_addr (
         rpc_socket_t          /*sock*/,
         rpc_addr_p_t          /*ip_addr*/,
         rpc_addr_p_t          /*netmask_addr*/,
         rpc_addr_p_t          /*broadcast_addr*/
-    ));
+    );
 
 #ifndef NO_SPRINTF
 #  define RPC__IP_NETWORK_SPRINTF   sprintf
@@ -112,7 +113,7 @@ INTERNAL rpc_ip_s_addr_vector_p_t local_ip_addr_vec = NULL;
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  This function is called from "rpc__ip_desc_inq_addr" via
 **  "enumerate_interfaces".  See comments in "enumerate_interfaces" for
 **  details.
@@ -136,7 +137,7 @@ INTERNAL rpc_ip_s_addr_vector_p_t local_ip_addr_vec = NULL;
 **
 **  IMPLICIT OUTPUTS:   none
 **
-**  FUNCTION VALUE:     
+**  FUNCTION VALUE:
 **
 **      result          true => we generated up an address for this interface
 **                      false => we didn't.
@@ -146,7 +147,7 @@ INTERNAL rpc_ip_s_addr_vector_p_t local_ip_addr_vec = NULL;
 **--
 **/
 
-INTERNAL boolean get_addr 
+INTERNAL boolean get_addr
 (
     rpc_socket_t         sock ATTRIBUTE_UNUSED,
     rpc_addr_p_t         ip_addr ATTRIBUTE_UNUSED,
@@ -184,7 +185,7 @@ INTERNAL boolean get_addr_noloop
 **  SCOPE:              PRIVATE - declared in ipnaf.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Receive a socket descriptor which is queried to obtain family, endpoint
 **  and network address.  If this information appears valid for an IP
 **  address,  space is allocated for an RPC address which is initialized
@@ -227,7 +228,7 @@ INTERNAL boolean get_addr_noloop
 **--
 **/
 
-PRIVATE void rpc__ip_desc_inq_addr 
+PRIVATE void rpc__ip_desc_inq_addr
 (
     rpc_protseq_id_t        protseq_id,
     rpc_socket_t            sock,
@@ -269,7 +270,7 @@ PRIVATE void rpc__ip_desc_inq_addr
         if (err != RPC_C_SOCKET_OK)
         {
             *status = -1;
-            return; 
+            return;
         }
         for (i = 0; i < (*rpc_addr_vec)->len; i++)
         {
@@ -300,7 +301,7 @@ PRIVATE void rpc__ip_desc_inq_addr
             sizeof **rpc_addr_vec,
             RPC_C_MEM_RPC_ADDR_VEC,
             RPC_C_MEM_WAITOK);
-    
+
         if (*rpc_addr_vec == NULL)
         {
             RPC_MEM_FREE (ip_addr, RPC_C_MEM_RPC_ADDR);
@@ -328,7 +329,7 @@ PRIVATE void rpc__ip_desc_inq_addr
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  This function is called from "rpc__ip_get_broadcast" via
 **  "enumerate_interfaces".  See comments in "enumerate_interfaces" for
 **  details.
@@ -360,7 +361,7 @@ PRIVATE void rpc__ip_desc_inq_addr
 **--
 **/
 
-INTERNAL boolean get_broadcast_addr 
+INTERNAL boolean get_broadcast_addr
 (
     rpc_socket_t         sock ATTRIBUTE_UNUSED,
     rpc_addr_p_t         _ip_addr ATTRIBUTE_UNUSED,
@@ -393,7 +394,7 @@ INTERNAL boolean get_broadcast_addr
 **  SCOPE:              PRIVATE - EPV declared in ipnaf.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Return a vector of RPC addresses that represent all the address
 **  required so that sending on all of them results in broadcasting on
 **  all the local network interfaces.
@@ -408,7 +409,7 @@ INTERNAL boolean get_broadcast_addr
 **
 **  INPUTS/OUTPUTS:     none
 **
-**  OUTPUTS:                        
+**  OUTPUTS:
 **
 **      rpc_addr_vec
 **
@@ -425,12 +426,12 @@ INTERNAL boolean get_broadcast_addr
 **--
 **/
 
-PRIVATE void rpc__ip_get_broadcast 
+PRIVATE void rpc__ip_get_broadcast
 (
     rpc_naf_id_t            naf_id ATTRIBUTE_UNUSED,
     rpc_protseq_id_t        protseq_id,
     rpc_addr_vector_p_t     *rpc_addr_vec,
-    unsigned32              *status 
+    unsigned32              *status
 )
 {
     rpc_socket_t sock = RPC_SOCKET_INVALID;
@@ -471,7 +472,7 @@ done:
 **  SCOPE:              PRIVATE - declared in ipnaf.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Initialize the local address vectors.
 **
 **
@@ -479,7 +480,7 @@ done:
 **
 **  INPUTS/OUTPUTS:     none
 **
-**  OUTPUTS:                        
+**  OUTPUTS:
 **
 **      status          A value indicating the status of the routine.
 **
@@ -497,14 +498,9 @@ done:
 **/
 
 PRIVATE void rpc__ip_init_local_addr_vec
-#ifdef _DCE_PROTO_
 (
     unsigned32 *status
 )
-#else
-(status)
-unsigned32 *status; 
-#endif
 {
     rpc_socket_t            sock = RPC_SOCKET_INVALID;
     unsigned32              i;
@@ -622,7 +618,7 @@ error:
 **  SCOPE:              PRIVATE - declared in ipnaf.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Return a boolean value to indicate if the given RPC address is on
 **  the same IP subnet.
 **
@@ -633,7 +629,7 @@ error:
 **
 **  INPUTS/OUTPUTS:     none
 **
-**  OUTPUTS:                        
+**  OUTPUTS:
 **
 **      status          A value indicating the status of the routine.
 **
@@ -651,16 +647,10 @@ error:
 **--
 **/
 PRIVATE boolean32 rpc__ip_is_local_network
-#ifdef _DCE_PROTO_
 (
     rpc_addr_p_t rpc_addr,
     unsigned32   *status
 )
-#else
-(rpc_addr, status)
-rpc_addr_p_t rpc_addr;
-unsigned32   *status; 
-#endif
 {
     rpc_ip_addr_p_t         ip_addr = (rpc_ip_addr_p_t) rpc_addr;
     unsigned32              addr1;
@@ -717,7 +707,7 @@ unsigned32   *status;
 **  SCOPE:              PRIVATE - declared in ipnaf.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Return a boolean value to indicate if the given RPC address is the
 **  the local IP address.
 **
@@ -728,7 +718,7 @@ unsigned32   *status;
 **
 **  INPUTS/OUTPUTS:     none
 **
-**  OUTPUTS:                        
+**  OUTPUTS:
 **
 **      status          A value indicating the status of the routine.
 **
@@ -747,16 +737,10 @@ unsigned32   *status;
 **/
 
 PRIVATE boolean32 rpc__ip_is_local_addr
-#ifdef _DCE_PROTO_
 (
     rpc_addr_p_t rpc_addr,
     unsigned32   *status
 )
-#else
-(rpc_addr, status)
-rpc_addr_p_t rpc_addr;
-unsigned32   *status; 
-#endif
 {
     rpc_ip_addr_p_t         ip_addr = (rpc_ip_addr_p_t) rpc_addr;
     unsigned32              i;

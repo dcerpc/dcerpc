@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -54,14 +55,9 @@
  */
 
 PRIVATE void rpc__dg_recvq_init
-#ifdef _DCE_PROTO_
 (
     rpc_dg_recvq_p_t rq
 )
-#else
-(rq)
-rpc_dg_recvq_p_t rq;
-#endif
 {
     /*
      * presumably the call is either locked or 'private' at this point
@@ -112,14 +108,9 @@ rpc_dg_recvq_p_t rq;
  */
 
 PRIVATE void rpc__dg_recvq_free
-#ifdef _DCE_PROTO_
 (
     rpc_dg_recvq_p_t rq
 )
-#else
-(rq)
-rpc_dg_recvq_p_t rq;
-#endif
 {
     /*
      * Presumably the call is either locked or 'private' at this point.

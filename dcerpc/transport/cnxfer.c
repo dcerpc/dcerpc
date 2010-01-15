@@ -3,6 +3,7 @@
  * (c) Copyright 1990 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1990 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1990 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -53,10 +54,10 @@
  * Prototype for internal entrypoints.
  */
 
-INTERNAL void rpc__cn_prep_next_iovector_elmt _DCE_PROTOTYPE_ ((
+INTERNAL void rpc__cn_prep_next_iovector_elmt (
         rpc_cn_call_rep_p_t /*call_rep*/, 
         unsigned32     * /*status*/
-    ));
+    );
 
 
 /*
@@ -99,18 +100,11 @@ INTERNAL void rpc__cn_prep_next_iovector_elmt _DCE_PROTOTYPE_ ((
 **/
 
 PRIVATE void rpc__cn_copy_buffer 
-#ifdef _DCE_PROTO_
 (
   rpc_cn_call_rep_p_t     call_rep,
   rpc_iovector_elt_p_t    iov_elt_p,
   unsigned32              *status
 )
-#else
-(call_rep, iov_elt_p, status)
-rpc_cn_call_rep_p_t     call_rep;
-rpc_iovector_elt_p_t    iov_elt_p;
-unsigned32              *status;
-#endif
 {
     unsigned32              xfer_size;
     unsigned32              bytes_to_segment_size;
@@ -266,18 +260,11 @@ unsigned32              *status;
 **/
 
 PRIVATE void rpc__cn_add_new_iovector_elmt 
-#ifdef _DCE_PROTO_
 (
   rpc_cn_call_rep_p_t     call_rep,
   rpc_iovector_elt_p_t    iov_elt_p,
   unsigned32              *status
 )
-#else
-(call_rep, iov_elt_p, status)
-rpc_cn_call_rep_p_t     call_rep;
-rpc_iovector_elt_p_t    iov_elt_p;
-unsigned32              *status;
-#endif
 {
     unsigned32              bytes_to_segment_size;
     unsigned32              bytes_left_to_xfer;
@@ -492,16 +479,10 @@ unsigned32              *status;
 **/
 
 PRIVATE void rpc__cn_flush_buffers 
-#ifdef _DCE_PROTO_
 (
   rpc_cn_call_rep_p_t     call_rep,
   unsigned32              *status
 )
-#else
-(call_rep, status)
-rpc_cn_call_rep_p_t     call_rep;
-unsigned32              *status;
-#endif
 {
     unsigned32          i;
     rpc_iovector_elt_t  *iov_p;
@@ -570,16 +551,10 @@ unsigned32              *status;
 **/
 
 PRIVATE void rpc__cn_transmit_buffers 
-#ifdef _DCE_PROTO_
 (
  rpc_cn_call_rep_p_t     call_rep,
  unsigned32              *status
 )
-#else
-(call_rep, status)
-rpc_cn_call_rep_p_t     call_rep;
-unsigned32              *status;
-#endif
 {
     rpc_cn_packet_p_t   header_p;
     
@@ -744,16 +719,10 @@ unsigned32              *status;
 **/
 
 INTERNAL void rpc__cn_prep_next_iovector_elmt 
-#ifdef _DCE_PROTO_
 (
   rpc_cn_call_rep_p_t     call_rep,
   unsigned32              *status
 )
-#else
-(call_rep, status)
-rpc_cn_call_rep_p_t     call_rep;
-unsigned32              *status;
-#endif
 {
     unsigned32              cur_iov_index;
     rpc_iovector_elt_p_t    iov_p;
@@ -825,14 +794,9 @@ unsigned32              *status;
 **/
 
 PRIVATE void rpc__cn_dealloc_buffered_data
-#ifdef _DCE_PROTO_
 (
   rpc_cn_call_rep_p_t     call_rep
 )
-#else
-(call_rep)
-rpc_cn_call_rep_p_t     call_rep;
-#endif
 {
     unsigned32      cur_iov_index;
     unsigned32      iov_elmnts;

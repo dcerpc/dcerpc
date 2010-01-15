@@ -3,6 +3,7 @@
  * (c) Copyright 1990 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1990 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1990 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -137,7 +138,6 @@ globaldef rpc_trans_tab_t ndr_g_def_ebcdic_to_ascii = {
  */
 
 void ndr_cvt_string
-#ifdef IDL_PROTOTYPES
 (
 ndr_format_t src_drep,
 ndr_format_t dst_drep,
@@ -145,15 +145,6 @@ char_p_t src,
 char_p_t dst,
 size_t dst_len
 )
-#else
-(src_drep, dst_drep, src, dst, dst_len)
-ndr_format_t src_drep;
-ndr_format_t dst_drep;
-char_p_t src;
-char_p_t dst;
-size_t dst_len;
-
-#endif
 {
     if (src_drep.char_rep == dst_drep.char_rep)
         strlcpy((char *) dst, (char *) src, dst_len);
@@ -176,16 +167,10 @@ size_t dst_len;
  */
 
 idl_ulong_int rpc_ss_strsiz
-#ifdef IDL_PROTOTYPES
 (
     idl_char        *s,
     idl_ulong_int   octets_per_char
 )
-#else
-(s, octets_per_char)
-    idl_char        *s;
-    idl_ulong_int   octets_per_char;
-#endif
 {
     idl_ulong_int   i = 0, j;
     idl_char        *octet;

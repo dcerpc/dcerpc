@@ -3,6 +3,7 @@
  * (c) Copyright 1990 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1990 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1990 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -72,9 +73,6 @@
  * would be overwritten. 
  */
 
-#ifndef _DCE_PROTOTYPE_
-#include <dce/dce.h>
-#endif
 
 /*int pthd4_get_expiration_np(struct timespec *delta, struct timespec *abstime);*/
 
@@ -101,9 +99,9 @@ typedef struct
  *
  */
 
-typedef void (*rpc_list_element_alloc_fn_t) _DCE_PROTOTYPE_ ((
+typedef void (*rpc_list_element_alloc_fn_t) (
         pointer_t   /*list_element*/
-    ));
+    );
 
 
 /***********************************************************************/
@@ -112,9 +110,9 @@ typedef void (*rpc_list_element_alloc_fn_t) _DCE_PROTOTYPE_ ((
  *
  */
 
-typedef void (*rpc_list_element_free_fn_t) _DCE_PROTOTYPE_ ((
+typedef void (*rpc_list_element_free_fn_t) (
         pointer_t   /*list_element*/
-    ));
+    );
 
 
 /***********************************************************************/
@@ -557,7 +555,7 @@ EXTERNAL rpc_lookaside_rcb_t rpc_g_lookaside_rcb;
  *
  */
 
-PRIVATE void rpc__list_desc_init _DCE_PROTOTYPE_ ((
+PRIVATE void rpc__list_desc_init (
         rpc_list_desc_p_t            /*list_desc*/,
         unsigned32                   /*max_size*/,
         unsigned32                   /*element_size*/,
@@ -566,7 +564,7 @@ PRIVATE void rpc__list_desc_init _DCE_PROTOTYPE_ ((
         rpc_list_element_free_fn_t   /*free_rtn*/,
         rpc_mutex_p_t                /*mutex*/,
         rpc_cond_p_t                 /*cond*/
-    ));
+    );
 
 
 /***********************************************************************/
@@ -575,10 +573,10 @@ PRIVATE void rpc__list_desc_init _DCE_PROTOTYPE_ ((
  *
  */
 
-PRIVATE pointer_t rpc__list_element_alloc _DCE_PROTOTYPE_ ((
+PRIVATE pointer_t rpc__list_element_alloc (
         rpc_list_desc_p_t            /*list_desc*/,
         boolean32                    /*block*/
-    ));
+    );
 
   
 /***********************************************************************/
@@ -587,10 +585,10 @@ PRIVATE pointer_t rpc__list_element_alloc _DCE_PROTOTYPE_ ((
  *
  */
 
-PRIVATE void rpc__list_element_free _DCE_PROTOTYPE_ ((
+PRIVATE void rpc__list_element_free (
         rpc_list_desc_p_t        /*list_desc*/,
         pointer_t                /*list_element*/
-    ));
+    );
 
 /***********************************************************************/
 /*
@@ -598,9 +596,9 @@ PRIVATE void rpc__list_element_free _DCE_PROTOTYPE_ ((
  *
  */
 
-PRIVATE void rpc__list_fork_handler _DCE_PROTOTYPE_ ((
+PRIVATE void rpc__list_fork_handler (
         rpc_fork_stage_id_t      /*stage*/
-    ));
+    );
 
 
 #endif /* _RPCLIST_H */

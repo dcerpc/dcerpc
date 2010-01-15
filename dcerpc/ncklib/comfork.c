@@ -3,6 +3,7 @@
  * (c) Copyright 1993 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1993 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1993 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -76,17 +77,17 @@ INTERNAL struct atfork_user_data_t
 
 /* ========================================================================= */
 
-INTERNAL void _pre_fork _DCE_PROTOTYPE_((
+INTERNAL void _pre_fork (
         pointer_t   /*arg*/
-    ));
+    );
 
-INTERNAL void _post_fork_child _DCE_PROTOTYPE_((
+INTERNAL void _post_fork_child (
         pointer_t   /*arg*/
-    ));
+    );
 
-INTERNAL void _post_fork_parent _DCE_PROTOTYPE_((
+INTERNAL void _post_fork_parent (
         pointer_t   /*arg*/
-    ));
+    );
 
 /* ========================================================================= */
 
@@ -97,14 +98,9 @@ INTERNAL void _post_fork_parent _DCE_PROTOTYPE_((
  * the fork/vfork system call.
  */         
 INTERNAL void _pre_fork
-#ifdef _DCE_PROTO_
 (
   pointer_t arg 
 )
-#else
-(arg)
-pointer_t arg;
-#endif
 {                      
     RPC_DBG_PRINTF(rpc_e_dbg_atfork, 1,
                ("(_pre_fork) entering, pid %d, pre %d, post_p %d, post_c %d\n",
@@ -135,14 +131,9 @@ pointer_t arg;
  */         
 
 INTERNAL void _post_fork_child
-#ifdef _DCE_PROTO_
 (
   pointer_t arg
 )
-#else
-(arg)
-pointer_t arg;
-#endif
 {
     RPC_DBG_PRINTF(rpc_e_dbg_atfork, 1,
         ("(_post_fork_child) entering, pid %d, pre %d, post_p %d, post_c %d\n",
@@ -175,14 +166,9 @@ pointer_t arg;
 
 
 INTERNAL void _post_fork_parent
-#ifdef _DCE_PROTO_
 (
   pointer_t arg
 )
-#else 
-(arg)
-pointer_t arg;
-#endif
 {
     RPC_DBG_PRINTF(rpc_e_dbg_atfork, 1,
        ("(_post_fork_parent) entering, pid %d, pre %d, post_p %d, post_c %d\n",
@@ -208,14 +194,9 @@ pointer_t arg;
 
 
 PRIVATE void rpc__atfork
-#ifdef _DCE_PROTO_
 (
  void *handler
 )
-#else 
-(handler)
-void *handler;
-#endif
 {
     if (handler == NULL)
         return;

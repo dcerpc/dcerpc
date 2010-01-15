@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -97,16 +98,10 @@ INTERNAL char         uuid_string_buff[40];
  */
 
 PUBLIC void rpc__dbg_set_switches
-#ifdef _DCE_PROTO_
 (
     const char      *s ATTRIBUTE_UNUSED,
     unsigned32      *status
 )
-#else
-(s, status)
-const char      *s;
-unsigned32      *status;
-#endif
 {
     int         first, last;
     register int i;
@@ -256,18 +251,11 @@ PRIVATE int rpc__printf (const char *format, ...)
  */
 
 PRIVATE void rpc__die
-#ifdef _DCE_PROTO_
 (
     char            *text,
     char            *file,
     int             line
 )
-#else
-(text, file, line)
-char            *text;
-char            *file;
-int             line;
-#endif
 {
 #ifndef FILE_SEPARATOR_CHAR
 #define FILE_SEPARATOR_CHAR '/'
@@ -289,14 +277,9 @@ int             line;
  */
 
 PRIVATE char *rpc__uuid_string
-#ifdef _DCE_PROTO_
 (
     idl_uuid_t          *uuid ATTRIBUTE_UNUSED
 )
-#else
-(uuid)
-idl_uuid_t          *uuid;
-#endif
 {
 #ifndef DEBUG
 
@@ -331,16 +314,10 @@ idl_uuid_t          *uuid;
  */
 
 PRIVATE void rpc__print_source
-#ifdef _DCE_PROTO_
 (
     const char      *file ATTRIBUTE_UNUSED,
     int             line ATTRIBUTE_UNUSED
 )
-#else
-(file, line)
-const char      *file ATTRIBUTE_UNUSED;
-int             line ATTRIBUTE_UNUSED;
-#endif
 {
     if (RPC_DBG(rpc_e_dbg_source, 1))
     {

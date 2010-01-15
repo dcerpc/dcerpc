@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -39,10 +40,6 @@
 
 #ifndef _DGCCT_H
 #define _DGCCT_H
-
-#ifndef _DCE_PROTOTYPE_
-#include <dce/dce.h>
-#endif
 
 
 /*
@@ -87,18 +84,18 @@ extern "C" {
 #endif
 
 
-PRIVATE void rpc__dg_cct_get _DCE_PROTOTYPE_((
+PRIVATE void rpc__dg_cct_get (
         rpc_auth_info_p_t /*auth_info*/,
         rpc_dg_ccall_p_t /*ccall*/
-    ));
+    );
 
-PRIVATE void rpc__dg_cct_release _DCE_PROTOTYPE_((
+PRIVATE void rpc__dg_cct_release (
         rpc_dg_ccte_ref_p_t /*ccte_ref*/
-    ));
+    );
 
-PRIVATE void rpc__dg_cct_fork_handler _DCE_PROTOTYPE_((
+PRIVATE void rpc__dg_cct_fork_handler (
         rpc_fork_stage_id_t /*stage*/
-    ));
+    );
 
 #ifdef __cplusplus
 }

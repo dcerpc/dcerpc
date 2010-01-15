@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -100,16 +101,10 @@ INTERNAL void * network_maintain_liveness (void*);
  */
 
 PRIVATE void rpc__dg_network_maint
-#ifdef _DCE_PROTO_
 (
     rpc_binding_rep_p_t binding_r,
     unsigned32 *st
 )
-#else
-(binding_r, st)
-rpc_binding_rep_p_t binding_r;
-unsigned32 *st;
-#endif
 {               
     maint_elt_p_t maint;
     rpc_dg_binding_client_p_t chand = (rpc_dg_binding_client_p_t) binding_r;
@@ -200,16 +195,10 @@ unsigned32 *st;
  */
 
 PRIVATE void rpc__dg_network_stop_maint
-#ifdef _DCE_PROTO_
 (
     rpc_binding_rep_p_t binding_r,
     unsigned32 *st
 )
-#else
-(binding_r, st)
-rpc_binding_rep_p_t binding_r;
-unsigned32 *st;
-#endif
 {
     maint_elt_p_t maint, prev = NULL;
     rpc_dg_binding_client_p_t chand = (rpc_dg_binding_client_p_t) binding_r;
@@ -260,16 +249,10 @@ unsigned32 *st;
  */
 
 PRIVATE void rpc__dg_network_close
-#ifdef _DCE_PROTO_
 (
     ATTRIBUTE_UNUSED rpc_binding_rep_p_t binding_r,
     unsigned32 *st
 )
-#else
-(binding_r, st)
-ATTRIBUTE_UNUSED rpc_binding_rep_p_t binding_r;
-unsigned32 *st;
-#endif
 {
     /* this is a NOOP for datagram transports */
     *st = rpc_s_ok;
@@ -401,14 +384,9 @@ PRIVATE void rpc__dg_maintain_init(void)
  */
 
 PRIVATE void rpc__dg_maintain_fork_handler
-#ifdef _DCE_PROTO_
 (
     rpc_fork_stage_id_t stage
 )
-#else
-(stage)
-rpc_fork_stage_id_t stage;
-#endif
 {                           
     unsigned32 st;
 

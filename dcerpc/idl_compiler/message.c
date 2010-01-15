@@ -3,7 +3,7 @@
  * (c) Copyright 1993 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1993 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1993 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2009 Apple Inc. All rights reserved.
+ * Portions Copyright (c) 2009-2010 Apple Inc. All rights reserved.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -56,11 +56,6 @@
 #       define NL_VFPRINTF NLvfprintf
 #   else
 #       define NL_VFPRINTF vfprintf
-#   endif
-#   ifndef PROTO
-#       if defined __STDC__ || defined VAXC || defined mips
-#           define PROTO
-#       endif
 #   endif
 #   define BRANCHCHAR '/'
 #else   /* Building for nidl. */
@@ -122,14 +117,9 @@ static char     msg_prefix[PATH_MAX+3];
  */
 
 void message_open
-#ifdef PROTO
 (
     char *image_name __attribute__((unused))
 )
-#else
-(image_name)
-      char    *image_name;
-#endif
 {
 #ifdef HAVE_NL_TYPES_H
     char cat_name[PATH_MAX] = CATALOG_DIR "idl.cat";
@@ -169,13 +159,9 @@ void message_open
  */
 
 void message_close
-#ifdef PROTO
 (
     void
 )
-#else
-()
-#endif
 
 {
 #ifdef HAVE_NL_TYPES_H
@@ -258,7 +244,6 @@ void message_print
  */
 
 void message_sprint
-#ifdef PROTO
 (
     char *str,
 	size_t str_len,
@@ -269,14 +254,6 @@ void message_sprint
     char *arg4,
     char *arg5
 )
-#else
-(str, msgid, arg1, arg2, arg3, arg4, arg5)
-    char    *str;                   /* Formatted return string */
-	size_t	str_len;				/* length of str */
-    long    msgid;                  /* Message id */
-    char    *arg1, *arg2,           /* 0-5 directive arguments */
-            *arg3, *arg4, *arg5;
-#endif
 {
     char *msg_text;     /* Ptr to message text (storage owned by catgets) */
 
@@ -318,7 +295,6 @@ void message_sprint
  */
 
 void message_fprint
-#ifdef PROTO
 (
     FILE *fid,
     long msgid,
@@ -328,13 +304,6 @@ void message_fprint
     char *arg4,
     char *arg5
 )
-#else
-(fid, msgid, arg1, arg2, arg3, arg4, arg5)
-    FILE    *fid;                   /* File handle */
-    long    msgid;                  /* Message id */
-    char    *arg1, *arg2,           /* 0-5 directive arguments */
-            *arg3, *arg4, *arg5;
-#endif
 {
     char            str[MAX_FMT_TEXT];     /* Formatted message text */
     char *msg_text;     /* Ptr to message text (storage owned by catgets) */

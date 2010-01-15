@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -44,15 +45,15 @@
 #include <dgcall.h>
 
 
-INTERNAL boolean32 chk_sboot _DCE_PROTOTYPE_((
+INTERNAL boolean32 chk_sboot (
         rpc_dg_recvq_elt_p_t  /*rqe*/,
         rpc_dg_ccall_p_t  /*ccall*/
-    ));
+    );
 
-INTERNAL void do_quack_body _DCE_PROTOTYPE_((
+INTERNAL void do_quack_body (
         rpc_dg_recvq_elt_p_t  /*rqe*/,
         rpc_dg_ccall_p_t  /*ccall*/
-    ));
+    );
 
 /* ========================================================================= */
 
@@ -66,16 +67,10 @@ INTERNAL void do_quack_body _DCE_PROTOTYPE_((
  */
 
 INTERNAL boolean32 chk_sboot
-#ifdef _DCE_PROTO_
 (
     rpc_dg_recvq_elt_p_t rqe,
     rpc_dg_ccall_p_t ccall
 )
-#else
-(rqe, ccall)
-rpc_dg_recvq_elt_p_t rqe;
-rpc_dg_ccall_p_t ccall;
-#endif
 {
     if (ccall->c.call_server_boot != 0 &&
         rqe->hdrp->server_boot != ccall->c.call_server_boot)
@@ -104,18 +99,11 @@ rpc_dg_ccall_p_t ccall;
  */
 
 PRIVATE boolean rpc__dg_do_common_response
-#ifdef _DCE_PROTO_
 (
     rpc_dg_sock_pool_elt_p_t sp,
     rpc_dg_recvq_elt_p_t rqe,
     rpc_dg_ccall_p_t ccall
 )
-#else
-(sp, rqe, ccall)
-rpc_dg_sock_pool_elt_p_t sp;
-rpc_dg_recvq_elt_p_t rqe;
-rpc_dg_ccall_p_t ccall;
-#endif
 {
     rpc_dg_pkt_hdr_p_t hdrp = rqe->hdrp;
     rpc_dg_ptype_t ptype = RPC_DG_HDR_INQ_PTYPE(hdrp);
@@ -293,18 +281,11 @@ rpc_dg_ccall_p_t ccall;
  */
 
 PRIVATE boolean rpc__dg_do_reject
-#ifdef _DCE_PROTO_
 (
     rpc_dg_sock_pool_elt_p_t sp,
     rpc_dg_recvq_elt_p_t rqe,
     rpc_dg_ccall_p_t ccall
 )
-#else
-(sp, rqe, ccall)
-rpc_dg_sock_pool_elt_p_t sp;
-rpc_dg_recvq_elt_p_t rqe;
-rpc_dg_ccall_p_t ccall;
-#endif
 {
     unsigned32 mst;
 
@@ -381,18 +362,11 @@ rpc_dg_ccall_p_t ccall;
  */
 
 PRIVATE boolean rpc__dg_do_fault
-#ifdef _DCE_PROTO_
 (
     rpc_dg_sock_pool_elt_p_t sp,
     rpc_dg_recvq_elt_p_t rqe,
     rpc_dg_ccall_p_t ccall
 )
-#else
-(sp, rqe, ccall)
-rpc_dg_sock_pool_elt_p_t sp;
-rpc_dg_recvq_elt_p_t rqe;
-rpc_dg_ccall_p_t ccall;
-#endif
 {
     
     /*
@@ -438,18 +412,11 @@ rpc_dg_ccall_p_t ccall;
  */
 
 PRIVATE boolean rpc__dg_do_response
-#ifdef _DCE_PROTO_
 (
     rpc_dg_sock_pool_elt_p_t sp,
     rpc_dg_recvq_elt_p_t rqe,
     rpc_dg_ccall_p_t ccall
 )
-#else
-(sp, rqe, ccall)
-rpc_dg_sock_pool_elt_p_t sp;
-rpc_dg_recvq_elt_p_t rqe;
-rpc_dg_ccall_p_t ccall;
-#endif
 {
     boolean rqe_wake_thread;
     rpc_dg_xmitq_p_t xq;
@@ -521,22 +488,16 @@ rpc_dg_ccall_p_t ccall;
  * shared by the "working" and "nocall/fack" packet processing routines.
  */
 
-INTERNAL void ping_later _DCE_PROTOTYPE_((
+INTERNAL void ping_later (
         rpc_dg_ccall_p_t /*ccall*/,
         rpc_dg_recvq_elt_p_t /*rqe*/
-    ));
+    );
 
 INTERNAL void ping_later
-#ifdef _DCE_PROTO_
 (
     rpc_dg_ccall_p_t ccall,
     rpc_dg_recvq_elt_p_t rqe ATTRIBUTE_UNUSED
 )
-#else
-(ccall, rqe)
-rpc_dg_ccall_p_t ccall;
-rpc_dg_recvq_elt_p_t rqe;
-#endif
 {
     struct rpc_dg_ping_info_t *ping;
     rpc_clock_t now, duration, interval;
@@ -589,18 +550,11 @@ rpc_dg_recvq_elt_p_t rqe;
  */
 
 PRIVATE boolean rpc__dg_do_working
-#ifdef _DCE_PROTO_
 (
     rpc_dg_sock_pool_elt_p_t sp,
     rpc_dg_recvq_elt_p_t rqe,
     rpc_dg_ccall_p_t ccall
 )
-#else
-(sp, rqe, ccall)
-rpc_dg_sock_pool_elt_p_t sp;
-rpc_dg_recvq_elt_p_t rqe;
-rpc_dg_ccall_p_t ccall;
-#endif
 {
     rpc_dg_xmitq_p_t xq;
 
@@ -648,18 +602,11 @@ rpc_dg_ccall_p_t ccall;
  */
 
 PRIVATE boolean rpc__dg_do_nocall
-#ifdef _DCE_PROTO_
 (
     rpc_dg_sock_pool_elt_p_t sp,
     rpc_dg_recvq_elt_p_t rqe,
     rpc_dg_ccall_p_t ccall
 )
-#else
-(sp, rqe, ccall)
-rpc_dg_sock_pool_elt_p_t sp;
-rpc_dg_recvq_elt_p_t rqe;
-rpc_dg_ccall_p_t ccall;
-#endif
 {
     rpc_dg_xmitq_p_t xq;
 
@@ -801,16 +748,10 @@ rpc_dg_ccall_p_t ccall;
  */
 
 INTERNAL void do_quack_body
-#ifdef _DCE_PROTO_
 (
     rpc_dg_recvq_elt_p_t rqe,
     rpc_dg_ccall_p_t ccall
 )
-#else
-(rqe, ccall)
-rpc_dg_recvq_elt_p_t rqe;
-rpc_dg_ccall_p_t ccall;
-#endif
 {
     unsigned32 cancel_id;
     boolean server_is_accepting;
@@ -892,18 +833,11 @@ rpc_dg_ccall_p_t ccall;
  */
 
 PRIVATE boolean rpc__dg_do_quack
-#ifdef _DCE_PROTO_
 (
     rpc_dg_sock_pool_elt_p_t sp,
     rpc_dg_recvq_elt_p_t rqe,
     rpc_dg_ccall_p_t ccall
 )
-#else
-(sp, rqe, ccall)
-rpc_dg_sock_pool_elt_p_t sp;
-rpc_dg_recvq_elt_p_t rqe;
-rpc_dg_ccall_p_t ccall;
-#endif
 {
     /*
      * Perform common response packet processing.

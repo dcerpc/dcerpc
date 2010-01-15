@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
@@ -16,7 +16,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
  */
@@ -49,44 +49,42 @@
 #include <dce/stubbase.h>
 
 /*
- * IDL general defines 
+ * IDL general defines
  */
 
 #define IDL_BUFF_SIZE 2048
 
-/* 
+/*
  *The number of iovector elements in the iovector the NDR marshalling
- * interpreter uses for transmits 
+ * interpreter uses for transmits
  */
 
 #define IDL_IOVECTOR_SIZE 10
 
-/* 
+/*
  * Arrays with the less than this number of elements are not NDR
- *  marshalled by pointing 
+ *  marshalled by pointing
  */
 
 #define IDL_POINT_THRESHOLD 256
 
-/* 
+/*
  * Arrays with more than this number of dimensions require interpreter
- * data structures to be dynamically allocated 
+ * data structures to be dynamically allocated
 */
- 
+
 #define IDL_NORMAL_DIMS 7
- 
 
 /* Always try and get storage for at least this many pipe elements */
 
 #define IDL_MIN_PIPE_CHUNK_SIZE 8
-
 
 /*
  * 'Address of array' macro - use to spell or not to spell '&' before array
  * reference reliably depending on whether compiler is ANSI Standard C.
  *
  * The following definition had previously been the covered by the __STDC__
- * macro. We make it the default, since we require an ANSI compiler for 
+ * macro. We make it the default, since we require an ANSI compiler for
  * DCE 1.1
  */
 
@@ -96,14 +94,14 @@
  * Macro used to spell or not to spell 'const' keyword before data definition
  * depending on whether compiler is ANSI Standard C.
  *
- * 1/10/94 
+ * 1/10/94
  * Strictly speaking, if the ANSI C Compiler supports "const" correctly
  */
 
 #ifdef CONST_NOT_SUPPORTED
-#define IDL_CONST 
+#define IDL_CONST
 #else
-#define IDL_CONST const 
+#define IDL_CONST const
 #endif
 
 /*
@@ -135,7 +133,7 @@ typedef enum {
                                marshalling before a "marshall by pointing at" */
 } IDL_stack_packet_use_k_t;
 
-typedef void (*IDL_rtn_func_t)  _DCE_PROTOTYPE_ ((rpc_void_p_t ));
+typedef void (*IDL_rtn_func_t)  (rpc_void_p_t );
 
 /*
  *  Interpreter state block
@@ -183,8 +181,7 @@ typedef struct IDL_ms_t {
     rpc_void_p_t IDL_ms_res_ptr_5;
 } IDL_ms_t, *IDL_msp_t;
 
-void rpc_ss_report_error_2  _DCE_PROTOTYPE_ ( 
-  (
+void rpc_ss_report_error_2  (
     ndr_ulong_int ,
     ndr_ulong_int ,
     ndr_ulong_int ,
@@ -192,33 +189,28 @@ void rpc_ss_report_error_2  _DCE_PROTOTYPE_ (
     error_status_t *,
     error_status_t *,
     dcethread_exc *[],
-    IDL_msp_t 
-  )
+    IDL_msp_t
 );
 
-void rpc_ss_send_server_exception_2  _DCE_PROTOTYPE_ ( 
-  (
+void rpc_ss_send_server_exception_2  (
     rpc_call_handle_t ,
     dcethread_exc *,
     idl_long_int ,
     dcethread_exc *[],
-    IDL_msp_t 
-  )
+    IDL_msp_t
 );
 
-void rpc_ss_type_vec_vers_check  _DCE_PROTOTYPE_ ( 
- (  IDL_msp_t   )
+void rpc_ss_type_vec_vers_check  (
+   IDL_msp_t
 );
 
-void rpc_ss_init_marsh_state  _DCE_PROTOTYPE_ ( 
-  ( idl_byte [], IDL_msp_t  )
+void rpc_ss_init_marsh_state  (
+   idl_byte [], IDL_msp_t
 );
 
-
-void rpc_ss_ndr_clean_up  _DCE_PROTOTYPE_ ( 
-  ( IDL_ms_t * )
+void rpc_ss_ndr_clean_up  (
+   IDL_ms_t *
 );
-
 
 /* Interpreter header access */
 
@@ -231,7 +223,7 @@ void rpc_ss_ndr_clean_up  _DCE_PROTOTYPE_ (
     (IDL_msp->IDL_type_vec[TVEC_INT_REP_OFFSET] != NDR_LOCAL_INT_REP) ? \
        (((*(idl_byte *)(IDL_msp->IDL_type_vec+versno_offset+1)) << 8) | \
        *(idl_byte *)(IDL_msp->IDL_type_vec+versno_offset)) : \
-       (*(idl_short_int *)(IDL_msp->IDL_type_vec+versno_offset)) 
+       (*(idl_short_int *)(IDL_msp->IDL_type_vec+versno_offset))
 
 /* Interpreter machinery - values of type byte */
 
@@ -316,7 +308,6 @@ void rpc_ss_ndr_clean_up  _DCE_PROTOTYPE_ (
     value = *(idl_ulong_int *)address; \
     address += 4; }
 
-
 /* Step over a long integer from the type/definition vector */
 
 #define IDL_DISCARD_LONG_FROM_VECTOR(address)\
@@ -399,19 +390,19 @@ void rpc_ss_ndr_clean_up  _DCE_PROTOTYPE_ (
  *  Signatures of interpreter modules
  */
 
-void rpc_ss_ndr_marsh_interp  _DCE_PROTOTYPE_ ((
+void rpc_ss_ndr_marsh_interp  (
     idl_ulong_int ,
     idl_ulong_int ,
     rpc_void_p_t [],
-    IDL_msp_t 
-));
+    IDL_msp_t
+);
 
-void rpc_ss_ndr_unmar_interp  _DCE_PROTOTYPE_ ((
+void rpc_ss_ndr_unmar_interp  (
     idl_ulong_int ,
     idl_ulong_int ,
     rpc_void_p_t [],
-    IDL_msp_t 
-));
+    IDL_msp_t
+);
 
 /*
  * Correlation checking machinery
@@ -459,7 +450,6 @@ typedef struct IDL_varying_control_t {
 #define IDL_BOUND_TYPE_MASK                   0x0F
 
 #define IDL_DATA_LIMIT_PAIR_WIDTH 16
-
 
 typedef struct IDL_bound_pair_t {
     idl_long_int lower;
@@ -601,7 +591,7 @@ typedef struct IDL_pointee_desc_t {
  *  MTS versions of storage management routines
  */
 
-void rpc_ss_mts_client_estab_alloc  _DCE_PROTOTYPE_ (( volatile IDL_ms_t * ));
+void rpc_ss_mts_client_estab_alloc  ( volatile IDL_ms_t * );
 
 /*
  * Masks for testing -bug flags
@@ -616,28 +606,22 @@ void rpc_ss_mts_client_estab_alloc  _DCE_PROTOTYPE_ (( volatile IDL_ms_t * ));
  */
 
 typedef struct IDL_pipe {
-    void (* pull)  _DCE_PROTOTYPE_ ( 
-      (
+    void (* pull)  (
        rpc_ss_pipe_state_t,
        rpc_void_p_t ,
        idl_ulong_int,
        idl_ulong_int *
-      )
     );
-    void (* push)  _DCE_PROTOTYPE_ ( 
-      ( 
+    void (* push)  (
        rpc_ss_pipe_state_t ,
        rpc_void_p_t ,
-       idl_ulong_int  
-      )
+       idl_ulong_int
     );
-    void (* alloc)  _DCE_PROTOTYPE_ ( 
-      ( 
+    void (* alloc)  (
        rpc_ss_pipe_state_t ,
        idl_ulong_int ,
        rpc_void_p_t *,
        idl_ulong_int *
-       )
     );
     rpc_ss_pipe_state_t state;
 } IDL_pipe;
@@ -674,21 +658,18 @@ typedef struct IDL_ee_context_t {
  *  Routines referenced from more than one interpreter module
  */
 
-idl_ulong_int rpc_ss_type_size  _DCE_PROTOTYPE_ ( 
-  ( idl_byte *,IDL_msp_t )
+idl_ulong_int rpc_ss_type_size  (
+   idl_byte *,IDL_msp_t
 );
 
-void rpc_ss_Z_values_from_bounds  _DCE_PROTOTYPE_ ( 
-  (
+void rpc_ss_Z_values_from_bounds  (
     IDL_bound_pair_t *,
     idl_ulong_int ,
     idl_ulong_int **,
-    IDL_msp_t 
-  )
+    IDL_msp_t
 );
 
-void rpc_ss_ndr_contiguous_elt  _DCE_PROTOTYPE_ ( 
-  (
+void rpc_ss_ndr_contiguous_elt  (
     idl_ulong_int ,
     idl_ulong_int *,
     IDL_bound_pair_t *,
@@ -696,46 +677,38 @@ void rpc_ss_ndr_contiguous_elt  _DCE_PROTOTYPE_ (
     idl_boolean *,
     idl_ulong_int *,
     rpc_void_p_t *
-  )
 );
 
-void rpc_ss_ndr_arr_align_and_opt  _DCE_PROTOTYPE_ ( 
-  (
+void rpc_ss_ndr_arr_align_and_opt  (
     IDL_mar_or_unmar_k_t ,
     idl_ulong_int ,
     idl_byte *,
     idl_byte *,
     idl_boolean *,
-    IDL_msp_t 
-  )
+    IDL_msp_t
 );
 
-void rpc_ss_ndr_marsh_init_buffer  _DCE_PROTOTYPE_ ( 
-   (IDL_msp_t  )
+void rpc_ss_ndr_marsh_init_buffer  (
+   IDL_msp_t
 );
 
-idl_long_int rpc_ss_get_typed_integer  _DCE_PROTOTYPE_ ( 
-  (
+idl_long_int rpc_ss_get_typed_integer  (
     idl_byte ,
     rpc_void_p_t ,
-    IDL_msp_t 
-  )
+    IDL_msp_t
 );
 
-void rpc_ss_build_bounds_list  _DCE_PROTOTYPE_ ( 
-  (            
+void rpc_ss_build_bounds_list  (
     idl_byte **,
     rpc_void_p_t ,
     rpc_void_p_t ,
     idl_ulong_int *,
     idl_ulong_int ,
     IDL_bound_pair_t **,
-    IDL_msp_t 
-  )
+    IDL_msp_t
 );
 
-void rpc_ss_build_bounds_list_2  _DCE_PROTOTYPE_ ( 
-  (            
+void rpc_ss_build_bounds_list_2  (
     idl_byte **,
     rpc_void_p_t ,
     rpc_void_p_t ,
@@ -743,12 +716,10 @@ void rpc_ss_build_bounds_list_2  _DCE_PROTOTYPE_ (
     idl_ulong_int ,
     idl_boolean *,
     IDL_bound_pair_t **,
-    IDL_msp_t 
-  )
+    IDL_msp_t
 );
 
-void rpc_ss_build_range_list  _DCE_PROTOTYPE_ ( 
-  (
+void rpc_ss_build_range_list  (
     idl_byte **,
     rpc_void_p_t ,
     rpc_void_p_t ,
@@ -757,12 +728,10 @@ void rpc_ss_build_range_list  _DCE_PROTOTYPE_ (
     IDL_bound_pair_t *,
     IDL_bound_pair_t **,
     idl_boolean *,
-    IDL_msp_t 
-  )
+    IDL_msp_t
 );
 
-void rpc_ss_build_range_list_2  _DCE_PROTOTYPE_ ( 
-  (
+void rpc_ss_build_range_list_2  (
     idl_byte **,
     rpc_void_p_t ,
     rpc_void_p_t ,
@@ -772,52 +741,41 @@ void rpc_ss_build_range_list_2  _DCE_PROTOTYPE_ (
     idl_boolean *,
     IDL_bound_pair_t **,
     idl_boolean *,
-    IDL_msp_t 
-  )
+    IDL_msp_t
 );
 
-void rpc_ss_get_string_base_desc  _DCE_PROTOTYPE_ ( 
- (
+void rpc_ss_get_string_base_desc  (
     idl_byte * ,
-    idl_ulong_int *, 
     idl_ulong_int *,
-    IDL_msp_t 
-  )
+    idl_ulong_int *,
+    IDL_msp_t
 );
 
-idl_boolean rpc_ss_find_union_arm_defn  _DCE_PROTOTYPE_ ( 
-  (
+idl_boolean rpc_ss_find_union_arm_defn  (
     idl_byte *_vec_ptr,
     idl_ulong_int ,
     idl_ulong_int ,
     idl_byte **   ,
-    IDL_msp_t 
-  )
+    IDL_msp_t
 );
 
-void rpc_ss_get_switch_from_data  _DCE_PROTOTYPE_ ( 
-  (
+void rpc_ss_get_switch_from_data  (
     idl_ulong_int ,
     idl_byte ,
     rpc_void_p_t ,
     idl_ulong_int *,
     idl_ulong_int *,
     IDL_msp_t
-  )
 );
 
-idl_boolean rpc_ss_bug_1_thru_31  _DCE_PROTOTYPE_ ( 
-  (
+idl_boolean rpc_ss_bug_1_thru_31  (
     idl_ulong_int ,
-    IDL_msp_t 
-  )
+    IDL_msp_t
 );
 
-idl_ulong_int rpc_ss_ndr_bug_1_align  _DCE_PROTOTYPE_ ( 
-  (
+idl_ulong_int rpc_ss_ndr_bug_1_align  (
     idl_byte *,
-    IDL_msp_t 
-  )
+    IDL_msp_t
 );
 
 /*
@@ -838,8 +796,7 @@ typedef struct rpc_ss_mts_ee_pipe_state_t
     ndr_boolean pipe_filled;          /* used only when pipe is [out] */
 } rpc_ss_mts_ee_pipe_state_t;
 
-void rpc_ss_mts_init_callee_pipe  _DCE_PROTOTYPE_ ( 
- (
+void rpc_ss_mts_init_callee_pipe  (
     long ,    /* Index of pipe in set of pipes in the
                             operation's parameter list */
     long ,     /* Index of next [in] pipe to process */
@@ -850,38 +807,33 @@ void rpc_ss_mts_init_callee_pipe  _DCE_PROTOTYPE_ (
                                             in type vector */
     rpc_ss_mts_ee_pipe_state_t **
 				/* Addr of ptr to pipe state block */
-  )
 );
 
-void rpc_ss_ndr_ee_marsh_pipe_chunk  _DCE_PROTOTYPE_ ( 
-  (
+void rpc_ss_ndr_ee_marsh_pipe_chunk  (
     rpc_ss_pipe_state_t ,
     rpc_void_p_t ,
-    idl_ulong_int 
-  )
+    idl_ulong_int
 );
 
-void rpc_ss_ndr_ee_unmar_pipe_chunk  _DCE_PROTOTYPE_ ( 
-  (
+void rpc_ss_ndr_ee_unmar_pipe_chunk  (
     rpc_ss_pipe_state_t ,
     rpc_void_p_t ,
     idl_ulong_int ,
     idl_ulong_int *
-  )
 );
 
-void rpc_ss_fixed_bounds_from_vector   _DCE_PROTOTYPE_ ((
+void rpc_ss_fixed_bounds_from_vector   (
     idl_ulong_int ,
     idl_byte *,
     IDL_bound_pair_t **,
-    IDL_msp_t 
-));
+    IDL_msp_t
+);
 
-idl_ulong_int rpc_ss_arm_switch_value   _DCE_PROTOTYPE_ ((
+idl_ulong_int rpc_ss_arm_switch_value   (
     idl_byte *,
     idl_long_int,
     IDL_msp_t
-));
+);
 
 /*
  *  IDL encoding services
@@ -951,9 +903,9 @@ typedef struct idl_es_handle_s_t
                                         of pickling used by MIA */
     IDL_es_action_type_k_t IDL_action;  /* Encode or decode */
     IDL_es_action_style_k_t IDL_style;  /* Type of buffering */
-    idl_boolean IDL_pickle_header_read; /* During decoding, TRUE => header for 
+    idl_boolean IDL_pickle_header_read; /* During decoding, TRUE => header for
                                         current pickle has been read */
-    idl_es_pvt_header_t IDL_pickle_header; 
+    idl_es_pvt_header_t IDL_pickle_header;
             /* For encoding, the transfer syntax is set when the state block is
                 created. The if_id and op_num are valid after an encoding has
                 been done.
@@ -972,7 +924,7 @@ typedef struct idl_es_handle_s_t
 
     idl_byte *IDL_buff_addr;            /* Address of user buffer */
     idl_ulong_int IDL_bsize;  /* Size of user buffer */
-    idl_byte *IDL_align_buff_addr;    /* For a fixed decode, NULL unless we had 
+    idl_byte *IDL_align_buff_addr;    /* For a fixed decode, NULL unless we had
                                         to allocate aligned storage */
 /* Field used for fixed and dynamic buffering */
 
@@ -987,28 +939,21 @@ typedef struct idl_es_handle_s_t
                                     /* Tail of chain of intermediate buffers */
 } IDL_es_state_t;
 
-void idl_es_encode_init_buffer   _DCE_PROTOTYPE_ ( 
-  (
+void idl_es_encode_init_buffer   (
     idl_ulong_int *,
-    IDL_msp_t 
-  )
+    IDL_msp_t
 );
 
-void idl_es_encode_attach_buff  _DCE_PROTOTYPE_ ( 
-  (
-    IDL_msp_t 
-  )
+void idl_es_encode_attach_buff  (
+    IDL_msp_t
 );
 
-error_status_t idl_es_encode_new_dyn_buff  _DCE_PROTOTYPE_ ( 
-  (
+error_status_t idl_es_encode_new_dyn_buff  (
     idl_ulong_int *,
-    IDL_msp_t 
-  )
+    IDL_msp_t
 );
 
-void idl_es_before_interp_call  _DCE_PROTOTYPE_ ( 
-  (
+void idl_es_before_interp_call  (
     idl_es_handle_t ,      /* [in] User's encoding handle */
     rpc_if_handle_t ,    /* [in] Pointer to stub's ifspec */
     idl_byte [],    /* [in] Stub's type vector */
@@ -1018,19 +963,18 @@ void idl_es_before_interp_call  _DCE_PROTOTYPE_ (
     idl_es_transfer_syntax_t *,
                             /* [out] Transfer syntax to use for encoding */
     IDL_msp_t
-  )
 );
 
-void idl_es_after_interp_call  _DCE_PROTOTYPE_ ( 
-  (IDL_msp_t )
+void idl_es_after_interp_call  (
+  IDL_msp_t
 );
 
-void idl_es_clean_up  _DCE_PROTOTYPE_ ( 
-  ( IDL_msp_t )
+void idl_es_clean_up  (
+   IDL_msp_t
 );
 
-void idl_es_decode_check_buffer  _DCE_PROTOTYPE_ ( 
-  (  IDL_msp_t )
+void idl_es_decode_check_buffer  (
+    IDL_msp_t
 );
 
 /*
@@ -1051,14 +995,11 @@ typedef struct IDL_cs_shadow_elt_t {
     } IDL_data;
 } IDL_cs_shadow_elt_t;
 
-void rpc_ss_put_typed_integer _DCE_PROTOTYPE_ ( 
-  (
+void rpc_ss_put_typed_integer (
     /* in */ idl_ulong_int ,
     /* in */ idl_byte ,
-    /* in */ rpc_void_p_t 
-  ) 
+    /* in */ rpc_void_p_t
 );
-
 
 #ifdef __cplusplus
     }

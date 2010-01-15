@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -40,20 +41,16 @@
 #define IFSPEC_H
 
 extern void CSPELL_interface_def(
-#ifdef PROTO
     FILE *fid,
     AST_interface_n_t *ifp,
     BE_output_k_t kind,
     boolean generate_mepv
-#endif
 );
 
 void CSPELL_manager_epv
 (
-#ifdef PROTO
     FILE *fid,
     AST_interface_n_t *ifp
-#endif
 );
 
 #endif

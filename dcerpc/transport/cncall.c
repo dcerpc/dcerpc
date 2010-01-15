@@ -3,6 +3,7 @@
  * (c) Copyright 1990 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1990 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1990 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -92,33 +93,33 @@
     RPC_CN_FORWARD_QUEUED_CANCELS (call_r, st); \
 }
     
-INTERNAL unsigned32 rpc__cn_call_cvt_from_nca_st _DCE_PROTOTYPE_ ((
+INTERNAL unsigned32 rpc__cn_call_cvt_from_nca_st (
         unsigned32      /*a_st*/
-    ));
+    );
 
-INTERNAL unsigned32 rpc__cn_call_cvt_to_nca_st _DCE_PROTOTYPE_ ((
+INTERNAL unsigned32 rpc__cn_call_cvt_to_nca_st (
         unsigned32      /*l_st*/
-    ));
+    );
 
-INTERNAL void rpc__cn_call_check_for_cancel _DCE_PROTOTYPE_ ((
+INTERNAL void rpc__cn_call_check_for_cancel (
         rpc_cn_call_rep_p_t     /*call_rep*/
-    ));
+    );
 
-INTERNAL void rpc__cn_call_forward_cancel _DCE_PROTOTYPE_ ((
+INTERNAL void rpc__cn_call_forward_cancel (
         rpc_cn_call_rep_p_t     /*call_rep*/,
         unsigned32              * /*status*/
-    ));
+    );
 
-INTERNAL void rpc__cn_call_binding_serialize _DCE_PROTOTYPE_ ((
+INTERNAL void rpc__cn_call_binding_serialize (
         rpc_binding_rep_p_t     /*binding_r*/,
         rpc_clock_t             /*cancel_timeout*/,
         unsigned32              * /*cancel_cnt*/,
         unsigned32              * /*st*/
-    ));
+    );
 
-INTERNAL boolean rpc__cn_call_cancel_timer _DCE_PROTOTYPE_ ((
+INTERNAL boolean rpc__cn_call_cancel_timer (
         rpc_cn_call_rep_p_t     /*call_r*/
-    ));
+    );
 
 /***********************************************************************/
 
@@ -170,7 +171,6 @@ INTERNAL boolean rpc__cn_call_cancel_timer _DCE_PROTOTYPE_ ((
 **/
 
 PRIVATE rpc_call_rep_t *rpc__cn_call_start 
-#ifdef _DCE_PROTO_
 (
   rpc_binding_rep_p_t     binding_r,
   unsigned32              call_options,
@@ -179,15 +179,6 @@ PRIVATE rpc_call_rep_t *rpc__cn_call_start
   rpc_transfer_syntax_t   *transfer_syntax,
   unsigned32              *st
 )
-#else
-(binding_r, call_options, ifspec_r, opnum, transfer_syntax, st)
-rpc_binding_rep_p_t     binding_r;
-unsigned32              call_options;
-rpc_if_rep_p_t          ifspec_r;
-unsigned32              opnum;
-rpc_transfer_syntax_t   *transfer_syntax;
-unsigned32              *st;
-#endif
 {
     rpc_cn_call_rep_t       *call_rep;
     rpc_iovector_elt_p_t    iov_p;
@@ -631,19 +622,11 @@ unsigned32              *st;
 **/
 
 PRIVATE void rpc__cn_call_transmit 
-#ifdef _DCE_PROTO_
 (
   rpc_call_rep_p_t        call_r,
   rpc_iovector_p_t        call_args,
   unsigned32              *st
 )
-#else
-(call_r, call_args, st)
-
-rpc_call_rep_p_t        call_r;
-rpc_iovector_p_t        call_args;
-unsigned32              *st;
-#endif
 {
     rpc_cn_call_rep_t       *call_rep;
     rpc_iovector_elt_p_t    iov_elt_p;
@@ -888,7 +871,6 @@ unsigned32              *st;
 **/
 
 PRIVATE void rpc__cn_call_transceive 
-#ifdef _DCE_PROTO_
 (
   rpc_call_rep_p_t        call_r,
   rpc_iovector_p_t        in_call_args,
@@ -896,15 +878,6 @@ PRIVATE void rpc__cn_call_transceive
   ndr_format_t            *remote_ndr_format,
   unsigned32              *st
 )
-#else
-(call_r, in_call_args, out_call_args, remote_ndr_format, st)
-rpc_call_rep_p_t        call_r;
-rpc_iovector_p_t        in_call_args;
-rpc_iovector_elt_t      *out_call_args;
-ndr_format_t            *remote_ndr_format;
-unsigned32              *st;
-
-#endif
 {
     rpc_cn_call_rep_p_t     call_rep;
     rpc_cn_fragbuf_p_t      frag_buf;
@@ -1242,19 +1215,11 @@ unsigned32              *st;
 **/
 
 PRIVATE void rpc__cn_call_receive 
-#ifdef _DCE_PROTO_
 (
   rpc_call_rep_p_t        call_r,
   rpc_iovector_elt_p_t    call_args,
   unsigned32              *st
 )
-#else
-(call_r, call_args, st)
-
-rpc_call_rep_p_t        call_r;
-rpc_iovector_elt_p_t    call_args;
-unsigned32              *st;
-#endif
 {
     rpc_cn_call_rep_t       *call_rep;
     rpc_cn_packet_p_t       header_p;
@@ -1542,17 +1507,10 @@ unsigned32              *st;
 **/
 
 PRIVATE void rpc__cn_call_block_until_free 
-#ifdef _DCE_PROTO_
 (
   rpc_call_rep_p_t        call_r,
   unsigned32              *st
 )
-#else
-(call_r, st)
-
-rpc_call_rep_p_t        call_r;
-unsigned32              *st;
-#endif
 {
     rpc_cn_call_rep_t       *call_rep;
 
@@ -1624,17 +1582,10 @@ unsigned32              *st;
 **/
 
 PRIVATE void rpc__cn_call_alert 
-#ifdef _DCE_PROTO_
 (
   rpc_call_rep_p_t        call_r,
   unsigned32              *st
 )
-#else
-(call_r, st)
-
-rpc_call_rep_p_t        call_r;
-unsigned32              *st;
-#endif
 {
     rpc_cn_call_rep_t   *call_rep;
     volatile boolean32  retry_op;
@@ -1706,17 +1657,10 @@ unsigned32              *st;
 **/
 
 PRIVATE void rpc__cn_call_end 
-#ifdef _DCE_PROTO_
 (
   rpc_call_rep_p_t        *call_r,
   unsigned32              *st
 )
-#else
-(call_r, st)
-
-rpc_call_rep_p_t        *call_r;
-unsigned32              *st;
-#endif
 {
     rpc_cn_call_rep_t       *call_rep;
     unsigned32              cur_iov_index;
@@ -1902,19 +1846,11 @@ unsigned32              *st;
 **/
 
 PRIVATE void rpc__cn_call_transmit_fault 
-#ifdef _DCE_PROTO_
 (
   rpc_call_rep_p_t        call_r,
   rpc_iovector_p_t        call_fault_info,
   unsigned32              *st
 )
-#else
-(call_r, call_fault_info, st)
-
-rpc_call_rep_p_t        call_r;
-rpc_iovector_p_t        call_fault_info;
-unsigned32              *st;
-#endif
 {
     rpc_cn_call_rep_p_t     call_rep;
     rpc_iovector_elt_p_t    iov_elt_p;
@@ -2014,17 +1950,10 @@ unsigned32              *st;
 **/
 
 PRIVATE void rpc__cn_call_reject 
-#ifdef _DCE_PROTO_
 (
   rpc_call_rep_p_t        call_r,
   unsigned32              l_st
 )
-#else
-(call_r, l_st)
-
-rpc_call_rep_p_t        call_r;
-unsigned32              l_st;
-#endif
 {
     rpc_cn_call_rep_p_t         call_rep;
     unsigned32                  st;
@@ -2104,7 +2033,6 @@ unsigned32              l_st;
 **/
 
 PRIVATE void rpc__cn_call_receive_fault 
-#ifdef _DCE_PROTO_
 (
   rpc_call_rep_p_t        call_r,
   rpc_iovector_elt_p_t    call_fault_info,
@@ -2112,15 +2040,6 @@ PRIVATE void rpc__cn_call_receive_fault
   unsigned32              *st
 
 )
-#else
- call_fault_info, remote_ndr_format, st)
-
-rpc_call_rep_p_t        call_r;
-rpc_iovector_elt_p_t    call_fault_info;
-ndr_format_t            *remote_ndr_format;
-unsigned32              *st;
-
-#endif
 {
     rpc_cn_call_rep_t       *call_rep;
     rpc_cn_fragbuf_p_t      fault_fragp;
@@ -2226,17 +2145,10 @@ unsigned32              *st;
 **/
 
 PRIVATE boolean32 rpc__cn_call_did_mgr_execute 
-#ifdef _DCE_PROTO_
 (
   rpc_call_rep_p_t        call_r,
   unsigned32              *st ATTRIBUTE_UNUSED
 )
-#else
-(call_r, st)
-
-rpc_call_rep_p_t        call_r;
-unsigned32              *st;
-#endif
 {
     rpc_cn_call_rep_t       *call_rep;
     boolean                 call_executed;
@@ -2300,15 +2212,9 @@ unsigned32              *st;
 **/
 
 INTERNAL unsigned32 rpc__cn_call_cvt_from_nca_st 
-#ifdef _DCE_PROTO_
 (
   unsigned32 a_st
 )
-#else
-(a_st)
-
-unsigned32              a_st;
-#endif
 {
     RPC_CN_DBG_RTN_PRINTF(rpc__cn_call_cvt_from_nca_st);
     switch ((int)a_st)
@@ -2362,15 +2268,9 @@ unsigned32              a_st;
 **/
 
 INTERNAL unsigned32 rpc__cn_call_cvt_to_nca_st 
-#ifdef _DCE_PROTO_
 (
   unsigned32 l_st
 )
-#else
-(l_st)
-
-unsigned32              l_st;
-#endif
 {
     RPC_CN_DBG_RTN_PRINTF(rpc__cn_call_cvt_to_nca_st);
     switch ((int)l_st)
@@ -2429,15 +2329,9 @@ unsigned32              l_st;
 **/
 
 PRIVATE void rpc__cn_call_no_conn_ind 
-#ifdef _DCE_PROTO_
 (
   rpc_cn_call_rep_p_t call_rep ATTRIBUTE_UNUSED
 )
-#else
-(call_rep)
-
-rpc_cn_call_rep_p_t     call_rep;
-#endif
 {
     RPC_CN_DBG_RTN_PRINTF(rpc__cn_call_no_conn_ind);
 
@@ -2484,15 +2378,9 @@ rpc_cn_call_rep_p_t     call_rep;
 **/
 
 PRIVATE void rpc__cn_call_ccb_create 
-#ifdef _DCE_PROTO_
 (
   rpc_cn_call_rep_p_t     ccb
 )
-#else
-(ccb)
-
-rpc_cn_call_rep_p_t     ccb;
-#endif
 {
     rpc_cn_fragbuf_p_t      fragbuf_p;
     rpc_cn_packet_p_t       header_p;
@@ -2559,15 +2447,9 @@ rpc_cn_call_rep_p_t     ccb;
 **/
 
 PRIVATE void rpc__cn_call_ccb_free 
-#ifdef _DCE_PROTO_
 (
   rpc_cn_call_rep_p_t     ccb
 )
-#else
-(ccb)
-
-rpc_cn_call_rep_p_t     ccb;
-#endif
 {
     RPC_CN_DBG_RTN_PRINTF(rpc__cn_call_ccb_free);
 
@@ -2624,19 +2506,11 @@ rpc_cn_call_rep_p_t     ccb;
 **/
 
 PRIVATE void rpc__cn_call_local_cancel 
-#ifdef _DCE_PROTO_
 (
   rpc_cn_call_rep_p_t     call_rep,
   volatile boolean32      *retry_op,
   unsigned32              *status
 )
-#else
-(call_rep, retry_op, status)
-
-rpc_cn_call_rep_p_t     call_rep;
-volatile boolean32      *retry_op;
-unsigned32              *status;
-#endif
 {
     RPC_CN_DBG_RTN_PRINTF(rpc__cn_call_local_cancel);
     CODING_ERROR (status);
@@ -2720,15 +2594,9 @@ unsigned32              *status;
 **/
 
 INTERNAL void rpc__cn_call_check_for_cancel 
-#ifdef _DCE_PROTO_
 (
   rpc_cn_call_rep_p_t     call_rep
 )
-#else
-(call_rep)
-
-rpc_cn_call_rep_p_t     call_rep;
-#endif
 {
     RPC_CN_DBG_RTN_PRINTF(rpc__cn_call_check_for_cancel);
 
@@ -2787,17 +2655,10 @@ rpc_cn_call_rep_p_t     call_rep;
 **/
 
 INTERNAL void rpc__cn_call_forward_cancel 
-#ifdef _DCE_PROTO_
 (
   rpc_cn_call_rep_p_t     call_rep,
   unsigned32              *status
 )
-#else
-(call_rep, status)
-
-rpc_cn_call_rep_p_t     call_rep;
-unsigned32              *status;
-#endif
 {
     unsigned32          temp_status;
 
@@ -2871,22 +2732,12 @@ unsigned32              *status;
 **/
 
 INTERNAL void rpc__cn_call_binding_serialize 
-#ifdef _DCE_PROTO_
 (
   rpc_binding_rep_p_t     binding_r,
   rpc_clock_t             cancel_timeout,
   unsigned32              *cancel_cnt,
   unsigned32              *st
 )
-#else
-( binding_r, cancel_timeout, cancel_cnt, st)
-
-rpc_binding_rep_p_t     binding_r;
-rpc_clock_t             cancel_timeout;
-unsigned32              *cancel_cnt;
-unsigned32              *st;
-
-#endif
 {
     volatile boolean    is_awaiting_timeout = false;
     volatile boolean    has_timed_out = false;
@@ -3029,17 +2880,10 @@ unsigned32              *st;
 **/
 
 PRIVATE void rpc__cn_call_start_cancel_timer 
-#ifdef _DCE_PROTO_
 (
   rpc_cn_call_rep_p_t     call_r,
   unsigned32              *st
 )
-#else
-(call_r, st)
-
-rpc_cn_call_rep_p_t     call_r;
-unsigned32              *st;
-#endif
 {
     RPC_CN_DBG_RTN_PRINTF(rpc__cn_call_start_cancel_timer);
     CODING_ERROR (st);
@@ -3112,15 +2956,9 @@ unsigned32              *st;
 **/
 
 PRIVATE void rpc__cn_call_stop_cancel_timer 
-#ifdef _DCE_PROTO_
 (
   rpc_cn_call_rep_p_t     call_r
 )
-#else
-(call_r)
-
-rpc_cn_call_rep_p_t     call_r;
-#endif
 {
     RPC_CN_DBG_RTN_PRINTF(rpc__cn_call_stop_cancel_timer);
 
@@ -3170,15 +3008,9 @@ rpc_cn_call_rep_p_t     call_r;
 **/
 
 INTERNAL boolean rpc__cn_call_cancel_timer 
-#ifdef _DCE_PROTO_
 (
   rpc_cn_call_rep_p_t     call_r
 )
-#else
-(call_r)
-
-rpc_cn_call_rep_p_t     call_r;
-#endif
 {
     RPC_CN_DBG_RTN_PRINTF(rpc__cn_call_cancel_timer);
 

@@ -1,4 +1,4 @@
-/* Portions Copyright (c) 2009 Apple Inc. All rights reserved. */
+/* Portions Copyright (c) 2009-2010 Apple Inc. All rights reserved. */
 
 #include <commonp.h>
 #include <com.h>
@@ -547,16 +547,10 @@ rpc_binding_inq_transport_info(
 **/
 
 PRIVATE boolean32 rpc__np_is_valid_endpoint
-#ifdef _DCE_PROTO_
 (
     const unsigned_char_t *endpoint,
     unsigned32            *status
 )
-#else
-(endpoint, status)
-const unsigned_char_t *endpoint;
-unsigned32   *status;
-#endif
 {
     CODING_ERROR (status);
 

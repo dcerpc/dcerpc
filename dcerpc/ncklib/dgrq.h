@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -39,9 +40,6 @@
 **
 */
 
-#ifndef _DCE_PROTOTYPE_
-#include <dce/dce.h>
-#endif
 
 /*
  * R P C _ D G _ R E C V Q _ E L T _ F R O M _ I O V E C T O R _ E L T
@@ -87,9 +85,9 @@
                                 (rqe)->pkt_len; \
 }
 
-PRIVATE void rpc__dg_recvq_init _DCE_PROTOTYPE_(( rpc_dg_recvq_p_t  /*rq*/));
+PRIVATE void rpc__dg_recvq_init ( rpc_dg_recvq_p_t  /*rq*/);
 
 
-PRIVATE void rpc__dg_recvq_free _DCE_PROTOTYPE_(( rpc_dg_recvq_p_t  /*rq*/));
+PRIVATE void rpc__dg_recvq_free ( rpc_dg_recvq_p_t  /*rq*/);
 
 #endif /* _DGRQ_H */

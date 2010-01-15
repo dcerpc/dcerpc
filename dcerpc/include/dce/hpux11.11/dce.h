@@ -3,6 +3,7 @@
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -53,33 +54,14 @@ extern "C" {
  * that wish to support old-style definitions, the following macros 
  * must be used.
  *
- *  Declare a prototype like this (don't use variables):
- *      int foo _DCE_PROTOTYPE_((int, void *, struct bar *))
- *  
  *  Define a function like this:
  *      int foo 
- *      #if defined(_DCE_PROTO_)
  *              (
  *              int a, 
  *              void *b,
  *              struct bar *c
  *              )
- *      #else
- *              (a, b, c)
- *              int a;
- *              void *b;
- *              struct bar *c;
- *      #endif
  */
-#if defined(__STDC__)                   /* other conditionals can be tested */
-#  define _DCE_PROTO_
-#endif                                  /* defined(__STDC__) */
-
-#if defined(_DCE_PROTO_)
-#  define _DCE_PROTOTYPE_(arg) arg 
-#else                                   /* defined(_DCE_PROTO_) */
-#  define _DCE_PROTOTYPE_(arg) ()
-#endif                                  /* defined(_DCE_PROTO_) */
 
 /* 
  * For those components wishing to support platforms where void 

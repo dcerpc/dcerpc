@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -78,13 +79,7 @@
 **/
 
 PRIVATE void rpc__cn_call_executor 
-#ifdef _DCE_PROTO_
 (pointer_t arg, boolean32 call_was_queued ATTRIBUTE_UNUSED) 
-#else 
-(arg, call_was_queued)
-pointer_t               arg;
-boolean32               call_was_queued;
-#endif
 {
     rpc_binding_rep_t           *binding_r;
     rpc_cn_call_rep_t           *call_r;

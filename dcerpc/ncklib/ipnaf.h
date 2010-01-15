@@ -1,8 +1,9 @@
 /*
- * 
+ *
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -16,7 +17,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
  */
@@ -30,7 +31,7 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
@@ -41,15 +42,10 @@
 **
 */
 
-#ifndef _DCE_PROTOTYPE_
-#include <dce/dce.h>
-#endif
-
 /***********************************************************************
  *
- *  Include the Internet specific socket address 
+ *  Include the Internet specific socket address
  */
-
 
 #include <netinet/in.h>
 #include <netinet/tcp.h>
@@ -80,11 +76,11 @@ typedef struct rpc_addr_ip_t
  * Define some TPDU/TSDU constants, if they haven't already been defined
  * (typically in a system header file).
  */
-                                    
+
 /*
  * The max # of data bytes that can go into a UDP packet body such that
  * the resulting IP packet can fit through any of the local network
- * interfaces without inducing IP fragmentation. 
+ * interfaces without inducing IP fragmentation.
  *
  * NOTE WELL:  This value is derived from
  *
@@ -131,9 +127,9 @@ typedef struct rpc_addr_ip_t
  *
  * !!! THIS VALUE SHOULD BE COMPUTED AT RUNTIME as a function of the
  * target host address but can't be given the tools we have today.
- * 
- */ 
-#ifndef RPC_C_IP_UDP_MAX_PTH_UNFRG_TPDU     
+ *
+ */
+#ifndef RPC_C_IP_UDP_MAX_PTH_UNFRG_TPDU
 #define RPC_C_IP_UDP_MAX_PTH_UNFRG_TPDU RPC_C_IP_UDP_MAX_LOC_UNFRG_TPDU
 #endif
 
@@ -192,11 +188,10 @@ typedef struct rpc_addr_ip_t
 #define RPC_C_IP_UDP_MAX_LOCAL_FRAG_SIZE (8 * 1024)
 #endif
 
-
 /***********************************************************************
  *
- * The IP-specific representation of rpc_port_restriction_list_t.range_list 
- * (see com.h).  The low and high are in native machine representation, not 
+ * The IP-specific representation of rpc_port_restriction_list_t.range_list
+ * (see com.h).  The low and high are in native machine representation, not
  * network rep.
  */
 
@@ -210,48 +205,46 @@ typedef struct struct_rpc_port_range_element
  *
  *  Routine Prototypes for the Internet Extension service routines.
  */
-    
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-
-PRIVATE void rpc__ip_init _DCE_PROTOTYPE_ ((  
+PRIVATE void rpc__ip_init (
         rpc_naf_epv_p_t             * /*naf_epv*/,
         unsigned32                  * /*status*/
-    ));
+    );
 
-PRIVATE void rpc__ip_desc_inq_addr _DCE_PROTOTYPE_ ((
+PRIVATE void rpc__ip_desc_inq_addr (
         rpc_protseq_id_t             /*protseq_id*/,
         rpc_socket_t                 /*desc*/,
         rpc_addr_vector_p_t         * /*rpc_addr_vec*/,
         unsigned32                  * /*st*/
-    ));
+    );
 
-PRIVATE void rpc__ip_get_broadcast _DCE_PROTOTYPE_ ((
+PRIVATE void rpc__ip_get_broadcast (
         rpc_naf_id_t                 /*naf_id*/,
         rpc_protseq_id_t             /*rpc_protseq_id*/,
         rpc_addr_vector_p_t         * /*rpc_addrs*/,
         unsigned32                  * /*status*/
-    ));
+    );
 
-PRIVATE void rpc__ip_init_local_addr_vec _DCE_PROTOTYPE_ ((
+PRIVATE void rpc__ip_init_local_addr_vec (
         unsigned32                  * /*status*/
-    ));
+    );
 
-PRIVATE boolean32 rpc__ip_is_local_network _DCE_PROTOTYPE_ ((
+PRIVATE boolean32 rpc__ip_is_local_network (
         rpc_addr_p_t                 /*rpc_addr*/,
         unsigned32                  * /*status*/
-    ));
+    );
 
-PRIVATE boolean32 rpc__ip_is_local_addr _DCE_PROTOTYPE_ ((
+PRIVATE boolean32 rpc__ip_is_local_addr (
         rpc_addr_p_t                 /*rpc_addr*/,
         unsigned32                  * /*status*/
-    ));
+    );
 
 #ifdef __cplusplus
 }
 #endif
 
-              
 #endif /* _IPNAF_H */

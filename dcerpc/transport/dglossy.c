@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -78,7 +79,7 @@ INTERNAL struct {
  * the packets AND be told about it.
  */
 
-INTERNAL void set_lossy_params _DCE_PROTOTYPE_ (( void ));
+INTERNAL void set_lossy_params ( void );
 
 
 INTERNAL void set_lossy_params( void )
@@ -123,22 +124,16 @@ INTERNAL void set_lossy_params( void )
  * Make a copy of a thing into malloc'd storage.
  */
 
-INTERNAL unsigned8 *mcopy _DCE_PROTOTYPE_((
+INTERNAL unsigned8 *mcopy (
         unsigned8 * /*p*/,
         int  /*len*/
-    ));
+    );
 
 INTERNAL unsigned8 *mcopy
-#ifdef _DCE_PROTO_
 (
     unsigned8 *p,
     int len
 )
-#else
-(p, len)
-unsigned8 *p;
-int len;
-#endif
 {
     unsigned8 *q;
 
@@ -158,22 +153,16 @@ int len;
  * Make a copy of an I/O vector and all it points to into malloc'd storage.
  */
 
-INTERNAL rpc_socket_iovec_p_t mcopy_iov _DCE_PROTOTYPE_((
+INTERNAL rpc_socket_iovec_p_t mcopy_iov (
         rpc_socket_iovec_p_t  /*iov*/,
         int  /*iovlen*/
-    ));
+    );
 
 INTERNAL rpc_socket_iovec_p_t mcopy_iov
-#ifdef _DCE_PROTO_
 (
     rpc_socket_iovec_p_t iov,
     int iovlen
 )
-#else
-(iov, iovlen)
-rpc_socket_iovec_p_t iov;
-int iovlen;
-#endif
 {
     unsigned16 i;
     rpc_socket_iovec_p_t ciov;
@@ -196,22 +185,16 @@ int iovlen;
  * Free an I/O vector.
  */
 
-INTERNAL void free_iov _DCE_PROTOTYPE_((
+INTERNAL void free_iov (
         rpc_socket_iovec_p_t /*iov*/,
         int /*iovlen*/
-    ));
+    );
 
 INTERNAL void free_iov
-#ifdef _DCE_PROTO_
 (
     rpc_socket_iovec_p_t iov,
     int iovlen
 )
-#else
-(iov, iovlen)
-rpc_socket_iovec_p_t iov;
-int iovlen;
-#endif
 {
     unsigned16 i;
 
@@ -228,28 +211,20 @@ int iovlen;
  * Make a copy and stash a packet described by rpc__socket_sendmsg() args.
  */
 
-INTERNAL void stash_sendmsg_pkt _DCE_PROTOTYPE_((
+INTERNAL void stash_sendmsg_pkt (
         rpc_socket_t  /*sock*/,
         rpc_socket_iovec_p_t  /*iov*/,
         int  /*iov_len*/,
         rpc_addr_p_t  /*addr*/
-    ));
+    );
 
 INTERNAL void stash_sendmsg_pkt
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t sock,
     rpc_socket_iovec_p_t iov,
     int iov_len,
     rpc_addr_p_t addr
 )
-#else
-(sock, iov, iov_len, addr)
-rpc_socket_t sock;
-rpc_socket_iovec_p_t iov;
-int iov_len;
-rpc_addr_p_t addr;
-#endif
 {
     unsigned32 st;
 
@@ -271,7 +246,7 @@ rpc_addr_p_t addr;
  * Transmit the packet we stashed away earlier.
  */
 
-INTERNAL void xmit_stashed_sendmsg_pkt _DCE_PROTOTYPE_((void));
+INTERNAL void xmit_stashed_sendmsg_pkt (void);
 
 
 INTERNAL void xmit_stashed_sendmsg_pkt( void )
@@ -305,7 +280,6 @@ INTERNAL void xmit_stashed_sendmsg_pkt( void )
  */
 
 PRIVATE rpc_socket_error_t rpc__dg_lossy_socket_sendmsg 
-#ifdef _DCE_PROTO_
 (
     rpc_socket_t sock,
     rpc_socket_iovec_p_t iov,   /* array of bufs of data to send */
@@ -313,14 +287,6 @@ PRIVATE rpc_socket_error_t rpc__dg_lossy_socket_sendmsg
     rpc_addr_p_t addr,          /* addr of receiver */
     int *cc                    /* returned number of bytes actually sent */
 )
-#else
-(sock, iov, iov_len, addr, cc)
-rpc_socket_t sock;
-rpc_socket_iovec_p_t iov;   /* array of bufs of data to send */
-int iov_len;                /* number of bufs */
-rpc_addr_p_t addr;          /* addr of receiver */
-int *cc;                    /* returned number of bytes actually sent */
-#endif
 {
     int i;
     rpc_socket_error_t serr;

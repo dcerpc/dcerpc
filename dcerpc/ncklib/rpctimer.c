@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -57,15 +58,15 @@ INTERNAL dcethread* timer_task;
 INTERNAL boolean timer_task_running = false;
 INTERNAL boolean timer_task_was_running = false;
 
-INTERNAL void timer_loop _DCE_PROTOTYPE_((void));
+INTERNAL void timer_loop (void);
 
 
-INTERNAL void rpc__timer_set_int _DCE_PROTOTYPE_ ((
+INTERNAL void rpc__timer_set_int (
         rpc_timer_p_t            /*t*/,
         rpc_timer_proc_p_t       /*proc*/,
         pointer_t                /*parg*/,
         rpc_clock_t              /*freq*/
-    ));
+    );
 
 
 /*
@@ -132,14 +133,9 @@ INTERNAL void timer_loop(void)
 #endif /* NO_RPC_TIMER_THREAD */
 
 INTERNAL void rpc__timer_prod
-#ifdef _DCE_PROTO_
 (
         rpc_clock_t trigger
 )
-#else
-(trigger)
-    rpc_clock_t trigger;
-#endif
 {
                     
     RPC_DBG_PRINTF(rpc_e_dbg_timer, 5, (
@@ -202,14 +198,9 @@ PRIVATE void rpc__timer_init(void)
  **/ 
 
 PRIVATE void rpc__timer_fork_handler
-#ifdef _DCE_PROTO_
 (
     rpc_fork_stage_id_t stage
 )
-#else
-(stage)
-rpc_fork_stage_id_t stage;
-#endif
 {  
 #ifndef NO_RPC_TIMER_THREAD
     switch ((int)stage)
@@ -277,20 +268,12 @@ rpc_fork_stage_id_t stage;
 */
 
 PRIVATE void rpc__timer_set 
-#ifdef _DCE_PROTO_
 (
     rpc_timer_p_t           t,
     rpc_timer_proc_p_t      proc,
     pointer_t               parg,
     rpc_clock_t             freq
 )
-#else
-(t, proc, parg, freq)
-rpc_timer_p_t           t;
-rpc_timer_proc_p_t      proc;
-pointer_t               parg;
-rpc_clock_t             freq;
-#endif
 {    
     RPC_TIMER_LOCK (0);
     rpc__timer_set_int (t, proc, parg, freq);
@@ -309,20 +292,12 @@ rpc_clock_t             freq;
 
 
 INTERNAL void rpc__timer_set_int 
-#ifdef _DCE_PROTO_
 (
     rpc_timer_p_t           t,
     rpc_timer_proc_p_t      proc,
     pointer_t               parg,
     rpc_clock_t             freq
 )
-#else
-(t, proc, parg, freq)
-rpc_timer_p_t           t;
-rpc_timer_proc_p_t      proc;
-pointer_t               parg;
-rpc_clock_t             freq;
-#endif
 {    
     rpc_timer_p_t       list_ptr, prev_ptr;
     
@@ -404,16 +379,10 @@ rpc_clock_t             freq;
  **/
 
 PRIVATE void rpc__timer_adjust 
-#ifdef _DCE_PROTO_
 (
     rpc_timer_p_t           t,
     rpc_clock_t             frequency           
 )
-#else
-(t, frequency)
-rpc_timer_p_t           t;
-rpc_clock_t             frequency;           
-#endif
 {   
     rpc_timer_p_t       ptr;
     
@@ -453,14 +422,9 @@ rpc_clock_t             frequency;
  **/
 
 PRIVATE void rpc__timer_clear 
-#ifdef _DCE_PROTO_
 (
     rpc_timer_p_t           t
 )
-#else
-(t)
-rpc_timer_p_t           t;
-#endif
 {  
     rpc_timer_p_t       list_ptr, prev = NULL;
     

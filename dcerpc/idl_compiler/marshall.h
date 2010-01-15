@@ -3,6 +3,7 @@
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -91,34 +92,27 @@ extern BE_mn_t BE_def_mn;
 
 void BE_declare_stack_vars
 (
-#ifdef PROTO
     FILE *fid,
     AST_operation_n_t *oper,
     boolean *p_uses_packet
-#endif
 );
 
 void BE_marshall
 (
-#ifdef PROTO
     FILE *fid,
     AST_operation_n_t *oper,
     BE_direction_t direction
-#endif
 );
 
 void BE_unmarshall
 (
-#ifdef PROTO
     FILE *fid,
     AST_operation_n_t *oper,
     BE_direction_t direction
-#endif
 );
 
 void BE_marshall_param
 (
-#ifdef PROTO
     FILE *fid,
     AST_parameter_n_t *param,
     BE_mflags_t flags,
@@ -126,18 +120,15 @@ void BE_marshall_param
     int *p_slots_used,
     boolean *p_routine_mode,
     int total_slots
-#endif
 );
 
 void BE_unmarshall_param
 (
-#ifdef PROTO
     FILE *fid,
     AST_parameter_n_t *param,
     BE_mflags_t flags,
     BE_mn_t *mn,
     boolean *p_routine_mode
-#endif
 );
 
 #endif

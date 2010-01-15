@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -44,9 +45,7 @@
 /*
  * Note: these are defined for later use of shared images
  */
-#ifndef _DCE_PROTOTYPE_
-#include <dce/dce.h>
-#endif
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -54,20 +53,20 @@ extern "C" {
 
 PRIVATE void rpc__load_modules(void);
 	
-PRIVATE rpc_naf_init_fn_t rpc__load_naf _DCE_PROTOTYPE_ ((
+PRIVATE rpc_naf_init_fn_t rpc__load_naf (
         rpc_naf_id_elt_p_t              /*naf*/, 
         unsigned32                      * /*st*/
-    ));
+    );
 
-PRIVATE rpc_prot_init_fn_t rpc__load_prot _DCE_PROTOTYPE_ ((
+PRIVATE rpc_prot_init_fn_t rpc__load_prot (
         rpc_protocol_id_elt_p_t         /*rpc_protocol*/,
         unsigned32                      * /*st*/
-    ));
+    );
 
-PRIVATE rpc_auth_init_fn_t rpc__load_auth _DCE_PROTOTYPE_ ((
+PRIVATE rpc_auth_init_fn_t rpc__load_auth (
         rpc_authn_protocol_id_elt_p_t   /*auth_protocol*/,
         unsigned32                      * /*st*/
-    ));
+    );
 
 #ifdef __cplusplus
 }
