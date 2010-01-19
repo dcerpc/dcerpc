@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1993 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1993 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1993 DIGITAL EQUIPMENT CORPORATION
@@ -17,7 +17,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
 **  NAME:
@@ -188,7 +188,6 @@ void CSPELL_parameter_list
         fprintf (fid, "    void");
 }
 
-
 /******************************************************************************/
 /*                                                                            */
 /*    Spell new and old style parameter lists                                 */
@@ -200,5 +199,8 @@ void CSPELL_finish_synopsis
     AST_parameter_n_t *paramlist ATTRIBUTE_UNUSED
 )
 {
+    /* this function used to put in the function parameters
+     when prototypes were NOT being used.  Since we now
+     always use function prototypes, this function now does
+     nothing */
 }
-
