@@ -3,7 +3,7 @@
 //  dcerpc
 //
 //  Created by Brad Suinn on 10/2/09.
-//  Copyright 2009 Apple Inc. All rights reserved.
+//  Copyright 2009-2010 Apple Inc. All rights reserved.
 //
 
 #include "base_config"
@@ -12,3 +12,7 @@
 HEADER_SEARCH_PATHS = $(HEADER_SEARCH_PATHS_BASE4)
 FRAMEWORK_SEARCH_PATHS = $(inherited) "/System/Library/PrivateFrameworks" /System/Library/Frameworks
 GCC_PREPROCESSOR_DEFINITIONS = $(GCC_PREPROCESSOR_DEFINITIONS_PATH1)
+
+INSTALL_OWNER = root
+INSTALL_GROUP = wheel
+INSTALL_PATH = /System/Library/PrivateFrameworks

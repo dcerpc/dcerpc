@@ -1,9 +1,8 @@
 //
-//  dcerpc.xcconfig
-//  dcerpc
+//  ncklib.xcconfig
+//  ncklib
 //
-//  Created by Brad Suinn on 9/29/09.
-//  Copyright 2009 Apple Inc. All rights reserved.
+//  Copyright 2010 Apple Inc. All rights reserved.
 //
 
 // Get the RPC_C_UXD_DIR, RPC_C_NP_DIR, and IMAGE_DIR paths
