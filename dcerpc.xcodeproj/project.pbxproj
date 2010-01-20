@@ -3882,8 +3882,8 @@
 		};
 		1DEB91B308733DA50010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DDB66DA2107BE3310095CBC1 /* base_config.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CURRENT_PROJECT_VERSION = 10;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -3892,7 +3892,6 @@
 				PREBINDING = NO;
 				SDKROOT = "";
 				STRIP_INSTALLED_PRODUCT = NO;
-				USE_HEADERMAP = NO;
 				VALID_ARCHS = "ppc i386 x86_64";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
