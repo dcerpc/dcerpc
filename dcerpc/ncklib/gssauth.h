@@ -47,7 +47,11 @@
 #include <comp.h>
 #include <gssauthcn.h>
 
+#if HAVE_GSS_FRAMEWORK
+#include <GSS/gssapi.h>
+#else
 #include <gssapi/gssapi.h>
+#endif
 
 /*
  * State block containing all the state of one end of an authenticated

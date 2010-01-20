@@ -37,6 +37,7 @@
 **
 */
 
+#include <config.h>
 #include <gssauth.h>
 #include <gssauthcn.h>
 
@@ -1476,6 +1477,11 @@ INTERNAL void rpc__gssauth_cn_wrap_packet
 
 	memset(&wrap_base[wrap_idx], 0, pad_len);
 	wrap_idx += pad_len;
+
+/* Heimdal names this flag differently */
+#if defined(GSS_IOV_BUFFER_TYPE_FLAG_ALLOCATE) && !defined(GSS_IOV_BUFFER_FLAG_ALLOCATE)
+#define GSS_IOV_BUFFER_FLAG_ALLOCATE GSS_IOV_BUFFER_TYPE_FLAG_ALLOCATE
+#endif
 
 	/* header */
 	output_iov[0].type = GSS_IOV_BUFFER_TYPE_HEADER |
