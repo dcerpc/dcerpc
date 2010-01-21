@@ -129,6 +129,7 @@
 		D67F763C11068B71003C1D11 /* rpcmutex.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB260100408FD0080B762 /* rpcmutex.c */; };
 		D67F763D11068B71003C1D11 /* rpcrand.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB262100408FD0080B762 /* rpcrand.c */; };
 		D67F763E11068B71003C1D11 /* rpctimer.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB266100408FD0080B762 /* rpctimer.c */; };
+		D69F92761108BD9500DDCD00 /* lrpc.idl in Sources */ = {isa = PBXBuildFile; fileRef = D6AE33151108BA6D0050828C /* lrpc.idl */; };
 		D6A1242F11066EFD007B04CF /* libncadg_stubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F8C3106D7357005F1EF3 /* libncadg_stubs.a */; };
 		D6A12458110672EF007B04CF /* libnck_stubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F4C9106D2364005F1EF3 /* libnck_stubs.a */; };
 		DD0435211076A0D60010E492 /* libidl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE0178F106C2FFD00A5E41A /* libidl.a */; };
@@ -858,6 +859,7 @@
 		D6422E331106554900D380C9 /* twr_uxd.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = twr_uxd.c; sourceTree = "<group>"; };
 		D655C48311067B1A005857C5 /* GSS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GSS.framework; path = /System/Library/Frameworks/GSS.framework; sourceTree = "<absolute>"; };
 		D6A1244F11067218007B04CF /* ncklib.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = ncklib.xcconfig; path = dcerpc.xc.configurations/ncklib.xcconfig; sourceTree = "<group>"; };
+		D6AE33151108BA6D0050828C /* lrpc.idl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lrpc.idl; sourceTree = "<group>"; };
 		DD04350210769FDA0010E492 /* DCERPC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DCERPC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD04350310769FDA0010E492 /* DCERPC-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "DCERPC-Info.plist"; sourceTree = "<group>"; };
 		DD04350B10769FF80010E492 /* dcerpc_framework.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = dcerpc_framework.xcconfig; path = dcerpc.xc.configurations/dcerpc_framework.xcconfig; sourceTree = "<group>"; };
@@ -1096,7 +1098,6 @@
 		DD3DB0F2100408FD0080B762 /* dce_error.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dce_error.h.in; sourceTree = "<group>"; };
 		DD3DB0F3100408FD0080B762 /* dce_utils.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dce_utils.h.in; sourceTree = "<group>"; };
 		DD3DB0F4100408FD0080B762 /* dcethread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dcethread.h; sourceTree = "<group>"; };
-		DD3DB0F5100408FD0080B762 /* diffs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = diffs; sourceTree = "<group>"; };
 		DD3DB0F6100408FD0080B762 /* ep.acf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ep.acf; sourceTree = "<group>"; };
 		DD3DB0F7100408FD0080B762 /* ep.idl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ep.idl; sourceTree = "<group>"; };
 		DD3DB0F9100408FD0080B762 /* dce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce.h; sourceTree = "<group>"; };
@@ -1973,7 +1974,6 @@
 				DD3DB0F2100408FD0080B762 /* dce_error.h.in */,
 				DD3DB0F3100408FD0080B762 /* dce_utils.h.in */,
 				DD3DB0F4100408FD0080B762 /* dcethread.h */,
-				DD3DB0F5100408FD0080B762 /* diffs */,
 				DD3DB0F6100408FD0080B762 /* ep.acf */,
 				DD3DB0F7100408FD0080B762 /* ep.idl */,
 				DD3DB0F8100408FD0080B762 /* freebsd6.0 */,
@@ -2019,6 +2019,7 @@
 				DD3DB163100408FD0080B762 /* twr.idl */,
 				DD3DB164100408FD0080B762 /* uuid.idl */,
 				DD3DB165100408FD0080B762 /* x86_64 */,
+				D6AE33151108BA6D0050828C /* lrpc.idl */,
 			);
 			path = dce;
 			sourceTree = "<group>";
@@ -3346,13 +3347,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D69F92761108BD9500DDCD00 /* lrpc.idl in Sources */,
+				DD081628106C1A250007E433 /* lbase.idl in Sources */,
 				DD081622106C1A250007E433 /* codesets.idl in Sources */,
 				DD081623106C1A250007E433 /* conv.idl in Sources */,
 				DD081624106C1A250007E433 /* convc.idl in Sources */,
 				DD081625106C1A250007E433 /* ep.idl in Sources */,
 				DD081626106C1A250007E433 /* id_base.idl in Sources */,
 				DD081627106C1A250007E433 /* iovector.idl in Sources */,
-				DD081628106C1A250007E433 /* lbase.idl in Sources */,
 				DD081629106C1A250007E433 /* mgmt.idl in Sources */,
 				DD08162A106C1A250007E433 /* nbase.idl in Sources */,
 				DD08162B106C1A250007E433 /* ncastat.idl in Sources */,
@@ -4052,12 +4054,14 @@
 		DDDF3110106AE5F700E6A9C2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				PRODUCT_NAME = Aggregate;
 			};
 			name = Debug;
 		};
 		DDDF3111106AE5F700E6A9C2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				PRODUCT_NAME = Aggregate;
 			};
 			name = Release;
 		};
