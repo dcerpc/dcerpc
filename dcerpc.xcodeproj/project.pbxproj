@@ -870,7 +870,6 @@
 		DD10F7EC106D6DA7005F1EF3 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
 		DD10F8C3106D7357005F1EF3 /* libncadg_stubs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libncadg_stubs.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD21F0B71083D15500696F06 /* libdceidl_parser.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdceidl_parser.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		DD21F0DB1083D32F00696F06 /* dceidl_stubs.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = dceidl_stubs.xcconfig; path = dcerpc.xc.configurations/dceidl_stubs.xcconfig; sourceTree = "<group>"; };
 		DD3DAF83100408FC0080B762 /* wc16str.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = wc16str.c; sourceTree = "<group>"; };
 		DD3DAF84100408FC0080B762 /* dummyfuncs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dummyfuncs.c; sourceTree = "<group>"; };
 		DD3DAF85100408FC0080B762 /* exports */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = exports; sourceTree = "<group>"; };
@@ -1457,13 +1456,10 @@
 		DD3DB2D9100408FD0080B762 /* uuidsys.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = uuidsys.c; sourceTree = "<group>"; };
 		DD3DB2DA100408FD0080B762 /* uuidtool.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = uuidtool.c; sourceTree = "<group>"; };
 		DD501C071073C24800473324 /* stubs.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = stubs.xcconfig; path = dcerpc.xc.configurations/stubs.xcconfig; sourceTree = "<group>"; };
-		DD8828241073077F00FBF62B /* dcethread.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = dcethread.xcconfig; path = dcerpc.xc.configurations/dcethread.xcconfig; sourceTree = "<group>"; };
 		DD88282810730DF600FBF62B /* dceidl.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = dceidl.xcconfig; path = dcerpc.xc.configurations/dceidl.xcconfig; sourceTree = "<group>"; };
-		DD88282B10730E5E00FBF62B /* dce.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = dce.xcconfig; path = dcerpc.xc.configurations/dce.xcconfig; sourceTree = "<group>"; };
 		DD88282E10730E8F00FBF62B /* idl.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = idl.xcconfig; path = dcerpc.xc.configurations/idl.xcconfig; sourceTree = "<group>"; };
 		DD88283910730EF100FBF62B /* uuid.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = uuid.xcconfig; path = dcerpc.xc.configurations/uuid.xcconfig; sourceTree = "<group>"; };
 		DD8828621073163F00FBF62B /* dcerpcd.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = dcerpcd.xcconfig; path = dcerpc.xc.configurations/dcerpcd.xcconfig; sourceTree = "<group>"; };
-		DD88286A1073189700FBF62B /* rpc_paths.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = rpc_paths.xcconfig; path = dcerpc.xc.configurations/rpc_paths.xcconfig; sourceTree = "<group>"; };
 		DD9D320C107D51CF00FA8214 /* junk.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = junk.c; path = dcerpc.xc.configurations/junk.c; sourceTree = "<group>"; };
 		DDA1C209107FDD0B004D2055 /* copy_catalogs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = copy_catalogs; path = dcerpc.xc.configurations/copy_catalogs; sourceTree = "<group>"; };
 		DDA1C20A107FDD0B004D2055 /* copy_dce_headers */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = copy_dce_headers; path = dcerpc.xc.configurations/copy_dce_headers; sourceTree = "<group>"; };
@@ -2691,11 +2687,7 @@
 				D6A1244F11067218007B04CF /* ncklib.xcconfig */,
 				DD0FE87D1074F526004AB68C /* buildconf_configure */,
 				DDB66DA2107BE3310095CBC1 /* base_config.xcconfig */,
-				DD88286A1073189700FBF62B /* rpc_paths.xcconfig */,
-				DD8828241073077F00FBF62B /* dcethread.xcconfig */,
-				DD21F0DB1083D32F00696F06 /* dceidl_stubs.xcconfig */,
 				DD88282810730DF600FBF62B /* dceidl.xcconfig */,
-				DD88282B10730E5E00FBF62B /* dce.xcconfig */,
 				DD88282E10730E8F00FBF62B /* idl.xcconfig */,
 				DD88283910730EF100FBF62B /* uuid.xcconfig */,
 				DD501C071073C24800473324 /* stubs.xcconfig */,
@@ -3863,18 +3855,13 @@
 /* Begin XCBuildConfiguration section */
 		1DEB91B208733DA50010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DDB66DA2107BE3310095CBC1 /* base_config.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CURRENT_PROJECT_VERSION = 10;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PREBINDING = NO;
 				SDKROOT = "";
-				STRIP_INSTALLED_PRODUCT = NO;
 				VALID_ARCHS = "ppc i386 x86_64";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -3886,12 +3873,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CURRENT_PROJECT_VERSION = 10;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				PREBINDING = NO;
 				SDKROOT = "";
-				STRIP_INSTALLED_PRODUCT = NO;
 				VALID_ARCHS = "ppc i386 x86_64";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -3943,7 +3925,6 @@
 		};
 		DD08161D106C19590007E433 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DD88282B10730E5E00FBF62B /* dce.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = dce;
 			};
@@ -3951,7 +3932,6 @@
 		};
 		DD08161E106C19590007E433 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DD88282B10730E5E00FBF62B /* dce.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = dce;
 			};
@@ -4023,7 +4003,7 @@
 		};
 		DD21F0C21083D15600696F06 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DD21F0DB1083D32F00696F06 /* dceidl_stubs.xcconfig */;
+			baseConfigurationReference = DD88282810730DF600FBF62B /* dceidl.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = dceidl_parser;
 			};
@@ -4031,7 +4011,7 @@
 		};
 		DD21F0C31083D15600696F06 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DD21F0DB1083D32F00696F06 /* dceidl_stubs.xcconfig */;
+			baseConfigurationReference = DD88282810730DF600FBF62B /* dceidl.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = dceidl_parser;
 			};
@@ -4072,23 +4052,12 @@
 		DDDF3110106AE5F700E6A9C2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				ONLY_ACTIVE_ARCH = NO;
-				PRODUCT_NAME = Aggregrate;
 			};
 			name = Debug;
 		};
 		DDDF3111106AE5F700E6A9C2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				ONLY_ACTIVE_ARCH = NO;
-				PRODUCT_NAME = Aggregrate;
-				ZERO_LINK = NO;
 			};
 			name = Release;
 		};
@@ -4158,72 +4127,48 @@
 		};
 		DDE704E71071197000563825 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DDB66DA2107BE3310095CBC1 /* base_config.xcconfig */;
 			buildSettings = {
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					_SOCKADDR_LEN,
-					"_FORTIFY_SOURCE=2",
-					HAVE_CONFIG_H,
-				);
 				PRODUCT_NAME = echo_server;
 			};
 			name = Debug;
 		};
 		DDE704E81071197000563825 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DDB66DA2107BE3310095CBC1 /* base_config.xcconfig */;
 			buildSettings = {
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					_SOCKADDR_LEN,
-					"_FORTIFY_SOURCE=2",
-					HAVE_CONFIG_H,
-				);
 				PRODUCT_NAME = echo_server;
 			};
 			name = Release;
 		};
 		DDFD947110723BEC008E776F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DDB66DA2107BE3310095CBC1 /* base_config.xcconfig */;
 			buildSettings = {
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					_SOCKADDR_LEN,
-					"_FORTIFY_SOURCE=2",
-					HAVE_CONFIG_H,
-				);
 				PRODUCT_NAME = echo_client;
 			};
 			name = Debug;
 		};
 		DDFD947210723BEC008E776F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DDB66DA2107BE3310095CBC1 /* base_config.xcconfig */;
 			buildSettings = {
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					_SOCKADDR_LEN,
-					"_FORTIFY_SOURCE=2",
-					HAVE_CONFIG_H,
-				);
 				PRODUCT_NAME = echo_client;
 			};
 			name = Release;
 		};
 		DDFD949B10723EB6008E776F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DDB66DA2107BE3310095CBC1 /* base_config.xcconfig */;
 			buildSettings = {
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					_SOCKADDR_LEN,
-					"_FORTIFY_SOURCE=2",
-					HAVE_CONFIG_H,
-				);
 				PRODUCT_NAME = epstatus;
 			};
 			name = Debug;
 		};
 		DDFD949C10723EB6008E776F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DDB66DA2107BE3310095CBC1 /* base_config.xcconfig */;
 			buildSettings = {
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					_SOCKADDR_LEN,
-					"_FORTIFY_SOURCE=2",
-					HAVE_CONFIG_H,
-				);
 				PRODUCT_NAME = epstatus;
 			};
 			name = Release;
