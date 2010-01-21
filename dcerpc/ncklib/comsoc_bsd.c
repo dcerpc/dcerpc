@@ -702,7 +702,7 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_getpeereid
 );
 
 
-#if !defined(SO_PEERCRED) && !defined(HAVE_GETPEERID)
+#if !defined(SO_PEERCRED) && !defined(HAVE_GETPEEREID)
 
 INTERNAL rpc_socket_error_t rpc__bsd_socket_sendpeereid
 (
@@ -772,7 +772,7 @@ connect_again:
         goto error;
     }
 
-#if !defined(SO_PEERCRED) && !defined(HAVE_GETPEERID)
+#if !defined(SO_PEERCRED) && !defined(HAVE_GETPEEREID)
     serr = rpc__bsd_socket_sendpeereid(sock, addr);
 #endif
 
@@ -1453,7 +1453,7 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_getpeereid
 }
 
 
-#if !defined(SO_PEERCRED) && !defined(HAVE_GETPEERID)
+#if !defined(SO_PEERCRED) && !defined(HAVE_GETPEEREID)
 
 INTERNAL rpc_socket_error_t rpc__bsd_socket_sendpeereid
 (
