@@ -422,8 +422,6 @@ const long  rpc_c_ep_max_annotation_size    = 64;   /* including null */
  */
 typedef rpc_opaque_ptr_t    rpc_ep_inq_handle_t, *rpc_ep_inq_handle_p_t;
 
-#include "lw/security-types.h"
-
-typedef PACCESS_TOKEN rpc_access_token_p_t;
+typedef rpc_opaque_ptr_t rpc_access_token_p_t;
 
 }

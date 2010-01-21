@@ -55,8 +55,14 @@
 #include <sys/param.h>
 #include <sys/socket.h>
 #include <cnp.h>
+
+#if HAVE_LW_BASE_H
 #include <lw/base.h>
+#endif
+
+#if HAVE_LWMAPSECURITY_LWMAPSECURITY_H
 #include <lwmapsecurity/lwmapsecurity.h>
+#endif
 
 /* Bizarre hack for HP-UX ia64 where a system header
  * makes reference to a kernel-only data structure
@@ -2216,6 +2222,7 @@ rpc__bsd_socket_transport_inq_access_token(
     rpc_access_token_p_t* token
     )
 {
+#if HAVE_LIKEWISE_LWMAPSECURITY
     rpc_bsd_transport_info_p_t lrpc_info = (rpc_bsd_transport_info_p_t) info;
     NTSTATUS status = STATUS_SUCCESS;
     PLW_MAP_SECURITY_CONTEXT context = NULL;
@@ -2235,6 +2242,9 @@ error:
     LwMapSecurityFreeContext(&context);
 
     return LwNtStatusToErrno(status);
+#else
+    return RPC_C_SOCKET_ENOTSUP;
+#endif
 }
 
 PRIVATE const rpc_socket_vtbl_t rpc_g_bsd_socket_vtbl =

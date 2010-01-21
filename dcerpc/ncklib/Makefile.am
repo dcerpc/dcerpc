@@ -153,7 +153,11 @@ endif
 
 libtrans_la_CPPFLAGS = $(AM_CPPFLAGS) $(NAF_NP_CPPFLAGS)
 libtrans_la_CFLAGS = $(BASE_CFLAGS)
-libtrans_la_LIBADD = $(NAF_NP_LIBS) -llwmapsecurity
+libtrans_la_LIBADD = $(NAF_NP_LIBS)
+
+if HAVE_LIKEWISE_LWMAPSECURITY
+libtrans_la_LIBADD += -llwmapsecurity
+endif
 
 ######################################################################
 ## COMPONENT: auth - comprises of libauth_none shared lib
@@ -289,7 +293,12 @@ libnck_la_LIBADD+=libauth_gss_negotiate.la
 libauth_gss_negotiate_la_SOURCES = gssauth.c gssauthcn.c
 libauth_gss_negotiate_la_CFLAGS = @GSSAPI_INCLUDES@
 libauth_gss_negotiate_la_LDFLAGS = @GSSAPI_LDFLAGS@
-libauth_gss_negotiate_la_LIBADD = @GSSAPI_LIBS@ -llwmapsecurity
+libauth_gss_negotiate_la_LIBADD = @GSSAPI_LIBS@
+
+if HAVE_LIKEWISE_LWMAPSECURITY
+libauth_gss_negotiate_la_LIBADD += -llwmapsecurity
+endif
+
 endif
 
 if AUTH_SCHANNEL

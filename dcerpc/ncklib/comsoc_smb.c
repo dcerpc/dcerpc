@@ -18,14 +18,22 @@
 #include <sys/param.h>
 #include <sys/mount.h>
 
-#if HAVE_LIKEWISE_LWIO
-#include <lwio/lwio.h>
-#include <lw/base.h>
-#elif HAVE_SMBCLIENT_FRAMEWORK
+#if HAVE_SMBCLIENT_FRAMEWORK
 #include <SMBClient/smbclient.h>
 #include <nttypes.h>
 #endif
+
+#if HAVE_LW_BASE_H
+#include <lw/base.h>
+#endif
+
+#if HAVE_LWIO_LWIO_H
+#include <lwio/lwio.h>
+#endif
+
+#if HAVE_LWMAPSECURITY_LWMAPSECURITY_H
 #include <lwmapsecurity/lwmapsecurity.h>
+#endif
 
 #define SMB_SOCKET_LOCK(sock) (rpc__smb_socket_lock(sock))
 #define SMB_SOCKET_UNLOCK(sock) (rpc__smb_socket_unlock(sock))
@@ -2185,6 +2193,7 @@ rpc__smb_socket_transport_inq_access_token(
     rpc_access_token_p_t* token
     )
 {
+#if HAVE_LIKEWISE_LWMAPSECURITY
     rpc_smb_transport_info_p_t smb_info = (rpc_smb_transport_info_p_t) info;
     NTSTATUS status = STATUS_SUCCESS;
     PLW_MAP_SECURITY_CONTEXT context = NULL;
@@ -2203,6 +2212,9 @@ error:
     LwMapSecurityFreeContext(&context);
 
     return LwNtStatusToErrno(status);
+#else
+    return RPC_C_SOCKET_ENOTSUP;
+#endif
 }
 
 rpc_socket_vtbl_t const rpc_g_smb_socket_vtbl =

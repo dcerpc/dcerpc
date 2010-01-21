@@ -403,6 +403,7 @@ fi
 
 # Check whether the Likewise SMB named pipe client library is available. If so,
 # we need to link it for named pipe support.
+AC_CHECK_HEADERS([lwio/lwio.h])
 AC_CHECK_LIB(lwioclient, LwNtCtxCreateNamedPipeFile,
 	[
 	    NAF_NP_LIBS="-llwioclient"
@@ -498,6 +499,22 @@ RPC_ARG_DEFINE(afuxd, NAF_UXD,no,AF_LOCAL network address family support (untest
 AM_CONDITIONAL(NAF_UXD, test x${rpc_arg_afuxd} = xyes)
 
 RPC_ARG_DEFINE(ifloopback, USE_LOOPBACK, yes,Include loopback interface support)
+
+# Check whether the Likewise lwmapsecurity library is available for
+# access token support
+AC_CHECK_HEADERS([lw/base.h, lwmapsecurity/lwmapsecurity.h])
+AC_CHECK_LIB(lwmapsecurity, LwMapSecurityInitialize,
+	[
+	    rpc_have_likewise_lwmapsecurity=yes
+	    AC_DEFINE(HAVE_LIKEWISE_LWMAPSECURITY, 1,
+		    [whether the Likewise lwmapsecurity API is available])
+	],
+	[
+	    rpc_have_likewise_lwmapsecurity=no
+	])
+
+AM_CONDITIONAL(HAVE_LIKEWISE_LWMAPSECURITY,
+	test x${rpc_have_likewise_lwmapsecurity} = xyes)
 
 #####################################################################
 ## COMPONENT: dcelib

@@ -39,8 +39,14 @@
 */
 
 #include <gssauth.h>
+
+#if HAVE_LW_LWBASE_H
 #include <lw/base.h>
+#endif
+
+#if HAVE_LWMAPSECURITY_LWMAPSECURITY_H
 #include <lwmapsecurity/lwmapsecurity.h>
+#endif
 
 /*
  * Size of buffer used when asking for remote server's principal name
@@ -650,8 +656,6 @@ INTERNAL void rpc__gssauth_inq_access_token(
     unsigned32 *stp
     )
 {
-    NTSTATUS status = STATUS_SUCCESS;
-    PLW_MAP_SECURITY_CONTEXT context = NULL;
     OM_uint32 minor_status = 0;
     int gss_rc = 0;
     rpc_gssauth_info_p_t gssauth_info = NULL;
@@ -659,7 +663,12 @@ INTERNAL void rpc__gssauth_inq_access_token(
     gss_name_t src = GSS_C_NO_NAME;
     gss_OID src_type = GSS_C_NULL_OID;
     gss_buffer_desc src_name = GSS_C_EMPTY_BUFFER;
+
+#if HAVE_LIKEWISE_LWMAPSECURITY
     PSTR principal = NULL;
+    NTSTATUS status = STATUS_SUCCESS;
+    PLW_MAP_SECURITY_CONTEXT context = NULL;
+#endif
 
     gssauth_info = (rpc_gssauth_info_p_t)auth_info;
     gssauth_cn_info = gssauth_info->cn_info;
@@ -679,6 +688,7 @@ INTERNAL void rpc__gssauth_inq_access_token(
     gss_rc = gss_display_name(&minor_status, src, &src_name, &src_type);
     if (gss_rc != GSS_S_COMPLETE) goto error;
 
+#if HAVE_LIKEWISE_LWMAPSECURITY
     status = LwMapSecurityCreateContext(&context);
     if (status) goto error;
 
@@ -689,6 +699,13 @@ INTERNAL void rpc__gssauth_inq_access_token(
     if (status) goto error;
 
     *stp = rpc_s_ok;
+#else
+    /*
+     * <rdar://problem/7566464> add darwin support to
+     *		rpc__gssauth_inq_access_token
+     */
+    *stp = rpc_s_unsupported_name_syntax;
+#endif
 
 cleanup:
 

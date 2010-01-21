@@ -135,10 +135,10 @@ typedef void (*rpc_auth_inq_sec_context_fn_t) (
         unsigned32                          /* out */   * /*st*/
    );
 
-typedef void (*rpc_auth_inq_access_token_fn_t) _DCE_PROTOTYPE_ ((
+typedef void (*rpc_auth_inq_access_token_fn_t) (
         rpc_auth_info_p_t,
         rpc_access_token_p_t*,
-        unsigned32*));
+        unsigned32*);
 
 /***********************************************************************/
 /*
