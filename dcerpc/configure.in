@@ -178,8 +178,17 @@ AC_CHECK_HEADERS(sys/kauth.h sys/syscall.h)
 
 
 AS_AC_EXPAND(rpc_dir, ["$localstatedir/rpc"])
-AC_DEFINE_UNQUOTED([RPC_C_NP_DIR], ["$rpc_dir"], [named pipes directory])
-AC_DEFINE_UNQUOTED([RPC_C_UXD_DIR], ["$rpc_dir"], [unix domain sockets directory])
+
+AC_CACHE_CHECK([for named pipes directory],
+	[rpcd_cv_rpc_c_np_dir],
+	[rpcd_cv_rpc_c_np_dir="$rpc_dir"])
+
+AC_CACHE_CHECK([for unix domain sockets directory],
+	[rpcd_cv_rpc_c_uxd_dir],
+	[rpcd_cv_rpc_c_uxd_dir="$rpc_dir"])
+
+AC_DEFINE_UNQUOTED([RPC_C_NP_DIR], ["$rpcd_cv_rpc_c_np_dir"], [named pipes directory])
+AC_DEFINE_UNQUOTED([RPC_C_UXD_DIR], ["$rpcd_cv_rpc_c_uxd_dir"], [unix domain sockets directory])
 
 #####################################################################
 ## COMPONENT: threads

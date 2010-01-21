@@ -3,6 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -1091,6 +1092,24 @@ error:
     goto cleanup;
 }
 
+static void
+rpcd_verify_sockets_directory(
+	const char * path)
+{
+
+    if (chmod(path, S_IRUSR | S_IWUSR | S_IXUSR) != 0)
+    {
+        if (errno != ENOENT ||
+            mkdir(path, S_IRUSR | S_IWUSR | S_IXUSR) != 0)
+        {
+
+            printf("(rpcd) could not change permissions on %s directory...\n",
+		    path);
+            exit(1);
+        }
+    }
+}
+
 int main(int argc, char *argv[])
 {
     error_status_t  status, listen_status, network_status;
@@ -1145,17 +1164,14 @@ int main(int argc, char *argv[])
     if (! STATUS_OK(&status)) exit(1);
 
     /*
-     * Ensure permissions on /var/rpc directory
+     * Ensure permissions on pipes directory and on unix sockets
+     * directory if it's different.
      */
-    if (chmod(RPC_C_NP_DIR, S_IRUSR | S_IWUSR | S_IXUSR) != 0)
-    {
-        if (errno != ENOENT ||
-            mkdir(RPC_C_NP_DIR, S_IRUSR | S_IWUSR | S_IXUSR) != 0)
-        {
 
-            printf("(rpcd) could not change permissions on " RPC_C_NP_DIR " directory...\n");
-            exit(1);
-        }
+    rpcd_verify_sockets_directory(RPC_C_NP_DIR);
+    if (strcmp(RPC_C_NP_DIR, RPC_C_UXD_DIR) != 0)
+    {
+	rpcd_verify_sockets_directory(RPC_C_UXD_DIR);
     }
 
     /*
