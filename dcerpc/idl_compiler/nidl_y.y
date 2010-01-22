@@ -4,7 +4,7 @@
  *  (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  *  (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  *  (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- *  Portions Copyright (c) 2009 Apple Inc. All rights reserved
+ *  Portions Copyright (c) 2009-2010 Apple Inc. All rights reserved
  *  To anyone who acknowledges that this file is provided "AS IS"
  *  without any express or implied warranty:
  *                  permission to use, copy, modify, and distribute this
@@ -70,7 +70,7 @@ typedef struct nidl_parser_state_t
    parser_location_t nidl_location;
 } nidl_parser_state_t;
 
-static void nidl_yyerror (YYLTYPE *, yyscan_t, char const *);
+static void nidl_yyerror (YYLTYPE *, nidl_parser_p, char const *);
 
 %}
 
@@ -2027,7 +2027,7 @@ unsigned nidl_yylineno
    return nidl_yyget_lineno(nidl->nidl_yyscanner);
 }
 
-unsigned nidl_yynerrs
+unsigned nidl_errcount
 (
    nidl_parser_p nidl
 )
@@ -2037,18 +2037,14 @@ unsigned nidl_yynerrs
 
 static void nidl_yyerror
 (
-    YYLTYPE * yylloc,
-    yyscan_t scanner,
+    YYLTYPE * yylloc ATTRIBUTE_UNUSED,
+    nidl_parser_p nidl,
     char const * message
 )
 {
-    struct parser_location_t loc;
-
-    loc.lineno = nidl_yyget_lineno(scanner);
-    loc.location = *yylloc;
-    loc.text = nidl_yyget_text(scanner);
-
-    idl_yyerror(&loc, message);
+    const struct parser_location_t * loc;
+    loc = nidl_location(nidl);
+    idl_yyerror(loc, message);
 }
 
 /* preserve coding style vim: set tw=78 sw=3 ts=3 et : */

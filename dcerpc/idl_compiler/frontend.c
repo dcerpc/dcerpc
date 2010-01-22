@@ -3,7 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2009 Apple Inc. All rights reserved
+ * Portions Copyright (c) 2009-2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -253,7 +253,7 @@ static boolean parse_acf        /* Returns true on success */
         FILE_open(acf_file, &acf_yyin);
 
     acf_parser_input(acf_parser, acf_yyin);
-    if (acf_yyparse(acf_parser) != 0 && acf_yynerrs(acf_parser) == 0)
+    if (acf_yyparse(acf_parser) != 0 && acf_errcount(acf_parser) == 0)
     {
         log_error(acf_yylineno(acf_parser), NIDL_COMPABORT, NULL);
     }
@@ -265,7 +265,7 @@ static boolean parse_acf        /* Returns true on success */
 #endif
         fclose(acf_yyin);
 
-    if (acf_yynerrs(acf_parser) != 0)
+    if (acf_errcount(acf_parser) != 0)
     {
 	acf_parser_destroy(acf_parser);
         return false;

@@ -4,7 +4,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2009 Apple Inc. All rights reserved
+ * Portions Copyright (c) 2009-2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -255,7 +255,6 @@ other           .
     NAMETABLE_id_t id;
     /* If id is too long, truncate it and issue a warning */
     if (yyleng > MAX_ID) {
-        NAMETABLE_id_t id;
         char const *identifier;
         id = NAMETABLE_add_id((char *)yytext);
         NAMETABLE_id_to_string(id, &identifier);

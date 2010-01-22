@@ -3,7 +3,7 @@
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2009 Apple Inc. All rights reserved
+ * Portions Copyright (c) 2009-2010 Apple Inc. All rights reserved
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
  *                 permission to use, copy, modify, and distribute this
@@ -287,7 +287,7 @@ void nidl_parser_destroy (nidl_parser_p);
 void nidl_parser_input (nidl_parser_p, FILE *);
 unsigned nidl_yylineno (nidl_parser_p);
 parser_location_p nidl_location (nidl_parser_p);
-unsigned nidl_yynerrs (nidl_parser_p);
+unsigned nidl_errcount (nidl_parser_p);
 int nidl_yyparse(nidl_parser_p);
 
 /* Public ACF parser API ... */
@@ -299,7 +299,7 @@ void acf_parser_input (acf_parser_p, FILE *);
 void acf_parser_destroy (acf_parser_p);
 unsigned acf_yylineno (acf_parser_p);
 parser_location_p acf_location (acf_parser_p);
-unsigned acf_yynerrs (acf_parser_p);
+unsigned acf_errcount (acf_parser_p);
 int acf_yyparse (acf_parser_p);
 
 #endif

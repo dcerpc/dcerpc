@@ -3,7 +3,7 @@
  *  (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  *  (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  *  (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- *  Portions Copyright (c) 2009 Apple Inc. All rights reserved
+ *  Portions Copyright (c) 2009-2010 Apple Inc. All rights reserved
  *  To anyone who acknowledges that this file is provided "AS IS"
  *  without any express or implied warranty:
  *                  permission to use, copy, modify, and distribute this
@@ -175,7 +175,7 @@ static void dump_attributes(acf_parser_state_t *, const char *, const char *, ac
  * Warning and Error stuff
  */
 
-static void acf_yyerror ( YYLTYPE *, yyscan_t, char const *);
+static void acf_yyerror ( YYLTYPE *, acf_parser_p, char const *);
 
 /*
 **  a c f _ e r r o r
@@ -1356,7 +1356,7 @@ const parser_location_t * acf_location
     return &acf->acf_location;
 }
 
-unsigned acf_yynerrs
+unsigned acf_errcount
 (
    acf_parser_p acf
 )
@@ -1366,18 +1366,14 @@ unsigned acf_yynerrs
 
 static void acf_yyerror
 (
-    YYLTYPE * yylloc,
-    yyscan_t scanner,
+    YYLTYPE * yylloc ATTRIBUTE_UNUSED,
+    acf_parser_p acf,
     char const * message
 )
 {
-    struct parser_location_t loc;
-
-    loc.lineno = acf_yyget_lineno(scanner);
-    loc.location = *yylloc;
-    loc.text = acf_yyget_text(scanner);
-
-    idl_yyerror(&loc, message);
+    const struct parser_location_t * loc;
+    loc = acf_location(acf);
+    idl_yyerror(loc, message);
 }
 
 /*
