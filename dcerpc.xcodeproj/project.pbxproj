@@ -2832,7 +2832,6 @@
 			buildPhases = (
 				DD10F5D3106D341E005F1EF3 /* Sources */,
 				DD10F5D4106D341E005F1EF3 /* Frameworks */,
-				D67F75E21106894F003C1D11 /* Ranlib */,
 				DD92D9391090F54600B869C1 /* Create dcerpc.cat */,
 			);
 			buildRules = (
@@ -3113,21 +3112,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		D67F75E21106894F003C1D11 /* Ranlib */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			comments = "cnp.o only has common symbols, so it doesn't get represented in the static archive's table of contents, so the object file is never loaded from the archive. We need a post-processing step on your static archive target to run \"ranlib -c libnck.a\", otherwise the global symbols in cnp.c don't get resolved at link time.";
-			files = (
-			);
-			inputPaths = (
-			);
-			name = Ranlib;
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "ranlib -c ${TARGET_BUILD_DIR}/${EXECUTABLE_NAME}";
-		};
 		D6E6B60210BCB1CE00E1DCF5 /* Configure */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
