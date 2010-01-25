@@ -1,4 +1,7 @@
 /*
+ * Copyright 2010 Apple Inc. All rights reserved.
+ */
+/*
  *
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
@@ -40,25 +43,13 @@
 
 #include <gssauth.h>
 
-#if HAVE_LW_LWBASE_H
-#include <lw/base.h>
-#endif
-
-#if HAVE_LWMAPSECURITY_LWMAPSECURITY_H
-#include <lwmapsecurity/lwmapsecurity.h>
-#endif
-
-/*
- * Size of buffer used when asking for remote server's principal name
- */
-#define MAX_SERVER_PRINC_NAME_LEN 500
-
-
 INTERNAL unsigned32 rpc_g_gssauth_alloc_count = 0;
 INTERNAL unsigned32 rpc_g_gssauth_free_count = 0;
 
 INTERNAL rpc_auth_rpc_prot_epv_p_t rpc_g_gssauth_negotiate_rpc_prot_epv[RPC_C_PROTOCOL_ID_MAX];
 INTERNAL rpc_auth_rpc_prot_epv_p_t rpc_g_gssauth_mskrb_rpc_prot_epv[RPC_C_PROTOCOL_ID_MAX];
+INTERNAL rpc_auth_rpc_prot_epv_p_t rpc_g_gssauth_winnt_rpc_prot_epv[RPC_C_PROTOCOL_ID_MAX];
+INTERNAL rpc_auth_rpc_prot_epv_p_t rpc_g_gssauth_netlogon_rpc_prot_epv[RPC_C_PROTOCOL_ID_MAX];
 
 INTERNAL void rpc__gssauth_negotiate_bnd_set_auth (
 	unsigned_char_p_t		/* in  */    /*server_princ_name*/,
@@ -71,6 +62,26 @@ INTERNAL void rpc__gssauth_negotiate_bnd_set_auth (
     );
 
 INTERNAL void rpc__gssauth_mskrb_bnd_set_auth (
+	unsigned_char_p_t		/* in  */    /*server_princ_name*/,
+	rpc_authn_level_t		/* in  */    /*authn_level*/,
+	rpc_auth_identity_handle_t	/* in  */    /*auth_identity*/,
+	rpc_authz_protocol_id_t		/* in  */    /*authz_protocol*/,
+	rpc_binding_handle_t		/* in  */    /*binding_h*/,
+	rpc_auth_info_p_t		/* out */    * /*auth_info*/,
+	unsigned32			/* out */    * /*st*/
+    );
+
+INTERNAL void rpc__gssauth_winnt_bnd_set_auth (
+	unsigned_char_p_t		/* in  */    /*server_princ_name*/,
+	rpc_authn_level_t		/* in  */    /*authn_level*/,
+	rpc_auth_identity_handle_t	/* in  */    /*auth_identity*/,
+	rpc_authz_protocol_id_t		/* in  */    /*authz_protocol*/,
+	rpc_binding_handle_t		/* in  */    /*binding_h*/,
+	rpc_auth_info_p_t		/* out */    * /*auth_info*/,
+	unsigned32			/* out */    * /*st*/
+    );
+
+INTERNAL void rpc__gssauth_netlogon_bnd_set_auth (
 	unsigned_char_p_t		/* in  */    /*server_princ_name*/,
 	rpc_authn_level_t		/* in  */    /*authn_level*/,
 	rpc_auth_identity_handle_t	/* in  */    /*auth_identity*/,
@@ -155,6 +166,34 @@ INTERNAL rpc_auth_epv_t rpc_g_gssauth_mskrb_epv =
         rpc__gssauth_inq_access_token
 };
 
+INTERNAL rpc_auth_epv_t rpc_g_gssauth_winnt_epv =
+{
+	rpc__gssauth_winnt_bnd_set_auth,
+	rpc__gssauth_srv_reg_auth,
+	rpc__gssauth_mgt_inq_def,
+	rpc__gssauth_inq_my_princ_name,
+	rpc__gssauth_free_info,
+	rpc__gssauth_free_key,
+	rpc__gssauth_resolve_identity,
+	rpc__gssauth_release_identity,
+	rpc__gssauth_inq_sec_context,
+        rpc__gssauth_inq_access_token
+};
+
+INTERNAL rpc_auth_epv_t rpc_g_gssauth_netlogon_epv =
+{
+	rpc__gssauth_netlogon_bnd_set_auth,
+	rpc__gssauth_srv_reg_auth,
+	rpc__gssauth_mgt_inq_def,
+	rpc__gssauth_inq_my_princ_name,
+	rpc__gssauth_free_info,
+	rpc__gssauth_free_key,
+	rpc__gssauth_resolve_identity,
+	rpc__gssauth_release_identity,
+	rpc__gssauth_inq_sec_context,
+        rpc__gssauth_inq_access_token
+};
+
 /*
  * R P C _ _ G S S A U T H _ B N D _ S E T _ A U T H
  *
@@ -176,6 +215,8 @@ INTERNAL void rpc__gssauth_bnd_set_auth
 	rpc_gssauth_info_p_t gssauth_info;
 	unsigned_char_p_t str_server_name;
 	gss_name_t gss_server_name;
+	OM_uint32 maj_stat;
+	OM_uint32 min_stat;
 
 	RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_ROUTINE_TRACE,
 		("(rpc__gssauth_bnd_set_auth)\n"));
@@ -206,11 +247,6 @@ INTERNAL void rpc__gssauth_bnd_set_auth
 	 */
 	if (authz_prot == rpc_c_authz_name) {
 		gss_buffer_desc input_name;
-		/* GSS_KRB5_NT_PRINCIPAL_NAME */
-		gss_OID_desc nt_principal =
-		{10, (void *)"\x2a\x86\x48\x86\xf7\x12\x01\x02\x02\x01"};
-		int gss_rc;
-		OM_uint32 minor_status = 0;
 
 		if (server_name == NULL) {
 			rpc_mgmt_inq_server_princ_name(binding_h,
@@ -227,13 +263,13 @@ INTERNAL void rpc__gssauth_bnd_set_auth
 		input_name.value = (void *)str_server_name;
 		input_name.length = strlen((char *)str_server_name);
 
-		gss_rc = gss_import_name(&minor_status,
-					 &input_name,
-					 &nt_principal,
-					 &gss_server_name);
-		if (gss_rc != GSS_S_COMPLETE) {
+		maj_stat = gss_import_name(&min_stat,
+					   &input_name,
+					   GSS_KRB5_NT_PRINCIPAL_NAME,
+					   &gss_server_name);
+		if (GSS_ERROR(maj_stat)) {
 			char msg[256];
-			rpc__gssauth_error_map(gss_rc, minor_status, GSS_C_NO_OID,
+			rpc__gssauth_error_map(maj_stat, min_stat, GSS_C_NO_OID,
 					       msg, sizeof(msg), &st);
 			RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_GENERAL,
 				("(rpc__gssauth_bnd_set_auth): import: %s\n", msg));
@@ -241,8 +277,6 @@ INTERNAL void rpc__gssauth_bnd_set_auth
 		}
 	} else if (authz_prot != rpc_c_authz_gss_name) {
 		gss_buffer_desc output_name;
-		int gss_rc;
-		OM_uint32 minor_status = 0;
 
 		gss_server_name = (gss_name_t)server_name;
 		server_name = NULL;
@@ -256,25 +290,25 @@ INTERNAL void rpc__gssauth_bnd_set_auth
 			gss_server_name = GSS_C_NO_NAME;
 			str_server_name = NULL;
 		} else {
-			gss_rc = gss_duplicate_name(&minor_status,
-						    gss_server_name,
-						    &gss_server_name);
-			if (gss_rc != GSS_S_COMPLETE) {
+			maj_stat = gss_duplicate_name(&min_stat,
+						      gss_server_name,
+						      &gss_server_name);
+			if (maj_stat != GSS_S_COMPLETE) {
 				char msg[256];
-				rpc__gssauth_error_map(gss_rc, minor_status, GSS_C_NO_OID,
+				rpc__gssauth_error_map(maj_stat, min_stat, GSS_C_NO_OID,
 						       msg, sizeof(msg), &st);
 				RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_GENERAL,
 					("(rpc__gssauth_bnd_set_auth): duplicate: %s\n", msg));
 				goto poison;
 			}
 
-			gss_rc = gss_display_name(&minor_status,
-						  gss_server_name,
-						  &output_name,
-						  NULL);
-			if (gss_rc != GSS_S_COMPLETE) {
+			maj_stat = gss_display_name(&min_stat,
+						    gss_server_name,
+						    &output_name,
+						    NULL);
+			if (maj_stat != GSS_S_COMPLETE) {
 				char msg[256];
-				rpc__gssauth_error_map(gss_rc, minor_status, GSS_C_NO_OID,
+				rpc__gssauth_error_map(maj_stat, min_stat, GSS_C_NO_OID,
 						       msg, sizeof(msg), &st);
 				RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_GENERAL,
 					("(rpc__gssauth_bnd_set_auth): display: %s\n", msg));
@@ -290,8 +324,7 @@ INTERNAL void rpc__gssauth_bnd_set_auth
 				     output_name.value,
 				     output_name.length);
 
-			gss_release_buffer(&minor_status,
-					   &output_name);
+			gss_release_buffer(&min_stat, &output_name);
 		}
 	}
 
@@ -314,8 +347,8 @@ INTERNAL void rpc__gssauth_bnd_set_auth
 	*infop = &gssauth_info->auth_info;
 	*stp = rpc_s_ok;
 	return;
+
 poison:
-/*TODO: should we really return *infop while returning an error???*/
 	*infop = &gssauth_info->auth_info;
 	*stp = st;
 	return;
@@ -369,39 +402,52 @@ INTERNAL void rpc__gssauth_mskrb_bnd_set_auth
 				  stp);
 }
 
-INTERNAL void rpc__gssauth_mskrb_init (
-	rpc_auth_epv_p_t *,
-	rpc_auth_rpc_prot_epv_tbl_t *,
-	unsigned32 *);
-
-INTERNAL void rpc__gssauth_negotiate_init (
-	rpc_auth_epv_p_t *,
-	rpc_auth_rpc_prot_epv_tbl_t *,
-	unsigned32 *);
-
-void rpc__gssauth_init_func(void)
+INTERNAL void rpc__gssauth_winnt_bnd_set_auth
+(
+	unsigned_char_p_t server_name,
+	rpc_authn_level_t level,
+	rpc_auth_identity_handle_t auth_ident,
+	rpc_authz_protocol_id_t authz_prot,
+	rpc_binding_handle_t binding_h,
+	rpc_auth_info_p_t *infop,
+	unsigned32 *stp
+)
 {
-	static rpc_authn_protocol_id_elt_t auth[2] = {
-	{ /* 0 */
-		rpc__gssauth_negotiate_init,
-		rpc_c_authn_gss_negotiate,
-		dce_c_rpc_authn_protocol_gss_negotiate,
-		NULL,
-		rpc_g_gssauth_negotiate_rpc_prot_epv
-	},
-	{ /* 1 */
-		rpc__gssauth_mskrb_init,
-		rpc_c_authn_gss_mskrb,
-		dce_c_rpc_authn_protocol_gss_mskrb,
-		NULL,
-		rpc_g_gssauth_mskrb_rpc_prot_epv
-	}
-	};
-
 	RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_ROUTINE_TRACE,
-		("(rpc__module_init_func)\n"));
+		("(rpc__gssauth_winntmskrb_bnd_set_auth)\n"));
 
-	rpc__register_authn_protocol(auth, 2);
+	rpc__gssauth_bnd_set_auth(server_name,
+				  level,
+				  rpc_c_authn_winnt,
+				  auth_ident,
+				  authz_prot,
+				  binding_h,
+				  infop,
+				  stp);
+}
+
+INTERNAL void rpc__gssauth_netlogon_bnd_set_auth
+(
+	unsigned_char_p_t server_name,
+	rpc_authn_level_t level,
+	rpc_auth_identity_handle_t auth_ident,
+	rpc_authz_protocol_id_t authz_prot,
+	rpc_binding_handle_t binding_h,
+	rpc_auth_info_p_t *infop,
+	unsigned32 *stp
+)
+{
+	RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_ROUTINE_TRACE,
+		("(rpc__gssauth_netlogon_bnd_set_auth)\n"));
+
+	rpc__gssauth_bnd_set_auth(server_name,
+				  level,
+				  rpc_c_authn_netlogon,
+				  auth_ident,
+				  authz_prot,
+				  binding_h,
+				  infop,
+				  stp);
 }
 
 INTERNAL void rpc__gssauth_negotiate_init
@@ -468,6 +514,69 @@ INTERNAL void rpc__gssauth_mskrb_init
 	*st = 0;
 }
 
+INTERNAL void rpc__gssauth_winnt_init
+(
+	rpc_auth_epv_p_t *epv,
+	rpc_auth_rpc_prot_epv_tbl_t *rpc_prot_epv,
+	unsigned32 *st
+)
+{
+	unsigned32		prot_id;
+	rpc_auth_rpc_prot_epv_t *prot_epv;
+
+	RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_ROUTINE_TRACE,
+		("(rpc__gssauth_winnt_init)\n"));
+
+	/*
+	 * Initialize the RPC-protocol-specific EPVs for the RPC protocols
+	 * we work with (ncacn).
+	 */
+	/* for now only ncacn, that's what windows uses */
+	prot_id = rpc__gssauth_winnt_cn_init (&prot_epv, st);
+	if (*st == rpc_s_ok) {
+		rpc_g_gssauth_winnt_rpc_prot_epv[prot_id] = prot_epv;
+	}
+
+	/*
+	 * Return information for this (KRB5) authentication service.
+	 */
+	*epv = &rpc_g_gssauth_winnt_epv;
+	*rpc_prot_epv = rpc_g_gssauth_winnt_rpc_prot_epv;
+
+	*st = 0;
+}
+
+INTERNAL void rpc__gssauth_netlogon_init
+(
+	rpc_auth_epv_p_t *epv,
+	rpc_auth_rpc_prot_epv_tbl_t *rpc_prot_epv,
+	unsigned32 *st
+)
+{
+	unsigned32		prot_id;
+	rpc_auth_rpc_prot_epv_t *prot_epv;
+
+	RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_ROUTINE_TRACE,
+		("(rpc__gssauth_netlogon_init)\n"));
+
+	/*
+	 * Initialize the RPC-protocol-specific EPVs for the RPC protocols
+	 * we work with (ncacn).
+	 */
+	/* for now only ncacn, that's what windows uses */
+	prot_id = rpc__gssauth_netlogon_cn_init (&prot_epv, st);
+	if (*st == rpc_s_ok) {
+		rpc_g_gssauth_netlogon_rpc_prot_epv[prot_id] = prot_epv;
+	}
+
+	/*
+	 * Return information for this (KRB5) authentication service.
+	 */
+	*epv = &rpc_g_gssauth_netlogon_epv;
+	*rpc_prot_epv = rpc_g_gssauth_netlogon_rpc_prot_epv;
+
+	*st = 0;
+}
 /*
  * R P C _ _ G S S A U T H _ F R E E _ I N F O
  *
@@ -487,14 +596,14 @@ INTERNAL void rpc__gssauth_free_info
 
 	info_type = (*info)->is_server?"server":"client";
 
-	if (gssauth_info->auth_info.server_princ_name) {
+	if (gssauth_info->auth_info.server_princ_name != NULL) {
 		unsigned32 st;
 		rpc_string_free(&gssauth_info->auth_info.server_princ_name, &st);
 	}
 
 	if (gssauth_info->gss_server_name != GSS_C_NO_NAME) {
-		OM_uint32 minor_status;
-		gss_release_name(&minor_status, &gssauth_info->gss_server_name);
+		OM_uint32 min_stat;
+		gss_release_name(&min_stat, &gssauth_info->gss_server_name);
 		gssauth_info->gss_server_name = GSS_C_NO_NAME;
 	}
 
@@ -624,6 +733,45 @@ INTERNAL void rpc__gssauth_release_identity
 		("(rpc__gssauth_release_identity)\n"));
 }
 
+void rpc__gssauth_init_func(void)
+{
+	static rpc_authn_protocol_id_elt_t auth[4] = {
+	{ /* 0 */
+		rpc__gssauth_negotiate_init,
+		rpc_c_authn_gss_negotiate,
+		dce_c_rpc_authn_protocol_gss_negotiate,
+		NULL,
+		rpc_g_gssauth_negotiate_rpc_prot_epv
+	},
+	{ /* 1 */
+		rpc__gssauth_mskrb_init,
+		rpc_c_authn_gss_mskrb,
+		dce_c_rpc_authn_protocol_gss_mskrb,
+		NULL,
+		rpc_g_gssauth_mskrb_rpc_prot_epv
+	},
+	{ /* 1 */
+		rpc__gssauth_winnt_init,
+		rpc_c_authn_winnt,
+		dce_c_rpc_authn_protocol_winnt,
+		NULL,
+		rpc_g_gssauth_winnt_rpc_prot_epv
+	},
+	{ /* 1 */
+		rpc__gssauth_netlogon_init,
+		rpc_c_authn_netlogon,
+		dce_c_rpc_authn_protocol_netlogon,
+		NULL,
+		rpc_g_gssauth_netlogon_rpc_prot_epv
+	}
+	};
+
+	RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_ROUTINE_TRACE,
+		("(rpc__module_init_func)\n"));
+
+	rpc__register_authn_protocol(auth, sizeof(auth)/sizeof(auth[0]));
+}
+
 /*
  * R P C _ _ G S S A U T H _ I N Q _ S E C _ C O N T E X T
  *
@@ -656,74 +804,6 @@ INTERNAL void rpc__gssauth_inq_access_token(
     unsigned32 *stp
     )
 {
-    OM_uint32 minor_status = 0;
-    int gss_rc = 0;
-    rpc_gssauth_info_p_t gssauth_info = NULL;
-    rpc_gssauth_cn_info_p_t gssauth_cn_info = NULL;
-    gss_name_t src = GSS_C_NO_NAME;
-    gss_OID src_type = GSS_C_NULL_OID;
-    gss_buffer_desc src_name = GSS_C_EMPTY_BUFFER;
-
-#if HAVE_LIKEWISE_LWMAPSECURITY
-    PSTR principal = NULL;
-    NTSTATUS status = STATUS_SUCCESS;
-    PLW_MAP_SECURITY_CONTEXT context = NULL;
-#endif
-
-    gssauth_info = (rpc_gssauth_info_p_t)auth_info;
-    gssauth_cn_info = gssauth_info->cn_info;
-
-    gss_rc = gss_inquire_context(
-        &minor_status,
-        gssauth_cn_info->gss_ctx,
-        &src,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL);
-    if (gss_rc != GSS_S_COMPLETE) goto error;
-
-    gss_rc = gss_display_name(&minor_status, src, &src_name, &src_type);
-    if (gss_rc != GSS_S_COMPLETE) goto error;
-
-#if HAVE_LIKEWISE_LWMAPSECURITY
-    status = LwMapSecurityCreateContext(&context);
-    if (status) goto error;
-
-    status = LwMapSecurityCreateAccessTokenFromCStringUsername(
-        context,
-        token,
-        src_name.value);
-    if (status) goto error;
-
-    *stp = rpc_s_ok;
-#else
-    /*
-     * <rdar://problem/7566464> add darwin support to
-     *		rpc__gssauth_inq_access_token
-     */
-    *stp = rpc_s_unsupported_name_syntax;
-#endif
-
-cleanup:
-
-    if (src_name.value)
-    {
-        gss_release_buffer(&minor_status, &src_name);
-    }
-
-    if (src)
-    {
-        gss_release_name(&minor_status, &src);
-    }
-
-    return;
-
-error:
-
-    *stp = -1;
-
-    goto cleanup;
+	*token = NULL;
+	*stp = rpc_s_not_supported;
 }

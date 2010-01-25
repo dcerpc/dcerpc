@@ -190,6 +190,7 @@
 #define RPC_C_CN_FLAGS_FIRST_FRAG       0x01    /* First fragment */
 #define RPC_C_CN_FLAGS_LAST_FRAG        0x02    /* Last fragment */
 #define RPC_C_CN_FLAGS_ALERT_PENDING    0x04    /* Alert was pending at sender */
+#define RPC_C_CN_FLAGS_SUPPORT_HEADER_SIGN 0x04 /* Support header signing */
 #define RPC_C_CN_FLAGS_RESERVED_1       0x08    /* Reserved, m.b.z. */
 #define RPC_C_CN_FLAGS_CONCURRENT_MPX   0x10    /* Supports concurrent multiplexing
                                                  * of a single connection */

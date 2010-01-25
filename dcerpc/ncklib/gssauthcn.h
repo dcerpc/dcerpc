@@ -56,10 +56,40 @@
 
 typedef struct
 {
-    rpc_cn_auth_info_t  cn_info;
-
+    rpc_cn_auth_info_t cn_info;
     gss_ctx_id_t gss_ctx;
-    int gss_rc;
+    OM_uint32 gss_stat;
+    boolean header_sign;
 } rpc_gssauth_cn_info_t, *rpc_gssauth_cn_info_p_t;
+
+PRIVATE rpc_protocol_id_t rpc__gssauth_negotiate_cn_init (
+         rpc_auth_rpc_prot_epv_p_t      * /*epv*/,
+         unsigned32                     * /*st*/
+    );
+
+PRIVATE rpc_protocol_id_t rpc__gssauth_mskrb_cn_init (
+         rpc_auth_rpc_prot_epv_p_t      * /*epv*/,
+         unsigned32                     * /*st*/
+    );
+
+PRIVATE rpc_protocol_id_t rpc__gssauth_winnt_cn_init (
+         rpc_auth_rpc_prot_epv_p_t      * /*epv*/,
+         unsigned32                     * /*st*/
+    );
+
+PRIVATE rpc_protocol_id_t rpc__gssauth_netlogon_cn_init (
+         rpc_auth_rpc_prot_epv_p_t      * /*epv*/,
+         unsigned32                     * /*st*/
+    );
+
+PRIVATE const char *rpc__gssauth_error_map (
+	int			/*major_status*/,
+	OM_uint32		/*minor_status*/,
+	const gss_OID		/*mech*/,
+	char			* /*message_buffer*/,
+	unsigned32		/*message_length*/,
+	unsigned32		* /*st*/
+    );
+
 
 #endif /* _GSSAUTHCN_H */
