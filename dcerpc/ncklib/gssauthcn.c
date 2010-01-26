@@ -1615,7 +1615,7 @@ INTERNAL void rpc__gssauth_cn_wrap_packet
 
 	gss_iov[3].type = GSS_IOV_BUFFER_TYPE_HEADER;
 	gss_iov[3].buffer.value = &pdu_buf[header_size + pad_len +
-					     RPC_CN_PKT_SIZEOF_COM_AUTH_TLR];
+				  RPC_CN_PKT_SIZEOF_COM_AUTH_TLR];
 	gss_iov[3].buffer.length = iov[iovlen - 1].iov_len -
 				   RPC_CN_PKT_SIZEOF_COM_AUTH_TLR;
 
