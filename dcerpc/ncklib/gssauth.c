@@ -275,7 +275,7 @@ INTERNAL void rpc__gssauth_bnd_set_auth
 				("(rpc__gssauth_bnd_set_auth): import: %s\n", msg));
 			goto poison;
 		}
-	} else if (authz_prot != rpc_c_authz_gss_name) {
+	} else if (authz_prot == rpc_c_authz_gss_name) {
 		gss_buffer_desc output_name;
 
 		gss_server_name = (gss_name_t)server_name;
