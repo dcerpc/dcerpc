@@ -899,14 +899,14 @@ INTERNAL OM_uint32 rpc__gssauth_create_client_token
 	maj_stat = rpc__gssauth_select_mech(min_stat,
 					    sec->sec_info->authn_protocol,
 					    &req_mech);
-	if (maj_stat != GSS_S_COMPLETE) {
+	if (GSS_ERROR(maj_stat)) {
 		return maj_stat;
 	}
 
 	maj_stat = rpc__gssauth_select_flags(min_stat,
 					     sec->sec_info->authn_level,
 					     &req_flags);
-	if (maj_stat != GSS_S_COMPLETE) {
+	if (GSS_ERROR(maj_stat)) {
 		return maj_stat;
 	}
 
@@ -950,14 +950,14 @@ INTERNAL OM_uint32 rpc__gssauth_verify_server_token
 	maj_stat = rpc__gssauth_select_mech(min_stat,
 					    sec->sec_info->authn_protocol,
 					    &req_mech);
-	if (maj_stat != GSS_S_COMPLETE) {
+	if (GSS_ERROR(maj_stat)) {
 		return maj_stat;
 	}
 
 	maj_stat = rpc__gssauth_select_flags(min_stat,
 					     sec->sec_info->authn_protocol,
 					     &req_flags);
-	if (maj_stat != GSS_S_COMPLETE) {
+	if (GSS_ERROR(maj_stat)) {
 		return maj_stat;
 	}
 
@@ -1701,7 +1701,7 @@ INTERNAL void rpc__gssauth_cn_wrap_packet
 	*st = rpc_s_ok;
 
 cleanup:
-	if (maj_stat != GSS_S_COMPLETE) {
+	if (GSS_ERROR(maj_stat)) {
 		char msg[BUFSIZ];
 		rpc__gssauth_error_map(maj_stat, min_stat,
 				       gssauth_cn_info->gss_mech,
@@ -2433,7 +2433,7 @@ INTERNAL void rpc__gssauth_cn_vfy_client_req
                  * we still transfer the buffer to the client
                  * but fail the auth in rpc__gssauth_cn_fmt_srvr_resp()
                  */
-        } else if (maj_stat != GSS_S_COMPLETE) {
+        } else if (GSS_ERROR(maj_stat)) {
                 char msg[BUFSIZ];
                 rpc__gssauth_error_map(maj_stat, min_stat,
                                        gssauth_cn_info->gss_mech,
@@ -2561,7 +2561,7 @@ INTERNAL void rpc__gssauth_cn_vfy_srvr_resp
 		 * we still transfer the buffer to the client
 		 * but fail the auth in rpc__gssauth_cn_fmt_srvr_resp()
 		 */
-	} else if (maj_stat != GSS_S_COMPLETE) {
+	} else if (GSS_ERROR(maj_stat)) {
 		char msg[BUFSIZ];
 		rpc__gssauth_error_map(maj_stat, min_stat,
                                        gssauth_cn_info->gss_mech,
