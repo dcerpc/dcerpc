@@ -448,9 +448,12 @@ INTERNAL void rpc__gssauth_cn_create_info
 	}
 #endif
 
-	if ((authn_level != rpc_c_authn_level_connect) &&
-	    (authn_level != rpc_c_authn_level_pkt_integrity) &&
-	    (authn_level != rpc_c_authn_level_pkt_privacy)) {
+	switch (authn_level) {
+	case rpc_c_authn_level_connect:
+	case rpc_c_authn_level_pkt_integrity:
+	case rpc_c_authn_level_pkt_privacy:
+		break;
+	default:
 		*st = rpc_s_unsupported_authn_level;
 		return;
 	}
@@ -794,27 +797,29 @@ PRIVATE const char *rpc__gssauth_error_map
 	return NULL;
 }
 
-#define	__GSS_MECH_SPNEGO_OID_LENGTH 6
-#define	__GSS_MECH_SPNEGO_OID "\053\006\001\005\005\002"
-INTERNAL const gss_OID_desc rpc__gssauth_spnego_oid =
-    {__GSS_MECH_SPNEGO_OID_LENGTH, (void *)__GSS_MECH_SPNEGO_OID};
+static struct {
+	rpc_authn_protocol_id_t authn_protocol;
+	gss_OID_desc gss_oid;
+} rpc__gssauth_mechanisms[] = {
+	{	/* SPNEGO mechanism */
+		rpc_c_authn_gss_negotiate,
+		{ 6, "\053\006\001\005\005\002" },
+	},
+	{	/* Kerberos mechanism */
+		rpc_c_authn_gss_mskrb,
+		{ 9, "\052\206\110\206\367\022\001\002\002" },
+	},
+	{	/* NTLM mechanism */
+		rpc_c_authn_winnt,
+		{ 10, "\x2b\x06\x01\x04\x01\x82\x37\x02\x02\x0a" },
+	},
+	{	/* NetLogon secure channel mechanism (private) */
+		rpc_c_authn_netlogon,
+		{ 6, "\x2a\x85\x70\x2b\x0e\x02" },
+	},
+};
 
-#define __GSS_MECH_KRB5_OID_LENGTH 9
-#define __GSS_MECH_KRB5_OID "\052\206\110\206\367\022\001\002\002"
-INTERNAL const gss_OID_desc rpc__gssauth_krb5_oid =
-    {__GSS_MECH_KRB5_OID_LENGTH, (void *)__GSS_MECH_KRB5_OID};
-
-#define __GSS_MECH_NTLM_OID_LENGTH 10
-#define __GSS_MECH_NTLM_OID "\x2b\x06\x01\x04\x01\x82\x37\x02\x02\x0a"
-INTERNAL const gss_OID_desc rpc__gssauth_ntlm_oid =
-    {__GSS_MECH_NTLM_OID_LENGTH, (void *)__GSS_MECH_NTLM_OID};
-
-#define __GSS_MECH_NETLOGON_OID_LENGTH 6
-#define __GSS_MECH_NETLOGON_OID "\x2a\x85\x70\x2b\x0e\x02"
-INTERNAL const gss_OID_desc rpc__gssauth_netlogon_oid =
-    {__GSS_MECH_NETLOGON_OID_LENGTH, (void *)__GSS_MECH_NETLOGON_OID};
-
-INTERNAL int rpc__gssauth_select_mech
+INTERNAL OM_uint32 rpc__gssauth_select_mech
 (
 	OM_uint32		*min_stat,
 	rpc_authn_protocol_id_t	authn_protocol,
@@ -822,29 +827,28 @@ INTERNAL int rpc__gssauth_select_mech
 )
 {
 	gss_OID selected_mech = GSS_C_NO_OID;
+	int i;
 
 	*min_stat = 0;
 
-	switch (authn_protocol) {
-	case rpc_c_authn_gss_negotiate:
-		selected_mech = (gss_OID)&rpc__gssauth_spnego_oid;
-		break;
-	case rpc_c_authn_gss_mskrb:
-		selected_mech = (gss_OID)&rpc__gssauth_krb5_oid;
-		break;
-	case rpc_c_authn_winnt:
-		selected_mech = (gss_OID)&rpc__gssauth_ntlm_oid;
-		break;
-	case rpc_c_authn_netlogon:
-		selected_mech = (gss_OID)&rpc__gssauth_netlogon_oid;
-		break;
+	for (i = 0;
+	     i < sizeof(rpc__gssauth_mechanisms)/sizeof(rpc__gssauth_mechanisms[0]);
+	     i++)
+	{
+		if (rpc__gssauth_mechanisms[i].authn_protocol == authn_protocol) {
+			selected_mech = &rpc__gssauth_mechanisms[i].gss_oid;
+			break;
+		}
 	}
+
+	if (selected_mech == GSS_C_NO_OID)
+		return GSS_S_UNAVAILABLE;
 
 	*req_mech = selected_mech;
 	return GSS_S_COMPLETE;
 }
 
-INTERNAL int rpc__gssauth_select_flags
+INTERNAL OM_uint32 rpc__gssauth_select_flags
 (
 	OM_uint32		*min_stat,
 	rpc_authn_level_t	authn_level,
@@ -870,13 +874,14 @@ INTERNAL int rpc__gssauth_select_flags
 	return GSS_S_COMPLETE;
 }
 
-INTERNAL int rpc__gssauth_create_client_token
+INTERNAL OM_uint32 rpc__gssauth_create_client_token
 (
 	OM_uint32			*min_stat,
 	const rpc_cn_sec_context_p_t	sec,
 	const gss_cred_id_t		gss_creds,
 	const gss_name_t		gss_server_name,
 	gss_ctx_id_t			*gss_ctx,
+	gss_OID *			*actual_mech,
 	gss_buffer_desc			*output_token
 )
 {
@@ -888,14 +893,14 @@ INTERNAL int rpc__gssauth_create_client_token
 	maj_stat = rpc__gssauth_select_mech(min_stat,
 					    sec->sec_info->authn_protocol,
 					    &req_mech);
-	if (maj_stat != GSS_S_COMPLETE) {
+	if (GSS_ERROR(maj_stat)) {
 		return maj_stat;
 	}
 
 	maj_stat = rpc__gssauth_select_flags(min_stat,
 					     sec->sec_info->authn_level,
 					     &req_flags);
-	if (maj_stat != GSS_S_COMPLETE) {
+	if (GSS_ERROR(maj_stat)) {
 		return maj_stat;
 	}
 
@@ -903,22 +908,22 @@ INTERNAL int rpc__gssauth_create_client_token
 	input_token.length = 0;
 
 	maj_stat = gss_init_sec_context(min_stat,
-				      gss_creds,
-				      gss_ctx,
-				      gss_server_name,
-				      req_mech,
-				      req_flags,
-				      0,
-				      NULL,
-				      &input_token,
-				      NULL,
-				      output_token,
-				      NULL,
-				      NULL);
+				        gss_creds,
+				        gss_ctx,
+				        gss_server_name,
+				        req_mech,
+				        req_flags,
+				        GSS_C_INDEFINITE,
+				        NULL,
+				        &input_token,
+				        actual_mech,
+				        output_token,
+				        NULL,
+				        NULL);
 	return maj_stat;
 }
 
-INTERNAL int rpc__gssauth_verify_server_token
+INTERNAL OM_uint32 rpc__gssauth_verify_server_token
 (
 	OM_uint32			*min_stat,
 	const rpc_cn_sec_context_p_t	sec,
@@ -926,6 +931,7 @@ INTERNAL int rpc__gssauth_verify_server_token
 	const gss_name_t		gss_server_name,
 	gss_ctx_id_t			gss_ctx,
 	gss_buffer_desc			input_token,
+	gss_OID				*actual_mech,
 	gss_buffer_desc			*output_token
 )
 {
@@ -938,14 +944,14 @@ INTERNAL int rpc__gssauth_verify_server_token
 	maj_stat = rpc__gssauth_select_mech(min_stat,
 					    sec->sec_info->authn_protocol,
 					    &req_mech);
-	if (maj_stat != GSS_S_COMPLETE) {
+	if (GSS_ERROR(maj_stat)) {
 		return maj_stat;
 	}
 
 	maj_stat = rpc__gssauth_select_flags(min_stat,
 					     sec->sec_info->authn_protocol,
 					     &req_flags);
-	if (maj_stat != GSS_S_COMPLETE) {
+	if (GSS_ERROR(maj_stat)) {
 		return maj_stat;
 	}
 
@@ -955,10 +961,10 @@ INTERNAL int rpc__gssauth_verify_server_token
 				        gss_server_name,
 				        req_mech,
 				        req_flags,
-				        0,
+				        GSS_C_INDEFINITE,
 				        NULL,
 				        &input_token,
-				        NULL,
+				        actual_mech,
 				        output_token,
 				        NULL,
 				        NULL);
@@ -1064,11 +1070,12 @@ INTERNAL void rpc__gssauth_cn_fmt_client_req
 							    gssauth_info->gss_creds,
 							    gssauth_info->gss_server_name,
 							    &gssauth_cn_info->gss_ctx,
+							    &gssauth_cn_info->gss_mech,
 							    &output_token);
 		if (GSS_ERROR(maj_stat)) {
 			char msg[BUFSIZ];
 			rpc__gssauth_error_map(maj_stat, min_stat,
-					       (gss_OID)&rpc__gssauth_krb5_oid,
+					       gssauth_cn_info->gss_mech,
 					       msg, sizeof(msg), st);
 			RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_GENERAL,
 				("(rpc__gssauth_cn_fmt_client_req): %s\n", msg));
@@ -1272,7 +1279,10 @@ INTERNAL void rpc__gssauth_cn_free_prot_info
 				       GSS_C_NO_BUFFER);
 		gssauth_cn_info->gss_ctx = GSS_C_NO_CONTEXT;
 	}
-
+	if (gssauth_cn_info->gss_mech != GSS_C_NO_OID) {
+		gss_release_oid(&min_stat, &gssauth_cn_info->gss_mech);
+		gssauth_cn_info->gss_mech = GSS_C_NO_OID;
+	}
 #ifdef DEBUG
 	memset (gssauth_cn_info, 0, sizeof (rpc_gssauth_cn_info_p_t));
 #endif
@@ -1459,6 +1469,12 @@ INTERNAL void rpc__gssauth_cn_pre_call
 	}
 #endif
 
+	if (gssauth_cn_info->gss_stat != GSS_S_COMPLETE) {
+		/* Can only do this on a completed context */
+		*st = rpc_s_ok;
+		return;
+	}
+
 	switch (sec->sec_info->authn_level) {
 	case rpc_c_protect_level_pkt_privacy:
 		conf_req_flag = 1;
@@ -1470,6 +1486,11 @@ INTERNAL void rpc__gssauth_cn_pre_call
 		iov[1].type = GSS_IOV_BUFFER_TYPE_HEADER;
 		iov[1].buffer.length = 0;
 
+		/*
+		 * XXX needs to report correct Get_MIC token size too
+		 * Correctness of this relies on MIC tokens always being
+		 * equal to or smaller than wrap tokens.
+		 */
 		maj_stat = gss_wrap_iov_length(&min_stat,
 					       gssauth_cn_info->gss_ctx,
 					       conf_req_flag,
@@ -1657,10 +1678,10 @@ INTERNAL void rpc__gssauth_cn_wrap_packet
 	*st = rpc_s_ok;
 
 cleanup:
-	if (maj_stat != GSS_S_COMPLETE) {
+	if (GSS_ERROR(maj_stat)) {
 		char msg[BUFSIZ];
 		rpc__gssauth_error_map(maj_stat, min_stat,
-				       (gss_OID)&rpc__gssauth_krb5_oid,
+				       gssauth_cn_info->gss_mech,
 				       msg, sizeof(msg), st);
 		RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_GENERAL,
 			("(rpc__gssauth_cn_wrap_packet): %s: %s\n", comment, msg));
@@ -1681,7 +1702,6 @@ INTERNAL void rpc__gssauth_cn_create_large_frag
 )
 {
 	rpc_cn_common_hdr_p_t pdu;
-	rpc_cn_packet_p_t pkt = (rpc_cn_packet_p_t)pdu;
 	unsigned32 i;
 	unsigned32 pdu_buflen;
 	unsigned_char_p_t pdu_buf, pdu_bufp;
@@ -1723,12 +1743,12 @@ INTERNAL void rpc__gssauth_cn_create_large_frag
 	}
 
 	if (pdu_buflen < header_size + RPC_CN_PKT_SIZEOF_COM_AUTH_TLR + output_token.length) {
-		gss_release_buffer(&min_stat, &output_token);
 		RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_GENERAL,
 			("(rpc__gssauth_cn_create_large_frag): %s: pdu_buflen[%u] < min_len[%u]\n",
 			comment, (unsigned int)pdu_buflen,
 			(unsigned int)header_size +
 				RPC_CN_PKT_SIZEOF_COM_AUTH_TLR + output_token.length));
+		gss_release_buffer(&min_stat, &output_token);
 		*st = rpc_m_no_stub_data;
 		return;
 	}
@@ -1930,6 +1950,7 @@ INTERNAL void rpc__gssauth_cn_pre_send
 							    GSS_C_NO_NAME,
 							    gssauth_cn_info->gss_ctx,
 							    input_token,
+							    &gssauth_cn_info->gss_mech,
 							    &output_token);
 		if (output_token.length) {
 			*st = rpc_s_credentials_too_large;
@@ -2029,7 +2050,7 @@ INTERNAL void rpc__gssauth_cn_unwrap_packet
 	if (GSS_ERROR(maj_stat)) {
 		char msg[BUFSIZ];
 		rpc__gssauth_error_map(maj_stat, min_stat,
-				       (gss_OID)&rpc__gssauth_krb5_oid,
+				       gssauth_cn_info->gss_mech,
 				       msg, sizeof(msg), st);
 		RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_GENERAL,
 			("(rpc__gssauth_cn_unwrap_packet): %s: %s\n",
@@ -2366,13 +2387,14 @@ INTERNAL void rpc__gssauth_cn_vfy_client_req
 
 	input_token.value = auth_value;
 	input_token.length = auth_value_len;
+
 	maj_stat = gss_accept_sec_context(&min_stat,
 					  &gssauth_cn_info->gss_ctx,
 					  NULL,
 					  &input_token,
 					  NULL,
 					  NULL,
-					  NULL,
+					  &gssauth_cn_info->gss_mech,
 					  &output_token,
 					  NULL,
 					  NULL,
@@ -2381,7 +2403,7 @@ INTERNAL void rpc__gssauth_cn_vfy_client_req
         if (maj_stat == GSS_S_CONTINUE_NEEDED) {
                 char msg[BUFSIZ];
                 rpc__gssauth_error_map(maj_stat, min_stat,
-                                       (gss_OID)&rpc__gssauth_krb5_oid,
+                                       gssauth_cn_info->gss_mech,
                                        msg, sizeof(msg), st);
                 RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_GENERAL,
                         ("(rpc__gssauth_cn_vfy_client_req): %s: output_token.length[%u]\n",
@@ -2390,10 +2412,10 @@ INTERNAL void rpc__gssauth_cn_vfy_client_req
                  * we still transfer the buffer to the client
                  * but fail the auth in rpc__gssauth_cn_fmt_srvr_resp()
                  */
-        } else if (maj_stat != GSS_S_COMPLETE) {
+        } else if (GSS_ERROR(maj_stat)) {
                 char msg[BUFSIZ];
                 rpc__gssauth_error_map(maj_stat, min_stat,
-                                       (gss_OID)&rpc__gssauth_krb5_oid,
+                                       gssauth_cn_info->gss_mech,
                                        msg, sizeof(msg), st);
                 RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_GENERAL,
                         ("(rpc__gssauth_cn_vfy_client_req): %s\n", msg));
@@ -2503,12 +2525,13 @@ INTERNAL void rpc__gssauth_cn_vfy_srvr_resp
 						    gssauth_info->gss_server_name,
 						    gssauth_cn_info->gss_ctx,
 						    input_token,
+						    &gssauth_cn_info->gss_mech,
 						    &output_token);
 	gssauth_cn_info->gss_stat = maj_stat;
 	if (maj_stat == GSS_S_CONTINUE_NEEDED) {
 		char msg[BUFSIZ];
 		rpc__gssauth_error_map(maj_stat, min_stat,
-				       (gss_OID)&rpc__gssauth_krb5_oid,
+                                       gssauth_cn_info->gss_mech,
 				       msg, sizeof(msg), st);
 		RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_GENERAL,
 			("(rpc__gssauth_cn_vfy_srvr_resp): %s: output_token.length[%u]\n",
@@ -2517,10 +2540,10 @@ INTERNAL void rpc__gssauth_cn_vfy_srvr_resp
 		 * we still transfer the buffer to the client
 		 * but fail the auth in rpc__gssauth_cn_fmt_srvr_resp()
 		 */
-	} else if (maj_stat != GSS_S_COMPLETE) {
+	} else if (GSS_ERROR(maj_stat)) {
 		char msg[BUFSIZ];
 		rpc__gssauth_error_map(maj_stat, min_stat,
-				       (gss_OID)&rpc__gssauth_krb5_oid,
+                                       gssauth_cn_info->gss_mech,
 				       msg, sizeof(msg), st);
 		RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_GENERAL,
 			("(rpc__gssauth_cn_vfy_srvr_resp): %s\n", msg));

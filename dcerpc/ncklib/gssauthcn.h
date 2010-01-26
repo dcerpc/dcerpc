@@ -59,6 +59,7 @@ typedef struct
     rpc_cn_auth_info_t cn_info;
     gss_ctx_id_t gss_ctx;
     OM_uint32 gss_stat;
+    gss_OID gss_mech;
     boolean header_sign;
 } rpc_gssauth_cn_info_t, *rpc_gssauth_cn_info_p_t;
 
