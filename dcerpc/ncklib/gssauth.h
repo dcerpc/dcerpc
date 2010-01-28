@@ -76,4 +76,11 @@ typedef struct rpc_gssauth_info_t {
  * Prototypes for PRIVATE routines.
  */
 
+PRIVATE OM_uint32 rpc__gssauth_select_mech
+(
+	OM_uint32		*min_stat,
+	rpc_authn_protocol_id_t	authn_protocol,
+	gss_OID			*req_mech
+);
+
 #endif /* _GSSAUTH_H */

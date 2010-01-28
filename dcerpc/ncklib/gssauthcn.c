@@ -797,57 +797,6 @@ PRIVATE const char *rpc__gssauth_error_map
 	return NULL;
 }
 
-static struct {
-	rpc_authn_protocol_id_t authn_protocol;
-	gss_OID_desc gss_oid;
-} rpc__gssauth_mechanisms[] = {
-	{	/* SPNEGO mechanism */
-		rpc_c_authn_gss_negotiate,
-		{ 6, "\053\006\001\005\005\002" },
-	},
-	{	/* Kerberos mechanism */
-		rpc_c_authn_gss_mskrb,
-		{ 9, "\052\206\110\206\367\022\001\002\002" },
-	},
-	{	/* NTLM mechanism */
-		rpc_c_authn_winnt,
-		{ 10, "\x2b\x06\x01\x04\x01\x82\x37\x02\x02\x0a" },
-	},
-	{	/* NetLogon secure channel mechanism (private) */
-		rpc_c_authn_netlogon,
-		{ 6, "\x2a\x85\x70\x2b\x0e\x02" },
-	},
-};
-
-INTERNAL OM_uint32 rpc__gssauth_select_mech
-(
-	OM_uint32		*min_stat,
-	rpc_authn_protocol_id_t	authn_protocol,
-	gss_OID			*req_mech
-)
-{
-	gss_OID selected_mech = GSS_C_NO_OID;
-	int i;
-
-	*min_stat = 0;
-
-	for (i = 0;
-	     i < sizeof(rpc__gssauth_mechanisms)/sizeof(rpc__gssauth_mechanisms[0]);
-	     i++)
-	{
-		if (rpc__gssauth_mechanisms[i].authn_protocol == authn_protocol) {
-			selected_mech = &rpc__gssauth_mechanisms[i].gss_oid;
-			break;
-		}
-	}
-
-	if (selected_mech == GSS_C_NO_OID)
-		return GSS_S_UNAVAILABLE;
-
-	*req_mech = selected_mech;
-	return GSS_S_COMPLETE;
-}
-
 INTERNAL OM_uint32 rpc__gssauth_select_flags
 (
 	OM_uint32		*min_stat,
@@ -881,7 +830,7 @@ INTERNAL OM_uint32 rpc__gssauth_create_client_token
 	const gss_cred_id_t		gss_creds,
 	const gss_name_t		gss_server_name,
 	gss_ctx_id_t			*gss_ctx,
-	gss_OID *			*actual_mech,
+	gss_OID 			*actual_mech,
 	gss_buffer_desc			*output_token
 )
 {
@@ -1530,14 +1479,13 @@ INTERNAL void rpc__gssauth_cn_wrap_packet
 	rpc_cn_common_hdr_p_t pdu;
 	rpc_cn_auth_tlr_p_t auth_tlr;
 	unsigned32 i;
-	unsigned32 payload_len;
 	unsigned8 pad_len;
 	OM_uint32 maj_stat;
 	OM_uint32 min_stat;
 	int conf_state;
 	gss_iov_buffer_desc gss_iov[4];
 	unsigned_char_p_t pdu_buf;
-	size_t pdu_buflen;
+	size_t pdu_buflen, payload_len;
 	boolean header_sign = gssauth_cn_info->header_sign;
 
 	CODING_ERROR(st);
@@ -1747,7 +1695,7 @@ INTERNAL void rpc__gssauth_cn_create_large_frag
 			("(rpc__gssauth_cn_create_large_frag): %s: pdu_buflen[%u] < min_len[%u]\n",
 			comment, (unsigned int)pdu_buflen,
 			(unsigned int)header_size +
-				RPC_CN_PKT_SIZEOF_COM_AUTH_TLR + output_token.length));
+			RPC_CN_PKT_SIZEOF_COM_AUTH_TLR + (unsigned int)output_token.length));
 		gss_release_buffer(&min_stat, &output_token);
 		*st = rpc_m_no_stub_data;
 		return;
@@ -1975,7 +1923,7 @@ INTERNAL void rpc__gssauth_cn_unwrap_packet
 	unsigned8			header_size,
 	rpc_cn_common_hdr_p_t		pdu,
 	unsigned32			pdu_len,
-	unsigned32			cred_len,
+	unsigned32			cred_len ATTRIBUTE_UNUSED,
 	rpc_cn_auth_tlr_p_t		auth_tlr,
 	boolean                         conf_req_flag,
 	boolean32			unpack_ints,
@@ -1983,7 +1931,6 @@ INTERNAL void rpc__gssauth_cn_unwrap_packet
 )
 {
 	rpc_gssauth_cn_info_p_t gssauth_cn_info = (rpc_gssauth_cn_info_p_t)sec->sec_cn_info;
-	unsigned32 payload_len;
 	OM_uint32 maj_stat;
 	OM_uint32 min_stat;
 	int conf_state;

@@ -332,17 +332,41 @@ INTERNAL void rpc__gssauth_bnd_set_auth
 		("(rpc__gssauth_bnd_set_auth) %p created (now %d active)\n",
 		gssauth_info, rpc_g_gssauth_alloc_count - rpc_g_gssauth_free_count));
 
+	if (auth_ident != NULL) {
+		gss_OID desired_mech = GSS_C_NO_OID;
+
+		rpc__gssauth_select_mech(&min_stat, authn_protocol, &desired_mech);
+
+		maj_stat = gss_add_cred(&min_stat,
+					(const gss_cred_id_t)auth_ident,
+					GSS_C_NO_NAME,
+					desired_mech,
+					GSS_C_INITIATE,
+					GSS_C_INDEFINITE,
+					GSS_C_INDEFINITE,
+					&gssauth_info->gss_creds,
+					NULL,
+					NULL,
+					NULL);
+		if (GSS_ERROR(maj_stat)) {
+			char msg[256];
+			rpc__gssauth_error_map(maj_stat, min_stat, GSS_C_NO_OID,
+					       msg, sizeof(msg), &st);
+			RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_GENERAL,
+				("(rpc__gssauth_bnd_set_auth): add_cred: %s\n", msg));
+			goto poison;
+		}
+	}
+
+	gssauth_info->gss_server_name = gss_server_name;
 	gssauth_info->auth_info.server_princ_name = str_server_name;
 	gssauth_info->auth_info.authn_level = level;
 	gssauth_info->auth_info.authn_protocol = authn_protocol;
 	gssauth_info->auth_info.authz_protocol = authz_prot;
 	gssauth_info->auth_info.is_server = 0;
-	gssauth_info->auth_info.u.auth_identity = auth_ident;
+	gssauth_info->auth_info.u.auth_identity = (rpc_auth_identity_handle_t)gssauth_info->gss_creds;
 
 	gssauth_info->auth_info.refcount = 1;
-
-	gssauth_info->gss_server_name = gss_server_name;
-	gssauth_info->gss_creds = (gss_cred_id_t)auth_ident;
 
 	*infop = &gssauth_info->auth_info;
 	*stp = rpc_s_ok;
@@ -607,6 +631,12 @@ INTERNAL void rpc__gssauth_free_info
 		gssauth_info->gss_server_name = GSS_C_NO_NAME;
 	}
 
+	if (gssauth_info->gss_creds != GSS_C_NO_CREDENTIAL) {
+		OM_uint32 min_stat;
+		gss_release_cred(&min_stat, &gssauth_info->gss_creds);
+		gssauth_info->gss_creds = GSS_C_NO_CREDENTIAL;
+	}
+
 	memset(gssauth_info, 0x69, sizeof(*gssauth_info));
 	RPC_MEM_FREE(gssauth_info, RPC_C_MEM_GSSAUTH_INFO);
 
@@ -618,7 +648,6 @@ INTERNAL void rpc__gssauth_free_info
 
 	*info = NULL;
 }
-
 
 /*
  * R P C _ _ G S S A U T H _ M G T _ I N Q _ D E F
@@ -641,7 +670,6 @@ INTERNAL void rpc__gssauth_mgt_inq_def
 	*stp = rpc_s_ok;
 }
 
-
 /*
  * R P C _ _ G S S A U T H _ S R V _ R E G _ A U T H
  *
@@ -660,7 +688,6 @@ INTERNAL void rpc__gssauth_srv_reg_auth
 
 	*stp = rpc_s_ok;
 }
-
 
 /*
  * R P C _ _ G S S A U T H _ I N Q _ M Y _ P R I N C _ N A M E
@@ -799,11 +826,62 @@ INTERNAL void rpc__gssauth_inq_sec_context
 }
 
 INTERNAL void rpc__gssauth_inq_access_token(
-    rpc_auth_info_p_t auth_info,
+    rpc_auth_info_p_t auth_info ATTRIBUTE_UNUSED,
     rpc_access_token_p_t* token,
     unsigned32 *stp
     )
 {
 	*token = NULL;
 	*stp = rpc_s_not_supported;
+}
+
+static struct {
+	rpc_authn_protocol_id_t authn_protocol;
+	gss_OID_desc gss_oid;
+} rpc__gssauth_mechanisms[] = {
+	{	/* SPNEGO mechanism */
+		rpc_c_authn_gss_negotiate,
+		{ 6, (void *)"\053\006\001\005\005\002" },
+	},
+	{	/* Kerberos mechanism */
+		rpc_c_authn_gss_mskrb,
+		{ 9, (void *)"\052\206\110\206\367\022\001\002\002" },
+	},
+	{	/* NTLM mechanism */
+		rpc_c_authn_winnt,
+		{ 10, (void *)"\x2b\x06\x01\x04\x01\x82\x37\x02\x02\x0a" },
+	},
+	{	/* NetLogon secure channel mechanism (private) */
+		rpc_c_authn_netlogon,
+		{ 6, (void *)"\x2a\x85\x70\x2b\x0e\x02" },
+	},
+};
+
+PRIVATE OM_uint32 rpc__gssauth_select_mech
+(
+	OM_uint32		*min_stat,
+	rpc_authn_protocol_id_t	authn_protocol,
+	gss_OID			*req_mech
+)
+{
+	gss_OID selected_mech = GSS_C_NO_OID;
+	size_t i;
+
+	*min_stat = 0;
+
+	for (i = 0;
+	     i < sizeof(rpc__gssauth_mechanisms)/sizeof(rpc__gssauth_mechanisms[0]);
+	     i++)
+	{
+		if (rpc__gssauth_mechanisms[i].authn_protocol == authn_protocol) {
+			selected_mech = &rpc__gssauth_mechanisms[i].gss_oid;
+			break;
+		}
+	}
+
+	if (selected_mech == GSS_C_NO_OID)
+		return GSS_S_UNAVAILABLE;
+
+	*req_mech = selected_mech;
+	return GSS_S_COMPLETE;
 }
