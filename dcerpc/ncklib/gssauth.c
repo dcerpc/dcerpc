@@ -337,6 +337,8 @@ INTERNAL void rpc__gssauth_bnd_set_auth
 
 		rpc__gssauth_select_mech(&min_stat, authn_protocol, &desired_mech);
 
+		assert(gssauth_info->gss_creds == GSS_C_NO_CREDENTIAL);
+
 		maj_stat = gss_add_cred(&min_stat,
 					(const gss_cred_id_t)auth_ident,
 					GSS_C_NO_NAME,

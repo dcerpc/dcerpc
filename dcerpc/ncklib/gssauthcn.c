@@ -1228,10 +1228,12 @@ INTERNAL void rpc__gssauth_cn_free_prot_info
 				       GSS_C_NO_BUFFER);
 		gssauth_cn_info->gss_ctx = GSS_C_NO_CONTEXT;
 	}
+#if 0
 	if (gssauth_cn_info->gss_mech != GSS_C_NO_OID) {
 		gss_release_oid(&min_stat, &gssauth_cn_info->gss_mech);
 		gssauth_cn_info->gss_mech = GSS_C_NO_OID;
 	}
+#endif
 #ifdef DEBUG
 	memset (gssauth_cn_info, 0, sizeof (rpc_gssauth_cn_info_p_t));
 #endif
@@ -1526,14 +1528,14 @@ INTERNAL void rpc__gssauth_cn_wrap_packet
 	if (pad_len == RPC__GSSAUTH_CN_AUTH_PADDING)
 		pad_len = 0;
 
-	pdu_buflen = header_size + payload_len + pad_len +
-		     iov[iovlen - 1].iov_len;
+	pdu_buflen = header_size + payload_len + pad_len + iov[iovlen - 1].iov_len;
 
 	RPC_MEM_ALLOC(pdu_buf,
 		      unsigned_char_p_t,
 		      pdu_buflen,
 		      RPC_C_MEM_CN_ENCRYPT_BUF,
 		      RPC_C_MEM_WAITOK);
+	memset(pdu_buf, 0xAF, pdu_buflen);
 
 	pdu = (rpc_cn_common_hdr_p_t)pdu_buf;
 
@@ -1553,19 +1555,28 @@ INTERNAL void rpc__gssauth_cn_wrap_packet
 	gss_iov[0].buffer.length = header_size;
 
 	gss_iov[1].type = GSS_IOV_BUFFER_TYPE_DATA;
-	gss_iov[1].buffer.value = &pdu_buf[header_size];
+	gss_iov[1].buffer.value = (unsigned_char_p_t)gss_iov[0].buffer.value +
+				  gss_iov[0].buffer.length;
 	gss_iov[1].buffer.length = payload_len + pad_len;
 
 	gss_iov[2].type = header_sign ? GSS_IOV_BUFFER_TYPE_SIGN_ONLY :
 					GSS_IOV_BUFFER_TYPE_EMPTY;
-	gss_iov[2].buffer.value = &pdu_buf[header_size + pad_len];
+	gss_iov[2].buffer.value = (unsigned_char_p_t)gss_iov[1].buffer.value +
+				  gss_iov[1].buffer.length;
 	gss_iov[2].buffer.length = RPC_CN_PKT_SIZEOF_COM_AUTH_TLR;
 
+	/*
+	 * The auth trailer may have moved relative to the start of the PDU
+	 * owing to any additional padding. Really, we should be able to allocate
+	 * just a padding [out] IOV and do the rest in place. This would require
+	 * some rejigging of the auth provider interface.
+	 */
+	memcpy(gss_iov[2].buffer.value, iov[iovlen - 1].iov_base, gss_iov[2].buffer.length);
+
 	gss_iov[3].type = GSS_IOV_BUFFER_TYPE_HEADER;
-	gss_iov[3].buffer.value = &pdu_buf[header_size + pad_len +
-				  RPC_CN_PKT_SIZEOF_COM_AUTH_TLR];
-	gss_iov[3].buffer.length = iov[iovlen - 1].iov_len -
-				   RPC_CN_PKT_SIZEOF_COM_AUTH_TLR;
+	gss_iov[3].buffer.value = (unsigned_char_p_t)gss_iov[2].buffer.value +
+				  gss_iov[2].buffer.length;
+	gss_iov[3].buffer.length = iov[iovlen - 1].iov_len - RPC_CN_PKT_SIZEOF_COM_AUTH_TLR;
 
 	if (conf_req_flag) {
 		maj_stat = gss_wrap_iov(&min_stat,
@@ -1597,10 +1608,9 @@ INTERNAL void rpc__gssauth_cn_wrap_packet
 		if (GSS_ERROR(maj_stat))
 			goto cleanup;
 
-		assert(mic_token.length <=
-		       gss_iov[3].buffer.length);
-		memcpy(gss_iov[3].buffer.value,
-		       mic_token.value, mic_token.length);
+		assert(mic_token.length <= gss_iov[3].buffer.length);
+		memcpy(gss_iov[3].buffer.value, mic_token.value, mic_token.length);
+		gss_iov[3].buffer.length = mic_token.length;
 		gss_release_buffer(&min_stat, &mic_token);
 	}
 
@@ -1618,6 +1628,8 @@ INTERNAL void rpc__gssauth_cn_wrap_packet
 			       gss_iov[3].buffer.length;
 
 	pdu->auth_len        = gss_iov[3].buffer.length;
+
+	auth_tlr = (rpc_cn_auth_tlr_p_t)gss_iov[2].buffer.value;
 	auth_tlr->stub_pad_length = pad_len;
 
 	out_iov->iov_base = pdu_buf;
@@ -1664,10 +1676,6 @@ INTERNAL void rpc__gssauth_cn_create_large_frag
 	output_token.value = assoc_sec->krb_message.data;
 	assoc_sec->krb_message.length = 0;
 	assoc_sec->krb_message.data = NULL;
-
-#if 0
-	RPC_CN_PKT_FLAGS(pkt) |= RPC_C_CN_FLAGS_SUPPORT_HEADER_SIGN;
-#endif
 
 	if (iovlen < 1) {
 		RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_GENERAL,
@@ -1797,6 +1805,7 @@ INTERNAL void rpc__gssauth_cn_pre_send
 {
 	rpc_gssauth_cn_info_p_t gssauth_cn_info = (rpc_gssauth_cn_info_p_t)sec->sec_cn_info;
 	rpc_cn_common_hdr_p_t pdu;
+	rpc_cn_packet_p_t pkt;
 	unsigned32 ptype;
 	boolean conf_req_flag = false;
 	OM_uint32 maj_stat;
@@ -1807,7 +1816,7 @@ INTERNAL void rpc__gssauth_cn_pre_send
 		("(rpc__gssauth_cn_pre_send)\n"));
 
 	pdu = (rpc_cn_common_hdr_p_t)iov[0].iov_base;
-	rpc_cn_packet_p_t pkt = (rpc_cn_packet_p_t)pdu;
+	pkt = (rpc_cn_packet_p_t)pdu;
 	ptype = pdu->ptype;
 	RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_GENERAL,
 		("(rpc__gssauth_cn_pre_send) authn level->%x packet type->%x\n",
@@ -1852,8 +1861,10 @@ INTERNAL void rpc__gssauth_cn_pre_send
 		default:
 			break;
 		}
+		break;
 	case RPC_C_CN_PKT_BIND:
 	case RPC_C_CN_PKT_ALTER_CONTEXT:
+		RPC_CN_PKT_FLAGS(pkt) |= RPC_C_CN_FLAGS_SUPPORT_HEADER_SIGN;
 		if (assoc_sec->krb_message.length == 0) {
 			*st = rpc_s_ok;
 		} else {
@@ -1977,7 +1988,6 @@ INTERNAL void rpc__gssauth_cn_unwrap_packet
 					  sizeof(gss_iov)/sizeof(gss_iov[0]));
 	} else {
 		gss_buffer_desc input_token;
-		gss_buffer_desc mic_token;
 
 		conf_state = 0;
 
@@ -1990,7 +2000,7 @@ INTERNAL void rpc__gssauth_cn_unwrap_packet
 		maj_stat = gss_verify_mic(&min_stat,
 					  gssauth_cn_info->gss_ctx,
 					  &input_token,
-					  &mic_token,
+					  &gss_iov[3].buffer,
 					  &qop_state);
 	}
 
