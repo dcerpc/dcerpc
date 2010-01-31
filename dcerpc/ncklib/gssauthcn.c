@@ -1573,6 +1573,9 @@ INTERNAL void rpc__gssauth_cn_wrap_packet
 	 */
 	memcpy(gss_iov[2].buffer.value, iov[iovlen - 1].iov_base, gss_iov[2].buffer.length);
 
+	auth_tlr = (rpc_cn_auth_tlr_p_t)gss_iov[2].buffer.value;
+	auth_tlr->stub_pad_length = pad_len;
+
 	gss_iov[3].type = GSS_IOV_BUFFER_TYPE_HEADER;
 	gss_iov[3].buffer.value = (unsigned_char_p_t)gss_iov[2].buffer.value +
 				  gss_iov[2].buffer.length;
@@ -1628,9 +1631,6 @@ INTERNAL void rpc__gssauth_cn_wrap_packet
 			       gss_iov[3].buffer.length;
 
 	pdu->auth_len        = gss_iov[3].buffer.length;
-
-	auth_tlr = (rpc_cn_auth_tlr_p_t)gss_iov[2].buffer.value;
-	auth_tlr->stub_pad_length = pad_len;
 
 	out_iov->iov_base = pdu_buf;
 	out_iov->iov_len  = pdu->frag_len;
@@ -1864,7 +1864,9 @@ INTERNAL void rpc__gssauth_cn_pre_send
 		break;
 	case RPC_C_CN_PKT_BIND:
 	case RPC_C_CN_PKT_ALTER_CONTEXT:
-		RPC_CN_PKT_FLAGS(pkt) |= RPC_C_CN_FLAGS_SUPPORT_HEADER_SIGN;
+		if (!getenv("DCE_DISABLE_HEADER_SIGN")) {
+			RPC_CN_PKT_FLAGS(pkt) |= RPC_C_CN_FLAGS_SUPPORT_HEADER_SIGN;
+		}
 		if (assoc_sec->krb_message.length == 0) {
 			*st = rpc_s_ok;
 		} else {
