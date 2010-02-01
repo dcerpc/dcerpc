@@ -1581,6 +1581,13 @@ INTERNAL void rpc__gssauth_cn_wrap_packet
 				  gss_iov[2].buffer.length;
 	gss_iov[3].buffer.length = iov[iovlen - 1].iov_len - RPC_CN_PKT_SIZEOF_COM_AUTH_TLR;
 
+	pdu->frag_len        = gss_iov[0].buffer.length +
+			       gss_iov[1].buffer.length +
+			       gss_iov[2].buffer.length +
+			       gss_iov[3].buffer.length;
+
+	pdu->auth_len        = gss_iov[3].buffer.length;
+
 	if (conf_req_flag) {
 		maj_stat = gss_wrap_iov(&min_stat,
 					gssauth_cn_info->gss_ctx,
@@ -1624,13 +1631,6 @@ INTERNAL void rpc__gssauth_cn_wrap_packet
 		*st = rpc_s_auth_method;
 		goto cleanup;
 	}
-
-	pdu->frag_len        = gss_iov[0].buffer.length +
-			       gss_iov[1].buffer.length +
-			       gss_iov[2].buffer.length +
-			       gss_iov[3].buffer.length;
-
-	pdu->auth_len        = gss_iov[3].buffer.length;
 
 	out_iov->iov_base = pdu_buf;
 	out_iov->iov_len  = pdu->frag_len;
