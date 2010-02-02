@@ -1522,6 +1522,12 @@ INTERNAL void rpc__gssauth_cn_wrap_packet
 		payload_len += iov[i].iov_len;
 	}
 
+	/*
+	 * If you ever change this code to use GSS_C_ATTR_STREAM_SIZES, remember
+	 * that [MS-RPCE] requires padding to 4 bytes, and that their implementation
+	 * always uses the underlying key size to determine the padding length of a
+	 * stream cipher (ie. RC4 and AES-CTS pad to 16 bytes).
+	 */
 	payload_len -= header_size;
 	pad_len = RPC__GSSAUTH_CN_AUTH_PADDING -
 		  (payload_len % RPC__GSSAUTH_CN_AUTH_PADDING);
