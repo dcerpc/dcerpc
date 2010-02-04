@@ -689,7 +689,7 @@ INTERNAL void rpc__gssauth_cn_cred_refresh
 
 PRIVATE const char *rpc__gssauth_error_map
 (
-	int			major_status,
+	OM_uint32		maj_stat,
 	OM_uint32		min_stat,
 	const gss_OID		mech,
 	char			*message_buffer,
@@ -697,6 +697,68 @@ PRIVATE const char *rpc__gssauth_error_map
 	unsigned32		*st
 )
 {
+	switch (maj_stat) {
+	case GSS_S_BAD_MECH:
+		*st = rpc_s_unknown_authn_service;
+		break;
+	case GSS_S_BAD_NAME:
+		*st = rpc_s_unsupported_name_syntax;
+		break;
+	case GSS_S_BAD_BINDINGS:
+		*st = rpc_s_auth_badaddr;
+		break;
+	case GSS_S_BAD_STATUS:
+		*st = rpc_s_unknown_status_code;
+		break;
+	case GSS_S_BAD_SIG:
+		*st = rpc_s_auth_bad_integrity;
+		break;
+	case GSS_S_NO_CRED:
+	case GSS_S_NO_CONTEXT:
+		*st = rpc_s_auth_nokey;
+		break;
+	case GSS_S_DEFECTIVE_TOKEN:
+		*st = rpc_s_auth_field_toolong;
+		break;
+	case GSS_S_DEFECTIVE_CREDENTIAL:
+		*st = rpc_s_invalid_credentials;
+		break;
+	case GSS_S_CONTEXT_EXPIRED:
+		*st = rpc_s_auth_tkt_expired;
+		break;
+	case GSS_S_BAD_QOP:
+		*st = rpc_s_protect_level_mismatch;
+		break;
+	case GSS_S_UNAUTHORIZED:
+		*st = rpc_s_authn_authz_mismatch;
+		break;
+	case GSS_S_NAME_NOT_MN:
+		*st = rpc_s_auth_not_us;
+		break;
+	case GSS_S_OLD_TOKEN:
+	case GSS_S_DUPLICATE_TOKEN:
+		*st = rpc_s_auth_repeat;
+		break;
+	case GSS_S_GAP_TOKEN:
+		*st = rpc_s_auth_badorder;
+		break;
+	case GSS_S_UNSEQ_TOKEN:
+		*st = rpc_s_auth_badseq;
+		break;
+	case GSS_S_CONTINUE_NEEDED:
+		*st = rpc_s_partial_credentials;
+		break;
+	case GSS_S_COMPLETE:
+		*st = rpc_s_ok;
+		break;
+	case GSS_S_DUPLICATE_ELEMENT:
+	case GSS_S_UNAVAILABLE:
+	case GSS_S_FAILURE:
+	default:
+		*st = rpc_s_auth_method;
+		break;
+	}
+
 	switch (min_stat) {
 	case KRB5KRB_AP_ERR_BAD_INTEGRITY:
 		*st = rpc_s_auth_bad_integrity;
@@ -756,11 +818,6 @@ PRIVATE const char *rpc__gssauth_error_map
 		*st = rpc_s_auth_inapp_cksum;
 		break;
 	default:
-		if (major_status == GSS_S_CONTINUE_NEEDED) {
-		    *st = rpc_s_partial_credentials;
-		    break;
-		}
-		*st = rpc_s_auth_method;
 		break;
 	}
 
@@ -775,7 +832,7 @@ PRIVATE const char *rpc__gssauth_error_map
 		minor_msg.value = NULL;
 		minor_msg.length = 0;
 
-		gss_display_status(&min2, major_status, GSS_C_GSS_CODE,
+		gss_display_status(&min2, maj_stat, GSS_C_GSS_CODE,
 				   NULL, &msg_ctx, &major_msg);
 		gss_display_status(&min2, min_stat, GSS_C_MECH_CODE,
 				   mech, &msg_ctx, &minor_msg);
@@ -783,7 +840,7 @@ PRIVATE const char *rpc__gssauth_error_map
 		snprintf((char *)message_buffer, message_length - 1,
 			 "major: %*s (%u) minor: %*s (%u) => dcerpc: (0x%08x)\n",
 			 (int)major_msg.length, (char *)major_msg.value,
-			 major_status, (int)minor_msg.length,
+			 maj_stat, (int)minor_msg.length,
 			 (char *)minor_msg.value, min_stat,
 			 (unsigned int)*st);
 		message_buffer[message_length - 1] = '\0';

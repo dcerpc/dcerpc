@@ -84,7 +84,7 @@ PRIVATE rpc_protocol_id_t rpc__gssauth_netlogon_cn_init (
     );
 
 PRIVATE const char *rpc__gssauth_error_map (
-	int			/*major_status*/,
+	OM_uint32		/*major_status*/,
 	OM_uint32		/*minor_status*/,
 	const gss_OID		/*mech*/,
 	char			* /*message_buffer*/,
