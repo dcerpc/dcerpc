@@ -899,14 +899,14 @@ INTERNAL OM_uint32 rpc__gssauth_create_client_token
 	maj_stat = rpc__gssauth_select_mech(min_stat,
 					    sec->sec_info->authn_protocol,
 					    &req_mech);
-	if (GSS_ERROR(maj_stat)) {
+	if (maj_stat != GSS_S_COMPLETE) {
 		return maj_stat;
 	}
 
 	maj_stat = rpc__gssauth_select_flags(min_stat,
 					     sec->sec_info->authn_level,
 					     &req_flags);
-	if (GSS_ERROR(maj_stat)) {
+	if (maj_stat != GSS_S_COMPLETE) {
 		return maj_stat;
 	}
 
@@ -950,14 +950,14 @@ INTERNAL OM_uint32 rpc__gssauth_verify_server_token
 	maj_stat = rpc__gssauth_select_mech(min_stat,
 					    sec->sec_info->authn_protocol,
 					    &req_mech);
-	if (GSS_ERROR(maj_stat)) {
+	if (maj_stat != GSS_S_COMPLETE) {
 		return maj_stat;
 	}
 
 	maj_stat = rpc__gssauth_select_flags(min_stat,
 					     sec->sec_info->authn_protocol,
 					     &req_flags);
-	if (GSS_ERROR(maj_stat)) {
+	if (maj_stat != GSS_S_COMPLETE) {
 		return maj_stat;
 	}
 
@@ -1506,7 +1506,7 @@ INTERNAL void rpc__gssauth_cn_pre_call
 					       NULL, /* conf_state */
 					       iov,
 					       sizeof(iov)/sizeof(iov[0]));
-		if (GSS_ERROR(maj_stat)) {
+		if (maj_stat != GSS_S_COMPLETE) {
 			*st = rpc_s_auth_method;
 			return;
 		}
@@ -1659,7 +1659,7 @@ INTERNAL void rpc__gssauth_cn_wrap_packet
 					&conf_state,
 					gss_iov,
 					sizeof(gss_iov)/sizeof(gss_iov[0]));
-		if (GSS_ERROR(maj_stat))
+		if (maj_stat != GSS_S_COMPLETE)
 			goto cleanup;
 	} else {
 		gss_buffer_desc input_token;
@@ -1678,7 +1678,7 @@ INTERNAL void rpc__gssauth_cn_wrap_packet
 				       GSS_C_QOP_DEFAULT,
 				       &input_token,
 				       &mic_token);
-		if (GSS_ERROR(maj_stat))
+		if (maj_stat != GSS_S_COMPLETE)
 			goto cleanup;
 
 		assert(mic_token.length <= gss_iov[3].buffer.length);
@@ -1701,7 +1701,7 @@ INTERNAL void rpc__gssauth_cn_wrap_packet
 	*st = rpc_s_ok;
 
 cleanup:
-	if (GSS_ERROR(maj_stat)) {
+	if (maj_stat != GSS_S_COMPLETE) {
 		char msg[BUFSIZ];
 		rpc__gssauth_error_map(maj_stat, min_stat,
 				       gssauth_cn_info->gss_mech,
@@ -1959,7 +1959,7 @@ INTERNAL void rpc__gssauth_cn_pre_send
 					       NULL,
 					       &locally_initiated,
 					       NULL);
-		if (GSS_ERROR(maj_stat) || !locally_initiated)
+		if (maj_stat != GSS_S_COMPLETE || !locally_initiated)
 			break;
 
 		assert(iovlen == 1);
@@ -2069,7 +2069,7 @@ INTERNAL void rpc__gssauth_cn_unwrap_packet
 					  &qop_state);
 	}
 
-	if (GSS_ERROR(maj_stat)) {
+	if (maj_stat != GSS_S_COMPLETE) {
 		char msg[BUFSIZ];
 		rpc__gssauth_error_map(maj_stat, min_stat,
 				       gssauth_cn_info->gss_mech,
@@ -2206,16 +2206,15 @@ INTERNAL void rpc__gssauth_cn_recv_check
 	case RPC_C_CN_PKT_ALTER_CONTEXT_RESP:
 		if (RPC_CN_PKT_FLAGS(pkt) & RPC_C_CN_FLAGS_SUPPORT_HEADER_SIGN)
 			gssauth_cn_info->header_sign = true;
-		break;
+		/* fallthrough */
 	case RPC_C_CN_PKT_SHUTDOWN:
 	case RPC_C_CN_PKT_REMOTE_ALERT:
 	case RPC_C_CN_PKT_ORPHANED:
 	case RPC_C_CN_PKT_FAULT:
 	default:
+		*st = rpc_s_ok;
 		break;
 	}
-
-	*st = rpc_s_ok;
 }
 
 /*****************************************************************************/
@@ -2434,7 +2433,7 @@ INTERNAL void rpc__gssauth_cn_vfy_client_req
                  * we still transfer the buffer to the client
                  * but fail the auth in rpc__gssauth_cn_fmt_srvr_resp()
                  */
-        } else if (GSS_ERROR(maj_stat)) {
+        } else if (maj_stat != GSS_S_COMPLETE) {
                 char msg[BUFSIZ];
                 rpc__gssauth_error_map(maj_stat, min_stat,
                                        gssauth_cn_info->gss_mech,
@@ -2562,7 +2561,7 @@ INTERNAL void rpc__gssauth_cn_vfy_srvr_resp
 		 * we still transfer the buffer to the client
 		 * but fail the auth in rpc__gssauth_cn_fmt_srvr_resp()
 		 */
-	} else if (GSS_ERROR(maj_stat)) {
+	} else if (maj_stat != GSS_S_COMPLETE) {
 		char msg[BUFSIZ];
 		rpc__gssauth_error_map(maj_stat, min_stat,
                                        gssauth_cn_info->gss_mech,
