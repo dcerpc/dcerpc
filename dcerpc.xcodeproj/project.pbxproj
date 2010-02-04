@@ -209,7 +209,6 @@
 		DD0435BB1076A10E0010E492 /* dcethread_signal_to_interrupt.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1B7100408FD0080B762 /* dcethread_signal_to_interrupt.c */; };
 		DD0435BC1076A10E0010E492 /* dcethread_unlock_global.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1B8100408FD0080B762 /* dcethread_unlock_global.c */; };
 		DD0435BD1076A10E0010E492 /* dcethread_yield.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1BA100408FD0080B762 /* dcethread_yield.c */; };
-		DD0435BF1076A12A0010E492 /* comep.c in Sources */ = {isa = PBXBuildFile; fileRef = DDFD941E1072371E008E776F /* comep.c */; };
 		DD0435C01076A12A0010E492 /* dummyfuncs.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAF84100408FC0080B762 /* dummyfuncs.c */; };
 		DD0435C11076A12A0010E492 /* mswrappers.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAF87100408FC0080B762 /* mswrappers.c */; };
 		DD0435C21076A12A0010E492 /* wc16str.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DAF83100408FC0080B762 /* wc16str.c */; };
@@ -3247,7 +3246,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD0435BF1076A12A0010E492 /* comep.c in Sources */,
 				DD0435C01076A12A0010E492 /* dummyfuncs.c in Sources */,
 				DD0435C11076A12A0010E492 /* mswrappers.c in Sources */,
 				DD0435C21076A12A0010E492 /* wc16str.c in Sources */,
@@ -3889,8 +3887,6 @@
 				DYLIB_CURRENT_VERSION = 11;
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = "DCERPC-Info.plist";
-				OTHER_LDFLAGS = "";
-				PREBINDING = NO;
 				PRODUCT_NAME = DCERPC;
 			};
 			name = Debug;
@@ -3903,8 +3899,6 @@
 				DYLIB_CURRENT_VERSION = 11;
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = "DCERPC-Info.plist";
-				OTHER_LDFLAGS = "";
-				PREBINDING = NO;
 				PRODUCT_NAME = DCERPC;
 			};
 			name = Release;
