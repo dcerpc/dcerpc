@@ -2746,7 +2746,7 @@ PUBLIC void rpc_server_use_protseq_ep
 **
 **  DESCRIPTION:
 **
-**  Register an RPC protocol sequence for an already native socket.
+**  Register an RPC protocol sequence for a previously created native socket.
 **
 **  INPUTS:
 **

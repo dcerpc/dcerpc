@@ -347,6 +347,13 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_destruct
     rpc_socket_t        sock
 );
 
+
+INTERNAL rpc_socket_error_t rpc__bsd_socket_construct(
+    rpc_socket_t                sock,
+    rpc_protseq_id_t            pseq_id,
+    rpc_transport_info_handle_t info
+);
+
 /* ======================================================================== */
 /*
  * R P C _ _ S O C K E T _ D U P L I C A T E
@@ -363,24 +370,48 @@ rpc__bsd_socket_duplicate(
     )
 {
     rpc_socket_error_t  serr;
-    const int * sockfd = (const int *)sockrep;
+    rpc_bsd_socket_p_t  lrpc;
+    const int *         sockfd = (const int *)sockrep;
 
     if (sockfd == NULL || *sockfd == -1) {
         return RPC_C_SOCKET_ENOTSOCK;
     }
 
-    close(sock->data.word);
+    if (sock->pseq_id != pseq_id) {
+        return RPC_C_SOCKET_EINVAL;
+    }
+
+    serr = rpc__bsd_socket_destruct(sock);
+    if (serr != RPC_C_SOCKET_OK) {
+        return serr;
+    }
+
+    serr = rpc__bsd_socket_construct(sock, pseq_id, NULL);
+    if (serr != RPC_C_SOCKET_OK) {
+        return serr;
+    }
+
+    lrpc = (rpc_bsd_socket_p_t) sock->data.pointer;
 
     RPC_SOCKET_DISABLE_CANCEL;
-    sock->data.word = dup(*sockfd);
-    serr = ((sock->data.word == -1) ? errno : RPC_C_SOCKET_OK);
-    if (serr == RPC_C_SOCKET_OK) {
-        serr = rpc__bsd_socket_set_default_options(sock->data.word);
-        if (serr != RPC_C_SOCKET_OK)
-            close (sock->data.word);
+    lrpc->fd = dup(*sockfd);
+
+    serr = ((lrpc->fd == -1) ? errno : RPC_C_SOCKET_OK);
+    if (serr != RPC_C_SOCKET_OK) {
+        goto error;
     }
+
+    serr = rpc__bsd_socket_set_default_options(lrpc->fd);
+    if (serr != RPC_C_SOCKET_OK) {
+        goto error;
+    }
+
     RPC_SOCKET_RESTORE_CANCEL;
 
+    return RPC_C_SOCKET_OK;
+
+error:
+    rpc__bsd_socket_destruct(sock);
     return serr;
 }
 
