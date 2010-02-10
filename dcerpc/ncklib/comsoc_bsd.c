@@ -2211,7 +2211,10 @@ rpc_lrpc_transport_info_free(
     rpc_transport_info_handle_t info
     )
 {
-    free(info);
+    if (info)
+    {
+        free(info);
+    }
 }
 
 void

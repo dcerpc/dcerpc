@@ -195,6 +195,8 @@ rpc__smb_transport_info_destroy(
     rpc_smb_transport_info_p_t smb_info
     )
 {
+    assert(smb_info != NULL);
+
 #if HAVE_LIKEWISE_LWIO
     if (smb_info->creds)
     {
@@ -219,8 +221,12 @@ rpc_smb_transport_info_free(
     )
 {
     RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc_smb_transport_info_free called\n"));
-    rpc__smb_transport_info_destroy((rpc_smb_transport_info_p_t) info);
-    free(info);
+
+    if (info)
+    {
+	rpc__smb_transport_info_destroy((rpc_smb_transport_info_p_t) info);
+	free(info);
+    }
 }
 
 void
