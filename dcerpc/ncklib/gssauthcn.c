@@ -759,6 +759,12 @@ PRIVATE const char *rpc__gssauth_error_map
 		break;
 	}
 
+	/*
+	 * Possibly this should check that mech is GSS_KRB5_MECHANISM first.
+	 * But, it's likely that other mechanisms use the krb5 minor status
+	 * namespace too, and/or that the Kerberos mechanism uses a different
+	 * OID. So safest to leave it as is for now.
+	 */
 	switch (min_stat) {
 	case KRB5KRB_AP_ERR_BAD_INTEGRITY:
 		*st = rpc_s_auth_bad_integrity;
