@@ -713,9 +713,10 @@ typedef struct
 
 typedef struct
 {
-    unsigned16 refcount;
-    rpc_protseq_id_t protseq;
-    rpc_transport_info_handle_t handle;
+    unsigned16				refcount;
+    rpc_protseq_id_t			protseq;
+    rpc_transport_info_handle_t		handle;
+    const struct rpc_socket_vtbl_s *	vtbl;
 } rpc_transport_info_t, *rpc_transport_info_p_t;
 
 /***********************************************************************/

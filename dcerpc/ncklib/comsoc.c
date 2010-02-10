@@ -352,7 +352,7 @@ rpc__socket_inq_transport_info(
     rpc_transport_info_handle_t handle = NULL;
 
     serr = sock->vtbl->socket_inq_transport_info(sock, &handle);
-    if (serr)
+    if (RPC_SOCKET_IS_ERR(serr))
     {
         goto error;
     }
@@ -360,10 +360,16 @@ rpc__socket_inq_transport_info(
     if (handle != NULL)
     {
         serr = rpc__transport_info_create(sock->pseq_id, handle, info);
-        if (serr)
+        if (RPC_SOCKET_IS_ERR(serr))
         {
             goto error;
         }
+
+        /* Reset the transport info vtbl to match the socket. This handles the
+         * case where the rpc_socket_t swizzles it's vtable to not match the
+         * global protseq vtable (eg. ncacn_np sockets on Darwin).
+	 */
+        (*info)->vtbl = sock->vtbl;
     }
     else
     {
@@ -372,7 +378,7 @@ rpc__socket_inq_transport_info(
 
 error:
 
-    if (serr)
+    if (RPC_SOCKET_IS_ERR(serr))
     {
         *info = NULL;
         if (handle != NULL)
@@ -404,6 +410,7 @@ rpc__transport_info_create(
     my_info->refcount = 1;
     my_info->protseq = protseq;
     my_info->handle = handle;
+    my_info->vtbl = rpc_g_protseq_id[protseq].socket_vtbl;
 
     *info = my_info;
 
@@ -430,7 +437,7 @@ rpc__transport_info_release(
 {
     if (info && --info->refcount == 0)
     {
-        rpc_g_protseq_id[info->protseq].socket_vtbl->transport_info_free(info->handle);
+	info->vtbl->transport_info_free(info->handle);
         free(info);
     }
 }
@@ -441,10 +448,11 @@ rpc__transport_info_equal(
     rpc_transport_info_p_t info2
     )
 {
-    return
-        (info1 == NULL && info2 == NULL) ||
-        (info1 != NULL && info2 != NULL && info1->protseq == info2->protseq &&
-         rpc_g_protseq_id[info1->protseq].socket_vtbl->transport_info_equal(info1->handle, info2->handle));
+    return (info1 == NULL && info2 == NULL) ||
+	    (info1 != NULL && info2 != NULL &&
+		info1->protseq == info2->protseq &&
+		info1->vtbl == info2->vtbl &&
+		info1->vtbl->transport_info_equal(info1->handle, info2->handle));
 }
 
 void
@@ -629,8 +637,7 @@ rpc_binding_inq_access_token_caller(
 
         if (!*token && binding_r->transport_info)
         {
-            err = rpc_g_protseq_id[binding_r->transport_info->protseq].socket_vtbl->
-                transport_inq_access_token(
+            err = binding_r->transport_info->vtbl->transport_inq_access_token(
                     binding_r->transport_info->handle,
                     token);
             if (err)
