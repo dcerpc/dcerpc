@@ -1946,20 +1946,10 @@ INTERNAL void rpc__gssauth_cn_pre_send
 			RPC_CN_PKT_FLAGS(pkt) |= RPC_C_CN_FLAGS_SUPPORT_HEADER_SIGN;
 		break;
 	case RPC_C_CN_PKT_AUTH3: {
-		int locally_initiated = 0;
 		gss_buffer_desc input_token, output_token;
 		rpc_cn_auth_tlr_p_t auth_tlr;
 
-		maj_stat = gss_inquire_context(&min_stat,
-					       gssauth_cn_info->gss_ctx,
-					       NULL,
-					       NULL,
-					       NULL,
-					       NULL,
-					       NULL,
-					       &locally_initiated,
-					       NULL);
-		if (maj_stat != GSS_S_COMPLETE || !locally_initiated)
+		if (sec->sec_info->is_server)
 			break;
 
 		assert(iovlen == 1);
