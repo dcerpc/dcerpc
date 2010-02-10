@@ -1678,8 +1678,9 @@ INTERNAL void rpc__gssauth_cn_wrap_packet
 		if (header_sign) {
 			input_token = gss_iov[0].buffer;
 			input_token.length += gss_iov[1].buffer.length + gss_iov[2].buffer.length;
-		} else
+		} else {
 			input_token = gss_iov[1].buffer;
+		}
 
 		maj_stat = gss_get_mic(&min_stat,
 				       gssauth_cn_info->gss_ctx,
@@ -2057,8 +2058,9 @@ INTERNAL void rpc__gssauth_cn_unwrap_packet
 		if (header_sign) {
 			input_token = gss_iov[0].buffer;
 			input_token.length += gss_iov[1].buffer.length + gss_iov[2].buffer.length;
-		} else
+		} else {
 			input_token = gss_iov[1].buffer;
+		}
 
 		maj_stat = gss_verify_mic(&min_stat,
 					  gssauth_cn_info->gss_ctx,
