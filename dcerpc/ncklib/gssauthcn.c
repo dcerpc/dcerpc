@@ -1580,10 +1580,12 @@ INTERNAL void rpc__gssauth_cn_wrap_packet
 	}
 
 	/*
-	 * If you ever change this code to use GSS_C_ATTR_STREAM_SIZES, remember
-	 * that [MS-RPCE] requires padding to 4 bytes, and that their implementation
-	 * always uses the underlying key size to determine the padding length of a
-	 * stream cipher (ie. RC4 and AES-CTS pad to 16 bytes).
+	 * [MS-RPCE] states that the stub data is padded to the underlying
+	 * blocksize (or four bytes, if that is greater). In practice they
+	 * use the underlying keysize when the blocksize is one. For now,
+	 * a constant 16 bytes works for all known ciphers and mechanisms
+	 * (at the expense of 8 bytes extra padding for DES), but we should
+	 * eventually fix it to use gss_context_query_attributes().
 	 */
 	payload_len -= header_size;
 	pad_len = RPC__GSSAUTH_CN_AUTH_PADDING -
