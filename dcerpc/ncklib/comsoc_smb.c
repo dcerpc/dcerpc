@@ -737,6 +737,7 @@ rpc__smb_socket_destruct(
 #endif
 
     rpc__smb_socket_destroy((rpc_smb_socket_p_t) sock->data.pointer);
+    sock->data.pointer = NULL;
 
     return serr;
 }
@@ -2179,9 +2180,24 @@ rpc__smb_socket_duplicate(
 	return RPC_C_SOCKET_EINVAL;
     }
 
-    rpc__smb_socket_destroy((rpc_smb_socket_p_t) sock->data.pointer);
-    sock->data.word = dup(*sockfd);
+    rpc__smb_socket_destruct(sock);
+
+    serr = rpc_g_bsd_socket_vtbl.socket_construct(sock,
+	    RPC_C_PROTSEQ_ID_NCALRPC, NULL);
+    if (RPC_SOCKET_IS_ERR(serr)) {
+        return serr;
+    }
+
+    // Flip the rpc_socket_t info ASAP in case some higer level
+    // calls a generic rpc__socket routine.
     sock->vtbl = &rpc_g_bsd_socket_vtbl;
+    sock->pseq_id = protseq_id;
+
+    serr = rpc_g_bsd_socket_vtbl.socket_duplicate(sock,
+	    RPC_C_PROTSEQ_ID_NCACN_NP, sockrep);
+    if (RPC_SOCKET_IS_ERR(serr)) {
+        return serr;
+    }
 
     return serr;
 }

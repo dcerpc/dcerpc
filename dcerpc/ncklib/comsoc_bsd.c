@@ -181,7 +181,6 @@ int ioctl(int d, int request, ...);
 #define RPC_SOCKET_FIX_ADDRLEN(addrp) do { } while (0)
 /*#endif*/
 
-
 #ifndef CMSG_ALIGN
 #if defined(_CMSG_DATA_ALIGN)
 #define CMSG_ALIGN _CMSG_DATA_ALIGN
@@ -347,7 +346,6 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_destruct
     rpc_socket_t        sock
 );
 
-
 INTERNAL rpc_socket_error_t rpc__bsd_socket_construct(
     rpc_socket_t                sock,
     rpc_protseq_id_t            pseq_id,
@@ -394,6 +392,11 @@ rpc__bsd_socket_duplicate(
     lrpc = (rpc_bsd_socket_p_t) sock->data.pointer;
 
     RPC_SOCKET_DISABLE_CANCEL;
+
+    if (lrpc->fd != -1) {
+        close(lrpc->fd);
+    }
+
     lrpc->fd = dup(*sockfd);
 
     serr = ((lrpc->fd == -1) ? errno : RPC_C_SOCKET_OK);
@@ -561,6 +564,7 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_destruct
     if (lrpc)
     {
 	free(lrpc);
+        sock->data.pointer = NULL;
     }
 
     return serr;
@@ -767,7 +771,6 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_getpeereid
     gid_t		*egid
 );
 
-
 #if !defined(SO_PEERCRED) && !defined(HAVE_GETPEEREID)
 
 INTERNAL rpc_socket_error_t rpc__bsd_socket_sendpeereid
@@ -775,7 +778,6 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_sendpeereid
     rpc_socket_t        sock,
     rpc_addr_p_t        addr
 );
-
 
 INTERNAL rpc_socket_error_t rpc__bsd_socket_recvpeereid
 (
@@ -1518,7 +1520,6 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_getpeereid
     return serr;
 }
 
-
 #if !defined(SO_PEERCRED) && !defined(HAVE_GETPEEREID)
 
 INTERNAL rpc_socket_error_t rpc__bsd_socket_sendpeereid
@@ -1609,7 +1610,6 @@ error:
     goto cleanup;
 }
 
-
 INTERNAL rpc_socket_error_t rpc__bsd_socket_recvpeereid
 (
     rpc_socket_t        sock,
@@ -1632,7 +1632,6 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_recvpeereid
     } cm_un;
     struct cmsghdr *cmsg = NULL;
     struct msghdr msg = {0};
-
 
     iovec.iov_base = &empty_buf;
     iovec.iov_len  = sizeof(empty_buf);
@@ -1706,7 +1705,6 @@ error:
 }
 
 #endif
-
 
 INTERNAL
 int rpc__bsd_socket_get_select_desc(
