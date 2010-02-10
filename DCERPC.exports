@@ -490,3 +490,11 @@ _uuid_x_getconf_failure
 _uuid_x_internal_error
 _uuid_x_no_address
 _uuid_x_socket_failure
+
+_idl_es_after_interp_call
+_idl_es_before_interp_call
+_idl_es_clean_up
+_idl_es_decode_buffer
+_idl_es_encode_dyn_buffer
+_idl_es_handle_free
+_idl_es_set_attrs
