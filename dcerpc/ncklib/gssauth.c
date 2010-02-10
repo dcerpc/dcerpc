@@ -365,7 +365,7 @@ INTERNAL void rpc__gssauth_bnd_set_auth
 	gssauth_info->auth_info.authn_level = level;
 	gssauth_info->auth_info.authn_protocol = authn_protocol;
 	gssauth_info->auth_info.authz_protocol = authz_prot;
-	gssauth_info->auth_info.is_server = 0;
+	gssauth_info->auth_info.is_server = false;
 	gssauth_info->auth_info.u.auth_identity = (rpc_auth_identity_handle_t)gssauth_info->gss_creds;
 
 	gssauth_info->auth_info.refcount = 1;
@@ -779,14 +779,14 @@ void rpc__gssauth_init_func(void)
 		NULL,
 		rpc_g_gssauth_mskrb_rpc_prot_epv
 	},
-	{ /* 1 */
+	{ /* 2 */
 		rpc__gssauth_winnt_init,
 		rpc_c_authn_winnt,
 		dce_c_rpc_authn_protocol_winnt,
 		NULL,
 		rpc_g_gssauth_winnt_rpc_prot_epv
 	},
-	{ /* 1 */
+	{ /* 3 */
 		rpc__gssauth_netlogon_init,
 		rpc_c_authn_netlogon,
 		dce_c_rpc_authn_protocol_netlogon,
