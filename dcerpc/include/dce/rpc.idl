@@ -1945,12 +1945,12 @@ void rpc_ns_mgmt_free_codesets (
 
 
 /*
- * R P C _ I M P E R S O N A T E _ C L I E N T
+ * R P C _ I M P E R S O N A T E _ N A M E D _ P I P E _ C L I E N T
  *
  * Allows a server thread to run with the security credentials
  * of the active client.
  */
-void rpc_impersonate_client
+void rpc_impersonate_named_pipe_client
 (
     [in]    rpc_binding_handle_t    binding_handle,
     [out]   unsigned32              *status

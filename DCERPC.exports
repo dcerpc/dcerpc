@@ -82,7 +82,7 @@ _rpc_ep_resolve_binding
 _rpc_ep_unregister
 _rpc_if_id_vector_free
 _rpc_if_inq_id
-_rpc_impersonate_client
+_rpc_impersonate_named_pipe_client
 _rpc_mgmt_ep_elt_inq_begin
 _rpc_mgmt_ep_elt_inq_done
 _rpc_mgmt_ep_elt_inq_next

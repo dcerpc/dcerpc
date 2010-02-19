@@ -1780,7 +1780,7 @@ PUBLIC void rpc_binding_inq_security_context
 /*
  **++
  **
- **  ROUTINE NAME:       rpc_impersonate_client
+ **  ROUTINE NAME:       rpc_impersonate_named_pipe_client
  **
  **  SCOPE:              PUBLIC - declared in rpc.idl
  **
@@ -1817,7 +1817,7 @@ PUBLIC void rpc_binding_inq_security_context
  **--
  **/
 
-PUBLIC void rpc_impersonate_client
+PUBLIC void rpc_impersonate_named_pipe_client
 (
  rpc_binding_handle_t    binding_h,
  unsigned32              *status
@@ -1839,13 +1839,13 @@ PUBLIC void rpc_impersonate_client
     RPC_BINDING_VALIDATE(binding_rep, status);
     if (*status != rpc_s_ok)
     {
-        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): invalid binding\n"));
+        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_named_pipe_client): invalid binding\n"));
         return;
     }
 
     if (RPC_BINDING_IS_CLIENT (binding_rep))
     {
-        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): wrong type of binding\n"));
+        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_named_pipe_client): wrong type of binding\n"));
         *status = rpc_s_wrong_kind_of_binding;
         return;
     }
@@ -1867,13 +1867,13 @@ PUBLIC void rpc_impersonate_client
 
     if (*status != rpc_s_ok)
     {
-        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): network_getpeereid failed %d\n", *status));
+        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_named_pipe_client): network_getpeereid failed %d\n", *status));
         return;
     }
 
     ret = pthread_setugid_np(euid, egid);
     if (ret != 0) {
-        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): pthread_setugid_np failed %d for euid %d, egid %d\n", errno, euid, egid));
+        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_named_pipe_client): pthread_setugid_np failed %d for euid %d, egid %d\n", errno, euid, egid));
         *status = rpc_s_no_context_available;
         return;
     }
@@ -1884,7 +1884,7 @@ PUBLIC void rpc_impersonate_client
     ret = syscall(SYS_initgroups, 1, &egid, euid);
     if (ret == -1)
     {
-        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): SYS_initgroups failed %d for euid %d, egid %d\n", errno, euid, egid));
+        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_named_pipe_client): SYS_initgroups failed %d for euid %d, egid %d\n", errno, euid, egid));
         *status = rpc_s_no_context_available;
         goto error;
     }
@@ -1895,7 +1895,7 @@ error:
     if (*status != rpc_s_ok)
     {
         /* error occurred, try to revert back to previous user/group ID */
-        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_client): reverting credentials due to error %d\n", *status));
+        RPC_DBG_PRINTF(rpc_e_dbg_auth, 3, ("(rpc_impersonate_named_pipe_client): reverting credentials due to error %d\n", *status));
         pthread_setugid_np(KAUTH_UID_NONE, KAUTH_GID_NONE);
     }
 
