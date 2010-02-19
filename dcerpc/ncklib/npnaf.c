@@ -1522,9 +1522,7 @@ INTERNAL void desc_inq_network
        return;
     }
 
-    /* XXX should check for arbitrary number of delimiters. */
-    is_np = (strncmp(addr.sa.sun_path, RPC_C_NP_DIR "//PIPE", RPC_C_NP_DIR_LEN + 6) == 0) ||
-            (strncmp(addr.sa.sun_path, RPC_C_NP_DIR "/PIPE", RPC_C_NP_DIR_LEN + 5) == 0);
+    is_np = (strncmp(addr.sa.sun_path, RPC_C_NP_DIR, RPC_C_NP_DIR_LEN) == 0);
 
     /*
      * This is a disgusting hack due to the tight binding between
@@ -1942,6 +1940,7 @@ INTERNAL void desc_inq_peer_addr
 {
     rpc_socket_error_t  serr;
     rpc_np_addr_p_t np_addr;
+    rpc_np_addr_t loc_np_addr;
 
     CODING_ERROR (status);
 
@@ -1978,21 +1977,67 @@ INTERNAL void desc_inq_peer_addr
      */
 
     memset(np_addr->sa.sun_path, 0, sizeof(np_addr->sa.sun_path));
-    serr = rpc__socket_getpeername (desc, (rpc_addr_p_t)np_addr);
-    if (RPC_SOCKET_IS_ERR (serr))
+
+    if (np_addr->rpc_protseq_id == RPC_C_PROTSEQ_ID_NCACN_NP)
     {
-        RPC_DBG_GPRINTF(("(desc_inq_peer_addr) rpc__socket_getpeername returned %d (socket->%p)\n", serr, desc));
-        RPC_MEM_FREE (np_addr, RPC_C_MEM_RPC_ADDR);
-        *rpc_addr = (rpc_addr_p_t)NULL;
-        *status = rpc_s_cant_getpeername;
+        memset (&loc_np_addr, 0, sizeof(rpc_np_addr_t));
+        loc_np_addr.len = sizeof(loc_np_addr) - offsetof(rpc_np_addr_t, sa);
+
+        serr = rpc__socket_inq_endpoint(desc, (rpc_addr_p_t) &loc_np_addr);
+        if (RPC_SOCKET_IS_ERR (serr))
+        {
+            RPC_DBG_GPRINTF (("(desc_inq_peer_addr) rpc__socket_inq_endpoint serr->%d\n", serr));
+            RPC_MEM_FREE (np_addr, RPC_C_MEM_RPC_ADDR);
+            *status = rpc_s_cant_get_if_id;
+            return;
+        }
+
+        np_addr->sa = loc_np_addr.sa;
+        np_addr->sa.sun_family = RPC_C_NAF_ID_UXD;
+
+        /*
+         * Assume that named pipes are unix domain sockets where the
+         * socket name is the same as the endpoint name. Trim the
+         * leading path components and prefix "\\PIPE\\" to make it
+         * into a named pipe endpoint.
+         */
+        struct sockaddr_un tmp = np_addr->sa;
+        const char *last;
+
+        last = strrchr(tmp.sun_path, '/');
+        if (!last) {
+            RPC_MEM_FREE (np_addr, RPC_C_MEM_RPC_ADDR);
+            *status = rpc_s_no_addrs;
+            return;
+        }
+
+        snprintf(np_addr->sa.sun_path, sizeof(np_addr->sa.sun_path),
+                 "\\PIPE\\%s", last + 1);
+
+        RPC_DBG_GPRINTF(("(desc_inq_peer_addr) peer address is %s (socket->%p)\n", np_addr->sa.sun_path, desc));
+
+        /* currently no way to fill in np_addr->remote_host due to <7664297> */
+
+        *status = rpc_s_ok;
     }
     else
     {
-        /* Force the address family to a correct value since getpeername can fail
-           silently on some platforms for UNIX domain sockets */
-        np_addr->sa.sun_family = RPC_C_NAF_ID_UXD;
-        RPC_DBG_GPRINTF(("(desc_inq_peer_addr) peer address is %s (socket->%p)\n", np_addr->sa.sun_path, desc));
-        *status = rpc_s_ok;
+        serr = rpc__socket_getpeername (desc, (rpc_addr_p_t)np_addr);
+        if (RPC_SOCKET_IS_ERR (serr))
+        {
+            RPC_DBG_GPRINTF(("(desc_inq_peer_addr) rpc__socket_getpeername returned %d (socket->%p)\n", serr, desc));
+            RPC_MEM_FREE (np_addr, RPC_C_MEM_RPC_ADDR);
+            *rpc_addr = (rpc_addr_p_t)NULL;
+            *status = rpc_s_cant_getpeername;
+        }
+        else
+        {
+            /* Force the address family to a correct value since getpeername can fail
+               silently on some platforms for UNIX domain sockets */
+            np_addr->sa.sun_family = RPC_C_NAF_ID_UXD;
+            RPC_DBG_GPRINTF(("(desc_inq_peer_addr) peer address is %s (socket->%p)\n", np_addr->sa.sun_path, desc));
+            *status = rpc_s_ok;
+        }
     }
 }
 
