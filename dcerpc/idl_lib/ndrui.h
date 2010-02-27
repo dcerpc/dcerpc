@@ -45,7 +45,7 @@
 /*  because DG runtime does not do this if receive fails                      */
 /*                                                                            */
 /******************************************************************************/
-#define rpc_ss_ndr_unmar_check_buffer( IDL_msp ) \
+#define rpc_ss_ndr_unmar_check_buffer( IDL_msp, bytesNeeded ) \
 { \
     if (IDL_msp->IDL_left_in_buff == 0) \
     { \
@@ -69,6 +69,11 @@
             IDL_msp->IDL_left_in_buff = IDL_msp->IDL_elt_p->data_len; \
         } \
     } \
+    if (IDL_msp->IDL_left_in_buff < bytesNeeded) \
+    { \
+        IDL_msp->IDL_status = rpc_s_stub_protocol_error; \
+        DCETHREAD_RAISE( rpc_x_ss_pipe_comm_error ); \
+    } \
 }
 
 /******************************************************************************/
@@ -79,7 +84,7 @@
 
 #define IDL_UNMAR_1_BYTE_SCALAR( marshalling_macro, type, param_addr ) \
 { \
-    rpc_ss_ndr_unmar_check_buffer( IDL_msp ); \
+    rpc_ss_ndr_unmar_check_buffer( IDL_msp, 1 ); \
     marshalling_macro( IDL_msp->IDL_drep, ndr_g_local_drep, \
                         IDL_msp->IDL_mp, *(type *)(param_addr)); \
     IDL_msp->IDL_mp += 1; \
@@ -100,7 +105,7 @@
 #define IDL_UNMAR_ALIGNED_SCALAR( marshalling_macro, size, type, param_addr ) \
 { \
     IDL_UNMAR_ALIGN_MP( IDL_msp, size ); \
-    rpc_ss_ndr_unmar_check_buffer( IDL_msp ); \
+    rpc_ss_ndr_unmar_check_buffer( IDL_msp, size ); \
     marshalling_macro( IDL_msp->IDL_drep, ndr_g_local_drep, \
                         IDL_msp->IDL_mp, *(type *)(param_addr)); \
     IDL_msp->IDL_mp += size; \
@@ -153,7 +158,7 @@
 #define IDL_UNMAR_ERROR_STATUS( param_addr ) \
 { \
     IDL_UNMAR_ALIGN_MP( IDL_msp, 4 ); \
-    rpc_ss_ndr_unmar_check_buffer( IDL_msp ); \
+    rpc_ss_ndr_unmar_check_buffer( IDL_msp, 4 ); \
     rpc_convert_ulong_int( IDL_msp->IDL_drep, ndr_g_local_drep, \
                         IDL_msp->IDL_mp, *(idl_ulong_int *)(param_addr)); \
     rpc_ss_map_dce_to_local_status((error_status_t *)(param_addr)); \
@@ -164,7 +169,7 @@
 #define IDL_UNMAR_ERROR_STATUS( param_addr ) \
 { \
     IDL_UNMAR_ALIGN_MP( IDL_msp, 4 ); \
-    rpc_ss_ndr_unmar_check_buffer( IDL_msp ); \
+    rpc_ss_ndr_unmar_check_buffer( IDL_msp, 4 ); \
     rpc_convert_ulong_int( IDL_msp->IDL_drep, ndr_g_local_drep, \
                         IDL_msp->IDL_mp, *(idl_ulong_int *)(param_addr)); \
     IDL_msp->IDL_mp += 4; \

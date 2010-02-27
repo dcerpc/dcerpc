@@ -552,6 +552,10 @@ idl_ulong_int rpc_ss_arm_switch_value
     advance = (idl_byte *)\
         (((IDL_msp->IDL_mp - (idl_byte *)0) + (alignment-1)) & ~(alignment-1)) \
             - IDL_msp->IDL_mp; \
+    if (advance > IDL_msp->IDL_left_in_buff) { \
+        IDL_msp->IDL_status = rpc_s_stub_protocol_error; \
+        DCETHREAD_RAISE( rpc_x_ss_pipe_comm_error ); \
+    } \
     IDL_msp->IDL_mp += advance; \
     IDL_msp->IDL_left_in_buff -= advance;\
 }

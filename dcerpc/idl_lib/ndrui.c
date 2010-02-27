@@ -494,7 +494,7 @@ void rpc_ss_ndr_unmar_struct
                 defn_vec_ptr++;     /* Properties byte */
                 /* Skip over the longword place holder */
                 IDL_UNMAR_ALIGN_MP( IDL_msp, 4 );
-                rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+                rpc_ss_ndr_unmar_check_buffer( IDL_msp, 4 );
                 IDL_msp->IDL_mp += 4;
                 IDL_msp->IDL_left_in_buff -= 4;
                 IDL_DISCARD_LONG_FROM_VECTOR( defn_vec_ptr );
@@ -504,7 +504,7 @@ void rpc_ss_ndr_unmar_struct
             case IDL_DT_IGNORE:
                 /* Skip over the longword place holder */
                 IDL_UNMAR_ALIGN_MP( IDL_msp, 4 );
-                rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+                rpc_ss_ndr_unmar_check_buffer( IDL_msp, 4 );
                 IDL_msp->IDL_mp += 4;
                 IDL_msp->IDL_left_in_buff -= 4;
                 offset_vec_ptr++;
@@ -646,7 +646,7 @@ void rpc_ss_ndr_unmar_by_copying
     bytes_required = element_count * element_size;
     while (bytes_required != 0)
     {
-        rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+        rpc_ss_ndr_unmar_check_buffer( IDL_msp, IDL_msp->IDL_left_in_buff );
         if (bytes_required > IDL_msp->IDL_left_in_buff)
             bytes_to_copy = IDL_msp->IDL_left_in_buff;
         else
@@ -696,7 +696,7 @@ void rpc_ss_ndr_unmar_by_looping
             {
                 element_count -= IDL_msp->IDL_left_in_buff / 4;
                 /* Force a buffer change */
-                rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+                rpc_ss_ndr_unmar_check_buffer( IDL_msp, element_byte_count );
             }
             else
             {
@@ -846,12 +846,12 @@ void rpc_ss_ndr_unmar_by_looping
                     base_type_size = rpc_ss_type_size(element_defn_ptr,
                                                                      IDL_msp);
                     IDL_UNMAR_ALIGN_MP( IDL_msp, 4 );
-                    rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+                    rpc_ss_ndr_unmar_check_buffer( IDL_msp, 4 );
                     rpc_convert_ulong_int(IDL_msp->IDL_drep, ndr_g_local_drep,
                                  IDL_msp->IDL_mp, A);
                     IDL_msp->IDL_mp += 4;
                     IDL_msp->IDL_left_in_buff -= 4;
-                    rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+                    rpc_ss_ndr_unmar_check_buffer( IDL_msp, 4 );
                     rpc_convert_ulong_int(IDL_msp->IDL_drep, ndr_g_local_drep,
                                  IDL_msp->IDL_mp, B);
                     IDL_msp->IDL_mp += 4;

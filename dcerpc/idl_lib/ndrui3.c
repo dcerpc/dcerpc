@@ -60,21 +60,21 @@ void rpc_ss_ndr_unmar_scalar
     switch(type_byte)
     {
         case IDL_DT_BOOLEAN:
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 1 );
             rpc_convert_boolean(IDL_msp->IDL_drep, ndr_g_local_drep,
                                  IDL_msp->IDL_mp, *(idl_boolean *)param_addr);
             IDL_msp->IDL_mp += 1;
             IDL_msp->IDL_left_in_buff -= 1;
             return;
         case IDL_DT_BYTE:
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 1 );
             rpc_convert_byte(IDL_msp->IDL_drep, ndr_g_local_drep,
                                  IDL_msp->IDL_mp, *(idl_byte *)param_addr);
             IDL_msp->IDL_mp += 1;
             IDL_msp->IDL_left_in_buff -= 1;
             return;
         case IDL_DT_CHAR:
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 1 );
             rpc_convert_char(IDL_msp->IDL_drep, ndr_g_local_drep,
                                  IDL_msp->IDL_mp, *(idl_byte *)param_addr);
             IDL_msp->IDL_mp += 1;
@@ -82,7 +82,7 @@ void rpc_ss_ndr_unmar_scalar
             return;
         case IDL_DT_DOUBLE:
             IDL_UNMAR_ALIGN_MP( IDL_msp, 8 );
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 8 );
             rpc_convert_long_float(IDL_msp->IDL_drep, ndr_g_local_drep,
                                IDL_msp->IDL_mp, *(idl_long_float *)param_addr);
             IDL_msp->IDL_mp += 8;
@@ -90,7 +90,7 @@ void rpc_ss_ndr_unmar_scalar
             return;
         case IDL_DT_ENUM:
             IDL_UNMAR_ALIGN_MP( IDL_msp, 2 );
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 2 );
             rpc_convert_enum(IDL_msp->IDL_drep, ndr_g_local_drep,
                                IDL_msp->IDL_mp, *(int *)param_addr);
             IDL_msp->IDL_mp += 2;
@@ -98,14 +98,14 @@ void rpc_ss_ndr_unmar_scalar
             return;
         case IDL_DT_FLOAT:
             IDL_UNMAR_ALIGN_MP( IDL_msp, 4 );
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 4 );
             rpc_convert_short_float(IDL_msp->IDL_drep, ndr_g_local_drep,
                                IDL_msp->IDL_mp, *(ndr_short_float *)param_addr);
             IDL_msp->IDL_mp += 4;
             IDL_msp->IDL_left_in_buff -= 4;
             return;
         case IDL_DT_SMALL:
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 1 );
             rpc_convert_small_int(IDL_msp->IDL_drep, ndr_g_local_drep,
                                IDL_msp->IDL_mp, *(idl_small_int *)param_addr);
             IDL_msp->IDL_mp += 1;
@@ -113,7 +113,7 @@ void rpc_ss_ndr_unmar_scalar
             return;
         case IDL_DT_SHORT:
             IDL_UNMAR_ALIGN_MP( IDL_msp, 2 );
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 2 );
             rpc_convert_short_int(IDL_msp->IDL_drep, ndr_g_local_drep,
                                IDL_msp->IDL_mp, *(idl_short_int *)param_addr);
             IDL_msp->IDL_mp += 2;
@@ -121,7 +121,7 @@ void rpc_ss_ndr_unmar_scalar
             return;
         case IDL_DT_LONG:
             IDL_UNMAR_ALIGN_MP( IDL_msp, 4 );
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 4 );
             rpc_convert_long_int(IDL_msp->IDL_drep, ndr_g_local_drep,
                                  IDL_msp->IDL_mp, *(idl_long_int *)param_addr);
             IDL_msp->IDL_mp += 4;
@@ -129,14 +129,14 @@ void rpc_ss_ndr_unmar_scalar
             return;
         case IDL_DT_HYPER:
             IDL_UNMAR_ALIGN_MP( IDL_msp, 8 );
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 8 );
             rpc_convert_hyper_int(IDL_msp->IDL_drep, ndr_g_local_drep,
                                IDL_msp->IDL_mp, *(idl_hyper_int *)param_addr);
             IDL_msp->IDL_mp += 8;
             IDL_msp->IDL_left_in_buff -= 8;
             return;
         case IDL_DT_USMALL:
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 1 );
             rpc_convert_usmall_int(IDL_msp->IDL_drep, ndr_g_local_drep,
                                IDL_msp->IDL_mp, *(idl_usmall_int *)param_addr);
             IDL_msp->IDL_mp += 1;
@@ -144,7 +144,7 @@ void rpc_ss_ndr_unmar_scalar
             return;
         case IDL_DT_USHORT:
             IDL_UNMAR_ALIGN_MP( IDL_msp, 2 );
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 2 );
             rpc_convert_ushort_int(IDL_msp->IDL_drep, ndr_g_local_drep,
                                IDL_msp->IDL_mp, *(idl_ushort_int *)param_addr);
             IDL_msp->IDL_mp += 2;
@@ -152,7 +152,7 @@ void rpc_ss_ndr_unmar_scalar
             return;
         case IDL_DT_ULONG:
             IDL_UNMAR_ALIGN_MP( IDL_msp, 4 );
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 4 );
             rpc_convert_ulong_int(IDL_msp->IDL_drep, ndr_g_local_drep,
                                  IDL_msp->IDL_mp, *(idl_ulong_int *)param_addr);
             IDL_msp->IDL_mp += 4;
@@ -160,7 +160,7 @@ void rpc_ss_ndr_unmar_scalar
             return;
         case IDL_DT_UHYPER:
             IDL_UNMAR_ALIGN_MP( IDL_msp, 8 );
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 8 );
             rpc_convert_uhyper_int(IDL_msp->IDL_drep, ndr_g_local_drep,
                                IDL_msp->IDL_mp, *(idl_uhyper_int *)param_addr);
             IDL_msp->IDL_mp += 8;
@@ -168,7 +168,7 @@ void rpc_ss_ndr_unmar_scalar
             return;
         case IDL_DT_V1_ENUM:
             IDL_UNMAR_ALIGN_MP( IDL_msp, 4 );
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 4 );
             rpc_convert_v1_enum(IDL_msp->IDL_drep, ndr_g_local_drep,
                                IDL_msp->IDL_mp, *(int *)param_addr);
             IDL_msp->IDL_mp += 4;
@@ -176,7 +176,7 @@ void rpc_ss_ndr_unmar_scalar
             return;
         case IDL_DT_ERROR_STATUS:
             IDL_UNMAR_ALIGN_MP( IDL_msp, 4 );
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 4 );
             rpc_convert_ulong_int( IDL_msp->IDL_drep, ndr_g_local_drep,
                         IDL_msp->IDL_mp, *(idl_ulong_int *)(param_addr));
 #ifdef IDL_ENABLE_STATUS_MAPPING
@@ -212,7 +212,7 @@ void rpc_ss_ndr_unmar_bounded_scalar
     switch(type_byte)
     {
         case IDL_DT_BOOLEAN:
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 1 );
             rpc_convert_boolean(IDL_msp->IDL_drep, ndr_g_local_drep,
                                  IDL_msp->IDL_mp, *(idl_boolean *)param_addr);
             IDL_msp->IDL_mp += 1;
@@ -220,7 +220,7 @@ void rpc_ss_ndr_unmar_bounded_scalar
             IDL_CHECK_RANGE_BOOLEAN( *range_bounds, param_addr );
             return;
         case IDL_DT_BYTE:
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 1 );
             rpc_convert_byte(IDL_msp->IDL_drep, ndr_g_local_drep,
                                  IDL_msp->IDL_mp, *(idl_byte *)param_addr);
             IDL_msp->IDL_mp += 1;
@@ -228,7 +228,7 @@ void rpc_ss_ndr_unmar_bounded_scalar
             IDL_CHECK_RANGE_BYTE( *range_bounds, param_addr );
             return;
         case IDL_DT_CHAR:
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 1 );
             rpc_convert_char(IDL_msp->IDL_drep, ndr_g_local_drep,
                                  IDL_msp->IDL_mp, *(idl_byte *)param_addr);
             IDL_msp->IDL_mp += 1;
@@ -237,7 +237,7 @@ void rpc_ss_ndr_unmar_bounded_scalar
             return;
         case IDL_DT_DOUBLE:
             IDL_UNMAR_ALIGN_MP( IDL_msp, 8 );
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 8 );
             rpc_convert_long_float(IDL_msp->IDL_drep, ndr_g_local_drep,
                                IDL_msp->IDL_mp, *(idl_long_float *)param_addr);
             IDL_msp->IDL_mp += 8;
@@ -245,7 +245,7 @@ void rpc_ss_ndr_unmar_bounded_scalar
             IDL_CHECK_RANGE_DOUBLE( *range_bounds, param_addr );
             return;
         case IDL_DT_ENUM:
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 2 );
             rpc_convert_enum(IDL_msp->IDL_drep, ndr_g_local_drep,
                                IDL_msp->IDL_mp, *(int *)param_addr);
             IDL_msp->IDL_mp += 2;
@@ -254,7 +254,7 @@ void rpc_ss_ndr_unmar_bounded_scalar
             return;
         case IDL_DT_FLOAT:
             IDL_UNMAR_ALIGN_MP( IDL_msp, 4 );
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 4 );
             rpc_convert_short_float(IDL_msp->IDL_drep, ndr_g_local_drep,
                                IDL_msp->IDL_mp, *(ndr_short_float *)param_addr);
             IDL_msp->IDL_mp += 4;
@@ -262,7 +262,7 @@ void rpc_ss_ndr_unmar_bounded_scalar
             IDL_CHECK_RANGE_FLOAT( *range_bounds, param_addr );
             return;
         case IDL_DT_SMALL:
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 1 );
             rpc_convert_small_int(IDL_msp->IDL_drep, ndr_g_local_drep,
                                IDL_msp->IDL_mp, *(idl_small_int *)param_addr);
             IDL_msp->IDL_mp += 1;
@@ -271,7 +271,7 @@ void rpc_ss_ndr_unmar_bounded_scalar
             return;
         case IDL_DT_SHORT:
             IDL_UNMAR_ALIGN_MP( IDL_msp, 2 );
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 2 );
             rpc_convert_short_int(IDL_msp->IDL_drep, ndr_g_local_drep,
                                IDL_msp->IDL_mp, *(idl_short_int *)param_addr);
             IDL_msp->IDL_mp += 2;
@@ -280,7 +280,7 @@ void rpc_ss_ndr_unmar_bounded_scalar
             return;
         case IDL_DT_LONG:
             IDL_UNMAR_ALIGN_MP( IDL_msp, 4 );
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 4 );
             rpc_convert_long_int(IDL_msp->IDL_drep, ndr_g_local_drep,
                                  IDL_msp->IDL_mp, *(idl_long_int *)param_addr);
             IDL_msp->IDL_mp += 4;
@@ -288,7 +288,7 @@ void rpc_ss_ndr_unmar_bounded_scalar
             IDL_CHECK_RANGE_LONG( *range_bounds, param_addr );
             return;
         case IDL_DT_HYPER:
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 8 );
             rpc_convert_hyper_int(IDL_msp->IDL_drep, ndr_g_local_drep,
                                IDL_msp->IDL_mp, *(idl_hyper_int *)param_addr);
             IDL_msp->IDL_mp += 8;
@@ -296,7 +296,7 @@ void rpc_ss_ndr_unmar_bounded_scalar
             IDL_UNMAR_ALIGN_MP( IDL_msp, 8 );
             return;
         case IDL_DT_USMALL:
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 1 );
             rpc_convert_usmall_int(IDL_msp->IDL_drep, ndr_g_local_drep,
                                IDL_msp->IDL_mp, *(idl_usmall_int *)param_addr);
             IDL_msp->IDL_mp += 1;
@@ -305,7 +305,7 @@ void rpc_ss_ndr_unmar_bounded_scalar
             return;
         case IDL_DT_USHORT:
             IDL_UNMAR_ALIGN_MP( IDL_msp, 2 );
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 2 );
             rpc_convert_ushort_int(IDL_msp->IDL_drep, ndr_g_local_drep,
                                IDL_msp->IDL_mp, *(idl_ushort_int *)param_addr);
             IDL_msp->IDL_mp += 2;
@@ -314,7 +314,7 @@ void rpc_ss_ndr_unmar_bounded_scalar
             return;
         case IDL_DT_ULONG:
             IDL_UNMAR_ALIGN_MP( IDL_msp, 4 );
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 4 );
             rpc_convert_ulong_int(IDL_msp->IDL_drep, ndr_g_local_drep,
                                  IDL_msp->IDL_mp, *(idl_ulong_int *)param_addr);
             IDL_msp->IDL_mp += 4;
@@ -323,7 +323,7 @@ void rpc_ss_ndr_unmar_bounded_scalar
             return;
         case IDL_DT_UHYPER:
             IDL_UNMAR_ALIGN_MP( IDL_msp, 8 );
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 8 );
             rpc_convert_uhyper_int(IDL_msp->IDL_drep, ndr_g_local_drep,
                                IDL_msp->IDL_mp, *(idl_uhyper_int *)param_addr);
             IDL_msp->IDL_mp += 8;
@@ -331,7 +331,7 @@ void rpc_ss_ndr_unmar_bounded_scalar
             return;
         case IDL_DT_V1_ENUM:
             IDL_UNMAR_ALIGN_MP( IDL_msp, 4 );
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 4 );
             rpc_convert_v1_enum(IDL_msp->IDL_drep, ndr_g_local_drep,
                                IDL_msp->IDL_mp, *(int *)param_addr);
             IDL_msp->IDL_mp += 4;
@@ -339,7 +339,7 @@ void rpc_ss_ndr_unmar_bounded_scalar
             return;
         case IDL_DT_ERROR_STATUS:
             IDL_UNMAR_ALIGN_MP( IDL_msp, 4 );
-            rpc_ss_ndr_unmar_check_buffer( IDL_msp );
+            rpc_ss_ndr_unmar_check_buffer( IDL_msp, 4 );
             rpc_convert_ulong_int( IDL_msp->IDL_drep, ndr_g_local_drep,
                         IDL_msp->IDL_mp, *(idl_ulong_int *)(param_addr));
 #ifdef IDL_ENABLE_STATUS_MAPPING
