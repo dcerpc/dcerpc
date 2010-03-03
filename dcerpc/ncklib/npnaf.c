@@ -1,8 +1,7 @@
 /* ex: set shiftwidth=4 expandtab: */
 /*
- * Copyright (c) 2007, Novell, Inc.
+ * Copyright (c) 2007, Novell, Inc. All rights reserved.
  * Portions Copyright (c) 2010 Apple Inc. All rights reserved
- * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -760,6 +759,7 @@ INTERNAL void addr_set_endpoint
     rpc_np_addr_p_t     np_addr = (rpc_np_addr_p_t) *rpc_addr;
     unsigned_char_p_t   p;
     size_t              req_len;
+    const char *        pipe_dir;
 
     CODING_ERROR (status);
 
@@ -773,20 +773,33 @@ INTERNAL void addr_set_endpoint
         return;
     }
 
-    if (np_addr->rpc_protseq_id == RPC_C_PROTSEQ_ID_NCACN_NP)
+    switch (np_addr->rpc_protseq_id)
     {
-        if (!rpc__np_is_valid_endpoint(endpoint, status))
-        {
+        case RPC_C_PROTSEQ_ID_NCACN_NP:
+            pipe_dir = RPC_C_NP_DIR;
+
+            if (!rpc__np_is_valid_endpoint(endpoint, status))
+            {
+                *status = rpc_s_invalid_endpoint_format;
+                return;
+            }
+
+            break;
+        case RPC_C_PROTSEQ_ID_NCALRPC:
+            pipe_dir = RPC_C_UXD_DIR;
+            break;
+
+        default:
             *status = rpc_s_invalid_endpoint_format;
             return;
-        }
     }
+
 
     req_len = strlen((char *)endpoint);
     if (endpoint[0] != '/')
     {
         /* Relative ncalrpc path. */
-        req_len += RPC_C_NP_DIR_LEN + 1;
+        req_len += strlen(pipe_dir) + 1;
     }
 
     if (req_len >= RPC_C_ENDPOINT_NP_MAX - 1)
@@ -796,7 +809,7 @@ INTERNAL void addr_set_endpoint
     }
 
     if (endpoint[0] != '/' && endpoint[0] != '\\')
-        snprintf(np_addr->sa.sun_path, RPC_C_ENDPOINT_NP_MAX, "%s/%s", RPC_C_NP_DIR, endpoint);
+        snprintf(np_addr->sa.sun_path, RPC_C_ENDPOINT_NP_MAX, "%s/%s", pipe_dir, endpoint);
     else
         strncpy(np_addr->sa.sun_path, (char *)endpoint, req_len);
 
@@ -1052,9 +1065,9 @@ INTERNAL void addr_inq_netaddr
     unsigned32              *status
 )
 {
-    rpc_np_addr_p_t     np_addr = (rpc_np_addr_p_t) rpc_addr;
+    rpc_np_addr_p_t   np_addr = (rpc_np_addr_p_t) rpc_addr;
     unsigned_char_p_t netaddr;
-    size_t addr_length = 0;
+    size_t            addr_length = 0;
 
     CODING_ERROR (status);
 
