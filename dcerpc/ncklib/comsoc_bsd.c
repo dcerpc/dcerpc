@@ -437,6 +437,10 @@ rpc__bsd_socket_construct(
     rpc_socket_error_t  serr = RPC_C_SOCKET_OK;
     rpc_bsd_socket_p_t lrpc = NULL;
 
+    /* set data.point to be 0 in case we get an error
+     and have to call rpc__bsd_socket_destruct */
+    sock->data.pointer = NULL;
+
     lrpc = calloc(1, sizeof(*lrpc));
 
     if (!lrpc)
