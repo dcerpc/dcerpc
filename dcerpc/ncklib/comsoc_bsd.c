@@ -446,8 +446,10 @@ rpc__bsd_socket_construct(
     if (!lrpc)
     {
         serr = ENOMEM;
-	goto error;
+        goto error;
     }
+
+    sock->data.pointer = (void*) lrpc;
 
     lrpc->fd            = -1;
     lrpc->info.peer_uid = -1;
@@ -471,8 +473,6 @@ rpc__bsd_socket_construct(
     {
         goto error;
     }
-
-    sock->data.pointer = (void*) lrpc;
 
 done:
     return serr;
