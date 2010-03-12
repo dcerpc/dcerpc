@@ -367,6 +367,34 @@ error:
 }
 
 INTERNAL
+size_t
+rpc__smb_fragment_size(
+    rpc_cn_common_hdr_p_t packet
+    )
+{
+    uint16_t result;
+    int packet_order = ((packet->drep[0] >> 4) & 1);
+    int native_order;
+
+#if __LITTLE_ENDIAN__
+    native_order = (NDR_LOCAL_INT_REP == ndr_c_int_big_endian) ? 0 : 1;
+#else
+    native_order = (NDR_LOCAL_INT_REP == ndr_c_int_little_endian) ? 0 : 1;
+#endif
+
+    if (packet_order != native_order)
+    {
+        result = SWAB_16(packet->frag_len);
+    }
+    else
+    {
+        result = packet->frag_len;
+    }
+
+    return (size_t) result;
+}
+
+INTERNAL
 inline
 size_t
 rpc__smb_buffer_packet_size(
@@ -382,19 +410,7 @@ rpc__smb_buffer_packet_size(
     }
     else
     {
-        int packet_order = ((packet->drep[0] >> 4) & 1);
-        int native_order = (NDR_LOCAL_INT_REP == ndr_c_int_big_endian) ? 0 : 1;
-
-        if (packet_order != native_order)
-        {
-            result = SWAB_16(packet->frag_len);
-        }
-        else
-        {
-            result = packet->frag_len;
-        }
-
-        return (size_t) result;
+        return (rpc__smb_fragment_size(packet));
     }
 }
 
@@ -1460,8 +1476,6 @@ smb_data_do_recv(
 #if !SMB_NP_NO_TRANSACTIONS
     unsigned char* cursor = smb->sendbuffer.base;
     rpc_cn_common_hdr_p_t packet;
-    int packet_order;
-    int native_order;
     size_t frag_len;
     size_t bytes_written;
     int sent_data = 0;
@@ -1504,17 +1518,7 @@ smb_data_do_recv(
             while (!(packet->flags & RPC_C_CN_FLAGS_LAST_FRAG))
             {
                 /* its not a last fragment, so send with SMBWriteFile */
-                packet_order = ((packet->drep[0] >> 4) & 1);
-                native_order = (NDR_LOCAL_INT_REP == ndr_c_int_big_endian) ? 0 : 1;
-
-                if (packet_order != native_order)
-                {
-                    frag_len = SWAB_16(packet->frag_len);
-                }
-                else
-                {
-                    frag_len = packet->frag_len;
-                }
+                frag_len = rpc__smb_fragment_size(packet);
 
                 /* Safety check to make sure we are not past the end
                  of the sendbuffer */
