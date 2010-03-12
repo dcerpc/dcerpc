@@ -1398,7 +1398,7 @@ smb_data_send(
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
     rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
     unsigned char* cursor = smb->sendbuffer.base;
-    off_t bytes_written = 0;
+    size_t bytes_written = 0;
 #if SMB_NP_NO_TRANSACTIONS
     NTSTATUS status;
 #endif
@@ -1409,7 +1409,7 @@ smb_data_send(
         /* <bms> Write the data out without using transactions */
         status = SMBWriteFile(smb->handle,
                               smb->hFile,
-                              smb->sendbuffer.base,
+                              cursor,
                               0,
                               smb->sendbuffer.start_cursor - cursor,
                               &bytes_written);
@@ -1459,6 +1459,12 @@ smb_data_do_recv(
     NTSTATUS status = NT_STATUS_SUCCESS;
 #if !SMB_NP_NO_TRANSACTIONS
     unsigned char* cursor = smb->sendbuffer.base;
+    rpc_cn_common_hdr_p_t packet;
+    int packet_order;
+    int native_order;
+    size_t frag_len;
+    size_t bytes_written;
+    int sent_data = 0;
 #endif
 
     *count = 0;
@@ -1491,6 +1497,61 @@ smb_data_do_recv(
             serr = rpc_smb_ntstatus_to_rpc_error (status);
         }
 #else
+        if ((smb->sendbuffer.start_cursor - cursor) != 0)
+        {
+            /* Check to see if this is a last fragment or not */
+            packet = (rpc_cn_common_hdr_p_t) cursor;
+            while (!(packet->flags & RPC_C_CN_FLAGS_LAST_FRAG))
+            {
+                /* its not a last fragment, so send with SMBWriteFile */
+                packet_order = ((packet->drep[0] >> 4) & 1);
+                native_order = (NDR_LOCAL_INT_REP == ndr_c_int_big_endian) ? 0 : 1;
+
+                if (packet_order != native_order)
+                {
+                    frag_len = SWAB_16(packet->frag_len);
+                }
+                else
+                {
+                    frag_len = packet->frag_len;
+                }
+
+                /* Safety check to make sure we are not past the end
+                 of the sendbuffer */
+                if ( (cursor + frag_len) > smb->sendbuffer.start_cursor)
+                {
+                    RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
+                                   ("rpc__smb_socket_do_recv - past end of send buffer\n"));
+                    serr = RPC_C_SOCKET_EIO;
+                    goto error;
+                }
+
+                bytes_written = 0;
+                sent_data = 1;
+                status = SMBWriteFile(smb->handle,
+                                      smb->hFile,
+                                      cursor,
+                                      0,
+                                      frag_len,
+                                      &bytes_written);
+
+                if (!NT_SUCCESS(status))
+                {
+                    RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
+                                   ("rpc__smb_socket_do_send - SMBWriteFile failed 0x%x\n",
+                                    status));
+                    serr = rpc_smb_ntstatus_to_rpc_error (status);
+                }
+
+                if (serr)
+                {
+                    goto error;
+                }
+                cursor += bytes_written;
+                packet = (rpc_cn_common_hdr_p_t) cursor;
+            }
+        }
+
         if ((smb->sendbuffer.start_cursor - cursor) == 0)
         {
             /* <bms> Must be reading in a fragment, so read the data in
@@ -1512,16 +1573,14 @@ smb_data_do_recv(
         else
         {
             /* <bms> for transactions, do send and rcv in a single transaction. */
+            sent_data = 1;
             status = SMBTransactNamedPipe(smb->handle,
                                           smb->hFile,
-                                          smb->sendbuffer.base,
+                                          cursor,
                                           smb->sendbuffer.start_cursor - cursor,
                                           smb->recvbuffer.end_cursor,
                                           bytes_requested,
                                           &bytes_read);
-
-            /* assume all the data got sent */
-            rpc__smb_buffer_settle(&smb->sendbuffer);
 
             if (!NT_SUCCESS(status))
             {
@@ -1530,6 +1589,13 @@ smb_data_do_recv(
                                 status));
                 serr = rpc_smb_ntstatus_to_rpc_error (status);
             }
+        }
+
+        if (sent_data == 1)
+        {
+            /* assume all the data got sent */
+            rpc__smb_buffer_settle(&smb->sendbuffer);
+            sent_data = 0;
         }
 #endif
 
