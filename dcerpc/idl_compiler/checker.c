@@ -2120,10 +2120,9 @@ static void param_pointer
         CHECKER_error(param_p, NIDL_OUTPTRPRM);
 
     /* [out,unique] parameters are not allowed */
-    /* [in, out,unique] parameters are not allowed for now <7810113> */
 
     if (AST_OUT_SET(param_p)
-        /* &&  !AST_IN_SET(param_p) */
+        &&  !AST_IN_SET(param_p)
         &&  AST_UNIQUE_SET(param_p)
         &&  param_p->uplink->result != param_p) /* Not the result param */
         CHECKER_error(param_p, NIDL_OUTUNIQPRM);
@@ -2198,6 +2197,13 @@ static void param_pointer
                     type_p->type_structure.pointer->pointee_type,
                     int_p,
                     true);
+
+        /*  <7810113> [in, out,unique] parameters are not allowed for arrays */
+        if (AST_OUT_SET(param_p)
+            &&  AST_IN_SET(param_p)
+            &&  AST_UNIQUE_SET(param_p)
+            &&  param_p->uplink->result != param_p) /* Not the result param */
+            CHECKER_error(param_p, NIDL_OUTUNIQPRM);
     }
 }
 
