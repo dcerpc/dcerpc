@@ -36,9 +36,14 @@ _dcethread_nostackmem_e
 _dcethread_privinst_e
 _dcethread_resaddr_e
 _dcethread_resoper_e
+_dcethread_self
+_dcethread_signal_to_interrupt
 _dcethread_subrng_e
 _dcethread_unksyncsig_e
 _dcethread_use_error_e
+
+_rpc__dbg_set_switches
+
 _rpc_binding_copy
 _rpc_binding_create
 _rpc_binding_free
