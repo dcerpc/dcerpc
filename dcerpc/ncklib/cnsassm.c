@@ -4180,8 +4180,19 @@ rpc_cn_packet_p_t	header;
      */
     auth_tlr = RPC_CN_PKT_AUTH_TLR(header,RPC_CN_PKT_FRAG_LEN (header));
     auth_value = (rpc_cn_bind_auth_value_priv_t *)auth_tlr->auth_value;
-    auth_value_len = RPC_CN_PKT_AUTH_LEN (header) -
-                         auth_value->checksum_length;
+
+    if (RPC_CN_PKT_AUTH_LEN (header) > auth_value->checksum_length)
+    {
+        auth_value_len = RPC_CN_PKT_AUTH_LEN (header) -
+                    auth_value->checksum_length;
+    }
+    else
+    {
+        RPC_DBG_PRINTF (rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_BIG_PAC,
+        ("(save_sec_fragment) Error - auth len %d < checksum len %d \n",
+         RPC_CN_PKT_AUTH_LEN (header), auth_value->checksum_length));
+        auth_value_len = 0;
+    }
 
     /*
      * For the first packet, copy the header info, for the rest
@@ -4191,16 +4202,34 @@ rpc_cn_packet_p_t	header;
 
     if (auth_buffer_len == 0)
     {
-        memcpy(auth_buffer, auth_value, auth_value_len);
+        if (auth_value_len <= auth_buffer_max)
+        {
+            memcpy(auth_buffer, auth_value, auth_value_len);
+        }
+        else
+        {
+            RPC_DBG_PRINTF (rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_BIG_PAC,
+                            ("(save_sec_fragment) Error - auth_value_len %d > auth_buffer_max %d \n",
+                             auth_value_len, auth_buffer_max));
+        }
     }
     else
     {
         auth_value_len -= RPC_CN_PKT_SIZEOF_BIND_AUTH_VAL;
-        assert(auth_value_len == auth_value->cred_length);
-        memcpy(auth_buffer+auth_buffer_len,
-               auth_value->credentials,
-               auth_value->cred_length);
-        ((rpc_cn_bind_auth_value_priv_t *)auth_buffer)->cred_length += auth_value->cred_length;
+
+        if ( (auth_buffer_len + auth_value->cred_length) <= auth_buffer_max )
+        {
+            memcpy(auth_buffer+auth_buffer_len,
+                   auth_value->credentials,
+                   auth_value->cred_length);
+            ((rpc_cn_bind_auth_value_priv_t *)auth_buffer)->cred_length += auth_value->cred_length;
+        }
+        else
+        {
+            RPC_DBG_PRINTF (rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_BIG_PAC,
+                            ("(save_sec_fragment) Error - auth buffer too small (%d + %d) > auth_buffer_max %d \n",
+                             auth_buffer_len, auth_value->cred_length, auth_buffer_max));
+        }
     }
 
     RPC_DBG_PRINTF (rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_BIG_PAC,
