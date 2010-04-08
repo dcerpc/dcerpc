@@ -872,8 +872,7 @@ rpc__smb_socket_connect(
     if (have_mountpath == 0)
     {
         /* its not a mount path, so just pass in the URL string */
-        len = strlen(netaddr) + strlen("smb://") + 1;
-        smbpath = malloc(len);
+        smbpath = SMBCreateURLString(NULL, NULL,  NULL, netaddr, NULL, -1);
         if (smbpath == NULL)
         {
             RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
@@ -881,7 +880,6 @@ rpc__smb_socket_connect(
             serr = RPC_C_SOCKET_ENOMEM;
             goto error;
         }
-        snprintf (smbpath, len, "smb://%s", (char*) netaddr);
     }
 
 #else
