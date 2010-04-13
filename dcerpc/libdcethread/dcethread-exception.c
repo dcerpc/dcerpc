@@ -6,7 +6,7 @@
 /*
  * Copyright (c) 2007, Novell, Inc.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -32,7 +32,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*
- * 
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
@@ -49,7 +49,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 
 #include <config.h>
@@ -60,6 +60,7 @@
 #ifdef HAVE_EXECINFO_H
 #    include <execinfo.h>
 #endif
+#include <assert.h>
 
 #include "dcethread-exception.h"
 #include "dcethread-debug.h"
@@ -123,13 +124,13 @@ default_uncaught_handler(dcethread_exc* exc, const char* file,
 #ifdef HAVE_BACKTRACE_SYMBOLS_FD
         void* buffer[256];
         int size;
-        
+
         size = backtrace(buffer, 256);
 
         fprintf(stderr, "Backtrace:\n");
         backtrace_symbols_fd(buffer, size, fileno(stderr));
 #endif
-        abort();        
+        abort();
     }
 
     pthread_exit(0);
@@ -180,11 +181,11 @@ dcethread__frame_push(dcethread_frame* frame)
 {
     dcethread_frame* cur = pthread_getspecific(frame_key);
     void *pframe = (void*)(struct _dcethread_frame*) frame;
-    
+
     memset(pframe, 0, sizeof(*frame));
 
     frame->parent = cur;
-    
+
     pthread_setspecific(frame_key, (void*) frame);
 }
 
@@ -243,6 +244,9 @@ dcethread__exc_getname(dcethread_exc* exc)
 int
 dcethread__exc_matches(dcethread_exc* exc, dcethread_exc* pattern)
 {
+    assert (exc != NULL);
+    assert (pattern != NULL);
+
     return (exc->kind == pattern->kind &&
 	    (exc->kind == DCETHREAD_EXC_KIND_STATUS ?
 	     exc->match.value == pattern->match.value :
