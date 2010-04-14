@@ -129,7 +129,6 @@
 		D67F763D11068B71003C1D11 /* rpcrand.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB262100408FD0080B762 /* rpcrand.c */; };
 		D67F763E11068B71003C1D11 /* rpctimer.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB266100408FD0080B762 /* rpctimer.c */; };
 		D69F92761108BD9500DDCD00 /* lrpc.idl in Sources */ = {isa = PBXBuildFile; fileRef = D6AE33151108BA6D0050828C /* lrpc.idl */; };
-		D6A1242F11066EFD007B04CF /* libncadg_stubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F8C3106D7357005F1EF3 /* libncadg_stubs.a */; };
 		D6A12458110672EF007B04CF /* libnck_stubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F4C9106D2364005F1EF3 /* libnck_stubs.a */; };
 		DD0435211076A0D60010E492 /* libidl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE0178F106C2FFD00A5E41A /* libidl.a */; };
 		DD0435221076A0D60010E492 /* libnck.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F5D6106D341E005F1EF3 /* libnck.a */; };
@@ -238,8 +237,6 @@
 		DD10F5DC106D3450005F1EF3 /* ndrglob.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB248100408FD0080B762 /* ndrglob.c */; };
 		DD10F5EE106D35EF005F1EF3 /* mgmt.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB127100408FD0080B762 /* mgmt.idl */; };
 		DD10F660106D3E88005F1EF3 /* libmgmt_stubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F5EA106D3528005F1EF3 /* libmgmt_stubs.a */; };
-		DD10F8CC106D73C3005F1EF3 /* conv.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0E9100408FD0080B762 /* conv.idl */; };
-		DD10F8CD106D73D9005F1EF3 /* convc.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0EA100408FD0080B762 /* convc.idl */; };
 		DD21F0DD1083D3AD00696F06 /* libdceidl_parser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD21F0B71083D15500696F06 /* libdceidl_parser.a */; };
 		DD9D320D107D51CF00FA8214 /* junk.c in Sources */ = {isa = PBXBuildFile; fileRef = DD9D320C107D51CF00FA8214 /* junk.c */; };
 		DD9D32C3107E345B00FA8214 /* DCERPC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD04350210769FDA0010E492 /* DCERPC.framework */; };
@@ -416,31 +413,6 @@
 			);
 			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -cepv out ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH} ${INPUT_FILE_PATH} &&\nmv -n ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce/ &&\nmv -n ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/${INPUT_FILE_BASE}_cstub.c ${SHARED_DERIVED_FILE_DIR}/dce/ &&\nmv -n ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/${INPUT_FILE_BASE}_sstub.c ${SHARED_DERIVED_FILE_DIR}/dce/\n";
 		};
-		DD10F8D0106D7461005F1EF3 /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.proxy.script;
-			filePatterns = "*conv.idl";
-			fileType = pattern.proxy;
-			isEditable = 1;
-			outputFiles = (
-				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE).h",
-				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE)_cstub.c",
-			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -server none -cepv out ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH} ${INPUT_FILE_PATH} &&\nmv -n ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce/ &&\nmv -n ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/${INPUT_FILE_BASE}_cstub.c ${SHARED_DERIVED_FILE_DIR}/dce/";
-		};
-		DD10F8D1106D754F005F1EF3 /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.proxy.script;
-			filePatterns = "*convc.idl";
-			fileType = pattern.proxy;
-			isEditable = 1;
-			outputFiles = (
-				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE).h",
-				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE)_sstub.c",
-				"$(SHARED_DERIVED_FILE_DIR)/dce/$(INPUT_FILE_BASE)_cstub.c",
-			);
-			script = "${BUILT_PRODUCTS_DIR}/dceidl -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -cepv out ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH} ${INPUT_FILE_PATH} &&\nmv -n ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce/ &&\nmv -n ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/${INPUT_FILE_BASE}_cstub.c ${SHARED_DERIVED_FILE_DIR}/dce/ &&\nmv -n ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/${INPUT_FILE_BASE}_sstub.c ${SHARED_DERIVED_FILE_DIR}/dce/";
-		};
 		DDD41A42107261620002C71D /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
 			compilerSpec = com.apple.compilers.proxy.script;
@@ -498,13 +470,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = DD10F5E9106D3528005F1EF3;
 			remoteInfo = mgmt_stubs;
-		};
-		D6A1242C11066EA4007B04CF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DD10F8C2106D7357005F1EF3;
-			remoteInfo = prot_ncadg_stubs;
 		};
 		D6A12455110672E4007B04CF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -695,13 +660,6 @@
 			remoteGlobalIDString = DD08161A106C19580007E433;
 			remoteInfo = dce;
 		};
-		DDEFE68A107E3C16006B8032 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DD08161A106C19580007E433;
-			remoteInfo = dce;
-		};
 		DDEFE695107E3C41006B8032 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
@@ -861,7 +819,6 @@
 		DD10F5D6106D341E005F1EF3 /* libnck.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libnck.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD10F5EA106D3528005F1EF3 /* libmgmt_stubs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmgmt_stubs.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD10F7EC106D6DA7005F1EF3 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
-		DD10F8C3106D7357005F1EF3 /* libncadg_stubs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libncadg_stubs.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD21F0B71083D15500696F06 /* libdceidl_parser.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdceidl_parser.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD3DAF83100408FC0080B762 /* wc16str.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = wc16str.c; sourceTree = "<group>"; };
 		DD3DAF84100408FC0080B762 /* dummyfuncs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dummyfuncs.c; sourceTree = "<group>"; };
@@ -1495,7 +1452,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D6A12458110672EF007B04CF /* libnck_stubs.a in Frameworks */,
-				D6A1242F11066EFD007B04CF /* libncadg_stubs.a in Frameworks */,
 				DD10F660106D3E88005F1EF3 /* libmgmt_stubs.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1589,7 +1545,6 @@
 				DD10F4C9106D2364005F1EF3 /* libnck_stubs.a */,
 				DD10F5D6106D341E005F1EF3 /* libnck.a */,
 				DD10F5EA106D3528005F1EF3 /* libmgmt_stubs.a */,
-				DD10F8C3106D7357005F1EF3 /* libncadg_stubs.a */,
 				DDE7046310710F5100563825 /* dcerpcd */,
 				DDE704E51071196F00563825 /* echo_server */,
 				DDFD946F10723BEB008E776F /* echo_client */,
@@ -2829,7 +2784,6 @@
 			);
 			dependencies = (
 				D6A1242211066E61007B04CF /* PBXTargetDependency */,
-				D6A1242D11066EA4007B04CF /* PBXTargetDependency */,
 				D6A12456110672E4007B04CF /* PBXTargetDependency */,
 			);
 			name = nck;
@@ -2852,24 +2806,6 @@
 			name = mgmt_stubs;
 			productName = mgmt_stubs;
 			productReference = DD10F5EA106D3528005F1EF3 /* libmgmt_stubs.a */;
-			productType = "com.apple.product-type.library.static";
-		};
-		DD10F8C2106D7357005F1EF3 /* ncadg_stubs */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = DD10F8CB106D736F005F1EF3 /* Build configuration list for PBXNativeTarget "ncadg_stubs" */;
-			buildPhases = (
-				DD10F8C0106D7357005F1EF3 /* Sources */,
-			);
-			buildRules = (
-				DD10F8D1106D754F005F1EF3 /* PBXBuildRule */,
-				DD10F8D0106D7461005F1EF3 /* PBXBuildRule */,
-			);
-			dependencies = (
-				DDEFE68B107E3C16006B8032 /* PBXTargetDependency */,
-			);
-			name = ncadg_stubs;
-			productName = prot_ncadg_stubs;
-			productReference = DD10F8C3106D7357005F1EF3 /* libncadg_stubs.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		DD21F0B61083D15500696F06 /* dceidl_parser */ = {
@@ -3080,7 +3016,6 @@
 				DD10F5D5106D341E005F1EF3 /* nck */,
 				DD10F4C8106D2364005F1EF3 /* nck_stubs */,
 				DD10F5E9106D3528005F1EF3 /* mgmt_stubs */,
-				DD10F8C2106D7357005F1EF3 /* ncadg_stubs */,
 				DDE7046210710F5100563825 /* dcerpcd */,
 				DDD80A1F107562E300956CF0 /* dcerpdc_stubs */,
 				DDE704E41071196F00563825 /* echo_server */,
@@ -3457,15 +3392,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DD10F8C0106D7357005F1EF3 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DD10F8CC106D73C3005F1EF3 /* conv.idl in Sources */,
-				DD10F8CD106D73D9005F1EF3 /* convc.idl in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		DD21F0B41083D15500696F06 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -3661,11 +3587,6 @@
 			target = DD10F5E9106D3528005F1EF3 /* mgmt_stubs */;
 			targetProxy = D6A1242111066E61007B04CF /* PBXContainerItemProxy */;
 		};
-		D6A1242D11066EA4007B04CF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DD10F8C2106D7357005F1EF3 /* ncadg_stubs */;
-			targetProxy = D6A1242C11066EA4007B04CF /* PBXContainerItemProxy */;
-		};
 		D6A12456110672E4007B04CF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DD10F4C8106D2364005F1EF3 /* nck_stubs */;
@@ -3800,11 +3721,6 @@
 			isa = PBXTargetDependency;
 			target = DD08161A106C19580007E433 /* dce */;
 			targetProxy = DDEFE686107E3BF0006B8032 /* PBXContainerItemProxy */;
-		};
-		DDEFE68B107E3C16006B8032 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DD08161A106C19580007E433 /* dce */;
-			targetProxy = DDEFE68A107E3C16006B8032 /* PBXContainerItemProxy */;
 		};
 		DDEFE696107E3C41006B8032 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3949,22 +3865,6 @@
 			baseConfigurationReference = DD501C071073C24800473324 /* stubs.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = mgmt_stubs;
-			};
-			name = Release;
-		};
-		DD10F8C4106D7358005F1EF3 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = DD501C071073C24800473324 /* stubs.xcconfig */;
-			buildSettings = {
-				PRODUCT_NAME = ncadg_stubs;
-			};
-			name = Debug;
-		};
-		DD10F8C5106D7358005F1EF3 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = DD501C071073C24800473324 /* stubs.xcconfig */;
-			buildSettings = {
-				PRODUCT_NAME = ncadg_stubs;
 			};
 			name = Release;
 		};
@@ -4204,15 +4104,6 @@
 			buildConfigurations = (
 				DD10F5EB106D3529005F1EF3 /* Debug */,
 				DD10F5EC106D3529005F1EF3 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		DD10F8CB106D736F005F1EF3 /* Build configuration list for PBXNativeTarget "ncadg_stubs" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				DD10F8C4106D7358005F1EF3 /* Debug */,
-				DD10F8C5106D7358005F1EF3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
