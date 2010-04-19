@@ -55,7 +55,6 @@
 #include <cnfbuf.h>     /* NCA Connection fragment buffer service */
 #include <cnassm.h>     /* NCA Connection association state machine */
 
-
 /******************************************************************************/
 /*
  * Global Definitions
@@ -119,7 +118,7 @@ INTERNAL void send_frag_resp_pdu (
     rpc_cn_fragbuf_p_t      /*fragbuf*/,
     rpc_cn_packet_p_t       /*req_header*/);
 
-INTERNAL RPC_STATUS save_sec_fragment (
+INTERNAL unsigned32 save_sec_fragment (
     rpc_cn_assoc_p_t        /*assoc*/,
     rpc_cn_packet_p_t	    /*header*/);
 
@@ -1424,7 +1423,7 @@ INTERNAL unsigned32     do_alter_cont_req_action_rtn
     rpc_cn_sm_event_entry_t     event;
     rpc_cn_port_any_t           *sec_addr;
     boolean 			old_client;
-    RPC_STATUS status;
+    unsigned32 status;
 
     RPC_CN_DBG_RTN_PRINTF(SERVER do_alter_cont_req_action_rtn);
 
@@ -1739,7 +1738,7 @@ INTERNAL unsigned32     do_authent3_action_rtn
     unsigned8 tmp[rpc_g_cn_large_frag_size];
     unsigned8 new_state;
     rpc_cn_sec_context_p_t sec;
-    RPC_STATUS status;
+    unsigned32 status;
 
     RPC_CN_DBG_RTN_PRINTF(SERVER do_authent3_action_rtn);
 
@@ -3439,7 +3438,7 @@ INTERNAL unsigned32     do_assoc_wait_action_rtn
     rpc_cn_packet_t                     *req_header;
     rpc_cn_sm_event_entry_t             event;
     rpc_cn_sm_ctlblk_t 			*sm_p;
-    RPC_STATUS status;
+    unsigned32 status;
 
     RPC_CN_DBG_RTN_PRINTF(SERVER do_assoc_wait_action_rtn);
 
@@ -4121,7 +4120,7 @@ rpc_cn_packet_p_t       header;
 **--
 **/
 
-INTERNAL RPC_STATUS save_sec_fragment(rpc_cn_assoc_p_t assoc,
+INTERNAL unsigned32 save_sec_fragment(rpc_cn_assoc_p_t assoc,
                                 rpc_cn_packet_p_t header)
 
 {
