@@ -54,7 +54,8 @@
 #include <cncall.h>     /* NCA connection call service */
 #include <cnclsm.h>
 
-
+#include <dce/rpcexc.h>
+
 /******************************************************************************/
 /*
  * Global Definitions
@@ -1232,12 +1233,22 @@ INTERNAL unsigned8 first_frag_pred_rtn
 {\
     if (RPC_CN_PKT_OBJ_UUID_PRESENT (header_p)) \
     { \
+        if (RPC_CN_PKT_FRAG_LEN (header_p) < \
+            (RPC_CN_PKT_AUTH_TLR_LEN (header_p) + RPC_CN_PKT_SIZEOF_RQST_HDR_W_OBJ)) \
+        { \
+            DCETHREAD_RAISE(rpc_x_ss_pipe_comm_error); \
+        } \
         fragbuf->data_size = RPC_CN_PKT_FRAG_LEN (header_p) - \
                              RPC_CN_PKT_AUTH_TLR_LEN (header_p) - \
                              RPC_CN_PKT_SIZEOF_RQST_HDR_W_OBJ; \
     } \
     else \
     { \
+        if (RPC_CN_PKT_FRAG_LEN (header_p) < \
+            (RPC_CN_PKT_AUTH_TLR_LEN (header_p) + RPC_CN_PKT_SIZEOF_RQST_HDR_NO_OBJ)) \
+        { \
+            DCETHREAD_RAISE(rpc_x_ss_pipe_comm_error); \
+        } \
         fragbuf->data_size = RPC_CN_PKT_FRAG_LEN (header_p) - \
                              RPC_CN_PKT_AUTH_TLR_LEN (header_p) - \
                              RPC_CN_PKT_SIZEOF_RQST_HDR_NO_OBJ; \
