@@ -119,7 +119,7 @@ INTERNAL void send_frag_resp_pdu (
     rpc_cn_fragbuf_p_t      /*fragbuf*/,
     rpc_cn_packet_p_t       /*req_header*/);
 
-INTERNAL void save_sec_fragment (
+INTERNAL RPC_STATUS save_sec_fragment (
     rpc_cn_assoc_p_t        /*assoc*/,
     rpc_cn_packet_p_t	    /*header*/);
 
@@ -1424,6 +1424,7 @@ INTERNAL unsigned32     do_alter_cont_req_action_rtn
     rpc_cn_sm_event_entry_t     event;
     rpc_cn_port_any_t           *sec_addr;
     boolean 			old_client;
+    RPC_STATUS status;
 
     RPC_CN_DBG_RTN_PRINTF(SERVER do_alter_cont_req_action_rtn);
 
@@ -1448,9 +1449,7 @@ INTERNAL unsigned32     do_alter_cont_req_action_rtn
          * an old client who doesn't set the last_frag flag).
          * Save the security fragment, and wait for the next one.
          */
-        save_sec_fragment(assoc, req_header);
-		  /* FIXME: is this value correct ? */
-        return rpc_s_ok;
+        return (save_sec_fragment(assoc, req_header));
     }
     /*
      * Make sure if we have processed previous alter_context PDU's
@@ -1458,7 +1457,9 @@ INTERNAL unsigned32     do_alter_cont_req_action_rtn
      */
     if (assoc->security.auth_buffer_info.auth_buffer != NULL)
     {
-        save_sec_fragment(assoc, req_header);
+        status = save_sec_fragment(assoc, req_header);
+        if (status != rpc_s_ok)
+            return (status);
     }
 
     /*
@@ -1738,6 +1739,7 @@ INTERNAL unsigned32     do_authent3_action_rtn
     unsigned8 tmp[rpc_g_cn_large_frag_size];
     unsigned8 new_state;
     rpc_cn_sec_context_p_t sec;
+    RPC_STATUS status;
 
     RPC_CN_DBG_RTN_PRINTF(SERVER do_authent3_action_rtn);
 
@@ -1757,13 +1759,13 @@ INTERNAL unsigned32     do_authent3_action_rtn
     if (!(RPC_CN_PKT_FLAGS (req_header)) &&
         !(RPC_CN_PKT_VERS_MINOR (req_header) < RPC_C_CN_PROTO_VERS_MINOR))
     {
-        save_sec_fragment (assoc, req_header);
-                   /* FIXME: is this value correct? */
-        return rpc_s_ok;
+        return (save_sec_fragment (assoc, req_header));
     }
     if (assoc->security.auth_buffer_info.auth_buffer != NULL)
     {
-        save_sec_fragment (assoc, req_header);
+        status = save_sec_fragment (assoc, req_header);
+        if (status != rpc_s_ok)
+            return (status);
     }
     assoc->security.assoc_current_sec_context = NULL;
 
@@ -3437,6 +3439,7 @@ INTERNAL unsigned32     do_assoc_wait_action_rtn
     rpc_cn_packet_t                     *req_header;
     rpc_cn_sm_event_entry_t             event;
     rpc_cn_sm_ctlblk_t 			*sm_p;
+    RPC_STATUS status;
 
     RPC_CN_DBG_RTN_PRINTF(SERVER do_assoc_wait_action_rtn);
 
@@ -3455,7 +3458,9 @@ INTERNAL unsigned32     do_assoc_wait_action_rtn
     /*
      * Save the security frament in the association reconstruction buffer
      */
-    save_sec_fragment(assoc, req_header);
+    status = save_sec_fragment(assoc, req_header);
+    if (status != rpc_s_ok)
+        return (status);
 
     /*
      * Now we check to see if this is the last packet for this rpc_bind PDU
@@ -4100,7 +4105,7 @@ rpc_cn_packet_p_t       header;
 **
 **  INPUTS/OUTPUTS:     none
 **
-**  OUTPUTS:            none
+**  OUTPUTS:            rpc_s_ok on success, rpc_s_bad_pkt on failure
 **
 **  IMPLICIT INPUTS:
 **
@@ -4116,11 +4121,8 @@ rpc_cn_packet_p_t       header;
 **--
 **/
 
-INTERNAL void save_sec_fragment(assoc,
-                                header)
-
-rpc_cn_assoc_p_t        assoc;
-rpc_cn_packet_p_t	header;
+INTERNAL RPC_STATUS save_sec_fragment(rpc_cn_assoc_p_t assoc,
+                                rpc_cn_packet_p_t header)
 
 {
     rpc_cn_bind_auth_value_priv_t       *auth_value;
@@ -4137,6 +4139,13 @@ rpc_cn_packet_p_t	header;
     auth_buffer = assoc->security.auth_buffer_info.auth_buffer;
     auth_buffer_len = assoc->security.auth_buffer_info.auth_buffer_len;
     auth_buffer_max = assoc->security.auth_buffer_info.auth_buffer_max;
+
+    if (RPC_CN_PKT_AUTH_LEN (header) > UINT32_MAX - auth_buffer_len) {
+        RPC_DBG_PRINTF (rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_BIG_PAC,
+                        ("(save_sec_fragment) Error - RPC_CN_PKT_AUTH_LEN %d + auth_buffer_len %d too large\n",
+                         RPC_CN_PKT_AUTH_LEN (header), auth_buffer_len));
+        return (rpc_s_bad_pkt);
+    }
 
     if (auth_buffer == NULL)
     {
@@ -4155,6 +4164,9 @@ rpc_cn_packet_p_t	header;
   ("(save_sec_fragment) Alloc'd auth_buffer: %p, auth_buffer_max = %d\n",
                         auth_buffer,
                         auth_buffer_max));
+
+        assoc->security.auth_buffer_info.auth_buffer = auth_buffer;
+        assoc->security.auth_buffer_info.auth_buffer_max = auth_buffer_max;
     }
 
     if ((RPC_CN_PKT_AUTH_LEN (header) + auth_buffer_len) > auth_buffer_max)
@@ -4170,6 +4182,9 @@ rpc_cn_packet_p_t	header;
 ("(save_sec_fragment) Realloc'd auth_buffer: %p, auth_buffer_max = %d\n",
                         auth_buffer,
                         auth_buffer_max));
+
+        assoc->security.auth_buffer_info.auth_buffer = auth_buffer;
+        assoc->security.auth_buffer_info.auth_buffer_max = auth_buffer_max;
     }
 
     /*
@@ -4178,21 +4193,17 @@ rpc_cn_packet_p_t	header;
      * We have to watch out for the checksum at the end of the
      * auth trailer, we only want to recover the KRB_AP_{REQ|REP} message.
      */
-    auth_tlr = RPC_CN_PKT_AUTH_TLR(header,RPC_CN_PKT_FRAG_LEN (header));
+    auth_tlr = RPC_CN_PKT_AUTH_TLR(header, RPC_CN_PKT_FRAG_LEN (header));
     auth_value = (rpc_cn_bind_auth_value_priv_t *)auth_tlr->auth_value;
 
-    if (RPC_CN_PKT_AUTH_LEN (header) > auth_value->checksum_length)
-    {
-        auth_value_len = RPC_CN_PKT_AUTH_LEN (header) -
-                    auth_value->checksum_length;
-    }
-    else
+    if (RPC_CN_PKT_AUTH_LEN (header) < auth_value->checksum_length)
     {
         RPC_DBG_PRINTF (rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_BIG_PAC,
-        ("(save_sec_fragment) Error - auth len %d < checksum len %d \n",
+                        ("(save_sec_fragment) Error - header auth len %d < checksum len %d \n",
          RPC_CN_PKT_AUTH_LEN (header), auth_value->checksum_length));
-        auth_value_len = 0;
+        return (rpc_s_bad_pkt);
     }
+    auth_value_len = RPC_CN_PKT_AUTH_LEN (header) - auth_value->checksum_length;
 
     /*
      * For the first packet, copy the header info, for the rest
@@ -4202,34 +4213,45 @@ rpc_cn_packet_p_t	header;
 
     if (auth_buffer_len == 0)
     {
-        if (auth_value_len <= auth_buffer_max)
-        {
-            memcpy(auth_buffer, auth_value, auth_value_len);
-        }
-        else
+        if (auth_value_len > auth_buffer_max)
         {
             RPC_DBG_PRINTF (rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_BIG_PAC,
                             ("(save_sec_fragment) Error - auth_value_len %d > auth_buffer_max %d \n",
                              auth_value_len, auth_buffer_max));
+            return (rpc_s_bad_pkt);
         }
+        memcpy(auth_buffer, auth_value, auth_value_len);
     }
     else
     {
+        if (auth_value_len < RPC_CN_PKT_SIZEOF_BIND_AUTH_VAL)
+        {
+            RPC_DBG_PRINTF (rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_BIG_PAC,
+                            ("(save_sec_fragment) Error - auth_value_len too small %d < RPC_CN_PKT_SIZEOF_BIND_AUTH_VAL %d \n",
+                             auth_value_len, RPC_CN_PKT_SIZEOF_BIND_AUTH_VAL));
+            return (rpc_s_bad_pkt);
+        }
         auth_value_len -= RPC_CN_PKT_SIZEOF_BIND_AUTH_VAL;
 
-        if ( (auth_buffer_len + auth_value->cred_length) <= auth_buffer_max )
+        if (auth_value->cred_length > RPC_CN_PKT_AUTH_LEN (header))
         {
-            memcpy(auth_buffer+auth_buffer_len,
-                   auth_value->credentials,
-                   auth_value->cred_length);
-            ((rpc_cn_bind_auth_value_priv_t *)auth_buffer)->cred_length += auth_value->cred_length;
+            RPC_DBG_PRINTF (rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_BIG_PAC,
+                            ("(save_sec_fragment) Error - cred_length too large (%d) > RPC_CN_PKT_AUTH_LEN %d \n",
+                             auth_value->cred_length, RPC_CN_PKT_AUTH_LEN (header)));
+            return (rpc_s_bad_pkt);
         }
-        else
+
+        if ((auth_buffer_len + auth_value->cred_length) > auth_buffer_max)
         {
             RPC_DBG_PRINTF (rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_BIG_PAC,
                             ("(save_sec_fragment) Error - auth buffer too small (%d + %d) > auth_buffer_max %d \n",
                              auth_buffer_len, auth_value->cred_length, auth_buffer_max));
+            return (rpc_s_bad_pkt);
         }
+        memcpy(auth_buffer + auth_buffer_len,
+               auth_value->credentials,
+               auth_value->cred_length);
+        ((rpc_cn_bind_auth_value_priv_t *)auth_buffer)->cred_length += auth_value->cred_length;
     }
 
     RPC_DBG_PRINTF (rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_BIG_PAC,
@@ -4245,7 +4267,7 @@ rpc_cn_packet_p_t	header;
     assoc->security.auth_buffer_info.auth_buffer_len = auth_buffer_len;
     assoc->security.auth_buffer_info.auth_buffer_max = auth_buffer_max;
 
-    return;
+    return (rpc_s_ok);
 }
 /* vim:sw=4 ts=4
  * */
