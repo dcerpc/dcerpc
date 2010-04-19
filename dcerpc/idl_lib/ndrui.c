@@ -85,11 +85,21 @@ idl_ulong_int rpc_ss_ndr_allocation_size
         else
             allocation_size = rpc_ss_type_size(array_defn_ptr, IDL_msp);
         /* Multiply by number of array elements */
-        for (i=0; i<dimensionality; i++)
+        for (i = 0; i < dimensionality; i++)
+        {
+            if (Z_values[i] > UINT_MAX / allocation_size)
+            {
+                DCETHREAD_RAISE(rpc_x_invalid_bound);
+            }
             allocation_size *= Z_values[i];
+        }
     }
     
     /* Add in the size of the fixed part */
+    if (fixed_part_size > UINT_MAX - allocation_size)
+    {
+        DCETHREAD_RAISE(rpc_x_invalid_bound);
+    }
     allocation_size += fixed_part_size;
 
     return(allocation_size);
