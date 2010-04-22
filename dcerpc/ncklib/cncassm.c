@@ -3731,7 +3731,7 @@ INTERNAL unsigned32     add_mark_set_action_rtn
      */
     assoc->assoc_grp_id = rpc__cn_assoc_grp_lkup_by_remid (RPC_CN_PKT_ASSOC_GROUP_ID (header),
                                                            RPC_C_CN_ASSOC_GRP_CLIENT,
-                                                           assoc->cn_ctlblk.rpc_addr,
+                                                           assoc->call_rep->binding_rep->rpc_addr,
                                                            &local_st);
     assoc_grp = RPC_CN_ASSOC_GRP (assoc->assoc_grp_id);
     if (assoc_grp == NULL)
