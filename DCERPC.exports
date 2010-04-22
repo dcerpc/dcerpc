@@ -55,6 +55,7 @@ _rpc_binding_inq_auth_client
 _rpc_binding_inq_auth_info
 _rpc_binding_inq_client
 _rpc_binding_inq_object
+_rpc_binding_inq_prot_seq
 _rpc_binding_inq_security_context
 _rpc_binding_inq_transport_info
 _rpc_binding_reset
