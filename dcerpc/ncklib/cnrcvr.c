@@ -54,7 +54,6 @@
 #include <cncall.h>     /* NCA connection call service */
 #include <comcthd.h>    /* Externals for call thread services component */
 #include <cncthd.h>     /* NCA Connection call executor service */
-
 
 /******************************************************************************/
 /*
@@ -773,7 +772,17 @@ INTERNAL void receive_dispatch
                          */
                         if (unpack_ints)
                         {
-                            rpc__cn_unpack_hdr (pktp);
+                            st = rpc__cn_unpack_hdr (pktp, fragbuf_p->data_size);
+                            if (st != rpc_s_ok)
+                            {
+                                RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
+                                                ("CN: call_rep->%p assoc->%p desc->%p auth rpc__cn_unpack_hdr failed\n",
+                                                 assoc->call_rep,
+                                                 assoc,
+                                                 assoc->cn_ctlblk.cn_sock));
+                                st = rpc_s_connection_closed;
+                                break;
+                            }
                             already_unpacked = true;
                         }
                         auth_len = RPC_CN_PKT_AUTH_LEN (pktp);
@@ -865,7 +874,17 @@ INTERNAL void receive_dispatch
          */
         if (unpack_ints && !already_unpacked)
         {
-            rpc__cn_unpack_hdr (pktp);
+            st = rpc__cn_unpack_hdr (pktp, fragbuf_p->data_size);
+            if (st != rpc_s_ok)
+            {
+                RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
+                                ("CN: call_rep->%p assoc->%p desc->%p rpc__cn_unpack_hdr failed\n",
+                                 assoc->call_rep,
+                                 assoc,
+                                 assoc->cn_ctlblk.cn_sock));
+                st = rpc_s_connection_closed;
+                break;
+            }
         }
 
         /*

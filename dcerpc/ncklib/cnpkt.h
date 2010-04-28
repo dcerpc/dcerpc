@@ -1040,7 +1040,7 @@ EXTERNAL rpc_cn_common_hdr_t rpc_g_cn_common_hdr;
  * R P C _ C N _ U N P A C K _ H D R 
  */
 
-PRIVATE void rpc__cn_unpack_hdr (rpc_cn_packet_p_t);
+PRIVATE unsigned32 rpc__cn_unpack_hdr (rpc_cn_packet_p_t, unsigned32 data_size);
 
 /*
  * R P C _ C N _ P K T _ F O R M A T _ C O M M O N

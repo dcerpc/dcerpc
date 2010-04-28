@@ -277,6 +277,49 @@ typedef idl_byte byte_t ;
 }
 #endif /* SWAB_INPLACE_UUID */
 
+#ifndef SWAP_INPLACE_16
+#define SWAP_INPLACE_16(ptr, end_of_pkt, st) { \
+    if (((unsigned8 *) ptr + 1) < end_of_pkt) \
+    { \
+        *ptr = SWAB_16(*ptr); \
+        st = rpc_s_ok; \
+    } \
+    else \
+    { \
+        st = rpc_s_bad_pkt; \
+    } \
+}
+#endif /* SWAP_INPLACE_16 */
+
+#ifndef SWAP_INPLACE_32
+#define SWAP_INPLACE_32(ptr, end_of_pkt, st) { \
+    if (((unsigned8 *) ptr + 3) < end_of_pkt) \
+    { \
+        *ptr = SWAB_32(*ptr); \
+        st = rpc_s_ok; \
+    } \
+    else \
+    { \
+        st = rpc_s_bad_pkt; \
+    } \
+}
+#endif /* SWAP_INPLACE_32 */
+
+#ifndef SWAP_INPLACE_UUID
+#define SWAP_INPLACE_UUID(ptr, end_of_pkt, st) { \
+    SWAP_INPLACE_32(ptr.time_low, end_of_pkt, st); \
+    if (st == rpc_s_ok) \
+    { \
+        SWAP_INPLACE_16(ptr.time_mid, end_of_pkt, st); \
+} \
+    if (st == rpc_s_ok) \
+    { \
+        SWAP_INPLACE_16(ptr.time_hi_and_version, end_of_pkt, st); \
+    } \
+}
+#endif /* SWAP_INPLACE_UUID */
+
+
 /*
  * Macros for converting to little endian, our data representation
  * for writing towers and other integer data into the namespace.  

@@ -568,10 +568,11 @@ INTERNAL rpc_cn_auth_tlr_p_t end_of_stub_data
 **  INPUTS:
 **
 **      pkt_p		a pointer to the packet to be unpacked
+**      data_size	length of packet to ensure do not go past end of packet
 **
 **  INPUTS/OUTPUTS:     none
 **
-**  OUTPUTS:            none
+**  OUTPUTS:            unsigned32 error
 **
 **  IMPLICIT INPUTS:    none
 **
@@ -584,9 +585,10 @@ INTERNAL rpc_cn_auth_tlr_p_t end_of_stub_data
 **--
 **/
 
-PRIVATE void rpc__cn_unpack_hdr
+PRIVATE unsigned32 rpc__cn_unpack_hdr
 (
-  rpc_cn_packet_p_t pkt_p
+    rpc_cn_packet_p_t pkt_p,
+    unsigned32 data_size
 )
 {
     rpc_cn_auth_tlr_p_t authp;           /* ptr to pkt authentication data */
@@ -597,8 +599,12 @@ PRIVATE void rpc__cn_unpack_hdr
     unsigned8 *drepp;                    /* ptr to pkt drep[] data */
     boolean swap;                        /* boolean says we swap bytes/words */
     boolean authenticate;                /* boolean says authentication data is valid */
-    boolean has_uuid;		         /* boolean says an OBJECT uuid is present */
+    boolean has_uuid;		             /* boolean says an OBJECT uuid is present */
     unsigned32 st;                       /* status variable */
+    unsigned8 *end_of_pkt;               /* ptr to end of pkt */
+
+    end_of_pkt = (unsigned8 *) pkt_p;
+    end_of_pkt += data_size;
 
     /*
      * Get the DREP and see if we need to do byte/word swapping.
@@ -613,9 +619,23 @@ PRIVATE void rpc__cn_unpack_hdr
      */
     if (swap)
     {
-        SWAB_INPLACE_16 (RPC_CN_PKT_FRAG_LEN (pkt_p));
-        SWAB_INPLACE_16 (RPC_CN_PKT_AUTH_LEN (pkt_p));
-        SWAB_INPLACE_32 (RPC_CN_PKT_CALL_ID (pkt_p));
+        SWAP_INPLACE_16 (&RPC_CN_PKT_FRAG_LEN (pkt_p), end_of_pkt, st);
+        if (st != rpc_s_ok)
+        {
+            return (st);
+        }
+
+        SWAP_INPLACE_16 (&RPC_CN_PKT_AUTH_LEN (pkt_p), end_of_pkt, st);
+        if (st != rpc_s_ok)
+        {
+            return (st);
+        }
+
+        SWAP_INPLACE_32 (&RPC_CN_PKT_CALL_ID (pkt_p), end_of_pkt, st);
+        if (st != rpc_s_ok)
+        {
+            return (st);
+        }
     }
 
     /*
@@ -635,16 +655,30 @@ PRIVATE void rpc__cn_unpack_hdr
      */
     switch (RPC_CN_PKT_PTYPE (pkt_p))
     {
-            /*
-             * RPC_CN_BIND_HDR_T
-             */
+        /*
+        * RPC_CN_BIND_HDR_T
+        */
         case RPC_C_CN_PKT_BIND:
         case RPC_C_CN_PKT_ALTER_CONTEXT:
             if (swap)
             {
-                SWAB_INPLACE_16 (RPC_CN_PKT_MAX_XMIT_FRAG (pkt_p));
-                SWAB_INPLACE_16 (RPC_CN_PKT_MAX_RECV_FRAG (pkt_p));
-                SWAB_INPLACE_32 (RPC_CN_PKT_ASSOC_GROUP_ID (pkt_p));
+                SWAP_INPLACE_16 (&RPC_CN_PKT_MAX_XMIT_FRAG (pkt_p), end_of_pkt, st);
+                if (st != rpc_s_ok)
+                {
+                    return (st);
+                }
+
+                SWAP_INPLACE_16 (&RPC_CN_PKT_MAX_RECV_FRAG (pkt_p), end_of_pkt, st);
+                if (st != rpc_s_ok)
+                {
+                    return (st);
+                }
+
+                SWAP_INPLACE_32 (&RPC_CN_PKT_ASSOC_GROUP_ID (pkt_p), end_of_pkt, st);
+                if (st != rpc_s_ok)
+                {
+                    return (st);
+                }
             }
             pconp = (rpc_cn_pres_cont_list_p_t)((unsigned8 *)(&RPC_CN_PKT_ASSOC_GROUP_ID (pkt_p)) + 4);
             authp = unpack_pres_context_list (pconp, swap);
@@ -657,9 +691,23 @@ PRIVATE void rpc__cn_unpack_hdr
         case RPC_C_CN_PKT_ALTER_CONTEXT_RESP:
             if (swap)
             {
-                SWAB_INPLACE_16 (RPC_CN_PKT_MAX_XMIT_FRAG (pkt_p));
-                SWAB_INPLACE_16 (RPC_CN_PKT_MAX_RECV_FRAG (pkt_p));
-                SWAB_INPLACE_32 (RPC_CN_PKT_ASSOC_GROUP_ID (pkt_p));
+                SWAP_INPLACE_16 (&RPC_CN_PKT_MAX_XMIT_FRAG (pkt_p), end_of_pkt, st);
+                if (st != rpc_s_ok)
+                {
+                    return (st);
+                }
+
+                SWAP_INPLACE_16 (&RPC_CN_PKT_MAX_RECV_FRAG (pkt_p), end_of_pkt, st);
+                if (st != rpc_s_ok)
+                {
+                    return (st);
+                }
+
+                SWAP_INPLACE_32 (&RPC_CN_PKT_ASSOC_GROUP_ID (pkt_p), end_of_pkt, st);
+                if (st != rpc_s_ok)
+                {
+                    return (st);
+                }
             }
             secadrp = (rpc_cn_port_any_t *)
                 ((unsigned8 *)(pkt_p) + RPC_CN_PKT_SIZEOF_BIND_ACK_HDR);
@@ -674,7 +722,11 @@ PRIVATE void rpc__cn_unpack_hdr
         case RPC_C_CN_PKT_BIND_NAK:
             if (swap)
             {
-                SWAB_INPLACE_16 (RPC_CN_PKT_PROV_REJ_REASON (pkt_p));
+                SWAP_INPLACE_16 (&RPC_CN_PKT_PROV_REJ_REASON (pkt_p), end_of_pkt, st);
+                if (st != rpc_s_ok)
+                {
+                    return (st);
+                }
             }
 	    versp = &RPC_CN_PKT_VERSIONS (pkt_p);
             authp = unpack_versions_supported (versp);
@@ -686,12 +738,31 @@ PRIVATE void rpc__cn_unpack_hdr
         case RPC_C_CN_PKT_REQUEST:
             if (swap)
             {
-                SWAB_INPLACE_32 (RPC_CN_PKT_ALLOC_HINT (pkt_p));
-                SWAB_INPLACE_16 (RPC_CN_PKT_PRES_CONT_ID (pkt_p));
-                SWAB_INPLACE_16 (RPC_CN_PKT_OPNUM (pkt_p));
-		if (has_uuid)
-		{
-                    SWAB_INPLACE_UUID (RPC_CN_PKT_OBJECT (pkt_p));
+                SWAP_INPLACE_32 (&RPC_CN_PKT_ALLOC_HINT (pkt_p), end_of_pkt, st);
+                if (st != rpc_s_ok)
+                {
+                    return (st);
+                }
+
+                SWAP_INPLACE_16 (&RPC_CN_PKT_PRES_CONT_ID (pkt_p), end_of_pkt, st);
+                if (st != rpc_s_ok)
+                {
+                    return (st);
+                }
+
+                SWAP_INPLACE_16 (&RPC_CN_PKT_OPNUM (pkt_p), end_of_pkt, st);
+                if (st != rpc_s_ok)
+                {
+                    return (st);
+                }
+
+                if (has_uuid)
+                {
+                    SWAP_INPLACE_UUID (&RPC_CN_PKT_OBJECT (pkt_p), end_of_pkt, st);
+                    if (st != rpc_s_ok)
+                    {
+                        return (st);
+                    }
                 }
             }
             authp = end_of_stub_data (pkt_p);
@@ -703,8 +774,17 @@ PRIVATE void rpc__cn_unpack_hdr
         case RPC_C_CN_PKT_RESPONSE:
             if (swap)
             {
-                SWAB_INPLACE_32 (RPC_CN_PKT_ALLOC_HINT (pkt_p));
-                SWAB_INPLACE_16 (RPC_CN_PKT_PRES_CONT_ID (pkt_p));
+                SWAP_INPLACE_32 (&RPC_CN_PKT_ALLOC_HINT (pkt_p), end_of_pkt, st);
+                if (st != rpc_s_ok)
+                {
+                    return (st);
+                }
+
+                SWAP_INPLACE_16 (&RPC_CN_PKT_PRES_CONT_ID (pkt_p), end_of_pkt, st);
+                if (st != rpc_s_ok)
+                {
+                    return (st);
+                }
             }
             authp = end_of_stub_data (pkt_p);
             break;
@@ -715,9 +795,23 @@ PRIVATE void rpc__cn_unpack_hdr
         case RPC_C_CN_PKT_FAULT:
             if (swap)
             {
-		SWAB_INPLACE_32 (RPC_CN_PKT_ALLOC_HINT (pkt_p));
-                SWAB_INPLACE_16 (RPC_CN_PKT_PRES_CONT_ID (pkt_p));
-		SWAB_INPLACE_32 (RPC_CN_PKT_STATUS (pkt_p));
+                SWAP_INPLACE_32 (&RPC_CN_PKT_ALLOC_HINT (pkt_p), end_of_pkt, st);
+                if (st != rpc_s_ok)
+                {
+                    return (st);
+                }
+
+                SWAP_INPLACE_16 (&RPC_CN_PKT_PRES_CONT_ID (pkt_p), end_of_pkt, st);
+                if (st != rpc_s_ok)
+                {
+                    return (st);
+                }
+
+                SWAP_INPLACE_32 (&RPC_CN_PKT_STATUS (pkt_p), end_of_pkt, st);
+                if (st != rpc_s_ok)
+                {
+                    return (st);
+                }
             }
             authp = end_of_stub_data (pkt_p);
             break;
@@ -733,14 +827,14 @@ PRIVATE void rpc__cn_unpack_hdr
 
         default:
             /* "(%s) Illegal or unknown packet type: %x\n" */
-	    RPC_DCE_SVC_PRINTF ((
-	        DCE_SVC(RPC__SVC_HANDLE, "%s%x"),
-	        rpc_svc_cn_pkt,
-	        svc_c_sev_warning,
-	        rpc_m_bad_pkt_type,
-	        "rpc__cn_unpack_hdr",
-	        RPC_CN_PKT_PTYPE(pkt_p) ));
-            return;
+            RPC_DCE_SVC_PRINTF ((
+                                 DCE_SVC(RPC__SVC_HANDLE, "%s%x"),
+                                 rpc_svc_cn_pkt,
+                                 svc_c_sev_warning,
+                                 rpc_m_bad_pkt_type,
+                                 "rpc__cn_unpack_hdr",
+                                 RPC_CN_PKT_PTYPE(pkt_p) ));
+            return (rpc_s_bad_pkt);
     }
 
     /*
@@ -750,33 +844,35 @@ PRIVATE void rpc__cn_unpack_hdr
     {
         switch (RPC_CN_PKT_PTYPE (pkt_p))
         {
-	    case RPC_C_CN_PKT_BIND:
-	    case RPC_C_CN_PKT_ALTER_CONTEXT:
-	    case RPC_C_CN_PKT_BIND_ACK:
-	    case RPC_C_CN_PKT_ALTER_CONTEXT_RESP:
-	    case RPC_C_CN_PKT_BIND_NAK:
-	    case RPC_C_CN_PKT_AUTH3:
+            case RPC_C_CN_PKT_BIND:
+            case RPC_C_CN_PKT_ALTER_CONTEXT:
+            case RPC_C_CN_PKT_BIND_ACK:
+            case RPC_C_CN_PKT_ALTER_CONTEXT_RESP:
+            case RPC_C_CN_PKT_BIND_NAK:
+            case RPC_C_CN_PKT_AUTH3:
             {
 #ifdef DEBUG
-		char *p;
+                char *p;
 #endif
                 rpc_authn_protocol_id_t authn_protocol;
 
-		authp = RPC_CN_PKT_AUTH_TLR (pkt_p, RPC_CN_PKT_FRAG_LEN (pkt_p));
+                authp = RPC_CN_PKT_AUTH_TLR (pkt_p, RPC_CN_PKT_FRAG_LEN (pkt_p));
 #ifdef DEBUG
-		p = (char *)authp;
-		force_alignment(4, (unsigned8 **)&authp);
-		if (p != (char *)authp) {
-		    /*
-		     * rpc_m_unalign_authtrl
-		     * "(%s) Unaligned RPC_CN_PKT_AUTH_TRL"
-		     */
-		    RPC_DCE_SVC_PRINTF ((
-			DCE_SVC(RPC__SVC_HANDLE, "%s"),
-			rpc_svc_cn_pkt,
-			svc_c_sev_fatal | svc_c_action_abort,
-			rpc_m_unalign_authtrl,
-			"rpc__cn_unpack_hdr" ));
+                p = (char *)authp;
+                force_alignment(4, (unsigned8 **)&authp);
+                if (p != (char *)authp)
+                {
+                    /*
+                     * rpc_m_unalign_authtrl
+                     * "(%s) Unaligned RPC_CN_PKT_AUTH_TRL"
+                     */
+                    RPC_DCE_SVC_PRINTF ((
+                                         DCE_SVC(RPC__SVC_HANDLE, "%s"),
+                                         rpc_svc_cn_pkt,
+                                         svc_c_sev_fatal | svc_c_action_abort,
+                                         rpc_m_unalign_authtrl,
+                                         "rpc__cn_unpack_hdr" ));
+                    return (rpc_s_bad_pkt);
                 }
 #endif
                 authn_protocol = RPC_CN_AUTH_CVT_ID_WIRE_TO_API (authp->auth_type, &st);
@@ -786,17 +882,19 @@ PRIVATE void rpc__cn_unpack_hdr
 				            pkt_p, RPC_CN_PKT_AUTH_LEN (pkt_p), drepp);
                 }
                 break;
-	    }
+            }
 
             default:
-		/*
-	         * We do not need the auth trailer of the other packet
+                /*
+                 * We do not need the auth trailer of the other packet
                  * types since they are thrown away after recv_check.
                  * So don't bother to unpack them in these cases.
-	         */
-            break;
+                 */
+                break;
         }
     }
+
+    return (rpc_s_ok);
 }
 
 
