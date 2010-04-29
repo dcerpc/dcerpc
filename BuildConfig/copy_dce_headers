@@ -1,4 +1,5 @@
 #!/bin/sh
+# Copyright (c) 2009-2010 Apple Inc. All rights reserved.
 
 cp -X ${SHARED_DERIVED_FILE_DIR}/dce/*.h ${CODESIGNING_FOLDER_PATH}/Headers/dce/
 

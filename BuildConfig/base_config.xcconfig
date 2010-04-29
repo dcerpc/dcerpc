@@ -3,7 +3,7 @@
 //  dcerpc
 //
 //  Created by Brad Suinn on 10/3/09.
-//  Copyright 2010 Apple Inc. All rights reserved.
+//  Copyright (c) 2009-2010 Apple Inc. All rights reserved.
 //
 
 // I don't think that we should be using the headermap, since we

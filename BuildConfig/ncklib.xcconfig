@@ -2,7 +2,7 @@
 //  ncklib.xcconfig
 //  ncklib
 //
-//  Copyright 2010 Apple Inc. All rights reserved.
+//  Copyright (c) 2010 Apple Inc. All rights reserved.
 //
 
 // Get the RPC_C_UXD_DIR, RPC_C_NP_DIR, and IMAGE_DIR paths
