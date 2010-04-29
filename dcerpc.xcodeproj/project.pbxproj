@@ -533,13 +533,6 @@
 			remoteGlobalIDString = DDE704E41071196F00563825;
 			remoteInfo = echo_server;
 		};
-		DD10F6B6106D6520005F1EF3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DDDF3256106BD43400E6A9C2;
-			remoteInfo = dceidl;
-		};
 		DD21F0CD1083D1A800696F06 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
@@ -2703,6 +2696,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DD08161F106C19770007E433 /* Build configuration list for PBXNativeTarget "dce" */;
 			buildPhases = (
+				D6B96649118A4F3F000291A6 /* Configure */,
 				DD081618106C19580007E433 /* Sources */,
 				DD081619106C19580007E433 /* Frameworks */,
 			);
@@ -2710,7 +2704,6 @@
 				DD081641106C1A6F0007E433 /* PBXBuildRule */,
 			);
 			dependencies = (
-				DD10F6B7106D6520005F1EF3 /* PBXTargetDependency */,
 			);
 			name = dce;
 			productName = dce;
@@ -2986,6 +2979,21 @@
 /* End PBXProject section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		D6B96649118A4F3F000291A6 /* Configure */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = Configure;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${SRCROOT}/BuildConfig/run-autoconf\n";
+			showEnvVarsInLog = 0;
+		};
 		D6E6B60210BCB1CE00E1DCF5 /* Configure */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3599,11 +3607,6 @@
 			isa = PBXTargetDependency;
 			target = DDE704E41071196F00563825 /* echo_server */;
 			targetProxy = DD0FE85D1074D92C004AB68C /* PBXContainerItemProxy */;
-		};
-		DD10F6B7106D6520005F1EF3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DDDF3256106BD43400E6A9C2 /* dceidl */;
-			targetProxy = DD10F6B6106D6520005F1EF3 /* PBXContainerItemProxy */;
 		};
 		DD21F0CE1083D1A800696F06 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
