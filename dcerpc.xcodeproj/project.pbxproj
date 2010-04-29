@@ -243,7 +243,6 @@
 		DDA1C037107E952B004D2055 /* junk.c in Create catalogs folders */ = {isa = PBXBuildFile; fileRef = DD9D320C107D51CF00FA8214 /* junk.c */; };
 		DDA1C1FE107FDCAE004D2055 /* dcerpc.h in Headers */ = {isa = PBXBuildFile; fileRef = DD3DB0D5100408FD0080B762 /* dcerpc.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DDAD850B109676D6003620DE /* SMBClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDAD850A109676D6003620DE /* SMBClient.framework */; };
-		DDC99904107AA36600330A72 /* dceidl in Resources */ = {isa = PBXBuildFile; fileRef = DDDF3257106BD43400E6A9C2 /* dceidl */; };
 		DDC99930107AAD5600330A72 /* codesets.idl in Create dce header folder */ = {isa = PBXBuildFile; fileRef = DD3DB0E7100408FD0080B762 /* codesets.idl */; };
 		DDC99945107AB5E100330A72 /* dce.h in Copy darwin headers */ = {isa = PBXBuildFile; fileRef = DD3DB0EC100408FD0080B762 /* dce.h */; };
 		DDC99946107AB5E100330A72 /* dce_error.h in Copy darwin headers */ = {isa = PBXBuildFile; fileRef = DD3DB0ED100408FD0080B762 /* dce_error.h */; };
@@ -2668,41 +2667,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DD21F0B31083D15500696F06 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DDD80A1C107562E300956CF0 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DDD80AB210756A0D00956CF0 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DDE0178B106C2FFD00A5E41A /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DDE017DA106C334200A5E41A /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
@@ -2712,7 +2676,6 @@
 			buildPhases = (
 				DD0434FF10769FDA0010E492 /* Sources */,
 				DD04350010769FDA0010E492 /* Frameworks */,
-				DD0434FE10769FDA0010E492 /* Resources */,
 				DD04362C1076A32D0010E492 /* Copy Modules */,
 				DD0434FD10769FDA0010E492 /* Headers */,
 				DDC99924107AACB500330A72 /* Create dce header folder */,
@@ -2812,7 +2775,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DD21F0D61083D2D400696F06 /* Build configuration list for PBXNativeTarget "dceidl_parser" */;
 			buildPhases = (
-				DD21F0B31083D15500696F06 /* Headers */,
 				DD21F0B41083D15500696F06 /* Sources */,
 				DD92D95F1090F87B00B869C1 /* Create idl.cat */,
 			);
@@ -2830,7 +2792,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DDD80A271075636F00956CF0 /* Build configuration list for PBXNativeTarget "dcerpdc_stubs" */;
 			buildPhases = (
-				DDD80A1C107562E300956CF0 /* Headers */,
 				DDD80A1D107562E300956CF0 /* Sources */,
 				DDD80A1E107562E300956CF0 /* Frameworks */,
 			);
@@ -2850,7 +2811,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DDD80ABB10756A9D00956CF0 /* Build configuration list for PBXNativeTarget "echo_stubs" */;
 			buildPhases = (
-				DDD80AB210756A0D00956CF0 /* Headers */,
 				DDD80AB310756A0D00956CF0 /* Sources */,
 				DDD80AB410756A0D00956CF0 /* Frameworks */,
 			);
@@ -2871,6 +2831,7 @@
 			buildPhases = (
 				DDDF3254106BD43400E6A9C2 /* Sources */,
 				DDDF3255106BD43400E6A9C2 /* Frameworks */,
+				D6F45E3D118A39C60048CA22 /* Install Message Catalog */,
 			);
 			buildRules = (
 			);
@@ -2886,7 +2847,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DDE01793106C300500A5E41A /* Build configuration list for PBXNativeTarget "idl" */;
 			buildPhases = (
-				DDE0178B106C2FFD00A5E41A /* Headers */,
 				DDE0178C106C2FFD00A5E41A /* Sources */,
 				DDE0178D106C2FFD00A5E41A /* Frameworks */,
 			);
@@ -2904,7 +2864,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DDE017E1106C336000A5E41A /* Build configuration list for PBXNativeTarget "uuid" */;
 			buildPhases = (
-				DDE017DA106C334200A5E41A /* Headers */,
 				DDE017DB106C334200A5E41A /* Sources */,
 				DDE017DC106C334200A5E41A /* Frameworks */,
 			);
@@ -3026,17 +2985,6 @@
 		};
 /* End PBXProject section */
 
-/* Begin PBXResourcesBuildPhase section */
-		DD0434FE10769FDA0010E492 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DDC99904107AA36600330A72 /* dceidl in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
-
 /* Begin PBXShellScriptBuildPhase section */
 		D6E6B60210BCB1CE00E1DCF5 /* Configure */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3092,6 +3040,21 @@
 			shellPath = /bin/sh;
 			shellScript = "${SRCROOT}/BuildConfig/generate-idl-parsers";
 		};
+		D6F45E3D118A39C60048CA22 /* Install Message Catalog */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Install Message Catalog";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "set -e\nmkdir -p ${DSTROOT}/usr/local/share/misc\ncp -X ${SHARED_DERIVED_FILE_DIR}/idl.cat ${DSTROOT}/usr/local/share/misc";
+			showEnvVarsInLog = 0;
+		};
 		DD81451C1087DAD200EAA9D9 /* Create rpc dir */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 8;
@@ -3105,6 +3068,7 @@
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "/usr/bin/install -m 0755 -o root -g wheel -d ${DSTROOT}/private/var/rpc\n/usr/bin/install -m 0755 -o root -g wheel -d ${DSTROOT}/private/var/rpc/ncalrpc\n/usr/bin/install -m 0755 -o root -g wheel -d ${DSTROOT}/private/var/rpc/ncacn_np";
+			showEnvVarsInLog = 0;
 		};
 		DD92D9391090F54600B869C1 /* Create dcerpc.cat */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3121,6 +3085,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "gencat ${SHARED_DERIVED_FILE_DIR}/dcerpc.cat ${SRCROOT}/dcerpc/ncklib/dcerpc.m\n";
+			showEnvVarsInLog = 0;
 		};
 		DD92D95F1090F87B00B869C1 /* Create idl.cat */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3137,6 +3102,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "gencat ${SHARED_DERIVED_FILE_DIR}/idl.cat ${SRCROOT}/dcerpc/idl_compiler/nidlmsg.m";
+			showEnvVarsInLog = 0;
 		};
 		DDA1C03B107E953D004D2055 /* Copy catalogs */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3151,6 +3117,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "${SRCROOT}/BuildConfig/copy-catalogs\n";
+			showEnvVarsInLog = 0;
 		};
 		DDC9990E107AA3FA00330A72 /* Copy dce headers */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3165,6 +3132,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "${SRCROOT}/BuildConfig/copy-dce-headers\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -3872,6 +3840,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DD88282810730DF600FBF62B /* dceidl.xcconfig */;
 			buildSettings = {
+				INSTALL_PATH = "";
 				PRODUCT_NAME = dceidl_parser;
 			};
 			name = Debug;
@@ -3880,6 +3849,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DD88282810730DF600FBF62B /* dceidl.xcconfig */;
 			buildSettings = {
+				INSTALL_PATH = "";
 				PRODUCT_NAME = dceidl_parser;
 			};
 			name = Release;
@@ -3942,7 +3912,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DD88282810730DF600FBF62B /* dceidl.xcconfig */;
 			buildSettings = {
-				PRODUCT_NAME = dceidl;
 			};
 			name = Release;
 		};
