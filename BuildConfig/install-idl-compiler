@@ -1,0 +1,18 @@
+#! /bin/bash
+# Copyright (c) 2010 Apple Inc. All rights reserved.
+
+# Build and install the dceidl target.
+
+set -e
+
+SRCROOT=$(cd $(dirname $0)/.. && pwd)
+VERSION=$(cd ${SRCROOT} && agvtool vers -terse)
+DSTROOT=${TMPDIR:-/tmp}/dceidl-${VERSION}
+
+xcodebuild -configuration Release -target dceidl install \
+	       SRCROOT=${SRCROOT} \
+	       ARCHS=$(arch) \
+	       DSTROOT=${DSTROOT}
+
+sudo chown -R root:wheel ${DSTROOT}
+sudo darwinup install ${DSTROOT}
