@@ -1,12 +1,30 @@
 #!/bin/sh
-if test ! -e "${SRCROOT}/dcerpc/configure"; then
-    cd "${SRCROOT}/dcerpc"
-    echo "Running buildconf and configure"
-    ./buildconf
-    ./configure --disable-dependency-tracking --enable-idldumpers --disable-ncadg \
-	rpcd_cv_rpc_c_np_dir=/var/rpc/ncacn_np \
-	rpcd_cv_rpc_c_uxd_dir=/var/rpc/ncalrpc
 
+# Copyright (c) 2009-2010 Apple Inc. All rights reserved.
+
+error()
+{
+    echo "error: " "$@" 1>&2
+    exit 1
+}
+
+cd "${SRCROOT}/dcerpc" || error "${SRCROOT}/dcerpc" has gone AWOL
+
+if [ ! -e "./configure" ] ; then
+    echo "Running buildconf"
+    ./buildconf || error buildconf failed
 else
-    echo "buildconf and configure have already been executed"
+    echo "configure exists, skipping buildconf phase"
+fi
+
+if [ ! -e "./config.status" ] ; then
+    echo "Running configure"
+    ./configure \
+	--disable-dependency-tracking \
+	--enable-idldumpers \
+	--disable-ncadg \
+	rpcd_cv_rpc_c_np_dir=/var/rpc/ncacn_np \
+	rpcd_cv_rpc_c_uxd_dir=/var/rpc/ncalrpc || error configure failed
+else
+    echo "config.status exists, skipping configure phase"
 fi
