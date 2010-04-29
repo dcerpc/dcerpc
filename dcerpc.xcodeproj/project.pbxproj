@@ -807,14 +807,14 @@
 		D6422E321106554900D380C9 /* twr_np.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = twr_np.c; sourceTree = "<group>"; };
 		D6422E331106554900D380C9 /* twr_uxd.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = twr_uxd.c; sourceTree = "<group>"; };
 		D655C48311067B1A005857C5 /* GSS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GSS.framework; path = /System/Library/Frameworks/GSS.framework; sourceTree = "<absolute>"; };
-		D6A1244F11067218007B04CF /* ncklib.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = ncklib.xcconfig; path = dcerpc.xc.configurations/ncklib.xcconfig; sourceTree = "<group>"; };
+		D6A1244F11067218007B04CF /* ncklib.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = ncklib.xcconfig; path = BuildConfig/ncklib.xcconfig; sourceTree = "<group>"; };
 		D6AE33151108BA6D0050828C /* lrpc.idl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lrpc.idl; sourceTree = "<group>"; };
 		DD04350210769FDA0010E492 /* DCERPC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DCERPC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD04350310769FDA0010E492 /* DCERPC-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "DCERPC-Info.plist"; sourceTree = "<group>"; };
-		DD04350B10769FF80010E492 /* dcerpc_framework.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = dcerpc_framework.xcconfig; path = dcerpc.xc.configurations/dcerpc_framework.xcconfig; sourceTree = "<group>"; };
+		DD04350B10769FF80010E492 /* dcerpc_framework.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = dcerpc_framework.xcconfig; path = BuildConfig/dcerpc_framework.xcconfig; sourceTree = "<group>"; };
 		DD08161B106C19580007E433 /* dce */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = dce; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD0FE804107411EB004AB68C /* Kerberos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Kerberos.framework; path = /System/Library/Frameworks/Kerberos.framework; sourceTree = "<absolute>"; };
-		DD0FE87D1074F526004AB68C /* buildconf_configure */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = buildconf_configure; path = dcerpc.xc.configurations/buildconf_configure; sourceTree = "<group>"; };
+		DD0FE87D1074F526004AB68C /* buildconf_configure */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = buildconf_configure; path = BuildConfig/buildconf_configure; sourceTree = "<group>"; };
 		DD10F4C9106D2364005F1EF3 /* libnck_stubs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libnck_stubs.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD10F5D6106D341E005F1EF3 /* libnck.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libnck.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD10F5EA106D3528005F1EF3 /* libmgmt_stubs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmgmt_stubs.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1404,16 +1404,16 @@
 		DD3DB2D8100408FD0080B762 /* uuid_i.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uuid_i.h; sourceTree = "<group>"; };
 		DD3DB2D9100408FD0080B762 /* uuidsys.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = uuidsys.c; sourceTree = "<group>"; };
 		DD3DB2DA100408FD0080B762 /* uuidtool.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = uuidtool.c; sourceTree = "<group>"; };
-		DD501C071073C24800473324 /* stubs.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = stubs.xcconfig; path = dcerpc.xc.configurations/stubs.xcconfig; sourceTree = "<group>"; };
-		DD88282810730DF600FBF62B /* dceidl.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = dceidl.xcconfig; path = dcerpc.xc.configurations/dceidl.xcconfig; sourceTree = "<group>"; };
-		DD88282E10730E8F00FBF62B /* idl.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = idl.xcconfig; path = dcerpc.xc.configurations/idl.xcconfig; sourceTree = "<group>"; };
-		DD88283910730EF100FBF62B /* uuid.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = uuid.xcconfig; path = dcerpc.xc.configurations/uuid.xcconfig; sourceTree = "<group>"; };
-		DD8828621073163F00FBF62B /* dcerpcd.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = dcerpcd.xcconfig; path = dcerpc.xc.configurations/dcerpcd.xcconfig; sourceTree = "<group>"; };
-		DD9D320C107D51CF00FA8214 /* junk.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = junk.c; path = dcerpc.xc.configurations/junk.c; sourceTree = "<group>"; };
-		DDA1C209107FDD0B004D2055 /* copy_catalogs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = copy_catalogs; path = dcerpc.xc.configurations/copy_catalogs; sourceTree = "<group>"; };
-		DDA1C20A107FDD0B004D2055 /* copy_dce_headers */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = copy_dce_headers; path = dcerpc.xc.configurations/copy_dce_headers; sourceTree = "<group>"; };
+		DD501C071073C24800473324 /* stubs.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = stubs.xcconfig; path = BuildConfig/stubs.xcconfig; sourceTree = "<group>"; };
+		DD88282810730DF600FBF62B /* dceidl.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = dceidl.xcconfig; path = BuildConfig/dceidl.xcconfig; sourceTree = "<group>"; };
+		DD88282E10730E8F00FBF62B /* idl.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = idl.xcconfig; path = BuildConfig/idl.xcconfig; sourceTree = "<group>"; };
+		DD88283910730EF100FBF62B /* uuid.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = uuid.xcconfig; path = BuildConfig/uuid.xcconfig; sourceTree = "<group>"; };
+		DD8828621073163F00FBF62B /* dcerpcd.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = dcerpcd.xcconfig; path = BuildConfig/dcerpcd.xcconfig; sourceTree = "<group>"; };
+		DD9D320C107D51CF00FA8214 /* junk.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = junk.c; path = BuildConfig/junk.c; sourceTree = "<group>"; };
+		DDA1C209107FDD0B004D2055 /* copy_catalogs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = copy_catalogs; path = BuildConfig/copy_catalogs; sourceTree = "<group>"; };
+		DDA1C20A107FDD0B004D2055 /* copy_dce_headers */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = copy_dce_headers; path = BuildConfig/copy_dce_headers; sourceTree = "<group>"; };
 		DDAD850A109676D6003620DE /* SMBClient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SMBClient.framework; path = /System/Library/PrivateFrameworks/SMBClient.framework; sourceTree = "<absolute>"; };
-		DDB66DA2107BE3310095CBC1 /* base_config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = base_config.xcconfig; path = dcerpc.xc.configurations/base_config.xcconfig; sourceTree = "<group>"; };
+		DDB66DA2107BE3310095CBC1 /* base_config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = base_config.xcconfig; path = BuildConfig/base_config.xcconfig; sourceTree = "<group>"; };
 		DDD80A20107562E300956CF0 /* libdcerpdc_stubs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdcerpdc_stubs.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDD80AB610756A0D00956CF0 /* libecho_stubs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libecho_stubs.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDDF3257106BD43400E6A9C2 /* dceidl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = dceidl; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3050,7 +3050,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "${SRCROOT}/dcerpc.xc.configurations/buildconf_configure\n";
+			shellScript = "${SRCROOT}/BuildConfig/buildconf_configure\n";
 		};
 		D6E6B60A10BCB25A00E1DCF5 /* Generate ACF Parser */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3070,7 +3070,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "${SRCROOT}/dcerpc.xc.configurations/generate_parser";
+			shellScript = "${SRCROOT}/BuildConfig/generate_parser";
 		};
 		D6E6B60C10BCB26400E1DCF5 /* Generate NIDL Parser */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3090,7 +3090,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "${SRCROOT}/dcerpc.xc.configurations/generate_parser";
+			shellScript = "${SRCROOT}/BuildConfig/generate_parser";
 		};
 		DD81451C1087DAD200EAA9D9 /* Create rpc dir */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3150,7 +3150,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "${SRCROOT}/dcerpc.xc.configurations/copy_catalogs\n";
+			shellScript = "${SRCROOT}/BuildConfig/copy_catalogs\n";
 		};
 		DDC9990E107AA3FA00330A72 /* Copy dce headers */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3164,7 +3164,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "${SRCROOT}/dcerpc.xc.configurations/copy_dce_headers\n";
+			shellScript = "${SRCROOT}/BuildConfig/copy_dce_headers\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
