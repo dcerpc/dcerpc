@@ -1,0 +1,4 @@
+#! /bin/sh
+# Copyright (c) 2010 Apple Inc. All rights reserved.
+
+exec ${BUILT_PRODUCTS_DIR}/dceidl "$@"
