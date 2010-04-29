@@ -145,20 +145,8 @@ AC_DEFINE_UNQUOTED(GETHOSTBYNAME_R_ARGS, $xad_cv_gethostbyname_r_args, Number of
 LIBS="$saved_LIBS"
 
 dnl Checks for typedefs, structures, and compiler characteristics.
-# Check for basic types
-AC_CHECK_TYPES([int8, int16, int32, int64], [], [],
-[#include <sys/types.h>
- #if __ia64
- #include <model.h>
- #endif])
-AC_CHECK_TYPES([uint8, uint16, uint32, uint64])
-
-AC_CHECK_SIZEOF([long long int])
-AC_CHECK_SIZEOF([long int])
 
 dnl Checks for library functions.
-AC_PROG_GCC_TRADITIONAL
-AC_FUNC_MEMCMP
 
 dnl _GNU_SOURCE pulls in the definition of _pthread_push_defer
 AC_DEFINE(__EXTENSIONS__, 1, Ask for extension api)
