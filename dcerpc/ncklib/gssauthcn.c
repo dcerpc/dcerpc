@@ -41,6 +41,9 @@
 */
 
 #include <config.h>
+
+#if defined(AUTH_GSS_NEGOTIATE) && AUTH_GSS_NEGOTIATE
+
 #include <gssauth.h>
 #include <gssauthcn.h>
 
@@ -2637,3 +2640,5 @@ PRIVATE rpc_protocol_id_t rpc__gssauth_netlogon_cn_init
 	*st = rpc_s_ok;
 	return RPC_C_PROTOCOL_ID_NCACN;
 }
+
+#endif /* defined(AUTH_GSS_NEGOTIATE) && AUTH_GSS_NEGOTIATE */

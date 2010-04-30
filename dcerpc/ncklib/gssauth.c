@@ -41,6 +41,10 @@
 **
 */
 
+#include <config.h>
+
+#if defined(AUTH_GSS_NEGOTIATE) && AUTH_GSS_NEGOTIATE
+
 #include <gssauth.h>
 
 INTERNAL unsigned32 rpc_g_gssauth_alloc_count = 0;
@@ -887,3 +891,5 @@ PRIVATE OM_uint32 rpc__gssauth_select_mech
 	*req_mech = selected_mech;
 	return GSS_S_COMPLETE;
 }
+
+#endif /* defined(AUTH_GSS_NEGOTIATE) && AUTH_GSS_NEGOTIATE */
