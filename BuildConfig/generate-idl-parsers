@@ -23,7 +23,7 @@ run()
     local status
 
     echo "$@"
-    "$@"
+    xcrun "$@"
 }
 
 OUTDIR="$(dirname ${SCRIPT_OUTPUT_FILE_0})"
