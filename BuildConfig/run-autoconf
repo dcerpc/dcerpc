@@ -1,29 +1,44 @@
 #!/bin/sh
 # Copyright (c) 2009-2010 Apple Inc. All rights reserved.
 
+PROG=$(basename $0)
+SDKROOT=${SDKROOT:-/}
+
 error()
 {
-    echo "error: " "$@" 1>&2
+    echo "$PROG: error: " "$@" 1>&2
     exit 1
+}
+
+message()
+{
+    echo "$PROG: " "$@"
 }
 
 cd "${SRCROOT}/dcerpc" || error "${SRCROOT}/dcerpc" has gone AWOL
 
+message SDKROOT is $SDKROOT
+
 if [ ! -e "./configure" ] ; then
-    echo "Running buildconf"
+    message "running buildconf"
     ./buildconf || error buildconf failed
 else
-    echo "configure exists, skipping buildconf phase"
+    message "configure exists, skipping buildconf phase"
 fi
 
 if [ ! -e "./config.status" ] ; then
-    echo "Running configure"
+    message "running configure"
     ./configure \
+	CC=$(xcrun -find cc) \
+	CXX=$(cxrun -find cxx) \
+	CFLAGS="-isysroot $SDKROOT" \
+	CXXFLAGS="-isysroot $SDKROOT" \
 	--disable-dependency-tracking \
 	--enable-idldumpers \
 	--disable-ncadg \
 	rpcd_cv_rpc_c_np_dir=/var/rpc/ncacn_np \
-	rpcd_cv_rpc_c_uxd_dir=/var/rpc/ncalrpc || error configure failed
+	rpcd_cv_rpc_c_uxd_dir=/var/rpc/ncalrpc \
+	|| error configure failed
 else
-    echo "config.status exists, skipping configure phase"
+    message "config.status exists, skipping configure phase"
 fi
