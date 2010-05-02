@@ -1,4 +1,4 @@
-/* Portions Copyright (c) 2009 Apple Inc. All rights reserved. */
+/* Portions Copyright (c) 2009-2010 Apple Inc. All rights reserved. */
 
 #include "config.h"
 #include <dce/smb.h>
@@ -80,8 +80,6 @@ typedef struct rpc_smb_socket_s
 #elif HAVE_SMBCLIENT_FRAMEWORK
     SMBHANDLE handle;
     SMBFID hFile;
-    unsigned32 *context;
-    unsigned32 *np;
 #endif
     rpc_smb_buffer_t sendbuffer;
     rpc_smb_buffer_t recvbuffer;
@@ -89,8 +87,6 @@ typedef struct rpc_smb_socket_s
     {
 #if HAVE_LIKEWISE_LWIO
         IO_FILE_HANDLE* queue;
-#elif HAVE_SMBCLIENT_FRAMEWORK
-        unsigned32* queue;
 #endif
         size_t capacity;
         size_t length;
@@ -571,15 +567,14 @@ rpc__smb_socket_destroy(
 
     if (sock)
     {
+#if HAVE_LIKEWISE_LWIO
         if (sock->accept_backlog.queue)
         {
             for (i = 0; i < sock->accept_backlog.capacity; i++)
             {
                 if (sock->accept_backlog.queue[i])
                 {
-#if HAVE_LIKEWISE_LWIO
                     NtCtxCloseFile(sock->context, sock->accept_backlog.queue[i]);
-#endif
                 }
             }
 
@@ -591,17 +586,23 @@ rpc__smb_socket_destroy(
 
         if (sock->np && sock->context)
         {
-#if HAVE_LIKEWISE_LWIO
             NtCtxCloseFile(sock->context, sock->np);
-#endif
         }
 
         if (sock->context)
         {
-#if HAVE_LIKEWISE_LWIO
             LwIoCloseContext(sock->context);
-#endif
         }
+
+#elif HAVE_SMBCLIENT_FRAMEWORK
+
+	if (sock->handle)
+	{
+	    SMBReleaseServer(sock->handle);
+	    sock->handle = NULL;
+	}
+
+#endif
 
         if (sock->sendbuffer.base)
         {
@@ -883,7 +884,7 @@ rpc__smb_socket_connect(
     }
 
 #else
-    serr = RPC_C_SOCKET_C_ENOTSUP;
+    serr = RPC_C_SOCKET_ENOTSUP;
     goto error;
 #endif
 
@@ -1031,10 +1032,12 @@ done:
 
 #endif
 
+#if HAVE_LIKEWISE_LWIO || HAVE_SMBCLIENT_FRAMEWORK
     if (smbpath)
     {
         free(smbpath);
     }
+#endif
 
     SMB_SOCKET_UNLOCK(smb);
 
@@ -2021,11 +2024,13 @@ rpc__smb_socket_getpeername(
     RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_getpeername called\n"));
     SMB_SOCKET_LOCK(smb);
 
+#if HAVE_LIKEWISE_LWIO
     if (!smb->np)
     {
         serr = RPC_C_SOCKET_EINVAL;
         goto error;
     }
+#endif
 
     memcpy(addr, &smb->peeraddr, sizeof(smb->peeraddr));
 

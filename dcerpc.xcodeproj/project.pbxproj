@@ -43,7 +43,6 @@
 		D610EA3B10B7577F00D0305F /* acf_y.c in Sources */ = {isa = PBXBuildFile; fileRef = D610EA3A10B7577F00D0305F /* acf_y.c */; };
 		D62430B610B7596C0092FD35 /* nidl_l.c in Sources */ = {isa = PBXBuildFile; fileRef = D62430B510B7596C0092FD35 /* nidl_l.c */; };
 		D62430B810B759790092FD35 /* nidl_y.c in Sources */ = {isa = PBXBuildFile; fileRef = D62430B710B759790092FD35 /* nidl_y.c */; };
-		D655C48411067B1A005857C5 /* GSS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D655C48311067B1A005857C5 /* GSS.framework */; };
 		D655C4AE11067FE1005857C5 /* cnassoc.c in Sources */ = {isa = PBXBuildFile; fileRef = D6422DFC1106554900D380C9 /* cnassoc.c */; };
 		D655C4AF11067FE1005857C5 /* cnbind.c in Sources */ = {isa = PBXBuildFile; fileRef = D6422DFD1106554900D380C9 /* cnbind.c */; };
 		D655C4B011067FE1005857C5 /* cncall.c in Sources */ = {isa = PBXBuildFile; fileRef = D6422DFE1106554900D380C9 /* cncall.c */; };
@@ -133,7 +132,6 @@
 		DD0435211076A0D60010E492 /* libidl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE0178F106C2FFD00A5E41A /* libidl.a */; };
 		DD0435221076A0D60010E492 /* libnck.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F5D6106D341E005F1EF3 /* libnck.a */; };
 		DD0435231076A0D60010E492 /* libuuid.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE017DE106C334200A5E41A /* libuuid.a */; };
-		DD0435731076A0F20010E492 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F7EC106D6DA7005F1EF3 /* CoreFoundation.framework */; };
 		DD0435751076A10E0010E492 /* dcethread_atfork.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB176100408FD0080B762 /* dcethread_atfork.c */; };
 		DD0435761076A10E0010E492 /* dcethread_checkinterrupt.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB181100408FD0080B762 /* dcethread_checkinterrupt.c */; };
 		DD0435771076A10E0010E492 /* dcethread_cond_broadcast.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB182100408FD0080B762 /* dcethread_cond_broadcast.c */; };
@@ -242,7 +240,6 @@
 		DD9D32C3107E345B00FA8214 /* DCERPC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD04350210769FDA0010E492 /* DCERPC.framework */; };
 		DDA1C037107E952B004D2055 /* junk.c in Create catalogs folders */ = {isa = PBXBuildFile; fileRef = DD9D320C107D51CF00FA8214 /* junk.c */; };
 		DDA1C1FE107FDCAE004D2055 /* dcerpc.h in Headers */ = {isa = PBXBuildFile; fileRef = DD3DB0D5100408FD0080B762 /* dcerpc.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		DDAD850B109676D6003620DE /* SMBClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDAD850A109676D6003620DE /* SMBClient.framework */; };
 		DDC99930107AAD5600330A72 /* codesets.idl in Create dce header folder */ = {isa = PBXBuildFile; fileRef = DD3DB0E7100408FD0080B762 /* codesets.idl */; };
 		DDC99945107AB5E100330A72 /* dce.h in Copy darwin headers */ = {isa = PBXBuildFile; fileRef = DD3DB0EC100408FD0080B762 /* dce.h */; };
 		DDC99946107AB5E100330A72 /* dce_error.h in Copy darwin headers */ = {isa = PBXBuildFile; fileRef = DD3DB0ED100408FD0080B762 /* dce_error.h */; };
@@ -1423,12 +1420,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD0435731076A0F20010E492 /* CoreFoundation.framework in Frameworks */,
 				DD0435211076A0D60010E492 /* libidl.a in Frameworks */,
 				DD0435221076A0D60010E492 /* libnck.a in Frameworks */,
 				DD0435231076A0D60010E492 /* libuuid.a in Frameworks */,
-				DDAD850B109676D6003620DE /* SMBClient.framework in Frameworks */,
-				D655C48411067B1A005857C5 /* GSS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
