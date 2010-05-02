@@ -6,6 +6,8 @@
 //  Copyright (c) 2009-2010 Apple Inc. All rights reserved.
 //
 
+VALID_ARCHS=ppc i386 x86_64 armv5 armv6 armv7
+
 // I don't think that we should be using the headermap, since we
 // have files with the same name. However, dependency tracking for
 // the IDL files, and dtrace header generation depends on this,
