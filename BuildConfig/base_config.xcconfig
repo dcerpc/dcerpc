@@ -57,9 +57,12 @@ WARNING_CFLAGS=-Wformat=2 -Wwrite-strings -Wcast-align -Wpointer-arith -Wstrict-
 
 RUN_CLANG_STATIC_ANALYZER=YES
 
-RPC_CATALOG_PATH=CATALOG_DIR=\"/System/Library/PrivateFrameworks/DCERPC.framework/Resources/Catalogs\"
+RPC_FRAMEWORK_RESOURCES=/System/Library/PrivateFrameworks/DCERPC.framework
+RPC_FRAMEWORK_RESOURCES[sdk=macosx*]=/System/Library/PrivateFrameworks/DCERPC.framework/Resources
+
+RPC_CATALOG_PATH=CATALOG_DIR=\"$(RPC_FRAMEWORK_RESOURCES)/Catalogs\"
 RPC_IDIR_PATH=DEFAULT_IDIR=\"/usr/local/include\"
-RPC_MODULES_PATH=IMAGE_DIR=\"/System/Library/PrivateFrameworks/DCERPC.framework/Resources/Modules\"
+RPC_MODULES_PATH=IMAGE_DIR=\"$(RPC_FRAMEWORK_RESOURCES)/Modules\"
 
 RPC_PATH_DEFINES=$(RPC_CATALOG_PATH) $(RPC_IDIR_PATH) $(RPC_MODULES_PATH)
 

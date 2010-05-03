@@ -63,6 +63,7 @@
 		D655C4BF11067FE1005857C5 /* cnsclsm.c in Sources */ = {isa = PBXBuildFile; fileRef = D6422E0D1106554900D380C9 /* cnsclsm.c */; };
 		D655C4C011067FE1005857C5 /* cnsm.c in Sources */ = {isa = PBXBuildFile; fileRef = D6422E0E1106554900D380C9 /* cnsm.c */; };
 		D655C4C111067FE1005857C5 /* cnxfer.c in Sources */ = {isa = PBXBuildFile; fileRef = D6422E0F1106554900D380C9 /* cnxfer.c */; };
+		D6635005118F6E87004C53D6 /* dcerpc.cat in Copy Message Catalogs (1) */ = {isa = PBXBuildFile; fileRef = D6634FEA118F6E6F004C53D6 /* dcerpc.cat */; };
 		D670B370118F4B510012A8B8 /* dce in Headers */ = {isa = PBXBuildFile; fileRef = D670B354118F4B320012A8B8 /* dce */; settings = {ATTRIBUTES = (Public, ); }; };
 		D6747746118F448C00F9A870 /* smb.idl in Copy Core DCE Headers */ = {isa = PBXBuildFile; fileRef = DD3DB14A100408FD0080B762 /* smb.idl */; };
 		D674774C118F44DD00F9A870 /* codesets.idl in Copy Core DCE Headers */ = {isa = PBXBuildFile; fileRef = DD3DB0E7100408FD0080B762 /* codesets.idl */; };
@@ -273,7 +274,6 @@
 		DD21F0DD1083D3AD00696F06 /* libdceidl_parser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD21F0B71083D15500696F06 /* libdceidl_parser.a */; };
 		DD9D320D107D51CF00FA8214 /* junk.c in Sources */ = {isa = PBXBuildFile; fileRef = DD9D320C107D51CF00FA8214 /* junk.c */; };
 		DD9D32C3107E345B00FA8214 /* DCERPC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD04350210769FDA0010E492 /* DCERPC.framework */; };
-		DDA1C037107E952B004D2055 /* junk.c in Create catalogs folders */ = {isa = PBXBuildFile; fileRef = DD9D320C107D51CF00FA8214 /* junk.c */; };
 		DDC99945107AB5E100330A72 /* dce.h in Copy Darwin Platform Headers (4) */ = {isa = PBXBuildFile; fileRef = DD3DB0EC100408FD0080B762 /* dce.h */; };
 		DDC99946107AB5E100330A72 /* dce_error.h in Copy Darwin Platform Headers (4) */ = {isa = PBXBuildFile; fileRef = DD3DB0ED100408FD0080B762 /* dce_error.h */; };
 		DDC99947107AB5E100330A72 /* dce_utils.h in Copy Darwin Platform Headers (4) */ = {isa = PBXBuildFile; fileRef = DD3DB0EE100408FD0080B762 /* dce_utils.h */; };
@@ -750,15 +750,15 @@
 			name = "Copy Core DCE Headers";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DD9B4FF0107BF0630074C2F5 /* Create catalogs folders */ = {
+		DD9B4FF0107BF0630074C2F5 /* Copy Message Catalogs (1) */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = Catalogs;
 			dstSubfolderSpec = 7;
 			files = (
-				DDA1C037107E952B004D2055 /* junk.c in Create catalogs folders */,
+				D6635005118F6E87004C53D6 /* dcerpc.cat in Copy Message Catalogs (1) */,
 			);
-			name = "Create catalogs folders";
+			name = "Copy Message Catalogs (1)";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		DDC99943107AB4F600330A72 /* Copy Darwin Platform Headers (4) */ = {
@@ -852,6 +852,7 @@
 		D6422E321106554900D380C9 /* twr_np.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = twr_np.c; sourceTree = "<group>"; };
 		D6422E331106554900D380C9 /* twr_uxd.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = twr_uxd.c; sourceTree = "<group>"; };
 		D655C48311067B1A005857C5 /* GSS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GSS.framework; path = /System/Library/Frameworks/GSS.framework; sourceTree = "<absolute>"; };
+		D6634FEA118F6E6F004C53D6 /* dcerpc.cat */ = {isa = PBXFileReference; lastKnownFileType = file; path = dcerpc.cat; sourceTree = "<group>"; };
 		D670B354118F4B320012A8B8 /* dce */ = {isa = PBXFileReference; lastKnownFileType = folder; path = dce; sourceTree = "<group>"; };
 		D674776B118F452300F9A870 /* dce_error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce_error.h; sourceTree = "<group>"; };
 		D674776C118F452300F9A870 /* dce_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce_utils.h; sourceTree = "<group>"; };
@@ -1463,7 +1464,6 @@
 		DD88283910730EF100FBF62B /* uuid.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = uuid.xcconfig; path = BuildConfig/uuid.xcconfig; sourceTree = "<group>"; };
 		DD8828621073163F00FBF62B /* dcerpcd.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = dcerpcd.xcconfig; path = BuildConfig/dcerpcd.xcconfig; sourceTree = "<group>"; };
 		DD9D320C107D51CF00FA8214 /* junk.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = junk.c; path = BuildConfig/junk.c; sourceTree = "<group>"; };
-		DDA1C209107FDD0B004D2055 /* copy-catalogs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = "copy-catalogs"; path = "BuildConfig/copy-catalogs"; sourceTree = "<group>"; };
 		DDAD850A109676D6003620DE /* SMBClient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SMBClient.framework; path = /System/Library/PrivateFrameworks/SMBClient.framework; sourceTree = "<absolute>"; };
 		DDB66DA2107BE3310095CBC1 /* base_config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = base_config.xcconfig; path = BuildConfig/base_config.xcconfig; sourceTree = "<group>"; };
 		DDD80A20107562E300956CF0 /* libdcerpdc_stubs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdcerpdc_stubs.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1643,6 +1643,7 @@
 		D6FC8BD410B765C300C5F198 /* DerivedSources */ = {
 			isa = PBXGroup;
 			children = (
+				D6634FEA118F6E6F004C53D6 /* dcerpc.cat */,
 				D670B354118F4B320012A8B8 /* dce */,
 				D62430B710B759790092FD35 /* nidl_y.c */,
 				D62430B510B7596C0092FD35 /* nidl_l.c */,
@@ -2697,7 +2698,6 @@
 				DD501C071073C24800473324 /* stubs.xcconfig */,
 				DD8828621073163F00FBF62B /* dcerpcd.xcconfig */,
 				DD04350B10769FF80010E492 /* dcerpc_framework.xcconfig */,
-				DDA1C209107FDD0B004D2055 /* copy-catalogs */,
 				DD9D320C107D51CF00FA8214 /* junk.c */,
 			);
 			name = ConfigurationFiles;
@@ -2737,8 +2737,7 @@
 				D62FD0B9118F431100253EB9 /* Copy Core DCE Headers */,
 				DDC99943107AB4F600330A72 /* Copy Darwin Platform Headers (4) */,
 				DDC99955107AB67800330A72 /* Copy Generic Architecture Headers (3) */,
-				DD9B4FF0107BF0630074C2F5 /* Create catalogs folders */,
-				DDA1C03B107E953D004D2055 /* Copy catalogs */,
+				DD9B4FF0107BF0630074C2F5 /* Copy Message Catalogs (1) */,
 				D6C14748118F4D730083EE16 /* Remove Framework Cruft */,
 				DD81451C1087DAD200EAA9D9 /* Create rpc dir */,
 			);
@@ -3188,21 +3187,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "gencat ${SHARED_DERIVED_FILE_DIR}/idl.cat ${SRCROOT}/dcerpc/idl_compiler/nidlmsg.m";
-			showEnvVarsInLog = 0;
-		};
-		DDA1C03B107E953D004D2055 /* Copy catalogs */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy catalogs";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "${SRCROOT}/BuildConfig/copy-catalogs\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
