@@ -13,25 +13,32 @@ The build system for DCE/RPC is relatively complex, partly due to
 the use of automake and libtool and partly because it does a lot
 of code generation.
 
-The automake and libtool issues are generally caused by a lack of
-support for Darwin in these tools. They don't really understand how
-dylibs work, and they certainly don't understand how multi-architecture
-builds ought to work.
+Xcode does not support this sort of thing particularly well, so we
+make heavy use of shell script build phases and "workarounds".
 
-The code generation is a problem because it means that the autoconf
-cross-compilation mechanism needs special sauce to work. There is
-no such special sauce in the DCE/RPC build system. For cross-compilation
-to work, we would need to build dceidl for the host system and for
-the target system. The one we build for the host system would need
-to be an IDL cross-compiler, generating c code suitable for th
-target system. Until this mechanism is available, we can't build
-ppc on i386 or vice versa.
+Our basic approach to cross-compilation is to separate the build
+into two phases. We have a dceidl project that builds the IDL
+compiler and installs it into the SDK. Then we have the dcerpc
+project that builds the DCERPC framework using the previously
+installed IDL compiler.
 
-So we can really only support multi-arch builds on i386 and x86_64,
-because we use the "generic" RPC architecture, which pulls definitions
-from stdint.h. However, we still can't allow the cross-compilation
-support to engage, so we have to pass the architcture flags in
-CFLAGS. This means that for everything to work right, we need to
-clobber CFLAGS in the top-level makefile and ignore that flags that
-configure detects.
+The dcerpc and dceidl projects should typically by run with different
+build architectures, since dceidl is expected to run on the uild
+host, and dcerpc is expected to run on the target host. Inside
+Apple, the build group has all this preconfigured.
 
+We assume that the IDL compiler is actually an IDL cross-compiler.
+This assumption is valid because the autotools build system uses
+the "generic" architecture, and everything that depends on the
+target architecture is determined at compilation time without the
+use of autoconf tests.
+
+We do use autoconf tests to select available features when we are
+building the DCERPC framework, and this relies on the fact that
+features vary between target SDKs, but not between target architectures.
+You can only target a single SDK, and within that SDK, the feature
+set is constant, and indepednent of the suported architecture.
+Therefore it is valid to do a single configure pass followed by a
+multi-architecture build.
+
+James Peach, Tue May  4 10:46:53 PDT 2010
