@@ -63,8 +63,7 @@
 		D655C4BF11067FE1005857C5 /* cnsclsm.c in Sources */ = {isa = PBXBuildFile; fileRef = D6422E0D1106554900D380C9 /* cnsclsm.c */; };
 		D655C4C011067FE1005857C5 /* cnsm.c in Sources */ = {isa = PBXBuildFile; fileRef = D6422E0E1106554900D380C9 /* cnsm.c */; };
 		D655C4C111067FE1005857C5 /* cnxfer.c in Sources */ = {isa = PBXBuildFile; fileRef = D6422E0F1106554900D380C9 /* cnxfer.c */; };
-		D6635005118F6E87004C53D6 /* dcerpc.cat in Copy Message Catalogs (1) */ = {isa = PBXBuildFile; fileRef = D6634FEA118F6E6F004C53D6 /* dcerpc.cat */; };
-		D670B370118F4B510012A8B8 /* dce in Headers */ = {isa = PBXBuildFile; fileRef = D670B354118F4B320012A8B8 /* dce */; settings = {ATTRIBUTES = (Public, ); }; };
+		D6635005118F6E87004C53D6 /* dcerpc.cat in Copy Message Catalogs */ = {isa = PBXBuildFile; fileRef = D6634FEA118F6E6F004C53D6 /* dcerpc.cat */; };
 		D6747746118F448C00F9A870 /* smb.idl in Copy Core DCE Headers */ = {isa = PBXBuildFile; fileRef = DD3DB14A100408FD0080B762 /* smb.idl */; };
 		D674774C118F44DD00F9A870 /* codesets.idl in Copy Core DCE Headers */ = {isa = PBXBuildFile; fileRef = DD3DB0E7100408FD0080B762 /* codesets.idl */; };
 		D674774D118F44DD00F9A870 /* conv.idl in Copy Core DCE Headers */ = {isa = PBXBuildFile; fileRef = DD3DB0E9100408FD0080B762 /* conv.idl */; };
@@ -165,6 +164,7 @@
 		D67F763E11068B71003C1D11 /* rpctimer.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB266100408FD0080B762 /* rpctimer.c */; };
 		D69F92761108BD9500DDCD00 /* lrpc.idl in Sources */ = {isa = PBXBuildFile; fileRef = D6AE33151108BA6D0050828C /* lrpc.idl */; };
 		D6A12458110672EF007B04CF /* libnck_stubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F4C9106D2364005F1EF3 /* libnck_stubs.a */; };
+		D6B20416118F93F600CFFEC6 /* junk.c in Headers */ = {isa = PBXBuildFile; fileRef = DD9D320C107D51CF00FA8214 /* junk.c */; settings = {ATTRIBUTES = (Public, ); }; };
 		DD0435211076A0D60010E492 /* libidl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE0178F106C2FFD00A5E41A /* libidl.a */; };
 		DD0435221076A0D60010E492 /* libnck.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F5D6106D341E005F1EF3 /* libnck.a */; };
 		DD0435231076A0D60010E492 /* libuuid.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE017DE106C334200A5E41A /* libuuid.a */; };
@@ -274,13 +274,13 @@
 		DD21F0DD1083D3AD00696F06 /* libdceidl_parser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD21F0B71083D15500696F06 /* libdceidl_parser.a */; };
 		DD9D320D107D51CF00FA8214 /* junk.c in Sources */ = {isa = PBXBuildFile; fileRef = DD9D320C107D51CF00FA8214 /* junk.c */; };
 		DD9D32C3107E345B00FA8214 /* DCERPC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD04350210769FDA0010E492 /* DCERPC.framework */; };
-		DDC99945107AB5E100330A72 /* dce.h in Copy Darwin Platform Headers (4) */ = {isa = PBXBuildFile; fileRef = DD3DB0EC100408FD0080B762 /* dce.h */; };
-		DDC99946107AB5E100330A72 /* dce_error.h in Copy Darwin Platform Headers (4) */ = {isa = PBXBuildFile; fileRef = DD3DB0ED100408FD0080B762 /* dce_error.h */; };
-		DDC99947107AB5E100330A72 /* dce_utils.h in Copy Darwin Platform Headers (4) */ = {isa = PBXBuildFile; fileRef = DD3DB0EE100408FD0080B762 /* dce_utils.h */; };
-		DDC99948107AB5E100330A72 /* sec_authn.h in Copy Darwin Platform Headers (4) */ = {isa = PBXBuildFile; fileRef = DD3DB0F0100408FD0080B762 /* sec_authn.h */; };
-		DDC9994E107AB66F00330A72 /* marshall.h in Copy Generic Architecture Headers (3) */ = {isa = PBXBuildFile; fileRef = DD3DB100100408FD0080B762 /* marshall.h */; };
-		DDC9994F107AB66F00330A72 /* ndr_rep.h in Copy Generic Architecture Headers (3) */ = {isa = PBXBuildFile; fileRef = DD3DB101100408FD0080B762 /* ndr_rep.h */; };
-		DDC99950107AB66F00330A72 /* ndrtypes.h in Copy Generic Architecture Headers (3) */ = {isa = PBXBuildFile; fileRef = DD3DB102100408FD0080B762 /* ndrtypes.h */; };
+		DDC99945107AB5E100330A72 /* dce.h in Copy Darwin Platform Headers */ = {isa = PBXBuildFile; fileRef = DD3DB0EC100408FD0080B762 /* dce.h */; };
+		DDC99946107AB5E100330A72 /* dce_error.h in Copy Darwin Platform Headers */ = {isa = PBXBuildFile; fileRef = DD3DB0ED100408FD0080B762 /* dce_error.h */; };
+		DDC99947107AB5E100330A72 /* dce_utils.h in Copy Darwin Platform Headers */ = {isa = PBXBuildFile; fileRef = DD3DB0EE100408FD0080B762 /* dce_utils.h */; };
+		DDC99948107AB5E100330A72 /* sec_authn.h in Copy Darwin Platform Headers */ = {isa = PBXBuildFile; fileRef = DD3DB0F0100408FD0080B762 /* sec_authn.h */; };
+		DDC9994E107AB66F00330A72 /* marshall.h in Copy Generic Architecture Headers */ = {isa = PBXBuildFile; fileRef = DD3DB100100408FD0080B762 /* marshall.h */; };
+		DDC9994F107AB66F00330A72 /* ndr_rep.h in Copy Generic Architecture Headers */ = {isa = PBXBuildFile; fileRef = DD3DB101100408FD0080B762 /* ndr_rep.h */; };
+		DDC99950107AB66F00330A72 /* ndrtypes.h in Copy Generic Architecture Headers */ = {isa = PBXBuildFile; fileRef = DD3DB102100408FD0080B762 /* ndrtypes.h */; };
 		DDD80A24107562FF00956CF0 /* dsm.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB286100408FD0080B762 /* dsm.idl */; };
 		DDD80A521075664800956CF0 /* libdcerpdc_stubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDD80A20107562E300956CF0 /* libdcerpdc_stubs.a */; };
 		DDD80A531075665000956CF0 /* ep.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0F7100408FD0080B762 /* ep.idl */; };
@@ -750,42 +750,42 @@
 			name = "Copy Core DCE Headers";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DD9B4FF0107BF0630074C2F5 /* Copy Message Catalogs (1) */ = {
+		DD9B4FF0107BF0630074C2F5 /* Copy Message Catalogs */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = Catalogs;
 			dstSubfolderSpec = 7;
 			files = (
-				D6635005118F6E87004C53D6 /* dcerpc.cat in Copy Message Catalogs (1) */,
+				D6635005118F6E87004C53D6 /* dcerpc.cat in Copy Message Catalogs */,
 			);
-			name = "Copy Message Catalogs (1)";
+			name = "Copy Message Catalogs";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DDC99943107AB4F600330A72 /* Copy Darwin Platform Headers (4) */ = {
+		DDC99943107AB4F600330A72 /* Copy Darwin Platform Headers */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 12;
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Headers/dce/darwin";
 			dstSubfolderSpec = 16;
 			files = (
-				DDC99945107AB5E100330A72 /* dce.h in Copy Darwin Platform Headers (4) */,
-				DDC99946107AB5E100330A72 /* dce_error.h in Copy Darwin Platform Headers (4) */,
-				DDC99947107AB5E100330A72 /* dce_utils.h in Copy Darwin Platform Headers (4) */,
-				DDC99948107AB5E100330A72 /* sec_authn.h in Copy Darwin Platform Headers (4) */,
+				DDC99945107AB5E100330A72 /* dce.h in Copy Darwin Platform Headers */,
+				DDC99946107AB5E100330A72 /* dce_error.h in Copy Darwin Platform Headers */,
+				DDC99947107AB5E100330A72 /* dce_utils.h in Copy Darwin Platform Headers */,
+				DDC99948107AB5E100330A72 /* sec_authn.h in Copy Darwin Platform Headers */,
 			);
-			name = "Copy Darwin Platform Headers (4)";
+			name = "Copy Darwin Platform Headers";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DDC99955107AB67800330A72 /* Copy Generic Architecture Headers (3) */ = {
+		DDC99955107AB67800330A72 /* Copy Generic Architecture Headers */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 12;
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Headers/dce/generic";
 			dstSubfolderSpec = 16;
 			files = (
-				DDC9994E107AB66F00330A72 /* marshall.h in Copy Generic Architecture Headers (3) */,
-				DDC9994F107AB66F00330A72 /* ndr_rep.h in Copy Generic Architecture Headers (3) */,
-				DDC99950107AB66F00330A72 /* ndrtypes.h in Copy Generic Architecture Headers (3) */,
+				DDC9994E107AB66F00330A72 /* marshall.h in Copy Generic Architecture Headers */,
+				DDC9994F107AB66F00330A72 /* ndr_rep.h in Copy Generic Architecture Headers */,
+				DDC99950107AB66F00330A72 /* ndrtypes.h in Copy Generic Architecture Headers */,
 			);
-			name = "Copy Generic Architecture Headers (3)";
+			name = "Copy Generic Architecture Headers";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -853,7 +853,6 @@
 		D6422E331106554900D380C9 /* twr_uxd.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = twr_uxd.c; sourceTree = "<group>"; };
 		D655C48311067B1A005857C5 /* GSS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GSS.framework; path = /System/Library/Frameworks/GSS.framework; sourceTree = "<absolute>"; };
 		D6634FEA118F6E6F004C53D6 /* dcerpc.cat */ = {isa = PBXFileReference; lastKnownFileType = file; path = dcerpc.cat; sourceTree = "<group>"; };
-		D670B354118F4B320012A8B8 /* dce */ = {isa = PBXFileReference; lastKnownFileType = folder; path = dce; sourceTree = "<group>"; };
 		D674776B118F452300F9A870 /* dce_error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce_error.h; sourceTree = "<group>"; };
 		D674776C118F452300F9A870 /* dce_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce_utils.h; sourceTree = "<group>"; };
 		D674776D118F452300F9A870 /* dce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dce.h; sourceTree = "<group>"; };
@@ -1644,7 +1643,6 @@
 			isa = PBXGroup;
 			children = (
 				D6634FEA118F6E6F004C53D6 /* dcerpc.cat */,
-				D670B354118F4B320012A8B8 /* dce */,
 				D62430B710B759790092FD35 /* nidl_y.c */,
 				D62430B510B7596C0092FD35 /* nidl_l.c */,
 				D610EA3810B7575800D0305F /* acf_l.c */,
@@ -2720,7 +2718,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D670B370118F4B510012A8B8 /* dce in Headers */,
+				D6B20416118F93F600CFFEC6 /* junk.c in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2734,10 +2732,11 @@
 				DD0434FF10769FDA0010E492 /* Sources */,
 				DD04350010769FDA0010E492 /* Frameworks */,
 				D670B34B118F49D50012A8B8 /* Headers */,
+				D6B2040F118F92B200CFFEC6 /* Copy Generated RPC Headers */,
 				D62FD0B9118F431100253EB9 /* Copy Core DCE Headers */,
-				DDC99943107AB4F600330A72 /* Copy Darwin Platform Headers (4) */,
-				DDC99955107AB67800330A72 /* Copy Generic Architecture Headers (3) */,
-				DD9B4FF0107BF0630074C2F5 /* Copy Message Catalogs (1) */,
+				DDC99943107AB4F600330A72 /* Copy Darwin Platform Headers */,
+				DDC99955107AB67800330A72 /* Copy Generic Architecture Headers */,
+				DD9B4FF0107BF0630074C2F5 /* Copy Message Catalogs */,
 				D6C14748118F4D730083EE16 /* Remove Framework Cruft */,
 				DD81451C1087DAD200EAA9D9 /* Create rpc dir */,
 			);
@@ -3041,6 +3040,20 @@
 /* End PBXProject section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		D6B2040F118F92B200CFFEC6 /* Copy Generated RPC Headers */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Generated RPC Headers";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "exec ${SRCROOT}/BuildConfig/copy-generated-framework-headers";
+		};
 		D6B96649118A4F3F000291A6 /* Configure */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

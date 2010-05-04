@@ -1,0 +1,16 @@
+#! /bin/sh
+# Copyright (c) 2010 Apple Inc. All rights reserved.
+
+set -e
+
+# Typical values of TARGET_BUILD_DIR and CONTENTS_FOLDER_PATH:
+#     setenv TARGET_BUILD_DIR /Volumes/Scratch/dcerpc.git/build/Debug
+#     setenv CONTENTS_FOLDER_PATH DCERPC.framework/Versions/A
+
+HEADERS=${TARGET_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/Headers
+
+[[ -d "$HEADERS" ]] || mkdir "$HEADERS"
+[[ -d "$HEADERS/dce" ]] || mkdir "$HEADERS/dce"
+
+cd ${SHARED_DERIVED_FILE_DIR}/dce
+cp -X * "$HEADERS/dce"

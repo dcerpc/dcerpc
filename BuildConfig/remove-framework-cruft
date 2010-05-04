@@ -7,9 +7,9 @@
 # Xcode to copy *everything* in that directory. We have to remove the
 # unwanted items afterwards.
 
-# Typical values of CONFIGURATION_BUILD_DIR and CONTENTS_FOLDER_PATH:
-#     setenv CONFIGURATION_BUILD_DIR /Volumes/Scratch/dcerpc.git/build/Debug
+# Typical values of TARGET_BUILD_DIR and CONTENTS_FOLDER_PATH:
+#     setenv TARGET_BUILD_DIR /Volumes/Scratch/dcerpc.git/build/Debug
 #     setenv CONTENTS_FOLDER_PATH DCERPC.framework/Versions/A
 
-find ${CONFIGURATION_BUILD_DIR}/${CONTENTS_FOLDER_PATH} -name \*.c -print0 | \
+find ${TARGET_BUILD_DIR}/${CONTENTS_FOLDER_PATH} -name \*.c -print0 | \
 	 xargs -0 rm
