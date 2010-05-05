@@ -565,64 +565,73 @@ rpc__smb_socket_destroy(
 {
     size_t i;
 
-    if (sock)
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_destroy called\n"));
+
+    if (!sock)
     {
+	return;
+    }
+
 #if HAVE_LIKEWISE_LWIO
-        if (sock->accept_backlog.queue)
-        {
-            for (i = 0; i < sock->accept_backlog.capacity; i++)
-            {
-                if (sock->accept_backlog.queue[i])
-                {
-                    NtCtxCloseFile(sock->context, sock->accept_backlog.queue[i]);
-                }
-            }
+    if (sock->accept_backlog.queue)
+    {
+	for (i = 0; i < sock->accept_backlog.capacity; i++)
+	{
+	    if (sock->accept_backlog.queue[i])
+	    {
+		NtCtxCloseFile(sock->context, sock->accept_backlog.queue[i]);
+	    }
+	}
 
-            close(sock->accept_backlog.selectfd[0]);
-            close(sock->accept_backlog.selectfd[1]);
+	close(sock->accept_backlog.selectfd[0]);
+	close(sock->accept_backlog.selectfd[1]);
 
-            free(sock->accept_backlog.queue);
-        }
+	free(sock->accept_backlog.queue);
+    }
 
-        if (sock->np && sock->context)
-        {
-            NtCtxCloseFile(sock->context, sock->np);
-        }
+    if (sock->np && sock->context)
+    {
+	NtCtxCloseFile(sock->context, sock->np);
+    }
 
-        if (sock->context)
-        {
-            LwIoCloseContext(sock->context);
-        }
+    if (sock->context)
+    {
+	LwIoCloseContext(sock->context);
+    }
 
 #elif HAVE_SMBCLIENT_FRAMEWORK
 
-	if (sock->handle)
-	{
-	    SMBReleaseServer(sock->handle);
-	    sock->handle = NULL;
-	}
+    if (sock->hFile != 0)
+    {
+	SMBCloseFile(sock->handle, sock->hFile);
+	sock->hFile = 0;
+    }
+
+    if (sock->handle)
+    {
+	SMBReleaseServer(sock->handle);
+	sock->handle = NULL;
+    }
 
 #endif
 
-        if (sock->sendbuffer.base)
-        {
-            free(sock->sendbuffer.base);
-        }
-
-        if (sock->recvbuffer.base)
-        {
-            free(sock->recvbuffer.base);
-        }
-
-        rpc__smb_transport_info_destroy(&sock->info);
-
-        dcethread_mutex_destroy_throw(&sock->lock);
-        dcethread_cond_destroy_throw(&sock->event);
-
-        free(sock);
+    if (sock->sendbuffer.base)
+    {
+	free(sock->sendbuffer.base);
     }
 
-    return;
+    if (sock->recvbuffer.base)
+    {
+	free(sock->recvbuffer.base);
+    }
+
+    rpc__smb_transport_info_destroy(&sock->info);
+
+    dcethread_mutex_destroy_throw(&sock->lock);
+    dcethread_cond_destroy_throw(&sock->event);
+
+    free(sock);
+
 }
 
 INTERNAL
@@ -733,36 +742,12 @@ rpc__smb_socket_destruct(
     rpc_socket_t sock
     )
 {
-    rpc_socket_error_t serr = RPC_C_SOCKET_OK;
-#if HAVE_SMBCLIENT_FRAMEWORK
     rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
 
-    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_destruct called\n"));
-
-    if (smb->handle != NULL)
-    {
-        if (smb->hFile != 0)
-        {
-            SMBCloseFile(smb->handle, smb->hFile);
-        }
-        else
-        {
-            RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_destruct - error file handle is 0\n"));
-        }
-
-        SMBReleaseServer(smb->handle);
-        smb->handle = NULL;
-    }
-    else
-    {
-        RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_destruct - error smb handle is NULL\n"));
-    }
-#endif
-
-    rpc__smb_socket_destroy((rpc_smb_socket_p_t) sock->data.pointer);
+    rpc__smb_socket_destroy(smb);
     sock->data.pointer = NULL;
 
-    return serr;
+    return RPC_C_SOCKET_OK;
 }
 
 INTERNAL
