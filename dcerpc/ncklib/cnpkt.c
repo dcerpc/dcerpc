@@ -72,18 +72,24 @@ GLOBAL rpc_cn_common_hdr_t rpc_g_cn_common_hdr =
 
 
 INTERNAL rpc_cn_pres_result_list_p_t unpack_port_any (
-        rpc_cn_port_any_t       * /*port_any_p*/,
-        unsigned8               * /*drepp*/
+        rpc_cn_port_any_t       *port_any_p,
+        unsigned8               *drepp,
+        unsigned8               *end_of_pkt,
+        unsigned32              *st
         );
 
 INTERNAL rpc_cn_auth_tlr_p_t unpack_pres_context_list (
-        rpc_cn_pres_cont_list_p_t /*pcontp*/,
-        boolean32               /*swap*/
+        rpc_cn_pres_cont_list_p_t   pcontp,
+        boolean32                   swap,
+        unsigned8                   *end_of_pkt,
+        unsigned32                  *st
         );
 
 INTERNAL rpc_cn_auth_tlr_p_t unpack_pres_result_list (
-        rpc_cn_pres_result_list_p_t /*presp*/,
-        boolean32               /*swap*/
+        rpc_cn_pres_result_list_p_t presp,
+        boolean32                   swap,
+        unsigned8                   *end_of_pkt,
+        unsigned32                  *st
         );
 
 INTERNAL rpc_cn_auth_tlr_p_t unpack_versions_supported (
@@ -106,11 +112,14 @@ INTERNAL rpc_cn_auth_tlr_p_t unpack_versions_supported (
 **  INPUTS:
 **
 **      port_any_p	pointer to the 'port_any' field within the packet
-**	drepp		pointer to the data representation
+**      drepp		pointer to the data representation
+**      swap		boolean indicating we need to perform byte swapping
+**      end_of_pkt  ptr to end on packet
 **
 **  INPUTS/OUTPUTS:     none
 **
-**  OUTPUTS:            none
+**  OUTPUTS:
+**      st          The return status of this routine
 **
 **  IMPLICIT INPUTS:    none
 **
@@ -127,8 +136,10 @@ INTERNAL rpc_cn_auth_tlr_p_t unpack_versions_supported (
 
 INTERNAL rpc_cn_pres_result_list_p_t unpack_port_any
 (
-  rpc_cn_port_any_t       *port_any_p,
-  unsigned8               *drepp
+    rpc_cn_port_any_t       *port_any_p,
+    unsigned8               *drepp,
+    unsigned8               *end_of_pkt,
+    unsigned32              *st
 )
 {
     union
@@ -137,6 +148,8 @@ INTERNAL rpc_cn_pres_result_list_p_t unpack_port_any
         rpc_cn_pres_result_list_p_t rtn;        /* a return value */
     }   ptr;
 
+    *st = rpc_s_ok;
+
     ptr.string = port_any_p->s;        /* init our string pointer */
 
     /*
@@ -144,7 +157,11 @@ INTERNAL rpc_cn_pres_result_list_p_t unpack_port_any
      */
     if (NDR_LOCAL_INT_REP != NDR_DREP_INT_REP (drepp))
     {
-        SWAB_INPLACE_16 (port_any_p->length);
+        SWAP_INPLACE_16 (&port_any_p->length, end_of_pkt, *st);
+        if (*st != rpc_s_ok)
+        {
+            return (NULL);
+        }
     }
 
     /*
@@ -182,11 +199,13 @@ INTERNAL rpc_cn_pres_result_list_p_t unpack_port_any
 **  INPUTS:
 **
 **      pcontp		pointer to the presentation context list
-**	swap		boolean indicating we need to perform byte swapping
+**      swap		boolean indicating we need to perform byte swapping
+**      end_of_pkt  ptr to end on packet
 **
 **  INPUTS/OUTPUTS:     none
 **
-**  OUTPUTS:            none
+**  OUTPUTS:
+**      st          The return status of this routine
 **
 **  IMPLICIT INPUTS:    none
 **
@@ -204,8 +223,10 @@ INTERNAL rpc_cn_pres_result_list_p_t unpack_port_any
 
 INTERNAL rpc_cn_auth_tlr_p_t unpack_pres_context_list
 (
-  rpc_cn_pres_cont_list_p_t       pcontp,
-  boolean32                       swap
+    rpc_cn_pres_cont_list_p_t     pcontp,
+    boolean32                     swap,
+    unsigned8                     *end_of_pkt,
+    unsigned32                    *st
 )
 {
     unsigned8 n;                       /* presentation context list element
@@ -220,6 +241,8 @@ INTERNAL rpc_cn_auth_tlr_p_t unpack_pres_context_list
         rpc_cn_auth_tlr_p_t rtn;       /* return value */
     } ptrs;
 
+    *st = rpc_s_ok;
+
     /*
      * Get a pointer to the first element.
      *
@@ -232,9 +255,9 @@ INTERNAL rpc_cn_auth_tlr_p_t unpack_pres_context_list
      */
     for (n = 0; n < pcontp->n_context_elem; n++)
     {
-	/*
-	 * Get the number of transfer syntaxes in this element.
-	 */
+        /*
+         * Get the number of transfer syntaxes in this element.
+         */
         tsn = (ptrs.ep)->n_transfer_syn;
 
         /*
@@ -245,19 +268,31 @@ INTERNAL rpc_cn_auth_tlr_p_t unpack_pres_context_list
 	    /*
 	     * Convert the presentation context id.
 	     */
-	    SWAB_INPLACE_16 ((ptrs.ep)->pres_context_id);
+            SWAP_INPLACE_16 (&(ptrs.ep)->pres_context_id, end_of_pkt, *st);
+            if (*st != rpc_s_ok)
+            {
+                return (NULL);
+            }
 
             /*
              * Convert the abstract syntax.
              */
-            SWAB_INPLACE_SYNTAX ((ptrs.ep)->abstract_syntax);
+            SWAP_INPLACE_SYNTAX (&(ptrs.ep)->abstract_syntax, end_of_pkt, *st);
+            if (*st != rpc_s_ok)
+            {
+                return (NULL);
+            }
 
             /*
              * Process each transfer syntax id of this element.
              */
             for (id = 0; id < tsn; id++)
             {
-                SWAB_INPLACE_SYNTAX ((ptrs.ep)->transfer_syntaxes[id]);
+                SWAP_INPLACE_SYNTAX (&(ptrs.ep)->transfer_syntaxes[id], end_of_pkt, *st);
+                if (*st != rpc_s_ok)
+                {
+                    return (NULL);
+                }
             }
         }
 
@@ -290,10 +325,13 @@ INTERNAL rpc_cn_auth_tlr_p_t unpack_pres_context_list
 **
 **      presp		pointer to the presentation result list
 **      swap		boolean indicating we need to perform byte swapping
+**      swap		boolean indicating we need to perform byte swapping
+**      end_of_pkt  ptr to end on packet
 **
 **  INPUTS/OUTPUTS:     none
 **
-**  OUTPUTS:            none
+**  OUTPUTS:
+**      st          The return status of this routine
 **
 **  IMPLICIT INPUTS:    none
 **
@@ -311,13 +349,17 @@ INTERNAL rpc_cn_auth_tlr_p_t unpack_pres_context_list
 
 INTERNAL rpc_cn_auth_tlr_p_t unpack_pres_result_list
 (
-  rpc_cn_pres_result_list_p_t     presp,
-  boolean32                       swap
+    rpc_cn_pres_result_list_p_t presp,
+    boolean32                   swap,
+    unsigned8                   *end_of_pkt,
+    unsigned32                  *st
 )
 {
     unsigned8 n;		/* presentation result list element loop
                                         * count */
     unsigned8 prn;		/* number of presentation results */
+
+    *st = rpc_s_ok;
 
     /*
      * Process each element of the presentation result list.
@@ -325,9 +367,23 @@ INTERNAL rpc_cn_auth_tlr_p_t unpack_pres_result_list
     prn = presp->n_results;
     for (n = 0; (n < prn) && swap; n++)
     {
-        SWAB_INPLACE_16 (presp->pres_results[n].result);
-        SWAB_INPLACE_16 (presp->pres_results[n].reason);
-        SWAB_INPLACE_SYNTAX (presp->pres_results[n].transfer_syntax);
+        SWAP_INPLACE_16 (&presp->pres_results[n].result, end_of_pkt, *st);
+        if (*st != rpc_s_ok)
+        {
+            return (NULL);
+        }
+
+        SWAP_INPLACE_16 (&presp->pres_results[n].reason, end_of_pkt, *st);
+        if (*st != rpc_s_ok)
+        {
+            return (NULL);
+        }
+
+        SWAP_INPLACE_SYNTAX (&presp->pres_results[n].transfer_syntax, end_of_pkt, *st);
+        if (*st != rpc_s_ok)
+        {
+            return (NULL);
+        }
     }
 
     /*
@@ -681,7 +737,11 @@ PRIVATE unsigned32 rpc__cn_unpack_hdr
                 }
             }
             pconp = (rpc_cn_pres_cont_list_p_t)((unsigned8 *)(&RPC_CN_PKT_ASSOC_GROUP_ID (pkt_p)) + 4);
-            authp = unpack_pres_context_list (pconp, swap);
+            authp = unpack_pres_context_list (pconp, swap, end_of_pkt, &st);
+            if (st != rpc_s_ok)
+            {
+                return (st);
+            }
             break;
 
             /*
@@ -711,9 +771,18 @@ PRIVATE unsigned32 rpc__cn_unpack_hdr
             }
             secadrp = (rpc_cn_port_any_t *)
                 ((unsigned8 *)(pkt_p) + RPC_CN_PKT_SIZEOF_BIND_ACK_HDR);
-            presp = unpack_port_any (secadrp, drepp);
+            presp = unpack_port_any (secadrp, drepp, end_of_pkt, &st);
+            if (st != rpc_s_ok)
+            {
+                return (st);
+            }
+
             force_alignment (4, (unsigned8 **)&presp);
-            authp = unpack_pres_result_list (presp, swap);
+            authp = unpack_pres_result_list (presp, swap, end_of_pkt, &st);
+            if (st != rpc_s_ok)
+            {
+                return (st);
+            }
             break;
 
             /*

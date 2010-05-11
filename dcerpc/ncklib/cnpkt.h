@@ -128,7 +128,12 @@
     SWAB_INPLACE_UUID( (sfield).id ); \
     SWAB_INPLACE_32( (sfield).version ); \
 }
-
+
+#define SWAP_INPLACE_SYNTAX(ptr, end_of_pkt, st) { \
+    SWAP_INPLACE_UUID( ptr.id, end_of_pkt, st ); \
+    SWAP_INPLACE_32( ptr.version, end_of_pkt, st ); \
+}
+
 
 /*
  *****************************************************************************
