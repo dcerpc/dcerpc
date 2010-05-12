@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
@@ -17,7 +17,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
  */
@@ -37,7 +37,7 @@
 **
 **      This file provides (1) all of the PUBLIC Network Listener Service
 **      API operations, and (2) the "portable" PRIVATE service operations.
-**      
+**
 **
 **
 */
@@ -99,8 +99,6 @@ INTERNAL boolean		    in_server_shutdown;
 INTERNAL rpc_mutex_t active_clients_mutex;
 INTERNAL volatile signed32 active_clients = 0;
 
-
-
 
 /*
  * forward declarations of internal (static) functions
@@ -120,7 +118,7 @@ INTERNAL void bv_alloc (
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**      
+**
 **  Return the bindings for this server to which RPCs may be made.
 **  Note that object UUIDs are not part of these bindings.
 **
@@ -148,7 +146,7 @@ INTERNAL void bv_alloc (
 **--
 **/
 
-PUBLIC void rpc_server_inq_bindings 
+PUBLIC void rpc_server_inq_bindings
 (
     rpc_binding_vector_p_t  *binding_vec,
     unsigned32              *status
@@ -163,7 +161,6 @@ PUBLIC void rpc_server_inq_bindings
     rpc_binding_rep_p_t     binding_rep;
     unsigned int                     i;
     unsigned32              xstatus;
-
 
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
@@ -234,7 +231,7 @@ PUBLIC void rpc_server_inq_bindings
                  * Allocate a binding with this RPC Address.
                  */
                 binding_rep =
-                    rpc__binding_alloc (false, &uuid_g_nil_uuid, 
+                    rpc__binding_alloc (false, &uuid_g_nil_uuid,
                         lsock->protocol_id, addr_vec->addrs[av_index], status);
 
                 if (*status != rpc_s_ok)
@@ -306,7 +303,7 @@ PUBLIC void rpc_server_inq_bindings
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**      
+**
 **  This routine begins listening to the network for RPC requests.
 **
 **  INPUTS:
@@ -335,14 +332,13 @@ PUBLIC void rpc_server_inq_bindings
 **--
 **/
 
-PUBLIC void rpc_server_listen 
+PUBLIC void rpc_server_listen
 (
     unsigned32              max_calls,
     unsigned32              *status
 )
 {
     int                     i;
-
 
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
@@ -358,7 +354,7 @@ PUBLIC void rpc_server_listen
         RPC_MUTEX_UNLOCK (listener_state.mutex);
         return;
     }
-                       
+
     /*
      * See if there are any server sockets.  We must add them to the real
      * listener so it'll start select'ing on them.
@@ -387,7 +383,7 @@ PUBLIC void rpc_server_listen
         RPC_MUTEX_UNLOCK (listener_state.mutex);
         return;
     }
-                                  
+
     /*
      * Clear the status of the listener state table.
      */
@@ -402,7 +398,7 @@ PUBLIC void rpc_server_listen
         RPC_MUTEX_UNLOCK (listener_state.mutex);
         return;
     }
-    
+
     RPC_DBG_PRINTF (rpc_e_dbg_general, 2, ("(rpc_server_listen) cthreads started\n"));
 
     /*
@@ -463,19 +459,19 @@ PUBLIC void rpc_server_listen
         /*
          * Make the real listener stop listening on our server sockets now.
          */
-    
+
         for (i = 0; i < listener_state.high_water; i++)
         {
             rpc_listener_sock_p_t lsock = &listener_state.socks[i];
-    
+
             if (lsock->busy && lsock->is_server && lsock->is_active)
             {
                 rpc__nlsn_deactivate_desc (&listener_state, i, status);
             }
         }
-    
+
         in_server_listen = false;
-                    
+
         /*
          * Set return status from the value in the listener state table.
          */
@@ -514,7 +510,7 @@ PUBLIC void rpc_server_listen
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Cause the thread that called "rpc_server_listen" to gracefully return
 **  from that routine.
 **
@@ -537,7 +533,7 @@ PUBLIC void rpc_server_listen
 **--
 **/
 
-PRIVATE void rpc__server_stop_listening 
+PRIVATE void rpc__server_stop_listening
 (
     unsigned32              *status
 )
@@ -569,9 +565,9 @@ PRIVATE void rpc__server_stop_listening
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Return true iff there's a thread in "rpc_server_listen".
-**  
+**
 **
 **  INPUTS:             none
 **
@@ -719,7 +715,7 @@ PRIVATE unsigned32 rpc__server_inq_idle_timeout (void)
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**      
+**
 **  This routine tells the Common Communication Service to listen for RPCs
 **  on all supported (by both the Common Communication Service and the
 **  operating system) RPC Protocol Sequences.
@@ -748,7 +744,7 @@ PRIVATE unsigned32 rpc__server_inq_idle_timeout (void)
 **--
 **/
 
-PUBLIC void rpc_server_use_all_protseqs 
+PUBLIC void rpc_server_use_all_protseqs
 (
     unsigned32                  max_calls,
     unsigned32                  *status
@@ -757,7 +753,6 @@ PUBLIC void rpc_server_use_all_protseqs
     unsigned int                         i;
     rpc_protseq_vector_p_t      psvp;
     unsigned32                  my_status;
-    
 
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
@@ -793,7 +788,7 @@ PUBLIC void rpc_server_use_all_protseqs
      * were any errors, we should de-register the ones registered,
      * free the vector and return an error.
      */
-     
+
     /*
      * Now free the protocol sequence vector.
      */
@@ -808,7 +803,7 @@ PUBLIC void rpc_server_use_all_protseqs
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**      
+**
 **  This routine creates a descriptor for the desired Network Address
 **  Family and adds it to the pool of descriptors being listened on.  It
 **  uses a dynamically assigned name for the descriptor for the Network
@@ -817,7 +812,7 @@ PUBLIC void rpc_server_use_all_protseqs
 **  INPUTS:
 **
 **      rpc_protseq     The RPC protocol sequence to be used.
-**  
+**
 **      max_calls       The maximum number of concurrent calls which this
 **                      server will process on this RPC protocol sequence.
 **
@@ -840,7 +835,7 @@ PUBLIC void rpc_server_use_all_protseqs
 **--
 **/
 
-PUBLIC void rpc_server_use_protseq 
+PUBLIC void rpc_server_use_protseq
 (
     unsigned_char_p_t       rpc_protseq,
     unsigned32              max_calls,
@@ -861,7 +856,7 @@ PUBLIC void rpc_server_use_protseq
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**      
+**
 **  This routine is the same as rpc_server_use_protseq() except the
 **  descriptor name is the name contained in the interface specification for
 **  the given Network Address Family Service.
@@ -869,7 +864,7 @@ PUBLIC void rpc_server_use_protseq
 **  INPUTS:
 **
 **      rpc_protseq     The RPC protocol sequence to be used.
-**  
+**
 **      max_calls       The maximum number of concurrent calls which this
 **                      server will process on this RPC protocol sequence.
 **
@@ -907,7 +902,6 @@ unsigned32              *status;
     unsigned32              temp_status;
     rpc_protseq_id_t        pseq_id;
 
-
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
 
@@ -937,7 +931,7 @@ unsigned32              *status;
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**      
+**
 **  This routine tells the RPC runtime to listen for RPCs on all the
 **  protocol sequences for which the specified interface has well-known
 **  endpoints.
@@ -969,7 +963,7 @@ unsigned32              *status;
 **--
 **/
 
-PUBLIC void rpc_server_use_all_protseqs_if 
+PUBLIC void rpc_server_use_all_protseqs_if
 (
     unsigned32              max_calls,
     rpc_if_handle_t         ifspec_h,
@@ -1039,7 +1033,7 @@ PUBLIC void rpc_server_use_all_protseqs_if
      * were any errors, we should de-register the ones registered,
      * free the vector and return an error.
      */
-     
+
     /*
      * Now free the protocol sequence vector.
      */
@@ -1054,7 +1048,7 @@ PUBLIC void rpc_server_use_all_protseqs_if
 **  SCOPE:              PRIVATE - declared in comfwd.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Register a forwarding map function with the runtime.  This registered
 **  function will be called by the protocol services to determine an
 **  appropriate forwarding endpoint for a received pkt that is not for
@@ -1083,7 +1077,7 @@ PUBLIC void rpc_server_use_all_protseqs_if
 **--
 **/
 
-PRIVATE void rpc__server_register_fwd_map 
+PRIVATE void rpc__server_register_fwd_map
 (
   rpc_fwd_map_fn_t    map_fn,
   unsigned32          *status
@@ -1096,7 +1090,6 @@ PRIVATE void rpc__server_register_fwd_map
     rpc_g_fwd_fn = map_fn;
 }
 
-
 
 /*
 **++
@@ -1106,7 +1099,7 @@ PRIVATE void rpc__server_register_fwd_map
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**      
+**
 **  Return all protocol sequences supported by both the Common
 **  Communication Service and the operating system.
 **
@@ -1148,7 +1141,6 @@ unsigned32              *status;
     size_t                  len;
     size_t                  len_left;
 
-
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
 
@@ -1180,7 +1172,7 @@ unsigned32              *status;
     /* b_c_o_p_y ((char *) psv, (char *) pvp, psv_size); */
     memmove((char *)pvp, (char *)psv, psv_size) ;
     ps = (unsigned_char_p_t) (((char *)pvp) + psv_size);
- 
+
     /*
      * Loop through the local protocol sequence id table:
      *   - copy each protseq string to the return vector string space
@@ -1208,7 +1200,7 @@ unsigned32              *status;
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**      
+**
 **  This routine determines whether the Common Communications Service
 **  supports a given RPC Protocol Sequence.
 **
@@ -1272,7 +1264,7 @@ unsigned32              *status;
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**      
+**
 **  This routine will free the RPC Protocol Sequence strings pointed to in
 **  the vector and the vector itself.
 **
@@ -1312,7 +1304,7 @@ unsigned32              *status;
 {
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
-    
+
     RPC_MEM_FREE (*protseq_vector, RPC_C_MEM_PROTSEQ_VECTOR);
 
     *protseq_vector = NULL;
@@ -1329,7 +1321,7 @@ unsigned32              *status;
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**      
+**
 **  This routine tells the Common Communication Service to call the routine
 **  provided if communications are lost to the process represented by the
 **  client handle provided.
@@ -1362,7 +1354,7 @@ unsigned32              *status;
 **--
 **/
 
-PUBLIC void rpc_network_monitor_liveness 
+PUBLIC void rpc_network_monitor_liveness
 (
     rpc_binding_handle_t    binding_h,
     rpc_client_handle_t     client_handle,
@@ -1384,12 +1376,11 @@ PUBLIC void rpc_network_monitor_liveness
         return;
 
     /*
-     * Get the protocol id from the binding handle (binding_rep) 
+     * Get the protocol id from the binding handle (binding_rep)
      */
 
     protid = binding_rep->protocol_id;
     net_epv = RPC_PROTOCOL_INQ_NETWORK_EPV (protid);
-
 
     /*
      * Pass through to the network protocol routine.
@@ -1406,7 +1397,7 @@ PUBLIC void rpc_network_monitor_liveness
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**      
+**
 **  This routine tells the Common Communication Service to cancel
 **  rpc_network_monitor_liveness.
 **
@@ -1458,11 +1449,10 @@ unsigned32                  *status;
         return;
 
     /*
-     * Get the protocol id from the binding handle (binding_rep) 
+     * Get the protocol id from the binding handle (binding_rep)
      */
     protid = binding_rep->protocol_id;
     net_epv = RPC_PROTOCOL_INQ_NETWORK_EPV (protid);
-
 
     /*
      * Pass through to the network protocol routine.
@@ -1479,7 +1469,7 @@ unsigned32                  *status;
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**      
+**
 **  This routine tells the Common Communication Service to actively keep
 **  communications alive with the process identified in the binding.
 **
@@ -1527,11 +1517,10 @@ unsigned32              *status;
         return;
 
     /*
-     * Get the protocol id from the binding handle (binding_rep) 
+     * Get the protocol id from the binding handle (binding_rep)
      */
     protid = binding_rep->protocol_id;
     net_epv = RPC_PROTOCOL_INQ_NETWORK_EPV (protid);
-
 
     /*
      * Pass through to the network protocol routine.
@@ -1547,7 +1536,7 @@ unsigned32              *status;
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**      
+**
 **  This routine tells the Common Communication Service to cancel
 **  rpc_network_maintain_liveness.
 **
@@ -1575,7 +1564,7 @@ unsigned32              *status;
 **--
 **/
 
-PUBLIC void rpc_network_stop_maintaining 
+PUBLIC void rpc_network_stop_maintaining
 (
     rpc_binding_handle_t    binding_h,
     unsigned32              *status
@@ -1595,11 +1584,10 @@ PUBLIC void rpc_network_stop_maintaining
         return;
 
     /*
-     * Get the protocol id from the binding handle (binding_rep) 
+     * Get the protocol id from the binding handle (binding_rep)
      */
     protid = binding_rep->protocol_id;
     net_epv = RPC_PROTOCOL_INQ_NETWORK_EPV (protid);
-
 
     /*
      * Pass through to the network protocol routine.
@@ -1616,7 +1604,7 @@ PUBLIC void rpc_network_stop_maintaining
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**      
+**
 **  This routine tells the Common Communication Service to remove
 **  any associations underlying the binding handle.
 **
@@ -1644,7 +1632,7 @@ PUBLIC void rpc_network_stop_maintaining
 **--
 **/
 
-PUBLIC void rpc_network_close 
+PUBLIC void rpc_network_close
 (
     rpc_binding_handle_t    binding_h,
     unsigned32              *status
@@ -1664,11 +1652,10 @@ PUBLIC void rpc_network_close
         return;
 
     /*
-     * Get the protocol id from the binding handle (binding_rep) 
+     * Get the protocol id from the binding handle (binding_rep)
      */
     protid = binding_rep->protocol_id;
     net_epv = RPC_PROTOCOL_INQ_NETWORK_EPV (protid);
-
 
     /*
      * Pass through to the network protocol routine.
@@ -1685,7 +1672,7 @@ PUBLIC void rpc_network_close
 **  SCOPE:              PRIVATE - declared in comnet.h
 **
 **  DESCRIPTION:
-**      
+**
 **  This routine adds a descriptor to the pool of descriptors being
 **  listened on.
 **
@@ -1720,7 +1707,7 @@ PUBLIC void rpc_network_close
 **--
 **/
 
-PRIVATE void rpc__network_add_desc 
+PRIVATE void rpc__network_add_desc
 (
     rpc_socket_t            desc,
     boolean32               is_server,
@@ -1732,7 +1719,6 @@ PRIVATE void rpc__network_add_desc
 {
     int                     nd, old_hiwat;
     rpc_listener_sock_p_t   lsock;
-
 
     CODING_ERROR (status);
 
@@ -1782,7 +1768,7 @@ PRIVATE void rpc__network_add_desc
     {
         listener_state.high_water++;
     }
-    
+
     /*
      * Activate the descriptor to the real listener only if
      * "rpc_server_listen" has been called or if this is a client socket.
@@ -1816,7 +1802,7 @@ PRIVATE void rpc__network_add_desc
 **  SCOPE:              PRIVATE - declared in comnet.h
 **
 **  DESCRIPTION:
-**      
+**
 **  This routine removes a descriptor from the pool of descriptors being
 **  listened on. This routine should be called only by protocol
 **  services which are attempting to register mutiple descriptors to the
@@ -1850,15 +1836,14 @@ PRIVATE void rpc__network_add_desc
 **--
 **/
 
-PRIVATE void rpc__network_remove_desc 
+PRIVATE void rpc__network_remove_desc
 (
     rpc_socket_t            desc,
     unsigned32              *status
 )
 {
-    int                     nd, found_nd, maxnd; 
+    int                     nd, found_nd, maxnd;
     boolean                 found_server_socket = false;
-
 
     CODING_ERROR (status);
 
@@ -1868,8 +1853,8 @@ PRIVATE void rpc__network_remove_desc
      * Find the slot in the Network Info Table which has the Network
      * descriptor given (and locate the new high water mark).
      */
-    for (nd = 0, maxnd = -1, found_nd = -1; 
-         nd < listener_state.high_water; 
+    for (nd = 0, maxnd = -1, found_nd = -1;
+         nd < listener_state.high_water;
          nd++)
     {
         if (listener_state.socks[nd].busy)
@@ -1877,7 +1862,7 @@ PRIVATE void rpc__network_remove_desc
             if (listener_state.socks[nd].desc == desc)
             {
                 found_nd = nd;
-            }   
+            }
             else if (listener_state.socks[nd].is_server)
                 found_server_socket = true;
 
@@ -1891,14 +1876,14 @@ PRIVATE void rpc__network_remove_desc
         RPC_MUTEX_UNLOCK (listener_state.mutex);
         return;
     }
-     
+
     /*
      * If we just removed the last server socket, and there's a
-     * thread sitting in rpc_server_listen(), wake it up. 
+     * thread sitting in rpc_server_listen(), wake it up.
      */
     if (! found_server_socket && in_server_listen)
     {
-        listener_state.status = rpc_s_no_protseqs_registered; 
+        listener_state.status = rpc_s_no_protseqs_registered;
         RPC_COND_SIGNAL (shutdown_cond, listener_state.mutex);
     }
 
@@ -1925,7 +1910,7 @@ PRIVATE void rpc__network_remove_desc
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Initialization for this module.
 **
 **  INPUTS:             none
@@ -1950,13 +1935,12 @@ PRIVATE void rpc__network_remove_desc
 **--
 **/
 
-PRIVATE void rpc__network_init 
+PRIVATE void rpc__network_init
 (
     unsigned32              *status
 )
 {
     int                     pseq_id;    /* protocol sequence id/index   */
-
 
     CODING_ERROR (status);
 
@@ -1970,7 +1954,6 @@ PRIVATE void rpc__network_init
     RPC_COND_INIT (listener_state.cond, listener_state.mutex);
 
     RPC_COND_INIT (shutdown_cond, listener_state.mutex);
-
 
     RPC_MUTEX_INIT (active_clients_mutex);
     rpc__server_set_idle_timeout(rpc_s_server_idle_default_timeout, status);
@@ -2020,7 +2003,7 @@ PRIVATE void rpc__network_init
 **  SCOPE:              PRIVATE - declared in comnet.h
 **
 **  DESCRIPTION:
-**      
+**
 **  This routine changes the private information stored with a descriptor
 **  being listened on.
 **
@@ -2050,7 +2033,7 @@ PRIVATE void rpc__network_init
 **--
 **/
 
-PRIVATE void rpc__network_set_priv_info 
+PRIVATE void rpc__network_set_priv_info
 (
     rpc_socket_t            desc,
     pointer_t               priv_info,
@@ -2058,7 +2041,6 @@ PRIVATE void rpc__network_set_priv_info
 )
 {
     int                     i;
-
 
     CODING_ERROR (status);
 
@@ -2087,7 +2069,7 @@ PRIVATE void rpc__network_set_priv_info
 **  SCOPE:              PRIVATE - declared in comnet.h
 **
 **  DESCRIPTION:
-**      
+**
 **  This routine returns the private information stored with the given
 **  descriptor.
 **
@@ -2117,7 +2099,7 @@ PRIVATE void rpc__network_set_priv_info
 **--
 **/
 
-PRIVATE void rpc__network_inq_priv_info 
+PRIVATE void rpc__network_inq_priv_info
 (
     rpc_socket_t            desc,
     pointer_t               *priv_info,
@@ -2125,7 +2107,6 @@ PRIVATE void rpc__network_inq_priv_info
 )
 {
     int                     i;
-
 
     CODING_ERROR (status);
 
@@ -2147,7 +2128,6 @@ PRIVATE void rpc__network_inq_priv_info
     *status = rpc_s_desc_not_registered;
 }
 
-
 
 /*
 **++
@@ -2157,7 +2137,7 @@ PRIVATE void rpc__network_inq_priv_info
 **  SCOPE:              PRIVATE - declared in comnet.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Return the version number of the RPC protocol sequence requested.
 **
 **  INPUTS:
@@ -2188,7 +2168,7 @@ PRIVATE void rpc__network_inq_priv_info
 **--
 **/
 
-PRIVATE void rpc__network_inq_prot_version 
+PRIVATE void rpc__network_inq_prot_version
 (
     rpc_protseq_id_t        rpc_protseq_id,
     unsigned8               *prot_id,
@@ -2216,7 +2196,7 @@ PRIVATE void rpc__network_inq_prot_version
 
     (*net_epv->network_inq_prot_vers)
         (prot_id, version_major, version_minor, status);
-    
+
 }
 
 /*
@@ -2227,7 +2207,7 @@ PRIVATE void rpc__network_inq_prot_version
 **  SCOPE:              PRIVATE - declared in comnet.h
 **
 **  DESCRIPTION:
-**      
+**
 **  This routine searches the RPC Protocol Sequence ID table and returns
 **  the Protocol Sequence ID for the given RPC Protocol Sequence string.
 **
@@ -2258,14 +2238,13 @@ PRIVATE void rpc__network_inq_prot_version
 **--
 **/
 
-PRIVATE rpc_protocol_id_t rpc__network_pseq_id_from_pseq 
+PRIVATE rpc_protocol_id_t rpc__network_pseq_id_from_pseq
 (
     unsigned_char_p_t       rpc_protseq,
     unsigned32              *status
 )
 {
     rpc_protocol_id_t       pseqid;
-
 
     CODING_ERROR (status);
 
@@ -2274,7 +2253,7 @@ PRIVATE rpc_protocol_id_t rpc__network_pseq_id_from_pseq
      */
     if ((strcmp ((char *) rpc_protseq, "ip")) == 0)
     {
-        pseqid = RPC_C_PROTSEQ_ID_NCADG_IP_UDP; 
+        pseqid = rpc_c_protseq_id_ncadg_ip_udp;
 
         /*
          * Verify whether the protocol sequence ID is supported.
@@ -2287,13 +2266,13 @@ PRIVATE rpc_protocol_id_t rpc__network_pseq_id_from_pseq
         else
         {
             *status = rpc_s_protseq_not_supported;
-            return (RPC_C_INVALID_PROTSEQ_ID);
+            return (rpc_c_invalid_protseq_id);
         }
     }
 
     if ((strcmp ((char *) rpc_protseq, "dds")) == 0)
     {
-        pseqid = RPC_C_PROTSEQ_ID_NCADG_DDS; 
+        pseqid = rpc_c_protseq_id_ncadg_dds;
 
         /*
          * Verify whether the protocol sequence ID is supported.
@@ -2306,7 +2285,7 @@ PRIVATE rpc_protocol_id_t rpc__network_pseq_id_from_pseq
         else
         {
             *status = rpc_s_protseq_not_supported;
-            return (RPC_C_INVALID_PROTSEQ_ID);
+            return (rpc_c_invalid_protseq_id);
         }
     }
 
@@ -2330,7 +2309,7 @@ PRIVATE rpc_protocol_id_t rpc__network_pseq_id_from_pseq
             else
             {
                 *status = rpc_s_protseq_not_supported;
-                return (RPC_C_INVALID_PROTSEQ_ID);
+                return (rpc_c_invalid_protseq_id);
             }
         }
     }
@@ -2341,7 +2320,7 @@ PRIVATE rpc_protocol_id_t rpc__network_pseq_id_from_pseq
      */
 	 /* not supported or invalid; it's doesn't really matter, does it? */
 	 *status = rpc_s_protseq_not_supported;
-    return (RPC_C_INVALID_PROTSEQ_ID);
+    return (rpc_c_invalid_protseq_id);
 }
 
 /*
@@ -2352,7 +2331,7 @@ PRIVATE rpc_protocol_id_t rpc__network_pseq_id_from_pseq
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Return the protseq (string) rep for the protseq_id.
 **
 **  This is an internal routine that needs to be relatively streamlined
@@ -2387,7 +2366,7 @@ PRIVATE rpc_protocol_id_t rpc__network_pseq_id_from_pseq
 **--
 **/
 
-PRIVATE void rpc__network_pseq_from_pseq_id 
+PRIVATE void rpc__network_pseq_from_pseq_id
 (
     rpc_protseq_id_t    protseq_id,
     unsigned_char_p_t   *protseq,
@@ -2410,7 +2389,7 @@ PRIVATE void rpc__network_pseq_from_pseq_id
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Return a rpc_addr bound the local host.
 **
 **  INPUTS:
@@ -2439,7 +2418,7 @@ PRIVATE void rpc__network_pseq_from_pseq_id
 **--
 **/
 
-PRIVATE void rpc__network_inq_local_addr 
+PRIVATE void rpc__network_inq_local_addr
 (
     rpc_protseq_id_t    pseq_id,
     unsigned_char_p_t   endpoint,
@@ -2567,7 +2546,7 @@ CLEANUP:
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**      
+**
 **  Register an RPC protocol sequence for use by the runtime.
 **
 **  INPUTS:
@@ -2619,12 +2598,12 @@ PUBLIC void rpc_server_use_protseq_ep
     rpc_addr_p_t            rpc_addr;
     unsigned_char_p_t       endpoint_copy;
     unsigned32              count;
-	
+
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
 
     RPC_DBG_PRINTF(rpc_es_dbg_general, 1, ("use_protseq %s[%s]\n", rpc_protseq, endpoint));
-	 
+
     /*
      * Until both protocol services fully implement this argument, we'll
      * ignore the value provided and use the default instead.
@@ -2665,10 +2644,10 @@ PUBLIC void rpc_server_use_protseq_ep
             unsigned int i;
             unsigned_char_p_t	p1, p2;
             for (i = 0, p1 = endpoint_copy, p2 = endpoint;
-                        i < count; 
+                        i < count;
                         i++, p2++)
             {
-                if (*p2 != '\\') 
+                if (*p2 != '\\')
                 {
                     *p1++ = *p2;
                 }
@@ -2724,7 +2703,6 @@ PUBLIC void rpc_server_use_protseq_ep
      */
     (*net_epv->network_use_protseq)
                         (pseq_id, max_calls, rpc_addr, endpoint_copy, status);
-
 
     /*
      * Free the rpc_addr we allocated above.
@@ -2792,7 +2770,6 @@ extern void rpc_server_use_protseq_socket
     rpc_prot_network_epv_p_t net_epv;
     rpc_socket_t            rpc_sock;
     rpc_socket_error_t	    serr;
-
 
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
@@ -2873,7 +2850,7 @@ extern void rpc_server_use_protseq_socket
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **  Allocate a binding vector.  If "old_vec" is non-NULL, copy its contents
 **  into the newly allocated vector.
 **
@@ -2917,7 +2894,6 @@ unsigned32              *status;
     int                     i;
     int                     new_count, old_count;
 
-
     CODING_ERROR (status);
 
     *new_vec = NULL;        /* assume the worst */
@@ -2952,7 +2928,7 @@ unsigned32              *status;
 
     if (old_vec != NULL)
     {
-        RPC_MEM_FREE (old_vec, RPC_C_MEM_BINDING_VEC); 
+        RPC_MEM_FREE (old_vec, RPC_C_MEM_BINDING_VEC);
     }
 
     for (i = old_count; i < new_count; i++)
@@ -2973,10 +2949,10 @@ unsigned32              *status;
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Initializes this module.
 **
-**  INPUTS:             stage   The stage of the fork we are 
+**  INPUTS:             stage   The stage of the fork we are
 **                              currently handling.
 **
 **  INPUTS/OUTPUTS:     none
@@ -2998,13 +2974,13 @@ PRIVATE void rpc__network_fork_handler
 (
   rpc_fork_stage_id_t stage
 )
-{   
+{
     switch ((int)stage)
     {
     case RPC_C_PREFORK:
         rpc__nlsn_fork_handler(&listener_state, stage);
         break;
-    case RPC_C_POSTFORK_CHILD:  
+    case RPC_C_POSTFORK_CHILD:
         /*
          * Reset the listener_state table to 0's.
          */

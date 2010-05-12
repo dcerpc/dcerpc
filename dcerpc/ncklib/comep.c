@@ -368,7 +368,7 @@ INTERNAL void ep_register
                     }
                 }
 
-                if (binding_rep->rpc_addr && binding_rep->rpc_addr->rpc_protseq_id == RPC_C_PROTSEQ_ID_NCALRPC)
+                if (binding_rep->rpc_addr && binding_rep->rpc_addr->rpc_protseq_id == rpc_c_protseq_id_ncalrpc)
                 {
                     /* Don't attempt to connect over ncalrpc on HP-UX because its native DCE
                        implementation does not understand it */
@@ -1477,7 +1477,7 @@ INTERNAL void get_ep_binding
     /* Workaround due to not having Named Pipe client support yet. */
     if (input_binding != NULL &&
         input_binding->rpc_addr != NULL &&
-        input_binding->rpc_addr->rpc_protseq_id == RPC_C_PROTSEQ_ID_NCACN_NP)
+        input_binding->rpc_addr->rpc_protseq_id == rpc_c_protseq_id_ncacn_np)
     {
         input_binding = NULL;
     }

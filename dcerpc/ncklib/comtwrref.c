@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1990 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1990 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1990 DIGITAL EQUIPMENT CORPORATION
@@ -17,7 +17,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
  */
@@ -30,14 +30,14 @@
 **
 **  FACILITY:
 **
-**    Remote procedure call (RPC) 
-**  
+**    Remote procedure call (RPC)
+**
 **  ABSTRACT:
 **
-**  Set of routines supporting operations on the runtime reference 
+**  Set of routines supporting operations on the runtime reference
 **  represention of protocol towers.
 **
-**  
+**
 **
 **/
 
@@ -59,11 +59,11 @@
 **
 **  Adds a floor to a tower reference.
 **
-**  INPUTS:             
+**  INPUTS:
 **      floor_number    The number of the floor to add to the tower.
 **      floor           The tower floor to add to the tower.
 **      tower_ref       The tower to which the floor is added.
-**      
+**
 **  INPUT/OUTPUTS:      none
 **
 **  OUTPUTS:
@@ -85,7 +85,7 @@
 **--
 */
 
-PRIVATE void rpc__tower_ref_add_floor 
+PRIVATE void rpc__tower_ref_add_floor
 (
     unsigned32          floor_number,
     rpc_tower_floor_p_t floor,
@@ -132,8 +132,8 @@ PRIVATE void rpc__tower_ref_add_floor
 **  The returned referenced structure contains NULL floor pointers
 **  for any unused floor.
 **
-**  INPUTS:             
-**  
+**  INPUTS:
+**
 **      tower_octet_string  Canonical tower to reference using a tower
 **                          reference structure.
 **
@@ -165,7 +165,7 @@ PRIVATE void rpc__tower_ref_add_floor
 **--
 */
 
-PRIVATE void rpc__tower_ref_alloc 
+PRIVATE void rpc__tower_ref_alloc
 (
     byte_p_t            tower_octet_string,
     unsigned32          num_flrs,
@@ -178,26 +178,25 @@ PRIVATE void rpc__tower_ref_alloc
     byte_p_t        tower_floor;
     unsigned32      i;
 
-
     CODING_ERROR (status);
 
     /*
-     * Allocate the tower reference structure allowing 
+     * Allocate the tower reference structure allowing
      * for the number of tower floors desired.
      *
-     * Note, the first floor is allocated via the "floor[1] 
+     * Note, the first floor is allocated via the "floor[1]
      * member of rpc_tower_ref_t.
      */
     RPC_MEM_ALLOC (
         *tower_ref,
         rpc_tower_ref_p_t,
-        sizeof (rpc_tower_ref_t) + 
+        sizeof (rpc_tower_ref_t) +
         (sizeof (rpc_tower_floor_p_t) * (num_flrs-1)),
         RPC_C_MEM_TOWER_REF,
         RPC_C_MEM_WAITOK);
 
     /*
-     * Initialize floor count to the number of floors and 
+     * Initialize floor count to the number of floors and
      * floor pointers to NULL.
      */
     (*tower_ref)->count = num_flrs;
@@ -215,7 +214,7 @@ PRIVATE void rpc__tower_ref_alloc
 
     /*
      * For each tower floor, starting at the desired floor,
-     * allocate the floor and initialize with the information 
+     * allocate the floor and initialize with the information
      * in the tower structure.
      */
     for (i= start_flr-1; i < num_flrs; i++)
@@ -223,7 +222,7 @@ PRIVATE void rpc__tower_ref_alloc
         /*
          * Allocate the tower floor
          */
-        RPC_MEM_ALLOC ( 
+        RPC_MEM_ALLOC (
             (*tower_ref)->floor[i],
             rpc_tower_floor_p_t,
             sizeof (rpc_tower_floor_t),
@@ -231,8 +230,8 @@ PRIVATE void rpc__tower_ref_alloc
             RPC_C_MEM_WAITOK );
 
         /*
-         * Initialize the floor's tower octet free flag to not 
-         * free the tower floor octet string, since they will be 
+         * Initialize the floor's tower octet free flag to not
+         * free the tower floor octet string, since they will be
          * freed by the caller who created them.
          */
         (*tower_ref)->floor[i]->free_twr_octet_flag = false;
@@ -258,7 +257,7 @@ PRIVATE void rpc__tower_ref_alloc
          * Get the additional information count.
          */
         memcpy ((char *) &((*tower_ref)->floor[i]->address_count),
-                (char *) tower_floor + RPC_C_TOWER_FLR_LHS_COUNT_SIZE + 
+                (char *) tower_floor + RPC_C_TOWER_FLR_LHS_COUNT_SIZE +
                 (*tower_ref)->floor[i]->prot_id_count,
                 RPC_C_TOWER_FLR_RHS_COUNT_SIZE);
 
@@ -276,7 +275,6 @@ PRIVATE void rpc__tower_ref_alloc
                        (*tower_ref)->floor[i]->address_count;
     }
 
-
     *status = rpc_s_ok;
     return;
 }
@@ -293,14 +291,14 @@ PRIVATE void rpc__tower_ref_alloc
 **  Allocates memory for a RPC tower reference structure and
 **  copies the contents of the source tower reference into it.
 **  The new tower reference points to the same tower floor as
-**  the source data structure.  The new tower reference free floor 
+**  the source data structure.  The new tower reference free floor
 **  flag is set to false so that a call to free the tower reference
 **  will not attempt to deallocate the tower floor twice.
 **
-**  INPUTS:             
+**  INPUTS:
 **
 **      source_tower    RPC tower reference to copy.
-**      
+**
 **  INPUT/OUTPUTS:      none
 **
 **  OUTPUTS:
@@ -325,7 +323,7 @@ PRIVATE void rpc__tower_ref_alloc
 **--
 */
 
-PRIVATE void rpc__tower_ref_copy 
+PRIVATE void rpc__tower_ref_copy
 (
     rpc_tower_ref_p_t   source_tower,
     rpc_tower_ref_p_t   *dest_tower,
@@ -337,8 +335,7 @@ PRIVATE void rpc__tower_ref_copy
 
     CODING_ERROR (status);
 
-
-    tower_ref_size = sizeof (rpc_tower_ref_t) + 
+    tower_ref_size = sizeof (rpc_tower_ref_t) +
                      (sizeof (rpc_tower_floor_p_t) * ((source_tower->count)-1));
 
     /*
@@ -351,18 +348,17 @@ PRIVATE void rpc__tower_ref_copy
         tower_ref_size,
         RPC_C_MEM_TOWER_REF,
         RPC_C_MEM_WAITOK);
-        
+
     /*
      * Copy the floor count to the destination tower ref.
      */
     (*dest_tower)->count = source_tower->count;
 
-
     /*
-     * For each floor in the source tower ref, allocate a new floor 
+     * For each floor in the source tower ref, allocate a new floor
      * for the destination tower ref and copy the floor contents.
-     * Set the destination free flag to false since the 
-     * floors' tower octet string will be freed when freeing 
+     * Set the destination free flag to false since the
+     * floors' tower octet string will be freed when freeing
      * the source_tower.
      */
     for (i=0; i < source_tower->count; i++)
@@ -394,13 +390,13 @@ PRIVATE void rpc__tower_ref_copy
 **
 **  DESCRIPTION:
 **
-**  Releases memory associated with a tower reference, including the 
+**  Releases memory associated with a tower reference, including the
 **  tower floor as well as the tower reference.
 **
 **  INPUTS:             none
 **
-**      
-**  INPUT/OUTPUTS:          
+**
+**  INPUT/OUTPUTS:
 **
 **      tower_ref       The tower reference to free. Nulled on return.
 **
@@ -423,14 +419,13 @@ PRIVATE void rpc__tower_ref_copy
 **--
 */
 
-PRIVATE void rpc__tower_ref_free 
+PRIVATE void rpc__tower_ref_free
 (
     rpc_tower_ref_p_t       *tower_ref,
     unsigned32              *status
 )
 {
     unsigned32      i;
-
 
     CODING_ERROR (status);
 
@@ -451,7 +446,7 @@ PRIVATE void rpc__tower_ref_free
      * Free the tower reference and set the pointer to NULL.
      */
     RPC_MEM_FREE (*tower_ref, RPC_C_MEM_TOWER_REF);
-    
+
     *tower_ref = NULL;
 
     *status = rpc_s_ok;
@@ -472,7 +467,7 @@ PRIVATE void rpc__tower_ref_free
 **
 **  INPUTS:
 **
-**      tower_ref       Protocol tower reference from which to 
+**      tower_ref       Protocol tower reference from which to
 **                      return the RPC protocol sequence id.
 **
 **  INPUT/OUTPUTS:      none
@@ -500,7 +495,7 @@ PRIVATE void rpc__tower_ref_free
 **--
 */
 
-PRIVATE void rpc__tower_ref_inq_protseq_id 
+PRIVATE void rpc__tower_ref_inq_protseq_id
 (
     rpc_tower_ref_p_t   tower_ref,
     rpc_protseq_id_t    *protseq_id,
@@ -513,17 +508,17 @@ PRIVATE void rpc__tower_ref_inq_protseq_id
     byte_p_t            tp;
     unsigned32          floors_to_search,
                         start_floor,
-                        i, j, k;            
+                        i, j, k;
     rpc_protocol_id_t   rpc_protocol_id;
     unsigned32          version_major;
     unsigned32          version_minor;
 
     CODING_ERROR (status);
 
-    /*  
+    /*
      * Initialize return protseq in case of failure.
      */
-    *protseq_id = RPC_C_INVALID_PROTSEQ_ID;
+    *protseq_id = rpc_c_invalid_protseq_id;
 
     /*
      * Let's find out if this is a tower without floors 1 & 2 (CDS
@@ -591,12 +586,12 @@ PRIVATE void rpc__tower_ref_inq_protseq_id
     /*
      * Allocate the array to hold the tower's protocol ids.
      * This is one element for each of the lower tower floors plus
-     * an element for the the RPC protocol id floor (in a minimal tower 
+     * an element for the the RPC protocol id floor (in a minimal tower
      * floor 1; in a full tower floor 3).
      */
     RPC_MEM_ALLOC (
-        tower_prot_ids, 
-        rpc_flr_prot_id_p_t, 
+        tower_prot_ids,
+        rpc_flr_prot_id_p_t,
         floors_to_search * sizeof (rpc_flr_prot_id_t),
         RPC_C_MEM_TOWER_PROT_IDS,
         RPC_C_MEM_WAITOK);
@@ -607,7 +602,7 @@ PRIVATE void rpc__tower_ref_inq_protseq_id
      */
     for (i= 0, j= start_floor; i < floors_to_search; i++)
     {
-        
+
         /*
          * Copy the floor's protocol id prefix.
          */
@@ -619,7 +614,7 @@ PRIVATE void rpc__tower_ref_inq_protseq_id
          * copy it.
          */
         if (tower_ref->floor[i+j]->prot_id_count > RPC_C_TOWER_PROT_ID_SIZE)
-        { 
+        {
             tp = (byte_p_t) RPC_PROT_ID_START(tower_ref->floor[i+j]);
 
             memcpy ((char *) &(tower_prot_ids[i].uuid),
@@ -638,9 +633,9 @@ PRIVATE void rpc__tower_ref_inq_protseq_id
      * For each protocol sequence supported by RPC,
      * see if the tower protocol ids match.
      *
-     * Note, we use RPC_C_PROTSEQ_ID_MAX+1 since 
-     * there are two entries in our table for 
-     * RPC_C_PROTSEQ_ID_NCACN_OSI_DNA - one for nsp 
+     * Note, we use RPC_C_PROTSEQ_ID_MAX+1 since
+     * there are two entries in our table for
+     * rpc_c_protseq_id_ncacn_osi_dna - one for nsp
      * and the other for tp4.
      */
     for (i = 0; i < rpc_g_tower_prot_id_number; i++)
@@ -663,10 +658,10 @@ PRIVATE void rpc__tower_ref_inq_protseq_id
          */
         for (k = 0; k < rpc_g_tower_prot_ids[i].num_floors; k++)
         {
-            master_prot_ids[k].prefix = 
+            master_prot_ids[k].prefix =
                 rpc_g_tower_prot_ids[i].floor_prot_ids[k].prefix;
 
-            master_prot_ids[k].uuid = 
+            master_prot_ids[k].uuid =
                 rpc_g_tower_prot_ids[i].floor_prot_ids[k].uuid;
         }
 
@@ -687,13 +682,13 @@ PRIVATE void rpc__tower_ref_inq_protseq_id
             for (j = 0; j < floors_to_search; j++)
             {
                 if ((master_prot_ids[k].prefix == tower_prot_ids[j].prefix) &&
-                    (uuid_equal (&(master_prot_ids[k].uuid), 
+                    (uuid_equal (&(master_prot_ids[k].uuid),
                      &(tower_prot_ids[j].uuid), status)))
                 {
                     master_prot_ids[k].prefix = 0;
                     break;
                 }
-                
+
                 /*
                  * Check status from uuid_equal.
                  * Return if failure.
@@ -758,7 +753,7 @@ CLEANUP:
 **
 **  DESCRIPTION:
 **
-**  Tells whether the specified protocol tower is compatible with 
+**  Tells whether the specified protocol tower is compatible with
 **  the client's protocols.
 **
 **  INPUTS:
@@ -766,7 +761,7 @@ CLEANUP:
 **      if_spec         The interface specification for the client.
 **                      If NULL, the if_spec compatibility check is bypassed.
 **
-**      tower_ref       Protocol tower reference to be checked for 
+**      tower_ref       Protocol tower reference to be checked for
 **                      compatibility with the client.
 **
 **  INPUT/OUTPUTS:      none
@@ -797,7 +792,7 @@ CLEANUP:
 **--
 */
 
-PRIVATE boolean rpc__tower_ref_is_compatible 
+PRIVATE boolean rpc__tower_ref_is_compatible
 (
     rpc_if_rep_p_t          if_spec,
     rpc_tower_ref_p_t       tower_ref,
@@ -818,9 +813,7 @@ PRIVATE boolean rpc__tower_ref_is_compatible
     rpc_protocol_id_t       tower_prot_id;
     unsigned8               temp_id;
 
-
     CODING_ERROR (status);
-
 
     /*
      * Obtain the protocol sequence from this tower.
@@ -833,8 +826,8 @@ PRIVATE boolean rpc__tower_ref_is_compatible
     }
 
     /*
-     * Ensure the protocol sequence from the tower 
-     * is supported by this client.  
+     * Ensure the protocol sequence from the tower
+     * is supported by this client.
      */
     if (!(RPC_PROTSEQ_INQ_SUPPORTED (tower_protseq_id)))
     {
@@ -859,7 +852,7 @@ PRIVATE boolean rpc__tower_ref_is_compatible
         {
             return (false);
         }
-        
+
         /*
          * Get the interface identifier from the tower
          */
@@ -873,19 +866,19 @@ PRIVATE boolean rpc__tower_ref_is_compatible
          * Compare the client's interface identifier to the
          * tower's interface id.  (Checks both the uuid and version.)
          */
-        if (!(rpc__if_id_compare 
+        if (!(rpc__if_id_compare
             (&if_id, &tower_if_id, rpc_c_vers_compatible, status)))
         {
             return (false);
         }
 
-        /* 
-         * See if any of the if_spec transfer syntaxes matches 
-         * the tower transfer syntaxes. 
+        /*
+         * See if any of the if_spec transfer syntaxes matches
+         * the tower transfer syntaxes.
          *
          * Note an interface transfer syntax count of 0 is an internal error.
          */
-         
+
          /*
           * Obtain the tower transfer syntax.
           */
@@ -895,10 +888,10 @@ PRIVATE boolean rpc__tower_ref_is_compatible
             return (false);
         }
 
-        for (if_spec_syntax_count = 0, 
+        for (if_spec_syntax_count = 0,
              match = false,
              if_syntax_id = if_spec->syntax_vector.syntax_id;
-             ((match == false) && 
+             ((match == false) &&
               (if_spec_syntax_count < if_spec->syntax_vector.count ));
              if_spec_syntax_count++,
              if_syntax_id++ )
@@ -906,7 +899,7 @@ PRIVATE boolean rpc__tower_ref_is_compatible
             /*
              * Check if a syntax id and version match.
              */
-            match = uuid_equal 
+            match = uuid_equal
                     (&(tower_syntax_id.id), &(if_syntax_id->id), status);
 
             if ((match == true) &&
@@ -916,10 +909,10 @@ PRIVATE boolean rpc__tower_ref_is_compatible
             }
         }
 
-        /* 
+        /*
          * if no match occurred, binding is not compatible - return false
          */
-        if (match == false) 
+        if (match == false)
         {
             *status = rpc_s_ok;
             return (false);
@@ -941,7 +934,7 @@ PRIVATE boolean rpc__tower_ref_is_compatible
      * specified in the tower.
      */
     rpc__network_inq_prot_version (
-        tower_protseq_id, &temp_id, &version_major, 
+        tower_protseq_id, &temp_id, &version_major,
         &version_minor, status);
     if (*status != rpc_s_ok)
     {
@@ -966,7 +959,6 @@ PRIVATE boolean rpc__tower_ref_is_compatible
     return (true);
 }
 
-
 
 /*
 **++
@@ -976,12 +968,12 @@ PRIVATE boolean rpc__tower_ref_is_compatible
 **
 **  DESCRIPTION:
 **
-**  Releases memory associated with a tower reference vector, 
+**  Releases memory associated with a tower reference vector,
 **  including the towers as well as the vector.
 **
 **  INPUTS:             none
 **
-**  INPUT/OUTPUTS:          
+**  INPUT/OUTPUTS:
 **
 **      tower_vector    The tower vector to free. Nulled on return.
 **
@@ -991,8 +983,8 @@ PRIVATE boolean rpc__tower_ref_is_compatible
 **                      operation. This status code is a value that
 **                      indicates whether the routine completed
 **                      successfully and, if not, why.
-**                      Returns 
-**                          rpc_s_ok 
+**                      Returns
+**                          rpc_s_ok
 **                          or status from a called routine.
 **
 **  IMPLICIT INPUTS:    none
@@ -1006,14 +998,13 @@ PRIVATE boolean rpc__tower_ref_is_compatible
 **--
 */
 
-PRIVATE void rpc__tower_ref_vec_free 
+PRIVATE void rpc__tower_ref_vec_free
 (
     rpc_tower_ref_vector_p_t    *tower_vector,
     unsigned32                  *status
 )
 {
     unsigned32      i;
-
 
     CODING_ERROR (status);
 
@@ -1027,7 +1018,7 @@ PRIVATE void rpc__tower_ref_vec_free
     }
 
     /*
-     * Free each tower reference in the vector.  
+     * Free each tower reference in the vector.
      */
     for (i=0; i < (*tower_vector)->count; i++)
     {
@@ -1059,12 +1050,12 @@ PRIVATE void rpc__tower_ref_vec_free
 **  DESCRIPTION:
 **
 **  Creates a vector of tower references from a single binding handle.
-**  A separate tower reference is created for each data representation 
-**  (transfer syntax) found in the interface specification.  
-**  With the exception of the data representation floor, each of 
+**  A separate tower reference is created for each data representation
+**  (transfer syntax) found in the interface specification.
+**  With the exception of the data representation floor, each of
 **  the returned towers in the vector is identical.
 **
-**  INPUTS:             
+**  INPUTS:
 **
 **      if_spec         Interface specification.
 **      binding         Binding handle.
@@ -1077,11 +1068,11 @@ PRIVATE void rpc__tower_ref_vec_free
 **      tower_vector    Returns a pointer to a tower reference vector.
 **
 **      status          Returns the status code from the tower-ref vector
-**                      from binding operation. This status code is a value 
+**                      from binding operation. This status code is a value
 **                      that indicates whether the routine completed
 **                      successfully and, if not, why.
-**                      Returns 
-**                          rpc_s_ok 
+**                      Returns
+**                          rpc_s_ok
 **                          or status from a called routine.
 **
 **  IMPLICIT INPUTS:    none
@@ -1095,7 +1086,7 @@ PRIVATE void rpc__tower_ref_vec_free
 **--
 */
 
-PRIVATE void rpc__tower_ref_vec_from_binding 
+PRIVATE void rpc__tower_ref_vec_from_binding
 (
     rpc_if_rep_p_t              if_spec,
     rpc_binding_handle_t        binding,
@@ -1113,16 +1104,15 @@ PRIVATE void rpc__tower_ref_vec_from_binding
     rpc_binding_rep_p_t     binding_rep;
     rpc_syntax_id_t         *if_syntax_id;
 
-
     CODING_ERROR (status);
 
     /*
      * Create the tower vector.
      */
-    RPC_MEM_ALLOC ( 
+    RPC_MEM_ALLOC (
         *tower_vector,
         rpc_tower_ref_vector_p_t,
-        sizeof (rpc_tower_ref_vector_t) + 
+        sizeof (rpc_tower_ref_vector_t) +
         ((if_spec->syntax_vector.count -1) * (sizeof (rpc_tower_ref_p_t))) ,
         RPC_C_MEM_TOWER_REF_VECTOR,
         RPC_C_MEM_WAITOK );
@@ -1133,7 +1123,7 @@ PRIVATE void rpc__tower_ref_vec_from_binding
     (*tower_vector)->count = 0;
 
     /*
-     * Create the tower for the first transfer syntax 
+     * Create the tower for the first transfer syntax
      * in the interface specification.
      */
 
@@ -1163,7 +1153,7 @@ PRIVATE void rpc__tower_ref_vec_from_binding
      * Get the number of lower tower floors returned and
      * convert to host's representation.
      */
-    memcpy ((char *)&lower_flr_count, 
+    memcpy ((char *)&lower_flr_count,
             (char *)lower_floors->tower_octet_string,
             RPC_C_TOWER_FLR_COUNT_SIZE);
 
@@ -1174,8 +1164,8 @@ PRIVATE void rpc__tower_ref_vec_from_binding
      * The number of floors is equal to the number of RPC (upper) floors
      * plus the number of network (lower) floors.
      */
-    rpc__tower_ref_alloc (lower_floors->tower_octet_string, 
-        RPC_C_NUM_RPC_FLOORS + lower_flr_count, 
+    rpc__tower_ref_alloc (lower_floors->tower_octet_string,
+        RPC_C_NUM_RPC_FLOORS + lower_flr_count,
         RPC_C_NUM_RPC_FLOORS+1, &((*tower_vector)->tower[0]), status);
 
     if (*status != rpc_s_ok)
@@ -1229,7 +1219,7 @@ PRIVATE void rpc__tower_ref_vec_from_binding
     /*
      * Create tower floor 3 from the RPC protocol id.
      */
-    rpc__tower_flr_from_rpc_prot_id (binding_rep->rpc_addr->rpc_protseq_id, 
+    rpc__tower_flr_from_rpc_prot_id (binding_rep->rpc_addr->rpc_protseq_id,
         binding_rep->protocol_version, &tower_floor, status);
     if (*status != rpc_s_ok)
     {
@@ -1255,7 +1245,7 @@ PRIVATE void rpc__tower_ref_vec_from_binding
      * in the interface specification.
      */
     if_syntax_id++;
-    for (i=1; i < if_spec->syntax_vector.count; 
+    for (i=1; i < if_spec->syntax_vector.count;
          i++, if_syntax_id++, (*tower_vector)->count++)
     {
         /*
@@ -1286,10 +1276,9 @@ PRIVATE void rpc__tower_ref_vec_from_binding
         }
 
         (*tower_vector)->tower[i] = tower_copy;
-        
 
     }
-        
+
 CLEANUP:
     /*
      * If status is anything other than successful,

@@ -132,17 +132,9 @@ EXTERNAL unsigned32    rpc_g_fork_count;
 /*
  * R P C _ P R O T S E Q _ I D _ T
  *
- * The RPC Protocol Sequence IDs.
- */
-#define RPC_C_INVALID_PROTSEQ_ID        rpc_c_invalid_protseq_id
-#define RPC_C_PROTSEQ_ID_NCACN_IP_TCP   rpc_c_protseq_id_ncacn_ip_tcp
-#define RPC_C_PROTSEQ_ID_NCACN_DNET_NSP rpc_c_protseq_id_ncacn_dnet_nsp
-#define RPC_C_PROTSEQ_ID_NCACN_OSI_DNA  rpc_c_protseq_id_ncacn_osi_dna
-#define RPC_C_PROTSEQ_ID_NCADG_IP_UDP   rpc_c_protseq_id_ncadg_ip_udp
-#define RPC_C_PROTSEQ_ID_NCADG_DDS      rpc_c_protseq_id_ncadg_dds
-#define RPC_C_PROTSEQ_ID_NCALRPC        rpc_c_protseq_id_ncalrpc
-#define RPC_C_PROTSEQ_ID_NCACN_NP       rpc_c_protseq_id_ncacn_np
-#define RPC_C_PROTSEQ_ID_NCACN_NB       rpc_c_protseq_id_ncacn_nb
+ * The RPC Protocol Sequence IDs are now in rpcbase.idl
+*/
+
 
 #ifdef TEST_PROTOCOL
 #define RPC_C_PROTSEQ_ID_NCATP_IP_TCP   15

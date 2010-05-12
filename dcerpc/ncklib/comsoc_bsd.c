@@ -598,12 +598,12 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_bind
 
     RPC_LOG_SOCKET_BIND_NTR;
 
-    ncalrpc = addr->rpc_protseq_id == RPC_C_PROTSEQ_ID_NCALRPC;
+    ncalrpc = addr->rpc_protseq_id == rpc_c_protseq_id_ncalrpc;
 
     /*
      * Check if the address has a well-known endpoint.
      */
-    if (addr->rpc_protseq_id == RPC_C_PROTSEQ_ID_NCACN_IP_TCP || ncalrpc)
+    if (addr->rpc_protseq_id == rpc_c_protseq_id_ncacn_ip_tcp || ncalrpc)
     {
         unsigned_char_t *endpoint;
 

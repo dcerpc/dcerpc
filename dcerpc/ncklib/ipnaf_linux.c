@@ -510,7 +510,7 @@ PRIVATE void rpc__ip_init_local_addr_vec
 
     CODING_ERROR (status);
 
-    err = rpc__socket_open(RPC_C_PROTSEQ_ID_NCADG_IP_UDP, NULL, &sock);
+    err = rpc__socket_open(rpc_c_protseq_id_ncadg_ip_udp, NULL, &sock);
 
     if (err)
     {

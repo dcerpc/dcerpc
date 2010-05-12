@@ -138,7 +138,7 @@ EXTERNAL rpc_protocol_id_elt_t   rpc_g_protocol_id[];
  * it accessible by the dynamic loading code so that new modules can register
  * with the runtime.
  * We allocate extra space, since there may be mulitple entries: eg
- * RPC_C_PROTSEQ_ID_NCACN_OSI_DNA
+ * rpc_c_protseq_id_ncacn_osi_dna
  * */
 typedef struct
 {

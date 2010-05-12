@@ -320,13 +320,13 @@ PRIVATE void rpc__np_naf_init_func(void)
          */
 	static rpc_tower_prot_ids_t prot_ids[] = {
 #if HAVE_LIKEWISE_LWIO || HAVE_SMBCLIENT_FRAMEWORK
-        { RPC_C_PROTSEQ_ID_NCACN_NP,   3,
+        { rpc_c_protseq_id_ncacn_np,   3,
           { {0x0B,   { 0, 0, 0, 0, 0, {0} }}, /* Connection-oriented */
             {0x0F,   { 0, 0, 0, 0, 0, {0} }}, /* SMB Named Pipes */
             {0x11,   { 0, 0, 0, 0, 0, {0} }}, /* NetBIOS host */
             {0x00,   { 0, 0, 0, 0, 0, {0} }} } },
 #endif
-        { RPC_C_PROTSEQ_ID_NCALRPC,   2,
+        { rpc_c_protseq_id_ncalrpc,   2,
           { {0x0B,   { 0, 0, 0, 0, 0, {0} }}, /* Connection-oriented */
             {0x20,   { 0, 0, 0, 0, 0, {0} }}, /* socket pathname */
             {0x00,   { 0, 0, 0, 0, 0, {0} }} } }
@@ -336,7 +336,7 @@ PRIVATE void rpc__np_naf_init_func(void)
     {                                   /* Connection-RPC / NP / NB */
         0,
         0, /* Does not use endpoint mapper */
-        RPC_C_PROTSEQ_ID_NCACN_NP,
+        rpc_c_protseq_id_ncacn_np,
         RPC_C_PROTOCOL_ID_NCACN,
         RPC_C_NAF_ID_UXD,
         RPC_C_NETWORK_PROTOCOL_ID_NP,
@@ -349,7 +349,7 @@ PRIVATE void rpc__np_naf_init_func(void)
     {                                   /* Connection-RPC / UXD */
         0,
         0, /* Does not use endpoint mapper */
-        RPC_C_PROTSEQ_ID_NCALRPC,
+        rpc_c_protseq_id_ncalrpc,
         RPC_C_PROTOCOL_ID_NCACN,
         RPC_C_NAF_ID_UXD,
         RPC_C_NETWORK_PROTOCOL_ID_UXD,
@@ -775,7 +775,7 @@ INTERNAL void addr_set_endpoint
 
     switch (np_addr->rpc_protseq_id)
     {
-        case RPC_C_PROTSEQ_ID_NCACN_NP:
+        case rpc_c_protseq_id_ncacn_np:
             pipe_dir = RPC_C_NP_DIR;
 
             if (!rpc__np_is_valid_endpoint(endpoint, status))
@@ -785,7 +785,7 @@ INTERNAL void addr_set_endpoint
             }
 
             break;
-        case RPC_C_PROTSEQ_ID_NCALRPC:
+        case rpc_c_protseq_id_ncalrpc:
             pipe_dir = RPC_C_UXD_DIR;
             break;
 
@@ -817,7 +817,7 @@ INTERNAL void addr_set_endpoint
      * Convert backslashes to forward slashes to conform to
      * UNIX filesystem convention.
      */
-    if (np_addr->rpc_protseq_id == RPC_C_PROTSEQ_ID_NCACN_NP)
+    if (np_addr->rpc_protseq_id == rpc_c_protseq_id_ncacn_np)
     {
         for (p = (unsigned char*) &np_addr->sa.sun_path[RPC_C_NP_DIR_LEN]; *p != '\0'; p++) {
             if (*p == '\\')
@@ -918,7 +918,7 @@ INTERNAL void addr_inq_endpoint
             RPC_C_ENDPOINT_NP_MAX,
             RPC_C_MEM_STRING,
             RPC_C_MEM_WAITOK);
-        if (np_addr->rpc_protseq_id == RPC_C_PROTSEQ_ID_NCACN_NP)
+        if (np_addr->rpc_protseq_id == rpc_c_protseq_id_ncacn_np)
         {
             if (!rpc__np_is_valid_endpoint((const unsigned_char_t *)sun_path, status))
             {
@@ -1073,7 +1073,7 @@ INTERNAL void addr_inq_netaddr
 
     /* Note that we return an empty string if the protocol
        sequence is not ncacn_np */
-    if (np_addr->rpc_protseq_id == RPC_C_PROTSEQ_ID_NCACN_NP)
+    if (np_addr->rpc_protseq_id == rpc_c_protseq_id_ncacn_np)
     {
         addr_length = strlen(np_addr->remote_host);
     }
@@ -1732,7 +1732,7 @@ INTERNAL void tower_flrs_from_addr
     /*
      * Convert sockaddr to lower tower floors.
      */
-    if (rpc_addr->rpc_protseq_id == RPC_C_PROTSEQ_ID_NCACN_NP)
+    if (rpc_addr->rpc_protseq_id == rpc_c_protseq_id_ncacn_np)
         twr_np_lower_flrs_from_sa ((sockaddr_t *) &(rpc_addr->sa),
 #if 0
         &temp_lower_flrs,
@@ -1991,7 +1991,7 @@ INTERNAL void desc_inq_peer_addr
 
     memset(np_addr->sa.sun_path, 0, sizeof(np_addr->sa.sun_path));
 
-    if (np_addr->rpc_protseq_id == RPC_C_PROTSEQ_ID_NCACN_NP)
+    if (np_addr->rpc_protseq_id == rpc_c_protseq_id_ncacn_np)
     {
         memset (&loc_np_addr, 0, sizeof(rpc_np_addr_t));
         loc_np_addr.len = sizeof(loc_np_addr) - offsetof(rpc_np_addr_t, sa);

@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
@@ -16,7 +16,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
  */
@@ -28,7 +28,7 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
@@ -55,7 +55,6 @@
  */
 GLOBAL boolean              rpc_g_initialized = false;
 
-
 /***********************************************************************/
 /*
  * R P C _ G _ T H R E A D _ C O N T E X T _ K E Y
@@ -65,7 +64,6 @@ GLOBAL boolean              rpc_g_initialized = false;
  */
 GLOBAL dcethread_key        rpc_g_thread_context_key;
 
-     
 /***********************************************************************/
 /*
  * R P C _ G _ G L O B A L _ M U T E X
@@ -76,7 +74,6 @@ GLOBAL dcethread_key        rpc_g_thread_context_key;
  * Services will need to reference it through the mutex macros.
  */
 GLOBAL rpc_mutex_t          rpc_g_global_mutex;
-
 
 /***********************************************************************/
 /*
@@ -89,7 +86,6 @@ GLOBAL rpc_mutex_t          rpc_g_global_mutex;
  */
 GLOBAL rpc_cond_t           rpc_g_global_binding_cond;
 
-
 /***********************************************************************/
 /*
  * R P C _ G _ F O R K _ C O U N T
@@ -99,8 +95,8 @@ GLOBAL rpc_cond_t           rpc_g_global_binding_cond;
  * unaffected--all RPC helper threads are restarted, and
  * all RPC state maintained.  In the child, however, all state
  * is dropped, and the RPC initialization process will have
- * to be repeated if the child tries to use RPC.  
- * 
+ * to be repeated if the child tries to use RPC.
+ *
  * The counter here is necessitated by the fact that it is possible
  * for the application to hold the only reference to certain
  * data structures allocated by the runtime;  the example of concern
@@ -124,9 +120,9 @@ GLOBAL rpc_cond_t           rpc_g_global_binding_cond;
  *        a call handle, the DG code will try to send out any
  *        pending acknowledgements.  For this reason, most of
  *        these routines are unusable.
- *     2) It is too late to redesign all of these routines to 
+ *     2) It is too late to redesign all of these routines to
  *        incorporate the correct fork-aware behavior.
- *     3) Vaporizing all state in the child of a fork creates a 
+ *     3) Vaporizing all state in the child of a fork creates a
  *        scenario that is easier to understand, and implement
  *        correctly.
  *     4) The amount of memory stranded does not seem to be enough
@@ -136,7 +132,6 @@ GLOBAL rpc_cond_t           rpc_g_global_binding_cond;
  *        with stranded memory.
  */
 GLOBAL unsigned32 rpc_g_fork_count;
-
 
 /***********************************************************************/
 /*
@@ -193,53 +188,53 @@ GLOBAL rpc_g_ns_specific_free_fn_t  rpc_g_ns_specific_free_fn = NULL;
  * it accessible by the dynamic loading code so that new modules can register
  * with the runtime.
  * We allocate extra space, since there may be mulitple entries: eg
- * RPC_C_PROTSEQ_ID_NCACN_OSI_DNA
+ * rpc_c_protseq_id_ncacn_osi_dna
  * */
 GLOBAL unsigned32 rpc_g_tower_prot_id_number = 0;	/* number of elts in rpc_g_tower_prot_ids */
-GLOBAL rpc_tower_prot_ids_t rpc_g_tower_prot_ids[RPC_C_PROTSEQ_ID_MAX*2] = 
+GLOBAL rpc_tower_prot_ids_t rpc_g_tower_prot_ids[RPC_C_PROTSEQ_ID_MAX*2] =
 {
 #if 0
-	{ RPC_C_PROTSEQ_ID_NCACN_IP_TCP,   3, 
+	{ rpc_c_protseq_id_ncacn_ip_tcp,   3,
 		{ {0x0B,   { 0, 0, 0, 0, 0, {0} }},
 			{0x07,   { 0, 0, 0, 0, 0, {0} }},
 			{0x09,   { 0, 0, 0, 0, 0, {0} }},
 			{0x00,   { 0, 0, 0, 0, 0, {0} }}
 		}
 	},
-	{ RPC_C_PROTSEQ_ID_NCACN_DNET_NSP, 4, 
+	{ rpc_c_protseq_id_ncacn_dnet_nsp, 4,
 		{ {0x0B,   { 0, 0, 0, 0, 0, {0} }},
 			{0x02,   { 0, 0, 0, 0, 0, {0} }},
 			{0x04,   { 0, 0, 0, 0, 0, {0} }},
-			{0x06,   { 0, 0, 0, 0, 0, {0} }} 
-		} 
+			{0x06,   { 0, 0, 0, 0, 0, {0} }}
+		}
 	},
-	{ RPC_C_PROTSEQ_ID_NCACN_OSI_DNA,  4, 
+	{ rpc_c_protseq_id_ncacn_osi_dna,  4,
 		{ {0x0B,   { 0, 0, 0, 0, 0, {0} }},
 			{0x03,   { 0, 0, 0, 0, 0, {0} }},
 			{0x04,   { 0, 0, 0, 0, 0, {0} }},
 			{0x06,   { 0, 0, 0, 0, 0, {0} }}
-		} 
+		}
 	},
-	{ RPC_C_PROTSEQ_ID_NCACN_OSI_DNA,  4, 
+	{ rpc_c_protseq_id_ncacn_osi_dna,  4,
 		{ {0x0B,   { 0, 0, 0, 0, 0, {0} }},
 			{0x03,   { 0, 0, 0, 0, 0, {0} }},
 			{0x05,   { 0, 0, 0, 0, 0, {0} }},
 			{0x06,   { 0, 0, 0, 0, 0, {0} }}
-		} 
+		}
 	},
-	{ RPC_C_PROTSEQ_ID_NCADG_IP_UDP,   3, 
+	{ rpc_c_protseq_id_ncadg_ip_udp,   3,
 		{ {0x0A,   { 0, 0, 0, 0, 0, {0} }},
 			{0x08,   { 0, 0, 0, 0, 0, {0} }},
 			{0x09,   { 0, 0, 0, 0, 0, {0} }},
 			{0x00,   { 0, 0, 0, 0, 0, {0} }}
-		} 
+		}
 	},
-	{ RPC_C_PROTSEQ_ID_NCADG_DDS,      3, 
+	{ rpc_c_protseq_id_ncadg_dds,      3,
 		{ {0x0A,   { 0, 0, 0, 0, 0, {0} }},
 			{0x0D,   {0x9865a080UL, 0xbb73, 0x11c9, 0x96, 0x3c, {0x08,0x00, 0x2b, 0x13, 0xec, 0x4e}}},
 			{0x0D,   {0x9b86b6a0UL, 0xbb73, 0x11c9, 0xb8, 0x89, {0x08, 0x00, 0x2b, 0x13, 0xec, 0x4e}}},
 			{0x00,   { 0, 0, 0, 0, 0, {0} }}
-		} 
+		}
 	}
 #endif
 };
@@ -268,33 +263,33 @@ GLOBAL rpc_tower_prot_ids_t rpc_g_tower_prot_ids[RPC_C_PROTSEQ_ID_MAX*2] =
  *                      Sequence is actually supported by the system.
  *
  *      rpc_protseq_id  A constant identifier for the Protocol Sequence.
- *      
+ *
  *      rpc_protocol_id A constant identifier for the RPC Protocol used
  *                      in this Protocol Sequence.
- *      
+ *
  *      naf_id          A constant identifier for the Network Address
  *                      Family used in this Protocol Sequence.
- *      
+ *
  *      net_protocol_id A constant identifier for the network protocol
  *                      used in this Protocol Sequence.
- *      
+ *
  *      net_if_id       A constant identifier for the network interface
  *                      type used in this Protocol Sequence.
- *      
+ *
  *      rpc_protseq     A string constant defining this Protocol Sequence.
  *
  *      port_restriction_list_p
- *                      An optionally pointer to a port_restriction_list 
+ *                      An optionally pointer to a port_restriction_list
  *                      object.
  */
 
-GLOBAL 
-rpc_protseq_id_elt_t     rpc_g_protseq_id[RPC_C_PROTSEQ_ID_MAX] = 
+GLOBAL
+rpc_protseq_id_elt_t     rpc_g_protseq_id[RPC_C_PROTSEQ_ID_MAX] =
 {
 #if 0
     {                                   /* Connection-RPC / IP / TCP */
         0,
-        RPC_C_PROTSEQ_ID_NCACN_IP_TCP,
+        rpc_c_protseq_id_ncacn_ip_tcp,
         RPC_C_PROTOCOL_ID_NCACN,
         RPC_C_NAF_ID_IP,
         RPC_C_NETWORK_PROTOCOL_ID_TCP,
@@ -304,8 +299,8 @@ rpc_protseq_id_elt_t     rpc_g_protseq_id[RPC_C_PROTSEQ_ID_MAX] =
     },
 
     {                                   /* Connection-RPC / DECnet / NSP */
-        0,                                
-        RPC_C_PROTSEQ_ID_NCACN_DNET_NSP,
+        0,
+        rpc_c_protseq_id_ncacn_dnet_nsp,
         RPC_C_PROTOCOL_ID_NCACN,
         RPC_C_NAF_ID_DNET,
         RPC_C_NETWORK_PROTOCOL_ID_UNS,
@@ -315,8 +310,8 @@ rpc_protseq_id_elt_t     rpc_g_protseq_id[RPC_C_PROTSEQ_ID_MAX] =
     },
 
     {                                   /* Connection-RPC / OSI / DNASESSION */
-        0,                              
-        RPC_C_PROTSEQ_ID_NCACN_OSI_DNA,     
+        0,
+        rpc_c_protseq_id_ncacn_osi_dna,
         RPC_C_PROTOCOL_ID_NCACN,
         RPC_C_NAF_ID_OSI,
         RPC_C_NETWORK_PROTOCOL_ID_DNASESSION,
@@ -327,7 +322,7 @@ rpc_protseq_id_elt_t     rpc_g_protseq_id[RPC_C_PROTSEQ_ID_MAX] =
 
     {                                   /* Datagram-RPC / IP / UDP */
         0,
-        RPC_C_PROTSEQ_ID_NCADG_IP_UDP,
+        rpc_c_protseq_id_ncadg_ip_udp,
         RPC_C_PROTOCOL_ID_NCADG,
         RPC_C_NAF_ID_IP,
         RPC_C_NETWORK_PROTOCOL_ID_UDP,
@@ -338,7 +333,7 @@ rpc_protseq_id_elt_t     rpc_g_protseq_id[RPC_C_PROTSEQ_ID_MAX] =
 
     {                                   /* Datagram-RPC / DDS */
         0,
-        RPC_C_PROTSEQ_ID_NCADG_DDS,
+        rpc_c_protseq_id_ncadg_dds,
         RPC_C_PROTOCOL_ID_NCADG,
         RPC_C_NAF_ID_DDS,
         RPC_C_NETWORK_PROTOCOL_ID_DDS,
@@ -378,26 +373,26 @@ rpc_protseq_id_elt_t     rpc_g_protseq_id[RPC_C_PROTSEQ_ID_MAX] =
  *
  *      prot_init       The address of an initialization routine in the
  *                      Protocol Service that will be called by rpc__init.
- *      
- *      prot_fork_handler  The address of a routine to call to handle 
+ *
+ *      prot_fork_handler  The address of a routine to call to handle
  *                      protocol specific, fork-related processing.
  *
  *      rpc_protocol_id A constant identifier for this RPC Protocol.
- *      
+ *
  *      call_epv        An entry point vector for the Call Services in
  *                      the Protocol Service.
- *      
- *      mgmt_epv        An entry point vector for the Management Services in 
+ *
+ *      mgmt_epv        An entry point vector for the Management Services in
  *                      the Protocol Service.
- *      
+ *
  *      binding_epv     An entry point vector for the Binding Services
  *                      in the Protocol Service.
- *      
+ *
  *      network_epv     An entry point vector for the Network Services
  *                      in the Protocol Service.
  */
 
-GLOBAL rpc_protocol_id_elt_t     rpc_g_protocol_id[RPC_C_PROTOCOL_ID_MAX] = 
+GLOBAL rpc_protocol_id_elt_t     rpc_g_protocol_id[RPC_C_PROTOCOL_ID_MAX] =
 {
 #if 0
 #ifdef PROT_NCACN
@@ -405,7 +400,7 @@ GLOBAL rpc_protocol_id_elt_t     rpc_g_protocol_id[RPC_C_PROTOCOL_ID_MAX] =
         rpc__ncacn_init,                /* Connection-RPC */
         NULL,
         RPC_C_PROTOCOL_ID_NCACN,
-        NULL, NULL, NULL, NULL 
+        NULL, NULL, NULL, NULL
     },
 #else
     {NULL},
@@ -416,7 +411,7 @@ GLOBAL rpc_protocol_id_elt_t     rpc_g_protocol_id[RPC_C_PROTOCOL_ID_MAX] =
         rpc__ncadg_init,                /* Datagram-RPC */
         NULL,
         RPC_C_PROTOCOL_ID_NCADG,
-        NULL, NULL, NULL, NULL 
+        NULL, NULL, NULL, NULL
     }
 #else
     {NULL}
@@ -427,7 +422,7 @@ GLOBAL rpc_protocol_id_elt_t     rpc_g_protocol_id[RPC_C_PROTOCOL_ID_MAX] =
         rpc__ncatp_init,                /* Test-RPC */
         NULL,
         RPC_C_PROTOCOL_ID_NCATP,
-        NULL, NULL, NULL, NULL 
+        NULL, NULL, NULL, NULL
     }
 #endif
 #endif
@@ -447,7 +442,7 @@ GLOBAL rpc_protocol_id_elt_t     rpc_g_protocol_id[RPC_C_PROTOCOL_ID_MAX] =
  * Note that the ".naf_id" field of i'th element in the table is always
  * "i".  While redundant, this is useful so that you can pass pointers
  * to individual table elements.
- * 
+ *
  * The fields are:
  *
  *      naf_init        The address of an initialization routine in the
@@ -458,11 +453,11 @@ GLOBAL rpc_protocol_id_elt_t     rpc_g_protocol_id[RPC_C_PROTOCOL_ID_MAX] =
  *      net_if_id       A constant identifier for the network interface
  *                      type used in the NAF initialization routine (when
  *                      determining if this NAF is supported).
- *      
+ *
  *      naf_epv         An entry point vector for the NAF Service.
  */
 
-GLOBAL rpc_naf_id_elt_t     rpc_g_naf_id[RPC_C_NAF_ID_MAX] = 
+GLOBAL rpc_naf_id_elt_t     rpc_g_naf_id[RPC_C_NAF_ID_MAX] =
 {
 #if 0
     {NULL, 0, 0, NULL},
@@ -472,7 +467,7 @@ GLOBAL rpc_naf_id_elt_t     rpc_g_naf_id[RPC_C_NAF_ID_MAX] =
         rpc__ip_init,
         RPC_C_NAF_ID_IP,
         RPC_C_NETWORK_IF_ID_DGRAM,
-        NULL 
+        NULL
     },
 #else
     {NULL, 0, 0, NULL},
@@ -491,7 +486,7 @@ GLOBAL rpc_naf_id_elt_t     rpc_g_naf_id[RPC_C_NAF_ID_MAX] =
         rpc__dnet_init,
         RPC_C_NAF_ID_DNET,
         RPC_C_NETWORK_IF_ID_SEQPACKET,
-        NULL 
+        NULL
     },
 #else
     {NULL, 0, 0, NULL},
@@ -501,7 +496,7 @@ GLOBAL rpc_naf_id_elt_t     rpc_g_naf_id[RPC_C_NAF_ID_MAX] =
         rpc__dds_init,
         RPC_C_NAF_ID_DDS,
         RPC_C_NETWORK_IF_ID_DGRAM,
-        NULL 
+        NULL
     },
 #else
     {NULL, 0, 0, NULL},
@@ -516,7 +511,7 @@ GLOBAL rpc_naf_id_elt_t     rpc_g_naf_id[RPC_C_NAF_ID_MAX] =
         rpc__osi_init,
         RPC_C_NAF_ID_OSI,
         RPC_C_NETWORK_IF_ID_STREAM,
-        NULL 
+        NULL
     }
 #else
     {NULL, 0, 0, NULL}
@@ -534,7 +529,7 @@ GLOBAL rpc_naf_id_elt_t     rpc_g_naf_id[RPC_C_NAF_ID_MAX] =
  * entries include the following fields:
  *
  *      auth_init           The address of an initialization routine in the
- *                          Authentication Service that will be called by 
+ *                          Authentication Service that will be called by
  *                          rpc__init.
  *
  *      authn_protocol_id   A constant identifier for this Authentication Service.
@@ -563,9 +558,9 @@ GLOBAL rpc_authn_protocol_id_elt_t rpc_g_authn_protocol_id[RPC_C_AUTHN_PROTOCOL_
 {
 #if 0
     {                               /* 0 */
-        NULL, 
-        rpc_c_authn_none, 
-        dce_c_rpc_authn_protocol_none, 
+        NULL,
+        rpc_c_authn_none,
+        dce_c_rpc_authn_protocol_none,
         NULL,
 		  NULL
     }
@@ -578,7 +573,7 @@ GLOBAL rpc_authn_protocol_id_elt_t rpc_g_authn_protocol_id[RPC_C_AUTHN_PROTOCOL_
 		  NULL
     },
     {                               /* 2 (reserved for dce_public) */
-        NULL, 
+        NULL,
         rpc_c_authn_dce_public,
         /* dce_c_rpc_authn_protocol_... */ 0,
         NULL,
@@ -593,12 +588,12 @@ GLOBAL rpc_authn_protocol_id_elt_t rpc_g_authn_protocol_id[RPC_C_AUTHN_PROTOCOL_
     },
     {                               /* 4 (reserved for dssa_public) */
         NULL,
-        rpc_c_authn_dssa_public, 
+        rpc_c_authn_dssa_public,
         0,
         NULL,
 		  NULL
     }
-#endif 
+#endif
 };
 
 

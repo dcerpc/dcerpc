@@ -265,7 +265,7 @@ PRIVATE void rpc__np_desc_inq_addr
      */
     np_addr->sa.sun_family = AF_UNIX;
 
-    if (np_addr->rpc_protseq_id == RPC_C_PROTSEQ_ID_NCACN_NP)
+    if (np_addr->rpc_protseq_id == rpc_c_protseq_id_ncacn_np)
     {
 	/*
 	 * Assume that named pipes are unix domain sockets where the

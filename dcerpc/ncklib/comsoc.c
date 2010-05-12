@@ -602,7 +602,7 @@ rpc_binding_inq_prot_seq(
     }
     else
     {
-        *prot_seq = (unsigned32)RPC_C_INVALID_PROTSEQ_ID;
+        *prot_seq = (unsigned32)rpc_c_invalid_protseq_id;
     }
 
     *st = rpc_s_ok;

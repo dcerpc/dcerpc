@@ -1017,7 +1017,7 @@ PRIVATE void rpc__naf_desc_inq_protseq_id
      }
      else
      {
-        *protseq_id = RPC_C_INVALID_PROTSEQ_ID;
+        *protseq_id = rpc_c_invalid_protseq_id;
         *status = rpc_s_invalid_rpc_protseq;
      }
 }

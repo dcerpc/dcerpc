@@ -516,7 +516,7 @@ rpc__smb_socket_create(
     sock->accept_backlog.selectfd[1] = -1;
 
     /* Set up reasonable default local endpoint */
-    sock->localaddr.rpc_protseq_id = RPC_C_PROTSEQ_ID_NCACN_NP;
+    sock->localaddr.rpc_protseq_id = rpc_c_protseq_id_ncacn_np;
     sock->localaddr.len = offsetof(rpc_np_addr_t, remote_host) + sizeof(sock->localaddr.remote_host);
     sock->localaddr.sa.sun_family = AF_UNIX;
     sock->localaddr.sa.sun_path[0] = '\0';
@@ -2239,7 +2239,7 @@ rpc__smb_socket_duplicate(
         return RPC_C_SOCKET_ENOTSOCK;
     }
 
-    if (protseq_id != RPC_C_PROTSEQ_ID_NCACN_NP)
+    if (protseq_id != rpc_c_protseq_id_ncacn_np)
     {
 	return RPC_C_SOCKET_EINVAL;
     }
@@ -2247,7 +2247,7 @@ rpc__smb_socket_duplicate(
     rpc__smb_socket_destruct(sock);
 
     serr = rpc_g_bsd_socket_vtbl.socket_construct(sock,
-	    RPC_C_PROTSEQ_ID_NCALRPC, NULL);
+	    rpc_c_protseq_id_ncalrpc, NULL);
     if (RPC_SOCKET_IS_ERR(serr)) {
         return serr;
     }
@@ -2258,7 +2258,7 @@ rpc__smb_socket_duplicate(
     sock->pseq_id = protseq_id;
 
     serr = rpc_g_bsd_socket_vtbl.socket_duplicate(sock,
-	    RPC_C_PROTSEQ_ID_NCACN_NP, sockrep);
+	    rpc_c_protseq_id_ncacn_np, sockrep);
     if (RPC_SOCKET_IS_ERR(serr)) {
         return serr;
     }

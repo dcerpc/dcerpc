@@ -897,7 +897,7 @@ PRIVATE void rpc__ip_init_local_addr_vec
     }
 
     enumerate_interfaces
-        (RPC_C_PROTSEQ_ID_NCADG_IP_UDP, desc, get_addr,
+        (rpc_c_protseq_id_ncadg_ip_udp, desc, get_addr,
          &rpc_addr_vec, &netmask_addr_vec, status);
     close(desc);
 

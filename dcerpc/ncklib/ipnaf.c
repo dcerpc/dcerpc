@@ -284,7 +284,7 @@ PRIVATE void rpc__ip_naf_init_func(void)
 		}
 	};
 	static rpc_tower_prot_ids_t prot_ids[2] = {
-		{ RPC_C_PROTSEQ_ID_NCADG_IP_UDP,   3,
+		{ rpc_c_protseq_id_ncadg_ip_udp,   3,
 			{ {0x0A,   { 0, 0, 0, 0, 0, {0} }},       /* DG */
 				{0x08,   { 0, 0, 0, 0, 0, {0} }}, /* port */
 				{0x09,   { 0, 0, 0, 0, 0, {0} }}, /* IP addr */
@@ -292,7 +292,7 @@ PRIVATE void rpc__ip_naf_init_func(void)
 			}
 		},
 
-		{ RPC_C_PROTSEQ_ID_NCACN_IP_TCP,   3,
+		{ rpc_c_protseq_id_ncacn_ip_tcp,   3,
 			{ {0x0B,   { 0, 0, 0, 0, 0, {0} }},       /* CN */
 				{0x07,   { 0, 0, 0, 0, 0, {0} }}, /* port */
 				{0x09,   { 0, 0, 0, 0, 0, {0} }}, /* IP addr */
@@ -304,7 +304,7 @@ PRIVATE void rpc__ip_naf_init_func(void)
     {                                   /* Connection-RPC / IP / TCP */
         0,
         1, /* Uses endpoint mapper */
-        RPC_C_PROTSEQ_ID_NCACN_IP_TCP,
+        rpc_c_protseq_id_ncacn_ip_tcp,
         RPC_C_PROTOCOL_ID_NCACN,
         RPC_C_NAF_ID_IP,
         RPC_C_NETWORK_PROTOCOL_ID_TCP,
@@ -316,7 +316,7 @@ PRIVATE void rpc__ip_naf_init_func(void)
     {                                   /* Datagram-RPC / IP / UDP */
         0,
         1, /* Uses endpoint mapper */
-        RPC_C_PROTSEQ_ID_NCADG_IP_UDP,
+        rpc_c_protseq_id_ncadg_ip_udp,
         RPC_C_PROTOCOL_ID_NCADG,
         RPC_C_NAF_ID_IP,
         RPC_C_NETWORK_PROTOCOL_ID_UDP,
