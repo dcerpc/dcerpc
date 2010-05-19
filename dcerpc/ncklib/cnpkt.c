@@ -169,7 +169,13 @@ INTERNAL rpc_cn_pres_result_list_p_t unpack_port_any
      */
     if (NDR_LOCAL_CHAR_REP != NDR_DREP_CHAR_REP (drepp))
     {
-	rpc_util_strcvt ( NDR_LOCAL_CHAR_REP == ndr_c_char_ascii,
+        if ((ptr.string + port_any_p->length) > end_of_pkt)
+        {
+            *st = rpc_s_bad_pkt;
+            return (NULL);
+        }
+
+        rpc_util_strcvt ( NDR_LOCAL_CHAR_REP == ndr_c_char_ascii,
 			  port_any_p->length,
 			  ptr.string,
 			  ptr.string );
