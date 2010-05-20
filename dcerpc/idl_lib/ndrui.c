@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
@@ -17,7 +17,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
  */
@@ -37,7 +37,6 @@
 #if HAVE_CONFIG_H
 #include <config.h>
 #endif
-
 
 #include <dce/idlddefs.h>
 #include <ndrui.h>
@@ -94,7 +93,7 @@ idl_ulong_int rpc_ss_ndr_allocation_size
             allocation_size *= Z_values[i];
         }
     }
-    
+
     /* Add in the size of the fixed part */
     if (fixed_part_size > UINT_MAX - allocation_size)
     {
@@ -138,12 +137,12 @@ void rpc_ss_ndr_alloc_storage
     }
     else
     {
-        *p_storage_addr = 
+        *p_storage_addr =
 	    rpc_allocator_allocate(&IDL_msp->IDL_allocator, allocation_size);
         if (*p_storage_addr == NULL)
             DCETHREAD_RAISE(rpc_x_no_memory);
     }
-            
+
 }
 
 /******************************************************************************/
@@ -204,7 +203,7 @@ void rpc_ss_ndr_unmar_struct
         if (cs_shadow == NULL)
         {
             cs_shadow = (IDL_cs_shadow_elt_t *) rpc_ss_mem_alloc
-                              (&IDL_msp->IDL_mem_handle, 
+                              (&IDL_msp->IDL_mem_handle,
                                    shadow_length * sizeof(IDL_cs_shadow_elt_t));
         }
         shadow_defn_ptr = defn_vec_ptr;
@@ -331,9 +330,9 @@ void rpc_ss_ndr_unmar_struct
                 array_dims = (idl_ulong_int)*field_defn_ptr;
                 field_defn_ptr++;
                 /* By design field_defn_ptr is now at (0 mod 4) */
-		if (IDL_msp->IDL_type_vec[TVEC_INT_REP_OFFSET] != 
+		if (IDL_msp->IDL_type_vec[TVEC_INT_REP_OFFSET] !=
 		    NDR_LOCAL_INT_REP)
-		  rpc_ss_fixed_bounds_from_vector(array_dims, field_defn_ptr, 
+		  rpc_ss_fixed_bounds_from_vector(array_dims, field_defn_ptr,
                                                 &bounds_list, IDL_msp);
 		else
 		  bounds_list = (IDL_bound_pair_t *)field_defn_ptr;
@@ -373,7 +372,7 @@ void rpc_ss_ndr_unmar_struct
                     rpc_ss_mem_item_free(&IDL_msp->IDL_mem_handle,
                                             (byte_p_t)varying_Z_values);
                 }
-		if (IDL_msp->IDL_type_vec[TVEC_INT_REP_OFFSET] != 
+		if (IDL_msp->IDL_type_vec[TVEC_INT_REP_OFFSET] !=
 		    NDR_LOCAL_INT_REP)
 		  rpc_ss_mem_item_free(&IDL_msp->IDL_mem_handle,
                                         (byte_p_t)bounds_list);
@@ -581,7 +580,7 @@ void rpc_ss_ndr_unmar_struct
             case IDL_DT_CS_ATTRIBUTE:
                 /* Discard the value on the wire. Later a correct value will
                     be written from the cs-shadow */
-                rpc_ss_ndr_unmar_scalar(*defn_vec_ptr, 
+                rpc_ss_ndr_unmar_scalar(*defn_vec_ptr,
                                         (rpc_void_p_t)&switch_value, IDL_msp);
                 defn_vec_ptr++;     /* Type of attribute */
                 offset_vec_ptr++;
@@ -825,7 +824,7 @@ void rpc_ss_ndr_unmar_by_looping
                 break;
             case IDL_DT_FULL_PTR:
 	    {
-	        idl_ulong_int _node;	
+	        idl_ulong_int _node;
                 /* Unmarshall the node number into the space for the pointer */
                 IDL_UNMAR_ULONG( &_node );
 		node_number = (intptr_t) _node;
@@ -955,7 +954,6 @@ void rpc_ss_ndr_u_fix_or_conf_arr
                                     &base_type, defn_vec_ptr,
                                     &unmarshall_by_copying, IDL_msp );
 
-
     if (base_type == IDL_DT_REF_PTR)
     {
         /* Arrays of [ref] pointers are not marshalled */
@@ -1051,7 +1049,7 @@ void rpc_ss_ndr_unmar_fixed_arr
     idl_ulong_int normal_Z_values[IDL_NORMAL_DIMS];
     IDL_bound_pair_t *bounds_list;
 
-    defn_vec_ptr = IDL_msp->IDL_type_vec + defn_index; 
+    defn_vec_ptr = IDL_msp->IDL_type_vec + defn_index;
     dimensionality = (idl_ulong_int)*defn_vec_ptr;
     defn_vec_ptr++;     /* By design, alignment is now (0 mod 4) */
     if (dimensionality > IDL_NORMAL_DIMS)
@@ -1151,7 +1149,9 @@ void rpc_ss_ndr_u_var_or_open_arr
     {
         for (i=0; (unsigned32)i<dimensionality; i++)
         {
-            if ((unsigned32)(range_list[i].upper - range_list[i].lower) > Z_values[i])
+            if ( ((unsigned32)(range_list[i].upper - range_list[i].lower) > Z_values[i])
+                || ((unsigned32)(range_list[i].lower) > Z_values[i])
+                || ((unsigned32)(range_list[i].upper) > Z_values[i]) )
             {
                 /* Bogus data stream with A,B values outside of Z bound value */
                 DCETHREAD_RAISE(rpc_x_invalid_bound);
@@ -1171,7 +1171,6 @@ void rpc_ss_ndr_u_var_or_open_arr
                                   &base_type, defn_vec_ptr,
                                   &unmarshall_by_copying, IDL_msp );
 
-
     if (base_type == IDL_DT_REF_PTR)
     {
         /* Arrays of [ref] pointers are not marshalled */
@@ -1186,7 +1185,7 @@ void rpc_ss_ndr_u_var_or_open_arr
                                         &element_defn_index, IDL_msp );
     }
     else
-        element_size = rpc_ss_type_size(defn_vec_ptr, IDL_msp);    
+        element_size = rpc_ss_type_size(defn_vec_ptr, IDL_msp);
 
     if (unmarshall_by_copying)
     {
@@ -1232,7 +1231,6 @@ void rpc_ss_ndr_u_var_or_open_arr
         IDL_GET_LONG_FROM_VECTOR( element_defn_index, defn_vec_ptr );
     }
 
-
     if (dimensionality > IDL_NORMAL_DIMS)
     {
         control_data = (IDL_varying_control_t *)rpc_ss_mem_alloc(
@@ -1242,13 +1240,13 @@ void rpc_ss_ndr_u_var_or_open_arr
     else
         control_data = normal_control_data;
     control_data[dimensionality-1].subslice_size = element_size;
-    control_data[dimensionality-1].index_value = 
+    control_data[dimensionality-1].index_value =
                                             range_list[dimensionality-1].lower;
     for (i=dimensionality-2; i>=0; i--)
     {
         control_data[i].index_value = range_list[i].lower;
         control_data[i].subslice_size = control_data[i+1].subslice_size
-                                                            * Z_values[i+1];   
+                                                            * Z_values[i+1];
     }
 
     do {
@@ -1261,7 +1259,7 @@ void rpc_ss_ndr_u_var_or_open_arr
         rpc_ss_ndr_unmar_by_looping(
                  range_list[dimensionality-1].upper
                                          - range_list[dimensionality-1].lower,
-                 base_type, (rpc_void_p_t)inner_slice_address, 
+                 base_type, (rpc_void_p_t)inner_slice_address,
                  element_size, element_defn_index, IDL_msp);
         dim = dimensionality - 2;
         while (dim >= 0)
@@ -1426,7 +1424,7 @@ static void rpc_ss_alloc_out_conf_array
         /* Get array type following qualifier */
         array_type = *type_vec_ptr;
         type_vec_ptr++;
-    }    
+    }
     /* Properties byte */
     type_has_pointers = IDL_PROP_TEST(*type_vec_ptr, IDL_PROP_HAS_PTRS);
     type_vec_ptr++;
@@ -1640,7 +1638,7 @@ void rpc_ss_ndr_unmar_interp
                              IDL_PROP_TEST(*type_vec_ptr, IDL_PROP_HAS_PTRS);
                     type_vec_ptr++;
                     IDL_GET_LONG_FROM_VECTOR(defn_index,type_vec_ptr);
-                    if ( type_has_pointers 
+                    if ( type_has_pointers
                             && (IDL_msp->IDL_side == IDL_server_side_k) )
                     {
                         rpc_ss_init_new_struct_ptrs( type_byte,
@@ -1676,8 +1674,8 @@ void rpc_ss_ndr_unmar_interp
                                                             struct_defn_ptr);
                         struct_cs_shadow = (IDL_cs_shadow_elt_t *)
                                             rpc_ss_mem_alloc
-                                             (&IDL_msp->IDL_mem_handle, 
-                                              struct_shadow_length * 
+                                             (&IDL_msp->IDL_mem_handle,
+                                              struct_shadow_length *
                                                 sizeof(IDL_cs_shadow_elt_t));
                     }
                     else
@@ -1732,7 +1730,7 @@ void rpc_ss_ndr_unmar_interp
                             }
                         }
                     }
-                    rpc_ss_ndr_unmar_struct(type_byte, 
+                    rpc_ss_ndr_unmar_struct(type_byte,
                                             IDL_msp->IDL_type_vec+defn_index,
                                              IDL_param_vector[param_index],
                                              Z_values, struct_cs_shadow,
@@ -1755,18 +1753,18 @@ void rpc_ss_ndr_unmar_interp
                     IDL_DISCARD_LONG_FROM_VECTOR(type_vec_ptr);
                                             /* Discard full array definition */
                     IDL_GET_LONG_FROM_VECTOR(defn_index,type_vec_ptr);
-                    if ( type_has_pointers 
+                    if ( type_has_pointers
                             && (IDL_msp->IDL_side == IDL_server_side_k) )
                     {
                         array_defn_ptr = IDL_msp->IDL_type_vec + defn_index;
                         array_dims = (idl_ulong_int)*array_defn_ptr;
                         array_defn_ptr++;
                         /* By design array_defn_ptr is now at (0 mod 4) */
-			if (IDL_msp->IDL_type_vec[TVEC_INT_REP_OFFSET] != 
+			if (IDL_msp->IDL_type_vec[TVEC_INT_REP_OFFSET] !=
 			    NDR_LOCAL_INT_REP)
 			  rpc_ss_fixed_bounds_from_vector(array_dims,
-							  array_defn_ptr, 
-							  &bounds_list, 
+							  array_defn_ptr,
+							  &bounds_list,
 							  IDL_msp);
 			else
 			  bounds_list = (IDL_bound_pair_t *)array_defn_ptr;
@@ -1784,7 +1782,7 @@ void rpc_ss_ndr_unmar_interp
                         if (array_dims > IDL_NORMAL_DIMS)
                             rpc_ss_mem_item_free(&IDL_msp->IDL_mem_handle,
                                                             (byte_p_t)Z_values);
-			if (IDL_msp->IDL_type_vec[TVEC_INT_REP_OFFSET] != 
+			if (IDL_msp->IDL_type_vec[TVEC_INT_REP_OFFSET] !=
 			    NDR_LOCAL_INT_REP)
 			  rpc_ss_mem_item_free(&IDL_msp->IDL_mem_handle,
                                                          (byte_p_t)bounds_list);
@@ -1820,7 +1818,7 @@ void rpc_ss_ndr_unmar_interp
                     IDL_DISCARD_LONG_FROM_VECTOR(type_vec_ptr);
                                             /* Discard full array definition */
                     IDL_GET_LONG_FROM_VECTOR(array_defn_index,type_vec_ptr);
-                    array_defn_ptr = IDL_msp->IDL_type_vec + array_defn_index; 
+                    array_defn_ptr = IDL_msp->IDL_type_vec + array_defn_index;
                     conf_dims = (idl_ulong_int)*array_defn_ptr;
                     array_defn_ptr++;
                     if (conf_dims > IDL_NORMAL_DIMS)
@@ -1874,7 +1872,7 @@ void rpc_ss_ndr_unmar_interp
                     IDL_DISCARD_LONG_FROM_VECTOR(type_vec_ptr);
                                             /* Discard full array definition */
                     IDL_GET_LONG_FROM_VECTOR(defn_index,type_vec_ptr);
-                    array_defn_ptr = IDL_msp->IDL_type_vec + defn_index; 
+                    array_defn_ptr = IDL_msp->IDL_type_vec + defn_index;
                     conf_dims = (idl_ulong_int)*array_defn_ptr;
                     array_defn_ptr++;
                     if (conf_dims > IDL_NORMAL_DIMS)
@@ -1981,7 +1979,7 @@ void rpc_ss_ndr_unmar_interp
                     break;
                 case IDL_DT_FULL_PTR:
 		{
-	            idl_ulong_int _node;	
+	            idl_ulong_int _node;
                     type_vec_ptr++;     /* Properties byte */
                     IDL_GET_LONG_FROM_VECTOR(defn_index,type_vec_ptr);
                     /* Unmarshall the node number */
@@ -2100,7 +2098,7 @@ void rpc_ss_ndr_unmar_interp
                 case IDL_DT_ALLOCATE:
                     /* Indicates an [out]-only conformant or open array must
                         be allocated. Should only appear on server side */
-                    rpc_ss_alloc_out_conf_array( &type_vec_ptr, 
+                    rpc_ss_alloc_out_conf_array( &type_vec_ptr,
                                                  &IDL_param_vector[param_index],
                                                  &num_conf_char_arrays,
                                                  IDL_msp );
@@ -2136,7 +2134,7 @@ void rpc_ss_ndr_unmar_interp
                     IDL_DISCARD_LONG_FROM_VECTOR(type_vec_ptr);
                                             /* Discard full array definition */
                     IDL_GET_LONG_FROM_VECTOR(defn_index,type_vec_ptr);
-                    array_defn_ptr = IDL_msp->IDL_type_vec + defn_index; 
+                    array_defn_ptr = IDL_msp->IDL_type_vec + defn_index;
                     array_dims = (idl_ulong_int)*array_defn_ptr;
                     array_defn_ptr++;
                     if (type_byte == IDL_DT_OPEN_ARRAY)
@@ -2186,7 +2184,7 @@ void rpc_ss_ndr_unmar_interp
                     IDL_GET_LONG_FROM_VECTOR(param_shadow_length, type_vec_ptr);
                     param_cs_shadow = (IDL_cs_shadow_elt_t *)
                                             rpc_ss_mem_alloc
-                                             (&IDL_msp->IDL_mem_handle, 
+                                             (&IDL_msp->IDL_mem_handle,
                                               param_shadow_length *
                                                 sizeof(IDL_cs_shadow_elt_t));
                     break;
@@ -2235,7 +2233,7 @@ void rpc_ss_ndr_unmar_interp
     if ((IDL_msp->IDL_language != IDL_lang_c_k)
         && (IDL_parameter_count != 0))
     {
-        rpc_ss_mem_item_free(&IDL_msp->IDL_mem_handle, 
+        rpc_ss_mem_item_free(&IDL_msp->IDL_mem_handle,
                                 (byte_p_t)conf_char_array_list);
     }
 
@@ -2298,7 +2296,7 @@ rpc_ss_ndr_unmar_cf_early
         /* Get lower bound or limit */
         if (kind == IDL_LIMIT_FIXED)
         {
-            IDL_DISCARD_LONG_FROM_VECTOR(defn_vec_ptr); 
+            IDL_DISCARD_LONG_FROM_VECTOR(defn_vec_ptr);
         }
         else
         {
@@ -2584,4 +2582,3 @@ void rpc_ss_ndr_unmar_check_range_correlation
     if (correl_ok == idl_false)
         DCETHREAD_RAISE( rpc_x_invalid_bound );
 }
-
