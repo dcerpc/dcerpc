@@ -918,6 +918,7 @@ INTERNAL void receive_dispatch
                 rpc__cn_assoc_push_call (assoc, call_r, &st);
                 if (st != rpc_s_ok)
                 {
+                    assoc->call_rep = NULL;
                     rpc__list_element_free (&rpc_g_cn_call_lookaside_list,
                                             (pointer_t) call_r);
                     break;
