@@ -281,7 +281,7 @@ typedef idl_byte byte_t ;
 #define SWAP_INPLACE_16(ptr, end_of_pkt, st) { \
     if (((unsigned8 *) (ptr) + 1) < (const unsigned8 *) (end_of_pkt)) \
     { \
-        *(ptr) = SWAB_16(*ptr); \
+        *(ptr) = SWAB_16(*(ptr)); \
         *(st) = rpc_s_ok; \
     } \
     else \
@@ -295,7 +295,7 @@ typedef idl_byte byte_t ;
 #define SWAP_INPLACE_32(ptr, end_of_pkt, st) { \
     if (((unsigned8 *) (ptr) + 3) < (const unsigned8 *) (end_of_pkt)) \
     { \
-        *(ptr) = SWAB_32(*ptr); \
+        *(ptr) = SWAB_32(*(ptr)); \
         *(st) = rpc_s_ok; \
     } \
     else \
