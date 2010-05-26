@@ -780,7 +780,6 @@ INTERNAL void receive_dispatch
                                                  assoc->call_rep,
                                                  assoc,
                                                  assoc->cn_ctlblk.cn_sock));
-                                st = rpc_s_connection_closed;
                                 break;
                             }
                             already_unpacked = true;

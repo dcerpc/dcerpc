@@ -95,7 +95,39 @@ INTERNAL rpc_cn_auth_tlr_p_t unpack_pres_result_list (
 INTERNAL rpc_cn_auth_tlr_p_t unpack_versions_supported (
         rpc_cn_versions_supported_p_t /*versp*/
         );
-
+
+void SWAP_INPLACE_UUID
+(
+    idl_uuid_t   *uuid_p,
+    unsigned8    *end_of_pkt,
+    unsigned32   *st
+)
+{
+    SWAP_INPLACE_32(&uuid_p->time_low, end_of_pkt, st);
+    if (*st == rpc_s_ok)
+    {
+        SWAP_INPLACE_16(&uuid_p->time_mid, end_of_pkt, st);
+    }
+    if (*st == rpc_s_ok)
+    {
+        SWAP_INPLACE_16(&uuid_p->time_hi_and_version, end_of_pkt, st);
+    }
+}
+
+void SWAP_INPLACE_SYNTAX
+(
+    rpc_cn_pres_syntax_id_p_t   syntax_p,
+    unsigned8                   *end_of_pkt,
+    unsigned32                  *st
+)
+{
+    SWAP_INPLACE_UUID(&syntax_p->id, end_of_pkt, st);
+    if (*st == rpc_s_ok)
+    {
+        SWAP_INPLACE_32(&syntax_p->version, end_of_pkt, st);
+    }
+}
+
 /*
 **++
 **
@@ -114,7 +146,7 @@ INTERNAL rpc_cn_auth_tlr_p_t unpack_versions_supported (
 **      port_any_p	pointer to the 'port_any' field within the packet
 **      drepp		pointer to the data representation
 **      swap		boolean indicating we need to perform byte swapping
-**      end_of_pkt  ptr to end on packet
+**      end_of_pkt  ptr to 1 byte past end of packet
 **
 **  INPUTS/OUTPUTS:     none
 **
@@ -142,6 +174,7 @@ INTERNAL rpc_cn_pres_result_list_p_t unpack_port_any
     unsigned32              *st
 )
 {
+    unsigned8 * string_end;
     union
     {                                  /* a "proper" union to shut up lint */
         unsigned8 *string;             /* a string pointer */
@@ -157,7 +190,7 @@ INTERNAL rpc_cn_pres_result_list_p_t unpack_port_any
      */
     if (NDR_LOCAL_INT_REP != NDR_DREP_INT_REP (drepp))
     {
-        SWAP_INPLACE_16 (&port_any_p->length, end_of_pkt, *st);
+        SWAP_INPLACE_16 (&port_any_p->length, end_of_pkt, st);
         if (*st != rpc_s_ok)
         {
             return (NULL);
@@ -169,7 +202,8 @@ INTERNAL rpc_cn_pres_result_list_p_t unpack_port_any
      */
     if (NDR_LOCAL_CHAR_REP != NDR_DREP_CHAR_REP (drepp))
     {
-        if ((ptr.string + port_any_p->length) > end_of_pkt)
+        string_end = ptr.string + port_any_p->length;
+        if ( (string_end < ptr.string) || (end_of_pkt < string_end) )
         {
             *st = rpc_s_bad_pkt;
             return (NULL);
@@ -206,7 +240,7 @@ INTERNAL rpc_cn_pres_result_list_p_t unpack_port_any
 **
 **      pcontp		pointer to the presentation context list
 **      swap		boolean indicating we need to perform byte swapping
-**      end_of_pkt  ptr to end on packet
+**      end_of_pkt  ptr to 1 byte past end of packet
 **
 **  INPUTS/OUTPUTS:     none
 **
@@ -274,7 +308,7 @@ INTERNAL rpc_cn_auth_tlr_p_t unpack_pres_context_list
 	    /*
 	     * Convert the presentation context id.
 	     */
-            SWAP_INPLACE_16 (&(ptrs.ep)->pres_context_id, end_of_pkt, *st);
+            SWAP_INPLACE_16 (&(ptrs.ep)->pres_context_id, end_of_pkt, st);
             if (*st != rpc_s_ok)
             {
                 return (NULL);
@@ -283,7 +317,7 @@ INTERNAL rpc_cn_auth_tlr_p_t unpack_pres_context_list
             /*
              * Convert the abstract syntax.
              */
-            SWAP_INPLACE_SYNTAX (&(ptrs.ep)->abstract_syntax, end_of_pkt, *st);
+            SWAP_INPLACE_SYNTAX (&(ptrs.ep)->abstract_syntax, end_of_pkt, st);
             if (*st != rpc_s_ok)
             {
                 return (NULL);
@@ -294,7 +328,7 @@ INTERNAL rpc_cn_auth_tlr_p_t unpack_pres_context_list
              */
             for (id = 0; id < tsn; id++)
             {
-                SWAP_INPLACE_SYNTAX (&(ptrs.ep)->transfer_syntaxes[id], end_of_pkt, *st);
+                SWAP_INPLACE_SYNTAX (&(ptrs.ep)->transfer_syntaxes[id], end_of_pkt, st);
                 if (*st != rpc_s_ok)
                 {
                     return (NULL);
@@ -332,7 +366,7 @@ INTERNAL rpc_cn_auth_tlr_p_t unpack_pres_context_list
 **      presp		pointer to the presentation result list
 **      swap		boolean indicating we need to perform byte swapping
 **      swap		boolean indicating we need to perform byte swapping
-**      end_of_pkt  ptr to end on packet
+**      end_of_pkt  ptr to 1 byte past end of packet
 **
 **  INPUTS/OUTPUTS:     none
 **
@@ -373,19 +407,19 @@ INTERNAL rpc_cn_auth_tlr_p_t unpack_pres_result_list
     prn = presp->n_results;
     for (n = 0; (n < prn) && swap; n++)
     {
-        SWAP_INPLACE_16 (&presp->pres_results[n].result, end_of_pkt, *st);
+        SWAP_INPLACE_16 (&presp->pres_results[n].result, end_of_pkt, st);
         if (*st != rpc_s_ok)
         {
             return (NULL);
         }
 
-        SWAP_INPLACE_16 (&presp->pres_results[n].reason, end_of_pkt, *st);
+        SWAP_INPLACE_16 (&presp->pres_results[n].reason, end_of_pkt, st);
         if (*st != rpc_s_ok)
         {
             return (NULL);
         }
 
-        SWAP_INPLACE_SYNTAX (&presp->pres_results[n].transfer_syntax, end_of_pkt, *st);
+        SWAP_INPLACE_SYNTAX (&presp->pres_results[n].transfer_syntax, end_of_pkt, st);
         if (*st != rpc_s_ok)
         {
             return (NULL);
@@ -663,7 +697,7 @@ PRIVATE unsigned32 rpc__cn_unpack_hdr
     boolean authenticate;                /* boolean says authentication data is valid */
     boolean has_uuid;		             /* boolean says an OBJECT uuid is present */
     unsigned32 st;                       /* status variable */
-    unsigned8 *end_of_pkt;               /* ptr to end of pkt */
+    unsigned8 *end_of_pkt;               /* ptr to 1 byte past end of packet */
 
     end_of_pkt = (unsigned8 *) pkt_p;
     end_of_pkt += data_size;
@@ -681,19 +715,19 @@ PRIVATE unsigned32 rpc__cn_unpack_hdr
      */
     if (swap)
     {
-        SWAP_INPLACE_16 (&RPC_CN_PKT_FRAG_LEN (pkt_p), end_of_pkt, st);
+        SWAP_INPLACE_16 (&RPC_CN_PKT_FRAG_LEN (pkt_p), end_of_pkt, &st);
         if (st != rpc_s_ok)
         {
             return (st);
         }
 
-        SWAP_INPLACE_16 (&RPC_CN_PKT_AUTH_LEN (pkt_p), end_of_pkt, st);
+        SWAP_INPLACE_16 (&RPC_CN_PKT_AUTH_LEN (pkt_p), end_of_pkt, &st);
         if (st != rpc_s_ok)
         {
             return (st);
         }
 
-        SWAP_INPLACE_32 (&RPC_CN_PKT_CALL_ID (pkt_p), end_of_pkt, st);
+        SWAP_INPLACE_32 (&RPC_CN_PKT_CALL_ID (pkt_p), end_of_pkt, &st);
         if (st != rpc_s_ok)
         {
             return (st);
@@ -724,19 +758,19 @@ PRIVATE unsigned32 rpc__cn_unpack_hdr
         case RPC_C_CN_PKT_ALTER_CONTEXT:
             if (swap)
             {
-                SWAP_INPLACE_16 (&RPC_CN_PKT_MAX_XMIT_FRAG (pkt_p), end_of_pkt, st);
+                SWAP_INPLACE_16 (&RPC_CN_PKT_MAX_XMIT_FRAG (pkt_p), end_of_pkt, &st);
                 if (st != rpc_s_ok)
                 {
                     return (st);
                 }
 
-                SWAP_INPLACE_16 (&RPC_CN_PKT_MAX_RECV_FRAG (pkt_p), end_of_pkt, st);
+                SWAP_INPLACE_16 (&RPC_CN_PKT_MAX_RECV_FRAG (pkt_p), end_of_pkt, &st);
                 if (st != rpc_s_ok)
                 {
                     return (st);
                 }
 
-                SWAP_INPLACE_32 (&RPC_CN_PKT_ASSOC_GROUP_ID (pkt_p), end_of_pkt, st);
+                SWAP_INPLACE_32 (&RPC_CN_PKT_ASSOC_GROUP_ID (pkt_p), end_of_pkt, &st);
                 if (st != rpc_s_ok)
                 {
                     return (st);
@@ -757,19 +791,19 @@ PRIVATE unsigned32 rpc__cn_unpack_hdr
         case RPC_C_CN_PKT_ALTER_CONTEXT_RESP:
             if (swap)
             {
-                SWAP_INPLACE_16 (&RPC_CN_PKT_MAX_XMIT_FRAG (pkt_p), end_of_pkt, st);
+                SWAP_INPLACE_16 (&RPC_CN_PKT_MAX_XMIT_FRAG (pkt_p), end_of_pkt, &st);
                 if (st != rpc_s_ok)
                 {
                     return (st);
                 }
 
-                SWAP_INPLACE_16 (&RPC_CN_PKT_MAX_RECV_FRAG (pkt_p), end_of_pkt, st);
+                SWAP_INPLACE_16 (&RPC_CN_PKT_MAX_RECV_FRAG (pkt_p), end_of_pkt, &st);
                 if (st != rpc_s_ok)
                 {
                     return (st);
                 }
 
-                SWAP_INPLACE_32 (&RPC_CN_PKT_ASSOC_GROUP_ID (pkt_p), end_of_pkt, st);
+                SWAP_INPLACE_32 (&RPC_CN_PKT_ASSOC_GROUP_ID (pkt_p), end_of_pkt, &st);
                 if (st != rpc_s_ok)
                 {
                     return (st);
@@ -797,7 +831,7 @@ PRIVATE unsigned32 rpc__cn_unpack_hdr
         case RPC_C_CN_PKT_BIND_NAK:
             if (swap)
             {
-                SWAP_INPLACE_16 (&RPC_CN_PKT_PROV_REJ_REASON (pkt_p), end_of_pkt, st);
+                SWAP_INPLACE_16 (&RPC_CN_PKT_PROV_REJ_REASON (pkt_p), end_of_pkt, &st);
                 if (st != rpc_s_ok)
                 {
                     return (st);
@@ -813,19 +847,19 @@ PRIVATE unsigned32 rpc__cn_unpack_hdr
         case RPC_C_CN_PKT_REQUEST:
             if (swap)
             {
-                SWAP_INPLACE_32 (&RPC_CN_PKT_ALLOC_HINT (pkt_p), end_of_pkt, st);
+                SWAP_INPLACE_32 (&RPC_CN_PKT_ALLOC_HINT (pkt_p), end_of_pkt, &st);
                 if (st != rpc_s_ok)
                 {
                     return (st);
                 }
 
-                SWAP_INPLACE_16 (&RPC_CN_PKT_PRES_CONT_ID (pkt_p), end_of_pkt, st);
+                SWAP_INPLACE_16 (&RPC_CN_PKT_PRES_CONT_ID (pkt_p), end_of_pkt, &st);
                 if (st != rpc_s_ok)
                 {
                     return (st);
                 }
 
-                SWAP_INPLACE_16 (&RPC_CN_PKT_OPNUM (pkt_p), end_of_pkt, st);
+                SWAP_INPLACE_16 (&RPC_CN_PKT_OPNUM (pkt_p), end_of_pkt, &st);
                 if (st != rpc_s_ok)
                 {
                     return (st);
@@ -833,7 +867,7 @@ PRIVATE unsigned32 rpc__cn_unpack_hdr
 
                 if (has_uuid)
                 {
-                    SWAP_INPLACE_UUID (&RPC_CN_PKT_OBJECT (pkt_p), end_of_pkt, st);
+                    SWAP_INPLACE_UUID (&RPC_CN_PKT_OBJECT (pkt_p), end_of_pkt, &st);
                     if (st != rpc_s_ok)
                     {
                         return (st);
@@ -849,13 +883,13 @@ PRIVATE unsigned32 rpc__cn_unpack_hdr
         case RPC_C_CN_PKT_RESPONSE:
             if (swap)
             {
-                SWAP_INPLACE_32 (&RPC_CN_PKT_ALLOC_HINT (pkt_p), end_of_pkt, st);
+                SWAP_INPLACE_32 (&RPC_CN_PKT_ALLOC_HINT (pkt_p), end_of_pkt, &st);
                 if (st != rpc_s_ok)
                 {
                     return (st);
                 }
 
-                SWAP_INPLACE_16 (&RPC_CN_PKT_PRES_CONT_ID (pkt_p), end_of_pkt, st);
+                SWAP_INPLACE_16 (&RPC_CN_PKT_PRES_CONT_ID (pkt_p), end_of_pkt, &st);
                 if (st != rpc_s_ok)
                 {
                     return (st);
@@ -870,19 +904,19 @@ PRIVATE unsigned32 rpc__cn_unpack_hdr
         case RPC_C_CN_PKT_FAULT:
             if (swap)
             {
-                SWAP_INPLACE_32 (&RPC_CN_PKT_ALLOC_HINT (pkt_p), end_of_pkt, st);
+                SWAP_INPLACE_32 (&RPC_CN_PKT_ALLOC_HINT (pkt_p), end_of_pkt, &st);
                 if (st != rpc_s_ok)
                 {
                     return (st);
                 }
 
-                SWAP_INPLACE_16 (&RPC_CN_PKT_PRES_CONT_ID (pkt_p), end_of_pkt, st);
+                SWAP_INPLACE_16 (&RPC_CN_PKT_PRES_CONT_ID (pkt_p), end_of_pkt, &st);
                 if (st != rpc_s_ok)
                 {
                     return (st);
                 }
 
-                SWAP_INPLACE_32 (&RPC_CN_PKT_STATUS (pkt_p), end_of_pkt, st);
+                SWAP_INPLACE_32 (&RPC_CN_PKT_STATUS (pkt_p), end_of_pkt, &st);
                 if (st != rpc_s_ok)
                 {
                     return (st);

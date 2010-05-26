@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
@@ -16,7 +16,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
  */
@@ -115,26 +115,6 @@
 #define RPC_CN_MEM_DUMP(addr, len, acc)
 #endif
 
-
-/*
- *****************************************************************************
- *
- * A macro for doing endian conversions for connection protocol syntax.
- *
- *****************************************************************************
- */
-
-#define SWAB_INPLACE_SYNTAX(sfield) { \
-    SWAB_INPLACE_UUID( (sfield).id ); \
-    SWAB_INPLACE_32( (sfield).version ); \
-}
-
-#define SWAP_INPLACE_SYNTAX(ptr, end_of_pkt, st) { \
-    SWAP_INPLACE_UUID( ptr.id, end_of_pkt, st ); \
-    SWAP_INPLACE_32( ptr.version, end_of_pkt, st ); \
-}
-
-
 /*
  *****************************************************************************
  *
@@ -187,7 +167,7 @@
 #define RPC_C_CN_PKT_REMOTE_ALERT         18    /* client -> server */
 #define RPC_C_CN_PKT_ORPHANED             19    /* client -> server */
 #define RPC_C_CN_PKT_MAX_TYPE             19
-#define RPC_C_CN_PKT_INVALID              0xff 
+#define RPC_C_CN_PKT_INVALID              0xff
 
 /*
  * Values for the flag field in the packet header.
@@ -411,7 +391,6 @@ typedef struct
     rpc_cn_pres_result_t pres_results[1];       /* [size_is(n_results)] */
 } rpc_cn_pres_result_list_t, *rpc_cn_pres_result_list_p_t;
 
-
 
 
 /*
@@ -436,7 +415,7 @@ typedef struct
     unsigned8 vers_major;
     unsigned8 vers_minor;
 } rpc_cn_version_t, *rpc_cn_version_p_t;
- 
+
 /*
  *****************************************************************************
  *
@@ -450,7 +429,7 @@ typedef struct
     unsigned8           n_protocols;    /* count */
     rpc_cn_version_t    protocols[1];   /* [max_is(n_protocols)] */
 } rpc_cn_versions_supported_t, *rpc_cn_versions_supported_p_t;
- 
+
 
 
 /*
@@ -492,7 +471,6 @@ typedef struct
 
 #define RPC_C_CN_FRAGLEN_HEADER_BYTES 10
 
-
 /*
  *****************************************************************************
  *
@@ -518,7 +496,7 @@ typedef struct
  */
 #define RPC_CN_PKT_STUB_DATA_PAD_LEN(pkt_p, pkt_len)\
 (RPC_CN_PKT_AUTH_TLR_PRESENT(pkt_p) ? ((RPC_CN_PKT_AUTH_TLR(pkt_p, pkt_len))->stub_pad_length) : 0)
-    
+
 /*
  * Return a pointer to the authentication trailer on a PDU. This
  * macros assumes there is an authentication trailer on the PDU.
@@ -553,11 +531,11 @@ typedef struct
 
 #define RPC_CN_PKT_SIZEOF_COM_AUTH_TLR  8
 
-/* 
+/*
  * The valid values for the auth_type field are contained in nbase.idl.
  */
 
-/* 
+/*
  * The valid values for the auth_level field are contained in nbase.idl.
  */
 
@@ -600,8 +578,8 @@ typedef struct
 typedef struct
 {
     unsigned8   sub_type;
-/* 
- * only if auth_level pkt or higher 
+/*
+ * only if auth_level pkt or higher
  */
     unsigned8   checksum_length;
     unsigned8   checksum[1];    /* [size_is (checksum_length)] */
@@ -641,7 +619,7 @@ typedef union
                                         * group */
                                        /* 24:xx presentation context list */
         /* rpc_cn_pres_cont_list_t pres_context_list; */
-        
+
         /* restore 4-byte alignment */
         /* rpc_cn_auth_tlr_t auth_tlr; */ /* if auth_len != 0 */
     } hdr;
@@ -767,7 +745,7 @@ typedef union
         rpc_cn_common_hdr_t common_hdr;/* 00:16 common to all packets  */
 
         unsigned32 alloc_hint;         /* 16:04 allocation hint */
-        rpc_cn_pres_context_id_t pres_cont_id;        
+        rpc_cn_pres_context_id_t pres_cont_id;
                                        /* 20:02 pres context, ie. drep */
 
         unsigned16 opnum;              /* 22:02 operation # w/in i/f */
@@ -825,7 +803,7 @@ typedef union
 
         unsigned32 alloc_hint;         /* 16:04 allocation hint */
                                        /* 20:02 pres context */
-        rpc_cn_pres_context_id_t pres_cont_id;        
+        rpc_cn_pres_context_id_t pres_cont_id;
         unsigned8  alert_count;        /* 22:01 pending alert count */
         unsigned8  reserved;           /* 23:01 alignment pad m.b.z. */
         stub_data_t stub_data;         /* 24:yy stub data */
@@ -858,7 +836,7 @@ typedef union
 
         unsigned32 alloc_hint;         /* 16:04 allocation hint */
                                        /* 20:02 pres context, ie. drep */
-        rpc_cn_pres_context_id_t pres_cont_id;        
+        rpc_cn_pres_context_id_t pres_cont_id;
         unsigned8  alert_count;        /* 22:01 pending alert count */
         unsigned8  reserved;           /* 23:01 alignment pad */
         unsigned32 status;             /* 24:04 runtime fault code or zero */
@@ -1036,13 +1014,13 @@ typedef union
     (RPC_CN_HDR_FAULT(pkt_p).hdr.stub_data)
 
 /*
- * R P C _ G _ C N _ C O M M O N _ H D R 
+ * R P C _ G _ C N _ C O M M O N _ H D R
  */
 EXTERNAL rpc_cn_common_hdr_t rpc_g_cn_common_hdr;
 
 
 /*
- * R P C _ C N _ U N P A C K _ H D R 
+ * R P C _ C N _ U N P A C K _ H D R
  */
 
 PRIVATE unsigned32 rpc__cn_unpack_hdr (rpc_cn_packet_p_t, unsigned32 data_size);
@@ -1072,7 +1050,6 @@ PRIVATE void rpc__cn_stats_print (void );
  */
 PRIVATE const char *rpc__cn_pkt_name ( unsigned32);
 
-
 /*
  * R P C _ C N _ P K T _ C R C _ C O M P U T E
  */
@@ -1080,5 +1057,17 @@ PRIVATE unsigned32 rpc__cn_pkt_crc_compute (
         unsigned8       * /* block */,
         unsigned32      /* block_len */
     );
+
+void SWAP_INPLACE_UUID (
+        idl_uuid_t   *uuid_p,
+        unsigned8    *end_of_pkt,
+        unsigned32   *st
+        );
+
+void SWAP_INPLACE_SYNTAX (
+        rpc_cn_pres_syntax_id_p_t   syntax_p,
+        unsigned8                   *end_of_pkt,
+        unsigned32                  *st
+        );
 
 #endif /* _CNPKT_H */
