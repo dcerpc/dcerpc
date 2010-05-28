@@ -1422,8 +1422,10 @@ INTERNAL unsigned32     do_alter_cont_req_action_rtn
     rpc_cn_fragbuf_t            *fragbuf;
     rpc_cn_sm_event_entry_t     event;
     rpc_cn_port_any_t           *sec_addr;
-    boolean 			old_client;
-    unsigned32 status;
+    boolean                     old_client;
+    unsigned32                  status;
+    unsigned8                   *end_of_pkt;    /* ptr to 1 byte past end of packet */
+    unsigned8                   *end_ptr;
 
     RPC_CN_DBG_RTN_PRINTF(SERVER do_alter_cont_req_action_rtn);
 
@@ -1439,6 +1441,8 @@ INTERNAL unsigned32     do_alter_cont_req_action_rtn
      * the rpc_alter_context PDU.
      */
     req_header = (rpc_cn_packet_t *) ((rpc_cn_fragbuf_t *)event_param)->data_p;
+    end_of_pkt = (unsigned8 *) req_header;
+    end_of_pkt += ((rpc_cn_fragbuf_t *)event_param)->data_size;
 
     if (!(RPC_CN_PKT_FLAGS(req_header) & RPC_C_CN_FLAGS_LAST_FRAG) &&
         !(RPC_CN_PKT_VERS_MINOR (req_header) < RPC_C_CN_PROTO_VERS_MINOR))
@@ -1489,18 +1493,40 @@ INTERNAL unsigned32     do_alter_cont_req_action_rtn
     pres_cont_list = (rpc_cn_pres_cont_list_t *)
         ((unsigned8 *) req_header + RPC_CN_PKT_SIZEOF_ALT_CTX_HDR);
 
-    pres_result_list = (rpc_cn_pres_result_list_t *)
-        ((unsigned8 *)(resp_header) + header_size);
+    if (pres_cont_list->n_context_elem > 0)
+    {
+        end_ptr = &pres_cont_list->pres_cont_elem[pres_cont_list->n_context_elem - 1];
+    }
+    else
+    {
+        end_ptr = &pres_cont_list->pres_cont_elem[0];
+    }
 
-    result_list_len = rpc_g_cn_large_frag_size - header_size;
+    if ( ((unsigned8 *) pres_cont_list < (unsigned8 *) req_header) ||
+        ((unsigned8 *) pres_cont_list > (unsigned8 *) end_of_pkt) ||
+        ((unsigned8 *) end_ptr < (unsigned8 *) req_header) ||
+        ((unsigned8 *) end_ptr > (unsigned8 *) end_of_pkt) )
+    {
+        RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
+                        ("invalid pres_cont_list in alter context\n"));
+        assoc->assoc_status = rpc_s_bad_pkt;
+    }
+    else
+    {
+        pres_result_list = (rpc_cn_pres_result_list_t *)
+            ((unsigned8 *)(resp_header) + header_size);
 
-    rpc__cn_assoc_syntax_negotiate (assoc,
-                                    pres_cont_list,
-                                    &result_list_len,
-                                    pres_result_list,
-                                    &assoc->assoc_status);
+        result_list_len = rpc_g_cn_large_frag_size - header_size;
 
-    header_size += result_list_len;
+        rpc__cn_assoc_syntax_negotiate (assoc,
+                                        pres_cont_list,
+                                        &result_list_len,
+                                        pres_result_list,
+                                        &assoc->assoc_status);
+
+        header_size += result_list_len;
+    }
+
     if (assoc->assoc_status == rpc_s_ok)
     {
         auth_len = rpc_g_cn_large_frag_size - header_size;
@@ -1882,8 +1908,10 @@ INTERNAL unsigned32     do_assoc_req_action_rtn
     rpc_cn_fragbuf_t            *fragbuf;
     rpc_cn_sm_event_entry_t     event;
     rpc_cn_port_any_t           *sec_addr;
-    boolean			old_client;
-    rpc_cn_sm_ctlblk_t 		*sm_p;
+    boolean                     old_client;
+    rpc_cn_sm_ctlblk_t          *sm_p;
+    unsigned8                   *end_of_pkt;    /* ptr to 1 byte past end of packet */
+    unsigned8                   *end_ptr;
 
     RPC_CN_DBG_RTN_PRINTF (SERVER do_assoc_req_action_rtn);
 
@@ -1913,6 +1941,8 @@ INTERNAL unsigned32     do_assoc_req_action_rtn
      * the rpc_bind PDU.
      */
     req_header = (rpc_cn_packet_t *) ((rpc_cn_fragbuf_t *)event_param)->data_p;
+    end_of_pkt = (unsigned8 *) req_header;
+    end_of_pkt += ((rpc_cn_fragbuf_t *)event_param)->data_size;
 
     /*
      * Allocate a large fragbuf for the response PDU. It will either
@@ -1934,12 +1964,11 @@ INTERNAL unsigned32     do_assoc_req_action_rtn
                       RPC_C_CN_DBG_PROT_VERS_MISMATCH))
     {
         RPC_CN_PKT_VERS_MINOR (req_header) =
-            RPC_C_CN_PROTO_VERS_MINOR + 1;
+        RPC_C_CN_PROTO_VERS_MINOR + 1;
     }
 #endif
 
-    if ((RPC_CN_PKT_VERS (req_header) != RPC_C_CN_PROTO_VERS)
-        ||
+    if ((RPC_CN_PKT_VERS (req_header) != RPC_C_CN_PROTO_VERS) ||
         (RPC_CN_PKT_VERS_MINOR (req_header) > RPC_C_CN_PROTO_VERS_MINOR))
     {
         assoc->assoc_status = rpc_s_rpc_prot_version_mismatch;
@@ -1952,7 +1981,7 @@ INTERNAL unsigned32     do_assoc_req_action_rtn
          * of the protocol to the client's minor version.
          */
         assoc->assoc_vers_minor = RPC_CN_PKT_VERS_MINOR (req_header);
-	old_client = (assoc->assoc_vers_minor <= RPC_C_CN_PROTO_VERS_COMPAT);
+        old_client = (assoc->assoc_vers_minor <= RPC_C_CN_PROTO_VERS_COMPAT);
         RPC_CN_PKT_VERS_MINOR (resp_header) = RPC_CN_PKT_VERS_MINOR(req_header);
 
         /*
@@ -2091,28 +2120,49 @@ INTERNAL unsigned32     do_assoc_req_action_rtn
                 pres_cont_list = (rpc_cn_pres_cont_list_t *)
                     ((unsigned8 *) req_header + RPC_CN_PKT_SIZEOF_BIND_HDR);
 
-                result_list_len = rpc_g_cn_large_frag_size - header_size;
-
-                rpc__cn_assoc_syntax_negotiate (assoc,
-                                                pres_cont_list,
-                                                &result_list_len,
-                                                pres_result_list,
-                                                &assoc->assoc_status);
-
-		header_size += result_list_len;
-                if (assoc->assoc_status == rpc_s_ok)
+                if (pres_cont_list->n_context_elem > 0)
                 {
-                    auth_len = rpc_g_cn_large_frag_size - header_size;
-                    rpc__cn_assoc_process_auth_tlr (assoc,
-                                                    req_header,
-                                                    ((rpc_cn_fragbuf_t *)event_param)->data_size,
-                                                    resp_header,
-                                                    &header_size,
-                                                    &auth_len,
-                                                    &assoc->security.assoc_current_sec_context,
-						    old_client,
+                    end_ptr = &pres_cont_list->pres_cont_elem[pres_cont_list->n_context_elem - 1];
+                }
+                else
+                {
+                    end_ptr = &pres_cont_list->pres_cont_elem[0];
+                }
+
+                if ( ((unsigned8 *) pres_cont_list < (unsigned8 *) req_header) ||
+                    ((unsigned8 *) pres_cont_list > (unsigned8 *) end_of_pkt) ||
+                    ((unsigned8 *) end_ptr < (unsigned8 *) req_header) ||
+                    ((unsigned8 *) end_ptr > (unsigned8 *) end_of_pkt) )
+                {
+                    RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
+                                    ("invalid pres_cont_list\n"));
+                    assoc->assoc_status = rpc_s_bad_pkt;
+                }
+                else
+                {
+                    result_list_len = rpc_g_cn_large_frag_size - header_size;
+
+                    rpc__cn_assoc_syntax_negotiate (assoc,
+                                                    pres_cont_list,
+                                                    &result_list_len,
+                                                    pres_result_list,
                                                     &assoc->assoc_status);
-		}
+
+                    header_size += result_list_len;
+                    if (assoc->assoc_status == rpc_s_ok)
+                    {
+                        auth_len = rpc_g_cn_large_frag_size - header_size;
+                        rpc__cn_assoc_process_auth_tlr (assoc,
+                                                        req_header,
+                                                        ((rpc_cn_fragbuf_t *)event_param)->data_size,
+                                                        resp_header,
+                                                        &header_size,
+                                                        &auth_len,
+                                                        &assoc->security.assoc_current_sec_context,
+                                                        old_client,
+                                                        &assoc->assoc_status);
+                    }
+                }
             }
             else
             {
@@ -2151,7 +2201,7 @@ INTERNAL unsigned32     do_assoc_req_action_rtn
     }
     else
     {
-	int 	i;
+        int 	i;
 
         /*
          * Some failure happened. Reject this
@@ -2169,7 +2219,7 @@ INTERNAL unsigned32     do_assoc_req_action_rtn
                                    assoc->assoc_vers_minor);
         (RPC_CN_PKT_VERSIONS (resp_header)).n_protocols
             = RPC_C_CN_PROTO_VERS_MINOR + 1;
-        for (i=0;i <= RPC_C_CN_PROTO_VERS_MINOR; i++)
+        for (i = 0;i <= RPC_C_CN_PROTO_VERS_MINOR; i++)
         {
             (RPC_CN_PKT_VERSIONS (resp_header)).protocols[i].vers_major
                 = RPC_C_CN_PROTO_VERS;
