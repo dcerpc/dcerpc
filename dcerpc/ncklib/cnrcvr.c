@@ -551,7 +551,7 @@ INTERNAL void receive_dispatch
         DCETHREAD_CATCH(dcethread_interrupt_e)
         {
             RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-("CN: call_rep->%p assoc->%p desc->%p receiver canceled, caught in receive_dispatch()\n",
+                            ("CN: call_rep->%p assoc->%p desc->%p receiver canceled, caught in receive_dispatch()\n",
                             assoc->call_rep,
                             assoc,
                             assoc->cn_ctlblk.cn_sock));
@@ -701,12 +701,26 @@ INTERNAL void receive_dispatch
             auth_len = RPC_CN_PKT_AUTH_LEN (pktp);
             if (unpack_ints)
             {
+                /* no need to check end_of_pkt since its a copy of pkt data */
                 SWAB_INPLACE_16 (auth_len);
             }
 
-	    auth_tlr = (rpc_cn_auth_tlr_t *) ((unsigned8 *)(pktp) +
+            auth_tlr = (rpc_cn_auth_tlr_t *) ((unsigned8 *)(pktp) +
                 fragbuf_p->data_size -
                 (auth_len + RPC_CN_PKT_SIZEOF_COM_AUTH_TLR));
+            if ( ((unsigned8 *)(auth_tlr) < (unsigned8 *)(pktp)) ||
+                ((unsigned8 *)(auth_tlr) > (unsigned8 *)(pktp) + fragbuf_p->data_size) ||
+                ((unsigned8 *)(auth_tlr) + auth_len < (unsigned8 *)(pktp)) ||
+                ((unsigned8 *)(auth_tlr) + auth_len > (unsigned8 *)(pktp) + fragbuf_p->data_size) )
+            {
+                RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
+                                ("CN: call_rep->%p assoc->%p desc->%p invalid auth_tlr\n",
+                                 assoc->call_rep,
+                                 assoc,
+                                 assoc->cn_ctlblk.cn_sock));
+                st = rpc_s_protocol_error;
+                break;
+            }
 
             /*
              * Find the appropriate security context element using the key ID
@@ -716,6 +730,7 @@ INTERNAL void receive_dispatch
             key_id = auth_tlr->key_id;
             if (unpack_ints)
             {
+                /* no need to check end_of_pkt since its a copy of pkt data */
                 SWAB_INPLACE_32 (key_id);
             }
 
@@ -790,9 +805,45 @@ INTERNAL void receive_dispatch
                                                           (auth_len
                                                            +
                                                            RPC_CN_PKT_SIZEOF_COM_AUTH_TLR));
+                        if ( ((unsigned8 *)(auth_tlr) < (unsigned8 *)(pktp)) ||
+                            ((unsigned8 *)(auth_tlr) > (unsigned8 *)(pktp) + fragbuf_p->data_size) ||
+                            ((unsigned8 *)(auth_tlr) + auth_len < (unsigned8 *)(pktp)) ||
+                            ((unsigned8 *)(auth_tlr) + auth_len > (unsigned8 *)(pktp) + fragbuf_p->data_size) )
+                        {
+                            RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
+                                            ("CN: call_rep->%p assoc->%p desc->%p invalid auth_tlr in sec context\n",
+                                             assoc->call_rep,
+                                             assoc,
+                                             assoc->cn_ctlblk.cn_sock));
+                            st = rpc_s_protocol_error;
+                            break;
+                        }
+
                         frag_len = RPC_CN_PKT_FRAG_LEN (pktp);
+                        if ( (frag_len > fragbuf_p->data_size) || (frag_len < auth_tlr->stub_pad_length) )
+                        {
+                            RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
+                                            ("CN: call_rep->%p assoc->%p desc->%p invalid frag_len\n",
+                                             assoc->call_rep,
+                                             assoc,
+                                             assoc->cn_ctlblk.cn_sock));
+                            st = rpc_s_protocol_error;
+                            break;
+                        }
+
                         frag_len -= auth_tlr->stub_pad_length;
                         RPC_CN_PKT_FRAG_LEN (pktp) = frag_len;
+
+                        if (fragbuf_p->data_size < auth_tlr->stub_pad_length)
+                        {
+                            RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
+                                            ("CN: call_rep->%p assoc->%p desc->%p invalid stub_pad_length\n",
+                                             assoc->call_rep,
+                                             assoc,
+                                             assoc->cn_ctlblk.cn_sock));
+                            st = rpc_s_protocol_error;
+                            break;
+                        }
                         fragbuf_p->data_size -= auth_tlr->stub_pad_length;
                     }
                     else
@@ -830,16 +881,16 @@ INTERNAL void receive_dispatch
 
                             dce_error_inq_text(auth_st, error_text, &temp_status);
                             /*
-			     * rpc_m_call_failed_s
-			     * "%s on server failed: %s"
-			     */
-			    RPC_DCE_SVC_PRINTF ((
-				DCE_SVC(RPC__SVC_HANDLE, "%s%x"),
-				rpc_svc_recv,
-				svc_c_sev_error,
-				rpc_m_call_failed_s,
-				"RPC_CN_AUTH_RECV_CHECK",
-				error_text ));
+                             * rpc_m_call_failed_s
+                             * "%s on server failed: %s"
+                             */
+                            RPC_DCE_SVC_PRINTF ((
+                                                 DCE_SVC(RPC__SVC_HANDLE, "%s%x"),
+                                                 rpc_svc_recv,
+                                                 svc_c_sev_error,
+                                                 rpc_m_call_failed_s,
+                                                 "RPC_CN_AUTH_RECV_CHECK",
+                                                 error_text ));
 
                             if (packet_info_table[ptype].class == ASSOC_CLASS_PKT)
                             {
