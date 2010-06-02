@@ -41,6 +41,8 @@
 /* Begin PBXBuildFile section */
 		D610EA3910B7575800D0305F /* acf_l.c in Sources */ = {isa = PBXBuildFile; fileRef = D610EA3810B7575800D0305F /* acf_l.c */; };
 		D610EA3B10B7577F00D0305F /* acf_y.c in Sources */ = {isa = PBXBuildFile; fileRef = D610EA3A10B7577F00D0305F /* acf_y.c */; };
+		D616F80B11B722660036020D /* libnck_stubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F4C9106D2364005F1EF3 /* libnck_stubs.a */; };
+		D616F80C11B722660036020D /* libmgmt_stubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F5EA106D3528005F1EF3 /* libmgmt_stubs.a */; };
 		D62430B610B7596C0092FD35 /* nidl_l.c in Sources */ = {isa = PBXBuildFile; fileRef = D62430B510B7596C0092FD35 /* nidl_l.c */; };
 		D62430B810B759790092FD35 /* nidl_y.c in Sources */ = {isa = PBXBuildFile; fileRef = D62430B710B759790092FD35 /* nidl_y.c */; };
 		D655C4AE11067FE1005857C5 /* cnassoc.c in Sources */ = {isa = PBXBuildFile; fileRef = D6422DFC1106554900D380C9 /* cnassoc.c */; };
@@ -163,7 +165,6 @@
 		D67F763D11068B71003C1D11 /* rpcrand.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB262100408FD0080B762 /* rpcrand.c */; };
 		D67F763E11068B71003C1D11 /* rpctimer.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB266100408FD0080B762 /* rpctimer.c */; };
 		D69F92761108BD9500DDCD00 /* lrpc.idl in Sources */ = {isa = PBXBuildFile; fileRef = D6AE33151108BA6D0050828C /* lrpc.idl */; };
-		D6A12458110672EF007B04CF /* libnck_stubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F4C9106D2364005F1EF3 /* libnck_stubs.a */; };
 		D6B20416118F93F600CFFEC6 /* junk.c in Headers */ = {isa = PBXBuildFile; fileRef = DD9D320C107D51CF00FA8214 /* junk.c */; settings = {ATTRIBUTES = (Public, ); }; };
 		DD0435211076A0D60010E492 /* libidl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE0178F106C2FFD00A5E41A /* libidl.a */; };
 		DD0435221076A0D60010E492 /* libnck.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F5D6106D341E005F1EF3 /* libnck.a */; };
@@ -270,7 +271,6 @@
 		DD10F5DB106D3450005F1EF3 /* mgmt.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB245100408FD0080B762 /* mgmt.c */; };
 		DD10F5DC106D3450005F1EF3 /* ndrglob.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB248100408FD0080B762 /* ndrglob.c */; };
 		DD10F5EE106D35EF005F1EF3 /* mgmt.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB127100408FD0080B762 /* mgmt.idl */; };
-		DD10F660106D3E88005F1EF3 /* libmgmt_stubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F5EA106D3528005F1EF3 /* libmgmt_stubs.a */; };
 		DD21F0DD1083D3AD00696F06 /* libdceidl_parser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD21F0B71083D15500696F06 /* libdceidl_parser.a */; };
 		DD9D320D107D51CF00FA8214 /* junk.c in Sources */ = {isa = PBXBuildFile; fileRef = DD9D320C107D51CF00FA8214 /* junk.c */; };
 		DD9D32C3107E345B00FA8214 /* DCERPC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD04350210769FDA0010E492 /* DCERPC.framework */; };
@@ -1485,13 +1485,8 @@
 				DD0435211076A0D60010E492 /* libidl.a in Frameworks */,
 				DD0435221076A0D60010E492 /* libnck.a in Frameworks */,
 				DD0435231076A0D60010E492 /* libuuid.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DD081619106C19580007E433 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				D616F80B11B722660036020D /* libnck_stubs.a in Frameworks */,
+				D616F80C11B722660036020D /* libmgmt_stubs.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1499,8 +1494,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D6A12458110672EF007B04CF /* libnck_stubs.a in Frameworks */,
-				DD10F660106D3E88005F1EF3 /* libmgmt_stubs.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1524,20 +1517,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				DD21F0DD1083D3AD00696F06 /* libdceidl_parser.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DDE0178D106C2FFD00A5E41A /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DDE017DC106C334200A5E41A /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2759,7 +2738,6 @@
 			buildPhases = (
 				D6B96649118A4F3F000291A6 /* Configure */,
 				DD081618106C19580007E433 /* Sources */,
-				DD081619106C19580007E433 /* Frameworks */,
 			);
 			buildRules = (
 				DD081641106C1A6F0007E433 /* PBXBuildRule */,
@@ -2902,7 +2880,6 @@
 			buildConfigurationList = DDE01793106C300500A5E41A /* Build configuration list for PBXNativeTarget "idl" */;
 			buildPhases = (
 				DDE0178C106C2FFD00A5E41A /* Sources */,
-				DDE0178D106C2FFD00A5E41A /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2919,7 +2896,6 @@
 			buildConfigurationList = DDE017E1106C336000A5E41A /* Build configuration list for PBXNativeTarget "uuid" */;
 			buildPhases = (
 				DDE017DB106C334200A5E41A /* Sources */,
-				DDE017DC106C334200A5E41A /* Frameworks */,
 			);
 			buildRules = (
 			);
