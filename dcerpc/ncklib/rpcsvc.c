@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
@@ -16,7 +16,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
  */
@@ -28,11 +28,72 @@
 #include <stdarg.h>
 
 /*
+ * The following symbol is reference by Crash Reporter symbolicly
+ * (instead of through undefined references. To get strip(1) to know
+ * this symbol is not to be stripped it needs to have the
+ * REFERENCED_DYNAMICALLY bit (0x10) set.  This would have been done
+ * automaticly by ld(1) if this symbol were referenced through undefined
+ * symbols.
+ *
+ * NOTE: this is an unsupported interface and the CrashReporter team reserve
+ * the right to change it at any time.
+ */
+char *__crashreporter_info__ = NULL;
+asm(".desc ___crashreporter_info__, 0x10");
+
+/*
 dce_svc_handle_t rpc_g_svc_handle;
 */
-DCE_SVC_DEFINE_HANDLE(rpc_g_svc_handle, rpc_g_svc_table, "rpc")
-      
-
+//DCE_SVC_DEFINE_HANDLE(rpc_g_svc_handle, rpc_g_svc_table, "rpc")
+
+//#define RPC_DCE_SVC_PRINTF(args) rpc_dce_svc_printf(args)
+
+void rpc_dce_svc_printf (
+                        const char* file,
+                        unsigned int line,
+                        const char *format,
+                        uint32_t dbg_switch ATTRIBUTE_UNUSED,
+                        uint32_t sev_action_flags,
+                        uint32_t error_code,
+                        ... )
+{
+    char buff[1024];
+    char *s = buff;
+    size_t remain = sizeof(buff);
+    va_list arg_ptr;
+    int cs;
+
+    snprintf (s, remain, "[file %s, line %d] ", file, line);
+    s = &buff[strlen(buff)];
+    remain = sizeof(buff) - (s - buff);
+
+    snprintf (s, remain, "[flags: 0x%x] ", (unsigned int) sev_action_flags);
+    s = &buff[strlen(buff)];
+    remain = sizeof(buff) - (s - buff);
+
+    snprintf (s, remain, "[error: 0x%x] ", (unsigned int) error_code);
+    s = &buff[strlen(buff)];
+    remain = sizeof(buff) - (s - buff);
+
+    va_start (arg_ptr, error_code);
+    vsnprintf (s, remain, format, arg_ptr);
+    va_end (arg_ptr);
+
+    if ( (sev_action_flags | svc_c_action_abort) ||
+        (sev_action_flags | svc_c_action_exit_bad) )
+    {
+        __crashreporter_info__ = buff;
+        abort();
+    }
+    else
+    {
+        cs = dcethread_enableinterrupt_throw(0);
+        dcethread_write (2, buff, strlen (buff));
+        dcethread_enableinterrupt_throw(cs);
+    }
+}
+
+#if 0
 /*
  * R P C _ _ S V C _ E P R I N T F
  *
@@ -66,7 +127,7 @@ PRIVATE void rpc__svc_init ( void )
     /*
      * Currently, all we have to do is return, since
      * everything is statically registered.
-     * 
+     *
      * But someday we might do something like turn
      * on debug levels corresponding to things set
      * in rpc_g_dbg_switches[], or ...
@@ -81,7 +142,6 @@ PRIVATE void rpc__svc_init ( void )
     return;
 }
 
-#ifdef DEBUG
 /*
  * R P C _ _ S V C _ F M T _ D B G _ M S G
  *

@@ -1008,16 +1008,17 @@ INTERNAL unsigned32     send_last_frag_action_rtn
          * least that of the request header, something is really
          * off.
          */
-	/*
-	 * rpc_m_invalid_accbytcnt
-	 * "(%s) Inconsistency in ACC_BYTCNT field"
-	 */
-	RPC_DCE_SVC_PRINTF ((
-	    DCE_SVC(RPC__SVC_HANDLE, "%s"),
-	    rpc_svc_cn_errors,
-	    svc_c_sev_fatal | svc_c_action_abort,
-	    rpc_m_invalid_accbytcnt,
-	    "send_last_frag_action_rtn" ));
+        /*
+         * rpc_m_invalid_accbytcnt
+         * "(%s) Inconsistency in ACC_BYTCNT field"
+         */
+        rpc_dce_svc_printf (
+            __FILE__, __LINE__,
+            "%s",
+            rpc_svc_cn_errors,
+            svc_c_sev_fatal | svc_c_action_abort,
+            rpc_m_invalid_accbytcnt,
+            "send_last_frag_action_rtn" );
     }
 
     sm_p->cur_state = n_state;

@@ -210,50 +210,51 @@ PRIVATE void rpc__cn_call_executor
          */
         case 0:
         case 1:
-	/*
-	 * rpc_m_pre_v2_ifspec
-	 * "(%s) Pre-v2 interface spec"
-	 */
-	RPC_DCE_SVC_PRINTF ((
-	    DCE_SVC(RPC__SVC_HANDLE, "%s"),
-	    rpc_svc_server_call,
-	    svc_c_sev_fatal | svc_c_action_abort,
-	    rpc_m_pre_v2_ifspec,
-	    "rpc__cn_call_executor" ));
-	break;
+            /*
+             * rpc_m_pre_v2_ifspec
+             * "(%s) Pre-v2 interface spec"
+             */
+            rpc_dce_svc_printf (
+                __FILE__, __LINE__,
+                "%s",
+                rpc_svc_server_call,
+                svc_c_sev_fatal | svc_c_action_abort,
+                rpc_m_pre_v2_ifspec,
+                "rpc__cn_call_executor" );
+            break;
 
         /*
          * This is the v2 (new) stub runtime interface.
          */
         case 2:
-
-        RPC_LOG_SERVER_STUB_PRE;
-        ((*server_stub_epv[call_r->opnum]))
-        ((handle_t) call_r->binding_rep,
-         (rpc_call_handle_t) call_r,
-         &iovector.elt[0],
-         &(RPC_CN_ASSOC_NDR_FORMAT (call_r->assoc)),
-         &call_r->transfer_syntax,
-         manager_epv,
-         &status);
-        RPC_LOG_SERVER_STUB_POST;
-        break;
+            RPC_LOG_SERVER_STUB_PRE;
+            ((*server_stub_epv[call_r->opnum]))
+            ((handle_t) call_r->binding_rep,
+                (rpc_call_handle_t) call_r,
+                &iovector.elt[0],
+                &(RPC_CN_ASSOC_NDR_FORMAT (call_r->assoc)),
+                &call_r->transfer_syntax,
+                manager_epv,
+                &status);
+            RPC_LOG_SERVER_STUB_POST;
+            break;
 
         /*
          * Unknown version
          */
         default:
-	/*
-	 * rpc_m_unk_ifspec
-	 * "(%s) Unknown interface spec version"
-	 */
-	RPC_DCE_SVC_PRINTF ((
-	    DCE_SVC(RPC__SVC_HANDLE, "%s"),
-	    rpc_svc_server_call,
-	    svc_c_sev_fatal | svc_c_action_abort,
-	    rpc_m_pre_v2_ifspec,
-	    "rpc__cn_call_executor" ));
-	break;
+            /*
+             * rpc_m_unk_ifspec
+             * "(%s) Unknown interface spec version"
+             */
+            rpc_dce_svc_printf (
+                __FILE__, __LINE__,
+                "%s",
+                rpc_svc_server_call,
+                svc_c_sev_fatal | svc_c_action_abort,
+                rpc_m_pre_v2_ifspec,
+                "rpc__cn_call_executor" );
+            break;
     }
 
     /*

@@ -289,12 +289,13 @@ EXTERNAL rpc_mem_stats_elt_t rpc_g_mem_stats[];
     rpc_g_mem_stats[type].calls++; \
     if ((addr) == NULL) { \
         rpc_g_mem_stats[type].fails++; \
-	RPC_DCE_SVC_PRINTF (( \
-	    DCE_SVC(RPC__SVC_HANDLE, "%s"), \
-	    rpc_svc_mem, \
-	    svc_c_sev_fatal | svc_c_action_abort, \
-	    rpc_m_alloc_fail, \
-	    "RPC_MEM_ALLOC" )); \
+        rpc_dce_svc_printf ( \
+            __FILE__, __LINE__, \
+            "%s", \
+            rpc_svc_mem, \
+            svc_c_sev_fatal | svc_c_action_abort, \
+            rpc_m_alloc_fail, \
+            "RPC_MEM_ALLOC" ); \
     } else \
         rpc_g_mem_stats[type].inuse++; \
     if ((size) > rpc_g_mem_stats[type].maxsize) \
@@ -330,12 +331,13 @@ EXTERNAL rpc_mem_stats_elt_t rpc_g_mem_stats[];
     rpc_g_mem_stats[type].calls++; \
     if ((addr) == NULL) { \
         rpc_g_mem_stats[type].fails++; \
-	RPC_DCE_SVC_PRINTF (( \
-	    DCE_SVC(RPC__SVC_HANDLE, "%s"), \
-	    rpc_svc_mem, \
-	    svc_c_sev_fatal | svc_c_action_abort, \
-	    rpc_m_realloc_fail, \
-	    "RPC_MEM_REALLOC" )); \
+        rpc_dce_svc_printf ( \
+            __FILE__, __LINE__, \
+            "%s", \
+            rpc_svc_mem, \
+            svc_c_sev_fatal | svc_c_action_abort, \
+            rpc_m_realloc_fail, \
+            "RPC_MEM_REALLOC" ); \
     } else \
         rpc_g_mem_stats[type].inuse++; \
     if ((size) > rpc_g_mem_stats[type].maxsize) \

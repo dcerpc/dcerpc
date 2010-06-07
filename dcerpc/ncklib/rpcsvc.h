@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
@@ -17,7 +17,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
  */
@@ -44,10 +44,42 @@
 
 #ifndef PD_BUILD
 
-#define RPC_DCE_SVC_PRINTF(args) do {;} while (0)
+void rpc_dce_svc_printf (
+                         const char* file,
+                         unsigned int line,
+                         const char *format,
+                         unsigned32 dbg_switch,
+                         unsigned32 sev_action_flags,
+                         unsigned32 error_code,
+                         ... );
+
+typedef enum {
+    svc_c_sev_fatal     = 0x00000001,
+    svc_c_sev_error     = 0x00000002,
+    svc_c_sev_warning   = 0x00000004
+} svc_c_severity_t;
+
+typedef enum {
+    svc_c_action_abort      = 0x00010000,
+    svc_c_action_exit_bad   = 0x00020000,
+    svc_c_action_none       = 0x00040000
+} svc_c_action_t;
+
+#define rpc_svc_general rpc_es_dbg_general
+#define rpc_svc_xmit rpc_es_dbg_xmit
+#define rpc_svc_recv rpc_es_dbg_recv
+#define rpc_svc_cn_state rpc_es_dbg_cn_state
+#define rpc_svc_cn_pkt rpc_es_dbg_cn_pkt
+#define rpc_svc_auth rpc_es_dbg_auth
+#define rpc_svc_mem rpc_es_dbg_mem
+#define rpc_svc_cn_errors rpc_es_dbg_cn_errors
+#define rpc_svc_server_call rpc_es_dbg_server_call
+#define rpc_svc_libidl rpc_es_dbg_libidl
+#define rpc_svc_dg_pkt rpc_es_dbg_dg_pkt
+
 /*
  * New debug switches map to offsets in
- * rpc_g_dbg_switches in kernel.  In user 
+ * rpc_g_dbg_switches in kernel.  In user
  * space, they map to S12Y sub-components.
  */
 #define rpc_e_dbg_general rpc_es_dbg_general
@@ -104,9 +136,6 @@
 
 #ifdef	DCE_RPC_SVC
 
-#define RPC_DCE_SVC_PRINTF(args) dce_svc_printf args
-
-
 /*
  * Map the old debug switches to the
  * new serviceability "sub-components".
@@ -131,7 +160,6 @@
 #define	rpc_e_dbg_dg_sockets	rpc_svc_dg_sockets
 #define	rpc_e_dbg_timer		rpc_svc_timer
 #define	rpc_e_dbg_threads	rpc_svc_threads
-
 
 #define EPRINTF           	rpc__svc_eprintf
 
@@ -166,7 +194,7 @@
  *      RPC_DBG_PRINTF(rpc_e_dbg_xmit, 3, ("Sent pkt %d", pkt_count));
  *
  * I.e. the third parameter is the argument list to "printf" and must be
- * enclosed in parens.  The macro is designed this way to allow us to 
+ * enclosed in parens.  The macro is designed this way to allow us to
  * eliminate all debug code when DEBUG is not defined.
  *
  */
@@ -175,7 +203,7 @@
  * Recoded to use serviceability debug interface ...
  *
  * Call a function that can deal with the "pargs"
- * argument and then call DCE_SVC_DEBUG ... 
+ * argument and then call DCE_SVC_DEBUG ...
  *
  * rpc__svc_fmt_dbg_msg returns a pointer to malloc()'ed
  * storage, since trying to use internal allocation

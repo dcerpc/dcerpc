@@ -936,13 +936,14 @@ PRIVATE unsigned32 rpc__cn_unpack_hdr
 
         default:
             /* "(%s) Illegal or unknown packet type: %x\n" */
-            RPC_DCE_SVC_PRINTF ((
-                                 DCE_SVC(RPC__SVC_HANDLE, "%s%x"),
-                                 rpc_svc_cn_pkt,
-                                 svc_c_sev_warning,
-                                 rpc_m_bad_pkt_type,
-                                 "rpc__cn_unpack_hdr",
-                                 RPC_CN_PKT_PTYPE(pkt_p) ));
+            rpc_dce_svc_printf (
+                __FILE__, __LINE__,
+                 "%s %x",
+                 rpc_svc_cn_pkt,
+                 svc_c_sev_warning,
+                 rpc_m_bad_pkt_type,
+                 "rpc__cn_unpack_hdr",
+                 RPC_CN_PKT_PTYPE(pkt_p) );
             return (rpc_s_bad_pkt);
     }
 
@@ -975,12 +976,13 @@ PRIVATE unsigned32 rpc__cn_unpack_hdr
                      * rpc_m_unalign_authtrl
                      * "(%s) Unaligned RPC_CN_PKT_AUTH_TRL"
                      */
-                    RPC_DCE_SVC_PRINTF ((
-                                         DCE_SVC(RPC__SVC_HANDLE, "%s"),
-                                         rpc_svc_cn_pkt,
-                                         svc_c_sev_fatal | svc_c_action_abort,
-                                         rpc_m_unalign_authtrl,
-                                         "rpc__cn_unpack_hdr" ));
+                    rpc_dce_svc_printf (
+                        __FILE__, __LINE__,
+                         "%s",
+                         rpc_svc_cn_pkt,
+                         svc_c_sev_fatal | svc_c_action_abort,
+                         rpc_m_unalign_authtrl,
+                         "rpc__cn_unpack_hdr" );
                     return (rpc_s_bad_pkt);
                 }
 #endif

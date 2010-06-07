@@ -1328,11 +1328,11 @@ INTERNAL unsigned32     handle_first_frag_action_rtn
     LAST_RECV_FRAG_PRED (spc_struct, event_param, status);
     if (status == 1)  /* LastRecvFrag is true */
     {
-	sm_p->cur_state = RPC_C_SERVER_CALL_CALL_RESPONSE;
+        sm_p->cur_state = RPC_C_SERVER_CALL_CALL_RESPONSE;
     }
     else  /* LastRecvFrag is false */
     {
-	sm_p->cur_state = RPC_C_SERVER_CALL_CALL_REQUEST;
+        sm_p->cur_state = RPC_C_SERVER_CALL_CALL_REQUEST;
     }
     status = rpc_s_ok;
 
@@ -1418,23 +1418,24 @@ INTERNAL unsigned32     handle_first_frag_action_rtn
 
                 dce_error_inq_text(status, error_text, &temp_status);
 
-		/*
-		 * "%s on server failed: %s"
-		 */
-		RPC_DCE_SVC_PRINTF ((
-		    DCE_SVC(RPC__SVC_HANDLE, "%s%x"),
-		    rpc_svc_auth,
-		    svc_c_sev_error,
-		    rpc_m_call_failed_s,
-		    "RPC_CN_AUTH_PRE_CALL",
-		    error_text ));
+                /*
+                 * "%s on server failed: %s"
+                 */
+                rpc_dce_svc_printf (
+                    __FILE__, __LINE__,
+                    "%s %x",
+                    rpc_svc_auth,
+                    svc_c_sev_error,
+                    rpc_m_call_failed_s,
+                    "RPC_CN_AUTH_PRE_CALL",
+                    error_text );
 
-		/*
+                /*
                  * A fault packet containing an appropriate status code
                  * will be sent to the client in the receiver
                  * thread.
                  */
-	         return (status);
+                return (status);
             }
             RPC_CN_CREP_ADJ_IOV_FOR_TLR (call_rep, response_header_p, auth_value_len);
         }
@@ -1569,7 +1570,7 @@ INTERNAL unsigned32     handle_frag_action_rtn
     LAST_RECV_FRAG_PRED (spc_struct, event_param, status);
     if (status == 1)  /* LastRecvFrag is true */
     {
-	sm_p->cur_state = RPC_C_SERVER_CALL_CALL_RESPONSE;
+        sm_p->cur_state = RPC_C_SERVER_CALL_CALL_RESPONSE;
     }
     else  /* LastRecvFrag is false */
     {
@@ -1693,16 +1694,17 @@ INTERNAL unsigned32     send_call_resp_action_rtn
 #ifdef DEBUG
     if ((stub_data_p == NULL) || (stub_data_p->num_elt <= 0))
     {
-	/*
-	 * rpc_m_no_stub_data
-	 * "(%s) No stub data to send"
-	 */
-	RPC_DCE_SVC_PRINTF ((
-	    DCE_SVC(RPC__SVC_HANDLE, "%s"),
-	    rpc_svc_xmit,
-	    svc_c_sev_fatal | svc_c_action_abort,
-	    rpc_m_no_stub_data,
-	    "send_call_resp_action_rtn" ));
+        /*
+         * rpc_m_no_stub_data
+         * "(%s) No stub data to send"
+         */
+        rpc_dce_svc_printf (
+            __FILE__, __LINE__,
+            "%s",
+            rpc_svc_xmit,
+            svc_c_sev_fatal | svc_c_action_abort,
+            rpc_m_no_stub_data,
+            "send_call_resp_action_rtn" );
     }
     else
     {
@@ -1939,17 +1941,18 @@ INTERNAL unsigned32     send_call_fault_action_rtn
          */
         if ((stub_data_p == NULL) || (stub_data_p->num_elt <= 0))
         {
-	    /*
-	     * rpc_m_no_stub_data
-	     * "(%s) No stub data to send"
-	     */
-	    RPC_DCE_SVC_PRINTF ((
-	        DCE_SVC(RPC__SVC_HANDLE, "%s"),
-	        rpc_svc_xmit,
-	        svc_c_sev_fatal | svc_c_action_abort,
-	        rpc_m_no_stub_data,
-	        "send_call_fault_action_rtn" ));
-	}
+            /*
+             * rpc_m_no_stub_data
+             * "(%s) No stub data to send"
+             */
+            rpc_dce_svc_printf (
+                __FILE__, __LINE__,
+                "%s",
+                rpc_svc_xmit,
+                svc_c_sev_fatal | svc_c_action_abort,
+                rpc_m_no_stub_data,
+                "send_call_fault_action_rtn" );
+        }
 #endif
 
         /*
@@ -2372,17 +2375,18 @@ INTERNAL unsigned32     abort_resp_send_fault_action_rtn
          */
         if ((stub_data_p == NULL) || (stub_data_p->num_elt <= 0))
         {
-	    /*
-	     * rpc_m_no_stub_data
-	     * "(%s) No stub data to send"
-	     */
-	    RPC_DCE_SVC_PRINTF ((
-	        DCE_SVC(RPC__SVC_HANDLE, "%s"),
-	        rpc_svc_xmit,
-	        svc_c_sev_fatal | svc_c_action_abort,
-	        rpc_m_no_stub_data,
-	        "send_call_fault_action_rtn" ));
-	}
+            /*
+             * rpc_m_no_stub_data
+             * "(%s) No stub data to send"
+             */
+            rpc_dce_svc_printf (
+                __FILE__, __LINE__,
+                "%s",
+                rpc_svc_xmit,
+                svc_c_sev_fatal | svc_c_action_abort,
+                rpc_m_no_stub_data,
+                "send_call_fault_action_rtn" );
+        }
 #endif
 
         /*
@@ -2851,15 +2855,16 @@ PRIVATE unsigned32     rpc__cn_call_sm_protocol_error
      * "Illegal state transition detected in CN {client|server} call state
      * machine [cur_state: %d, cur_event: %d, call_rep: %x]"
      */
-    RPC_DCE_SVC_PRINTF ((
-	DCE_SVC(RPC__SVC_HANDLE, "%d%d%x"),
-	rpc_svc_cn_state,
-	svc_c_sev_fatal | svc_c_action_abort,
+    rpc_dce_svc_printf (
+        __FILE__, __LINE__,
+        "%d %d %x",
+        rpc_svc_cn_state,
+        svc_c_sev_fatal | svc_c_action_abort,
         RPC_CALL_IS_SERVER( (rpc_call_rep_t *)call_rep ) ?
-            rpc_m_cn_ill_state_trans_sr : rpc_m_cn_ill_state_trans_cr,
+        rpc_m_cn_ill_state_trans_sr : rpc_m_cn_ill_state_trans_cr,
         call_rep->call_state.cur_state,
         call_rep->call_state.cur_event,
-        call_rep ));
+        call_rep );
 	 /* FIXME: is this correct? */
 	 return rpc_s_ok;
 }

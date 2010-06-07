@@ -770,12 +770,13 @@ INTERNAL pointer_t rpc__cn_network_init_desc
          * "(%s) Socket's maximum receive buffering is less than
          * NCA Connection Protocol minimum requirement"
          */
-        RPC_DCE_SVC_PRINTF ((
-	    DCE_SVC(RPC__SVC_HANDLE, "%s"),
-	    rpc_svc_cn_errors,
-	    svc_c_sev_fatal | svc_c_action_abort,
-	    rpc_m_recvbuf_toosmall,
-	    "rpc__cn_network_init_desc" ));
+        rpc_dce_svc_printf (
+            __FILE__, __LINE__,
+            "%s",
+            rpc_svc_cn_errors,
+            svc_c_sev_fatal | svc_c_action_abort,
+            rpc_m_recvbuf_toosmall,
+            "rpc__cn_network_init_desc" );
     }
 
     /*
@@ -1210,17 +1211,18 @@ PRIVATE void rpc__cn_network_req_connect
 
         if (rsize < RPC_C_ASSOC_MUST_RECV_FRAG_SIZE)
         {
-	    /*
-	     * rpc_m_recvbuf_toosmall
-	     * "(%s) Socket's maximum receive buffering is less than
-	     * NCA Connection Protocol minimum requirement"
-	     */
-	    RPC_DCE_SVC_PRINTF ((
-	    DCE_SVC(RPC__SVC_HANDLE, "%s"),
-	        rpc_svc_cn_errors,
-	        svc_c_sev_fatal | svc_c_action_abort,
-	        rpc_m_recvbuf_toosmall,
-	        "rpc__cn_network_req_connect" ));
+            /*
+             * rpc_m_recvbuf_toosmall
+             * "(%s) Socket's maximum receive buffering is less than
+             * NCA Connection Protocol minimum requirement"
+             */
+            rpc_dce_svc_printf (
+                __FILE__, __LINE__,
+                "%s",
+                rpc_svc_cn_errors,
+                svc_c_sev_fatal | svc_c_action_abort,
+                rpc_m_recvbuf_toosmall,
+                "rpc__cn_network_req_connect" );
         }
 
         /*

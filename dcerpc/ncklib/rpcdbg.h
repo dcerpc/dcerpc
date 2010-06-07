@@ -96,20 +96,23 @@ typedef enum {
     rpc_es_dbg_ip_max_tsdu,              /* 33 */
     rpc_es_dbg_dg_max_psock,             /* 34 */
     rpc_es_dbg_dg_max_window_size,       /* 35 */
-    rpc_es_dbg_threads,       	 	 /* 36 */
+    rpc_es_dbg_threads,                  /* 36 */
     rpc_es_dbg_uxd_max_pth_unfrag_tpdu,  /* 37 */
     rpc_es_dbg_uxd_max_loc_unfrag_tpdu,  /* 38 */
     rpc_es_dbg_uxd_max_tsdu,             /* 39 */
     rpc_es_dbg_np_max_pth_unfrag_tpdu,   /* 40 */
     rpc_es_dbg_np_max_loc_unfrag_tpdu,   /* 41 */
     rpc_es_dbg_np_max_tsdu,              /* 42 */
+    rpc_es_dbg_server_call,              /* 43 */
+    rpc_es_dbg_libidl,                   /* 44 */
+    rpc_es_dbg_dg_pkt,                   /* 45 */
  
     /* 
      * Add new switches above this comment and adjust the
      * "last_switch" value if necessary.  We keep a few
      * empty slots to allow for easy temporary additions.
      */
-    rpc_es_dbg_last_switch       = 43    /* 43 */
+    rpc_es_dbg_last_switch       = 45    /* 45 */
 } rpc_dbg_switch_t;
 
 #define RPC_DBG_N_SWITCHES (((int) rpc_es_dbg_last_switch) + 1)

@@ -3050,19 +3050,19 @@ INTERNAL unsigned32     mark_syntax_and_sec_action_rtn
 #if DEBUG
                 if (i == pres_context->syntax_vector->count)
                 {
-
-		    /*
-		     * rpc_m_nts_not_found
-		     * "(%s) Negotiated transfer syntax not found
-		     * in presentation context element"
-		     */
-		    RPC_DCE_SVC_PRINTF ((
-			DCE_SVC(RPC__SVC_HANDLE, "%s"),
-			rpc_svc_cn_errors,
-			svc_c_sev_fatal | svc_c_action_abort,
-			rpc_m_nts_not_found,
-			"mark_syntax_and_sec_action_rtn" ));
-		}
+                    /*
+                     * rpc_m_nts_not_found
+                     * "(%s) Negotiated transfer syntax not found
+                     * in presentation context element"
+                     */
+                    rpc_dce_svc_printf (
+                        __FILE__, __LINE__,
+                        "%s",
+                        rpc_svc_cn_errors,
+                        svc_c_sev_fatal | svc_c_action_abort,
+                        rpc_m_nts_not_found,
+                        "mark_syntax_and_sec_action_rtn" );
+                }
 #endif
             }
             else
@@ -4474,14 +4474,15 @@ INTERNAL unsigned32     illegal_event_abort_action_rtn
      * "Illegal state transition detected in CN client association
      * state machine [cur_state: %s, cur_event: %s, assoc: %x]"
      */
-    RPC_DCE_SVC_PRINTF ((
-	DCE_SVC(RPC__SVC_HANDLE, "%s%s%x"),
-	rpc_svc_cn_state,
-	svc_c_sev_warning | svc_c_action_none,
+    rpc_dce_svc_printf (
+        __FILE__, __LINE__,
+        "%s %s %x",
+        rpc_svc_cn_state,
+        svc_c_sev_warning | svc_c_action_none,
         rpc_m_cn_ill_state_trans_ca,
-rpc_g_cn_assoc_client_states[assoc->assoc_state.cur_state-RPC_C_CN_STATEBASE],
-rpc_g_cn_assoc_client_events[assoc->assoc_state.cur_event-RPC_C_CN_STATEBASE],
-        assoc ));
+        rpc_g_cn_assoc_client_states[assoc->assoc_state.cur_state-RPC_C_CN_STATEBASE],
+        rpc_g_cn_assoc_client_events[assoc->assoc_state.cur_event-RPC_C_CN_STATEBASE],
+        assoc );
 
     /*
      * Note that since we are calling action routines from

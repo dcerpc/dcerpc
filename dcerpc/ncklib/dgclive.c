@@ -351,16 +351,17 @@ PRIVATE void rpc__dg_maintain_init(void)
     uuid_create(&rpc_g_dg_my_cas_uuid, &st);
     if (st != rpc_s_ok)
     {
-	/*
-	 * rpc_m_cant_create_uuid
-	 * "(%s) Can't create UUID"
-	 */
-	RPC_DCE_SVC_PRINTF ((
-	    DCE_SVC(RPC__SVC_HANDLE, "%s"),
-	    rpc_svc_general,
-	    svc_c_sev_fatal | svc_c_action_exit_bad,
-	    rpc_m_cant_create_uuid,
-	    "rpc__dg_maintain_init" ));
+        /*
+         * rpc_m_cant_create_uuid
+         * "(%s) Can't create UUID"
+         */
+        rpc_dce_svc_printf (
+            __FILE__, __LINE__,
+            "%s",
+            rpc_svc_general,
+            svc_c_sev_fatal | svc_c_action_exit_bad,
+            rpc_m_cant_create_uuid,
+            "rpc__dg_maintain_init" );
     }
 
     /*

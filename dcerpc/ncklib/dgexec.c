@@ -841,18 +841,20 @@ PRIVATE void rpc__dg_execute_call
          */
         case RPC_C_STUB_RTL_IF_VERS_NCS_1_0:
         case RPC_C_STUB_RTL_IF_VERS_NCS_1_5:
-            if (rpc_g_dg_pre_v2_server_call_p == NULL) {
-		/*
-		 * rpc_m_pre_v2_ss
-		 * "(%s) Can't handle pre-v2 server stubs"
-		 */
-		RPC_DCE_SVC_PRINTF ((
-		    DCE_SVC(RPC__SVC_HANDLE, "%s"),
-		    rpc_svc_server_call,
-		    svc_c_sev_fatal | svc_c_action_abort,
-		    rpc_m_pre_v2_ss,
-		    "rpc__dg_execute_call" ));
-	    }
+            if (rpc_g_dg_pre_v2_server_call_p == NULL)
+            {
+                /*
+                 * rpc_m_pre_v2_ss
+                 * "(%s) Can't handle pre-v2 server stubs"
+                 */
+                rpc_dce_svc_printf (
+                    __FILE__, __LINE__,
+                    "%s",
+                    rpc_svc_server_call,
+                    svc_c_sev_fatal | svc_c_action_abort,
+                    rpc_m_pre_v2_ss,
+                    "rpc__dg_execute_call" );
+            }
 
             prev_cancel_state = dcethread_enableinterrupt_throw(0);
             (*rpc_g_dg_pre_v2_server_call_p)(

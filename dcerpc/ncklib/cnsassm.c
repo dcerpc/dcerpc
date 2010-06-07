@@ -3568,11 +3568,11 @@ INTERNAL unsigned32     do_assoc_action_rtn
   pointer_t       sm
 )
 {
-    rpc_cn_assoc_t                      *assoc;
-    rpc_cn_packet_t                     *req_header ATTRIBUTE_UNUSED;
-    rpc_cn_sm_event_entry_t             event ATTRIBUTE_UNUSED;
-    rpc_cn_sm_ctlblk_t 			*sm_p ATTRIBUTE_UNUSED;
-    unsigned32				status;
+    rpc_cn_assoc_t *assoc;
+    rpc_cn_packet_t *req_header ATTRIBUTE_UNUSED;
+    rpc_cn_sm_event_entry_t event ATTRIBUTE_UNUSED;
+    rpc_cn_sm_ctlblk_t *sm_p ATTRIBUTE_UNUSED;
+    unsigned32 status;
 
     RPC_CN_DBG_RTN_PRINTF(SERVER do_assoc_action_rtn);
     assoc = (rpc_cn_assoc_t *) spc_struct;
@@ -3580,7 +3580,7 @@ INTERNAL unsigned32     do_assoc_action_rtn
     status = lastbindfrag_pred_rtn (spc_struct, event_param);
     if (status == 0)
     {
-	do_assoc_wait_action_rtn (spc_struct, event_param, sm);
+        do_assoc_wait_action_rtn (spc_struct, event_param, sm);
         return (rpc_s_ok);
     }
 
@@ -3726,16 +3726,17 @@ INTERNAL void rpc__cn_assoc_process_auth_tlr
 
         dce_error_inq_text(*st, error_text, &temp_status);
 
-	/*
+        /*
          * "%s failed: %s"
-	 */
-	RPC_DCE_SVC_PRINTF ((
-	    DCE_SVC(RPC__SVC_HANDLE, "%s%x"),
-	    rpc_svc_auth,
-	    svc_c_sev_error,
-	    rpc_m_call_failed,
-	    "RPC_CN_AUTH_CREATE_INFO",
-	    error_text ));
+         */
+        rpc_dce_svc_printf (
+            __FILE__, __LINE__,
+            "%s %x",
+            rpc_svc_auth,
+            svc_c_sev_error,
+            rpc_m_call_failed,
+            "RPC_CN_AUTH_CREATE_INFO",
+            error_text );
         goto DONE;
     }
     if (sec == NULL)
@@ -3898,15 +3899,16 @@ INTERNAL void rpc__cn_assoc_process_auth_tlr
         dce_error_inq_text(sec->sec_status, error_text, &temp_status);
 
         /*
-	 * "%s on server failed: %s"
-	 */
-	RPC_DCE_SVC_PRINTF ((
-	    DCE_SVC(RPC__SVC_HANDLE, "%s%x"),
-	    rpc_svc_auth,
-	    svc_c_sev_error,
-	    rpc_m_call_failed_s,
-	    "RPC_CN_AUTH_VFY_CLIENT_REQ",
-	    error_text ));
+         * "%s on server failed: %s"
+         */
+        rpc_dce_svc_printf (
+            __FILE__, __LINE__,
+            "%s %x",
+            rpc_svc_auth,
+            svc_c_sev_error,
+            rpc_m_call_failed_s,
+            "RPC_CN_AUTH_VFY_CLIENT_REQ",
+            error_text );
 
         RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_SECURITY_ERRORS,
                         ("CN: call_rep->%p assoc->%p desc->%p client verification failed security_context->%p auth_type->%x auth_level->%x auth_len->%x stub_pad_length->%x st->%x\n",

@@ -267,12 +267,13 @@ PRIVATE void rpc__cn_network_receiver
                      * rpc_m_unexpected_exc
                      * "(%s) Unexpected exception was raised"
                      */
-                    RPC_DCE_SVC_PRINTF ((
-                        DCE_SVC(RPC__SVC_HANDLE, "%s"),
+                    rpc_dce_svc_printf (
+                        __FILE__, __LINE__,
+                        "%s",
                         rpc_svc_recv,
                         svc_c_sev_fatal | svc_c_action_abort,
                         rpc_m_unexpected_exc,
-                        "rpc__cn_network_receiver" ));
+                        "rpc__cn_network_receiver" );
                 }
                 DCETHREAD_ENDTRY
 
@@ -326,12 +327,13 @@ PRIVATE void rpc__cn_network_receiver
                      * rpc_m_unexpected_exc
                      * "(%s) Unexpected exception was raised"
                      */
-                   RPC_DCE_SVC_PRINTF ((
-                       DCE_SVC(RPC__SVC_HANDLE, "%s"),
+                   rpc_dce_svc_printf (
+                       __FILE__, __LINE__,
+                       "%s",
                        rpc_svc_recv,
                        svc_c_sev_fatal | svc_c_action_abort,
                        rpc_m_unexpected_exc,
-                       "rpc__cn_network_receiver" ));
+                       "rpc__cn_network_receiver" );
                 }
                 DCETHREAD_ENDTRY
 
@@ -400,32 +402,34 @@ PRIVATE void rpc__cn_network_receiver
                 }
                 DCETHREAD_CATCH_ALL(THIS_CATCH)
                 {
-		    /*
-		     * rpc_m_unexpected_exc
-		     * "(%s) Unexpected exception was raised"
-		     */
-		    RPC_DCE_SVC_PRINTF ((
-		        DCE_SVC(RPC__SVC_HANDLE, "%s"),
-		        rpc_svc_recv,
-		        svc_c_sev_fatal | svc_c_action_abort,
-		        rpc_m_unexpected_exc,
-		        "rpc__cn_network_receiver" ));
+                    /*
+                     * rpc_m_unexpected_exc
+                     * "(%s) Unexpected exception was raised"
+                     */
+                    rpc_dce_svc_printf (
+                        __FILE__, __LINE__,
+                        "%s",
+                        rpc_svc_recv,
+                        svc_c_sev_fatal | svc_c_action_abort,
+                        rpc_m_unexpected_exc,
+                        "rpc__cn_network_receiver" );
                 }
                 DCETHREAD_ENDTRY
             }
         }
         DCETHREAD_CATCH(dcethread_interrupt_e)
         {
-	    /*
-	     * rpc_m_unexpected_exc
-	     * "(%s) Unexpected exception was raised"
-	     */
-	    RPC_DCE_SVC_PRINTF ((
-		DCE_SVC(RPC__SVC_HANDLE, "%s"),
-		rpc_svc_recv,
-		svc_c_sev_fatal | svc_c_action_abort,
-		rpc_m_unexpected_exc,
-		"rpc__cn_network_receiver" ));
+            /*
+             * rpc_m_unexpected_exc
+             * "(%s) Unexpected exception was raised"
+             */
+            rpc_dce_svc_printf (
+                __FILE__, __LINE__,
+                "%s",
+                rpc_svc_recv,
+                svc_c_sev_fatal | svc_c_action_abort,
+                rpc_m_unexpected_exc,
+                "rpc__cn_network_receiver" );
         }
         DCETHREAD_CATCH_ALL(THIS_CATCH)
         {
@@ -441,16 +445,17 @@ PRIVATE void rpc__cn_network_receiver
         }
         DCETHREAD_CATCH_ALL(THIS_CATCH)
         {
-	    /*
-	     * rpc_m_unexpected_exc
-	     * "(%s) Unexpected exception was raised"
-	     */
-	    RPC_DCE_SVC_PRINTF ((
-		DCE_SVC(RPC__SVC_HANDLE, "%s"),
-		rpc_svc_recv,
-		svc_c_sev_fatal | svc_c_action_abort,
-		rpc_m_unexpected_exc,
-		"rpc__cn_network_receiver" ));
+            /*
+             * rpc_m_unexpected_exc
+             * "(%s) Unexpected exception was raised"
+             */
+            rpc_dce_svc_printf (
+                __FILE__, __LINE__,
+                "%s",
+                rpc_svc_recv,
+                svc_c_sev_fatal | svc_c_action_abort,
+                rpc_m_unexpected_exc,
+                "rpc__cn_network_receiver" );
         }
         DCETHREAD_ENDTRY
     } /* end while (!done && !assoc->cn_ctlblk.exit_rcvr) */
@@ -559,16 +564,17 @@ INTERNAL void receive_dispatch
         }
         DCETHREAD_CATCH_ALL(THIS_CATCH)
         {
-	    /*
-	     * rpc_m_unexpected_exc
-	     * "(%s) Unexpected exception was raised"
-	     */
-	    RPC_DCE_SVC_PRINTF ((
-	        DCE_SVC(RPC__SVC_HANDLE, "%s"),
-	        rpc_svc_recv,
-	        svc_c_sev_fatal | svc_c_action_abort,
-	        rpc_m_unexpected_exc,
-	        "receive_dispatch" ));
+            /*
+             * rpc_m_unexpected_exc
+             * "(%s) Unexpected exception was raised"
+             */
+            rpc_dce_svc_printf (
+                __FILE__, __LINE__,
+                "%s",
+                rpc_svc_recv,
+                svc_c_sev_fatal | svc_c_action_abort,
+                rpc_m_unexpected_exc,
+                "receive_dispatch" );
         }
         DCETHREAD_ENDTRY
 
@@ -884,13 +890,14 @@ INTERNAL void receive_dispatch
                              * rpc_m_call_failed_s
                              * "%s on server failed: %s"
                              */
-                            RPC_DCE_SVC_PRINTF ((
-                                                 DCE_SVC(RPC__SVC_HANDLE, "%s%x"),
-                                                 rpc_svc_recv,
-                                                 svc_c_sev_error,
-                                                 rpc_m_call_failed_s,
-                                                 "RPC_CN_AUTH_RECV_CHECK",
-                                                 error_text ));
+                            rpc_dce_svc_printf (
+                                __FILE__, __LINE__,
+                                "%s %x",
+                                rpc_svc_recv,
+                                svc_c_sev_error,
+                                rpc_m_call_failed_s,
+                                "RPC_CN_AUTH_RECV_CHECK",
+                                error_text );
 
                             if (packet_info_table[ptype].class == ASSOC_CLASS_PKT)
                             {
@@ -1438,16 +1445,17 @@ INTERNAL void receive_packet
         }
         DCETHREAD_CATCH_ALL(THIS_CATCH)
         {
-	    /*
-	     * rpc_m_unexpected_exc
-	     * "(%s) Unexpected exception was raised"
-	     */
-	    RPC_DCE_SVC_PRINTF ((
-	        DCE_SVC(RPC__SVC_HANDLE, "%s"),
-	        rpc_svc_recv,
-	        svc_c_sev_fatal | svc_c_action_abort,
-	        rpc_m_unexpected_exc,
-	        "receive_packet" ));
+            /*
+             * rpc_m_unexpected_exc
+             * "(%s) Unexpected exception was raised"
+             */
+            rpc_dce_svc_printf (
+                __FILE__, __LINE__,
+                "%s",
+                rpc_svc_recv,
+                svc_c_sev_fatal | svc_c_action_abort,
+                rpc_m_unexpected_exc,
+                "receive_packet" );
         }
         DCETHREAD_ENDTRY
 
@@ -1565,20 +1573,21 @@ INTERNAL void receive_packet
                 {
                     /*
                      * We have incompatible protocol versions.
-		     */
-		    /*
-		     * "(receive_packet) assoc->%p %s: Protocol version mismatch -
-		     *            major->%x minor->%x"
                      */
-		    RPC_DCE_SVC_PRINTF ((
-			DCE_SVC(RPC__SVC_HANDLE, "%x%s%x%x"),
-			rpc_svc_cn_pkt,
-			svc_c_sev_warning,
-			rpc_m_prot_mismatch,
-			assoc,
-			rpc__cn_pkt_name(ptype),
-			RPC_CN_PKT_VERS ((rpc_cn_packet_p_t)fbp->data_p),
-			RPC_CN_PKT_VERS_MINOR ((rpc_cn_packet_p_t)fbp->data_p) ));
+                    /*
+                     * "(receive_packet) assoc->%p %s: Protocol version mismatch -
+                     *            major->%x minor->%x"
+                     */
+                    rpc_dce_svc_printf (
+                        __FILE__, __LINE__,
+                        "%x %s %x %x",
+                        rpc_svc_cn_pkt,
+                        svc_c_sev_warning,
+                        rpc_m_prot_mismatch,
+                        assoc,
+                        rpc__cn_pkt_name(ptype),
+                        RPC_CN_PKT_VERS ((rpc_cn_packet_p_t)fbp->data_p),
+                        RPC_CN_PKT_VERS_MINOR ((rpc_cn_packet_p_t)fbp->data_p) );
                 }
             }
 
@@ -1592,17 +1601,18 @@ INTERNAL void receive_packet
                 ptype = RPC_CN_PKT_PTYPE((rpc_cn_packet_p_t)fbp->data_p);
 
                 /*
-		 * "(receive_packet) assoc->%p frag_length %d in header >
-		 *                fragbuf data size %d"
-		 */
-                RPC_DCE_SVC_PRINTF ((
-		    DCE_SVC(RPC__SVC_HANDLE, "%x%d%d"),
-		    rpc_svc_cn_pkt,
-		    svc_c_sev_warning,
-		    rpc_m_frag_toobig,
+                 * "(receive_packet) assoc->%p frag_length %d in header >
+                 *                fragbuf data size %d"
+                 */
+                rpc_dce_svc_printf (
+                    __FILE__, __LINE__,
+                    "%x %d %d",
+                    rpc_svc_cn_pkt,
+                    svc_c_sev_warning,
+                    rpc_m_frag_toobig,
                     assoc,
                     frag_length,
-                    rpc_g_cn_large_frag_size ));
+                    rpc_g_cn_large_frag_size );
 
                 /*
                  * BIND and ALTER_CONTEXT are allowed to be larger

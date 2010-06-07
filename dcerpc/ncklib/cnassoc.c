@@ -1826,22 +1826,23 @@ PRIVATE void rpc__cn_assoc_send_frag
         {
             if (assoc->assoc_flags & RPC_C_CN_ASSOC_SERVER)
             {
-		dce_error_string_t error_text;
-		int temp_status;
+                dce_error_string_t error_text;
+                int temp_status;
 
-		dce_error_inq_text(*st, error_text, &temp_status);
+                dce_error_inq_text(*st, error_text, &temp_status);
 
-		/*
-		 * rpc_m_call_failed_s
-		 * "%s on server failed: %s"
-		 */
-                RPC_DCE_SVC_PRINTF ((
-		    DCE_SVC(RPC__SVC_HANDLE, "%s%x"),
-		    rpc_svc_auth,
-		    svc_c_sev_error,
-		    rpc_m_call_failed_s,
-		    "RPC_CN_AUTH_PRE_SEND",
-		    error_text ));
+                /*
+                 * rpc_m_call_failed_s
+                 * "%s on server failed: %s"
+                 */
+                rpc_dce_svc_printf (
+                    __FILE__, __LINE__,
+                    "%s %x",
+                    rpc_svc_auth,
+                    svc_c_sev_error,
+                    rpc_m_call_failed_s,
+                    "RPC_CN_AUTH_PRE_SEND",
+                    error_text );
             }
             return;
         };
@@ -2887,25 +2888,27 @@ PRIVATE unsigned32 rpc__cn_assoc_sm_protocol_error
      */
     if (assoc->assoc_flags & RPC_C_CN_ASSOC_SERVER)
     {
-        RPC_DCE_SVC_PRINTF ((
-	    DCE_SVC(RPC__SVC_HANDLE, "%s%s%x"),
+        rpc_dce_svc_printf (
+            __FILE__, __LINE__,
+            "%s %s %x",
             rpc_svc_cn_state,
             svc_c_sev_fatal | svc_c_action_abort,
             rpc_m_cn_ill_state_trans_sa,
-rpc_g_cn_assoc_server_states[assoc->assoc_state.cur_state-RPC_C_CN_STATEBASE],
-rpc_g_cn_assoc_server_events[assoc->assoc_state.cur_event-RPC_C_CN_STATEBASE],
-            assoc ));
+            rpc_g_cn_assoc_server_states[assoc->assoc_state.cur_state-RPC_C_CN_STATEBASE],
+            rpc_g_cn_assoc_server_events[assoc->assoc_state.cur_event-RPC_C_CN_STATEBASE],
+            assoc );
     }
     else
     {
-        RPC_DCE_SVC_PRINTF ((
-	    DCE_SVC(RPC__SVC_HANDLE, "%s%s%x"),
+        rpc_dce_svc_printf (
+            __FILE__, __LINE__,
+	        "%s %s %x",
             rpc_svc_cn_state,
             svc_c_sev_fatal | svc_c_action_abort,
             rpc_m_cn_ill_state_trans_ca,
-rpc_g_cn_assoc_client_states[assoc->assoc_state.cur_state-RPC_C_CN_STATEBASE],
-rpc_g_cn_assoc_client_events[assoc->assoc_state.cur_event-RPC_C_CN_STATEBASE],
-            assoc ));
+            rpc_g_cn_assoc_client_states[assoc->assoc_state.cur_state-RPC_C_CN_STATEBASE],
+            rpc_g_cn_assoc_client_events[assoc->assoc_state.cur_event-RPC_C_CN_STATEBASE],
+            assoc );
     }
 	/* FIXME: what should be returned ? */
 	 return 0;
@@ -3727,17 +3730,18 @@ PRIVATE rpc_cn_sec_context_t *rpc__cn_assoc_sec_alloc
 
             dce_error_inq_text(*st, error_text, &temp_status);
 
-	    /*
-	     * rpc_m_call_failed_s
-	     * "%s on server failed: %s"
-	     */
-            RPC_DCE_SVC_PRINTF ((
-		DCE_SVC(RPC__SVC_HANDLE, "%s%x"),
-		rpc_svc_auth,
-		svc_c_sev_error,
-		rpc_m_call_failed_s,
-		"RPC_CN_AUTH_GET_PROT_INFO",
-		error_text ));
+            /*
+             * rpc_m_call_failed_s
+             * "%s on server failed: %s"
+             */
+            rpc_dce_svc_printf (
+                __FILE__, __LINE__,
+                "%s %x",
+                rpc_svc_auth,
+                svc_c_sev_error,
+                rpc_m_call_failed_s,
+                "RPC_CN_AUTH_GET_PROT_INFO",
+                error_text );
         }
         return (NULL);
     }
@@ -5751,14 +5755,15 @@ PRIVATE unsigned32     rpc__cn_grp_sm_protocol_error
      * "Illegal state transition detected in CN {server|client} association
      * group state machine [cur_state: %d, cur_event: %d, grp: %x]"
      */
-    RPC_DCE_SVC_PRINTF ((
-	DCE_SVC(RPC__SVC_HANDLE, "%d%d%x"),
-	rpc_svc_cn_state,
-	svc_c_sev_fatal | svc_c_action_abort,
+    rpc_dce_svc_printf (
+        __FILE__, __LINE__,
+        "%d %d %x",
+        rpc_svc_cn_state,
+        svc_c_sev_fatal | svc_c_action_abort,
         (assoc_grp->grp_flags & RPC_C_CN_ASSOC_GRP_SERVER) ?
 	    rpc_m_cn_ill_state_trans_sg : rpc_m_cn_ill_state_trans_cg,
         assoc_grp->grp_state.cur_state,
         assoc_grp->grp_state.cur_event,
-        assoc_grp ));
+        assoc_grp );
 	 return 0;
 }

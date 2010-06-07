@@ -1034,6 +1034,34 @@ PRIVATE void rpc__cn_call_transceive
                     call_rep->last_frag_received = true;
                 }
 
+                /* check to see if las_frag should have been set in this packet or not */
+                if ((RPC_CN_PKT_PTYPE(header_p) == RPC_C_CN_PKT_REQUEST) ||
+                    (RPC_CN_PKT_PTYPE(header_p) == RPC_C_CN_PKT_FAULT) &&
+                    (RPC_CN_PKT_ALLOC_HINT (header_p) != 0) )
+                {
+                    /* Request, responses and fault pkts have the alloc_hint that
+                     we can use to check the validity of last frag flag.
+                     Note:  alloc_hint field can be 0 */
+                    if ( (RPC_CN_PKT_ALLOC_HINT (header_p) <= frag_buf->data_size) &&
+                        !(RPC_CN_PKT_FLAGS (header_p) & RPC_C_CN_FLAGS_LAST_FRAG) )
+                    {
+                        RPC_DBG_PRINTF (rpc_e_dbg_cn_pkt, RPC_C_CN_DBG_PKT,
+                                        ("PACKET: call transceive last frag should have been set. flags 0x%x call id %d alloc_hint %d rcvd data size %d\n",
+                                         RPC_CN_PKT_FLAGS (header_p),
+                                         RPC_CN_PKT_CALL_ID (header_p),
+                                         RPC_CN_PKT_ALLOC_HINT (header_p),
+                                         frag_buf->data_size));
+                        *st = rpc_s_call_faulted;
+
+                        /*
+                         * Release the CN global mutex to allow other threads to
+                         * run.
+                         */
+                        RPC_CN_UNLOCK ();
+                        return;
+                    }
+                }
+
                 /*
                  * Copy the drep field from the association
                  * (which is in the 4 byte wire format)
@@ -1317,6 +1345,34 @@ PRIVATE void rpc__cn_call_receive
     if (RPC_CN_PKT_FLAGS (header_p) & RPC_C_CN_FLAGS_LAST_FRAG)
     {
         call_rep->last_frag_received = true;
+    }
+
+    /* check to see if las_frag should have been set in this packet or not */
+    if ((RPC_CN_PKT_PTYPE(header_p) == RPC_C_CN_PKT_REQUEST) ||
+        (RPC_CN_PKT_PTYPE(header_p) == RPC_C_CN_PKT_FAULT) &&
+        (RPC_CN_PKT_ALLOC_HINT (header_p) != 0) )
+    {
+        /* Request, responses and fault pkts have the alloc_hint that
+         we can use to check the validity of last frag flag.
+         Note:  alloc_hint field can be 0 */
+        if ( (RPC_CN_PKT_ALLOC_HINT (header_p) <= frag_buf->data_size) &&
+            !(RPC_CN_PKT_FLAGS (header_p) & RPC_C_CN_FLAGS_LAST_FRAG) )
+        {
+            RPC_DBG_PRINTF (rpc_e_dbg_cn_pkt, RPC_C_CN_DBG_PKT,
+                            ("PACKET: call receive last frag should have been set. flags 0x%x call id %d alloc_hint %d rcvd data size %d\n",
+                             RPC_CN_PKT_FLAGS (header_p),
+                             RPC_CN_PKT_CALL_ID (header_p),
+                             RPC_CN_PKT_ALLOC_HINT (header_p),
+                             frag_buf->data_size));
+            *st = rpc_s_call_faulted;
+
+            /*
+             * Release the CN global mutex to allow other threads to
+             * run.
+             */
+            RPC_CN_UNLOCK ();
+            return;
+        }
     }
 
     /*

@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1993 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1993 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1993 DIGITAL EQUIPMENT CORPORATION
@@ -17,7 +17,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
  */
@@ -40,7 +40,6 @@
 #if HAVE_CONFIG_H
 #include <config.h>
 #endif
-
 
 /* The ordering of the following 3 includes should NOT be changed! */
 #include <dce/rpc.h>
@@ -142,7 +141,6 @@ void rpc_ss_add_to_callee_client
                                     in lookup table */
     callee_client_entry_t *this_client, *next_client, *new_client;
 
-
 #ifdef PERFMON
     RPC_SS_ADD_TO_CALLEE_CLIENT_N;
 #endif
@@ -239,7 +237,6 @@ void rpc_ss_add_to_callee_client
     }
     *result = error_status_ok;
 
-
 #ifdef PERFMON
     RPC_SS_ADD_TO_CALLEE_CLIENT_X;
 #endif
@@ -301,7 +298,6 @@ void rpc_ss_take_from_callee_client
 #ifdef PERFMON
     RPC_SS_TAKE_FROM_CALLEE_CLNT_N;
 #endif
-
 
     *result = error_status_ok;
     *p_close_client = NULL;
@@ -371,7 +367,7 @@ void rpc_ss_rundown_client
     /* FIXME: is the volatility set correctly here? */
     rpc_ss_rundown_list_elt * volatile rundown_list;
     rpc_ss_rundown_list_elt * volatile rundown_elt;
-	 
+
     rundown_list = NULL;
 
 #ifdef PERFMON
@@ -425,12 +421,15 @@ void rpc_ss_rundown_client
 		     * rpc_m_ctxrundown_nomem
 		     * "Out of memory while trying to run down contexts of client %x"
 		     */
-                    RPC_DCE_SVC_PRINTF ((
-		        DCE_SVC(RPC__SVC_HANDLE, "%x"),
-		        rpc_svc_libidl,
-		        svc_c_sev_error,
-		        rpc_m_ctxrundown_nomem,
-		        this_client ));
+#if 0
+                    rpc_dce_svc_printf (
+                        __FILE__, __LINE__,
+                         "%x",
+                         rpc_svc_libidl,
+                         svc_c_sev_error,
+                         rpc_m_ctxrundown_nomem,
+                         this_client );
+#endif
                     return;
                 }
                 rundown_elt->rundown = this_context->rundown;
@@ -455,14 +454,17 @@ void rpc_ss_rundown_client
 		 * rpc_m_ctxrundown_exc
 		 * "Exception in routine at %x, running down context %x of client %x"
 		 */
-                RPC_DCE_SVC_PRINTF ((
-		    DCE_SVC(RPC__SVC_HANDLE, "%x%x%x"),
-		    rpc_svc_libidl,
-		    svc_c_sev_error,
-		    rpc_m_ctxrundown_exc,
-                    rundown_list->rundown,
-		    rundown_list->user_context,
-		    this_client ));
+#if 0
+            rpc_dce_svc_printf (
+                __FILE__, __LINE__,
+                 %x %x %x",
+                 rpc_svc_libidl,
+                 svc_c_sev_error,
+                 rpc_m_ctxrundown_exc,
+                 rundown_list->rundown,
+                 rundown_list->user_context,
+                 this_client );
+#endif
             DCETHREAD_ENDTRY
         }
         rundown_elt = rundown_list;

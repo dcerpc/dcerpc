@@ -208,12 +208,13 @@ PRIVATE void rpc__dg_binding_inq_addr
      * rpc_m_unimp_call
      * "(%s) Call not implemented"
      */
-    RPC_DCE_SVC_PRINTF ((
-	DCE_SVC(RPC__SVC_HANDLE, "%s"),
-	rpc_svc_general,
-	svc_c_sev_fatal | svc_c_action_abort,
-	rpc_m_unimp_call,
-        "rpc__dg_binding_inq_addr" ));
+    rpc_dce_svc_printf (
+        __FILE__, __LINE__,
+        "%s",
+        rpc_svc_general,
+        svc_c_sev_fatal | svc_c_action_abort,
+        rpc_m_unimp_call,
+        "rpc__dg_binding_inq_addr" );
 }
 
 

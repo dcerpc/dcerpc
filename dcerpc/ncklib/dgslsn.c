@@ -638,18 +638,19 @@ INTERNAL void ping_common
         break;
 
     default:
-	/*
-	 * rpc_m_unhandled_callstate
-	 * "(%s) Unhandled call state: %s"
-	 */
-	RPC_DCE_SVC_PRINTF ((
-	    DCE_SVC(RPC__SVC_HANDLE, "%s%s"),
-	    rpc_svc_recv,
-	    svc_c_sev_fatal | svc_c_action_abort,
-	    rpc_m_unhandled_callstate,
-	    "ping_common",
-            rpc__dg_call_state_name(scall->c.state) ));
-	break;
+        /*
+         * rpc_m_unhandled_callstate
+         * "(%s) Unhandled call state: %s"
+         */
+        rpc_dce_svc_printf (
+            __FILE__, __LINE__,
+            "%s %s",
+            rpc_svc_recv,
+            svc_c_sev_fatal | svc_c_action_abort,
+            rpc_m_unhandled_callstate,
+            "ping_common",
+            rpc__dg_call_state_name(scall->c.state) );
+        break;
     }
 }
 
@@ -856,18 +857,19 @@ INTERNAL do_req_enum_t do_request_common
             return (do_req_e_old);
 
         default:
-	    /*
-	     * rpc_m_unhandled_callstate
-	     * "(%s) Unhandled call state: %s"
-	     */
-	    RPC_DCE_SVC_PRINTF ((
-		DCE_SVC(RPC__SVC_HANDLE, "%s%s"),
-		rpc_svc_recv,
-		svc_c_sev_fatal | svc_c_action_abort,
-		rpc_m_unhandled_callstate,
-		"do_request_common",
-                rpc__dg_call_state_name(cur_call_state) ));
-	    break;
+            /*
+             * rpc_m_unhandled_callstate
+             * "(%s) Unhandled call state: %s"
+             */
+            rpc_dce_svc_printf (
+                __FILE__, __LINE__,
+                "%s %s",
+                rpc_svc_recv,
+                svc_c_sev_fatal | svc_c_action_abort,
+                rpc_m_unhandled_callstate,
+                "do_request_common",
+                rpc__dg_call_state_name(cur_call_state) );
+            break;
         }
     }
 
@@ -939,18 +941,19 @@ INTERNAL do_req_enum_t do_request_common
                 return (do_req_e_old);
 
         default:
-	    /*
-	     * rpc_m_unhandled_callstate
-	     * "(%s) Unhandled call state: %s"
-	     */
-	    RPC_DCE_SVC_PRINTF ((
-		DCE_SVC(RPC__SVC_HANDLE, "%s%s"),
-		rpc_svc_recv,
-		svc_c_sev_fatal | svc_c_action_abort,
-		rpc_m_unhandled_callstate,
-		"do_request_common",
-                rpc__dg_call_state_name(cur_call_state) ));
-	    break;
+            /*
+             * rpc_m_unhandled_callstate
+             * "(%s) Unhandled call state: %s"
+             */
+            rpc_dce_svc_printf (
+                __FILE__, __LINE__,
+                "%s %s",
+                rpc_svc_recv,
+                svc_c_sev_fatal | svc_c_action_abort,
+                rpc_m_unhandled_callstate,
+                "do_request_common",
+                rpc__dg_call_state_name(cur_call_state) );
+            break;
         }
     }
 
@@ -1082,17 +1085,18 @@ INTERNAL boolean do_cbk_request
             drop = true;
             break;
         default:
-	    /*
-	     * rpc_m_call_failed
-	     * "%s failed"
-	     */
-	    RPC_DCE_SVC_PRINTF ((
-		DCE_SVC(RPC__SVC_HANDLE, "%s"),
-		rpc_svc_recv,
-		svc_c_sev_fatal | svc_c_action_abort,
-		rpc_m_call_failed_no_status,
-		"do_cbk_request/do_request_common" ));
-	    break;
+            /*
+             * rpc_m_call_failed
+             * "%s failed"
+             */
+            rpc_dce_svc_printf (
+                __FILE__, __LINE__,
+                "%s",
+                rpc_svc_recv,
+                svc_c_sev_fatal | svc_c_action_abort,
+                rpc_m_call_failed_no_status,
+                "do_cbk_request/do_request_common" );
+            break;
     }
 
     *scallp = scall;
@@ -1235,17 +1239,18 @@ PRIVATE boolean rpc__dg_do_request
                 drop = true;
                 break;
             default:
-	        /*
-	         * rpc_m_call_failed
-	         * "%s failed"
-	         */
-	        RPC_DCE_SVC_PRINTF ((
-		    DCE_SVC(RPC__SVC_HANDLE, "%s"),
-		    rpc_svc_recv,
-		    svc_c_sev_fatal | svc_c_action_abort,
-		    rpc_m_call_failed_no_status,
-		    "do_request/do_request_common" ));
-	        break;
+                /*
+                 * rpc_m_call_failed
+                 * "%s failed"
+                 */
+                rpc_dce_svc_printf (
+                    __FILE__, __LINE__,
+                    "%s",
+                    rpc_svc_recv,
+                    svc_c_sev_fatal | svc_c_action_abort,
+                    rpc_m_call_failed_no_status,
+                    "do_request/do_request_common" );
+                break;
         }
 
         /*

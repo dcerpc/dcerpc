@@ -6,7 +6,7 @@
 /*
  * Copyright (c) 2007, Novell, Inc.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -33,16 +33,31 @@
  */
 
 #include <config.h>
+#include <limits.h>
+#include <unistd.h>
 
 #include "dcethread-private.h"
 #include "dcethread-util.h"
 #include "dcethread-debug.h"
 
-
 int
 dcethread_attr_setstacksize(dcethread_attr *attr, long stacksize)
 {
-    return dcethread__set_errno(pthread_attr_setstacksize(attr, (size_t)stacksize));
+    long new_stacksize = stacksize;
+    int page_size;
+
+    /* stack size can not be less than PTHREAD_STACK_MIN */
+    if (new_stacksize < PTHREAD_STACK_MIN) {
+        new_stacksize = PTHREAD_STACK_MIN;
+    }
+
+    /* stack size must be a multiple of system page size */
+    page_size = getpagesize();
+    if (new_stacksize % page_size) {
+        new_stacksize = ((new_stacksize / page_size) + 1) * page_size;
+    }
+
+    return dcethread__set_errno(pthread_attr_setstacksize(attr, (size_t) new_stacksize));
 }
 
 int

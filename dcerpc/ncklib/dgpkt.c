@@ -498,16 +498,17 @@ INTERNAL rpc_dg_pkt_pool_elt_p_t pkt_alloc(void)
                 RPC_DBG_PRINTF(rpc_e_dbg_mem, 20,
                    ("(pkt_alloc) free_count mismatch: free_count (%d) != %d\n",
                                 pool->free_count, count));
-		/*
-		 * rpc_m_dgpkt_pool_corrupt
-		 * "(%s) DG packet free pool is corrupted"
-		 */
-		RPC_DCE_SVC_PRINTF ((
-		    DCE_SVC(RPC__SVC_HANDLE, "%s"),
-		    rpc_svc_dg_pkt,
-		    svc_c_sev_fatal | svc_c_action_abort,
-		    rpc_m_dgpkt_pool_corrupt,
-		    "pkt_alloc" ));
+                /*
+                 * rpc_m_dgpkt_pool_corrupt
+                 * "(%s) DG packet free pool is corrupted"
+                 */
+                rpc_dce_svc_printf (
+                    __FILE__, __LINE__,
+                    "%s",
+                    rpc_svc_dg_pkt,
+                    svc_c_sev_fatal | svc_c_action_abort,
+                    rpc_m_dgpkt_pool_corrupt,
+                    "pkt_alloc" );
             }
         }
 #endif
@@ -893,33 +894,35 @@ INTERNAL void pkt_free
             {
                 RPC_DBG_PRINTF(rpc_e_dbg_mem, 20,
                            ("(pkt_free) pkt already on free_list %p (%d)\n",
-                                pkt, count));
-		/*
-		 * rpc_m_dgpkt_pool_corrupt
-		 * "(%s) DG packet free pool is corrupted"
-		 */
-		RPC_DCE_SVC_PRINTF ((
-		    DCE_SVC(RPC__SVC_HANDLE, "%s"),
-		    rpc_svc_dg_pkt,
-		    svc_c_sev_fatal | svc_c_action_abort,
-		    rpc_m_dgpkt_pool_corrupt,
-		    "pkt_free" ));
+                            pkt, count));
+                /*
+                 * rpc_m_dgpkt_pool_corrupt
+                 * "(%s) DG packet free pool is corrupted"
+                 */
+                rpc_dce_svc_printf (
+                    __FILE__, __LINE__,
+                    "%s",
+                    rpc_svc_dg_pkt,
+                    svc_c_sev_fatal | svc_c_action_abort,
+                    rpc_m_dgpkt_pool_corrupt,
+                    "pkt_free" );
             }
             if (!next_pkt->is_on_free_list)
             {
                 RPC_DBG_PRINTF(rpc_e_dbg_mem, 20,
                  ("(pkt_free) free'ed pkt(%p) is not marked as free (%d)\n",
                                 next_pkt, count));
-		/*
-		 * rpc_m_dgpkt_pool_corrupt
-		 * "(%s) DG packet free pool is corrupted"
-		 */
-		RPC_DCE_SVC_PRINTF ((
-		    DCE_SVC(RPC__SVC_HANDLE, "%s"),
-		    rpc_svc_dg_pkt,
-		    svc_c_sev_fatal | svc_c_action_abort,
-		    rpc_m_dgpkt_pool_corrupt,
-		    "pkt_free" ));
+                /*
+                 * rpc_m_dgpkt_pool_corrupt
+                 * "(%s) DG packet free pool is corrupted"
+                 */
+                rpc_dce_svc_printf (
+                    __FILE__, __LINE__,
+                    "%s",
+                    rpc_svc_dg_pkt,
+                    svc_c_sev_fatal | svc_c_action_abort,
+                    rpc_m_dgpkt_pool_corrupt,
+                    "pkt_free" );
             }
         }
 
@@ -928,32 +931,34 @@ INTERNAL void pkt_free
             RPC_DBG_PRINTF(rpc_e_dbg_mem, 20,
                     ("(pkt_free) free_count mismatch: free_count (%d) != %d\n",
                             pool->free_count, count));
-	    /*
-	     * rpc_m_dgpkt_pool_corrupt
-	     * "(%s) DG packet free pool is corrupted"
-	     */
-	    RPC_DCE_SVC_PRINTF ((
-		DCE_SVC(RPC__SVC_HANDLE, "%s"),
-		rpc_svc_dg_pkt,
-		svc_c_sev_fatal | svc_c_action_abort,
-		rpc_m_dgpkt_pool_corrupt,
-		"pkt_free" ));
+            /*
+             * rpc_m_dgpkt_pool_corrupt
+             * "(%s) DG packet free pool is corrupted"
+             */
+            rpc_dce_svc_printf (
+                __FILE__, __LINE__,
+                "%s",
+                rpc_svc_dg_pkt,
+                svc_c_sev_fatal | svc_c_action_abort,
+                rpc_m_dgpkt_pool_corrupt,
+                "pkt_free" );
         }
 
         if (pkt->is_on_free_list)
         {
             RPC_DBG_PRINTF(rpc_e_dbg_mem, 20,
                            ("(pkt_free) double free'ing pkt(%p)\n", pkt));
-	    /*
-	     * rpc_m_dgpkt_bad_free
-	     * "(%s) Attempt to free already-freed DG packet"
-	     */
-	    RPC_DCE_SVC_PRINTF ((
-		DCE_SVC(RPC__SVC_HANDLE, "%s"),
-		rpc_svc_dg_pkt,
-		svc_c_sev_fatal | svc_c_action_abort,
-		rpc_m_dgpkt_bad_free,
-		"pkt_free" ));
+            /*
+             * rpc_m_dgpkt_bad_free
+             * "(%s) Attempt to free already-freed DG packet"
+             */
+            rpc_dce_svc_printf (
+                __FILE__, __LINE__,
+                "%s",
+                rpc_svc_dg_pkt,
+                svc_c_sev_fatal | svc_c_action_abort,
+                rpc_m_dgpkt_bad_free,
+                "pkt_free" );
         }
     }
 #endif

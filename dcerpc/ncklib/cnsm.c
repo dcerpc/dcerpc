@@ -356,16 +356,17 @@ PRIVATE void rpc__cn_sm_insert_event
     if ((sm->event_list_hindex == sm->event_list_tindex) &&
         (sm->event_list_state != RPC_C_CN_SM_EVENT_LIST_EMPTY))
     {
-	/*
-	 * rpc_m_eventlist_full
-	 * "(%s) Event list full"
-	 */
-	RPC_DCE_SVC_PRINTF ((
-	    DCE_SVC(RPC__SVC_HANDLE, "%s"),
-	    rpc_svc_cn_state,
-	    svc_c_sev_fatal | svc_c_action_abort,
-	    rpc_m_eventlist_full,
-	    "rpc__cn_sm_insert_event" ));
+        /*
+         * rpc_m_eventlist_full
+         * "(%s) Event list full"
+         */
+        rpc_dce_svc_printf (
+            __FILE__, __LINE__,
+            "%s",
+            rpc_svc_cn_state,
+            svc_c_sev_fatal | svc_c_action_abort,
+            rpc_m_eventlist_full,
+            "rpc__cn_sm_insert_event" );
     }
 #endif
 

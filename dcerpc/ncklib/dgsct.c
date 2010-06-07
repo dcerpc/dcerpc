@@ -259,16 +259,17 @@ PRIVATE void rpc__dg_sct_new_call
     {
         if (RPC_DG_SEQ_IS_LT((*scallp)->c.call_seq, scte->high_seq) && !maybe)
         {
-	    /*
-	     * rpc_m_invalid_seqnum
-	     * "(%s) Invalid call sequence number"
-	     */
-	    RPC_DCE_SVC_PRINTF ((
-		DCE_SVC(RPC__SVC_HANDLE, "%s"),
-		rpc_svc_general,
-		svc_c_sev_fatal | svc_c_action_abort,
-		rpc_m_invalid_seqnum,
-		"rpc__dg_sct_new_call" ));
+            /*
+             * rpc_m_invalid_seqnum
+             * "(%s) Invalid call sequence number"
+             */
+            rpc_dce_svc_printf (
+                __FILE__, __LINE__,
+                "%s",
+                rpc_svc_general,
+                svc_c_sev_fatal | svc_c_action_abort,
+                rpc_m_invalid_seqnum,
+                "rpc__dg_sct_new_call" );
         }
         if (!maybe || RPC_DG_SEQ_IS_LT(scte->high_seq, (*scallp)->c.call_seq))
             scte->high_seq = (*scallp)->c.call_seq;

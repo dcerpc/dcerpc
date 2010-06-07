@@ -152,12 +152,13 @@ typedef struct rpc_cond_t
     { \
         if (! rpc__mutex_init(&(mutex))) \
         { \
-	    RPC_DCE_SVC_PRINTF (( \
-		DCE_SVC(RPC__SVC_HANDLE, "%s"), \
-		rpc_svc_mutex, \
-		svc_c_sev_fatal | svc_c_action_abort, \
-		rpc_m_call_failed_no_status, \
-		"RPC_MUTEX_INIT/rpc__mutex_init" )); \
+            rpc_dce_svc_printf ( \
+                __FILE__, __LINE__, \
+                "%s", \
+                rpc_svc_mutex, \
+                svc_c_sev_fatal | svc_c_action_abort, \
+                rpc_m_call_failed_no_status, \
+                "RPC_MUTEX_INIT/rpc__mutex_init" ); \
         } \
     }
 #else
@@ -182,12 +183,13 @@ typedef struct rpc_cond_t
         { \
             if (! rpc__mutex_delete(&(mutex))) \
             { \
-		RPC_DCE_SVC_PRINTF (( \
-		    DCE_SVC(RPC__SVC_HANDLE, "%s"), \
-		    rpc_svc_mutex, \
-		    svc_c_sev_fatal | svc_c_action_abort, \
-		    rpc_m_call_failed_no_status, \
-		    "RPC_MUTEX_DELETE/rpc__mutex_delete" )); \
+                rpc_dce_svc_printf ( \
+                    __FILE__, __LINE__, \
+                    "%s", \
+                    rpc_svc_mutex, \
+                    svc_c_sev_fatal | svc_c_action_abort, \
+                    rpc_m_call_failed_no_status, \
+                    "RPC_MUTEX_DELETE/rpc__mutex_delete" ); \
             } \
         } else { \
             dcethread_mutex_destroy_throw(&(mutex).m); \
@@ -216,12 +218,13 @@ typedef struct rpc_cond_t
         { \
             if (! rpc__mutex_lock(&(mutex), __FILE__, __LINE__)) \
             { \
-		RPC_DCE_SVC_PRINTF (( \
-		    DCE_SVC(RPC__SVC_HANDLE, "%s"), \
-		    rpc_svc_mutex, \
-		    svc_c_sev_fatal | svc_c_action_abort, \
-		    rpc_m_call_failed_no_status, \
-		    "RPC_MUTEX_LOCK/rpc__mutex_lock" )); \
+                rpc_dce_svc_printf ( \
+                    __FILE__, __LINE__, \
+                    "%s", \
+                    rpc_svc_mutex, \
+                    svc_c_sev_fatal | svc_c_action_abort, \
+                    rpc_m_call_failed_no_status, \
+                    "RPC_MUTEX_LOCK/rpc__mutex_lock" ); \
             } \
         } else { \
             RPC_LOG_MUTEX_LOCK_NTR; \
@@ -252,12 +255,13 @@ typedef struct rpc_cond_t
         { \
             if (! rpc__mutex_try_lock(&(mutex), (bp), __FILE__, __LINE__)) \
             { \
-		RPC_DCE_SVC_PRINTF (( \
-		    DCE_SVC(RPC__SVC_HANDLE, "%s"), \
-		    rpc_svc_mutex, \
-		    svc_c_sev_fatal | svc_c_action_abort, \
-		    rpc_m_call_failed_no_status, \
-		    "RPC_MUTEX_TRY_LOCK/rpc__mutex_try_lock" )); \
+                rpc_dce_svc_printf ( \
+                    __FILE__, __LINE__, \
+                    "%s", \
+                    rpc_svc_mutex, \
+                    svc_c_sev_fatal | svc_c_action_abort, \
+                    rpc_m_call_failed_no_status, \
+                    "RPC_MUTEX_TRY_LOCK/rpc__mutex_try_lock" ); \
             } \
         } else { \
             *(bp) = dcethread_mutex_trylock_throw(&(mutex).m); \
@@ -286,12 +290,13 @@ typedef struct rpc_cond_t
         { \
             if (! rpc__mutex_unlock(&(mutex))) \
             { \
-		RPC_DCE_SVC_PRINTF (( \
-		    DCE_SVC(RPC__SVC_HANDLE, "%s"), \
-		    rpc_svc_mutex, \
-		    svc_c_sev_fatal | svc_c_action_abort, \
-		    rpc_m_call_failed_no_status, \
-		    "RPC_MUTEX_UNLOCK/rpc__mutex_unlock" )); \
+                rpc_dce_svc_printf ( \
+                    __FILE__, __LINE__, \
+                    "%s", \
+                    rpc_svc_mutex, \
+                    svc_c_sev_fatal | svc_c_action_abort, \
+                    rpc_m_call_failed_no_status, \
+                    "RPC_MUTEX_UNLOCK/rpc__mutex_unlock" ); \
             } \
         } else { \
             dcethread_mutex_unlock_throw(&(mutex).m); \
@@ -320,12 +325,13 @@ typedef struct rpc_cond_t
         { \
             if (! rpc__mutex_lock_assert(&(mutex))) \
             { \
-		RPC_DCE_SVC_PRINTF (( \
-		    DCE_SVC(RPC__SVC_HANDLE, "%s"), \
-		    rpc_svc_mutex, \
-		    svc_c_sev_fatal | svc_c_action_abort, \
-		    rpc_m_call_failed_no_status, \
-		    "RPC_MUTEX_LOCK_ASSERT/rpc__mutex_lock_assert" )); \
+                rpc_dce_svc_printf ( \
+                    __FILE__, __LINE__, \
+                    "%s", \
+                    rpc_svc_mutex, \
+                    svc_c_sev_fatal | svc_c_action_abort, \
+                    rpc_m_call_failed_no_status, \
+                    "RPC_MUTEX_LOCK_ASSERT/rpc__mutex_lock_assert" ); \
             } \
         } \
     }
@@ -347,12 +353,13 @@ typedef struct rpc_cond_t
         { \
             if (! rpc__mutex_unlock_assert(&(mutex))) \
             { \
-		RPC_DCE_SVC_PRINTF (( \
-		    DCE_SVC(RPC__SVC_HANDLE, "%s"), \
-		    rpc_svc_mutex, \
-		    svc_c_sev_fatal | svc_c_action_abort, \
-		    rpc_m_call_failed_no_status, \
-		    "RPC_MUTEX_UNLOCK_ASSERT/rpc__mutex_unlock_assert" )); \
+                rpc_dce_svc_printf ( \
+                    __FILE__, __LINE__, \
+                    "%s", \
+                    rpc_svc_mutex, \
+                    svc_c_sev_fatal | svc_c_action_abort, \
+                    rpc_m_call_failed_no_status, \
+                    "RPC_MUTEX_UNLOCK_ASSERT/rpc__mutex_unlock_assert" ); \
             } \
         } \
     }
@@ -371,12 +378,13 @@ typedef struct rpc_cond_t
     { \
         if (! rpc__cond_init(&(cond), &(mutex))) \
         { \
-	    RPC_DCE_SVC_PRINTF (( \
-		DCE_SVC(RPC__SVC_HANDLE, "%s"), \
-		rpc_svc_mutex, \
-		svc_c_sev_fatal | svc_c_action_abort, \
-		rpc_m_call_failed_no_status, \
-		"RPC_COND_INIT/rpc__cond_init" )); \
+            rpc_dce_svc_printf ( \
+                __FILE__, __LINE__, \
+                "%s", \
+                rpc_svc_mutex, \
+                svc_c_sev_fatal | svc_c_action_abort, \
+                rpc_m_call_failed_no_status, \
+                "RPC_COND_INIT/rpc__cond_init" ); \
         } \
     }
 #else
@@ -402,12 +410,13 @@ typedef struct rpc_cond_t
         { \
             if (! rpc__cond_delete(&(cond), &(mutex))) \
             { \
-		RPC_DCE_SVC_PRINTF (( \
-		    DCE_SVC(RPC__SVC_HANDLE, "%s"), \
-		    rpc_svc_mutex, \
-		    svc_c_sev_fatal | svc_c_action_abort, \
-		    rpc_m_call_failed_no_status, \
-		    "RPC_COND_DELETE/rpc__cond_delete" )); \
+                rpc_dce_svc_printf ( \
+                    __FILE__, __LINE__, \
+                    "%s", \
+                    rpc_svc_mutex, \
+                    svc_c_sev_fatal | svc_c_action_abort, \
+                    rpc_m_call_failed_no_status, \
+                    "RPC_COND_DELETE/rpc__cond_delete" ); \
             } \
         } else { \
             dcethread_cond_destroy_throw(&(cond).c); \
@@ -436,12 +445,13 @@ typedef struct rpc_cond_t
         { \
             if (! rpc__cond_wait(&(cond), &(mutex), __FILE__, __LINE__)) \
             { \
-		RPC_DCE_SVC_PRINTF (( \
-		    DCE_SVC(RPC__SVC_HANDLE, "%s"), \
-		    rpc_svc_mutex, \
-		    svc_c_sev_fatal | svc_c_action_abort, \
-		    rpc_m_call_failed_no_status, \
-		    "RPC_COND_WAIT/rpc__cond_wait" )); \
+                rpc_dce_svc_printf ( \
+                    __FILE__, __LINE__, \
+                    "%s", \
+                    rpc_svc_mutex, \
+                    svc_c_sev_fatal | svc_c_action_abort, \
+                    rpc_m_call_failed_no_status, \
+                    "RPC_COND_WAIT/rpc__cond_wait" ); \
             } \
         } else { \
             dcethread_cond_wait_throw(&(cond).c, &(mutex).m); \
@@ -469,12 +479,13 @@ typedef struct rpc_cond_t
         { \
             if (! rpc__cond_timed_wait(&(cond), &(mutex), (time), __FILE__, __LINE__)) \
             { \
-		RPC_DCE_SVC_PRINTF (( \
-		    DCE_SVC(RPC__SVC_HANDLE, "%s"), \
-		    rpc_svc_mutex, \
-		    svc_c_sev_fatal | svc_c_action_abort, \
-		    rpc_m_call_failed_no_status, \
-		    "RPC_COND_TIMED_WAIT/rpc__cond_timed_wait" )); \
+                rpc_dce_svc_printf ( \
+                    __FILE__, __LINE__, \
+                    "%s", \
+                    rpc_svc_mutex, \
+                    svc_c_sev_fatal | svc_c_action_abort, \
+                    rpc_m_call_failed_no_status, \
+                    "RPC_COND_TIMED_WAIT/rpc__cond_timed_wait" ); \
             } \
         } else { \
             dcethread_cond_timedwait_throw(&(cond).c, &(mutex).m, (time)); \
@@ -502,12 +513,13 @@ typedef struct rpc_cond_t
         { \
             if (! rpc__cond_signal(&(cond), &(mutex))) \
             { \
-		RPC_DCE_SVC_PRINTF (( \
-		    DCE_SVC(RPC__SVC_HANDLE, "%s"), \
-		    rpc_svc_mutex, \
-		    svc_c_sev_fatal | svc_c_action_abort, \
-		    rpc_m_call_failed_no_status, \
-		    "RPC_COND_SIGNAL/rpc__cond_signal" )); \
+                rpc_dce_svc_printf ( \
+                    __FILE__, __LINE__, \
+                    "%s", \
+                    rpc_svc_mutex, \
+                    svc_c_sev_fatal | svc_c_action_abort, \
+                    rpc_m_call_failed_no_status, \
+                    "RPC_COND_SIGNAL/rpc__cond_signal" ); \
             } \
         } else { \
             dcethread_cond_signal_throw(&(cond).c); \
@@ -535,12 +547,13 @@ typedef struct rpc_cond_t
         { \
             if (! rpc__cond_broadcast(&(cond), &(mutex))) \
             { \
-		RPC_DCE_SVC_PRINTF (( \
-		    DCE_SVC(RPC__SVC_HANDLE, "%s"), \
-		    rpc_svc_mutex, \
-		    svc_c_sev_fatal | svc_c_action_abort, \
-		    rpc_m_call_failed_no_status, \
-		    "RPC_COND_BROADCAST/rpc__cond_broadcast" )); \
+                rpc_dce_svc_printf ( \
+                    __FILE__, __LINE__, \
+                    "%s", \
+                    rpc_svc_mutex, \
+                    svc_c_sev_fatal | svc_c_action_abort, \
+                    rpc_m_call_failed_no_status, \
+                    "RPC_COND_BROADCAST/rpc__cond_broadcast" ); \
             } \
         } else { \
             dcethread_cond_broadcast_throw(&(cond).c); \

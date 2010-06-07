@@ -213,16 +213,17 @@ PRIVATE pointer_t rpc__list_element_alloc
 #ifdef DEBUG
             if (list_desc->list_head.next == NULL)
             {
-		/*
-		 * rpc_m_lookaside_corrupt
-		 * "(%s) Lookaside list is corrupted"
-		 */
-		RPC_DCE_SVC_PRINTF ((
-		    DCE_SVC(RPC__SVC_HANDLE, "%s"),
-		    rpc_svc_general,
-		    svc_c_sev_fatal | svc_c_action_abort,
-		    rpc_m_lookaside_corrupt,
-		    "rpc__list_element_alloc" ));
+                /*
+                 * rpc_m_lookaside_corrupt
+                 * "(%s) Lookaside list is corrupted"
+                 */
+                rpc_dce_svc_printf (
+                    __FILE__, __LINE__,
+                    "%s",
+                    rpc_svc_general,
+                    svc_c_sev_fatal | svc_c_action_abort,
+                    rpc_m_lookaside_corrupt,
+                    "rpc__list_element_alloc" );
             }
 #endif
             list_desc->cur_size--;
@@ -327,16 +328,17 @@ PRIVATE pointer_t rpc__list_element_alloc
                     {
                         RPC_MEM_FREE (element, list_desc->element_type);
                         element = NULL;
-			/*
-			 * rpc_m_call_failed_no_status
-			 * "%s failed"
-			 */
-			RPC_DCE_SVC_PRINTF ((
-			    DCE_SVC(RPC__SVC_HANDLE, "%s"),
-			    rpc_svc_general,
-			    svc_c_sev_fatal | svc_c_action_abort,
-			    rpc_m_call_failed_no_status,
-			    "rpc__list_element_alloc/(*list_desc->alloc_rtn)(element)" ));
+                        /*
+                         * rpc_m_call_failed_no_status
+                         * "%s failed"
+                         */
+                        rpc_dce_svc_printf (
+                            __FILE__, __LINE__,
+                            "%s",
+                            rpc_svc_general,
+                            svc_c_sev_fatal | svc_c_action_abort,
+                            rpc_m_call_failed_no_status,
+                            "rpc__list_element_alloc/(*list_desc->alloc_rtn)(element)" );
                     }
                     DCETHREAD_ENDTRY
                 }
