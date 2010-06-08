@@ -51,7 +51,7 @@
  * A vector of "debug levels", one level per "debug switch".
  */
 
-GLOBAL unsigned8 rpc_g_dbg_switches[RPC_C_DBG_SWITCHES];
+GLOBAL unsigned8 rpc_g_dbg_switches[RPC_DBG_N_SWITCHES];
 
 /*
  * string buffer used by uuid_string()

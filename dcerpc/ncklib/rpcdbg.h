@@ -60,60 +60,59 @@
  */
 
 typedef enum {
-    rpc_es_dbg_general = 0,              /*  0 */
-    rpc_es_dbg_mutex,                    /*  1 */
-    rpc_es_dbg_xmit,                     /*  2 */
-    rpc_es_dbg_recv,                     /*  3 */
-    rpc_es_dbg_dg_lossy,                 /*  4 */
-    rpc_es_dbg_dg_state,                 /*  5 */
-    rpc_es_dbg_ip_max_pth_unfrag_tpdu,   /*  6 */
-    rpc_es_dbg_ip_max_loc_unfrag_tpdu,   /*  7 */
-    rpc_es_dbg_dds_max_pth_unfrag_tpdu,  /*  8 */
-    rpc_es_dbg_dds_max_loc_unfrag_tpdu,  /*  9 */
-    rpc_es_dbg_dg_rq_qsize,              /* 10 */
-    rpc_es_dbg_cancel,                   /* 11 */
-    rpc_es_dbg_orphan,                   /* 12 */
-    rpc_es_dbg_cn_state,                 /* 13 */
-    rpc_es_dbg_cn_pkt,                   /* 14 */
-    rpc_es_dbg_pkt_quotas,               /* 15 */
-    rpc_es_dbg_auth,                     /* 16 */
-    rpc_es_dbg_source,                   /* 17 */
-    rpc_es_dbg_pkt_quota_size,           /* 18 */
-    rpc_es_dbg_stats,                    /* 19 */
-    rpc_es_dbg_mem,                      /* 20 */
-    rpc_es_dbg_mem_type,                 /* 21 */
-    rpc_es_dbg_dg_pktlog,                /* 22 */
-    rpc_es_dbg_thread_id,                /* 23 */
-    rpc_es_dbg_timestamp,                /* 24 */
+    rpc_es_dgb_none = 0,
+    rpc_es_dbg_general,                  /*  1 */
+    rpc_es_dbg_mutex,                    /*  2 */
+    rpc_es_dbg_xmit,                     /*  3 */
+    rpc_es_dbg_recv,                     /*  4 */
+    rpc_es_dbg_dg_lossy,                 /*  5 */
+    rpc_es_dbg_dg_state,                 /*  6 */
+    rpc_es_dbg_ip_max_pth_unfrag_tpdu,   /*  7 */
+    rpc_es_dbg_ip_max_loc_unfrag_tpdu,   /*  8 */
+    rpc_es_dbg_dds_max_pth_unfrag_tpdu,  /*  9 */
+    rpc_es_dbg_dds_max_loc_unfrag_tpdu,  /* 10 */
+    rpc_es_dbg_dg_rq_qsize,              /* 11 */
+    rpc_es_dbg_cancel,                   /* 12 */
+    rpc_es_dbg_orphan,                   /* 13 */
+    rpc_es_dbg_cn_state,                 /* 14 */
+    rpc_es_dbg_cn_pkt,                   /* 15 */
+    rpc_es_dbg_pkt_quotas,               /* 16 */
+    rpc_es_dbg_auth,                     /* 17 */
+    rpc_es_dbg_source,                   /* 18 */
+    rpc_es_dbg_pkt_quota_size,           /* 19 */
+    rpc_es_dbg_stats,                    /* 20 */
+    rpc_es_dbg_mem,                      /* 21 */
+    rpc_es_dbg_mem_type,                 /* 22 */
+    rpc_es_dbg_dg_pktlog,                /* 23 */
+    rpc_es_dbg_thread_id,                /* 24 */
+    rpc_es_dbg_timestamp,                /* 25 */
     rpc_es_dbg_cn_errors,                /* 25 */
-    rpc_es_dbg_conv_thread,              /* 26 */
-    rpc_es_dbg_pid,                      /* 27 */
-    rpc_es_dbg_atfork,                   /* 28 */
-    rpc_es_dbg_cma_thread,               /* 29 */
-    rpc_es_dbg_inherit,                  /* 30 */
-    rpc_es_dbg_dg_sockets,               /* 31 */
-    rpc_es_dbg_ip_max_tsdu,              /* 32 */
-    rpc_es_dbg_dg_max_psock,             /* 33 */
-    rpc_es_dbg_dg_max_window_size,       /* 34 */
-    rpc_es_dbg_threads,       	 	 /* 35 */
-    rpc_es_dbg_uxd_max_pth_unfrag_tpdu,  /* 36 */
-    rpc_es_dbg_uxd_max_loc_unfrag_tpdu,  /* 37 */
-    rpc_es_dbg_uxd_max_tsdu,             /* 38 */
-    rpc_es_dbg_np_max_pth_unfrag_tpdu,   /* 39 */
-    rpc_es_dbg_np_max_loc_unfrag_tpdu,   /* 40 */
-    rpc_es_dbg_np_max_tsdu,              /* 41 */
+    rpc_es_dbg_conv_thread,              /* 27 */
+    rpc_es_dbg_pid,                      /* 28 */
+    rpc_es_dbg_atfork,                   /* 29 */
+    rpc_es_dbg_cma_thread,               /* 30 */
+    rpc_es_dbg_inherit,                  /* 31 */
+    rpc_es_dbg_dg_sockets,               /* 32 */
+    rpc_es_dbg_ip_max_tsdu,              /* 33 */
+    rpc_es_dbg_dg_max_psock,             /* 34 */
+    rpc_es_dbg_dg_max_window_size,       /* 35 */
+    rpc_es_dbg_threads,       	 	 /* 36 */
+    rpc_es_dbg_uxd_max_pth_unfrag_tpdu,  /* 37 */
+    rpc_es_dbg_uxd_max_loc_unfrag_tpdu,  /* 38 */
+    rpc_es_dbg_uxd_max_tsdu,             /* 39 */
+    rpc_es_dbg_np_max_pth_unfrag_tpdu,   /* 40 */
+    rpc_es_dbg_np_max_loc_unfrag_tpdu,   /* 41 */
+    rpc_es_dbg_np_max_tsdu,              /* 42 */
  
     /* 
      * Add new switches above this comment and adjust the
      * "last_switch" value if necessary.  We keep a few
      * empty slots to allow for easy temporary additions.
      */
-    rpc_es_dbg_last_switch       = 42    /* 42 */
+    rpc_es_dbg_last_switch       = 43    /* 43 */
 } rpc_dbg_switch_t;
 
 #define RPC_DBG_N_SWITCHES (((int) rpc_es_dbg_last_switch) + 1)
-
-#define RPC_C_DBG_SWITCHES      43      /* size of rpc_g_dbg_switches[] */
 
 /*
  * Debug table

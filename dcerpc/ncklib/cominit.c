@@ -1637,7 +1637,7 @@ PRIVATE void rpc__fork_handler
 #ifdef DEBUG
         if (!RPC_DBG(rpc_es_dbg_inherit, 1))
         {
-            for (ctr = 0; ctr < RPC_C_DBG_SWITCHES; ctr++)
+            for (ctr = 0; ctr < RPC_DBG_N_SWITCHES; ctr++)
                 rpc_g_dbg_switches[ctr] = 0; 
         }
 #endif            
