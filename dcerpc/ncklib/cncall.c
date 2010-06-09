@@ -1045,12 +1045,6 @@ PRIVATE void rpc__cn_call_transceive
                     if ( (RPC_CN_PKT_ALLOC_HINT (header_p) <= frag_buf->data_size) &&
                         !(RPC_CN_PKT_FLAGS (header_p) & RPC_C_CN_FLAGS_LAST_FRAG) )
                     {
-                        RPC_DBG_PRINTF (rpc_e_dbg_cn_pkt, RPC_C_CN_DBG_PKT,
-                                        ("PACKET: call transceive last frag should have been set. flags 0x%x call id %d alloc_hint %d rcvd data size %d\n",
-                                         RPC_CN_PKT_FLAGS (header_p),
-                                         RPC_CN_PKT_CALL_ID (header_p),
-                                         RPC_CN_PKT_ALLOC_HINT (header_p),
-                                         frag_buf->data_size));
                         *st = rpc_s_call_faulted;
 
                         /*
@@ -1058,6 +1052,21 @@ PRIVATE void rpc__cn_call_transceive
                          * run.
                          */
                         RPC_CN_UNLOCK ();
+
+                        /* since this is only called by the client side, abort the client
+                         since the client did something invalid */
+                        rpc_dce_svc_printf (
+                            __FILE__, __LINE__,
+                            "%s flags 0x%x call id %d alloc_hint %d rcvd data size %d",
+                            rpc_svc_recv,
+                            svc_c_sev_fatal | svc_c_action_abort,
+                            rpc_s_protocol_error,
+                            "rpc__cn_call_transceive - last frag should be set",
+                            RPC_CN_PKT_FLAGS (header_p),
+                            RPC_CN_PKT_CALL_ID (header_p),
+                            RPC_CN_PKT_ALLOC_HINT (header_p),
+                            frag_buf->data_size );
+
                         return;
                     }
                 }
