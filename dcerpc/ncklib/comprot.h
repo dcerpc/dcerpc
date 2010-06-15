@@ -328,6 +328,8 @@ typedef void (*rpc_prot_init_fn_t) (
 /*
  * Declarations of the RPC Protocol Service init routines.
  */
+void rpc__cn_init_func(void);
+
 void rpc__ncacn_init (
         rpc_prot_call_epv_p_t       * /*call_epv*/,
         rpc_prot_mgmt_epv_p_t       * /*mgmt_epv*/,

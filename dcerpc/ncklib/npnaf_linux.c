@@ -337,13 +337,12 @@ PRIVATE void rpc__np_desc_inq_addr
 PRIVATE void rpc__np_get_broadcast
 (
     rpc_naf_id_t            naf_id ATTRIBUTE_UNUSED,
-    rpc_protseq_id_t        protseq_id,
+    rpc_protseq_id_t        protseq_id ATTRIBUTE_UNUSED,
     rpc_addr_vector_p_t     *rpc_addr_vec,
     unsigned32              *status
 )
 {
 	naf_id = 0;
-	protseq_id = 0;
 	rpc_addr_vec = NULL;
 
     CODING_ERROR (status);

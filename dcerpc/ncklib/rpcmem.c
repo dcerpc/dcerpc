@@ -42,7 +42,7 @@
 
 PRIVATE pointer_t rpc__mem_alloc
 (
-    unsigned32 size,
+    size_t size,
     unsigned32 type,
     unsigned32 flags ATTRIBUTE_UNUSED
 )
@@ -55,13 +55,13 @@ PRIVATE pointer_t rpc__mem_alloc
     if ((type & 0xff) == rpc_g_dbg_switches[rpc_es_dbg_mem_type])
     {
         RPC_DBG_PRINTF(rpc_e_dbg_mem, 1,
-	    ("(rpc__mem_alloc) type %x - %x @ %p\n",
+	    ("(rpc__mem_alloc) type %x - %lx @ %p\n",
 	    type, size, addr));
     }
     else
     {
 	RPC_DBG_PRINTF(rpc_e_dbg_mem, 10,
-	    ("(rpc__mem_alloc) type %x - %x @ %p\n",
+	    ("(rpc__mem_alloc) type %x - %lx @ %p\n",
 	    type, size, addr));
     }
 #endif

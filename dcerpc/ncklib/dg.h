@@ -958,12 +958,12 @@ typedef struct {
     unsigned16 next_fragnum;            /* next fragnum to use */
     unsigned16 next_serial_num;         /* unique serial # sent in each pkt   */
     unsigned16 last_fack_serial;        /* serial # that induced last recv'd fack */
-    unsigned16 window_size;         /* receiver's window size (in fragments) */
-    unsigned16 cwindow_size;        /* congestion window size (in fragments) */
+    unsigned16 window_size;             /* receiver's window size (in fragments) */
+    unsigned16 cwindow_size;            /* congestion window size (in fragments) */
     unsigned32 max_rcv_tsdu;            /* max receive data size supported by the LOCAL transport API (recvmsg) */
     unsigned32 max_snd_tsdu;            /* max send data size supported by the LOCAL transport API (sendmsg) */
     unsigned32 max_frag_size;           /* max frag size can be received/sent */
-    unsigned32 snd_frag_size;           /* send frag size, currently used */
+    size_t snd_frag_size;               /* send frag size, currently used */
     unsigned8 blast_size;               /* # of pkts to send as a blast */
     unsigned8 max_blast_size;           /* limit to the above value */
     unsigned16 xq_timer;                /* used by blast size code to delay adjustments */
@@ -1090,7 +1090,7 @@ typedef struct rpc_dg_recvq_elt_t {
     rpc_dg_pkt_hdr_p_t hdrp;            /* -> usable header info */
     rpc_dg_pkt_hdr_t hdr;               /* pkt hdr in usable form */
     rpc_socket_t sock;                  /* socket for response */
-    unsigned32 frag_len;                /* length of fragment, as recv'ed
+    size_t frag_len;                    /* length of fragment, as recv'ed
                                          * iff a head of fragment */
     unsigned16 from_len;                /* length of ".from" */
     unsigned16 pkt_len;                 /* length of .pkt, as recv'ed */
@@ -1122,7 +1122,7 @@ typedef struct rpc_dg_recvq_elt_t {
 typedef struct {
     rpc_dg_recvq_elt_p_t head;          /* -> head pktq element */
     rpc_dg_recvq_elt_p_t last_inorder;  /* -> last in-order frag in the queue */
-    unsigned32 high_rcv_frag_size;      /* largest frag size seen so far */
+    size_t high_rcv_frag_size;          /* largest frag size seen so far */
     unsigned16 next_fragnum;            /* next in-order frag we want to see */
     unsigned16 high_fragnum;            /* highest numbered fragnum so far */
     unsigned16 high_serial_num;         /* highest serial number seen so far */
@@ -2581,6 +2581,8 @@ PRIVATE void rpc__dg_fack_common    (
     );
 
 /* ======================================================================== */
+
+void rpc__dg_init_func(void);
 
 #ifdef __cplusplus
 }

@@ -198,7 +198,7 @@ typedef struct
     unsigned32 inuse;         /* number currently allocated */
     unsigned32 calls;         /* total ever allocated */
     unsigned32 fails;         /* denied alloc requests */
-    unsigned32 maxsize;       /* max size allocated for this type */
+    size_t maxsize;           /* max size allocated for this type */
 } rpc_mem_stats_elt_t, *rpc_mem_stats_elt_p_t;
 
 EXTERNAL rpc_mem_stats_elt_t rpc_g_mem_stats[];
@@ -367,7 +367,7 @@ EXTERNAL rpc_mem_stats_elt_t rpc_g_mem_stats[];
 
 
 PRIVATE pointer_t rpc__mem_alloc (
-        unsigned32 /*size*/,
+        size_t /*size*/,
         unsigned32 /*type*/,
         unsigned32  /*flags*/
     );

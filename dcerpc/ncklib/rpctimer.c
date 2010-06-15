@@ -120,7 +120,7 @@ INTERNAL void timer_loop(void)
         if (next > 10)
         {
             RPC_DBG_PRINTF(rpc_e_dbg_timer, 5,
-                ("(timer_loop) next event in %d seconds\n", next/RPC_C_CLOCK_HZ));
+                ("(timer_loop) next event in %ld seconds\n", next/RPC_C_CLOCK_HZ));
         }
         rpc_timer_cur_trigger = rpc_g_clock_curr + next;
         rpc__clock_timespec (rpc_timer_cur_trigger, &next_ts);
@@ -139,7 +139,7 @@ INTERNAL void rpc__timer_prod
 {
                     
     RPC_DBG_PRINTF(rpc_e_dbg_timer, 5, (
-        "(rpc__timer_prod) timer backup; old %d, new %d\n",
+        "(rpc__timer_prod) timer backup; old %ld, new %ld\n",
         rpc_timer_cur_trigger, trigger
         ));
     /* 
@@ -506,7 +506,7 @@ PRIVATE void rpc__timer_clear
 
 PRIVATE rpc_clock_t rpc__timer_callout (void)
 {                              
-    unsigned32      ret_val;
+    rpc_clock_t      ret_val;
     rpc_timer_p_t   ptr, prev;
 
 #if 0    

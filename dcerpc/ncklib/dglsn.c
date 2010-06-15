@@ -356,7 +356,7 @@ PRIVATE void rpc__dg_get_epkt_body_st
     unsigned32 *st
 )
 {
-    u_long st_all;
+    unsigned32 st_all;
     rpc_dg_pkt_hdr_p_t hdrp = rqe->hdrp;
 
 #ifndef MISPACKED_HDR
@@ -1422,12 +1422,13 @@ INTERNAL unsigned32 recv_pkt
 )
 {
     rpc_socket_error_t serr;
-    int recv_len;
+    size_t recv_len;
     boolean fwd;
     rpc_dg_ptype_t ptype;
     rpc_socket_iovec_t iov[RPC_C_DG_MAX_NUM_PKTS_IN_FRAG];
     rpc_dg_recvq_elt_p_t tmp;
-    unsigned32 cc, num_rqes, i;
+    size_t cc;
+    unsigned32 num_rqes, i;
 
     rqe->from.rpc_protseq_id = sp->pseq_id;
     rqe->from.len = sizeof rqe->from.sa;
@@ -1460,7 +1461,7 @@ INTERNAL unsigned32 recv_pkt
         }
         else
         {
-            RPC_DBG_GPRINTF(("(recv_pkt) recvfrom (sock %p) recv_len = %d, error = %d\n",
+            RPC_DBG_GPRINTF(("(recv_pkt) recvfrom (sock %p) recv_len = %ld, error = %d\n",
                 sp->sock, recv_len, RPC_SOCKET_ETOI(serr)));
         }
         return (0);
@@ -1484,7 +1485,7 @@ INTERNAL unsigned32 recv_pkt
     }
     if (cc != 0)
     {
-        RPC_DBG_GPRINTF(("(recv_pkt) suspicious recvmsg recv_len = %d, error = %d\n",
+        RPC_DBG_GPRINTF(("(recv_pkt) suspicious recvmsg recv_len = %ld, error = %d\n",
             recv_len, RPC_SOCKET_ETOI(serr)));
         rqe->frag_len = 0;
         return (0);
@@ -1646,7 +1647,7 @@ INTERNAL unsigned32 recv_pkt
 
     if (! fwd && (unsigned32)recv_len < (rqe->hdrp->len + RPC_C_DG_RAW_PKT_HDR_SIZE))
     {
-        RPC_DBG_GPRINTF(("(recv_pkt) Inconsistent lengths:  recvfrom len = %u, len from hdr (+ hdr size) = %lu\n",
+        RPC_DBG_GPRINTF(("(recv_pkt) Inconsistent lengths:  recvfrom len = %lu, len from hdr (+ hdr size) = %lu\n",
                 recv_len, (unsigned long)rqe->hdrp->len + RPC_C_DG_RAW_PKT_HDR_SIZE));
         rqe->frag_len = 0;
         rqe->hdrp = NULL;
@@ -2171,7 +2172,7 @@ INTERNAL void do_fack_body
     }
 
     RPC_DBG_PRINTF(rpc_e_dbg_recv, 6, (
-        "(do_fack_body) <-- our snd_tsdu %u, max fs %u, snd fs %u\n",
+        "(do_fack_body) <-- our snd_tsdu %u, max fs %u, snd fs %lu\n",
        call->xq.max_snd_tsdu, call->xq.max_frag_size, call->xq.snd_frag_size));
 
 #ifdef DEBUG
@@ -2975,8 +2976,17 @@ INTERNAL unsigned32 recv_dispatch
         /*
          * If we've found a call, do a little common processing.
          */
+        if (scall != NULL)
+        {
+            assert(scall != NULL);
+            call = &scall->c;
+        }
+        else
+        {
+            assert(ccall != NULL);
+            call = &ccall->c;
+        }
 
-        call = (scall != NULL) ? &scall->c : &ccall->c;
         if (call != NULL)
         {
             call->last_rcv_timestamp = rpc__clock_stamp();
@@ -3183,11 +3193,10 @@ PRIVATE void rpc__dg_network_select_dispatch
          */
         if (rqe == NULL)
         {
-            rpc_socket_error_t serr;
-            int recv_len;
+            size_t recv_len;
 
             purged_pkts++;
-            serr = rpc__socket_recvfrom(sp->sock, junk_buf, sizeof(junk_buf),
+            (void) rpc__socket_recvfrom(sp->sock, junk_buf, sizeof(junk_buf),
                                 NULL, &recv_len);
             RPC_DBG_GPRINTF(("(rpc__dg_select_dispatch) discarded pkt !!!\n"));
             return;

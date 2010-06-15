@@ -52,7 +52,6 @@
 #include <config.h>
 #endif
 
-
 /*
  * VAX Floating point
  * ------------------
@@ -316,6 +315,11 @@
 #   ifdef __STDC__
 #       include <stdlib.h>
 #   endif
+
+
+int ndr_cray64_to_ieee32(unsigned32 *cray_flt, unsigned32 *ieee_flt);
+int ndr_ieee32_to_cray64(unsigned32 *ieee_flt, unsigned32 *cray_flt);
+
 
 #define INTERNAL static
 #define PUBLIC

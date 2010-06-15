@@ -52,6 +52,7 @@
 #include <cnassoc.h>    /* NCA connection association service */
 
 void rpc__cn_minute_system_time (void);
+void rpc__cn_init_func(void);
 
 /*
  * INTERNAL variables.

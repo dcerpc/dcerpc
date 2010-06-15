@@ -228,9 +228,9 @@ inline static void RPC_SOCKET_SENDMSG(
 	rpc_socket_iovec_p_t iovp,
 	int iovlen,
 	rpc_addr_p_t addrp,
-	volatile int *ccp,
+	volatile size_t *ccp,
 	volatile rpc_socket_error_t *serrp
-		)
+    )
 {
 	struct msghdr msg;
 	rpc_bsd_socket_p_t lrpc = (rpc_bsd_socket_p_t) sock->data.pointer;
@@ -251,7 +251,7 @@ sendmsg_again:
 	msg.msg_iov = (struct iovec *) iovp;
 	msg.msg_iovlen = iovlen;
 	*(ccp) = dcethread_sendmsg (lrpc->fd, (struct msghdr *) &msg, 0);
-	*(serrp) = (*(ccp) == -1) ? errno : RPC_C_SOCKET_OK;
+	*(serrp) = (*(ccp) == (size_t) -1) ? errno : RPC_C_SOCKET_OK;
 	RPC_LOG_SOCKET_SENDMSG_XIT;
 	if (*(serrp) == EINTR)
 	{
@@ -263,9 +263,9 @@ inline static void RPC_SOCKET_RECVFROM
 (
     rpc_socket_t        sock,
     byte_p_t            buf,        /* buf for rcvd data */
-    int                 buflen,        /* len of above buf */
+    int                 buflen,     /* len of above buf */
     rpc_addr_p_t        from,       /* addr of sender */
-    volatile int                 *ccp,        /* returned number of bytes actually rcvd */
+    volatile size_t     *ccp,       /* returned number of bytes actually rcvd */
 	 volatile rpc_socket_error_t *serrp
 )
 {
@@ -275,7 +275,7 @@ recvfrom_again:
 	RPC_LOG_SOCKET_RECVFROM_NTR;
 	*(ccp) = dcethread_recvfrom (lrpc->fd, (char *) buf, (int) buflen, (int) 0,
 			(struct sockaddr *) (&(from)->sa), (&(from)->len));
-	*(serrp) = (*(ccp) == -1) ? errno : RPC_C_SOCKET_OK;
+	*(serrp) = (*(ccp) == (size_t) -1) ? errno : RPC_C_SOCKET_OK;
 	RPC_LOG_SOCKET_RECVFROM_XIT;
 	RPC_SOCKET_FIX_ADDRLEN(from);
 	if (*(serrp) == EINTR)
@@ -289,9 +289,9 @@ inline static void RPC_SOCKET_RECVMSG
 (
     rpc_socket_t        sock,
     rpc_socket_iovec_p_t iovp,       /* array of bufs for rcvd data */
-    int                 iovlen,    /* number of bufs */
+    int                 iovlen,      /* number of bufs */
     rpc_addr_p_t        addrp,       /* addr of sender */
-    volatile int                 *ccp,        /* returned number of bytes actually rcvd */
+    volatile size_t     *ccp,        /* returned number of bytes actually rcvd */
 	 volatile rpc_socket_error_t *serrp
 )
 {
@@ -318,7 +318,7 @@ recvmsg_again:
 	{
 		(addrp)->len = msg.msg_namelen;
 	}
-	*(serrp) = (*(ccp) == -1) ? errno : RPC_C_SOCKET_OK;
+	*(serrp) = (*(ccp) == (size_t) -1) ? errno : RPC_C_SOCKET_OK;
 	RPC_LOG_SOCKET_RECVMSG_XIT;
 	if (*(serrp) == EINTR)
 	{
@@ -995,7 +995,7 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_sendmsg
     rpc_socket_iovec_p_t iov,       /* array of bufs of data to send */
     int                 iov_len,    /* number of bufs */
     rpc_addr_p_t        addr,       /* addr of receiver */
-    int                 *cc        /* returned number of bytes actually sent */
+    size_t              *cc         /* returned number of bytes actually sent */
 )
 {
     rpc_socket_error_t serr;
@@ -1023,7 +1023,7 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_recvfrom
     byte_p_t            buf,        /* buf for rcvd data */
     int                 len,        /* len of above buf */
     rpc_addr_p_t        from,       /* addr of sender */
-    int                 *cc        /* returned number of bytes actually rcvd */
+    size_t              *cc         /* returned number of bytes actually rcvd */
 )
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
@@ -1050,7 +1050,7 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_recvmsg
     rpc_socket_iovec_p_t iov,       /* array of bufs for rcvd data */
     int                 iov_len,    /* number of bufs */
     rpc_addr_p_t        addr,       /* addr of sender */
-    int                 *cc        /* returned number of bytes actually rcvd */
+    size_t              *cc         /* returned number of bytes actually rcvd */
 )
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
@@ -2254,8 +2254,8 @@ rpc__bsd_socket_transport_info_equal(
 INTERNAL
 rpc_socket_error_t
 rpc__bsd_socket_transport_inq_access_token(
-    rpc_transport_info_handle_t info,
-    rpc_access_token_p_t* token
+    rpc_transport_info_handle_t info ATTRIBUTE_UNUSED,
+    rpc_access_token_p_t* token ATTRIBUTE_UNUSED
     )
 {
 #if HAVE_LIKEWISE_LWMAPSECURITY

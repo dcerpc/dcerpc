@@ -776,7 +776,7 @@ PRIVATE void rpc__dg_scall_reinit
     }
 
     RPC_DBG_PRINTF(rpc_e_dbg_xmit, 6,
-                   ("(rpc__dg_scall_reinit) Set snd fs %u, high rcv fs %u\n",
+                   ("(rpc__dg_scall_reinit) Set snd fs %lu, high rcv fs %lu\n",
                     scall->c.xq.snd_frag_size, scall->c.rq.high_rcv_frag_size));
 
     /*

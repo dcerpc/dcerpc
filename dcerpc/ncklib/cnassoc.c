@@ -149,7 +149,7 @@ INTERNAL void rpc__cn_assoc_reclaim (
  */
 
 INTERNAL void rpc__cn_assoc_timer_reclaim (
-    pointer_t                   /*type*/);
+    unsigned32                   /*type*/);
 
 /*
  * R P C _ _ C N _ A S S O C _ A C B _ A L L O C
@@ -1774,11 +1774,11 @@ PRIVATE void rpc__cn_assoc_send_frag
     rpc_socket_iovec_t          * volatile iovp;
     rpc_socket_iovec_t          out_iov;
     static rpc_addr_p_t         addr = NULL;
-    volatile unsigned32         bytes_to_send;
+    volatile size_t             bytes_to_send;
     volatile boolean32          free_iov_buffer;
     volatile boolean32          retry_op;
     volatile rpc_socket_error_t serr;
-    volatile int                cc;
+    size_t                      cc;
     byte_p_t                    volatile save_base = NULL;
 
     //DO_NOT_CLOBBER(iovcnt);
@@ -1856,8 +1856,7 @@ PRIVATE void rpc__cn_assoc_send_frag
         if (out_iov.iov_base != NULL)
         {
             iovp = &out_iov;
-            iovcnt = 1;
-	    bytes_to_send = iovp->iov_len;
+            bytes_to_send = iovp->iov_len;
             free_iov_buffer = true;
             save_base = iovp->iov_base;
         }
@@ -1868,7 +1867,6 @@ PRIVATE void rpc__cn_assoc_send_frag
      * identified in the association control block.
      */
     serr = 0;
-    retry_op = true;
     while ((bytes_to_send) && (!RPC_SOCKET_IS_ERR (serr)))
     {
         RPC_LOG_TRY_PRE;
@@ -1901,7 +1899,7 @@ PRIVATE void rpc__cn_assoc_send_frag
                 iovp,
                 iovcnt,
                 addr,
-                (int*) &cc);
+                &cc);
 
 #ifdef NON_CANCELLABLE_IO
 	    dcethread_enableasync_throw(0);
@@ -2038,7 +2036,7 @@ PRIVATE void rpc__cn_assoc_send_frag
         }
 
         RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                        ("CN: call_rep->%p assoc->%p desc->%p sent %d bytes\n",
+                        ("CN: call_rep->%p assoc->%p desc->%p sent %ld bytes\n",
                          assoc->call_rep,
                          assoc,
                          assoc->cn_ctlblk.cn_sock,
@@ -3977,7 +3975,7 @@ PRIVATE void rpc__cn_assoc_syntax_free
 
 INTERNAL void rpc__cn_assoc_timer_reclaim
 (
- pointer_t       type
+ unsigned32       type
 )
 {
     rpc_cn_local_id_t   grp_id;
@@ -3990,7 +3988,7 @@ INTERNAL void rpc__cn_assoc_timer_reclaim
      */
     RPC_CN_LOCAL_ID_CLEAR (grp_id);
     RPC_CN_LOCK ();
-    rpc__cn_assoc_reclaim (grp_id, (unsigned long) type, false);
+    rpc__cn_assoc_reclaim (grp_id, type, false);
     RPC_CN_UNLOCK ();
 }
 
@@ -4034,9 +4032,9 @@ INTERNAL void rpc__cn_assoc_timer_reclaim
 
 INTERNAL void rpc__cn_assoc_reclaim
 (
-  rpc_cn_local_id_t       grp_id,
-  unsigned32              type,
-  boolean32		loop
+  rpc_cn_local_id_t grp_id,
+  unsigned32 type,
+  boolean32 loop
 )
 {
     unsigned32          i;
@@ -5635,7 +5633,6 @@ PRIVATE rpc_cn_local_id_t rpc__cn_assoc_grp_lkup_by_id
 
 PRIVATE void rpc__cn_assoc_grp_tbl_init (void)
 {
-    rpc_cn_local_id_t   grp_id;
     unsigned32          st;
     unsigned32          server_disc_time = 0;
     unsigned32          client_disc_time = 0;
@@ -5694,7 +5691,7 @@ PRIVATE void rpc__cn_assoc_grp_tbl_init (void)
      * Put some association groups in the table so this doesn't have
      * to be done on the first RPC.
      */
-    grp_id = rpc__cn_assoc_grp_create (&st);
+    (void) rpc__cn_assoc_grp_create (&st);
 }
 
 
@@ -5741,15 +5738,12 @@ PRIVATE void rpc__cn_assoc_grp_tbl_init (void)
 
 PRIVATE unsigned32     rpc__cn_grp_sm_protocol_error
 (
-  pointer_t       spc_struct,
-  pointer_t       event_param ATTRIBUTE_UNUSED,
-  pointer_t       sm ATTRIBUTE_UNUSED
+    pointer_t       spc_struct ATTRIBUTE_UNUSED,
+    pointer_t       event_param ATTRIBUTE_UNUSED,
+    pointer_t       sm ATTRIBUTE_UNUSED
 )
 {
-    rpc_cn_assoc_grp_t  *assoc_grp;
-
     RPC_CN_DBG_RTN_PRINTF(rpc__cn_grp_sm_protocol_error);
-    assoc_grp = (rpc_cn_assoc_grp_t *) spc_struct;
 
     /*
      * "Illegal state transition detected in CN {server|client} association

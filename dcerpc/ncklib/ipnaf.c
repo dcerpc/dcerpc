@@ -1580,11 +1580,12 @@ INTERNAL void set_pkt_nodelay
      * Assume this is a TCP socket and corresponding connection. If
      * not the setsockopt will fail.
      */
-    if ((err = setsockopt (desc,
-                           IPPROTO_TCP,
-                           TCP_NODELAY,
-                           (char *) &delay,
-                           sizeof (delay))) < 0)
+    err = setsockopt (desc,
+                      IPPROTO_TCP,
+                      TCP_NODELAY,
+                      (char *) &delay,
+                      sizeof (delay));
+    if (err < 0)
     {
         *status = rpc_s_cannot_set_nodelay;
     }

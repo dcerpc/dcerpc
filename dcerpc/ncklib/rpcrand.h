@@ -70,7 +70,7 @@
  * Prototype for the private 'c' routines used by the RPC_RANDOM macros.
  */
 
-PRIVATE void rpc__random_init ( unsigned32  /*seed*/ );
+PRIVATE void rpc__random_init ( unsigned /*seed*/ );
 
 PRIVATE unsigned32 rpc__random_get (
         unsigned32  /*lower*/,

@@ -40,6 +40,7 @@
 #include "dcethread-debug.h"
 
 #ifdef API
+int interrupt_join(dcethread* thread ATTRIBUTE_UNUSED, void* data);
 
 int
 interrupt_join(dcethread* thread ATTRIBUTE_UNUSED, void* data)

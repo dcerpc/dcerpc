@@ -150,7 +150,7 @@ typedef struct rpc_socket_vtbl_s
         rpc_socket_iovec_p_t iov,
         int iov_len,
         rpc_addr_p_t addr,
-        int * cc
+        size_t * cc
         );
     /* Receive data from the socket */
     rpc_socket_error_t
@@ -159,7 +159,7 @@ typedef struct rpc_socket_vtbl_s
         byte_p_t buf,
         int len,
         rpc_addr_p_t from,
-        int *cc
+        size_t *cc
         );
     /* Receive a message from the socket */
     rpc_socket_error_t
@@ -168,7 +168,7 @@ typedef struct rpc_socket_vtbl_s
         rpc_socket_iovec_p_t iov,
         int iov_len,
         rpc_addr_p_t addr,
-        int * cc
+        size_t * cc
         );
     /* Inquire local socket endpoint */
     rpc_socket_error_t
@@ -446,7 +446,7 @@ PRIVATE rpc_socket_error_t rpc__socket_sendmsg (
         rpc_socket_iovec_p_t  /*iov*/,   /* array of bufs of data to send */
         int  /*iov_len*/,        /* number of bufs */
         rpc_addr_p_t  /*addr*/,  /* addr of receiver */
-        int * /*cc*/             /* returned number of bytes actually sent */
+        size_t * /*cc*/             /* returned number of bytes actually sent */
     );
 
 
@@ -468,7 +468,7 @@ PRIVATE rpc_socket_error_t rpc__socket_recvfrom (
         byte_p_t  /*buf*/,       /* buf for rcvd data */
         int  /*len*/,            /* len of above buf */
         rpc_addr_p_t  /*from*/,  /* addr of sender */
-        int * /*cc*/             /* returned number of bytes actually rcvd */
+        size_t * /*cc*/             /* returned number of bytes actually rcvd */
     );
 
 
@@ -489,7 +489,7 @@ PRIVATE rpc_socket_error_t rpc__socket_recvmsg (
         rpc_socket_iovec_p_t  /*iov*/,   /* array of bufs for rcvd data */
         int  /*iov_len*/,        /* number of bufs */
         rpc_addr_p_t  /*addr*/,  /* addr of sender */
-        int * /*cc*/             /* returned number of bytes actually rcvd */
+        size_t * /*cc*/             /* returned number of bytes actually rcvd */
     );
 
 

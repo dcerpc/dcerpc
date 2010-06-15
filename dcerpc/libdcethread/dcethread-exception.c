@@ -265,10 +265,10 @@ dcethread__exc_raise(dcethread_exc* exc, const char* file, unsigned int line)
 
     if (cur)
     {
-	cur->exc = *exc;
+        cur->exc = *exc;
         cur->file = file;
         cur->line = line;
-	siglongjmp(((struct _dcethread_frame*) cur)->jmpbuf, 1);
+        siglongjmp(((struct _dcethread_frame*) cur)->jmpbuf, 1);
     }
     else
     {

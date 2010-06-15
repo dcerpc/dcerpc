@@ -2526,7 +2526,7 @@ PRIVATE void rpc__network_inq_local_addr
 CLEANUP:
 
     if (have_desc)
-        RPC_SOCKET_CLOSE(desc);
+        (void) RPC_SOCKET_CLOSE(desc);
 
     if (have_addr_vec)
         rpc__naf_addr_vector_free (&addr_vector, &temp_status);
@@ -2597,7 +2597,7 @@ PUBLIC void rpc_server_use_protseq_ep
     unsigned32              temp_status;
     rpc_addr_p_t            rpc_addr;
     unsigned_char_p_t       endpoint_copy;
-    unsigned32              count;
+    size_t                  count;
 
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
@@ -2821,9 +2821,9 @@ extern void rpc_server_use_protseq_socket
 
     if (net_epv->network_use_socket == NULL)
     {
-	RPC_SOCKET_CLOSE (rpc_sock);
-	*status = rpc_s_protocol_error;
-	return;
+        (void) RPC_SOCKET_CLOSE (rpc_sock);
+        *status = rpc_s_protocol_error;
+        return;
     }
 
     /* Ignore max_calls because rpc_server_use_protseq_ep() does.  */
@@ -2833,8 +2833,8 @@ extern void rpc_server_use_protseq_socket
 
     if (*status != rpc_s_ok)
     {
-	RPC_SOCKET_CLOSE (rpc_sock);
-	return;
+        (void) RPC_SOCKET_CLOSE (rpc_sock);
+        return;
     }
 
     *status = rpc_s_ok;

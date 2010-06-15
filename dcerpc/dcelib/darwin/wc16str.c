@@ -51,6 +51,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "wc16str.h"
+
 #define CONVERSION_FLAGS ( \
     kCFStringEncodingAllowLossyConversion \
 )

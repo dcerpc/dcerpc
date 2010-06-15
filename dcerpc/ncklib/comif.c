@@ -500,7 +500,6 @@ PRIVATE void rpc__server_register_if_int
                 *status = rpc_s_no_memory;
                 goto ERROR_AND_LOCKED;
             }
-            type_info_alloced = true;
 
             /*
              * fill in the supplied type info
@@ -514,7 +513,6 @@ PRIVATE void rpc__server_register_if_int
              */
             RPC_LIST_ADD_TAIL
                 (if_entry->type_info_list, type_info, rpc_if_type_info_p_t);
-            type_info_added = true;
         }
     }
     else
@@ -1748,7 +1746,7 @@ PRIVATE void rpc__if_inq_endpoint
                 RPC_C_MEM_STRING,
                 RPC_C_MEM_WAITOK);
 
-            snprintf (scratch_endpoint, len, "[%s]",
+            snprintf ((char *) scratch_endpoint, len, "[%s]",
                       (char *) (ifspec->endpoint_vector.endpoint_vector_elt[ctr].endpoint));
 
             /*

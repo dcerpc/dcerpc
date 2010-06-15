@@ -239,7 +239,6 @@ PRIVATE void rpc__ip_desc_inq_addr
     rpc_ip_addr_p_t         ip_addr;
     rpc_ip_addr_t           loc_ip_addr;
     unsigned16              i;
-    socklen_t               _slen;
     int err = 0;
 
     CODING_ERROR (status);
@@ -253,8 +252,6 @@ PRIVATE void rpc__ip_desc_inq_addr
      * interfaces the local host has and construct an RPC address for
      * each one of them.
      */
-    _slen = (socklen_t) sizeof (rpc_ip_addr_t);
-
     loc_ip_addr.len = sizeof(loc_ip_addr.sa);
     err = rpc__socket_inq_endpoint (sock, (rpc_addr_p_t) &loc_ip_addr);
     if (err)
@@ -458,7 +455,7 @@ done:
 
     if (sock != RPC_SOCKET_INVALID)
     {
-        RPC_SOCKET_CLOSE(sock);
+        (void) RPC_SOCKET_CLOSE(sock);
     }
 
     return;
@@ -583,7 +580,7 @@ PRIVATE void rpc__ip_init_local_addr_vec
 done:
     if (sock != RPC_SOCKET_INVALID)
     {
-        RPC_SOCKET_CLOSE(sock);
+        (void) RPC_SOCKET_CLOSE(sock);
     }
 
     return;

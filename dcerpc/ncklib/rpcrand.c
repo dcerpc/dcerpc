@@ -47,10 +47,10 @@
 
 PRIVATE void rpc__random_init
 (
-    unsigned32 seed
+    unsigned seed
 )
 {
-    srandom ((int) seed);
+    srandom ((unsigned) seed);
 }
 
 /* 
@@ -63,5 +63,5 @@ PRIVATE unsigned32 rpc__random_get
     unsigned32 upper ATTRIBUTE_UNUSED
 )
 {
-    return (random ());
+    return ( (unsigned32) (random () % UINT_MAX));
 }

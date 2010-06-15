@@ -418,7 +418,7 @@ INTERNAL void ccall_common_init
     }
 
     RPC_DBG_PRINTF(rpc_e_dbg_xmit, 6,
-                   ("(ccall_common_init) Set snd fs %u, high rcv fs %u\n",
+                   ("(ccall_common_init) Set snd fs %lu, high rcv fs %lu\n",
                    ccall->c.xq.snd_frag_size, ccall->c.rq.high_rcv_frag_size));
 
     *st = rpc_s_ok;

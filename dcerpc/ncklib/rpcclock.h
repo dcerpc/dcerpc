@@ -48,14 +48,14 @@
 #define  RPC_CLOCK_SEC(sec)         ((sec)*RPC_C_CLOCK_HZ)
 #define  RPC_CLOCK_MS(ms)           ((ms)/(1000/RPC_C_CLOCK_HZ))
 
-typedef unsigned32  rpc_clock_t, *rpc_clock_p_t;
+typedef time_t  rpc_clock_t, *rpc_clock_p_t;
                                       
 /*
  * An absolute time, UNIX time(2) format (i.e. time since 00:00:00 GMT, 
  * Jan. 1, 1970, measured in seconds.
  */
 
-typedef unsigned32  rpc_clock_unix_t, *rpc_clock_unix_p_t;
+typedef time_t  rpc_clock_unix_t, *rpc_clock_unix_p_t;
 
 #ifdef __cplusplus
 extern "C" {

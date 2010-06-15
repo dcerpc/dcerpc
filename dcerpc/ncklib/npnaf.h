@@ -184,6 +184,8 @@ PRIVATE boolean32 rpc__np_is_valid_endpoint (
 	unsigned32                 * /* status */
     );
 
+PRIVATE void rpc__np_naf_init_func(void);
+
 #ifdef __cplusplus
 }
 #endif

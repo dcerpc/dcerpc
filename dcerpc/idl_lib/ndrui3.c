@@ -43,6 +43,7 @@
 #include <dce/idlddefs.h>
 #include <ndrui.h>
 #include <lsysdep.h>
+#include <assert.h>
 
 /******************************************************************************/
 /*                                                                            */
@@ -887,7 +888,7 @@ void rpc_ss_ndr_unmar_xmit_as
     idl_ulong_int transmitted_data_size; /* Storage size for transmitted data */
     idl_byte *defn_vec_ptr;
     idl_byte transmitted_type;      /* Type of transmitted data */
-    idl_ulong_int xmit_defn_index;  /* Index of definition of constructed
+    idl_ulong_int xmit_defn_index = 0;  /* Index of definition of constructed
                                                             transmitted type */
     idl_ulong_int offset_index;
     idl_byte *struct_defn_ptr;
@@ -955,6 +956,7 @@ void rpc_ss_ndr_unmar_xmit_as
             if (transmitted_type == IDL_DT_V1_CONF_STRUCT)
             {
                 IDL_UNMAR_CUSHORT( &v1_size );
+                assert(Z_values != NULL);
                 *Z_values = (idl_ulong_int)v1_size;
             }
             else
@@ -1114,6 +1116,7 @@ void rpc_ss_ndr_unmar_xmit_as
                 range_list = NULL;
             else
                 range_list = normal_range_list;
+            assert(array_defn_ptr != NULL);
             rpc_ss_ndr_unmar_range_list(array_dims, *array_defn_ptr,
                                         &range_list, IDL_msp);
             rpc_ss_ndr_u_var_or_open_arr(array_dims, Z_values, array_defn_ptr,

@@ -43,6 +43,8 @@
 
 #if defined(ATFORK_SUPPORTED)
 
+PRIVATE boolean32 rpc__fork_is_in_progress (void);
+
 /*
  * Boolean indicating whether fork is in progress or not.
  */

@@ -143,7 +143,8 @@ INTERNAL void send_broadcast
 {
     unsigned32 st, j;
     rpc_socket_error_t serr;
-    int i, sentcc, sendcc;
+    int i;
+    size_t sentcc, sendcc;
     rpc_dg_sock_pool_elt_p_t sp;
     unsigned_char_p_t endpoint = NULL;
     rpc_dg_ccall_p_t ccall = (rpc_dg_ccall_p_t) call;
@@ -190,7 +191,7 @@ INTERNAL void send_broadcast
 
         if (RPC_SOCKET_IS_ERR(serr) || sentcc != sendcc)
         {
-            RPC_DBG_GPRINTF(("(send_broadcast) sendmsg failed, sendcc = %d, sentcc = %d, error = %d\n",
+            RPC_DBG_GPRINTF(("(send_broadcast) sendmsg failed, sendcc = %ld, sentcc = %ld, error = %d\n",
                 sendcc, sentcc, RPC_SOCKET_ETOI(serr)));
             break;
         }
@@ -221,7 +222,7 @@ PRIVATE void rpc__dg_xmitq_elt_xmit
     rpc_dg_xmitq_p_t xq = &call->xq;
     rpc_key_info_p_t key_info;
     rpc_dg_auth_epv_p_t auth_epv;
-    int sentcc, sendcc;
+    size_t sentcc, sendcc;
     unsigned32  original_seq = 0;
     rpc_socket_error_t serr;
     unsigned16 i;
@@ -413,7 +414,7 @@ PRIVATE void rpc__dg_xmitq_elt_xmit
         sendcc += overhead;
     }
     RPC_DBG_PRINTF(rpc_e_dbg_xmit, 5,
-        ("(rpc__dg_xmitq_elt_xmit) iovlen %d, sendcc %d\n",
+        ("(rpc__dg_xmitq_elt_xmit) iovlen %d, sendcc %ld\n",
          iovlen, sendcc));
 
     /*
@@ -447,7 +448,7 @@ PRIVATE void rpc__dg_xmitq_elt_xmit
             if (! RPC_SOCKET_ERR_EQ(serr, RPC_C_SOCKET_EWOULDBLOCK))
             {
                 RPC_DBG_GPRINTF(
-                    ("(rpc__dg_xmitq_elt_xmit) sendmsg failed, sendcc = %d, sentcc = %d, error = %d\n",
+                    ("(rpc__dg_xmitq_elt_xmit) sendmsg failed, sendcc = %ld, sentcc = %ld, error = %d\n",
                     sendcc, sentcc, RPC_SOCKET_ETOI(serr)));
                 break;
             }

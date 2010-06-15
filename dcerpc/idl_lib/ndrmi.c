@@ -43,6 +43,7 @@
 #include <dce/idlddefs.h>
 #include <ndrmi.h>
 #include <lsysdep.h>
+#include <assert.h>
 
 /*
  *  Forward function references
@@ -309,10 +310,10 @@ void rpc_ss_ndr_marsh_struct
     idl_ulong_int field_defn_index;
     idl_byte *field_defn_ptr;
     idl_ulong_int conf_dims = 0;    /* Number of dimensions of conformance info */
-    IDL_bound_pair_t *conf_bounds;   /* Bounds list from conformance info */
+    IDL_bound_pair_t *conf_bounds = NULL;   /* Bounds list from conformance info */
     IDL_bound_pair_t normal_conf_bounds[IDL_NORMAL_DIMS];
     IDL_bound_pair_t range_bounds; /* Bounds list from range info */
-    idl_ulong_int *Z_values;
+    idl_ulong_int *Z_values = NULL;
     idl_ulong_int normal_Z_values[IDL_NORMAL_DIMS];
     IDL_bound_pair_t *range_list;
     IDL_bound_pair_t normal_range_list[IDL_NORMAL_DIMS];
@@ -323,7 +324,7 @@ void rpc_ss_ndr_marsh_struct
                                                                         union */
     idl_ushort_int v1_size;     /* Number of elements in open [v1_array] */
     idl_boolean add_null;
-    idl_ulong_int shadow_length;    /* Number of elements in a cs_shadow */
+    idl_ulong_int shadow_length = 0;    /* Number of elements in a cs_shadow */
     IDL_cs_shadow_elt_t *cs_shadow = NULL;
     unsigned32 i;
 
@@ -524,6 +525,7 @@ void rpc_ss_ndr_marsh_struct
                 field_defn_ptr = IDL_msp->IDL_type_vec + field_defn_index
                                    + 1; /* We already know the dimensionality */
                 IDL_ADV_DEFN_PTR_OVER_BOUNDS( field_defn_ptr, conf_dims );
+                assert (conf_bounds != NULL);
                 rpc_ss_ndr_m_fix_or_conf_arr(
                         (rpc_void_p_t)((idl_byte *)struct_addr+offset),
                         conf_dims, conf_bounds, field_defn_ptr,
@@ -549,10 +551,12 @@ void rpc_ss_ndr_marsh_struct
                     range_list = NULL;
                 else
                     range_list = normal_range_list;
+                assert (conf_bounds != NULL);
                 rpc_ss_build_range_list( &field_defn_ptr,
                             (rpc_void_p_t)((idl_byte *)struct_addr+offset),
                              struct_addr, struct_offset_vec_ptr, conf_dims,
                              conf_bounds, &range_list, &add_null, IDL_msp );
+                assert (Z_values != NULL);
                 rpc_ss_ndr_m_var_or_open_arr(
                         (rpc_void_p_t)((idl_byte *)struct_addr+offset),
                         Z_values, conf_dims, range_list, field_defn_ptr,
@@ -862,7 +866,7 @@ void rpc_ss_ndr_marsh_by_looping
                     base_type_size = rpc_ss_type_size(element_defn_ptr,
                                                                      IDL_msp);
                     if (base_type_size == 1)
-                        B = strlen(array_addr) + 1;
+                        B = (idl_ulong_int) strlen(array_addr) + 1;
                     else
                         B = rpc_ss_strsiz((idl_char *)array_addr,
                                                                base_type_size);
@@ -932,9 +936,9 @@ void rpc_ss_ndr_m_fix_or_conf_arr
 {
     idl_ulong_int element_count;
     int i;
-    idl_ulong_int element_defn_index;
+    idl_ulong_int element_defn_index = 0;
     idl_ulong_int element_offset_index;
-    idl_ulong_int element_size;
+    idl_ulong_int element_size = 0;
     idl_byte *element_defn_ptr;
     idl_byte base_type;
     idl_boolean marshall_by_pointing;
@@ -1146,7 +1150,7 @@ void rpc_ss_ndr_m_var_or_open_arr
     IDL_msp_t IDL_msp
 )
 {
-    idl_ulong_int element_defn_index;
+    idl_ulong_int element_defn_index = 0;
     idl_ulong_int element_size;
     idl_byte base_type;
     IDL_varying_control_t *control_data;    /* List of data used to control
@@ -1638,7 +1642,7 @@ void rpc_ss_ndr_marsh_interp
     IDL_msp_t IDL_msp        /* [in,out] -- Pointer to marshalling state   */
 )
 {
-    idl_byte *type_vec_ptr;
+    idl_byte *type_vec_ptr = NULL;
     idl_byte type_byte;
     idl_ulong_int param_index;
     rpc_void_p_t param_addr;
@@ -1657,7 +1661,7 @@ void rpc_ss_ndr_marsh_interp
                                                                         union */
     idl_ulong_int routine_index; /* Index of rtn to be used to free referents
                        of [in]-only [transmit_as] or [represent_as] parameter */
-    IDL_cs_shadow_elt_t *cs_shadow;     /* cs-shadow for parameter list */
+    IDL_cs_shadow_elt_t *cs_shadow = NULL;     /* cs-shadow for parameter list */
     idl_ulong_int shadow_length;
     IDL_bound_pair_t range_bounds;
 
@@ -1992,6 +1996,7 @@ void rpc_ss_ndr_marsh_interp
                     break;
                 case IDL_DT_CS_ATTRIBUTE:
                     /* Is followed by the (integer) type of the attribute */
+                    assert (type_vec_ptr != NULL);
                     rpc_ss_ndr_marsh_scalar(*type_vec_ptr,
                             (rpc_void_p_t)&cs_shadow[param_index-1].IDL_data,
                             IDL_msp);
@@ -2004,12 +2009,14 @@ void rpc_ss_ndr_marsh_interp
                     break;
                 case IDL_DT_CS_ARRAY:
                     /* Is followed by an array description */
+                    assert (cs_shadow != NULL);
                     rpc_ss_ndr_marsh_cs_array(param_addr, cs_shadow,
                             param_index-1, idl_false, &type_vec_ptr, IDL_msp);
                     break;
 
                 case IDL_DT_CS_SHADOW:
                     IDL_GET_LONG_FROM_VECTOR(shadow_length, type_vec_ptr);
+                    assert (cs_shadow != NULL);
                     rpc_ss_ndr_m_param_cs_shadow(
                                 type_vec_ptr, param_index, shadow_length,
                                 &cs_shadow, IDL_msp);

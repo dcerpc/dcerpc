@@ -345,8 +345,8 @@ PRIVATE void rpc__dg_xmit_pkt
     rpc_dg_pkt_hdr_p_t hdrp;
 #endif
     rpc_socket_error_t serr;
-    int sendcc = 0;
-    int sentcc;
+    size_t sendcc = 0;
+    size_t sentcc;
     int i;
 
 #ifdef MISPACKED_HDR
@@ -366,7 +366,7 @@ PRIVATE void rpc__dg_xmit_pkt
     RPC_DG_SOCKET_SENDMSG_OOL(sock, iov, iovlen, addr, &sentcc, &serr);
     if (RPC_SOCKET_IS_ERR(serr) || sentcc != sendcc)
     {
-        RPC_DBG_GPRINTF(("(rpc__dg_xmit_pkt) sendmsg failed, sendcc = %d, sentcc = %d, error = %d\n",
+        RPC_DBG_GPRINTF(("(rpc__dg_xmit_pkt) sendmsg failed, sendcc = %ld, sentcc = %ld, error = %d\n",
             sendcc, sentcc, RPC_SOCKET_ETOI(serr)));
         *b = false;
     }

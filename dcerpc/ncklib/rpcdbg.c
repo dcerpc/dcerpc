@@ -185,24 +185,24 @@ PUBLIC void rpc__dbg_set_switches
  *
  * Only support the stdargs form
  */
-PRIVATE int rpc__printf (const char *format, ...)
+PRIVATE ssize_t rpc__printf (const char *format, ...)
 {
-    char            buff[1024];
-    char            *s = buff;
-    size_t	    remain = sizeof(buff);
+    char buff[1024];
+    char *s = buff;
+    size_t remain = sizeof(buff);
 
     if (RPC_DBG (rpc_e_dbg_pid, 1))
     {
         snprintf (s, remain, "[pid: %06lu] ", (unsigned long)getpid());
         s = &buff[strlen(buff)];
-	remain = sizeof(buff) - (s - buff);
+        remain = sizeof(buff) - (s - buff);
     }
 
     if (RPC_DBG (rpc_e_dbg_timestamp, 1))
     {
         snprintf (s, remain, "[time: %06lu] ", (unsigned long) rpc__clock_stamp());
         s = &buff[strlen(buff)];
-	remain = sizeof(buff) - (s - buff);
+        remain = sizeof(buff) - (s - buff);
     }
 
     if (RPC_DBG (rpc_e_dbg_thread_id, 1))
@@ -216,7 +216,7 @@ PRIVATE int rpc__printf (const char *format, ...)
         snprintf (s, remain, "[thread: %08lx] ", (unsigned long) self);
 #endif
         s = &buff[strlen (buff)];
-	remain = sizeof(buff) - (s - buff);
+        remain = sizeof(buff) - (s - buff);
     }
 
     {
@@ -228,8 +228,8 @@ PRIVATE int rpc__printf (const char *format, ...)
     }
 
     {
-        int             cs;
-        int ret;
+        int cs;
+        ssize_t ret;
 
         cs = dcethread_enableinterrupt_throw(0);
         ret = dcethread_write (2, buff, strlen (buff));

@@ -96,7 +96,7 @@ INTERNAL void rpc__auth_info_cache_remove (
 
 #define ASSIGN_COPY(buffer, length, val) do { \
         char* _val = (char*) (val);                             \
-        unsigned32 _vallength = _val ? strlen(_val) : 0;        \
+        size_t _vallength = _val ? strlen(_val) : 0;        \
         if ((buffer) == NULL || (length) < _vallength) { \
             *st = rpc_s_ss_bad_buffer; \
             return; \
@@ -105,7 +105,7 @@ INTERNAL void rpc__auth_info_cache_remove (
                 memcpy((buffer), _val, _vallength + 1);       \
             else \
                 (buffer)[0] = '\0'; \
-            (length) = _vallength; \
+            (length) = (unsigned32) _vallength; \
         } \
     } while (0)
 
@@ -962,15 +962,15 @@ PUBLIC void rpc_binding_inq_auth_info
 
     if (auth_info->server_princ_name == NULL)
     {
-        ASSIGN(server_princ_name, NULL);
+        (void) ASSIGN(server_princ_name, NULL);
     } else
     {
-        ASSIGN(server_princ_name, rpc_stralloc(auth_info->server_princ_name));
+        (void) ASSIGN(server_princ_name, rpc_stralloc(auth_info->server_princ_name));
     }
-    ASSIGN(authn_level,         auth_info->authn_level);
-    ASSIGN(authn_protocol,      auth_info->authn_protocol);
-    ASSIGN(auth_identity,       auth_info->u.auth_identity);
-    ASSIGN(authz_protocol,      auth_info->authz_protocol);
+    (void) ASSIGN(authn_level,         auth_info->authn_level);
+    (void) ASSIGN(authn_protocol,      auth_info->authn_protocol);
+    (void) ASSIGN(auth_identity,       auth_info->u.auth_identity);
+    (void) ASSIGN(authz_protocol,      auth_info->authz_protocol);
 
     *st = rpc_s_ok;
 }
@@ -1127,23 +1127,23 @@ PUBLIC void rpc_binding_inq_auth_client
 
     assert(auth_info->is_server);
 
-    ASSIGN(privs,               auth_info->u.s.privs);
+    (void) ASSIGN(privs,               auth_info->u.s.privs);
 
     if (server_princ_name != NULL)
     {
         if (auth_info->server_princ_name == NULL)
         {
-            ASSIGN(server_princ_name,   NULL);
+            (void) ASSIGN(server_princ_name,   NULL);
         }
         else
         {
-            ASSIGN(server_princ_name, rpc_stralloc(auth_info->server_princ_name));
+            (void) ASSIGN(server_princ_name, rpc_stralloc(auth_info->server_princ_name));
         }
     }
 
-    ASSIGN(authn_level,         auth_info->authn_level);
-    ASSIGN(authn_protocol,      auth_info->authn_protocol);
-    ASSIGN(authz_protocol,      auth_info->authz_protocol);
+    (void) ASSIGN(authn_level,         auth_info->authn_level);
+    (void) ASSIGN(authn_protocol,      auth_info->authn_protocol);
+    (void) ASSIGN(authz_protocol,      auth_info->authz_protocol);
 
     *st = rpc_s_ok;
 }
@@ -1237,17 +1237,17 @@ PUBLIC void rpc_binding_inq_auth_caller
     {
         if (auth_info->server_princ_name == NULL)
         {
-            ASSIGN(server_princ_name,   NULL);
+            (void) ASSIGN(server_princ_name,   NULL);
         }
         else
         {
-            ASSIGN(server_princ_name, rpc_stralloc(auth_info->server_princ_name));
+            (void) ASSIGN(server_princ_name, rpc_stralloc(auth_info->server_princ_name));
         }
     }
 
-    ASSIGN(authn_level,         auth_info->authn_level);
-    ASSIGN(authn_protocol,      auth_info->authn_protocol);
-    ASSIGN(authz_protocol,      auth_info->authz_protocol);
+    (void) ASSIGN(authn_level,         auth_info->authn_level);
+    (void) ASSIGN(authn_protocol,      auth_info->authn_protocol);
+    (void) ASSIGN(authz_protocol,      auth_info->authz_protocol);
 
     *st = rpc_s_ok;
 }

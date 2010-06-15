@@ -113,8 +113,8 @@ PRIVATE boolean rpc__clock_unix_expired
 PRIVATE void rpc__clock_update(void)
 {
 
-    struct timeval         tp;
-    unsigned long          ticks;
+    struct timeval tp;
+    time_t ticks;
     
     /*
      * On startup, just initialize start time.  Arrange for the initial

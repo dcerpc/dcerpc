@@ -92,7 +92,7 @@ typedef struct
 {
     unsigned short              ifspec_vers;
     unsigned short              opcnt;
-    unsigned long               vers;
+    unsigned int                vers;
     idl_uuid_t                      id;
     unsigned short              stub_rtl_if_vers;
     rpc_endpoint_vector_t       endpoint_vector;
@@ -800,7 +800,7 @@ typedef volatile struct {
 
 byte_p_t rpc_ss_mem_alloc   (
     rpc_ss_mem_handle *,  /* The (initially NULL) allocation handle */
-    unsigned               /* Number of bytes to allocate */
+    size_t                /* Number of bytes to allocate */
 );
 
 /*
@@ -813,7 +813,7 @@ byte_p_t rpc_ss_mem_alloc   (
  */
 byte_p_t rpc_sm_mem_alloc   (
     rpc_ss_mem_handle *,    /* The (initially NULL) allocation handle */
-    unsigned,               /* Number of bytes to allocate */
+    size_t,                 /* Number of bytes to allocate */
     error_status_t *        /*The status parameter if alloc returns NULL */
 );
 
@@ -874,14 +874,14 @@ void rpc_ss_mem_dealloc   ( byte_p_t );
 typedef struct rpc_ss_marsh_state_t
 {
     rpc_mp_t mp;                      /* unmarshalling pointer */
-    unsigned long op;                 /* offset from start of parameters */
+    unsigned32 op;                    /* offset from start of parameters */
     ndr_format_t src_drep;            /* sender's data representation */
     rpc_iovector_elt_t *p_rcvd_data;  /* address of received data descriptor */
     rpc_ss_mem_handle *p_mem_h;       /* ptr to stub memory management handle */
     rpc_call_handle_t call_h;
     rpc_ss_allocator_t allocator;
     rpc_ss_node_table_t node_table;   /* node number to pointer table */
-    unsigned long space_in_buff;      /* Space left in buffer */
+    unsigned32 space_in_buff;         /* Space left in buffer */
     rpc_iovector_t  *p_iovec;         /* Address of I/O vector */
     error_status_t  *p_st;            /* Return status */
     unsigned long   version;          /* Version number field */
@@ -917,7 +917,7 @@ void rpc_ss_enable_reflect_deletes  (
  rpc_ss_node_table_t 
 );
 
-long rpc_ss_register_node   (
+idl_ulong_int rpc_ss_register_node   (
     rpc_ss_node_table_t  /*tab*/,
     byte_p_t  /*ptr*/,
     long  /*marshalling*/,
@@ -938,7 +938,7 @@ byte_p_t rpc_ss_lookup_pointer_to_node   (
 
 byte_p_t rpc_ss_return_pointer_to_node   (
     rpc_ss_node_table_t  /*tab*/,
-    unsigned long  /*num*/,
+    idl_ulong_int  /*num*/,
     long  /*size*/,
     rpc_ss_allocator_t * p_allocator,
     long * /*has_been_unmarshalled*/,

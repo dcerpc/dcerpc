@@ -57,6 +57,9 @@
 #       include <stdlib.h>
 #   endif
 
+void rpc_ss_trans_table_init(void);
+
+
 /*
  * declare the default character translation tables.  Not in stubbase, since
  * the stubs never reference them directly.

@@ -451,7 +451,7 @@ INTERNAL void init_once(void)
 			 */
 			if (naf->naf_init)
 			{
-				(*naf->naf_init) (&(naf->epv), &status);
+				(*naf->naf_init) ( (rpc_naf_epv_p_t *) &(naf->epv), &status);
 				if (status != rpc_s_ok)
 				{
 					/*
@@ -810,7 +810,7 @@ INTERNAL void init_once(void)
 	 * initialize (seed) the random number generator using the current
 	 * system time
 	 */
-	RPC_RANDOM_INIT(time (NULL));
+	RPC_RANDOM_INIT((unsigned) time (NULL));
 
 #ifndef NO_GETENV
 

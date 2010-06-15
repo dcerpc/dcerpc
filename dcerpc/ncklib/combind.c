@@ -1287,10 +1287,10 @@ PUBLIC void rpc_string_binding_parse
 
     unsigned_char_p_t       binding_ptr;
     unsigned_char_p_t       option_ptr = NULL;
-    unsigned32              count;
+    size_t                  count;
     boolean                 get_endpoint;
     unsigned32              temp_status;
-    unsigned32              len;
+    size_t                  len;
 
 
     CODING_ERROR (status);

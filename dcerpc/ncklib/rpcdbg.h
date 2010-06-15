@@ -158,13 +158,13 @@ EXTERNAL unsigned8 rpc_g_dbg_switches[];
  *
  */
 #define RPC_DBG_ADD_PRINTF(switch, level, pargs) \
-( \
+(void) ( \
     ! RPC_DBG((switch), (level)) ? \
         0 : (rpc__printf pargs, 0) \
 )
 
 #define RPC_DBG_PRINTF(switch, level, pargs) \
-( \
+(void) ( \
     ! RPC_DBG((switch), (level)) ? \
         0 : (rpc__printf pargs, rpc__print_source(__FILE__, __LINE__), 0) \
 )
@@ -223,7 +223,7 @@ PUBLIC void rpc__dbg_set_switches (
 
 #include <stdarg.h>
 
-PRIVATE int rpc__printf ( const char * /*format*/, ...)
+PRIVATE ssize_t rpc__printf ( const char * /*format*/, ...)
 #if __GNUC__
 __attribute__((__format__ (__printf__, 1, 2)))
 #endif

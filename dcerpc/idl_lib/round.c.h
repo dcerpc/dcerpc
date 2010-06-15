@@ -123,7 +123,7 @@
 
 {
   int roundup, more_bits;
-  unsigned long  bit_mask;
+  unsigned32  bit_mask;
 
 
       /* Check TRUNCATE option */
@@ -136,7 +136,7 @@
 
            /* Create a mask isolating the round bit */
 
-      bit_mask = 0x1L << (31 - (round_bit_position & 0x1FL));
+      bit_mask = 0x1 << (31 - (round_bit_position & 0x1FL));
 
            /* Check VAX ROUNDING option */
 

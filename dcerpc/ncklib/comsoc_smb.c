@@ -21,6 +21,7 @@
 #if HAVE_SMBCLIENT_FRAMEWORK
 #include <SMBClient/smbclient.h>
 #include <nttypes.h>
+rpc_socket_error_t rpc_smb_ntstatus_to_rpc_error(NTSTATUS status);
 #endif
 
 #if HAVE_LW_BASE_H
@@ -398,7 +399,6 @@ rpc__smb_buffer_packet_size(
     )
 {
     rpc_cn_common_hdr_p_t packet = (rpc_cn_common_hdr_p_t) buffer->start_cursor;
-    uint16_t result;
 
     if (rpc__smb_buffer_pending(buffer) < sizeof(*packet))
     {
@@ -563,7 +563,9 @@ rpc__smb_socket_destroy(
     rpc_smb_socket_p_t sock
     )
 {
+#if HAVE_LIKEWISE_LWIO
     size_t i;
+#endif
 
     RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_destroy called\n"));
 
@@ -690,12 +692,18 @@ rpc_socket_error_t
 rpc__smb_socket_construct(
     rpc_socket_t sock,
     rpc_protseq_id_t pseq_id ATTRIBUTE_UNUSED,
+#if HAVE_LIKEWISE_LWIO
     rpc_transport_info_handle_t info
+#else
+    rpc_transport_info_handle_t info ATTRIBUTE_UNUSED
+#endif
     )
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
     rpc_smb_socket_p_t smb_sock = NULL;
+#if HAVE_LIKEWISE_LWIO
     rpc_smb_transport_info_p_t smb_info = (rpc_smb_transport_info_p_t) info;
+#endif
 
     RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_construct called\n"));
 
@@ -786,8 +794,8 @@ rpc__smb_socket_connect(
     USHORT sesskeylen = 0;
     IO_FILE_NAME filename = { 0 };
     IO_STATUS_BLOCK io_status = { 0 };
-#elif HAVE_SMBCLIENT_FRAMEWORK
     size_t len;
+#elif HAVE_SMBCLIENT_FRAMEWORK
     char* smbpath = NULL;
     NTSTATUS status;
     unsigned32 have_mountpath = 0;
@@ -1394,15 +1402,22 @@ error:
 INTERNAL
 rpc_socket_error_t
 smb_data_send(
+#if SMB_NP_NO_TRANSACTIONS
     rpc_socket_t sock
+#else
+    rpc_socket_t sock ATTRIBUTE_UNUSED
+#endif
     )
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
-    rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
-    unsigned char* cursor = smb->sendbuffer.base;
+    rpc_smb_socket_p_t smb;
+    unsigned char* cursor;
     size_t bytes_written = 0;
 #if SMB_NP_NO_TRANSACTIONS
     NTSTATUS status;
+
+    smb = (rpc_smb_socket_p_t) sock->data.pointer;
+    cursor = smb->sendbuffer.base;
 #endif
 
     do
@@ -1743,7 +1758,7 @@ rpc__smb_socket_sendmsg(
     rpc_socket_iovec_p_t iov,
     int iov_len,
     rpc_addr_p_t addr ATTRIBUTE_UNUSED,
-    int *cc
+    size_t *cc
     )
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
@@ -1814,7 +1829,7 @@ rpc__smb_socket_recvfrom(
     byte_p_t buf ATTRIBUTE_UNUSED,
     int len ATTRIBUTE_UNUSED,
     rpc_addr_p_t from ATTRIBUTE_UNUSED,
-    int *cc ATTRIBUTE_UNUSED
+    size_t *cc ATTRIBUTE_UNUSED
 )
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_ENOTSUP;
@@ -1832,7 +1847,7 @@ rpc__smb_socket_recvmsg(
     rpc_socket_iovec_p_t iov,
     int iov_len,
     rpc_addr_p_t addr,
-    int *cc
+    size_t *cc
 )
 {
     rpc_socket_error_t serr = RPC_C_SOCKET_OK;
@@ -2269,8 +2284,13 @@ rpc__smb_socket_duplicate(
 INTERNAL
 rpc_socket_error_t
 rpc__smb_socket_transport_inq_access_token(
+#if HAVE_LIKEWISE_LWMAPSECURITY
     rpc_transport_info_handle_t info,
     rpc_access_token_p_t* token
+#else
+   rpc_transport_info_handle_t info ATTRIBUTE_UNUSED,
+   rpc_access_token_p_t* token ATTRIBUTE_UNUSED
+#endif
     )
 {
 #if HAVE_LIKEWISE_LWMAPSECURITY

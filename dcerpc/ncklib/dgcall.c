@@ -1141,7 +1141,7 @@ PRIVATE boolean rpc__dg_call_recvq_insert
 
     if (rqe->frag_len > rq->high_rcv_frag_size) {
         RPC_DBG_PRINTF(rpc_e_dbg_recv, 7,
-                ("(rpc__dg_call_recvq_insert) Set high_rcv_frag %u was %u\n",
+                ("(rpc__dg_call_recvq_insert) Set high_rcv_frag %lu was %lu\n",
                         rqe->frag_len, rq->high_rcv_frag_size));
         rq->high_rcv_frag_size = rqe->frag_len;
 
@@ -1458,7 +1458,7 @@ PRIVATE boolean rpc__dg_call_recvq_insert
             ! RPC_DG_HDR_FLAG_IS_SET(rqe->hdrp, RPC_C_DG_PF_NO_FACK)) ?
                 "frq" : ""));
     RPC_DBG_PRINTF(rpc_e_dbg_recv, 7,
-        ("(rpc__dg_call_recvq_insert) recv frag_len %u\n", rqe->frag_len));
+        ("(rpc__dg_call_recvq_insert) recv frag_len %lu\n", rqe->frag_len));
 
     /*
      * If we've got a fragmented receive stream consider sending a fack.

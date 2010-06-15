@@ -548,7 +548,7 @@ idl_ulong_int rpc_ss_arm_switch_value
 
 #define IDL_UNMAR_ALIGN_MP(IDL_msp, alignment)\
 { \
-    int advance;\
+    unsigned long advance;\
     advance = (idl_byte *)\
         (((IDL_msp->IDL_mp - (idl_byte *)0) + (alignment-1)) & ~(alignment-1)) \
             - IDL_msp->IDL_mp; \

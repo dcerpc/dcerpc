@@ -184,7 +184,7 @@ PRIVATE pointer_t rpc__list_element_alloc
     boolean32               block
 )
 {
-    volatile pointer_t  element;
+    volatile pointer_t  element = NULL;
     unsigned32          wait_cnt;
     struct timespec     delta;
     struct timespec     abstime;

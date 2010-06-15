@@ -785,7 +785,7 @@ typedef struct rpc_ss_pvt_node_table_t {
                                             /* available in the multi-level */
                                             /* array for storing mappings   */
 
-    long high_num;                          /* Highest node number used     */
+    idl_ulong_int high_num;                 /* Highest node number used     */
 
     rpc_ss_mem_handle *mem_h;               /* Pointer to the mem handle    */
                                             /* used to free up local        */
@@ -1051,7 +1051,7 @@ static rpc_ss_hash_entry_t *rpc_ss_find_hash_entry
 static void rpc_ss_register_node_by_num
 (
     rpc_ss_node_table_t tab,
-    long num,
+    idl_ulong_int num,
     byte_p_t ptr
 )
 {
@@ -1134,7 +1134,7 @@ static void rpc_ss_register_node_by_num
 **
 **--
 */
-static long rpc_ss_lookup_node_by_ptr
+static idl_ulong_int rpc_ss_lookup_node_by_ptr
 (
     rpc_ss_node_table_t tab,
     byte_p_t ptr,
@@ -1142,7 +1142,7 @@ static long rpc_ss_lookup_node_by_ptr
 )
 {
     rpc_ss_hash_entry_t *hash_entry;
-    long node;
+    idl_ulong_int node;
     rpc_ss_pvt_node_table_t * str;
 
 #ifdef PERFMON
@@ -1450,7 +1450,7 @@ byte_p_t rpc_ss_lookup_node_by_num
 **
 **--
 */
-long rpc_ss_register_node
+idl_ulong_int rpc_ss_register_node
 (
     rpc_ss_node_table_t tab,
     byte_p_t ptr,
@@ -1458,7 +1458,7 @@ long rpc_ss_register_node
     long *has_been_marshalled
 )
 {
-    long num;
+    idl_ulong_int num;
     rpc_ss_pvt_node_table_t * str;
     rpc_ss_hash_entry_t *hash_entry;
 
@@ -1514,7 +1514,7 @@ long rpc_ss_register_node
     }
 
     DTRACE((
-        trace_fid, "Register(%p): num=%ld, ptr=%p\n", str, num, ptr
+        trace_fid, "Register(%p): num=%d, ptr=%p\n", str, num, ptr
     ));
 
 #ifdef PERFMON
@@ -1738,7 +1738,7 @@ void rpc_ss_replace_address
 byte_p_t rpc_ss_return_pointer_to_node
 (
     rpc_ss_node_table_t tab,
-    unsigned long       num,
+    idl_ulong_int       num,
     long                size,
     rpc_ss_allocator_t *p_allocator,
     long                *has_been_unmarshalled,
@@ -2013,7 +2013,7 @@ rpc_ss_node_table_t  str;
 
 main ()
 {
-long node;
+idl_ulong_int node;
 byte_p_t ptr;
 long high_node;
 long has_been_marshalled;

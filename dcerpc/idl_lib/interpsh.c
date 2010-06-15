@@ -827,7 +827,7 @@ void rpc_ss_build_bounds_list_2
                 }
                 if (element_size == 1)
                     bounds_list[i].upper = bounds_list[i].lower
-                                                             + strlen(array_addr);
+                                                             + (idl_long_int) strlen(array_addr);
                 else
                 {
                     size = rpc_ss_strsiz( (idl_char *)array_addr, element_size );
@@ -1014,7 +1014,7 @@ void rpc_ss_build_range_list_2
             if (unmarshalled_list == NULL || unmarshalled_list[i])
             {
                 if (element_size == 1)
-                    data_limit = strlen(array_addr) + 1;
+                    data_limit = (idl_long_int) strlen(array_addr) + 1;
                 else
                     data_limit = rpc_ss_strsiz( (idl_char *)array_addr,
                                                                  element_size );

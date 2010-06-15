@@ -142,7 +142,7 @@ void rpc__ncadg_init
         struct timeval tv;
 
         gettimeofday(&tv, NULL);
-        rpc_g_dg_server_boot_time = tv.tv_sec;
+        rpc_g_dg_server_boot_time = (unsigned32) tv.tv_sec;
     }
 
     rpc__dg_pkt_pool_init();

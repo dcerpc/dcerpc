@@ -765,7 +765,7 @@ static void idl_es_get_encoding_header
     IDL_msp_t IDL_msp
 )
 {
-    IDL_es_state_t *p_es_state;
+    IDL_es_state_t *p_es_state = NULL;
 
     p_es_state = (IDL_es_state_t *)(IDL_msp->IDL_pickling_handle);
 
@@ -797,6 +797,7 @@ static void idl_es_get_encoding_header
         /* And align to 8 bytes */
         IDL_UNMAR_ALIGN_MP(IDL_msp, 8);
     }
+    assert(p_es_state != NULL);
     p_es_state->IDL_pickle_header_read = idl_true;
 }
 

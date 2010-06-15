@@ -60,6 +60,8 @@ struct pickle_handle_s {
 	idl_es_handle_t idl_h;
 };
 
+PRIVATE void sec_id_free(sec_id_t *identity);
+
 /* s e c _ p i c k l e _ c r e a t e
  *
  * Create a pickling context.  This must be called to obtain a pickling

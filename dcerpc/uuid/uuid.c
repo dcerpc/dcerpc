@@ -760,7 +760,7 @@ void uuid_to_string
 
     UUID_SPRINTF(
         (char *) *uuid_string,
-        "%08lx-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x",
+        "%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x",
         uuid->time_low, uuid->time_mid, uuid->time_hi_and_version,
         uuid->clock_seq_hi_and_reserved, uuid->clock_seq_low,
         (unsigned8) uuid->node[0], (unsigned8) uuid->node[1],
@@ -816,9 +816,9 @@ void uuid_from_string
     unsigned32              *status
 )
 {
-    idl_uuid_t              uuid_new;       /* used for sscanf for new uuid's */
-    uuid_old_t          uuid_old;       /* used for sscanf for old uuid's */
-    uuid_p_t            uuid_ptr;       /* pointer to correct uuid (old/new) */
+    idl_uuid_t          uuid_new;   /* used for sscanf for new uuid's */
+    uuid_old_t          uuid_old;   /* used for sscanf for old uuid's */
+    uuid_p_t            uuid_ptr;   /* pointer to correct uuid (old/new) */
     int                 i;
 
     CODING_ERROR (status);
@@ -829,9 +829,9 @@ void uuid_from_string
      */
     if (uuid_string == NULL || *uuid_string == '\0')
     {
-	memcpy (uuid, &uuid_g_nil_uuid, sizeof *uuid);
-	*status = uuid_s_ok;
-	return;
+        memcpy (uuid, &uuid_g_nil_uuid, sizeof *uuid);
+        *status = uuid_s_ok;
+        return;
     }
 
     /*
@@ -848,15 +848,15 @@ void uuid_from_string
      */
     if (uuid_string[8] == '-')
     {
-        long    time_low;
-        int     time_mid;
-        int     time_hi_and_version;
-        int     clock_seq_hi_and_reserved;
-        int     clock_seq_low;
-        int     node[6];
+        unsigned32      time_low;
+        unsigned16      time_mid;
+        unsigned16      time_hi_and_version;
+        unsigned8       clock_seq_hi_and_reserved;
+        unsigned8       clock_seq_low;
+        unsigned char   node[6];
 
         i = UUID_SSCANF(
-            (char *) uuid_string, "%8lx-%4x-%4x-%2x%2x-%2x%2x%2x%2x%2x%2x",
+            (char *) uuid_string, "%8x-%4x-%4x-%2x%2x-%2x%2x%2x%2x%2x%2x",
             &time_low,
             &time_mid,
             &time_hi_and_version,
@@ -893,10 +893,16 @@ void uuid_from_string
          * point to the correct uuid
          */
         uuid_ptr = &uuid_new;
+
+        /*
+         * sanity check, is version ok?
+         */
+        vCHECK_STRUCTURE (uuid_ptr, status);
+
     }
     else
     {
-        long    time_high;
+        int     time_high;
         int     time_low;
         int     family;
         int     host[7];
@@ -940,11 +946,6 @@ void uuid_from_string
         uuid_old.reserved = 0;
         uuid_ptr = (uuid_p_t) (&uuid_old);
     }
-
-    /*
-     * sanity check, is version ok?
-     */
-    vCHECK_STRUCTURE (uuid_ptr, status);
 
     /*
      * copy the uuid to user

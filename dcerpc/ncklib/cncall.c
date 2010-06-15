@@ -2965,7 +2965,7 @@ PRIVATE void rpc__cn_call_start_cancel_timer
             (call_r->u.client.cancel.timeout_time != (typeof(call_r->u.client.cancel.timeout_time))(rpc_c_cancel_infinite_timeout)))
         {
             RPC_DBG_PRINTF (rpc_e_dbg_cancel, RPC_C_CN_DBG_CANCEL,
-                           ("(rpc__cn_call_start_cancel_timer) call_rep->%p starting cancel timer - %d seconds\n",
+                           ("(rpc__cn_call_start_cancel_timer) call_rep->%p starting cancel timer - %ld seconds\n",
                             call_r, call_r->u.client.cancel.timeout_time));
             call_r->u.client.cancel.timer_running = true;
             call_r->u.client.cancel.thread_h = dcethread_self ();

@@ -52,7 +52,7 @@
 /*
  * Pointer cells for the two tables.
  */
-globaldef rpc_trans_tab_p_t ndr_g_ascii_to_ebcdic = "NDR_G_ASCII_TO_EBCDIC";
-globaldef rpc_trans_tab_p_t ndr_g_ebcdic_to_ascii ="NDR_G_EBCDIC_TO_ASCII";
+globaldef rpc_trans_tab_p_t ndr_g_ascii_to_ebcdic = (rpc_trans_tab_p_t) "NDR_G_ASCII_TO_EBCDIC";
+globaldef rpc_trans_tab_p_t ndr_g_ebcdic_to_ascii = (rpc_trans_tab_p_t) "NDR_G_EBCDIC_TO_ASCII";
 
 

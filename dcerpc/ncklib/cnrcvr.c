@@ -1281,7 +1281,7 @@ INTERNAL void receive_packet
 {
     rpc_cn_fragbuf_t    * volatile fbp;
     volatile unsigned16 frag_length;
-    volatile int                 bytes_rcvd = 0;
+    size_t              bytes_rcvd = 0;
     rpc_socket_iovec_t  iov;
     volatile rpc_socket_error_t  serr = 0;
     signed32            need_bytes;
@@ -1416,7 +1416,7 @@ INTERNAL void receive_packet
                 &iov,
                 1,
                 addr,
-                (int*) &bytes_rcvd);
+                &bytes_rcvd);
 #ifdef NON_CANCELLABLE_IO
 	    dcethread_enableasync_throw(0);
 #endif /* NON_CANCELLABLE_IO */
@@ -1507,7 +1507,7 @@ INTERNAL void receive_packet
             if (rpc__naf_is_connect_closed (assoc->cn_ctlblk.cn_sock, st))
             {
                 RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                                ("CN: call_rep->%p assoc->%p desc->%p connection closed recvmsg failed serr = %x, bytes_rcvd = %d\n",
+                                ("CN: call_rep->%p assoc->%p desc->%p connection closed recvmsg failed serr = %x, bytes_rcvd = %ld\n",
                                  assoc->call_rep,
                                  assoc,
                                  assoc->cn_ctlblk.cn_sock,
@@ -1525,7 +1525,7 @@ INTERNAL void receive_packet
         }
 
         RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
-                        ("CN: call_rep->%p assoc->%p desc->%p received %d bytes\n",
+                        ("CN: call_rep->%p assoc->%p desc->%p received %ld bytes\n",
                          assoc->call_rep,
                          assoc,
                          assoc->cn_ctlblk.cn_sock,

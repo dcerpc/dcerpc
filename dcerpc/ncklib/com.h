@@ -1643,7 +1643,7 @@ PRIVATE size_t rpc__get_token(
 PRIVATE void rpc__strncpy (
         unsigned_char_p_t           /* dst_string */,
         unsigned_char_p_t           /* src_string */,
-        unsigned32                  /* max_length */
+        size_t                      /* max_length */
     );
 
 PRIVATE unsigned32 rpc__strsqz ( unsigned_char_p_t);

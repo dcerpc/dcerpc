@@ -56,5 +56,5 @@ dcethread_attr_getstacksize(dcethread_attr* attr)
 long
 dcethread_attr_getstacksize_throw(dcethread_attr* attr)
 {
-    DCETHREAD_WRAP_THROW(dcethread_attr_getstacksize(attr));
+    DCETHREAD_WRAP_THROW((int) dcethread_attr_getstacksize(attr));
 }

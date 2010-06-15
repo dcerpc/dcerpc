@@ -303,6 +303,8 @@ int                     *status
     strlcat ((char*) error_text, ")", dce_c_error_string_len);
 }
 
+#if 0
+/* unused functions */
 int dce_fprintf(FILE *f, unsigned long index, ...)
 {
     va_list ap;
@@ -333,7 +335,8 @@ int dce_printf(unsigned long index, ...)
     va_end(ap);
     return i;
 }
-
+#endif
+
 #ifdef BUILD_STCODE
 main(int argc, char **argv)
 {

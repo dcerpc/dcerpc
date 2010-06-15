@@ -459,7 +459,7 @@ PRIVATE void rpc__strncpy
 (
     unsigned_char_p_t       dst_string,
     unsigned_char_p_t       src_string,
-    unsigned32              max_len
+    size_t                  max_len
 )
 {
     /*

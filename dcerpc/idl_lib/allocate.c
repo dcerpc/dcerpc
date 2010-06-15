@@ -64,7 +64,7 @@ typedef struct memlink
 } memlink;
 
 byte_p_t 
-rpc_ss_mem_alloc(rpc_ss_mem_handle *handle, unsigned bytes)
+rpc_ss_mem_alloc(rpc_ss_mem_handle *handle, size_t bytes)
 {
 
     error_status_t status = 0;
@@ -79,7 +79,7 @@ rpc_ss_mem_alloc(rpc_ss_mem_handle *handle, unsigned bytes)
 }
 
 byte_p_t
-rpc_sm_mem_alloc (rpc_ss_mem_handle *handle, unsigned bytes, error_status_t *st)
+rpc_sm_mem_alloc (rpc_ss_mem_handle *handle, size_t bytes, error_status_t *st)
 {
     memlink* l = (memlink*) handle->alloc(sizeof(memlink));
 

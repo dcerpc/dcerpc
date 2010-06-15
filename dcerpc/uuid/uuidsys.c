@@ -83,13 +83,13 @@ void uuid__get_os_time (uuid_time_t * uuid_time)
     /*
      * Multiply the number of seconds by the number clunks 
      */
-    uuid__uemul ((long) tp.tv_sec, UUID_C_100NS_PER_SEC, &utc);
+    uuid__uemul ((unsigned32) tp.tv_sec, UUID_C_100NS_PER_SEC, &utc);
 
     /*
      * Multiply the number of microseconds by the number clunks 
      * and add to the seconds
      */
-    uuid__uemul ((long) tp.tv_usec, UUID_C_100NS_PER_USEC, &usecs);
+    uuid__uemul ((unsigned32) tp.tv_usec, UUID_C_100NS_PER_USEC, &usecs);
     UADD_UVLW_2_UVLW (&usecs, &utc, &utc);
 
     /*

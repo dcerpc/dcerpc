@@ -768,7 +768,7 @@ PRIVATE const char *rpc__gssauth_error_map
 	 * namespace too, and/or that the Kerberos mechanism uses a different
 	 * OID. So safest to leave it as is for now.
 	 */
-	switch (min_stat) {
+	switch ((signed32) min_stat) {
 	case KRB5KRB_AP_ERR_BAD_INTEGRITY:
 		*st = rpc_s_auth_bad_integrity;
 		break;
@@ -1100,13 +1100,13 @@ INTERNAL void rpc__gssauth_cn_fmt_client_req
 	}
 
 	if (*auth_value_len < output_token.length) {
-		assoc_sec->krb_message.length = output_token.length;
+		assoc_sec->krb_message.length = (int) output_token.length;
 		assoc_sec->krb_message.data = output_token.value;
 
-		*auth_value_len = output_token.length;
+		*auth_value_len = (unsigned32) output_token.length;
 		memset((unsigned_char_p_t)auth_value, 0xAF, *auth_value_len);
 	} else {
-		*auth_value_len = output_token.length;
+		*auth_value_len = (unsigned32) output_token.length;
 		*auth_len_remain = 0;
 
 		memcpy((unsigned_char_p_t)auth_value,
@@ -1205,7 +1205,7 @@ INTERNAL void rpc__gssauth_cn_fmt_srvr_resp
 		assoc_sec->assoc_next_rcv_seq,
 		verify_st));
 
-#ifdef DEBUG
+#if 0
 	if (RPC_DBG_EXACT(rpc_es_dbg_cn_errors, RPC_C_CN_DBG_AUTH_FMT_SERVER_RESP)) {
 		verify_st = RPC_S_CN_DBG_AUTH_FAILURE;
 	}
@@ -1225,7 +1225,7 @@ INTERNAL void rpc__gssauth_cn_fmt_srvr_resp
 		return;
 	}
 
-	*auth_value_len = output_token.length;
+	*auth_value_len = (unsigned32) output_token.length;
 
 	memcpy((unsigned_char_p_t)auth_value,
 	       output_token.value,
@@ -1519,7 +1519,7 @@ INTERNAL void rpc__gssauth_cn_pre_call
 			*st = rpc_s_auth_method;
 			return;
 		}
-		*auth_value_len = iov[1].buffer.length;
+		*auth_value_len = (unsigned32) iov[1].buffer.length;
 		memset((unsigned_char_p_t)auth_value, 0xAF, *auth_value_len);
 		break;
 	case rpc_c_authn_level_connect:
@@ -1621,7 +1621,6 @@ INTERNAL void rpc__gssauth_cn_wrap_packet
 	}
 
 	memset(&pdu_buf[pdu_buflen], 0, pad_len);
-	pdu_buflen += pad_len;
 
 	gss_iov[0].type = header_sign ? GSS_IOV_BUFFER_TYPE_SIGN_ONLY :
 					GSS_IOV_BUFFER_TYPE_EMPTY;
@@ -1883,7 +1882,6 @@ INTERNAL void rpc__gssauth_cn_pre_send
 	rpc_cn_packet_p_t pkt;
 	unsigned32 ptype;
 	boolean conf_req_flag = false;
-	OM_uint32 maj_stat;
 	OM_uint32 min_stat;
 
 	CODING_ERROR(st);
@@ -1970,7 +1968,7 @@ INTERNAL void rpc__gssauth_cn_pre_send
 		input_token.value = auth_tlr->auth_value;
 		input_token.length = RPC_CN_PKT_AUTH_LEN(pkt);
 
-		maj_stat = rpc__gssauth_verify_server_token(&min_stat,
+		(void) rpc__gssauth_verify_server_token(&min_stat,
 							    sec,
 							    GSS_C_NO_CREDENTIAL,
 							    GSS_C_NO_NAME,
@@ -2448,7 +2446,7 @@ INTERNAL void rpc__gssauth_cn_vfy_client_req
                 *st = rpc_s_ok;
         }
 
-	assoc_sec->krb_message.length = output_token.length;
+	assoc_sec->krb_message.length = (unsigned32) output_token.length;
 	assoc_sec->krb_message.data = output_token.value;
 }
 
@@ -2575,7 +2573,7 @@ INTERNAL void rpc__gssauth_cn_vfy_srvr_resp
 	}
 
 done:
-	assoc_sec->krb_message.length = output_token.length;
+	assoc_sec->krb_message.length = (unsigned32) output_token.length;
 	assoc_sec->krb_message.data = output_token.value;
 
 	*st = rpc_s_ok;

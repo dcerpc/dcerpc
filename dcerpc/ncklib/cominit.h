@@ -65,6 +65,8 @@ PRIVATE void rpc__set_port_restriction_from_string (
         unsigned32         * /*status*/
     );
 
+    PRIVATE void rpc__static_init(void);
+
 #ifdef __cplusplus
 }
 #endif

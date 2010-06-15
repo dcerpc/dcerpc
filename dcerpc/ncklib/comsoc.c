@@ -8,6 +8,7 @@
 #include <comsoc.h>
 #include <comsoc_bsd.h>
 #include <errno.h>
+#include <npnaf.h>
 
 rpc_socket_error_t
 rpc__socket_open_basic (
@@ -181,7 +182,7 @@ rpc__socket_sendmsg (
     rpc_socket_iovec_p_t iov,
     int iov_len,
     rpc_addr_p_t addr,
-    int * cc
+    size_t * cc
     )
 {
     return sock->vtbl->socket_sendmsg(sock, iov, iov_len, addr, cc);
@@ -194,7 +195,7 @@ rpc__socket_recvfrom (
     byte_p_t buf,
     int len,
     rpc_addr_p_t from,
-    int *cc
+    size_t *cc
     )
 {
     return sock->vtbl->socket_recvfrom(sock, buf, len, from, cc);
@@ -207,7 +208,7 @@ rpc__socket_recvmsg (
     rpc_socket_iovec_p_t iov,
     int iov_len,
     rpc_addr_p_t addr,
-    int * cc)
+    size_t * cc)
 {
     return sock->vtbl->socket_recvmsg(sock, iov, iov_len, addr, cc);
 }

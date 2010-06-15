@@ -191,7 +191,7 @@ PRIVATE void rpc__cn_binding_init
      */
     if (RPC_BINDING_IS_SERVER (binding_r))
     {
-        type = RPC_C_CN_ASSOC_GRP_SERVER;
+        //type = RPC_C_CN_ASSOC_GRP_SERVER;
     }
     else
     {

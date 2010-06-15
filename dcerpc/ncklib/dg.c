@@ -154,7 +154,7 @@ unsigned32 *st;
 
     unsigned16 elt_num;                 /* Current data elt being processed */
     unsigned32 data_used;               /* # bytes of current data elt consumed */
-    unsigned32 body_size = 0;
+    size_t body_size = 0;
     rpc_dg_xmitq_p_t xq = &call->xq;
     rpc_dg_xmitq_elt_p_t xqe = NULL;
 
@@ -336,7 +336,6 @@ unsigned32 *st;
                     data_used += room_left;
                     xqe->body_len += room_left;
                     frag_length += room_left;
-                    room_left = 0;
 
                     /*
                      * If we copied the full data buffer, and it's the last one,
@@ -512,7 +511,7 @@ unsigned32 *st;
 
         unsigned32 blocksize = auth_epv->blocksize;
         char *cksum;
-        unsigned long raw_bodysize;
+        unsigned32 raw_bodysize;
         unsigned32 pkt_bodysize;
         rpc_dg_recvq_elt_p_t last_rqe = rqe;
         char auth_trailer[32];  /* XXX: should be malloc'ed */
@@ -982,7 +981,7 @@ unsigned32 *st;
 
         unsigned32 blocksize = auth_epv->blocksize;
         char *cksum;
-        unsigned long raw_bodysize;
+        unsigned32 raw_bodysize;
         unsigned32 pkt_bodysize;
         rpc_dg_recvq_elt_p_t last_rqe = rqe;
         char auth_trailer[32];  /* XXX: should be malloc'ed */

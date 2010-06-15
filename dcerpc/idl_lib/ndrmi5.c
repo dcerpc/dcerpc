@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
@@ -17,7 +17,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
  */
@@ -38,11 +38,10 @@
 #include <config.h>
 #endif
 
-
 #include <dce/idlddefs.h>
 #include <ndrmi.h>
 #include <lsysdep.h>
-
+#include <assert.h>
 
 /*****************************************************************************/
 /*                                                                           */
@@ -144,7 +143,7 @@ static void rpc_ss_ndr_m_array_shadow (
         if (struct_addr != NULL)
         {
             l_storage_len = rpc_ss_get_typed_integer(sz_type,
-                     (rpc_void_p_t)((idl_byte *)struct_addr 
+                     (rpc_void_p_t)((idl_byte *)struct_addr
                                         + *(struct_offset_vec_ptr + sz_index)),
                      IDL_msp);
         }
@@ -168,7 +167,7 @@ static void rpc_ss_ndr_m_array_shadow (
         if (struct_addr != NULL)
         {
             l_data_len = rpc_ss_get_typed_integer(ln_type,
-                     (rpc_void_p_t)((idl_byte *)struct_addr 
+                     (rpc_void_p_t)((idl_byte *)struct_addr
                                         + *(struct_offset_vec_ptr + ln_index)),
                      IDL_msp);
         }
@@ -256,7 +255,7 @@ static void rpc_ss_ndr_m_array_shadow (
 
  common_return:
     ;
-    
+
     *p_defn_vec_ptr = defn_vec_ptr;
 
     if (IDL_msp->IDL_type_vec[TVEC_INT_REP_OFFSET] != NDR_LOCAL_INT_REP)
@@ -310,7 +309,7 @@ void rpc_ss_ndr_m_struct_cs_shadow (
                 offset_vec_ptr++;
                 break;
             /* For fields that are not array of [cs_char],
-             advance the definition and offset pointers and shadow index 
+             advance the definition and offset pointers and shadow index
              in step. And note they have no translation storage */
             case IDL_DT_BYTE:
             case IDL_DT_CHAR:
@@ -388,7 +387,6 @@ void rpc_ss_ndr_m_struct_cs_shadow (
                 DCETHREAD_RAISE(rpc_x_coding_error);
         }
     } while (type_byte != IDL_DT_EOL);
-
 
     /* Give the caller the address of the cs-shadow */
     *p_cs_shadow = cs_shadow;
@@ -535,7 +533,7 @@ void rpc_ss_ndr_marsh_cs_char
 void rpc_ss_ndr_marsh_cs_array (
 
     rpc_void_p_t array_addr,    /* [in] Used only for fixed arrays */
-    IDL_cs_shadow_elt_t *cs_shadow,  /* [in] Address of cs-shadow 
+    IDL_cs_shadow_elt_t *cs_shadow,  /* [in] Address of cs-shadow
                                             (Not used for fixed arrays) */
     idl_ulong_int shadow_index, /* [in] Index in cs_shadow of array */
     idl_boolean in_struct,      /* [in] TRUE => array is structure field */
@@ -544,10 +542,10 @@ void rpc_ss_ndr_marsh_cs_array (
     IDL_msp_t IDL_msp
 )
 {
-    idl_byte array_type ;
-    idl_byte *defn_vec_ptr = 0 ;
+    idl_byte array_type;
+    idl_byte *defn_vec_ptr = 0;
     idl_ulong_int array_defn_index;
-    idl_byte *array_defn_ptr = 0 ;
+    idl_byte *array_defn_ptr = 0;
     IDL_bound_pair_t bound_pair;
     IDL_bound_pair_t *bounds_list;
     idl_ulong_int Z_value;
@@ -591,11 +589,11 @@ void rpc_ss_ndr_marsh_cs_array (
 
     if (array_type == IDL_DT_VARYING_ARRAY)
     {
-      if (IDL_msp->IDL_type_vec[TVEC_INT_REP_OFFSET] != NDR_LOCAL_INT_REP)
-	rpc_ss_fixed_bounds_from_vector(1, array_defn_ptr, &bounds_list,
-                                        IDL_msp);
-      else
-	bounds_list = (IDL_bound_pair_t *)array_defn_ptr;
+        if (IDL_msp->IDL_type_vec[TVEC_INT_REP_OFFSET] != NDR_LOCAL_INT_REP)
+            rpc_ss_fixed_bounds_from_vector(1, array_defn_ptr, &bounds_list,
+                                            IDL_msp);
+        else
+            bounds_list = (IDL_bound_pair_t *)array_defn_ptr;
         array_defn_ptr += IDL_FIXED_BOUND_PAIR_WIDTH;
     }
     else    /* Conformant or varying */
@@ -748,7 +746,7 @@ void rpc_ss_ndr_m_param_cs_shadow
             switch(type_byte)
             {
                 case IDL_DT_CS_ARRAY:
-                    rpc_ss_ndr_m_array_shadow(NULL, NULL, NULL,  cs_shadow, 
+                    rpc_ss_ndr_m_array_shadow(NULL, NULL, NULL,  cs_shadow,
                             param_index - 1, &type_vec_ptr, IDL_msp);
                     break;
                 /* For parameters that are not array of [cs_char],
@@ -863,4 +861,3 @@ void rpc_ss_conf_struct_cs_bounds
                             (rpc_void_p_t)&cs_shadow[sz_index].IDL_data,
                             IDL_msp);
 }
-

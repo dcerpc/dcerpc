@@ -72,7 +72,7 @@
 #define RPC_CN_NETWORK_IOV_ADJUST(iovp, iovcnt, cc)\
 {\
     unsigned8   _num_elts;\
-    unsigned32    _bytes_to_adjust;\
+    size_t    _bytes_to_adjust;\
 \
     for (_bytes_to_adjust = (cc), _num_elts = 0;; _num_elts++, iovp++) \
     { \

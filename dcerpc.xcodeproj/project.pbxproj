@@ -272,7 +272,7 @@
 		DD10F5DC106D3450005F1EF3 /* ndrglob.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB248100408FD0080B762 /* ndrglob.c */; };
 		DD10F5EE106D35EF005F1EF3 /* mgmt.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB127100408FD0080B762 /* mgmt.idl */; };
 		DD21F0DD1083D3AD00696F06 /* libdceidl_parser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD21F0B71083D15500696F06 /* libdceidl_parser.a */; };
-		DD2ECFC411B5C7DC00B9D0BE /* rpcsvc.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB264100408FD0080B762 /* rpcsvc.c */; };
+		DD55CA1511C2FF090095BC61 /* wc16str.h in Headers */ = {isa = PBXBuildFile; fileRef = DD55CA1411C2FF090095BC61 /* wc16str.h */; };
 		DD9D320D107D51CF00FA8214 /* junk.c in Sources */ = {isa = PBXBuildFile; fileRef = DD9D320C107D51CF00FA8214 /* junk.c */; };
 		DD9D32C3107E345B00FA8214 /* DCERPC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD04350210769FDA0010E492 /* DCERPC.framework */; };
 		DDC99945107AB5E100330A72 /* dce.h in Copy Darwin Platform Headers */ = {isa = PBXBuildFile; fileRef = DD3DB0EC100408FD0080B762 /* dce.h */; };
@@ -1459,6 +1459,7 @@
 		DD3DB2D9100408FD0080B762 /* uuidsys.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = uuidsys.c; sourceTree = "<group>"; };
 		DD3DB2DA100408FD0080B762 /* uuidtool.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = uuidtool.c; sourceTree = "<group>"; };
 		DD501C071073C24800473324 /* stubs.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = stubs.xcconfig; path = BuildConfig/stubs.xcconfig; sourceTree = "<group>"; };
+		DD55CA1411C2FF090095BC61 /* wc16str.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wc16str.h; sourceTree = "<group>"; };
 		DD88282810730DF600FBF62B /* dceidl.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = dceidl.xcconfig; path = BuildConfig/dceidl.xcconfig; sourceTree = "<group>"; };
 		DD88282E10730E8F00FBF62B /* idl.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = idl.xcconfig; path = BuildConfig/idl.xcconfig; sourceTree = "<group>"; };
 		DD88283910730EF100FBF62B /* uuid.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = uuid.xcconfig; path = BuildConfig/uuid.xcconfig; sourceTree = "<group>"; };
@@ -1646,6 +1647,7 @@
 		DD3DAF82100408FC0080B762 /* darwin */ = {
 			isa = PBXGroup;
 			children = (
+				DD55CA1411C2FF090095BC61 /* wc16str.h */,
 				DD3DAF83100408FC0080B762 /* wc16str.c */,
 			);
 			path = darwin;
@@ -2699,6 +2701,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D6B20416118F93F600CFFEC6 /* junk.c in Headers */,
+				DD55CA1511C2FF090095BC61 /* wc16str.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

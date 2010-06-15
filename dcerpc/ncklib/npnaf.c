@@ -1244,15 +1244,13 @@ INTERNAL void addr_inq_options
 INTERNAL void inq_max_tsdu
 (
     rpc_naf_id_t            naf_id ATTRIBUTE_UNUSED,
-    rpc_network_if_id_t     iftype,
-    rpc_network_protocol_id_t protocol,
+    rpc_network_if_id_t     iftype ATTRIBUTE_UNUSED,
+    rpc_network_protocol_id_t protocol ATTRIBUTE_UNUSED,
     unsigned32              *max_tsdu,
     unsigned32              *status
 )
 {
     *max_tsdu = RPC_C_NP_MAX_LOCAL_FRAG_SIZE;
-	iftype = 0;
-	protocol = 0;
 
 #ifdef DEBUG
     if (RPC_DBG (rpc_es_dbg_np_max_tsdu, 1))
@@ -1366,14 +1364,12 @@ INTERNAL boolean addr_compare
 INTERNAL void inq_max_pth_unfrag_tpdu
 (
     rpc_addr_p_t            rpc_addr ATTRIBUTE_UNUSED,
-    rpc_network_if_id_t     iftype,
-    rpc_network_protocol_id_t protocol,
+    rpc_network_if_id_t     iftype ATTRIBUTE_UNUSED,
+    rpc_network_protocol_id_t protocol ATTRIBUTE_UNUSED,
     unsigned32              *max_tpdu,
     unsigned32              *status
 )
 {
-	iftype = 0;
-	protocol = 0;
     *max_tpdu = RPC_C_NP_MAX_LOCAL_FRAG_SIZE;
 
 #ifdef DEBUG
@@ -1427,14 +1423,12 @@ INTERNAL void inq_max_pth_unfrag_tpdu
 INTERNAL void inq_max_loc_unfrag_tpdu
 (
     rpc_naf_id_t            naf_id ATTRIBUTE_UNUSED,
-    rpc_network_if_id_t     iftype,
-    rpc_network_protocol_id_t protocol,
+    rpc_network_if_id_t     iftype ATTRIBUTE_UNUSED,
+    rpc_network_protocol_id_t protocol ATTRIBUTE_UNUSED,
     unsigned32              *max_tpdu,
     unsigned32              *status
 )
 {
-	iftype = 0;
-	protocol = 0;
     *max_tpdu = RPC_C_NP_MAX_LOCAL_FRAG_SIZE;
 
 #ifdef DEBUG
@@ -1695,7 +1689,7 @@ INTERNAL void tower_flrs_from_addr
     unsigned32         *status
 )
 {
-    unsigned32    net_prot_id;
+    //unsigned32    net_prot_id;
 
     CODING_ERROR (status);
 
@@ -1724,7 +1718,7 @@ INTERNAL void tower_flrs_from_addr
      * Get the network protocol id (aka transport layer protocol)
      * for this RPC addr.
      */
-    net_prot_id = RPC_PROTSEQ_INQ_NET_PROT_ID(rpc_addr->rpc_protseq_id);
+    //net_prot_id = RPC_PROTSEQ_INQ_NET_PROT_ID(rpc_addr->rpc_protseq_id);
 
     /*
      * Convert sockaddr to lower tower floors.
@@ -2099,8 +2093,8 @@ INTERNAL void desc_inq_peer_addr
 
 INTERNAL void set_port_restriction
 (
-     rpc_protseq_id_t            protseq_id,
-     unsigned32                  n_elements,
+     rpc_protseq_id_t            protseq_id ATTRIBUTE_UNUSED,
+     unsigned32                  n_elements ATTRIBUTE_UNUSED,
      unsigned_char_p_t           *first_port_name_list,
      unsigned_char_p_t           *last_port_name_list,
      unsigned32                  *status
@@ -2108,8 +2102,6 @@ INTERNAL void set_port_restriction
 {
     CODING_ERROR (status);
 
-	protseq_id = 0;
-	n_elements = 0;
 	first_port_name_list = NULL;
 	last_port_name_list = NULL;
 
@@ -2155,14 +2147,13 @@ INTERNAL void set_port_restriction
 
 INTERNAL void get_next_restricted_port
 (
-    rpc_protseq_id_t           protseq_id,
+    rpc_protseq_id_t           protseq_id ATTRIBUTE_UNUSED,
      unsigned_char_p_t          *port_name,
      unsigned32                 *status
 )
 {
     CODING_ERROR (status);
 
-	protseq_id = 0;
 	port_name = NULL;
 
 	/*

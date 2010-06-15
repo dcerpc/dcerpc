@@ -754,7 +754,6 @@ INTERNAL unsigned32     decr_assoc_count_action_rtn
     RPC_CN_DBG_RTN_PRINTF(SERVER decr_assoc_count_action_rtn);
 
     sm_p = (rpc_cn_sm_ctlblk_t *)sm;
-    assoc_grp = (rpc_cn_assoc_grp_t *) spc_struct;
     assoc = (rpc_cn_assoc_t *) event_param;
 
     SERVER_ASSOC_COUNT_PRED( spc_struct, event_param, status);
@@ -850,7 +849,6 @@ INTERNAL unsigned32     rundown_handles_action_rtn
     RPC_CN_DBG_RTN_PRINTF(SERVER rundown_handles_action_rtn);
 
     sm_p = (rpc_cn_sm_ctlblk_t *)sm;
-    assoc_grp = (rpc_cn_assoc_grp_t *) spc_struct;
     assoc = (rpc_cn_assoc_t *) event_param;
 
     RPC_CN_LOCAL_ID_CLEAR (assoc->assoc_grp_id);

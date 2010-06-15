@@ -41,6 +41,7 @@
 #include <dce/idlddefs.h>
 #include <ndrui.h>
 #include <lsysdep.h>
+#include <assert.h>
 
 /*
  *  Forward function references
@@ -929,7 +930,7 @@ void rpc_ss_ndr_u_fix_or_conf_arr
     unsigned32 i;
     idl_byte base_type;
     idl_boolean unmarshall_by_copying;
-    idl_ulong_int element_size;
+    idl_ulong_int element_size = 0;
     idl_ulong_int element_defn_index;
     idl_ulong_int struct_offset_index;
     idl_byte *struct_defn_ptr;
@@ -1126,7 +1127,7 @@ void rpc_ss_ndr_u_var_or_open_arr
 )
 {
     idl_byte base_type;
-    idl_ulong_int element_defn_index;
+    idl_ulong_int element_defn_index = 0;
     idl_ulong_int element_size;
     idl_boolean unmarshall_by_copying;
     rpc_void_p_t copy_addr;    /* Address to be used in unmar by copying */
@@ -1245,6 +1246,7 @@ void rpc_ss_ndr_u_var_or_open_arr
     for (i=dimensionality-2; i>=0; i--)
     {
         control_data[i].index_value = range_list[i].lower;
+        assert (Z_values != NULL);
         control_data[i].subslice_size = control_data[i+1].subslice_size
                                                             * Z_values[i+1];
     }
@@ -1511,7 +1513,7 @@ void rpc_ss_ndr_unmar_interp
     idl_ulong_int array_defn_index;
     idl_byte *array_defn_ptr;
     idl_ulong_int conf_dims;    /* Number of dimensions of conformance info */
-    idl_ulong_int *Z_values;
+    idl_ulong_int *Z_values = NULL;
     idl_ulong_int normal_Z_values[IDL_NORMAL_DIMS];
     IDL_bound_pair_t *range_list;
     IDL_bound_pair_t normal_range_list[IDL_NORMAL_DIMS];
@@ -1650,6 +1652,7 @@ void rpc_ss_ndr_unmar_interp
                                             param_addr, NULL, NULL, IDL_msp);
                     if (type_has_pointers)
                     {
+                        assert(Z_values != NULL);
                         rpc_ss_ndr_u_struct_pointees(type_byte, defn_index,
                                                 param_addr, Z_values, IDL_msp);
                     }
@@ -2337,7 +2340,6 @@ rpc_ss_ndr_unmar_cf_early
                        "IDL_CF_EARLY set for (size_is) attribute %ld\n",
                        attribute_index);
 #endif
-                early = false;
                 early_list[i] = idl_false;
             }
             else if (kind != IDL_LIMIT_UPPER_CONF && !early)

@@ -243,6 +243,8 @@ PRIVATE boolean32 rpc__ip_is_local_addr (
         unsigned32                  * /*status*/
     );
 
+PRIVATE void rpc__ip_naf_init_func(void);
+
 #ifdef __cplusplus
 }
 #endif

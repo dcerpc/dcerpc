@@ -83,4 +83,6 @@ PRIVATE OM_uint32 rpc__gssauth_select_mech
 	gss_OID			*req_mech
 );
 
+void rpc__gssauth_init_func(void);
+
 #endif /* _GSSAUTH_H */

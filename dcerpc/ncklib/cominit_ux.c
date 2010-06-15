@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
@@ -16,7 +16,7 @@
  * Packard Company, nor Digital Equipment Corporation makes any
  * representations about the suitability of this software for any
  * purpose.
- * 
+ *
  */
 /*
  * Copyright (c) 1983, 1993
@@ -61,7 +61,7 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
@@ -75,6 +75,10 @@
 #include <comnaf.h>
 #include <comp.h>
 #include <cominitp.h>
+#include <gssauth.h>
+#include <npnaf.h>
+#include <ipnaf.h>
+#include <dg.h>
 
 /* Determine shared library extension
  * FIXME: move this into a centralized location
@@ -99,124 +103,116 @@ static int select_module(const struct dirent * dirent);
 
 static int sort_modules(const void* a, const void* b)
 {
-        int pri_a, pri_b;
+    int pri_a, pri_b;
 
-        switch((*(const struct dirent**)a)->d_name[3])        {
-                case 'p': pri_a = 1; break;
-                case 'n': pri_a = 2; break;
-                case 'a': pri_a = 3; break;
-                default: pri_a = 4;
-        }
-        switch((*(const struct dirent**)b)->d_name[3])        {
-                case 'p': pri_b = 1; break;
-                case 'n': pri_b = 2; break;
-                case 'a': pri_b = 3; break;
-                default: pri_b = 4;
-        }
-        if (pri_a == pri_b)
-                return 0;
-        if (pri_a < pri_b)
-                return -1;
-        return 1;
+    switch((*(const struct dirent**)a)->d_name[3]) {
+        case 'p': pri_a = 1; break;
+        case 'n': pri_a = 2; break;
+        case 'a': pri_a = 3; break;
+        default: pri_a = 4;
+    }
+    switch((*(const struct dirent**)b)->d_name[3]) {
+        case 'p': pri_b = 1; break;
+        case 'n': pri_b = 2; break;
+        case 'a': pri_b = 3; break;
+        default: pri_b = 4;
+    }
+    if (pri_a == pri_b)
+        return 0;
+    if (pri_a < pri_b)
+        return -1;
+    return 1;
 }
 
 static int select_module(const struct dirent * dirent)
 {
-        int len = strlen(dirent->d_name);
-        const char * module_types[] = {"libnaf_", "libauth_", "libprot_", NULL};
-        int i;
+    size_t len = strlen(dirent->d_name);
+    const char * module_types[] = {"libnaf_", "libauth_", "libprot_", NULL};
+    int i;
 
-        for (i=0; module_types[i] != NULL; i++)        {
-                if (strncmp(dirent->d_name, module_types[i], strlen(module_types[i])) == 0)        {
-                        /* prefix matches; now check for a matching suffix */
-                        if (strcmp(&dirent->d_name[len - 3], DSO_EXT) == 0)
-                                return 1;
-                }
+    for (i = 0; module_types[i] != NULL; i++) {
+        if (strncmp(dirent->d_name, module_types[i], strlen(module_types[i])) == 0) {
+            /* prefix matches; now check for a matching suffix */
+            if (strcmp(&dirent->d_name[len - 3], DSO_EXT) == 0)
+                return 1;
         }
-        /* reject */
-        return 0;
+    }
+    /* reject */
+    return 0;
 }
 #endif
 
 /* register an auth protocol */
 PRIVATE void rpc__register_authn_protocol(rpc_authn_protocol_id_elt_p_t auth, int number)
 {
-        int i;
-        for (i=0; i<number; i++)        {
-                RPC_DBG_PRINTF(rpc_es_dbg_general, 1, ("Register authn protocol 0x%0x\n", auth[i].authn_protocol_id));        
+    int i;
+    for (i = 0; i < number; i++) {
+        RPC_DBG_PRINTF(rpc_es_dbg_general, 1, ("Register authn protocol 0x%0x\n", auth[i].authn_protocol_id));
 
-                memcpy(&rpc_g_authn_protocol_id[auth[i].authn_protocol_id],
-                                &auth[i],
-                                sizeof(rpc_authn_protocol_id_elt_t)
-                                );
-        }
+        memcpy(&rpc_g_authn_protocol_id[auth[i].authn_protocol_id],
+               &auth[i],
+               sizeof(rpc_authn_protocol_id_elt_t)
+               );
+    }
 }
 
 /* register a protocol sequence with the runtime */
 PRIVATE void rpc__register_protseq(rpc_protseq_id_elt_p_t elt, int number)
 {
-        int i;
-        for (i=0; i<number; i++)        {
-                RPC_DBG_PRINTF(rpc_es_dbg_general, 1, ("Register protseq 0x%0x %s\n", elt[i].rpc_protseq_id, elt[i].rpc_protseq));        
-                memcpy(&rpc_g_protseq_id[elt[i].rpc_protseq_id],
-                                &elt[i],
-                                sizeof(rpc_protseq_id_elt_t));
-        }
+    int i;
+    for (i = 0; i < number; i++) {
+        RPC_DBG_PRINTF(rpc_es_dbg_general, 1, ("Register protseq 0x%0x %s\n", elt[i].rpc_protseq_id, elt[i].rpc_protseq));
+        memcpy(&rpc_g_protseq_id[elt[i].rpc_protseq_id],
+               &elt[i],
+               sizeof(rpc_protseq_id_elt_t));
+    }
 }
 
 /* register a tower protocol id */
 PRIVATE void rpc__register_tower_prot_id(rpc_tower_prot_ids_p_t tower_prot, int number)
 {
-        int i;
-        for (i=0; i<number; i++) {
-                rpc_tower_prot_ids_p_t tower = &tower_prot[i];
-                
-                RPC_DBG_PRINTF(rpc_es_dbg_general, 1,
-                                ("Register tower protocol for %s\n",
-                                         rpc_g_protseq_id[tower->rpc_protseq_id].rpc_protseq
-                                )
-                );        
+    int i;
+    for (i = 0; i < number; i++) {
+        rpc_tower_prot_ids_p_t tower = &tower_prot[i];
 
-                memcpy(&rpc_g_tower_prot_ids[rpc_g_tower_prot_id_number],
-                                tower, sizeof(rpc_tower_prot_ids_t));
+        RPC_DBG_PRINTF(rpc_es_dbg_general, 1,
+                       ("Register tower protocol for %s\n",
+                        rpc_g_protseq_id[tower->rpc_protseq_id].rpc_protseq)
+                       );
 
-                rpc_g_tower_prot_id_number++;
-        }
+        memcpy(&rpc_g_tower_prot_ids[rpc_g_tower_prot_id_number],
+               tower, sizeof(rpc_tower_prot_ids_t));
+
+        rpc_g_tower_prot_id_number++;
+    }
 }
 
 PRIVATE void rpc__register_protocol_id(rpc_protocol_id_elt_p_t prot, int number)
 {
-        int i;
-        for (i=0; i<number; i++)        {
-                RPC_DBG_PRINTF(rpc_es_dbg_general, 1,
-                                ("Register protocol id 0x%x\n", prot[i].rpc_protocol_id));        
+    int i;
+    for (i = 0; i < number; i++) {
+        RPC_DBG_PRINTF(rpc_es_dbg_general, 1,
+                       ("Register protocol id 0x%x\n", prot[i].rpc_protocol_id));
 
-
-                memcpy(&rpc_g_protocol_id[prot[i].rpc_protocol_id],
-                                &prot[i],
-                                sizeof(rpc_protocol_id_elt_t));
-        }
+        memcpy(&rpc_g_protocol_id[prot[i].rpc_protocol_id],
+               &prot[i],
+               sizeof(rpc_protocol_id_elt_t));
+    }
 }
 
 PRIVATE void rpc__register_naf_id(rpc_naf_id_elt_p_t naf, int number)
 {
-        int i;
-        for (i=0; i < number; i++)        {
-                RPC_DBG_PRINTF(rpc_es_dbg_general, 1,
-                                ("Register network address family id 0x%x\n", naf[i].naf_id));        
+    int i;
+    for (i = 0; i < number; i++) {
+        RPC_DBG_PRINTF(rpc_es_dbg_general, 1,
+                       ("Register network address family id 0x%x\n", naf[i].naf_id));
 
-
-                memcpy(&rpc_g_naf_id[naf[i].naf_id],
-                                &naf[i],
-                                sizeof(rpc_naf_id_elt_t));
-        }
+        memcpy(&rpc_g_naf_id[naf[i].naf_id],
+               &naf[i],
+               sizeof(rpc_naf_id_elt_t));
+    }
 }
 
-void rpc__cn_init_func(void);
-void rpc__dg_init_func(void);
-void rpc__ip_naf_init_func(void);
-void rpc__np_naf_init_func(void);
-void rpc__gssauth_init_func(void);
 void rpc__schnauth_init_func(void);
 
 static void (*rpc__g_static_modules[])(void) =
@@ -244,77 +240,70 @@ static void (*rpc__g_static_modules[])(void) =
 PRIVATE void rpc__load_modules(void)
 {
 #if HAVE_DLFCN_H
-        struct dirent **namelist = NULL;
-        int i, n;
-        void * image;
-        char buf[PATH_MAX];
+    struct dirent **namelist = NULL;
+    size_t i;
+    size_t n;
+    void * image;
+    char buf[PATH_MAX];
 
-        memset(rpc_g_protseq_id, 0, sizeof(rpc_g_protseq_id));
-        memset(rpc_g_naf_id, 0, sizeof(rpc_g_naf_id));
-        memset(rpc_g_authn_protocol_id, 0, sizeof(rpc_g_authn_protocol_id));
+    memset(rpc_g_protseq_id, 0, sizeof(rpc_g_protseq_id));
+    memset(rpc_g_naf_id, 0, sizeof(rpc_g_naf_id));
+    memset(rpc_g_authn_protocol_id, 0, sizeof(rpc_g_authn_protocol_id));
 
-        rpc_g_authn_protocol_id[rpc_c_authn_none].authn_protocol_id = rpc_c_authn_none;
-        rpc_g_authn_protocol_id[rpc_c_authn_none].dce_rpc_authn_protocol_id = dce_c_rpc_authn_protocol_none;
-        
-        /* Load static modules */
-        for (i = 0; i < sizeof(rpc__g_static_modules) / sizeof(rpc__g_static_modules[0]); i++)
-        {
-            rpc__g_static_modules[i]();
-        }
+    rpc_g_authn_protocol_id[rpc_c_authn_none].authn_protocol_id = rpc_c_authn_none;
+    rpc_g_authn_protocol_id[rpc_c_authn_none].dce_rpc_authn_protocol_id = dce_c_rpc_authn_protocol_none;
 
-        n = scandir(IMAGE_DIR, &namelist, (void*) select_module, (void*) sort_modules);
-        for (i = 0; i < n; i++)
-        {
-                int flags = 0;
+    /* Load static modules */
+    for (i = 0; i < sizeof(rpc__g_static_modules) / sizeof(rpc__g_static_modules[0]); i++) {
+        rpc__g_static_modules[i]();
+    }
 
-                sprintf(buf, "%s/%s", IMAGE_DIR, namelist[i]->d_name);
+    n = scandir(IMAGE_DIR, &namelist, (void*) select_module, (void*) sort_modules);
+    for (i = 0; i < n; i++) {
+        int flags = 0;
 
-                RPC_DBG_PRINTF(rpc_es_dbg_general, 1, ("Loading module %s\n", buf));        
+        sprintf(buf, "%s/%s", IMAGE_DIR, namelist[i]->d_name);
+
+        RPC_DBG_PRINTF(rpc_es_dbg_general, 1, ("Loading module %s\n", buf));
 
 #ifdef RTLD_LAZY
-                /* Allow lazy symbol binding */
-                flags |= RTLD_LAZY;
+        /* Allow lazy symbol binding */
+        flags |= RTLD_LAZY;
 #endif /* RTLD_LAZY */
 
 #ifdef RTLD_MEMBER
-                /* Allow file name to specify an archive member */
-                flags |= RTLD_MEMBER;
+        /* Allow file name to specify an archive member */
+        flags |= RTLD_MEMBER;
 #endif /* RTLD_MEMBER */
 
-                image = dlopen(buf, flags);
-                if (image != NULL)
-                {
-                        void (*init_func)(void);
-                        
-                        init_func = dlsym(image, "rpc__module_init_func");
-                        if (init_func != NULL)
-			{
-                                (*init_func)();
-			}
-                        else                        
-			{
-				RPC_DBG_GPRINTF ((
-				    "%s: dlsym error: %s\n", __func__, dlerror()));
-                                dlclose(image);
-			}
-                }
-                else
-                {
-			RPC_DBG_GPRINTF ((
-			    "%s: dlopen error: %s\n", __func__, dlerror()));
-                }
-		free(namelist[i]);
+        image = dlopen(buf, flags);
+        if (image != NULL) {
+            void (*init_func)(void);
+
+            init_func = dlsym(image, "rpc__module_init_func");
+            if (init_func != NULL) {
+                (*init_func)();
+            }
+            else {
+                RPC_DBG_GPRINTF ((
+                    "%s: dlsym error: %s\n", __func__, dlerror()));
+                    dlclose(image);
+            }
         }
-	if (namelist != NULL)
-	{
-	        free(namelist);
+        else {
+            RPC_DBG_GPRINTF ((
+                "%s: dlopen error: %s\n", __func__, dlerror()));
+        }
+        free(namelist[i]);
+    }
+
+	if (namelist != NULL) {
+        free(namelist);
 	}
 #endif /* HAVE_DLFCN_H */
 }
 
-
-
-/* 
+/*
  * Routines for loading Network Families and Protocol Families as shared
  * images.  i.e., VMS
  */
@@ -325,10 +314,9 @@ PRIVATE rpc_naf_init_fn_t  rpc__load_naf
   unsigned32              *status
 )
 {
-        *status = rpc_s_ok;
-        return((rpc_naf_init_fn_t)NULL);
+    *status = rpc_s_ok;
+    return((rpc_naf_init_fn_t)NULL);
 }
-
 
 PRIVATE rpc_prot_init_fn_t  rpc__load_prot
 (
@@ -373,74 +361,73 @@ scandir(dirname, namelist, selectfn, dcomp)
         int (*selectfn)(const struct dirent *);
         int (*dcomp)(const void *, const void *);
 {
-        struct dirent *d, *p, **names = NULL;
-        size_t nitems = 0;
-        struct stat stb;
-        unsigned long arraysz;
-        DIR *dirp;
-        size_t len;
+    struct dirent *d, *p, **names = NULL;
+    size_t nitems = 0;
+    struct stat stb;
+    unsigned long arraysz;
+    DIR *dirp;
+    size_t len;
 
-        if ((dirp = opendir(dirname)) == NULL)
-                return(-1);
+    if ((dirp = opendir(dirname)) == NULL)
+        return(-1);
 
 	if (stat(dirname, &stb))
-	  return(-1);
+        return(-1);
 
+    /*
+     * estimate the array size by taking the size of the directory file
+     * and dividing it by a multiple of the minimum size entry.
+     */
+    arraysz = (stb.st_size / 24);
+    names = (struct dirent **)malloc(arraysz * sizeof(struct dirent *));
+    if (names == NULL)
+        goto fail;
+
+    while ((d = readdir(dirp)) != NULL) {
+        if (selectfn != NULL && !(*selectfn)(d))
+            continue;        /* just selected names */
         /*
-         * estimate the array size by taking the size of the directory file
-         * and dividing it by a multiple of the minimum size entry.
+         * Make a minimum size copy of the data
          */
-        arraysz = (stb.st_size / 24);
-        names = (struct dirent **)malloc(arraysz * sizeof(struct dirent *));
-        if (names == NULL)
+        len = strlen(d->d_name) + 1); /* +1 for terminating null */
+        p = (struct dirent *)malloc(sizeof(*p) + len);
+        if (p == NULL)
+            goto fail;
+        p->d_ino = d->d_ino;
+        p->d_off = d->d_off;
+        p->d_reclen = d->d_reclen;
+        strlcpy(p->d_name, d->d_name, len);
+        /*
+         * Check to make sure the array has space left and
+         * realloc the maximum size.
+         */
+        if (nitems >= arraysz) {
+            const int inc = 10;        /* increase by this much */
+            struct dirent **names2;
+
+            names2 = (struct dirent **)realloc((char *)names,
+                                               (arraysz + inc) * sizeof(struct dirent *));
+            if (names2 == NULL) {
+                free(p);
                 goto fail;
-
-        while ((d = readdir(dirp)) != NULL) {
-                if (selectfn != NULL && !(*selectfn)(d))
-                        continue;        /* just selected names */
-                /*
-                 * Make a minimum size copy of the data
-                 */
-                len = strlen(d->d_name) + 1); /* +1 for terminating null */
-                p = (struct dirent *)malloc(sizeof(*p) + len);
-                if (p == NULL)
-                        goto fail;
-                p->d_ino = d->d_ino;
-                p->d_off = d->d_off;
-                p->d_reclen = d->d_reclen;
-                strlcpy(p->d_name, d->d_name, len);
-                /*
-                 * Check to make sure the array has space left and
-                 * realloc the maximum size.
-                 */
-                if (nitems >= arraysz) {
-                        const int inc = 10;        /* increase by this much */
-                        struct dirent **names2;
-
-                        names2 = (struct dirent **)realloc((char *)names,
-                                (arraysz + inc) * sizeof(struct dirent *));
-                        if (names2 == NULL) {
-                                free(p);
-                                goto fail;
-                        }
-                        names = names2;
-                        arraysz += inc;
-                }
-                names[nitems++] = p;
+            }
+            names = names2;
+            arraysz += inc;
         }
-        closedir(dirp);
-        if (nitems && dcomp != NULL)
-                qsort(names, nitems, sizeof(struct dirent *), dcomp);
-        *namelist = names;
-        return(nitems);
+        names[nitems++] = p;
+    }
+    closedir(dirp);
+    if (nitems && dcomp != NULL)
+        qsort(names, nitems, sizeof(struct dirent *), dcomp);
+    *namelist = names;
+    return(nitems);
 
 fail:
-        while (nitems > 0)
-                free(names[--nitems]);
-        free(names);
-        closedir(dirp);
-        return -1;
+    while (nitems > 0)
+        free(names[--nitems]);
+    free(names);
+    closedir(dirp);
+    return -1;
 }
 #endif /* HAVE_SCANDIR */
 #endif /* HAVE_DLFCN_H */
-

@@ -97,7 +97,7 @@ rpc_ss_ue_short_int
   idl_short_int  *p_node = NULL;
   long NIDL_already_unmarshalled = 0;
   unsigned long node_size;
-  unsigned long node_number = 0;
+  idl_ulong_int node_number = 0;
 
   if ( NIDL_node_type == rpc_ss_unique_node_k )
   {
@@ -107,7 +107,7 @@ rpc_ss_ue_short_int
 
   if ( NIDL_node_type == rpc_ss_mutable_node_k )
   {
-    node_number = (unsigned long)*p_referred_to_by;
+    node_number = (idl_ulong_int)*p_referred_to_by;
     if(node_number==0)return;
   }
   if ( NIDL_node_type == rpc_ss_old_ref_node_k )

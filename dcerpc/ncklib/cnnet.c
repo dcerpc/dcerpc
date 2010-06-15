@@ -511,7 +511,7 @@ PRIVATE void rpc__cn_network_use_protseq
         rpc__naf_addr_set_endpoint (endpoint, &rpc_addr, status);
         if (*status != rpc_s_ok)
         {
-            RPC_SOCKET_CLOSE (sock);
+            (void) RPC_SOCKET_CLOSE (sock);
             break;
         }
 
@@ -519,7 +519,7 @@ PRIVATE void rpc__cn_network_use_protseq
         if (RPC_SOCKET_IS_ERR (serr))
         {
             *status = rpc_s_cant_bind_sock;
-            RPC_SOCKET_CLOSE (sock);
+            (void) RPC_SOCKET_CLOSE (sock);
             break;
         }
 
@@ -533,7 +533,7 @@ PRIVATE void rpc__cn_network_use_protseq
                                                status);
         if (*status != rpc_s_ok)
         {
-            RPC_SOCKET_CLOSE (sock);
+            (void) RPC_SOCKET_CLOSE (sock);
             break;
         }
 
@@ -550,7 +550,7 @@ PRIVATE void rpc__cn_network_use_protseq
 
         if (*status != rpc_s_ok)
         {
-            RPC_SOCKET_CLOSE (sock);
+            (void) RPC_SOCKET_CLOSE (sock);
             break;
         }
 
@@ -573,7 +573,7 @@ PRIVATE void rpc__cn_network_use_protseq
              created_sock_index++)
         {
             rpc__network_remove_desc (sock_list[created_sock_index], &temp_status);
-            RPC_SOCKET_CLOSE (sock_list[created_sock_index]);
+            (void) RPC_SOCKET_CLOSE (sock_list[created_sock_index]);
         }
     }
     else
@@ -652,7 +652,6 @@ INTERNAL pointer_t rpc__cn_network_init_desc
     rpc_addr_p_t        rpc_addr;
     unsigned_char_t     *endpoint;
     rpc_socket_error_t  serr;
-    rpc_cn_assoc_t      *assoc;
     unsigned32          temp_status;
     unsigned32          ssize, rsize;
 
@@ -795,7 +794,7 @@ INTERNAL pointer_t rpc__cn_network_init_desc
          * block which comes back will have all mutexes and condition
          * variables created. Also the receiver thread will be created.
          */
-        assoc = rpc__cn_assoc_listen (connected_desc, endpoint, status);
+        (void) rpc__cn_assoc_listen (connected_desc, endpoint, status);
         if (*status != rpc_s_ok)
         {
             rpc_string_free (&endpoint, &temp_status);
@@ -928,7 +927,6 @@ PRIVATE void rpc__cn_network_select_dispatch
 )
 {
     rpc_socket_t        newdesc;
-    rpc_cn_assoc_t      *assoc;
     rpc_socket_error_t  serr;
 
     RPC_CN_DBG_RTN_PRINTF (rpc__cn_network_select_dispatch);
@@ -1010,7 +1008,7 @@ PRIVATE void rpc__cn_network_select_dispatch
              */
             RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_GENERAL,
                             ("CN: desc->%p socket not active ... being closed\n", newdesc));
-            serr = RPC_SOCKET_CLOSE (newdesc);
+            (void) RPC_SOCKET_CLOSE (newdesc);
         }
         else
         {
@@ -1077,7 +1075,7 @@ PRIVATE void rpc__cn_network_select_dispatch
              * condition variables created. Also the receiver thread
              * will be created.
              */
-            assoc = rpc__cn_assoc_listen (newdesc,
+            (void) rpc__cn_assoc_listen (newdesc,
                                           (unsigned_char_t *) priv_info,
                                           st);
             if (*st != rpc_s_ok)
@@ -1085,7 +1083,7 @@ PRIVATE void rpc__cn_network_select_dispatch
                 /*
                  * The association listen failed. Close the connection.
                  */
-                serr = RPC_SOCKET_CLOSE (newdesc);
+                (void) RPC_SOCKET_CLOSE (newdesc);
             }
 
 	    /*
@@ -1368,7 +1366,7 @@ PRIVATE void rpc__cn_network_req_connect
             if (!retry_op)
             {
                 RPC_CN_LOCK ();
-                RPC_SOCKET_CLOSE (assoc->cn_ctlblk.cn_sock);
+                (void) RPC_SOCKET_CLOSE (assoc->cn_ctlblk.cn_sock);
                 return;
             }
 
@@ -1637,7 +1635,7 @@ PRIVATE void rpc__cn_network_mon
      * Get the association group using the group id provided as a
      * client handle.
      */
-    grp_id.all = (unsigned long) client_h;
+    grp_id.all = (unsigned32) client_h;
     grp_id = rpc__cn_assoc_grp_lkup_by_id (grp_id,
                                            RPC_C_CN_ASSOC_GRP_SERVER,
                                            binding_r->transport_info,
@@ -1718,7 +1716,7 @@ PRIVATE void rpc__cn_network_stop_mon
      * Get the association group using the group id provided as a
      * client handle.
      */
-    grp_id.all = (unsigned long) client_h;
+    grp_id.all = (unsigned32) client_h;
     grp_id = rpc__cn_assoc_grp_lkup_by_id (grp_id,
                                            RPC_C_CN_ASSOC_GRP_SERVER,
                                            binding_r->transport_info,

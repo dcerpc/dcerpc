@@ -400,25 +400,24 @@ INTERNAL unsigned32     decr_assoc_count_action_rtn
   pointer_t	  sm
 )
 {
-    rpc_cn_assoc_grp_t          *assoc_grp;
-    rpc_cn_assoc_t              *assoc;
-    rpc_cn_sm_ctlblk_t 		*sm_p;
+    rpc_cn_assoc_grp_t  *assoc_grp;
+    rpc_cn_assoc_t      *assoc;
+    rpc_cn_sm_ctlblk_t  *sm_p;
     unsigned32			status;
 
-    assoc_grp = (rpc_cn_assoc_grp_t *) spc_struct;
     sm_p = (rpc_cn_sm_ctlblk_t *)sm;
 
     ASSOC_COUNT_PRED(spc_struct, event_param, status);
     if (status == 1)  /* (assoc_grp->grp_cur_assoc == 1) */
     {
-	sm_p->cur_state = RPC_C_ASSOC_GRP_CLOSED;
+        sm_p->cur_state = RPC_C_ASSOC_GRP_CLOSED;
     }
     else /* (assoc_grp->grp_cur_assoc > 1) */
     {
         /*
          * There is more than one association on the group.
          */
-	sm_p->cur_state = RPC_C_ASSOC_GRP_ACTIVE;
+        sm_p->cur_state = RPC_C_ASSOC_GRP_ACTIVE;
     }
 
     RPC_CN_DBG_RTN_PRINTF(CLIENT decr_assoc_count_action_rtn);
