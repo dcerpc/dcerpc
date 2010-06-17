@@ -51,7 +51,12 @@ GCC_WARN_UNUSED_LABEL=YES
 GCC_WARN_UNUSED_PARAMETER=YES
 GCC_WARN_UNUSED_VARIABLE=YES
 GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS=YES
+
 GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS=YES
+// -Werror-implicit-function-declaration causes build failures with PPC due to
+// llvm-gcc bugs, ie. <rdar://problem/8103032>
+GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS[arch=ppc]=NO
+
 OTHER_CFLAGS=-fstack-protector -fno-common
 WARNING_CFLAGS=-Wformat=2 -Wwrite-strings -Wcast-align -Wpointer-arith -Wstrict-prototypes -Wbad-function-cast -Wextra -Wall
 
