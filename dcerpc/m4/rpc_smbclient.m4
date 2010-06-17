@@ -31,8 +31,8 @@ _rpc_smbclient_save_CPPFLAGS=$CPPFLAGS
 _rpc_smbclient_save_LDFLAGS=$LDFLAGS
 _rpc_smbclient_save_LIBS=$LIBS
 
-for location in "/System/Library/PrivateFrameworks" \
-	    "/AppleInternal/Library/Frameworks" ; do
+for location in "$SDKROOT/System/Library/PrivateFrameworks" \
+	    "$SDKROOT/AppleInternal/Library/Frameworks" ; do
 
     AC_MSG_CHECKING(for SMBClient.framework in $location)
     CPPFLAGS="$_rpc_smbclient_save_CPPFLAGS -F$location"

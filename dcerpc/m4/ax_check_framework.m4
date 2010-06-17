@@ -17,12 +17,15 @@ dnl
 	[ax_cv_framework_]$1,
 	[
 	    _ax_check_framework_CFLAGS="$CFLAGS"
+	    _ax_check_framework_LIBS="$LIBS"
 	    LIBS="$LIBS -framework $1"
 	    AC_LINK_IFELSE(
 		[AC_LANG_PROGRAM([], [])],
 		[ax_cv_framework_]$1[=yes],
 		[ax_cv_framework_]$1[=no]
 	    )
+	    CFLAGS="$_ax_check_framework_CFLAGS"
+	    LIBS="$_ax_check_framework_LIBS"
 	])
 
     if test "$ax_cv_framework_$1" = "yes" ; then
