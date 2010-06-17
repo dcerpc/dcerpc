@@ -3754,7 +3754,7 @@
 			baseConfigurationReference = DDB66DA2107BE3310095CBC1 /* base_config.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 24;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				ONLY_ACTIVE_ARCH = YES;
@@ -3768,7 +3768,7 @@
 			baseConfigurationReference = DDB66DA2107BE3310095CBC1 /* base_config.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 24;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				SDKROOT = "";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -3796,7 +3796,7 @@
 			baseConfigurationReference = DD04350B10769FF80010E492 /* dcerpc_framework.xcconfig */;
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 23;
+				DYLIB_CURRENT_VERSION = 24;
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = "DCERPC-Info.plist";
 				PRODUCT_NAME = DCERPC;
@@ -3808,7 +3808,7 @@
 			baseConfigurationReference = DD04350B10769FF80010E492 /* dcerpc_framework.xcconfig */;
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 23;
+				DYLIB_CURRENT_VERSION = 24;
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = "DCERPC-Info.plist";
 				PRODUCT_NAME = DCERPC;
