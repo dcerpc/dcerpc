@@ -1980,7 +1980,7 @@ rpc__smb_socket_set_bufs(
 )
 {
     RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_set_bufs called\n"));
-    rpc_socket_error_t serr = RPC_C_SOCKET_OK;
+    rpc_socket_error_t serr = RPC_C_SOCKET_ENOTSUP;
 
     return serr;
 }

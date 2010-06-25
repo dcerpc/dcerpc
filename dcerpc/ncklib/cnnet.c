@@ -1190,37 +1190,20 @@ PRIVATE void rpc__cn_network_req_connect
                                      rpc_g_cn_socket_write_buffer,
                                      &ssize,
                                      &rsize);
-        if (RPC_SOCKET_IS_ERR (serr))
-        {
+        if (RPC_SOCKET_IS_ERR (serr)) {
             RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
                             ("(rpc__cn_network_req_connect) call_rep->%p assoc->%p desc->%p Can't set socket bufs, error=%d\n",
                              assoc->call_rep,
                              assoc,
                              assoc->cn_ctlblk.cn_sock,
                              RPC_SOCKET_ETOI (serr)));
-        }
-
-        RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_BUFFS,
-                        ("(rpc__cn_network_req_connect) desc->%p desired_sndbuf %u, desired_rcvbuf %u\n",
-                         assoc->cn_ctlblk.cn_sock, rpc_g_cn_socket_read_buffer, rpc_g_cn_socket_write_buffer));
-        RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_BUFFS,
-                       ("(rpc__cn_network_req_connect) desc->%p actual sndbuf %u, actual rcvbuf %u\n",
-                        assoc->cn_ctlblk.cn_sock, ssize, rsize));
-
-        if (rsize < RPC_C_ASSOC_MUST_RECV_FRAG_SIZE)
-        {
-            /*
-             * rpc_m_recvbuf_toosmall
-             * "(%s) Socket's maximum receive buffering is less than
-             * NCA Connection Protocol minimum requirement"
-             */
-            rpc_dce_svc_printf (
-                __FILE__, __LINE__,
-                "%s",
-                rpc_svc_cn_errors,
-                svc_c_sev_fatal | svc_c_action_abort,
-                rpc_m_recvbuf_toosmall,
-                "rpc__cn_network_req_connect" );
+        } else {            
+            RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_BUFFS,
+                            ("(rpc__cn_network_req_connect) desc->%p desired_sndbuf %u, desired_rcvbuf %u\n",
+                             assoc->cn_ctlblk.cn_sock, rpc_g_cn_socket_read_buffer, rpc_g_cn_socket_write_buffer));
+            RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_BUFFS,
+                            ("(rpc__cn_network_req_connect) desc->%p actual sndbuf %u, actual rcvbuf %u\n",
+                             assoc->cn_ctlblk.cn_sock, ssize, rsize));
         }
 
         /*
