@@ -79,8 +79,8 @@ void rpc_dce_svc_printf (
     vsnprintf (s, remain, format, arg_ptr);
     va_end (arg_ptr);
 
-    if ( (sev_action_flags | svc_c_action_abort) ||
-        (sev_action_flags | svc_c_action_exit_bad) )
+    if ( (sev_action_flags & svc_c_action_abort) ||
+        (sev_action_flags & svc_c_action_exit_bad) )
     {
         __crashreporter_info__ = buff;
         abort();
