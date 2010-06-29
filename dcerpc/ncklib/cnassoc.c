@@ -5369,8 +5369,24 @@ PRIVATE rpc_cn_local_id_t rpc__cn_assoc_grp_lkup_by_addr
                  * If the input argument RPC address matched that in
                  * the association group return it.
                  */
-                if (addrs_equal && rpc__transport_info_equal(assoc_grp[i].grp_transport_info, transport_info))
+                if (!addrs_equal)
                 {
+                    /* address do not match, so continue searching */
+                    continue;
+                }
+
+                if (!transport_info)
+                {
+                    /* addresses matched, but no transport_info to check, so
+                     go ahead and use this group */
+                    *st = rpc_s_ok;
+                    return (assoc_grp[i].grp_id);
+                }
+
+                if (rpc__transport_info_equal(assoc_grp[i].grp_transport_info, transport_info))
+                {
+                    /* addresses matched and transport_info matched, so
+                     go ahead and use this group */
                     *st = rpc_s_ok;
                     return (assoc_grp[i].grp_id);
                 }
