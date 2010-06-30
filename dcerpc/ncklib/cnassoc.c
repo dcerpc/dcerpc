@@ -5600,15 +5600,17 @@ PRIVATE rpc_cn_local_id_t rpc__cn_assoc_grp_lkup_by_id
          * and must be the right type.
          */
         assert(assoc_grp != NULL);
-        if (RPC_CN_LOCAL_ID_EQUAL (assoc_grp->grp_id, grp_id) &&
+        if ( RPC_CN_LOCAL_ID_EQUAL (assoc_grp->grp_id, grp_id) &&
             (assoc_grp->grp_flags & type) &&
-            (assoc_grp->grp_state.cur_state == RPC_C_ASSOC_GRP_ACTIVE) &&
-            (rpc__transport_info_equal(assoc_grp->grp_transport_info, transport_info)))
+            (assoc_grp->grp_state.cur_state == RPC_C_ASSOC_GRP_ACTIVE) )
         {
-            *st = rpc_s_ok;
-            RPC_LOG_CN_GRP_ID_LKUP_XIT;
-
-            return (grp_id);
+            if ( (transport_info) &&
+                (rpc__transport_info_equal(assoc_grp->grp_transport_info, transport_info)) )
+            {
+                *st = rpc_s_ok;
+                RPC_LOG_CN_GRP_ID_LKUP_XIT;
+                return (grp_id);
+            }
         }
     }
 
