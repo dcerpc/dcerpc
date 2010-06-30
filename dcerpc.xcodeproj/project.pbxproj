@@ -271,6 +271,7 @@
 		DD10F5DB106D3450005F1EF3 /* mgmt.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB245100408FD0080B762 /* mgmt.c */; };
 		DD10F5DC106D3450005F1EF3 /* ndrglob.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB248100408FD0080B762 /* ndrglob.c */; };
 		DD10F5EE106D35EF005F1EF3 /* mgmt.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB127100408FD0080B762 /* mgmt.idl */; };
+		DD14B7BF11CAE62000ACEB03 /* rpcsvc.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB264100408FD0080B762 /* rpcsvc.c */; };
 		DD21F0DD1083D3AD00696F06 /* libdceidl_parser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD21F0B71083D15500696F06 /* libdceidl_parser.a */; };
 		DD55CA1511C2FF090095BC61 /* wc16str.h in Headers */ = {isa = PBXBuildFile; fileRef = DD55CA1411C2FF090095BC61 /* wc16str.h */; };
 		DD9D320D107D51CF00FA8214 /* junk.c in Sources */ = {isa = PBXBuildFile; fileRef = DD9D320C107D51CF00FA8214 /* junk.c */; };
@@ -3397,7 +3398,7 @@
 				DD10F5DA106D3450005F1EF3 /* comfork.c in Sources */,
 				DD10F5DB106D3450005F1EF3 /* mgmt.c in Sources */,
 				DD10F5DC106D3450005F1EF3 /* ndrglob.c in Sources */,
-				DD2ECFC411B5C7DC00B9D0BE /* rpcsvc.c in Sources */,
+				DD14B7BF11CAE62000ACEB03 /* rpcsvc.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

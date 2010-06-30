@@ -1867,6 +1867,9 @@ PRIVATE void rpc__cn_assoc_send_frag
      * identified in the association control block.
      */
     serr = 0;
+    /* be careful, retry_op really is read contrary to what clang
+     analyzer states */
+    retry_op = true;
     while ((bytes_to_send) && (!RPC_SOCKET_IS_ERR (serr)))
     {
         RPC_LOG_TRY_PRE;
@@ -5756,12 +5759,15 @@ PRIVATE void rpc__cn_assoc_grp_tbl_init (void)
 
 PRIVATE unsigned32     rpc__cn_grp_sm_protocol_error
 (
-    pointer_t       spc_struct ATTRIBUTE_UNUSED,
+    pointer_t       spc_struct,
     pointer_t       event_param ATTRIBUTE_UNUSED,
     pointer_t       sm ATTRIBUTE_UNUSED
 )
 {
+    rpc_cn_assoc_grp_t  *assoc_grp;
+
     RPC_CN_DBG_RTN_PRINTF(rpc__cn_grp_sm_protocol_error);
+    assoc_grp = (rpc_cn_assoc_grp_t *) spc_struct;
 
     /*
      * "Illegal state transition detected in CN {server|client} association

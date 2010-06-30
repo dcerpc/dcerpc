@@ -92,7 +92,7 @@ typedef struct
 {
     unsigned short              ifspec_vers;
     unsigned short              opcnt;
-    unsigned int                vers;
+    unsigned long               vers;   /* odd, if I change this, then everything fails... */
     idl_uuid_t                      id;
     unsigned short              stub_rtl_if_vers;
     rpc_endpoint_vector_t       endpoint_vector;

@@ -2833,17 +2833,20 @@ INTERNAL unsigned32     call_end_action_rtn
 **/
 PRIVATE unsigned32     rpc__cn_call_sm_protocol_error
 (
-  pointer_t       spc_struct ATTRIBUTE_UNUSED,
+  pointer_t       spc_struct,
   pointer_t       event_param ATTRIBUTE_UNUSED,
   pointer_t       sm
 )
 {
+    rpc_cn_call_rep_p_t call_rep;
     rpc_cn_sm_ctlblk_t 	    *sm_p;
 
     RPC_CN_DBG_RTN_PRINTF(rpc__cn_call_sm_protocol_error);
 
     sm_p = (rpc_cn_sm_ctlblk_t *)sm;
     sm_p->cur_state = RPC_C_SM_NO_NSTATE;
+
+    call_rep = (rpc_cn_call_rep_p_t) spc_struct;
 
     /*
      * "Illegal state transition detected in CN {client|server} call state

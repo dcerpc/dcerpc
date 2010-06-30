@@ -80,6 +80,8 @@
 #include <ipnaf.h>
 #include <dg.h>
 
+#define ALLOW_LOADABLE_MODULES 0
+
 /* Determine shared library extension
  * FIXME: move this into a centralized location
  */
@@ -98,6 +100,8 @@
 #ifndef HAVE_SCANDIR
 static int scandir(const char *, struct dirent ***, int (*)(const struct dirent *), int (*)(const void *, const void *));
 #endif
+
+#if ALLOW_LOADABLE_MODULES
 static int sort_modules(const void* a, const void *b);
 static int select_module(const struct dirent * dirent);
 
@@ -140,6 +144,7 @@ static int select_module(const struct dirent * dirent)
     /* reject */
     return 0;
 }
+#endif /* ALLOW_LOADABLE_MODULES */
 #endif
 
 /* register an auth protocol */
@@ -240,11 +245,13 @@ static void (*rpc__g_static_modules[])(void) =
 PRIVATE void rpc__load_modules(void)
 {
 #if HAVE_DLFCN_H
+    int i;
+#if ALLOW_LOADABLE_MODULES
     struct dirent **namelist = NULL;
-    size_t i;
-    size_t n;
+     int n;
     void * image;
     char buf[PATH_MAX];
+#endif
 
     memset(rpc_g_protseq_id, 0, sizeof(rpc_g_protseq_id));
     memset(rpc_g_naf_id, 0, sizeof(rpc_g_naf_id));
@@ -254,10 +261,11 @@ PRIVATE void rpc__load_modules(void)
     rpc_g_authn_protocol_id[rpc_c_authn_none].dce_rpc_authn_protocol_id = dce_c_rpc_authn_protocol_none;
 
     /* Load static modules */
-    for (i = 0; i < sizeof(rpc__g_static_modules) / sizeof(rpc__g_static_modules[0]); i++) {
+    for (i = 0; i < (int) (sizeof(rpc__g_static_modules) / sizeof(rpc__g_static_modules[0])); i++) {
         rpc__g_static_modules[i]();
     }
 
+#if ALLOW_LOADABLE_MODULES
     n = scandir(IMAGE_DIR, &namelist, (void*) select_module, (void*) sort_modules);
     for (i = 0; i < n; i++) {
         int flags = 0;
@@ -300,6 +308,7 @@ PRIVATE void rpc__load_modules(void)
 	if (namelist != NULL) {
         free(namelist);
 	}
+#endif /* ALLOW_LOADABLE_MODULES */
 #endif /* HAVE_DLFCN_H */
 }
 

@@ -1652,7 +1652,6 @@ void rpc_ss_ndr_unmar_interp
                                             param_addr, NULL, NULL, IDL_msp);
                     if (type_has_pointers)
                     {
-                        assert(Z_values != NULL);
                         rpc_ss_ndr_u_struct_pointees(type_byte, defn_index,
                                                 param_addr, Z_values, IDL_msp);
                     }

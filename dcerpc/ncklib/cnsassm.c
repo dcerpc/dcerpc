@@ -1494,7 +1494,7 @@ INTERNAL unsigned32     do_alter_cont_req_action_rtn
         ((unsigned8 *) req_header + RPC_CN_PKT_SIZEOF_ALT_CTX_HDR);
 
     /* points to end of pkt whether n_context_elem is 0 or not */
-    end_ptr = &pres_cont_list->pres_cont_elem[pres_cont_list->n_context_elem];
+    end_ptr = (unsigned8 *) &pres_cont_list->pres_cont_elem[pres_cont_list->n_context_elem];
 
     if ( ((unsigned8 *) pres_cont_list < (unsigned8 *) req_header) ||
         ((unsigned8 *) pres_cont_list > (unsigned8 *) end_of_pkt) ||
@@ -2115,7 +2115,7 @@ INTERNAL unsigned32     do_assoc_req_action_rtn
                     ((unsigned8 *) req_header + RPC_CN_PKT_SIZEOF_BIND_HDR);
 
                 /* points to end of pkt whether n_context_elem is 0 or not */
-                end_ptr = &pres_cont_list->pres_cont_elem[pres_cont_list->n_context_elem];
+                end_ptr = (unsigned8 *) &pres_cont_list->pres_cont_elem[pres_cont_list->n_context_elem];
 
                 if ( ((unsigned8 *) pres_cont_list < (unsigned8 *) req_header) ||
                     ((unsigned8 *) pres_cont_list > (unsigned8 *) end_of_pkt) ||

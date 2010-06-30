@@ -452,7 +452,6 @@ void rpc_ss_ndr_unmar_pointee
             type_has_pointers = IDL_PROP_TEST(*defn_vec_ptr, IDL_PROP_HAS_PTRS);
             defn_vec_ptr++;
             IDL_GET_LONG_FROM_VECTOR(pointee_defn_index,defn_vec_ptr);
-            assert(Z_values != NULL);
             rpc_ss_ndr_unmar_struct(pointee_type,
                                    IDL_msp->IDL_type_vec+pointee_defn_index,
                                    p_node, Z_values,
