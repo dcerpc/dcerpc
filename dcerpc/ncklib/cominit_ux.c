@@ -75,10 +75,13 @@
 #include <comnaf.h>
 #include <comp.h>
 #include <cominitp.h>
-#include <gssauth.h>
 #include <npnaf.h>
 #include <ipnaf.h>
 #include <dg.h>
+
+#if defined(AUTH_GSS_NEGOTIATE) && AUTH_GSS_NEGOTIATE
+#include <gssauth.h>
+#endif
 
 #define ALLOW_LOADABLE_MODULES 0
 
