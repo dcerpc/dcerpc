@@ -60,51 +60,51 @@ void rpc__cn_init_func(void);
 
 INTERNAL rpc_prot_call_epv_t cn_call_epv =
 {
-    rpc__cn_call_start,
-    rpc__cn_call_transmit,
-    rpc__cn_call_transceive,
-    rpc__cn_call_receive,
-    rpc__cn_call_end,
-    rpc__cn_call_block_until_free,
-    rpc__cn_call_transmit_fault,
-    rpc__cn_call_alert,
-    rpc__cn_call_receive_fault,
-    rpc__cn_call_did_mgr_execute
+    .call_start =               rpc__cn_call_start,
+    .call_transmit =            rpc__cn_call_transmit,
+    .call_transceive =          rpc__cn_call_transceive,
+    .call_receive =             rpc__cn_call_receive,
+    .call_end =                 rpc__cn_call_end,
+    .call_block_until_free =    rpc__cn_call_block_until_free,
+    .call_transmit_fault =      rpc__cn_call_transmit_fault,
+    .call_cancel =              rpc__cn_call_alert,
+    .call_receive_fault =       rpc__cn_call_receive_fault,
+    .call_did_mgr_execute =     rpc__cn_call_did_mgr_execute
 };
 
 INTERNAL rpc_prot_mgmt_epv_t cn_mgmt_epv =
 {
-    rpc__cn_mgmt_inq_calls_sent,
-    rpc__cn_mgmt_inq_calls_rcvd,
-    rpc__cn_mgmt_inq_pkts_sent,
-    rpc__cn_mgmt_inq_pkts_rcvd,
+    .mgmt_inq_calls_sent =  rpc__cn_mgmt_inq_calls_sent,
+    .mgmt_inq_calls_rcvd =  rpc__cn_mgmt_inq_calls_rcvd,
+    .mgmt_inq_pkts_sent =   rpc__cn_mgmt_inq_pkts_sent,
+    .mgmt_inq_pkts_rcvd =   rpc__cn_mgmt_inq_pkts_rcvd,
 };
 
 INTERNAL rpc_prot_binding_epv_t cn_binding_epv =
 {
-    rpc__cn_binding_alloc,
-    rpc__cn_binding_init,
-    rpc__cn_binding_reset,
-    rpc__cn_binding_changed,
-    rpc__cn_binding_free,
-    rpc__cn_binding_inq_addr,
-    rpc__cn_binding_inq_client,
-    rpc__cn_binding_copy,
-    rpc__cn_binding_cross_fork
+    .binding_alloc =        rpc__cn_binding_alloc,
+    .binding_init =         rpc__cn_binding_init,
+    .binding_reset =        rpc__cn_binding_reset,
+    .binding_changed =      rpc__cn_binding_changed,
+    .binding_free =         rpc__cn_binding_free,
+    .binding_inq_addr =     rpc__cn_binding_inq_addr,
+    .binding_inq_client =   rpc__cn_binding_inq_client,
+    .binding_copy =         rpc__cn_binding_copy,
+    .binding_cross_fork =   rpc__cn_binding_cross_fork
 };
 
 INTERNAL rpc_prot_network_epv_t cn_network_epv =
 {
-    .network_use_socket = rpc__cn_network_use_socket,
-    rpc__cn_network_use_protseq,
-    rpc__cn_network_mon,
-    rpc__cn_network_stop_mon,
-    rpc__cn_network_maint,
-    rpc__cn_network_stop_maint,
-    rpc__cn_network_select_dispatch,
-    rpc__cn_network_inq_prot_vers,
-    rpc__cn_network_close,
-    .network_getpeereid = rpc__cn_network_getpeereid
+    .network_use_socket =       rpc__cn_network_use_socket,
+    .network_use_protseq =      rpc__cn_network_use_protseq,
+    .network_mon =              rpc__cn_network_mon,
+    .network_stop_mon =         rpc__cn_network_stop_mon,
+    .network_maint =            rpc__cn_network_maint,
+    .network_stop_maint =       rpc__cn_network_stop_maint,
+    .network_select_disp =      rpc__cn_network_select_dispatch,
+    .network_inq_prot_vers =    rpc__cn_network_inq_prot_vers,
+    .network_close =            rpc__cn_network_close,
+    .network_getpeereid =       rpc__cn_network_getpeereid
 };
 
 /***********************************************************************/
