@@ -158,16 +158,17 @@ EXTERNAL unsigned8 rpc_g_dbg_switches[];
  *
  */
 #define RPC_DBG_ADD_PRINTF(switch, level, pargs) \
-(void) ( \
-    ! RPC_DBG((switch), (level)) ? \
-        0 : (rpc__printf pargs, 0) \
-)
+do { \
+    if (RPC_DBG((switch), (level))) {\
+        rpc__printf pargs; \
+} } while(0)
 
 #define RPC_DBG_PRINTF(switch, level, pargs) \
-(void) ( \
-    ! RPC_DBG((switch), (level)) ? \
-        0 : (rpc__printf pargs, rpc__print_source(__FILE__, __LINE__), 0) \
-)
+do { \
+    if (RPC_DBG((switch), (level))) { \
+        rpc__printf pargs ; \
+        rpc__print_source(__FILE__, __LINE__); \
+} } while(0)
 
 #define RPC_DBG_GPRINTF(pargs) \
     RPC_DBG_PRINTF(rpc_es_dbg_general, 1, pargs)
