@@ -162,11 +162,11 @@ int dcethread_attr_setinheritsched_throw(dcethread_attr *attr, int inherit);
 int dcethread_attr_getinheritsched(dcethread_attr *attr);
 int dcethread_attr_getinheritsched_throw(dcethread_attr *attr);
 
-int dcethread_attr_setstacksize(dcethread_attr *attr, long stacksize);
-int dcethread_attr_setstacksize_throw(dcethread_attr *attr, long stacksize);
+int dcethread_attr_setstacksize(dcethread_attr *attr, size_t stacksize);
+int dcethread_attr_setstacksize_throw(dcethread_attr *attr, size_t stacksize);
 
-long dcethread_attr_getstacksize(dcethread_attr *attr);
-long dcethread_attr_getstacksize_throw(dcethread_attr* attr);
+ssize_t dcethread_attr_getstacksize(dcethread_attr *attr);
+ssize_t dcethread_attr_getstacksize_throw(dcethread_attr* attr);
 
 int dcethread_create(dcethread** _thread, dcethread_attr* attr, void *(*start_routine)(void *), void *arg);
 int dcethread_create_throw(dcethread** _thread, dcethread_attr* attr, void *(*start_routine)(void *), void *arg);

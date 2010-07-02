@@ -41,9 +41,9 @@
 #include "dcethread-debug.h"
 
 int
-dcethread_attr_setstacksize(dcethread_attr *attr, long stacksize)
+dcethread_attr_setstacksize(dcethread_attr *attr, size_t stacksize)
 {
-    long new_stacksize = stacksize;
+    size_t new_stacksize = stacksize;
     int page_size;
 
     /* stack size can not be less than PTHREAD_STACK_MIN */
@@ -57,11 +57,11 @@ dcethread_attr_setstacksize(dcethread_attr *attr, long stacksize)
         new_stacksize = ((new_stacksize / page_size) + 1) * page_size;
     }
 
-    return dcethread__set_errno(pthread_attr_setstacksize(attr, (size_t) new_stacksize));
+    return dcethread__set_errno(pthread_attr_setstacksize(attr, new_stacksize));
 }
 
 int
-dcethread_attr_setstacksize_throw(dcethread_attr *attr, long stacksize)
+dcethread_attr_setstacksize_throw(dcethread_attr *attr, size_t stacksize)
 {
     DCETHREAD_WRAP_THROW(dcethread_attr_setstacksize(attr, stacksize));
 }

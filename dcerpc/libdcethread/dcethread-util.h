@@ -16,7 +16,7 @@ int dcethread__set_errno(int err);
             return dcethread__set_errno(EINTR);                         \
         }                                                               \
     } while (0)
-        
+
 #define DCETHREAD_END_SYSCALL                                           \
     do                                                                  \
     {                                                                   \
@@ -40,13 +40,15 @@ int dcethread__set_errno(int err);
         return ret;			   \
     } while(0);
 
-#define DCETHREAD_WRAP_THROW(expr)					\
+#define DCETHREAD_WRAP_THROW_TYPE(type, expr)				\
     do									\
     {									\
-        int ret = (expr);						\
+        type ret = (expr);						\
         if (ret < 0)							\
 	    dcethread__exc_raise(dcethread__exc_from_errno(errno), __FILE__, __LINE__); \
 	return ret;							\
     } while (0);							\
-	      
+
+#define DCETHREAD_WRAP_THROW(expr) DCETHREAD_WRAP_THROW_TYPE(int, expr)
+
 #endif

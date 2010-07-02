@@ -6,7 +6,7 @@
 /*
  * Copyright (c) 2007, Novell, Inc.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -38,23 +38,23 @@
 #include "dcethread-util.h"
 #include "dcethread-debug.h"
 
-long
+ssize_t
 dcethread_attr_getstacksize(dcethread_attr* attr)
 {
     size_t stacksize;
-    
+
     if (dcethread__set_errno(pthread_attr_getstacksize(attr, &stacksize)))
     {
 	return -1;
     }
     else
     {
-	return (long)stacksize;
+	return (ssize_t)stacksize;
     }
 }
 
-long
+ssize_t
 dcethread_attr_getstacksize_throw(dcethread_attr* attr)
 {
-    DCETHREAD_WRAP_THROW((int) dcethread_attr_getstacksize(attr));
+    DCETHREAD_WRAP_THROW_TYPE(ssize_t, dcethread_attr_getstacksize(attr));
 }
