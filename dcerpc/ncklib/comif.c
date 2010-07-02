@@ -320,12 +320,9 @@ PRIVATE void rpc__server_register_if_int
     rpc_if_rep_p_t              if_rep = (rpc_if_rep_p_t) ifspec_h;
     rpc_mgr_epv_t               mepv;
     rpc_if_rgy_entry_p_t        if_entry;
-    rpc_if_type_info_p_t        type_info = NULL;
     unsigned32                  index;
     unsigned32                  ctr;
     boolean                     copied_mepv = false;
-    boolean                     type_info_alloced = false;
-    boolean                     type_info_added = false;
     boolean                     if_entry_alloced = false;
     boolean                     if_entry_added = false;
 
@@ -460,6 +457,8 @@ PRIVATE void rpc__server_register_if_int
      */
     if (mgr_type_uuid != NULL && !(uuid_is_nil (mgr_type_uuid, status)))
     {
+	rpc_if_type_info_p_t type_info = NULL;
+
         /*
          * see if the specified mgr type already exists for this entry
          */
@@ -481,39 +480,38 @@ PRIVATE void rpc__server_register_if_int
         }
 
         /*
-         * if no entry was found, create one and add it to the list
+         * no entry was found, create one and add it to the list
          */
-        if (type_info == NULL)
-        {
-            /*
-             * malloc a type uuid/manager epv list element
-             */
-            RPC_MEM_ALLOC (
-                type_info,
-                rpc_if_type_info_p_t,
-                sizeof (rpc_if_type_info_t),
-                RPC_C_MEM_IF_TYPE_INFO,
-                RPC_C_MEM_WAITOK);
+        assert (type_info == NULL);
 
-            if (type_info == NULL)
-            {
-                *status = rpc_s_no_memory;
-                goto ERROR_AND_LOCKED;
-            }
+	/*
+	 * malloc a type uuid/manager epv list element
+	 */
+	RPC_MEM_ALLOC (
+	    type_info,
+	    rpc_if_type_info_p_t,
+	    sizeof (rpc_if_type_info_t),
+	    RPC_C_MEM_IF_TYPE_INFO,
+	    RPC_C_MEM_WAITOK);
 
-            /*
-             * fill in the supplied type info
-             */
-            type_info->type = *mgr_type_uuid;
-            type_info->mepv = mepv;
-            type_info->copied_mepv = copied_mepv;
+	if (type_info == NULL)
+	{
+	    *status = rpc_s_no_memory;
+	    goto ERROR_AND_LOCKED;
+	}
 
-            /*
-             * add the type info entry to the list for this interface
-             */
-            RPC_LIST_ADD_TAIL
-                (if_entry->type_info_list, type_info, rpc_if_type_info_p_t);
-        }
+	/*
+	 * fill in the supplied type info
+	 */
+	type_info->type = *mgr_type_uuid;
+	type_info->mepv = mepv;
+	type_info->copied_mepv = copied_mepv;
+
+	/*
+	 * add the type info entry to the list for this interface
+	 */
+	RPC_LIST_ADD_TAIL
+	    (if_entry->type_info_list, type_info, rpc_if_type_info_p_t);
     }
     else
     {
@@ -542,14 +540,6 @@ ERROR_AND_LOCKED:
      * (the return status already set).
      */
 
-    if (type_info_alloced)
-    {
-        if (type_info_added)
-        {
-            RPC_LIST_REMOVE (if_entry->type_info_list, type_info);
-        }
-        RPC_MEM_FREE (type_info, RPC_C_MEM_IF_TYPE_INFO);
-    }
     if (if_entry_alloced)
     {
         if (if_entry_added)
