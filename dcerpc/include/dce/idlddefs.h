@@ -533,7 +533,7 @@ idl_ulong_int rpc_ss_arm_switch_value
     if (IDL_msp->IDL_buff_addr == NULL)\
         rpc_ss_ndr_marsh_init_buffer(IDL_msp);\
     {\
-        int advance = IDL_msp->IDL_left_in_buff - (IDL_msp->IDL_left_in_buff & ~(alignment-1));\
+        idl_ulong_int advance = IDL_msp->IDL_left_in_buff - (IDL_msp->IDL_left_in_buff & ~(alignment-1));\
         memset(IDL_msp->IDL_mp, 0, advance);\
         IDL_msp->IDL_mp += advance;\
         IDL_msp->IDL_left_in_buff -= advance;\
@@ -548,7 +548,7 @@ idl_ulong_int rpc_ss_arm_switch_value
 
 #define IDL_UNMAR_ALIGN_MP(IDL_msp, alignment)\
 { \
-    unsigned long advance;\
+    uintptr_t advance;\
     advance = (idl_byte *)\
         (((IDL_msp->IDL_mp - (idl_byte *)0) + (alignment-1)) & ~(alignment-1)) \
             - IDL_msp->IDL_mp; \
