@@ -2421,6 +2421,11 @@ INTERNAL unsigned32     send_alt_context_req_action_rtn
     }
 
     /*
+     * Remember the call id in case we get a fault on the alter context
+     */
+    assoc->alter_call_id = rpc_g_cn_call_id;
+
+    /*
      * Format an rpc_alter_context PDU and send it to the server.
      */
     send_pdu (assoc,
@@ -3019,6 +3024,8 @@ INTERNAL unsigned32     mark_syntax_and_sec_action_rtn
      */
     assoc = (rpc_cn_assoc_t *) spc_struct;
     sm_p = (rpc_cn_sm_ctlblk_t *)sm;
+
+    assoc->alter_call_id = -1;
 
     status = lastfrag_pred_rtn(spc_struct, event_param);
     if (status == 0)
