@@ -212,20 +212,20 @@ INTERNAL rpc_cn_syntax_t *rpc__cn_assoc_syntax_alloc (
 /*
  * The maximum resource wait in seconds. This is the maximum amount
  * of time trying to request an association. This value is specified
- * in Appendix A of the NCA connection architecture spec.
+ * as 300 in Appendix A of the NCA connection architecture spec.
  */
 #define RPC_C_ASSOC_MAX_RESOURCE_WAIT           60
 
 /*
  * The client idle connection disconnect time in seconds.
- * This value is specified in Appendix A of the NCA connection
+ * This value is specified as 300 in Appendix A of the NCA connection
  * architecture spec.
  */
 #define RPC_C_ASSOC_CLIENT_DISC_TIMER           60
 
 /*
  * The server idle connection disconnect time in seconds.
- * This value is specified in Appendix A of the NCA connection
+ * This value is specified as 300 in Appendix A of the NCA connection
  * architecture spec.
  */
 #define RPC_C_ASSOC_SERVER_DISC_TIMER           60
