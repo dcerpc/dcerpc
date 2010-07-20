@@ -80,6 +80,9 @@
 #include <rpcsvc.h>
 #include <stdarg.h>
 
+#if HAVE_CRASHREPORTERCLIENT_H
+#include <CrashReporterClient.h>
+#else
 /*
  * The following symbol is reference by Crash Reporter symbolicly
  * (instead of through undefined references. To get strip(1) to know
@@ -93,6 +96,11 @@
  */
 char *__crashreporter_info__ = NULL;
 asm(".desc ___crashreporter_info__, 0x10");
+
+#define CRSetCrashLogMessage(msg) do { \
+    __crashreporter_info__ = (msg);
+} while (0)
+#endif
 
 /*
 dce_svc_handle_t rpc_g_svc_handle;
@@ -135,7 +143,7 @@ void rpc_dce_svc_printf (
     if ( (sev_action_flags & svc_c_action_abort) ||
         (sev_action_flags & svc_c_action_exit_bad) )
     {
-        __crashreporter_info__ = buff;
+        CRSetCrashLogMessage(buff);
         abort();
     }
     else
