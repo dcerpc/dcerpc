@@ -1,27 +1,55 @@
 /*
- * 
- * (c) Copyright 1990 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1990 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1990 DIGITAL EQUIPMENT CORPORATION
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
-#ifndef _CNCALLSM_H
-#define _CNCALLSM_H 1
+
 /*
 **
 **  NAME
@@ -30,7 +58,7 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
@@ -40,6 +68,8 @@
 **
 */
 
+#ifndef _CNCALLSM_H
+#define _CNCALLSM_H 1
 
 /***********************************************************************/
 /*
@@ -49,9 +79,9 @@
  * State values are incremented by 100 to distinguish them from
  * action routine indexes which are all < 100.  This was done as
  * an efficiency measure to the engine, rpc__cn_sm_eval_event().
- */ 
+ */
 #define RPC_C_CLIENT_CALL_INIT              100
-#define RPC_C_CLIENT_CALL_ASSOC_ALLOC_WAIT  101 
+#define RPC_C_CLIENT_CALL_ASSOC_ALLOC_WAIT  101
 #define RPC_C_CLIENT_CALL_STUB_WAIT         102
 #define RPC_C_CLIENT_CALL_REQUEST           103
 #define RPC_C_CLIENT_CALL_RESPONSE          104
@@ -59,7 +89,6 @@
 #define RPC_C_CLIENT_CALL_CFDNE             106
 #define RPC_C_CLIENT_CALL_CALL_FAILED       107
 #define RPC_C_CLIENT_CALL_STATES            108
-
 
 /***********************************************************************/
 /*
@@ -69,16 +98,16 @@
 /*
  * Events common to both client and server state machines
  */
-#define RPC_C_CALL_SEND                     100 
+#define RPC_C_CALL_SEND                     100
 #define RPC_C_CALL_TRANSMIT_REQ             100    /* client */
 #define RPC_C_CALL_RPC_RESP                 100    /* server */
-#define RPC_C_CALL_RECV                     101  
+#define RPC_C_CALL_RECV                     101
 #define RPC_C_CALL_RPC_CONF                 101   /* client */
 #define RPC_C_CALL_RPC_IND                  101   /* server */
-#define RPC_C_CALL_FAULT_DNE                102  
-#define RPC_C_CALL_FAULT                    103  
-#define RPC_C_CALL_LOCAL_ALERT              104  
-#define RPC_C_CALL_END                      105 
+#define RPC_C_CALL_FAULT_DNE                102
+#define RPC_C_CALL_FAULT                    103
+#define RPC_C_CALL_LOCAL_ALERT              104
+#define RPC_C_CALL_END                      105
 
 /*
  * Events only applicable to client state machine
@@ -88,16 +117,15 @@
 #define RPC_C_CALL_START_CALL               108
 #define RPC_C_CALL_LAST_TRANSMIT_REQ        109
 #define RPC_C_CALL_LOCAL_ERR                110
-#define RPC_C_CALL_ALERT_TIMEOUT            111 
-#define RPC_C_CALL_CLIENT_EVENTS            112 
+#define RPC_C_CALL_ALERT_TIMEOUT            111
+#define RPC_C_CALL_CLIENT_EVENTS            112
 
 /*
  * Events only applicable to server state machine
  */
 #define RPC_C_CALL_REMOTE_ALERT_IND         106
-#define RPC_C_CALL_ORPHANED                 107 
+#define RPC_C_CALL_ORPHANED                 107
 #define RPC_C_CALL_SERVER_EVENTS            108
-
 
 /***********************************************************************/
 /*
@@ -115,11 +143,10 @@ EXTERNAL const char   *rpc_g_cn_call_client_states [];
 /*
  * S E R V E R   C A L L   S T A T E S
  */
-#define RPC_C_SERVER_CALL_INIT              100 
-#define RPC_C_SERVER_CALL_CALL_REQUEST      101 
-#define RPC_C_SERVER_CALL_CALL_RESPONSE     102  
-#define RPC_C_SERVER_CALL_CALL_COMPLETED    103  
-
+#define RPC_C_SERVER_CALL_INIT              100
+#define RPC_C_SERVER_CALL_CALL_REQUEST      101
+#define RPC_C_SERVER_CALL_CALL_RESPONSE     102
+#define RPC_C_SERVER_CALL_CALL_COMPLETED    103
 
 /***********************************************************************/
 /*
@@ -273,8 +300,7 @@ PRIVATE unsigned32     rpc__cn_call_sm_protocol_error (
              (pointer_t)(crep), &((crep)->call_state)); \
         RPC_CN_CALL_SM_TRC_STATE (crep, (RPC_CN_PKT_CALL_ID ((rpc_cn_packet_p_t) RPC_CN_CREP_SEND_HDR (crep))));\
     }\
-} 
-
+}
 
 /***********************************************************************/
 /*
@@ -300,7 +326,7 @@ PRIVATE unsigned32     rpc__cn_call_sm_protocol_error (
                                 (pointer_t)(crep), \
                                 &(crep)->call_state); \
     RPC_CN_CALL_SM_TRC_STATE (crep, (RPC_CN_PKT_CALL_ID ((rpc_cn_packet_p_t) RPC_CN_CREP_SEND_HDR (crep)))); \
-} 
+}
 
 
 /***********************************************************************/

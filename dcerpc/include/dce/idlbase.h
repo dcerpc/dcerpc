@@ -1,26 +1,55 @@
 /*
- * 
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **  NAME:
 **
@@ -46,7 +75,7 @@
 #    define __IDL_UNUSED_LABEL__
 #endif
 
-#ifndef TRUE 
+#ifndef TRUE
 #define TRUE 1
 #define FALSE 0
 #endif  /* TRUE */
@@ -113,9 +142,9 @@
 
 /*
  * Work around C's flawed model for global variable definitions.
- * this definition now depends on the preprocessor variable 
- * HAS_GLOBALDEF 
- * which should be defined in platform specific dce.h file 
+ * this definition now depends on the preprocessor variable
+ * HAS_GLOBALDEF
+ * which should be defined in platform specific dce.h file
  */
 
 #ifndef HAS_GLOBALDEF
@@ -137,18 +166,17 @@
  * side... at worst your compiler will complain and you can enhance the
  * list and/or add "-Dvolatile" to the cc command line.
  *
- * this definition now depends on the preprocessor variable 
- * VOLATILE_NOT_SUPPORTED 
- * which should be defined in platform specific dce.h file 
+ * this definition now depends on the preprocessor variable
+ * VOLATILE_NOT_SUPPORTED
+ * which should be defined in platform specific dce.h file
  *
  */
 
-#ifdef VOLATILE_NOT_SUPPORTED 
+#ifdef VOLATILE_NOT_SUPPORTED
 #  define volatile
 #endif
 
 /***************************************************************************/
-
 
 /*
  * define true and false
@@ -165,7 +193,7 @@
 #endif /* true */
 
 #ifndef false
-#   define false       FALSE 
+#   define false       FALSE
 #endif /* false */
 
 /***************************************************************************/
@@ -182,7 +210,7 @@ typedef struct rpc_handle_s_t *handle_t;
  * (unless some target specific section below #undef's the symbol) of
  * these symbols.
  *
- * for DCE 1.1, we include the platform specific file ndrtypes.h 
+ * for DCE 1.1, we include the platform specific file ndrtypes.h
  */
 
 #include <dce/ndrtypes.h>
@@ -191,23 +219,23 @@ typedef struct rpc_handle_s_t *handle_t;
 
 typedef ndr_boolean		idl_boolean ;
 
-#define idl_false ndr_false 
-#define idl_true  ndr_true 
+#define idl_false ndr_false
+#define idl_true  ndr_true
 
 typedef ndr_byte		idl_byte ;
 
 /*
  * when compiling DCE programs and/or libraries, we want the base type
  * of idl_char to be "unsigned char" (IDL doesn't support signed chars).
- * However, we compiling external programs, we want idl_char to have 
+ * However, we compiling external programs, we want idl_char to have
  * the char type native to the platform on which the program is being
- * compiled. So ... use a macro that should only be defined if we 
+ * compiled. So ... use a macro that should only be defined if we
  * are building the RPC runtime of the IDL compiler.
  */
 
-#ifndef IDL_CHAR_IS_CHAR 
+#ifndef IDL_CHAR_IS_CHAR
 typedef unsigned char idl_char ;
-#else 
+#else
 typedef char idl_char ;
 #endif /* idl_char */
 
@@ -230,7 +258,6 @@ typedef ndr_uhyper_int		idl_uhyper_int ;
 typedef ndr_short_float		idl_short_float ;
 
 typedef ndr_long_float		idl_long_float ;
-
 
 typedef ndr_ulong_int      idl_size_t;
 
@@ -317,8 +344,6 @@ void rpc_ss_disable_allocate (void);
  */
 void rpc_ss_destroy_client_context (rpc_ss_context_t *);
 
-
-
 /*
  *  Prototypes for rpc_sm_... routines
  */
@@ -329,7 +354,7 @@ void rpc_sm_client_free (idl_void_p_t, idl_ulong_int *);
 
 void rpc_sm_destroy_client_context  (
     rpc_ss_context_t *,
-    idl_ulong_int * 
+    idl_ulong_int *
 );
 
 void rpc_sm_disable_allocate (idl_ulong_int * );
@@ -377,5 +402,3 @@ typedef enum {
 #endif /* IDLBASE_H */
 
 /***************************************************************************/
-
-

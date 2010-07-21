@@ -1,24 +1,55 @@
 /*
- * 
- * (c) Copyright 1993 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1993 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1993 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
+
 /*
 **  NAME:
 **
@@ -150,7 +181,6 @@ static void BE_server_binding_analyze
     return;
 }
 
-
 /*
  * CSPELL_zero_initializer
  *
@@ -221,7 +251,7 @@ static void DDBE_spell_stack_surrogates
     AST_pointer_n_t array_elt_ptr_pointer_node;
 
     param_index = 0;
-    for (pp = p_operation->parameters; pp != NULL; pp = pp->next) 
+    for (pp = p_operation->parameters; pp != NULL; pp = pp->next)
     {
         param_index++;
         if (param_index == 1)
@@ -311,7 +341,7 @@ static void DDBE_spell_stack_surrogates
         }
         else
 	{
-            CSPELL_typed_name(fid, pp->type, pp->name, NULL, false, true, 
+            CSPELL_typed_name(fid, pp->type, pp->name, NULL, false, true,
                                 false);
 	    CSPELL_zero_initializer(fid, pp->type);
 	}
@@ -457,8 +487,8 @@ static void CSPELL_manager_call
                     == AST_structure_k)
                 CSPELL_cast_exp(fid, pp->type);
             /* Context handle by value is pointer to void,
-                              by reference is pointer to pointer to void */ 
-            fprintf( fid, "%c%s.local", 
+                              by reference is pointer to pointer to void */
+            fprintf( fid, "%c%s.local",
                      ((pp->type->type_structure.pointer->pointee_type->kind
                                                             == AST_pointer_k)
                                                                             )
@@ -477,7 +507,7 @@ static void CSPELL_manager_call
             }
             spell_name(fid, pp->name);
         }
-        
+
         param_index++;
     }
 
@@ -526,7 +556,7 @@ static void DDBE_convert_out_contexts
         CSPELL_test_status(fid);
     }
 
-    for (pp = p_operation->parameters; pp != NULL; pp = pp->next) 
+    for (pp = p_operation->parameters; pp != NULL; pp = pp->next)
     {
         if ( AST_OUT_SET(pp) && AST_CONTEXT_SET(pp) )
         {
@@ -693,7 +723,6 @@ static void CSPELL_server_stub_routine
     if (cs_info.cs_machinery)
         fprintf(fid, "IDL_ms.IDL_h=%s;\n", handle_info.assoc_name);
 
-
     /* If there are user exceptions which are not external, initialize them */
     if (num_declared_exceptions != 0)
     {
@@ -789,7 +818,7 @@ static void CSPELL_server_stub_routine
      * client.  For the report status exception, just fall through and
      * perform the normal failing status reporting.
      */
-        fprintf(fid, "rpc_ss_ndr_clean_up(&IDL_ms);\n"); 
+        fprintf(fid, "rpc_ss_ndr_clean_up(&IDL_ms);\n");
     fprintf(fid,
          "if (!RPC_SS_EXC_MATCHES(THIS_CATCH,&rpc_x_ss_pipe_comm_error))\n{\n");
     fprintf(fid, "if ( ! IDL_manager_entered )\n{\n");
@@ -847,7 +876,6 @@ static void CSPELL_server_stub_routine
      */
     fprintf(fid, "*IDL_status_p = IDL_ms.IDL_status;\n");
 
-
     fprintf(fid, "}\n");
 }
 
@@ -890,7 +918,6 @@ void BE_gen_sstub
     DDBE_spell_offset_vec( fid, dd_vip, cmd_opt, cmd_val );
     DDBE_spell_rtn_vec( fid, dd_vip, cmd_opt, cmd_val, FALSE );
     DDBE_spell_type_vec( fid, dd_vip, cmd_opt, cmd_val );
-
 
     /* If there are any user exceptions, emit the necessary declarations */
     DDBE_user_exceptions(fid, p_interface,

@@ -1,26 +1,55 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **  NAME:
@@ -29,7 +58,7 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
@@ -53,7 +82,6 @@
  * these stats so we can track gross trends.
  */
 
-
 /*
  * !!! Since CMA pthreads doesn't provide a "null" handle, create our own.
  */
@@ -68,7 +96,6 @@ PRIVATE dcethread* rpc_g_null_thread_handle;
 
 INTERNAL rpc_mutex_stats_t mutex_stats = {0};
 INTERNAL rpc_cond_stats_t cond_stats = {0};
-
 
 /*
  * R P C _ _ M U T E X _ I N I T
@@ -98,7 +125,6 @@ PRIVATE boolean rpc__mutex_init
     return(true);
 }
 
-
 /*
  * R P C _ _ M U T E X _ D E L E T E
  */
@@ -113,7 +139,6 @@ PRIVATE boolean rpc__mutex_delete
     dcethread_mutex_destroy(&mp->m);
     return(true);
 }
-
 
 /*
  * R P C _ _ M U T E X _ L O C K
@@ -131,7 +156,7 @@ PRIVATE boolean rpc__mutex_lock
     boolean dbg;
 
     dbg = RPC_DBG(rpc_es_dbg_mutex, 5);
-    if (dbg) 
+    if (dbg)
     {
         my_thread = dcethread_self();
         if (is_locked && IS_MY_THREAD(mp->owner))
@@ -143,7 +168,7 @@ PRIVATE boolean rpc__mutex_lock
         }
     }
     dcethread_mutex_lock(&mp->m);
-    mp->is_locked = true; 
+    mp->is_locked = true;
     if (dbg)
     {
         mp->owner = my_thread;
@@ -159,7 +184,6 @@ PRIVATE boolean rpc__mutex_lock
     mutex_stats.lock++;
     return(true);
 }
-
 
 /*
  * R P C _ _ M U T E X _ T R Y _ L O C K
@@ -178,7 +202,7 @@ PRIVATE boolean rpc__mutex_try_lock
     boolean dbg;
 
     dbg = RPC_DBG(rpc_es_dbg_mutex, 5);
-    if (dbg) 
+    if (dbg)
     {
         my_thread = dcethread_self();
         if (is_locked && IS_MY_THREAD(mp->owner))
@@ -210,7 +234,6 @@ PRIVATE boolean rpc__mutex_try_lock
     return(true);
 }
 
-
 /*
  * R P C _ _ M U T E X _ U N L O C K
  */
@@ -225,7 +248,7 @@ PRIVATE boolean rpc__mutex_unlock
     boolean dbg;
 
     dbg = RPC_DBG(rpc_es_dbg_mutex, 5);
-    if (dbg) 
+    if (dbg)
     {
         if (! is_locked)
         {
@@ -249,7 +272,6 @@ PRIVATE boolean rpc__mutex_unlock
     dcethread_mutex_unlock(&mp->m);
     return(true);
 }
-
 
 /*
  * R P C _ _ M U T E X _ L O C K _ A S S E R T
@@ -288,7 +310,6 @@ PRIVATE boolean rpc__mutex_lock_assert
     return(true);
 }
 
-
 /*
  * R P C _ _ M U T E X _ U N L O C K _ A S S E R T
  *
@@ -322,7 +343,6 @@ PRIVATE boolean rpc__mutex_unlock_assert
     return(true);
 }
 
-
 /*
  * R P C _ _ C O N D _ I N I T
  *
@@ -345,7 +365,6 @@ boolean rpc__cond_init
     return(true);
 }
 
-
 /*
  * R P C _ _ C O N D _ D E L E T E
  */
@@ -361,7 +380,6 @@ boolean rpc__cond_delete
     dcethread_cond_destroy(&cp->c);
     return(true);
 }
-
 
 /*
  *  R P C _ _ C O N D _ W A I T
@@ -424,7 +442,6 @@ boolean rpc__cond_wait
     }
     return(true);
 }
-
 
 /*
  *  R P C _ _ C O N D _ T I M E D _ W A I T
@@ -490,7 +507,6 @@ boolean rpc__cond_timed_wait
     return(true);
 }
 
-
 /*
  *  R P C _ _ C O N D _ S I G N A L
  *
@@ -510,7 +526,6 @@ boolean rpc__cond_signal
     return(true);
 }
 
-
 /*
  *  R P C _ _ C O N D _ B R O A D C A S T
  *
@@ -529,7 +544,6 @@ boolean rpc__cond_broadcast
     dcethread_cond_broadcast(&cp->c);
     return(true);
 }
-
 
 #else
 #ifdef MIREK_NOT_DEFINED

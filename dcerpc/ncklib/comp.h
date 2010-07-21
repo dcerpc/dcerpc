@@ -1,28 +1,55 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
-#ifndef _COMP_H
-#define _COMP_H
+
 /*
 **
 **  NAME
@@ -31,17 +58,19 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
-**  Definitions of types/constants internal to the Common Communications 
+**  Definitions of types/constants internal to the Common Communications
 **  Service component of the RPC runtime.
 **
 **
 */
 
-
+#ifndef _COMP_H
+#define _COMP_H
+
 /***********************************************************************/
 #include <comprot.h>    /* Externals for Protocol Services sub-component*/
 #include <comnaf.h>     /* Externals for NAF Services sub-component     */
@@ -50,7 +79,6 @@
 /*
  * Accessor macros for the RPC Protocol Sequence ID table.
  */
-
 
 #define RPC_PROTSEQ_INQ_SUPPORTED(id) \
        (boolean)rpc_g_protseq_id[id].supported
@@ -67,26 +95,26 @@
  *
  * The RPC Protocol ID table element structure.  An element describes
  * a single RPC Protocol.
- * 
+ *
  * The fields are:
  *
  *      prot_init       The address of an initialization routine in the
  *                      Protocol Service that will be called by rpc__init.
- * 
- *      prot_fork_handler  The address of a routine to call to handle 
+ *
+ *      prot_fork_handler  The address of a routine to call to handle
  *                      protocol specific, fork-related processing.
  *
  *      rpc_protocol_id A constant identifier for this RPC Protocol.
- *      
+ *
  *      call_epv        An entry point vector for the Call Services in
  *                      the Protocol Service.
- *      
- *      mgmt_epv        An entry point vector for the Management Services in 
+ *
+ *      mgmt_epv        An entry point vector for the Management Services in
  *                      the Protocol Service.
- *      
+ *
  *      binding_epv     An entry point vector for the Binding Services
  *                      in the Protocol Service.
- *      
+ *
  *      network_epv     An entry point vector for the Network Services
  *                      in the Protocol Service.
  */
@@ -126,11 +154,11 @@ EXTERNAL rpc_protocol_id_elt_t   rpc_g_protocol_id[];
 
 /*
  * Protocol Sequence ID Table
- * 
+ *
  * This table contains the valid combination of protocol ids
  * for upper floor 3 and the lower tower floors.
- * This table maps each combination to the appropriate 
- * RPC protocol id sequence.  
+ * This table maps each combination to the appropriate
+ * RPC protocol id sequence.
  *
  * The field num_floors provides for the number of significant
  * floors comprising the RPC protocol sequence.
@@ -155,7 +183,6 @@ typedef struct
 EXTERNAL rpc_tower_prot_ids_t rpc_g_tower_prot_ids[RPC_C_PROTSEQ_ID_MAX*2];
 EXTERNAL unsigned32 rpc_g_tower_prot_id_number;	/* number of elts in rpc_g_tower_prot_ids */
 
-
 
 /***********************************************************************/
 /*
@@ -163,7 +190,7 @@ EXTERNAL unsigned32 rpc_g_tower_prot_id_number;	/* number of elts in rpc_g_tower
  *
  * The Network Address Family ID table element structure.  An element
  * describes a single Network Address Family Extension.
- * 
+ *
  * The fields are:
  *
  *      naf_init        The address of an initialization routine in the
@@ -174,7 +201,7 @@ EXTERNAL unsigned32 rpc_g_tower_prot_id_number;	/* number of elts in rpc_g_tower
  *      net_if_id       A constant identifier for the network interface
  *                      type used in the NAF initialization routine (when
  *                      determining if this NAF is supported).
- *      
+ *
  *      naf_epv         An entry point vector for the NAF Service.
  */
 typedef struct
@@ -213,11 +240,11 @@ EXTERNAL rpc_naf_id_elt_t   rpc_g_naf_id[RPC_C_NAF_ID_MAX];
  * R P C _ A U T H N _ P R O T O C O L _ I D _ E L T _ T
  *
  * The RPC Authentication Protocol ID table element structure.
- * 
+ *
  * The fields are:
  *
  *      auth_init           The address of an initialization routine in the
- *                          Authentication Service that will be called by 
+ *                          Authentication Service that will be called by
  *                          rpc__init.
  *
  *      authn_protocol_id   A constant identifier for this Authentication Service.
@@ -242,7 +269,7 @@ typedef struct
 {
     rpc_auth_init_fn_t      auth_init;
     rpc_authn_protocol_id_t authn_protocol_id;
-    dce_rpc_authn_protocol_id_t 
+    dce_rpc_authn_protocol_id_t
                             dce_rpc_authn_protocol_id;
     rpc_auth_epv_t          *epv;
     rpc_auth_rpc_prot_epv_tbl_t
@@ -283,7 +310,7 @@ static inline int RPC_AUTHN_IN_RANGE(unsigned32 id)
 {
 	return (id > 0) ? (id < RPC_C_AUTHN_PROTOCOL_ID_MAX) : 0;
 }
-	
+
 #define RPC_AUTHN_CHECK_SUPPORTED(id, st) \
 { \
     if ((id) == (typeof(id))(rpc_c_authn_default)) \
@@ -306,7 +333,6 @@ static inline int RPC_AUTHN_IN_RANGE(unsigned32 id)
         return; \
     } \
 }
-
 
 
 /***********************************************************************/
@@ -350,7 +376,7 @@ EXTERNAL dcethread_attr     rpc_g_server_dcethread_attr;
     } \
     else \
         *(st) = rpc_s_ok; \
-} 
+}
 
 /*
  * The following macros are for use by callers that want to verify

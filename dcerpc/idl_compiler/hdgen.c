@@ -1,24 +1,55 @@
 /*
- * 
- * (c) Copyright 1993 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1993 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1993 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
+
 /*
 **
 **  NAME:
@@ -55,8 +86,6 @@ extern int yylineno;
 
 extern AST_cpp_quote_n_t * global_cppquotes;
 extern AST_cpp_quote_n_t * global_cppquotes_post;
-
-
 
 /*
  * mapchar
@@ -149,7 +178,6 @@ static void CSPELL_constant_def
     fprintf (fid, "\n");
 }
 
-
 static void CSPELL_operation_def
 (
     FILE *fid,
@@ -166,7 +194,6 @@ static void CSPELL_operation_def
                         (AST_ENCODE_SET(op) || AST_DECODE_SET(op)));
     fprintf (fid, ";\n");
 }
-
 
 void CSPELL_type_def
 (
@@ -197,7 +224,6 @@ void CSPELL_type_def
     }
 }
 
-
 static const char*
 unescape_string(const char* str)
 {
@@ -223,7 +249,6 @@ unescape_string(const char* str)
     return res;
 }
 
-
 //centeris wfu
 static void CPPQUOTES_exports
 (
@@ -232,19 +257,13 @@ static void CPPQUOTES_exports
 )
 {
     const char* str;
-    for (; cpps; cpps = cpps->next) {        
+    for (; cpps; cpps = cpps->next) {
                 STRTAB_str_to_string(cpps->text, &str);
                 str = unescape_string(str);
                 fprintf(fid, "\n%s\n", str);
                 free((void*)str);
 	}
 }
-        
-
-
-
-
-
 
 static void CSPELL_exports
 (
@@ -324,7 +343,6 @@ void BE_gen_orpc_defs(FILE * fid, AST_interface_n_t * ifp, enum orpc_class_def_t
 	char const * if_name_str;
 	char const * if_ancestor_str = NULL;
     AST_export_n_t *ep;
-	
 
 	NAMETABLE_id_to_string(ifp->name, &if_name_str);
 	if (ifp->inherited_interface_name != NAMETABLE_NIL_ID)
@@ -343,7 +361,7 @@ void BE_gen_orpc_defs(FILE * fid, AST_interface_n_t * ifp, enum orpc_class_def_t
 		case stub_def:
 			fprintf(fid, "\nclass %sStub: public %s", if_name_str, if_name_str);
 	}
-	
+
 	fprintf(fid, "\n{\npublic:\n");
 
 	for (ep = ifp->exports; ep; ep = ep->next)	{
@@ -371,7 +389,7 @@ void BE_gen_orpc_defs(FILE * fid, AST_interface_n_t * ifp, enum orpc_class_def_t
 
 			if (handle_param != NULL)
 				op->parameters = handle_param;
-		
+
 			/* pure virtual */
 			if (deftype == class_def)
 				fprintf(fid, " = 0;\n");
@@ -380,7 +398,6 @@ void BE_gen_orpc_defs(FILE * fid, AST_interface_n_t * ifp, enum orpc_class_def_t
 		}
 	}
 	fprintf(fid, "};\n\n\n");
-
 
 }
 
@@ -696,7 +713,7 @@ void BE_gen_c_header
     boolean cepv_opt = cmd_opt[opt_cepv];
 
 	the_interface = ifp;
-	 
+
     NAMETABLE_id_to_string(ifp->name, &if_name);
     sprintf (include_var_name, "%s_v%ld_%ld_included", if_name,
                                (ifp->version%65536), (ifp->version/65536));
@@ -776,7 +793,6 @@ void BE_gen_c_header
 	if (AST_OBJECT_SET(ifp))
 		BE_gen_orpc_defs(fid, ifp, class_def);
 
-	 
     if (!AST_LOCAL_SET(ifp) && (ifp->op_count > 0) && !AST_OBJECT_SET(ifp)) {
         CSPELL_epv_type_and_var(fid, ifp->name, ifp->version, ifp->exports,
             cepv_opt);

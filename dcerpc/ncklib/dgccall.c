@@ -1,26 +1,55 @@
 /*
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
  *
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
  *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **  NAME:
@@ -59,7 +88,6 @@
 typedef struct {
     unsigned32 max_ping_time;
 } com_timeout_params_t;
-
 
 /* ========================================================================= */
 
@@ -158,7 +186,6 @@ PRIVATE void rpc__dg_ccall_lsct_inq_scall
     }
 }
 
-
 /*
  * R P C _ _ D G _ C C A L L _ L S C T _ N E W _ C A L L
  *
@@ -207,7 +234,6 @@ PRIVATE void rpc__dg_ccall_lsct_new_call
         ccall->c.high_seq = rqe->hdrp->seq;
     }
 }
-
 
 /*
  * C C A L L _ C O M M O N _ I N I T
@@ -423,7 +449,6 @@ INTERNAL void ccall_common_init
 
     *st = rpc_s_ok;
 }
-
 
 /*
  * C C A L L _ A L L O C
@@ -654,7 +679,6 @@ INTERNAL rpc_dg_ccall_p_t ccall_alloc
     return (ccall);
 }
 
-
 /*
  * C C A L L _ R E I N I T
  *
@@ -754,7 +778,6 @@ INTERNAL rpc_dg_ccall_p_t ccall_reinit
 
     return (ccall);
 }
-
 
 /*
  * C C A L L _ B I N D I N G _ S E R I A L I Z E
@@ -914,7 +937,6 @@ INTERNAL void ccall_initial_cancel_setup
     ccall->cancel.local_count = cancel_cnt;
 }
 
-
 /*
  * R P C _ _ D G _ C C A L L _ S E T U P _ C A N C E L _ T M O
  *
@@ -948,7 +970,6 @@ rpc_dg_ccall_p_t ccall;
         }
     }
 }
-
 
 /*
  * R P C _ _ D G _ C A L L _ S T A R T
@@ -1176,7 +1197,6 @@ PRIVATE rpc_call_rep_p_t rpc__dg_call_start
     *st = rpc_s_ok;
     return ((rpc_call_rep_p_t) ccall);
 }
-
 
 /*
  * R P C _ _ D G _ C A L L _ E N D
@@ -1433,7 +1453,6 @@ PRIVATE void rpc__dg_call_end
         RPC_DG_CCALL_SET_STATE_IDLE(ccall);
     }
 
-
     /*
      * If we already have a cached call handle for the (binding) handle,
      * then free this one.  Otherwise, stash away the current call handle
@@ -1454,7 +1473,6 @@ PRIVATE void rpc__dg_call_end
 
     RPC_UNLOCK(0);
 }
-
 
 /*
  * X M I T _ P I N G
@@ -1483,7 +1501,6 @@ INTERNAL void xmit_ping
     rpc__dg_xmit_hdr_only_pkt(ccall->c.sock_ref->sock, ccall->c.addr,
                               &xq->hdr, RPC_C_DG_PT_PING);
 }
-
 
 /*
  * R P C _ _ D G _ C C A L L _ A C K
@@ -1524,7 +1541,6 @@ INTERNAL void xmit_orphan_quit
                               &ccall->c.xq.hdr,
         RPC_C_DG_PT_QUIT);
 }
-
 
 /*
  * R P C _ _ D G _ C C A L L _ X M I T _ C A N C E L _ Q U I T
@@ -1584,7 +1600,6 @@ PRIVATE void rpc__dg_ccall_xmit_cancel_quit
 
     rpc__dg_xmit_pkt(ccall->c.sock_ref->sock, ccall->c.addr, iov, 2, &b);
 }
-
 
 /*
  * C C A L L _ C A N C E L _ T I M E R
@@ -1664,7 +1679,6 @@ INTERNAL void ccall_cancel_timer
         rpc__dg_ccall_xmit_cancel_quit(ccall, ccall->cancel.local_count);
     }
 }
-
 
 /*
  * R E C V _ S T A T E _ T I M E R
@@ -1910,7 +1924,6 @@ PRIVATE void rpc__dg_ccall_free
     /* ccall may no longer be referenced */
 }
 
-
 /*
  * R P C _ _ D G _ C C A L L _ F R E E _ P R E P
  *
@@ -1931,7 +1944,6 @@ PRIVATE void rpc__dg_ccall_free_prep
         RPC_DG_CCALL_SET_STATE_IDLE(ccall);
 }
 
-
 /*
  * C C A L L _ U N C A C H E
  *
@@ -1944,7 +1956,6 @@ INTERNAL void ccall_uncache
     rpc_dg_ccall_p_t ccall
 )
 {
-
 
     RPC_LOCK_ASSERT(0);
     RPC_DG_CALL_LOCK_ASSERT(&ccall->c);
@@ -1963,7 +1974,6 @@ INTERNAL void ccall_uncache
     rpc__timer_clear(&ccall->c.timer);
     RPC_DG_CCALL_RELEASE(&ccall);
 }
-
 
 /*
  * R P C _ _ D G _ C C A L L _ T I M E R

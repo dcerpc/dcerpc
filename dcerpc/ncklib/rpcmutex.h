@@ -1,28 +1,55 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
-#ifndef _RPCMUTEX_H
-#define _RPCMUTEX_H	1
+
 /*
 **
 **  NAME:
@@ -31,7 +58,7 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
@@ -46,10 +73,10 @@
 **  condition variables have an associated mutex).
 **
 **  This package provides the following PRIVATE data types and operations:
-**  
+**
 **      rpc_mutex_t m;
 **      rpc_cond_t c;
-**  
+**
 **      void RPC_MUTEX_INIT(m)
 **      void RPC_MUTEX_DELETE(m)
 **      void RPC_MUTEX_LOCK(m)
@@ -72,15 +99,18 @@
 **
 */
 
+#ifndef _RPCMUTEX_H
+#define _RPCMUTEX_H	1
+
 /*
- * The rpc_mutex_t data type.  
+ * The rpc_mutex_t data type.
  *
  * If debugging isn't configured, this is just a unadorned mutex, else we adorn
  * the struct with goodies to enable assertion checking, deadlock detection
  * and statistics gathering.
  */
 
-typedef struct rpc_mutex_stats_t 
+typedef struct rpc_mutex_stats_t
 {
     unsigned32 busy;            /* total lock requests when already locked */
     unsigned32 lock;            /* total locks */
@@ -93,7 +123,7 @@ typedef struct rpc_mutex_stats_t
 } rpc_mutex_stats_t, *rpc_mutex_stats_p_t;
 #define RPC_MUTEX_STATUS_INITIALIZER {0, 0, 0, 0, 0, 0, 0, 0}
 
-typedef struct rpc_mutex_t 
+typedef struct rpc_mutex_t
 {
     dcethread_mutex m;          /* the unadorned mutex lock */
 #if defined(RPC_MUTEX_DEBUG) || defined(RPC_MUTEX_STATS)
@@ -131,13 +161,11 @@ typedef struct rpc_cond_t
 } rpc_cond_t, *rpc_cond_p_t;
 #define RPC_COND_INITIALIZER {DCETHREAD_COND_INITIALIZER, NULL, RPC_COND_STATS_INITIALIZER}
 
-
 /*
  * Some relatively efficient generic mutex operations that are controllable
  * at run time as well as compile time.  The "real" support routines
  * can be found in rpcmutex.c .
  */
-
 
 /*
  * R P C _ M U T E X _ I N I T
@@ -170,8 +198,6 @@ typedef struct rpc_cond_t
     }
 #endif /* RPC_MUTEX_DEBUG or RPC_MUTEX_STATS */
 
-
-
 /*
  * R P C _ M U T E X _ D E L E T E
  */
@@ -203,8 +229,6 @@ typedef struct rpc_cond_t
         RPC_LOG_MUTEX_DELETE_XIT; \
     }
 #endif  /* RPC_MUTEX_DEBUG or RPC_MUTEX_STATS */
-
-
 
 /*
  * R P C _ M U T E X _ L O C K
@@ -241,8 +265,6 @@ typedef struct rpc_cond_t
     }
 #endif  /* RPC_MUTEX_DEBUG or RPC_MUTEX_STATS */
 
-
-
 /*
  * R P C _ M U T E X _ T R Y _ L O C K
  */
@@ -275,8 +297,6 @@ typedef struct rpc_cond_t
         RPC_LOG_MUTEX_TRY_LOCK_XIT; \
     }
 #endif  /* RPC_MUTEX_DEBUG or RPC_MUTEX_STATS */
-
-
 
 /*
  * R P C _ M U T E X _ U N L O C K
@@ -311,8 +331,6 @@ typedef struct rpc_cond_t
     }
 #endif  /* RPC_MUTEX_DEBUG or RPC_MUTEX_STATS */
 
-
-
 /*
  * R P C _ M U T E X _ L O C K _ A S S E R T
  */
@@ -339,8 +357,6 @@ typedef struct rpc_cond_t
 #  define RPC_MUTEX_LOCK_ASSERT(mutex)      { }
 #endif  /* RPC_MUTEX_DEBUG or RPC_MUTEX_STATS */
 
-
-
 /*
  * R P C _ M U T E X _ U N L O C K _ A S S E R T
  */
@@ -366,7 +382,6 @@ typedef struct rpc_cond_t
 #else
 #  define RPC_MUTEX_UNLOCK_ASSERT(mutex)    { }
 #endif  /* RPC_MUTEX_DEBUG or RPC_MUTEX_STATS */
-
 
 /*
  *  R P C _ C O N D _ I N I T
@@ -395,8 +410,6 @@ typedef struct rpc_cond_t
         RPC_LOG_COND_INIT_XIT; \
     }
 #endif  /* RPC_MUTEX_DEBUG or RPC_MUTEX_STATS */
-
-
 
 /*
  *  R P C _ C O N D _ D E L E T E
@@ -431,8 +444,6 @@ typedef struct rpc_cond_t
   }
 #endif  /* RPC_MUTEX_DEBUG or RPC_MUTEX_STATS */
 
-
-
 /*
  *  R P C _ C O N D _ W A I T
  */
@@ -465,7 +476,6 @@ typedef struct rpc_cond_t
         RPC_LOG_COND_WAIT_XIT; \
     }
 #endif
-
 
 /*
  *  R P C _ C O N D _ T I M E D _ W A I T
@@ -500,7 +510,6 @@ typedef struct rpc_cond_t
     }
 #endif  /* RPC_MUTEX_DEBUG or RPC_MUTEX_STATS */
 
-
 /*
  *  R P C _ _ C O N D _ S I G N A L
  */
@@ -533,7 +542,6 @@ typedef struct rpc_cond_t
         RPC_LOG_COND_SIGNAL_XIT; \
     }
 #endif  /* RPC_MUTEX_DEBUG or RPC_MUTEX_STATS */
-
 
 /*
  *  R P C _ _ C O N D _ B R O A D C A S T
@@ -568,7 +576,6 @@ typedef struct rpc_cond_t
     }
 #endif  /* RPC_MUTEX_DEBUG or RPC_MUTEX_STATS */
 
-
 /* ===================================================================== */
 
 #if defined(RPC_MUTEX_DEBUG) || defined(RPC_MUTEX_STATS)
@@ -599,7 +606,6 @@ boolean rpc__mutex_unlock ( rpc_mutex_p_t  /*mp*/ );
 boolean rpc__mutex_lock_assert ( rpc_mutex_p_t  /*mp*/);
 
 boolean rpc__mutex_unlock_assert ( rpc_mutex_p_t  /*mp*/);
-
 
 boolean rpc__cond_init (
         rpc_cond_p_t  /*cp*/,
@@ -636,7 +642,7 @@ boolean rpc__cond_broadcast (
         rpc_mutex_p_t  /*mp*/
     );
 
-#else 
+#else
 
 #ifdef MIREK_NOT_DEFINED
 static void rpc__mutex_none (void);

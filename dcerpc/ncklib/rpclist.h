@@ -1,28 +1,55 @@
 /*
- * 
- * (c) Copyright 1990 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1990 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1990 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
-#ifndef _RPCLIST_H
-#define _RPCLIST_H
+
 /*
 **
 **  NAME:
@@ -31,7 +58,7 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
@@ -40,11 +67,13 @@
 **
 */
 
+#ifndef _RPCLIST_H
+#define _RPCLIST_H
 
 /***********************************************************************/
 /*
  * List Processing.
- * 
+ *
  * The RPC services maintain a number of structures in the form of lists
  * and queues.  Lists are doubly linked with the list head containing both
  * a pointer to the first element of the list as well as a pointer to the
@@ -60,8 +89,8 @@
  * Memory for these lists is obtained in large "chunks", which is then
  * provided to individual list elements on an as-needed basis.
  *
- * ***CAVEAT***: 
- * 
+ * ***CAVEAT***:
+ *
  * The structures kept on lists which are processed by the
  * RPC_LIST* macros can be kept on only one list at a time.
  * This is because the macros *assume* the first field of the
@@ -70,12 +99,10 @@
  * rpc_list_t structure and manipulates the fields of it ("next" and
  * "last"). Enqueuing a structure on a second list would effectively
  * remove it from the first list since the "next" and "last" fields
- * would be overwritten. 
+ * would be overwritten.
  */
 
-
 /*int pthd4_get_expiration_np(struct timespec *delta, struct timespec *abstime);*/
-
 
 /***********************************************************************/
 /*
@@ -91,8 +118,6 @@ typedef struct
                         /* pointer to the prior element in an element */
 } rpc_list_t, *rpc_list_p_t;
 
-
-
 /***********************************************************************/
 /*
  * R P C _ L I S T _ E L E M E N T _ A L L O C _ F N _ T
@@ -103,7 +128,6 @@ typedef void (*rpc_list_element_alloc_fn_t) (
         pointer_t   /*list_element*/
     );
 
-
 /***********************************************************************/
 /*
  * R P C _ L I S T _ E L E M E N T _ F R E E _ F N _ T
@@ -113,7 +137,6 @@ typedef void (*rpc_list_element_alloc_fn_t) (
 typedef void (*rpc_list_element_free_fn_t) (
         pointer_t   /*list_element*/
     );
-
 
 /***********************************************************************/
 /*
@@ -134,7 +157,6 @@ typedef struct
     rpc_cond_t                  *cond;
     boolean32                   use_global_mutex;
 } rpc_list_desc_t, *rpc_list_desc_p_t;
-
 
 /***********************************************************************/
 /*
@@ -158,9 +180,9 @@ typedef struct
 EXTERNAL rpc_lookaside_rcb_t rpc_g_lookaside_rcb;
 
 /***********************************************************************/
-/* 
+/*
  * R P C _ L I S T _ M U T E X _ I N I T
- * 
+ *
  *  Initialize the global lookaside list mutex.
  *
  * Sample usage:
@@ -175,9 +197,9 @@ EXTERNAL rpc_lookaside_rcb_t rpc_g_lookaside_rcb;
 }
 
 /***********************************************************************/
-/* 
+/*
  * R P C _ L I S T _ I N I T
- * 
+ *
  *  Initialize a list head.
  *
  * Sample usage:
@@ -193,9 +215,8 @@ EXTERNAL rpc_lookaside_rcb_t rpc_g_lookaside_rcb;
     list.last = NULL; \
 }
 
-
 /***********************************************************************/
-/* 
+/*
  * R P C _ L I S T _ E M P T Y
  *
  *  Determine whether or not a list has any elements left.
@@ -211,7 +232,6 @@ EXTERNAL rpc_lookaside_rcb_t rpc_g_lookaside_rcb;
  */
 
 #define RPC_LIST_EMPTY(list)    (list.next == NULL)
-
 
 /***********************************************************************/
 /*
@@ -245,7 +265,6 @@ EXTERNAL rpc_lookaside_rcb_t rpc_g_lookaside_rcb;
     ((rpc_list_p_t) (list_element))->next = (pointer_t) (insert_element); \
 }
 
-
 /***********************************************************************/
 /*
  * R P C _ L I S T _ A D D _ H E A D
@@ -277,7 +296,6 @@ EXTERNAL rpc_lookaside_rcb_t rpc_g_lookaside_rcb;
     } \
 }
 
-
 /***********************************************************************/
 /*
  * R P C _ L I S T _ A D D _ T A I L
@@ -308,9 +326,8 @@ EXTERNAL rpc_lookaside_rcb_t rpc_g_lookaside_rcb;
     ((rpc_list_p_t) (list_element))->next = NULL; \
 }
 
-
 /***********************************************************************/
-/* 
+/*
  * R P C _ L I S T _ R E M O V E
  *
  * Remove an element (pointed to by list_element) from a list.
@@ -345,9 +362,8 @@ EXTERNAL rpc_lookaside_rcb_t rpc_g_lookaside_rcb;
     } \
 }
 
-
 /***********************************************************************/
-/* 
+/*
  * R P C _ L I S T _ R E M O V E _ H E A D
  *
  * Remove the first entry from a list and return it. If the list is
@@ -376,9 +392,8 @@ EXTERNAL rpc_lookaside_rcb_t rpc_g_lookaside_rcb;
     } \
 }
 
-
 /***********************************************************************/
-/* 
+/*
  * R P C _ L I S T _ R E M O V E _ T A I L
  *
  * Remove the last entry from a list and return it. If the list is
@@ -405,11 +420,10 @@ EXTERNAL rpc_lookaside_rcb_t rpc_g_lookaside_rcb;
     } \
 }
 
-
 /***********************************************************************/
-/* 
+/*
  * R P C _ L I S T _ E X T R A C T
- * 
+ *
  * Remove the nth entry on a list and return it.
  * If n exceeds the length of the list a NULL pointer is returned.
  *
@@ -430,11 +444,10 @@ EXTERNAL rpc_lookaside_rcb_t rpc_g_lookaside_rcb;
     } \
 }
 
-
 /***********************************************************************/
-/* 
+/*
  * R P C _ L I S T _ F I R S T
- * 
+ *
  * Returns the first element in a list (without removing it).
  *
  * Sample usage:
@@ -447,12 +460,11 @@ EXTERNAL rpc_lookaside_rcb_t rpc_g_lookaside_rcb;
 
 #define RPC_LIST_FIRST(list, list_element, list_element_type) \
     list_element = (list_element_type) (list.next);
-    
 
 /***********************************************************************/
-/* 
+/*
  * R P C _ L I S T _ L A S T
- * 
+ *
  * Return the last element in a list (without removing it).
  *
  * Sample usage:
@@ -465,12 +477,11 @@ EXTERNAL rpc_lookaside_rcb_t rpc_g_lookaside_rcb;
 
 #define RPC_LIST_LAST(list, list_element, list_element_type) \
     list_element = (list_element_type) (list.last);
-    
 
 /***********************************************************************/
-/* 
+/*
  * R P C _ L I S T _ N E X T
- * 
+ *
  * Can be used iteratively to walk a list and read all entries.
  * When there are no more entries a NULL pointer is returned.
  *
@@ -495,11 +506,10 @@ EXTERNAL rpc_lookaside_rcb_t rpc_g_lookaside_rcb;
     } \
 }
 
-
 /***********************************************************************/
-/* 
+/*
  * R P C _ L I S T _ L O O K U P
- * 
+ *
  * Get the nth entry on a list (without removing it).
  * If n exceeds the length of the list a NULL pointer is returned.
  *
@@ -524,11 +534,10 @@ EXTERNAL rpc_lookaside_rcb_t rpc_g_lookaside_rcb;
         _count--); \
 }
 
-
 /***********************************************************************/
-/* 
+/*
  * R P C _ L I S T _ C O U N T
- * 
+ *
  * Return the number of entries on the list.
  *
  * Sample usage:
@@ -548,7 +557,6 @@ EXTERNAL rpc_lookaside_rcb_t rpc_g_lookaside_rcb;
          count++, _next_element = ((rpc_list_p_t)(_next_element->next)));\
 }
 
-
 /***********************************************************************/
 /*
  * R P C _ _ L I S T _ D E S C _ I N I T
@@ -566,7 +574,6 @@ PRIVATE void rpc__list_desc_init (
         rpc_cond_p_t                 /*cond*/
     );
 
-
 /***********************************************************************/
 /*
  * R P C _ _ L I S T _ E L E M E N T _ A L L O C
@@ -578,7 +585,6 @@ PRIVATE pointer_t rpc__list_element_alloc (
         boolean32                    /*block*/
     );
 
-  
 /***********************************************************************/
 /*
  * R P C _ _ L I S T _ E L E M E N T _ F R E E
@@ -599,6 +605,5 @@ PRIVATE void rpc__list_element_free (
 PRIVATE void rpc__list_fork_handler (
         rpc_fork_stage_id_t      /*stage*/
     );
-
 
 #endif /* _RPCLIST_H */

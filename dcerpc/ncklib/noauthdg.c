@@ -1,26 +1,55 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **  NAME
@@ -29,7 +58,7 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
@@ -57,7 +86,6 @@ INTERNAL rpc_dg_auth_epv_t rpc_g_noauth_dg_epv =
     rpc__noauth_dg_way_handler
 };
 
-
 /*
  * R P C _ _ N O A U T H _ D G _ E N C R Y P T
  *
@@ -74,14 +102,13 @@ PRIVATE void rpc__noauth_dg_encrypt
     *st = rpc_s_ok;
 }
 
-
 /*
  * R P C _ _ N O A U T H _ D G _ P R E _ S E N D
  *
  * Optionally encrypt user data in the packet.
  */
 
-PRIVATE void rpc__noauth_dg_pre_send 
+PRIVATE void rpc__noauth_dg_pre_send
 (
         rpc_auth_info_p_t info,
         rpc_dg_xmitq_elt_p_t pkt,
@@ -95,13 +122,12 @@ PRIVATE void rpc__noauth_dg_pre_send
     *st = rpc_s_ok;
 }
 
-
 /*
  * R P C _ _ N O A U T H _ D G _ R E C V _ C K
  *
  */
 
-PRIVATE void rpc__noauth_dg_recv_ck 
+PRIVATE void rpc__noauth_dg_recv_ck
 (
         rpc_auth_info_p_t info,
         rpc_dg_recvq_elt_p_t pkt,
@@ -112,13 +138,12 @@ PRIVATE void rpc__noauth_dg_recv_ck
     *st = rpc_s_ok;
 }
 
-
 /*
  * R P C _ _ N O A U T H _ D G _ P R E _ C A L L
  *
  */
 
-PRIVATE void rpc__noauth_dg_pre_call 
+PRIVATE void rpc__noauth_dg_pre_call
 (
         rpc_auth_info_p_t info,
         handle_t h,
@@ -128,13 +153,12 @@ PRIVATE void rpc__noauth_dg_pre_call
     *st = rpc_s_ok;
 }
 
-
 /*
  * R P C _ _ N O A U T H _ D G _ W A Y _ H A N D L E R
  *
  */
 
-PRIVATE void rpc__noauth_dg_way_handler 
+PRIVATE void rpc__noauth_dg_way_handler
 (
         rpc_auth_info_p_t info,
         ndr_byte *in_data,
@@ -147,13 +171,13 @@ PRIVATE void rpc__noauth_dg_way_handler
 {
     sec_krb_message message;
     error_status_t st;
-    
+
     rpc_noauth_info_p_t noauth_info = (rpc_noauth_info_p_t)info;
-        
+
     *out_len = 0;
-    
+
     RPC_DBG_PRINTF(rpc_e_dbg_auth, 2, ("(rpc__noauth_dg_way_handler) %x called back\n", info));
-    
+
     if (noauth_info->status != rpc_s_ok)
     {
         RPC_DBG_GPRINTF(("(rpc__noauth_dg_way_handler) handle was poisoned with %x\n",
@@ -164,14 +188,14 @@ PRIVATE void rpc__noauth_dg_way_handler
 
     message.data = 0;
     message.length = 0;
-    
+
     st = sec_krb_dg_build_message (noauth_info->auth_info.u.auth_identity, 0, 0,
         rpc_c_authn_level_none, noauth_info->auth_info.authz_protocol,
         0, 0, 0, &message);
 
     if (st != rpc_s_ok)
         goto out;
-        
+
     if (message.length > out_max_len)
     {
         st = rpc_s_credentials_too_large;
@@ -186,14 +210,13 @@ out:
     return;
 }
 
-
 /*
  * R P C _ _ N O A U T H _ D G _ W H O _ A R E _ Y O U
  *
  * Issue challenge to client; decompose response and sanity-check it.
  */
 
-PRIVATE void rpc__noauth_dg_who_are_you 
+PRIVATE void rpc__noauth_dg_who_are_you
 (
         rpc_auth_info_p_t info,
         handle_t h,
@@ -214,12 +237,12 @@ PRIVATE void rpc__noauth_dg_who_are_you
 
     /* XXX set up exception handler here around remote call? */
     RPC_DBG_PRINTF(rpc_e_dbg_auth, 2, ("(rpc__noauth_dg_way) %x doing callback\n", info));
-    
+
     /* do call */
     (*conv_v3_0_c_epv.conv_who_are_you_auth)
         (h, actuid, boot_time, inbuf, 0, sizeof(outbuf),
          seq, cas_uuid, outbuf, &outlen, stp);
-    
+
     st = *stp;
     if (st != rpc_s_ok)
     {
@@ -239,14 +262,13 @@ PRIVATE void rpc__noauth_dg_who_are_you
         0, 0, 0, 0);
 }
 
-
 /*
  * R P C _ _ N O A U T H _ D G _ C R E A T E
  *
  * Issue challenge to client; decompose response and sanity-check it.
  */
 
-PRIVATE rpc_auth_info_p_t rpc__noauth_dg_create 
+PRIVATE rpc_auth_info_p_t rpc__noauth_dg_create
 (
         unsigned32 *stp
 )
@@ -271,7 +293,7 @@ PRIVATE rpc_auth_info_p_t rpc__noauth_dg_create
     /*
      * fill in the common auth_info stuff.
      */
-    
+
     noauth_info->auth_info.refcount = 1;
     noauth_info->auth_info.server_princ_name = 0;
     noauth_info->auth_info.authn_level = -1;
@@ -282,13 +304,11 @@ PRIVATE rpc_auth_info_p_t rpc__noauth_dg_create
     { /* FAKE-EPAC */
 	noauth_info->auth_info.u.s.creds = 0;
     }
-    
 
     /* XXX do other initialization here. */
     *stp = 0;
     return (rpc_auth_info_p_t) noauth_info;
 }
-
 
 /*
  * R P C _ _ N O A U T H _ D G _ I N I T
@@ -297,7 +317,7 @@ PRIVATE rpc_auth_info_p_t rpc__noauth_dg_create
  *
  */
 
-PRIVATE rpc_protocol_id_t rpc__noauth_dg_init 
+PRIVATE rpc_protocol_id_t rpc__noauth_dg_init
 (
         rpc_auth_rpc_prot_epv_p_t       *epv,
         unsigned32                      *st
@@ -307,4 +327,3 @@ PRIVATE rpc_protocol_id_t rpc__noauth_dg_init
     *st = rpc_s_ok;
     return (RPC_C_PROTOCOL_ID_NCADG);
 }
-

@@ -1,25 +1,55 @@
 /*
- * 
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **  NAME:
@@ -33,12 +63,12 @@
 **  ABSTRACT:
 **
 **  This file contains the PRIVATE interface to the Common Communications
-**  Service of the RPC facility.  
+**  Service of the RPC facility.
 **
 **  NOTE WELL: The existence, signature, and semantics of anything in
 **  this file is subject to change without notice and should thus not
 **  be depended on by application writers.
-**  
+**
 **
 */
 
@@ -120,7 +150,6 @@ void rpc_binding_handle_copy
     [out]       unsigned32              *status
 );
 
-
 /*
  * R P C _ B I N D I N G _ H A N D L E _ E Q U A L
  *
@@ -153,7 +182,6 @@ void rpc_binding_server_to_client
     [out]       rpc_binding_handle_t    *cbinding_handle,
     [out]       unsigned32              *status
 );
-
 
 /*
  * R P C _ B I N D I N G _ T O _ E P M A P
@@ -239,10 +267,10 @@ typedef void (*rpc_thread_pool_fn_t)
 
 /*
  * R P C _ S E R V E R _ S E T _ T H R E A D _ P O O L _ F N
- * 
+ *
  * Supply the runtime with a function to be called to determine
  * which pool an incoming RPC request should be run in.
- * 
+ *
  * !!! NOTE: Your application assumes certain responsibilities if it
  * uses thread pools. The applications's pool_fn operation is called
  * back to from the runtime internal listener thread hence it should
@@ -262,8 +290,8 @@ void rpc_server_set_thread_pool_fn
  * Allow the application to adjust the size of a thread pool's call
  * queue.  That is, this routine allows the application to specify
  * the maximum number of calls that will be queued for execution by
- * a particular thread pool, if all of the pool's call threads are 
- * already in use.  (Note that this function will only allow the 
+ * a particular thread pool, if all of the pool's call threads are
+ * already in use.  (Note that this function will only allow the
  * queue size to be increased.  Attempts to decrease the queue size
  * are ignored.)
  */
@@ -290,7 +318,6 @@ void rpc_tower_to_binding
     [out]       rpc_binding_handle_t    *binding,
     [out]       unsigned32              *status
 );
-
 
 /*
  * R P C _ T O W E R _ V E C T O R _ F R O M _ B I N D I N G
@@ -567,7 +594,6 @@ void rpc_call_transmit
     [out]       unsigned32              *status
 );
 
-
 /*************************************************************************/
 /******************  Stub Services Network object  ***********************/
 /*************************************************************************/
@@ -657,13 +683,12 @@ void rpc_util_strcvt
 
 /*
  * R P C _ S T R A L L O C
- * 
+ *
  * Make a copy of the input string into allocated storage.
  */
 unsigned_char_p_t rpc_stralloc
 (
     [in]        unsigned_char_p_t       string
 );
-
 
 }

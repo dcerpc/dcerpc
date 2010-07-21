@@ -1,25 +1,55 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **  NAME:
@@ -80,7 +110,6 @@
 #define C_f     	'f'
 #define C_t     	't'
 
-
 /*
 UNPACKED REAL:
 
@@ -113,8 +142,6 @@ typedef UNPACKED_REAL *UNPACKED_REAL_PTR;
 #define U_R_BIAS 2147483648UL
 #endif
 
-
-
 extern idl_ulong_int vax_c[];
 
 #define VAX_F_INVALID &vax_c[0]
@@ -137,7 +164,6 @@ extern idl_ulong_int vax_c[];
 #define VAX_G_NEG_HUGE &vax_c[12]
 #define VAX_H_NEG_HUGE &vax_c[12]
 
-
 extern idl_ulong_int ieee_s[];
 
 #define IEEE_S_INVALID ((options & CVT_C_BIG_ENDIAN) ? \
@@ -154,7 +180,6 @@ extern idl_ulong_int ieee_s[];
 	&ieee_s[11] : &ieee_s[10])
 #define IEEE_S_NEG_INFINITY ((options & CVT_C_BIG_ENDIAN) ? \
 	&ieee_s[13] : &ieee_s[12])
-
 
 extern idl_ulong_int ieee_t[];
 
@@ -173,7 +198,6 @@ extern idl_ulong_int ieee_t[];
 #define IEEE_T_NEG_INFINITY ((options & CVT_C_BIG_ENDIAN) ? \
 	&ieee_t[26] : &ieee_t[24])
 
-
 extern idl_ulong_int ibm_s[];
 
 #define IBM_S_INVALID 	&ibm_s[0]
@@ -183,7 +207,6 @@ extern idl_ulong_int ibm_s[];
 #define IBM_S_NEG_HUGE 	&ibm_s[4]
 #define IBM_S_POS_INFINITY  &ibm_s[5]
 #define IBM_S_NEG_INFINITY  &ibm_s[6]
-
 
 extern idl_ulong_int ibm_l[];
 
@@ -195,7 +218,6 @@ extern idl_ulong_int ibm_l[];
 #define IBM_L_POS_INFINITY  &ibm_l[10]
 #define IBM_L_NEG_INFINITY  &ibm_l[12]
 
-
 extern idl_ulong_int cray[];
 
 #define CRAY_INVALID	&cray[0]
@@ -205,7 +227,6 @@ extern idl_ulong_int cray[];
 #define CRAY_NEG_HUGE	&cray[8]
 #define CRAY_POS_INFINITY  &cray[10]
 #define CRAY_NEG_INFINITY  &cray[12]
-
 
 extern idl_ulong_int int_c[];
 
@@ -221,6 +242,5 @@ extern idl_ulong_int int_c[];
 	&int_c[9] : &int_c[8])
 #define INT_NEG_INFINITY ((options & CVT_C_BIG_ENDIAN) ? \
 	&int_c[11] : &int_c[10])
-
 
 #endif

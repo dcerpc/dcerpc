@@ -1,26 +1,55 @@
 /*
- * 
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **      interpsh.c
 **
@@ -36,7 +65,6 @@
 #if HAVE_CONFIG_H
 #include <config.h>
 #endif
-
 
 #include <dce/idlddefs.h>
 #include <lsysdep.h>
@@ -81,7 +109,7 @@
                                                 element which has complex type
     element_offset_vec_ptr Pointer to the start of the offset vector entries
                             for an array element of complex type
-    element_size    Size of an array element 
+    element_size    Size of an array element
     field_defn_index Index into definition vector for description of field
                                                         which has complex type
     field_defn_ptr  Pointer to description in definition vector of field
@@ -121,7 +149,7 @@
 /******************************************************************************/
 idl_ulong_int rpc_ss_type_size
 (
-    /* [in] */  idl_byte *defn_vec_ptr, /* Pointer to start of type 
+    /* [in] */  idl_byte *defn_vec_ptr, /* Pointer to start of type
                                         specification in definition vector */
     IDL_msp_t IDL_msp
 )
@@ -214,7 +242,7 @@ idl_ulong_int rpc_ss_type_size
             }
             if (type == IDL_DT_VARYING_ARRAY)
                 array_defn_ptr += dimensionality * IDL_DATA_LIMIT_PAIR_WIDTH;
-            return(array_element_count 
+            return(array_element_count
                     * rpc_ss_type_size(array_defn_ptr, IDL_msp));
         case IDL_DT_FULL_PTR:
         case IDL_DT_UNIQUE_PTR:
@@ -274,8 +302,7 @@ interpsh_apply_func_code(byte func_code, idl_long_int size)
 			break;
 	}
 	return calc_size;
-}	
-
+}
 
 /******************************************************************************/
 /*                                                                            */
@@ -305,7 +332,7 @@ void rpc_ss_ndr_clean_up
             IDL_msp->IDL_iovec.elt[i].buff_dealloc = NULL;
         }
     }
-    
+
     /* Clean up unmarshalling state */
     if (IDL_msp->IDL_elt_p != NULL)
     {
@@ -426,7 +453,6 @@ void rpc_ss_ndr_arr_align_and_opt
         defn_vec_ptr += pipe_arr_dims * IDL_FIXED_BOUND_PAIR_WIDTH;
         base_type = *defn_vec_ptr;
     }
-
 
     switch( base_type )
     {
@@ -705,12 +731,12 @@ void rpc_ss_build_bounds_list
 (
     /* [in,out] */ idl_byte **p_defn_vec_ptr,
                         /* On entry defn_vec_ptr points to bounds info */
-                        /* On exit it points at 
+                        /* On exit it points at
                                     conformant array - base type info
                                     open array - data limit info */
     /* [in] */  rpc_void_p_t array_addr,    /* NULL when building bounds list
                                                 for a conformant structure */
-    /* [in] */  rpc_void_p_t struct_addr,   /* Address of structure that array 
+    /* [in] */  rpc_void_p_t struct_addr,   /* Address of structure that array
                                    is field of. NULL if array is a parameter */
     /* [in] */  idl_ulong_int *struct_offset_vec_ptr,
                                            /*  NULL if array is a parameter */
@@ -734,12 +760,12 @@ void rpc_ss_build_bounds_list_2
 (
     /* [in,out] */ idl_byte **p_defn_vec_ptr,
                         /* On entry defn_vec_ptr points to bounds info */
-                        /* On exit it points at 
+                        /* On exit it points at
                                     conformant array - base type info
                                     open array - data limit info */
     /* [in] */  rpc_void_p_t array_addr,    /* NULL when building bounds list
                                                 for a conformant structure */
-    /* [in] */  rpc_void_p_t struct_addr,   /* Address of structure that array 
+    /* [in] */  rpc_void_p_t struct_addr,   /* Address of structure that array
                                    is field of. NULL if array is a parameter */
     /* [in] */  idl_ulong_int *struct_offset_vec_ptr,
                                            /*  NULL if array is a parameter */
@@ -822,7 +848,7 @@ void rpc_ss_build_bounds_list_2
                     /* Conformant field of conformant structure
                         has size determined by [string] */
                     array_addr = (rpc_void_p_t)((idl_byte *)struct_addr
-                                                    + *(struct_offset_vec_ptr 
+                                                    + *(struct_offset_vec_ptr
                                                             + string_field_offset));
                 }
                 if (element_size == 1)
@@ -866,7 +892,7 @@ void rpc_ss_build_bounds_list_2
                 {
                     size = rpc_ss_get_typed_integer( bound_type, bound_addr,
                                                         IDL_msp );
-    
+
                     bounds_list[i].upper = bounds_list[i].lower +
                              interpsh_apply_func_code(func_code, size) - 1;
                 }
@@ -1068,7 +1094,7 @@ void rpc_ss_build_range_list_2
                 else
                 {
                     range_list[i].upper = data_limit - bounds_list[i].lower + 1;
-                } 
+                }
                 if ( range_list[i].upper > (bounds_list[i].upper
                                             - bounds_list[i].lower + 1) )
                     DCETHREAD_RAISE( rpc_x_invalid_bound );
@@ -1134,7 +1160,7 @@ idl_boolean rpc_ss_find_union_arm_defn
     /* [in] */ idl_ulong_int switch_value,  /* to be matched */
     /* [out] */ idl_byte **p_arm_type_ptr,
                     /* Pointer to type part of arm with matching switch value */
-    /* [in] */ IDL_msp_t IDL_msp 
+    /* [in] */ IDL_msp_t IDL_msp
                     /* marshall state ptr needed for IDL_ARM macro */
 )
 {
@@ -1371,7 +1397,7 @@ idl_ulong_int rpc_ss_ndr_bug_1_align
     defn_vec_ptr += 2;     /* DT_FIXED_STRUCT and properties byte */
     IDL_GET_LONG_FROM_VECTOR(defn_index, defn_vec_ptr);
     struct_defn_ptr = IDL_msp->IDL_type_vec + defn_index;
- 
+
     /* Find the last field of the structure */
     do {
         type_byte = *struct_defn_ptr;
@@ -1498,7 +1524,7 @@ rpc_ss_init_mem_handle(rpc_ss_mem_handle* handle)
 {
     handle->memory = NULL;
     handle->node_table = NULL;
-    
+
     handle->alloc = rpc_ss_default_alloc;
     handle->free = rpc_ss_default_free;
 }
@@ -1533,7 +1559,6 @@ void rpc_ss_init_marsh_state
     }
     rpc_ss_type_vec_vers_check( IDL_msp );
 }
-
 
 /* always include these routines to read type vecs in either endian */
 
@@ -1583,8 +1608,6 @@ idl_ulong_int rpc_ss_arm_switch_value
     return(switch_value);
 }
 
-
-
 /******************************************************************************/
 /*                                                                            */
 /*  Write an unsigned value of specified integer type to an untyped location  */
@@ -1621,4 +1644,3 @@ void rpc_ss_put_typed_integer
             DCETHREAD_RAISE(rpc_x_coding_error);
     }
 }
-

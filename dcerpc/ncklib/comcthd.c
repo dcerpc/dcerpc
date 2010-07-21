@@ -1,26 +1,55 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **  NAME
@@ -29,11 +58,11 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
-**  Definition of the Call Thread Services for the Common 
+**  Definition of the Call Thread Services for the Common
 **  Communication Services component. These routines permit
 **  a call thread to be created and invoked.
 **
@@ -82,7 +111,6 @@ typedef struct
     rpc_call_rep_p_t                    call_rep;
 } cthread_elt_t, *cthread_elt_p_t;
 
-
 /*
  * Reserved Pool Call Queue Element.
  *
@@ -95,7 +123,6 @@ typedef struct {
     rpc_call_rep_p_t                    call_rep;
 } cthread_queue_elt_t, *cthread_queue_elt_p_t;
 
-
 /*
  * Call Thread Pools.
  *
@@ -105,7 +132,7 @@ typedef struct {
  * applications to have calls execute using threads from some application
  * defined set of thread pools.  The application declared thread pools are
  * refered to "reserved" pools (due to a previous incarnation of this
- * code which provided -a too limited scheme of- thread reservation on 
+ * code which provided -a too limited scheme of- thread reservation on
  * per-interface basis).
  *
  * The application (via the pool lookup function callout) gets to decide
@@ -126,7 +153,7 @@ typedef struct {
  * assigned to calls in the order in which they are received).  The total
  * number of call threads in a server is the sum of the threads in the
  * default pool and the reserved pools.
- * 
+ *
  * The relationship between n_queued, max_queued and the call_queue
  * requires some explanation.  n_queued and max_queued represent the
  * number and limit respectively of the number of call_queue entries
@@ -145,7 +172,7 @@ typedef struct {
  * the maximums are imposed on a per pool basis;  use the queue to
  * to determine of there are actually any queued calls to process,
  * NOT n_queued.
- * 
+ *
  * The default pool uses its pool.call_queue to directly link call reps
  * and it does not use the pool.free_queue.  The reserved pools can't
  * directly link the call reps (because call reps only have one rpc_list
@@ -164,11 +191,11 @@ typedef struct {
  * (including those requested by previous calls to
  * rpc_server_create_thread_pool()) must be automatically recreated upon
  * a restart.
- * 
+ *
  * Pool creation is two step process.  First, a pool descriptor is
  * allocated (cthread_pool_alloc()).  Subsequently, a pool may be "started"
  * (cthread_pool_start()); this actually creates the call threads.
- * 
+ *
  * Shutting down involves stopping all of the call threads in all of
  * the pools (including freeing each pool's call thread table).  The
  * pool descriptors are not freed.  This is necessary to retain information
@@ -197,14 +224,12 @@ typedef struct cthread_pool_elt_t {
 #define IF_VERS_MAJOR(_vers) ((_vers) & 0xffff)
 #define IF_VERS_MINOR(_vers) (((_vers) >> 16) & 0xffff)
 
-
 /*
  * A couple of macros for convienience.
  */
 
 #define CTHREAD_POOL_IS_QUEUE_FULL(p)   ((p)->n_queued >= (p)->max_queued)
 #define CTHREAD_POOL_IS_QUEUE_EMPTY(p)  (RPC_LIST_EMPTY ((p)->call_queue))
-
 
 /*
  * A couple of macros for (fast path) performance.
@@ -254,7 +279,7 @@ typedef struct cthread_pool_elt_t {
     }
 
 
- 
+
 /*
  * The reserved pools.
  *
@@ -372,10 +397,10 @@ INTERNAL boolean32 cthread_call_dequeue (
 **  SCOPE:              INTERNAL
 **
 **  DESCRIPTION:
-**      
+**
 **  Create a call thread and initialize the table entry.
 **
-**  INPUTS:             
+**  INPUTS:
 **
 **      cthread         The cthread_table entry to use.
 **
@@ -398,12 +423,12 @@ INTERNAL boolean32 cthread_call_dequeue (
 **--
 **/
 
-INTERNAL void cthread_create 
+INTERNAL void cthread_create
 (
     cthread_elt_p_t volatile cthread,
     unsigned32              *status
 )
-{ 
+{
     dcethread*               handle_copy;
 
     RPC_MUTEX_LOCK_ASSERT (cthread_mutex);
@@ -434,7 +459,7 @@ INTERNAL void cthread_create
 		  fprintf(stderr, "XXX MIREK: %s: %s: %d: cthread creation failure\n",
 				  __FILE__, __PRETTY_FUNCTION__, __LINE__);
     } DCETHREAD_ENDTRY
-        
+
     return;
 }
 
@@ -449,7 +474,7 @@ INTERNAL void cthread_create
 **
 **  The base routine of all call executor threads.  Loop awaiting
 **  and processing calls until told to stop.
-**      
+**
 **  INPUTS:
 **
 **      cthread         Pointer to the thread's call table element
@@ -469,7 +494,7 @@ INTERNAL void cthread_create
 **--
 **/
 
-INTERNAL void cthread_call_executor 
+INTERNAL void cthread_call_executor
 (
   cthread_elt_p_t cthread
 )
@@ -488,7 +513,7 @@ INTERNAL void cthread_call_executor
     dcethread_enableinterrupt_throw(0);
 
     RPC_MUTEX_LOCK (cthread_mutex);
-    
+
     if (CTHREAD_POOL_IS_QUEUE_EMPTY(p))
     {
 	skip_startup = false;
@@ -501,7 +526,7 @@ INTERNAL void cthread_call_executor
     {
         boolean run_queued_call = false;
 
-	if (!skip_startup) 
+	if (!skip_startup)
 	{
 	    /*
 	     * Update the pool's idle thread info.
@@ -536,12 +561,11 @@ INTERNAL void cthread_call_executor
          */
         do
         {
-	    if (!skip_startup) 
+	    if (!skip_startup)
 	    {
 		RPC_DBG_PRINTF (rpc_e_dbg_general, 15,
 		    ("(cthread_call_executor) pool %p cthread %p executing call_rep %p\n",
 			p, cthread, call_rep));
-
 
 		/*
 		 * Unlock the cthread_mutex while the call is executing.
@@ -553,7 +577,7 @@ INTERNAL void cthread_call_executor
 		 * with the argument provided.  The routine is always called
 		 * with general cancelability disabled AND WITH THE CALL LOCKED.
 		 * Since we don't have reference counts (in the common code)
-		 * this call reference and lock is 'handed off' to the routine 
+		 * this call reference and lock is 'handed off' to the routine
 		 * (which is responsible for releasing the lock).  Upon completion
 		 * of the 'routine' we can no longer reference the call (it may
 		 * no longer exist).
@@ -631,8 +655,8 @@ INTERNAL void cthread_call_executor
 **  SCOPE:              INTERNAL
 **
 **  DESCRIPTION:
-**      
-**  Free pools as they become idle 
+**
+**  Free pools as they become idle
 **  (this is run periodically from the timer thread).
 **
 **  INPUTS:             none
@@ -694,7 +718,6 @@ INTERNAL void cthread_reaper
             continue;
         }
 
-
         RPC_DBG_PRINTF (rpc_e_dbg_general, 5,
             ("(cthread_reaper) freeing pool %p\n", p));
 
@@ -735,11 +758,11 @@ INTERNAL void cthread_reaper
 **  SCOPE:              INTERNAL
 **
 **  DESCRIPTION:
-**      
+**
 **  Allocate the resources for a pool (cthread_pool_start() actually creates the
 **  threads).
 **
-**  INPUTS:             
+**  INPUTS:
 **
 **      n_threads       number of call threads in the pool
 **
@@ -764,7 +787,7 @@ INTERNAL void cthread_reaper
 **--
 **/
 
-INTERNAL cthread_pool_elt_p_t cthread_pool_alloc 
+INTERNAL cthread_pool_elt_p_t cthread_pool_alloc
 (
     unsigned32  n_threads,
     boolean32   is_default_pool,
@@ -789,10 +812,10 @@ INTERNAL cthread_pool_elt_p_t cthread_pool_alloc
     /*
      * Alloc a pool descriptor.
      */
-    RPC_MEM_ALLOC (p, 
+    RPC_MEM_ALLOC (p,
                    cthread_pool_elt_p_t,
                    sizeof (cthread_pool_elt_t),
-                   RPC_C_MEM_CTHREAD_POOL, 
+                   RPC_C_MEM_CTHREAD_POOL,
                    RPC_C_MEM_WAITOK);
 
     if (p == NULL)
@@ -849,13 +872,13 @@ CLEANUP:
 **  SCOPE:              INTERNAL
 **
 **  DESCRIPTION:
-**      
+**
 **  Modify the number of threads associated with the pool
 **  This is not intended to generically work; this is only
 **  suppose to work on "idle" pools (alloc'ed but not started,
 **  or started and then stopped).
 **
-**  INPUTS:             
+**  INPUTS:
 **
 **      p               the pool who's count to modify
 **      n_threads       the new number of threads
@@ -879,7 +902,7 @@ CLEANUP:
 **--
 **/
 
-INTERNAL void cthread_pool_set_threadcnt 
+INTERNAL void cthread_pool_set_threadcnt
 (
     cthread_pool_elt_p_t p,
     unsigned32  n_threads,
@@ -900,7 +923,7 @@ INTERNAL void cthread_pool_set_threadcnt
     }
 
     p->n_threads    = n_threads;
-    
+
     /*
      * Use a default call queue size if we're operating on a private pool,
      * or if this is the default pool and the application hasn't previously
@@ -920,10 +943,10 @@ INTERNAL void cthread_pool_set_threadcnt
 **  SCOPE:              INTERNAL
 **
 **  DESCRIPTION:
-**      
+**
 **  Free the (assumed idle) pool's resources.
 **
-**  INPUTS:             
+**  INPUTS:
 **
 **      p               the pool to free
 **
@@ -946,7 +969,7 @@ INTERNAL void cthread_pool_set_threadcnt
 **--
 **/
 
-INTERNAL void cthread_pool_free 
+INTERNAL void cthread_pool_free
 (
     cthread_pool_elt_p_t p,
     unsigned32  *status
@@ -1005,10 +1028,10 @@ INTERNAL void cthread_pool_free
 **  SCOPE:              INTERNAL
 **
 **  DESCRIPTION:
-**      
+**
 **  Start up the call execution threads for an existing pool.
 **
-**  INPUTS:             
+**  INPUTS:
 **
 **      p               the pool to start
 **      n_threads       number of call threads in the pool
@@ -1032,7 +1055,7 @@ INTERNAL void cthread_pool_free
 **--
 **/
 
-INTERNAL void cthread_pool_start 
+INTERNAL void cthread_pool_start
 (
     cthread_pool_elt_p_t p,
     unsigned32  *status
@@ -1044,7 +1067,7 @@ INTERNAL void cthread_pool_start
     CODING_ERROR (status);
 
     RPC_MUTEX_LOCK_ASSERT (cthread_mutex);
-         
+
     /*
      * The pool should not currently have any actual call threads.
      */
@@ -1057,10 +1080,10 @@ INTERNAL void cthread_pool_start
     /*
      * Allocate the pool's call thread table.
      */
-    RPC_MEM_ALLOC (p->ctbl, 
+    RPC_MEM_ALLOC (p->ctbl,
                    cthread_elt_p_t,
                    p->n_threads * (sizeof (cthread_elt_t)),
-                   RPC_C_MEM_CTHREAD_CTBL, 
+                   RPC_C_MEM_CTHREAD_CTBL,
                    RPC_C_MEM_WAITOK);
 
     if (p->ctbl == NULL)
@@ -1112,7 +1135,7 @@ INTERNAL void cthread_pool_start
         {
             cthread_queue_elt_p_t qe;
 
-            RPC_MEM_ALLOC (qe, 
+            RPC_MEM_ALLOC (qe,
                            cthread_queue_elt_p_t,
                            sizeof (cthread_queue_elt_t),
                            RPC_C_MEM_CTHREAD_QETBL,
@@ -1123,13 +1146,13 @@ INTERNAL void cthread_pool_start
                 *status = rpc_s_no_memory;
                 goto CLEANUP;
             }
-            
+
             qe->pool = p;
             RPC_LIST_ADD_TAIL (p->free_queue, qe, cthread_queue_elt_p_t);
         }
     }
 
-    RPC_DBG_PRINTF (rpc_e_dbg_general, 5, 
+    RPC_DBG_PRINTF (rpc_e_dbg_general, 5,
         ("(cthread_pool_start) pool %p (%d threads)\n", p, p->n_threads));
 
     /*
@@ -1140,12 +1163,12 @@ INTERNAL void cthread_pool_start
     *status = rpc_s_ok;
 
 CLEANUP:
-    
+
     if (*status != rpc_s_ok)
     {
         unsigned32  st;
 
-        if (p->ctbl != NULL) 
+        if (p->ctbl != NULL)
         {
             cthread_pool_stop(p, true /* wait */, &st);
             p->ctbl = NULL;
@@ -1169,10 +1192,10 @@ CLEANUP:
 **  SCOPE:              INTERNAL
 **
 **  DESCRIPTION:
-**      
+**
 **  Stop the pool's call threadas.
 **
-**  INPUTS:             
+**  INPUTS:
 **
 **      p               the pool to stop
 **      wait_flag       T => wait for threads to stop
@@ -1196,7 +1219,7 @@ CLEANUP:
 **--
 **/
 
-INTERNAL void cthread_pool_stop 
+INTERNAL void cthread_pool_stop
 (
     cthread_pool_elt_p_t p,
     unsigned32 wait_flag,
@@ -1221,7 +1244,7 @@ INTERNAL void cthread_pool_stop
     }
 
     RPC_DBG_PRINTF (rpc_e_dbg_general, 5,
-            ("(cthread_pool_stop) pool %p (%d threads) stopping\n", 
+            ("(cthread_pool_stop) pool %p (%d threads) stopping\n",
             p, p->n_threads));
 
     /*
@@ -1280,7 +1303,7 @@ INTERNAL void cthread_pool_stop
     dcethread_enableinterrupt_throw (cs);
 
     RPC_DBG_PRINTF (rpc_e_dbg_general, 5,
-            ("(cthread_pool_stop) pool %p (%d threads) stopped\n", 
+            ("(cthread_pool_stop) pool %p (%d threads) stopped\n",
             p, p->n_threads));
 
     /*
@@ -1316,10 +1339,10 @@ INTERNAL void cthread_pool_stop
 **  SCOPE:              INTERNAL
 **
 **  DESCRIPTION:
-**      
+**
 **  Locate an idle thread in the indicated pool.
 **
-**  INPUTS:             
+**  INPUTS:
 **
 **      p               the pool to search
 **
@@ -1344,7 +1367,7 @@ INTERNAL void cthread_pool_stop
 **--
 **/
 
-INTERNAL cthread_elt_p_t cthread_pool_assign_thread 
+INTERNAL cthread_elt_p_t cthread_pool_assign_thread
 (
     cthread_pool_elt_p_t    p
 )
@@ -1396,10 +1419,10 @@ INTERNAL cthread_elt_p_t cthread_pool_assign_thread
 **  SCOPE:              INTERNAL
 **
 **  DESCRIPTION:
-**      
+**
 **  Attempt to queue a call for deferred execution.
 **
-**  INPUTS:             
+**  INPUTS:
 **
 **      p               the call's pool
 **      call_rep        the call
@@ -1424,7 +1447,7 @@ INTERNAL cthread_elt_p_t cthread_pool_assign_thread
 **--
 **/
 
-INTERNAL void cthread_pool_queue_call 
+INTERNAL void cthread_pool_queue_call
 (
     cthread_pool_elt_p_t    p,
     rpc_call_rep_p_t        call_rep,
@@ -1460,7 +1483,7 @@ INTERNAL void cthread_pool_queue_call
      * ONLY Update the default pool's n_queued if the call is for the
      * default pool (see the cthread_pool_elt description comments above)!
      */
-    RPC_LIST_ADD_TAIL (cthread_default_pool->call_queue, 
+    RPC_LIST_ADD_TAIL (cthread_default_pool->call_queue,
                         call_rep, rpc_call_rep_p_t);
     if (is_default_pool)
     {
@@ -1483,10 +1506,10 @@ INTERNAL void cthread_pool_queue_call
 
         RPC_LIST_ADD_TAIL (p->call_queue, qelt, cthread_queue_elt_p_t);
         p->n_queued++;
-    } 
+    }
 
     RPC_DBG_PRINTF (rpc_e_dbg_general, 5,
-        ("(cthread_pool_queue_call) pool %p (now %d) call_rep %p\n", 
+        ("(cthread_pool_queue_call) pool %p (now %d) call_rep %p\n",
             p, p->n_queued, call_rep));
 
     *status = rpc_s_ok;
@@ -1500,10 +1523,10 @@ INTERNAL void cthread_pool_queue_call
 **  SCOPE:              INTERNAL
 **
 **  DESCRIPTION:        Remove the first queued call rep from a pool.
-**      
+**
 **  INPUTS:             none
 **
-**  INPUTS/OUTPUTS:    
+**  INPUTS/OUTPUTS:
 **
 **      p               The pool of interest
 **
@@ -1522,7 +1545,7 @@ INTERNAL void cthread_pool_queue_call
 **--
 **/
 
-INTERNAL rpc_call_rep_p_t cthread_pool_dequeue_first 
+INTERNAL rpc_call_rep_p_t cthread_pool_dequeue_first
 (
     cthread_pool_elt_p_t    p
 )
@@ -1582,10 +1605,10 @@ INTERNAL rpc_call_rep_p_t cthread_pool_dequeue_first
 **
 **  DESCRIPTION:        Remove a call rep from the call executor
 **                      thread waiting queue, if it's there.
-**      
+**
 **  INPUTS:             none
 **
-**  INPUTS/OUTPUTS:    
+**  INPUTS/OUTPUTS:
 **
 **      call_rep        The call rep to be dequeued.
 **
@@ -1604,7 +1627,7 @@ INTERNAL rpc_call_rep_p_t cthread_pool_dequeue_first
 **--
 **/
 
-INTERNAL boolean32 cthread_call_dequeue 
+INTERNAL boolean32 cthread_call_dequeue
 (
     rpc_call_rep_p_t        call_rep
 )
@@ -1671,7 +1694,7 @@ INTERNAL boolean32 cthread_call_dequeue
     pvt->qelt = NULL;
 
     RPC_DBG_PRINTF (rpc_e_dbg_general, 5,
-        ("(cthread_call_dequeue) pool %p (%d remain) call_rep %p\n", 
+        ("(cthread_call_dequeue) pool %p (%d remain) call_rep %p\n",
         p, p->n_queued, call_rep));
 
     return true;
@@ -1685,7 +1708,7 @@ INTERNAL boolean32 cthread_call_dequeue
 **  SCOPE:              PRIVATE - declared in comcthd.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Initialize the cthread package.
 **
 **  INPUTS:             none
@@ -1709,7 +1732,7 @@ INTERNAL boolean32 cthread_call_dequeue
 **--
 **/
 
-PRIVATE void rpc__cthread_init 
+PRIVATE void rpc__cthread_init
 (
     unsigned32  *status
 )
@@ -1729,11 +1752,11 @@ PRIVATE void rpc__cthread_init
 **  SCOPE:              PUBLIC - declared in rpcpvt.idl
 **
 **  DESCRIPTION:
-**      
-**  Allocate the resources for a pool (rpc__cthread_pool_start() actually 
+**
+**  Allocate the resources for a pool (rpc__cthread_pool_start() actually
 **  creates the threads).
 **
-**  INPUTS:             
+**  INPUTS:
 **
 **      n_threads       number of call threads in the pool
 **
@@ -1782,17 +1805,17 @@ PUBLIC void rpc_server_create_thread_pool
      */
     RPC_LIST_ADD_TAIL (cthread_reserved_pools, p, cthread_pool_elt_p_t);
     *phandle = (rpc_thread_pool_handle_t) p;
-    
+
     /*
      * Normally, reserved pools are started up when the default pool
      * gets started, as a consequence of calling rpc_server_listen.
      * However, if the default pool has already been started up, then
      * start up this reserved pool immediately so that it will be available
-     * for handling calls. 
-     */   
+     * for handling calls.
+     */
     if (cthread_invoke_enabled)
         cthread_pool_start (p, status);
-    
+
 CLEANUP:
 
     RPC_MUTEX_UNLOCK (cthread_mutex);
@@ -1806,10 +1829,10 @@ CLEANUP:
 **  SCOPE:              PUBLIC - declared in rpcpvt.idl
 **
 **  DESCRIPTION:
-**      
+**
 **  Stop the pool's call threads and free the pool resources.
 **
-**  INPUTS:             
+**  INPUTS:
 **
 **      phandle         Pool to free
 **      wait_flag       T => wait for threads to stop
@@ -1833,7 +1856,7 @@ CLEANUP:
 **--
 **/
 
-PUBLIC void rpc_server_free_thread_pool 
+PUBLIC void rpc_server_free_thread_pool
 (
     rpc_thread_pool_handle_t *phandle,
     boolean32       wait_flag,
@@ -1896,10 +1919,10 @@ CLEANUP:
 **  SCOPE:              PUBLIC - declared in rpcpvt.idl
 **
 **  DESCRIPTION:
-**      
+**
 **  [Un]Register a thread pool lookup function with the runtime.
 **
-**  INPUTS:             
+**  INPUTS:
 **
 **      pool_fn         the lookup function - may be NULL
 **
@@ -1922,7 +1945,7 @@ CLEANUP:
 **--
 **/
 
-PUBLIC void rpc_server_set_thread_pool_fn 
+PUBLIC void rpc_server_set_thread_pool_fn
 (
     rpc_thread_pool_fn_t pool_fn,
     unsigned32      *status
@@ -1955,10 +1978,10 @@ CLEANUP:
 **  SCOPE:              PUBLIC - declared in rpcpvt.idl
 **
 **  DESCRIPTION:
-**      
+**
 **  Adjust the maximum number of queued calls for a specified thread pool.
 **
-**  INPUTS:             
+**  INPUTS:
 **
 **      phandle         the pool whose queue size is being adjusted
 **                      a NULL argument can be used to specify that the
@@ -1984,11 +2007,11 @@ CLEANUP:
 **--
 **/
 
-PUBLIC void rpc_server_set_thread_pool_qlen 
+PUBLIC void rpc_server_set_thread_pool_qlen
 (
     rpc_thread_pool_handle_t phandle,
     unsigned32 queue_size,
-    unsigned32 * status 
+    unsigned32 * status
 )
 {
     cthread_pool_elt_p_t pool = (cthread_pool_elt_p_t) phandle;
@@ -2011,8 +2034,8 @@ PUBLIC void rpc_server_set_thread_pool_qlen
         /*
          * If the default pool hasn't been started yet, we're done; the
          * global value will be used when it does get started up.  If the
-         * default pool *has* been started, just update its max_queued 
-         * value. 
+         * default pool *has* been started, just update its max_queued
+         * value.
          */
         if (cthread_default_pool != NULL)
         {
@@ -2063,7 +2086,7 @@ PUBLIC void rpc_server_set_thread_pool_qlen
                     if (qe == NULL)
                     {
                         *status = rpc_s_no_memory;
-                
+
                         /*
                          * Try to stay calm...
                          */
@@ -2093,9 +2116,9 @@ PUBLIC void rpc_server_set_thread_pool_qlen
 **  SCOPE:              PRIVATE - declared in comcthd.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Arrange for all the call execution threads to be created and
-**  enabled RPC execution. 
+**  enabled RPC execution.
 **
 **  INPUTS:
 **
@@ -2122,7 +2145,7 @@ PUBLIC void rpc_server_set_thread_pool_qlen
 **--
 **/
 
-PRIVATE void rpc__cthread_start_all 
+PRIVATE void rpc__cthread_start_all
 (
     unsigned32              default_pool_cthreads,
     unsigned32              *status
@@ -2141,7 +2164,7 @@ PRIVATE void rpc__cthread_start_all
     if (cthread_default_pool == NULL)
     {
         cthread_default_pool = cthread_pool_alloc (
-                                    default_pool_cthreads, 
+                                    default_pool_cthreads,
                                     true, /* is_default_pool */
                                     status);
         if (*status != rpc_s_ok)
@@ -2149,7 +2172,7 @@ PRIVATE void rpc__cthread_start_all
     }
     else
     {
-        cthread_pool_set_threadcnt(cthread_default_pool, 
+        cthread_pool_set_threadcnt(cthread_default_pool,
                     default_pool_cthreads, status);
         if (*status != rpc_s_ok)
             goto CLEANUP;
@@ -2176,7 +2199,7 @@ PRIVATE void rpc__cthread_start_all
      */
     cthread_invoke_enabled = true;
 
-    *status = rpc_s_ok;            
+    *status = rpc_s_ok;
 
 CLEANUP:
 
@@ -2191,7 +2214,7 @@ CLEANUP:
 **  SCOPE:              PRIVATE - declared in comcthd.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Stop all the call executor threads.  Don't return until all have stopped.
 **
 **  INPUTS:             none
@@ -2214,14 +2237,13 @@ CLEANUP:
 **--
 **/
 
-PRIVATE void rpc__cthread_stop_all 
+PRIVATE void rpc__cthread_stop_all
 (
     unsigned32              *status
 )
-{ 
+{
 
     cthread_pool_elt_p_t    p;
-    
 
     CODING_ERROR (status);
 
@@ -2249,7 +2271,7 @@ PRIVATE void rpc__cthread_stop_all
             goto CLEANUP;
         RPC_LIST_NEXT (p, p, cthread_pool_elt_p_t);
     }
-    
+
     /*
      * Now wait for each pool's threads to complete.
      */
@@ -2285,7 +2307,7 @@ CLEANUP:
 **
 **  Arrange for a call execution thread to (eventually) be allocated to
 **  "execute" the RPC.
-**      
+**
 **  INPUTS:             none
 **
 **  INPUTS/OUTPUTS:
@@ -2309,13 +2331,13 @@ CLEANUP:
 **
 **  FUNCTION VALUE:     void
 **
-**  SIDE EFFECTS:       
+**  SIDE EFFECTS:
 **                      call may be queued if no available call executors
 **
 **--
 **/
 
-PRIVATE void rpc__cthread_invoke_null 
+PRIVATE void rpc__cthread_invoke_null
 (
     rpc_call_rep_p_t        call_rep,
     uuid_p_t                object,
@@ -2326,7 +2348,7 @@ PRIVATE void rpc__cthread_invoke_null
     pointer_t               args,
     unsigned32              *status
 )
-{ 
+{
     rpc_cthread_pvt_info_p_t    pvt = &call_rep->u.server.cthread;
     unsigned32                  lookup_fn_st;
     cthread_pool_elt_p_t        p;
@@ -2361,7 +2383,7 @@ PRIVATE void rpc__cthread_invoke_null
      * Attempt to locate / assign an idle thread (this code is
      * in-line because this is the fast-path).
      */
-    CTHREAD_POOL_LOOKUP_RESERVED(object, if_uuid, if_ver, if_opnum, 
+    CTHREAD_POOL_LOOKUP_RESERVED(object, if_uuid, if_ver, if_opnum,
         &p, &lookup_fn_st);
     if (lookup_fn_st != 0)
     {
@@ -2434,10 +2456,10 @@ CLEANUP:
 **
 **  DESCRIPTION:        Remove a call rep from the call executor
 **                      thread waiting queue, if it's there.
-**      
+**
 **  INPUTS:             none
 **
-**  INPUTS/OUTPUTS:    
+**  INPUTS/OUTPUTS:
 **
 **      call_rep        The call rep to be dequeued.
 **
@@ -2456,7 +2478,7 @@ CLEANUP:
 **--
 **/
 
-PRIVATE boolean32 rpc__cthread_dequeue 
+PRIVATE boolean32 rpc__cthread_dequeue
 (
   rpc_call_rep_p_t        call_rep
 )
@@ -2481,10 +2503,10 @@ PRIVATE boolean32 rpc__cthread_dequeue
 **  SCOPE:              PRIVATE - included in comcthd.h
 **
 **  DESCRIPTION:        Post a cancel to cthread associated with a call
-**      
+**
 **  INPUTS:             none
 **
-**  INPUTS/OUTPUTS:    
+**  INPUTS/OUTPUTS:
 **
 **      call            The call that the cancel is associated with.
 **
@@ -2496,13 +2518,13 @@ PRIVATE boolean32 rpc__cthread_dequeue
 **
 **  FUNCTION VALUE:     void
 **
-**  SIDE EFFECTS:       
+**  SIDE EFFECTS:
 **                      a cancel may be posted to the call execution thread
 **
 **--
 **/
 
-PRIVATE void rpc__cthread_cancel 
+PRIVATE void rpc__cthread_cancel
 (
   rpc_call_rep_p_t        call
 )
@@ -2534,10 +2556,10 @@ PRIVATE void rpc__cthread_cancel
 **  SCOPE:              PRIVATE - included in comcthd.h
 **
 **  DESCRIPTION:        Check for pending cancel and flush.
-**      
+**
 **  INPUTS:             none
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **      call            The call that the cancel is associated with.
 **
@@ -2547,10 +2569,10 @@ PRIVATE void rpc__cthread_cancel
 **
 **  IMPLICIT OUTPUTS:   none
 **
-**  FUNCTION VALUE:     
+**  FUNCTION VALUE:
 **                      boolean32 => T iff call had a pending cancel
 **
-**  SIDE EFFECTS:       
+**  SIDE EFFECTS:
 **                      the call will no longer accept cancels
 **                      any pending cancels will be flushed (i.e. the
 **                      call thread must not have any residual pending
@@ -2559,7 +2581,7 @@ PRIVATE void rpc__cthread_cancel
 **--
 **/
 
-PRIVATE boolean32 rpc__cthread_cancel_caf 
+PRIVATE boolean32 rpc__cthread_cancel_caf
 (
   rpc_call_rep_p_t        call
 )
@@ -2613,7 +2635,7 @@ PRIVATE boolean32 rpc__cthread_cancel_caf
     call->u.server.cancel.count = 0;
 
     /*
-     * Let the caller know if a cancel was pending (without them having 
+     * Let the caller know if a cancel was pending (without them having
      * to look at the flag).
      */
     return (call->u.server.cancel.had_pending);
@@ -2628,10 +2650,10 @@ PRIVATE boolean32 rpc__cthread_cancel_caf
 **
 **  DESCRIPTION:        Enable direct posting of cancels to a cthread;
 **                      post any previously queued cancels.
-**      
+**
 **  INPUTS:             none
 **
-**  INPUTS/OUTPUTS:    
+**  INPUTS/OUTPUTS:
 **
 **      call            The call that the cancel is associated with.
 **
@@ -2643,13 +2665,13 @@ PRIVATE boolean32 rpc__cthread_cancel_caf
 **
 **  FUNCTION VALUE:     void
 **
-**  SIDE EFFECTS:       
+**  SIDE EFFECTS:
 **                      a cancel may be posted to the call execution thread
 **
 **--
 **/
 
-PRIVATE void rpc__cthread_cancel_enable_post 
+PRIVATE void rpc__cthread_cancel_enable_post
 (
   rpc_call_rep_p_t        call
 )

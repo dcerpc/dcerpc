@@ -1,25 +1,55 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **
@@ -46,7 +76,7 @@
 **  atomically, with no intermediate state.  We use this to stably write
 **  new blocks, and free existing ones.  There is no atomic update operation;
 **  the caller must establish protocol for doing updates of existing records.
-**  
+**
 **  The memory model is simple.  The heap file begins with a header page
 **  containing version information etc. (including the size of the stably
 **  initialized portion of the file).  The rest of the file is some integral
@@ -63,7 +93,7 @@
 **  boundary.  The first 64 bytes of each record, including the preheader,
 **  fit within a page, so the preheader (16 bytes currently) and the first
 **  48 bytes of the user data can be atomically updated.
-**  
+**
 **  When initially created, no data pages are allocated to the file (just
 **  the header is filled in).  When the file needs to grow (because no suitable
 **  free block is available) it is extended by an integral number of pages,
@@ -75,7 +105,7 @@
 **  of the file is created, and the entire file read into it.  Within memory
 **  a free list is constructed linking all free blocks; this list is
 **  reconstructed at open time by traversing the entire (virtual) file.
-**  
+**
 **  A given data store can be specified to be volatile at open/create time
 **  by giving a null or empty filename, in which case there will be no backing
 **  file.  This allows PL/I-style storage areas, where an arbitrary number
@@ -89,7 +119,6 @@
 #if HAVE_CONFIG_H
 #include <config.h>
 #endif
-
 
 #include <dce/dce.h>
 #include <string.h>
@@ -165,7 +194,7 @@ error_status_t *st;         /* (output) status */
     dsh->cookie = DSM_COOKIE;               /* magic cookie */
     dsh->coalesced = false;                 /* no coalesce yet */
     dsh->pending = 0;                       /* no allocated/unwritten blocks */
-    cache_clear(dsh);                       /* nothing in cache */                    
+    cache_clear(dsh);                       /* nothing in cache */
 
     *new_dsh = (dsm_handle_t)dsh;           /* fill in user's dsh */
 
@@ -181,7 +210,7 @@ error_status_t *st;         /* (output) status */
     an initial file map (one entry) mapping the entire file (pages
     1..pagecount) to a single buffer, which we allocate and read the file
     into.  Finally we use the build_freelist() operation to traverse the file
-    constructing the free list.  If the file name is null/empty there is no  
+    constructing the free list.  If the file name is null/empty there is no
     backing store.
 */
 
@@ -214,7 +243,7 @@ error_status_t *st;         /* (output) status */
         PROP_BAD_ST;
 
         if (dcethread_read(fd,&fhdr,PAGE_SIZE) != PAGE_SIZE) SIGNAL(dsm_err_file_io_error); /* read hdr */
-     
+
         if (fhdr.version != dsm_version) SIGNAL(dsm_err_version); /* check version */
     }
 
@@ -222,7 +251,7 @@ error_status_t *st;         /* (output) status */
     if (dsh == NULL) SIGNAL(dsm_err_no_memory);    /* make sure we got it */
 
     dsh->fd = fd;                   /* remember fd */
-    dsh->fname = (char *) malloc(ustrlen(fname)+1);  
+    dsh->fname = (char *) malloc(ustrlen(fname)+1);
     ustrlcpy(dsh->fname, fname, ustrlen(fname)+1);      /* and filename */
     dsh->freelist = NULL;           /* no free list yet */
     dsh->map = NULL;                /* no memory mapping yet */
@@ -239,13 +268,13 @@ error_status_t *st;         /* (output) status */
         dsh->map->size = dsh->pages*PAGE_SIZE;                      /* it's this many bytes long */
         dsh->map->ptr = (block_t *)malloc(dsh->map->size);          /* allocate space for it */
         if (dsh->map->ptr == NULL) SIGNAL(dsm_err_no_memory);  /* did we get it? */
-    
+
         /* observe that the file pointer is right after the header, from header read.
         */
         if ((unsigned32)dcethread_read(dsh->fd,dsh->map->ptr,dsh->map->size) != dsh->map->size) { /* read in the file */
             SIGNAL(dsm_err_file_io_error); /* gripe if that fails */
         }
-    
+
         build_freelist(dsh);        /* reconstruct free list */
     }
 
@@ -312,7 +341,7 @@ dsm_handle_t   dsx;        /* data store handle */
 unsigned32     usr_size;   /* requested minimum size of user data area */
 void *         *ptr;        /* (output) allocated storage (user data) */
 error_status_t *st;         /* (output) status */
-{              
+{
     dsm_handle dsh = (dsm_handle)dsx;
     block_t            *p;      /* new block */
     block_t            *fp;     /* constructed block made from tail of large free block */
@@ -324,14 +353,14 @@ error_status_t *st;         /* (output) status */
     verify_dsh(dsh);                    /* reality check */
 
     usr_size = ROUND_UP(usr_size,8);            /* round size up to 8-byte alignment */
-    
+
     p = get_free_block(dsh,usr_size);           /* get suitably-sized block from free list */
 
     if (p == NULL) {                            /* didn't find one? */
         coalesce(dsh, st);                      /* coalesce adjacent free blocks */
         PROP_BAD_ST;
         p = get_free_block(dsh,usr_size);       /* try again */
-        if (p == NULL) {                        /* still out of luck? grow the file */ 
+        if (p == NULL) {                        /* still out of luck? grow the file */
             p = grow_file(dsh, usr_size, st);   /* grow the file by at least usr_size */
             PROP_BAD_ST;
         }
@@ -389,7 +418,6 @@ error_status_t *st;     /* (output) status */
 
     make_free(dsh,p,st);                 /* free the block stably, add to free list */
 
-
 } /* dsm_free */
 
 /** dsm_detach
@@ -403,7 +431,7 @@ error_status_t *st;     /* (output) status */
     log etc.).  For such applications we provide a 'detach' operation.  Detach
     is similar to free; the effect is that if a crash occurs between the detach
     and write phases of an update, the block in question is effectively freed,
-    i.e. upon restarting the record being updated will have been deleted. 
+    i.e. upon restarting the record being updated will have been deleted.
     dsm_detach of a free/detached record is a no-op.
 */
 
@@ -608,13 +636,13 @@ error_status_t *st;     /* status */
 
     memcpy(hdr.info,info,size);          /* copy caller's info into header */
 
-    /* 
+    /*
      * seek back to the beginning, write out file header, synch the file.
      */
     if (lseek(dsh->fd,0,L_SET) == -1
     ||  dcethread_write(dsh->fd,&hdr,PAGE_SIZE) != PAGE_SIZE
     ||  dsm__flush_file(dsh->fd) != status_ok ) SIGNAL(dsm_err_file_io_error);
- 
+
     CLEAR_ST;
 } /* dsm_set_info */
 
@@ -629,7 +657,7 @@ error_status_t *st;     /* status */
     to the record filled in.  A status of dsm_err_no_more_entries will
     be returned when no more valid entries exist (i.e. on the call *after*
     the last valid entry is seen).  Thus the complete set of allocated
-    records can be traversed by calling dsm_marker_reset and then 
+    records can be traversed by calling dsm_marker_reset and then
     repeatedly calling dsm_read with that marker as long as the status
     is status_ok.
 
@@ -637,8 +665,8 @@ error_status_t *st;     /* status */
     other dsm calls will see all allocated records.  However in general it
     is possible for a marker to become stale, as could happen during a
     coalesce operation.  We maintain a small cache of valid marker values,
-    cleared upon coalescing; if a given marker value is not cached, then 
-    we scan the data store from some earlier known valid block loooking 
+    cleared upon coalescing; if a given marker value is not cached, then
+    we scan the data store from some earlier known valid block loooking
     for the first allocated block at a higher offset than the nominal
     marker value (at worst we might have to scan the entire data store;
     the problem is that with variable-length records it's hard to find an
@@ -699,7 +727,7 @@ error_status_t *st;     /* (output) status */
 /** dsm_locate
 
     Returns a pointer to a dsm block, given a marker identifying that block, as
-    returned by dsm_read (the marker returned by a dsm_read call corresponds 
+    returned by dsm_read (the marker returned by a dsm_read call corresponds
     to the record returned by that call), or by dsm_inq_marker.  The marker is
     simply the record's offset in the file.  We locate the record by methods
     similar to dsm_read, but the record must be located exactly.
@@ -720,9 +748,9 @@ error_status_t *st;     /* (output) status */
 
     verify_dsh(dsh);                    /* reality check */
 
-    /* reset marker is not valid 
+    /* reset marker is not valid
     */
-    if (marker == MAGIC_MARKER) SIGNAL(dsm_err_invalid_marker); 
+    if (marker == MAGIC_MARKER) SIGNAL(dsm_err_invalid_marker);
 
     /* If this marker is in the cache, we can use the block cached with it.
        Otherwise we have to back up to some known block at an earlier
@@ -750,7 +778,7 @@ error_status_t *st;     /* (output) status */
 
 /** dsm_marker_reset
 
-    Reset the given dsm_marker_t such that it will cause the first 
+    Reset the given dsm_marker_t such that it will cause the first
     block to be returned from the next dsm_read.
 */
 
@@ -763,7 +791,7 @@ dsm_marker_t  *marker;
 /** dsm_inq_marker
 
     Returns a marker identifying a given dsm block.  This marker can later
-    be used to redevelop a pointer to the block, with dsm_locate, even if 
+    be used to redevelop a pointer to the block, with dsm_locate, even if
     the data store is closed in between.  Naturally such a marker becomes
     invalid if the block in question is freed.
 */
@@ -793,7 +821,7 @@ error_status_t *st;     /* (output) status */
 
 /** dsm_inq_size
 
-    Returns (in the "size" parameter) the size in bytes allocated to the 
+    Returns (in the "size" parameter) the size in bytes allocated to the
     given dsm block.  This may be larger than the amount requested when
     the block was allocated.
 */
@@ -875,13 +903,12 @@ error_status_t *st;         /* (output) status */
     unsigned32          size;           /* size of record */
     error_status_t      st2;
 
-
     if (curh) {
         /*  does handle point to same data store that is being
             reclaimed?
         */
         if (ustrcmp(name, ((dsm_handle)curh)->fname) != 0) {
-            *st = dsm_err_invalid_handle; 
+            *st = dsm_err_invalid_handle;
             return false;
         }
     }
@@ -895,7 +922,7 @@ error_status_t *st;         /* (output) status */
     dsm_get_stats(curh,&stats,st);      /* get statistics */
     if (BAD_ST) goto EXIT;
 
-    if ((stats.size == 0) || 
+    if ((stats.size == 0) ||
         (stats.free_space <= (GROW_PAGES*PAGE_SIZE)) ||
         ((100*stats.free_space)/stats.size <= pct)) { /* ignore if within pct */
         goto EXIT;                      /* return (with that status) */
@@ -928,34 +955,34 @@ error_status_t *st;         /* (output) status */
         if (BAD_ST) goto EXIT;
     }
 
-    /* close datastores 
+    /* close datastores
     */
-    dsm_close(&newh,st); 
-    if (BAD_ST) goto EXIT; 
+    dsm_close(&newh,st);
+    if (BAD_ST) goto EXIT;
 
-    dsm_close(&curh,st);              
-    if (BAD_ST) goto EXIT; 
+    dsm_close(&curh,st);
+    if (BAD_ST) goto EXIT;
 
     if (rename((char *)name,(char *)bakname) != 0) { /* rename foo, foo.bak */
         (*st) = dsm_err_file_io_error;
         goto EXIT;
     }
-    
+
     if (rename((char *)tmpname,(char *)name) != 0) { /* rename foo.new foo */
         (*st) = dsm_err_file_io_error;
         goto EXIT;
     }
 
     if ((*dsx) != NULL) {
-        dsm_open(name,dsx,st);          /* open reclaimed datastore */      
+        dsm_open(name,dsx,st);          /* open reclaimed datastore */
         if (BAD_ST) goto EXIT;
     }
 
     return true;
 
-EXIT:   /* problem 
+EXIT:   /* problem
            clean up stuff dsm_reclaim has opened/created
-           exit (with status st) 
+           exit (with status st)
         */
     if ((curh) && ((*dsx) == NULL )) {
         dsm_close(&curh,&st2);
@@ -966,9 +993,9 @@ EXIT:   /* problem
 
     if (newh) {
         dsm_close(&newh,&st2);
-    } 
+    }
 
-    remove((char *) tmpname);  
+    remove((char *) tmpname);
     return false;
 } /* dsm_reclaim */
 
@@ -1133,7 +1160,7 @@ error_status_t *st;
         update_file_header(dsh, st);        /* update the file header to include new page count */
     }
     else dsh->pages += grow_pages;          /* maintain page count even if no fd */
-                                            
+
     CLEAR_ST;
     return p;                               /* return the newly allocated block */
 } /* grow_file */
@@ -1219,12 +1246,12 @@ error_status_t *st;
     ||  fsync(dsh->fd) == -1) SIGNAL(dsm_err_file_io_error);
 
     CLEAR_ST;
- 
+
 } /* update_file_header */
 
 /** create_file
 
-    Create a new file of a given name.  Essentially x = create_file(foo) 
+    Create a new file of a given name.  Essentially x = create_file(foo)
     has the semantics of x = open(foo,O_CREAT|O_RDWR,0666), but on older
     Apollo systems (pre-SR10) we need to force the created object to
     'unstruct' not 'uasc' -- the latter includes an invisible stream header
@@ -1408,7 +1435,7 @@ dsm_handle   dsh;  /* data store handle */
 
             next = (block_t *) (((char *)this)+this->size+PREHEADER);   /* find next block */
             if ((unsigned)((char *)next-(char *)map->ptr) >= map->size) break;   /* is this the last block? */
-            
+
             this = next;                            /* iterate looking at next */
         }
     }
@@ -1494,7 +1521,7 @@ dsm_marker_t   marker ATTRIBUTE_UNUSED;
 
     We maintain, per database, a cache of location/pointer values for use
     by dsm_read.  The cache is cleared initially and upon coalesce(),
-    and the location/pointer pair returned by successful dsm_read is 
+    and the location/pointer pair returned by successful dsm_read is
     entered in the cache.  The size of the cache depends on the expected
     pattern of dsm_read calls.
 
@@ -1537,7 +1564,7 @@ dsm_marker_t   mkr;
 {
     dsh->cache.loc = mkr;
     dsh->cache.p = p;
-} /* cache_add */    
+} /* cache_add */
 
 /** cache_lookup
 
@@ -1558,4 +1585,3 @@ dsm_marker_t   mkr;
     }
     else return NULL;
 } /* cache_lookup */
-

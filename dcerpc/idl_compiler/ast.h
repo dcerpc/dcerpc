@@ -1,23 +1,55 @@
 /*
- * 
- * (c) Copyright 1993 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1993 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1993 DIGITAL EQUIPMENT CORPORATION
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
+
 /*
 **
 **  NAME:
@@ -261,13 +293,11 @@
  * 0x8000000 |             |         |             |               |             | out_pa_stub   |
   */
 
-
 #include <nidl.h>
 #include <be_pvt.h>
 #include <ir_pvt.h>
 #include <fe_pvt.h>
 #include <nametbl.h>
-
 
 /* flags used in interface, type, field, parameter attribute flag words */
 #define AST_IN_LINE       0x0001
@@ -458,7 +488,7 @@
 
 #define AST_OBJECT_SET(np)			 (AST_OBJECT & (np)->flags)
 #define AST_CLR_OBJECT(np)			 ((np)->flags &= ~AST_OBJECT
-#define AST_SET_OBJECT(np)			 (np)->flags |= AST_OBJECT		  
+#define AST_SET_OBJECT(np)			 (np)->flags |= AST_OBJECT
 
 #define AST_NO_CANCEL_SET(np)     (AST_NO_CANCEL & (np)->flags)
 #define AST_CLR_NO_CANCEL(np)     (np)->flags &= ~AST_NO_CANCEL
@@ -664,8 +694,6 @@
 #define AST_MUTABLE_SET(np)       (((np)->flags & (AST_UNIQUE|AST_REF)) == 0)
 #define AST_SET_MUTABLE(np)       ((np) == (np))
 
-
-
 /*
  *  A S T _ f l a g s _ t
  *
@@ -696,7 +724,7 @@ typedef struct AST_interface_n_t {
     NAMETABLE_id_t      implicit_handle_type_name;
     struct AST_type_n_t *implicit_handle_type;
     int                 op_count;               /* synthsized: */
-    AST_flags_t         flags;  
+    AST_flags_t         flags;
     /*
      *  The following five fields head lists of type_p_n_t nodes that point
      *  to exported types that, in one way or another, oblige the backend
@@ -725,7 +753,6 @@ typedef struct AST_interface_n_t {
     struct AST_interface_n_t *prev; /* Previous sibling interface */
 } AST_interface_n_t;
 
-
 /*
  *  A S T _ t y p e _ p _ n _ t
  */
@@ -737,7 +764,6 @@ typedef struct AST_type_p_n_t {
     struct AST_type_p_n_t *last;
     struct AST_type_n_t   *type;
 } AST_type_p_n_t;
-
 
 /*
  *  A S T _ i n c l u d e  _ n _ t
@@ -752,7 +778,6 @@ typedef struct AST_include_n_t {
     STRTAB_str_t           simple_file_name;
 } AST_include_n_t;
 
-
 /*
  *  A S T _ e x c e p t i o n _ n _ t
  */
@@ -766,7 +791,6 @@ typedef struct AST_exception_n_t {
     AST_flags_t                 flags;
 } AST_exception_n_t;
 
-
 /*
  *  A S T _ n a m e _ n _ t
  */
@@ -778,7 +802,6 @@ typedef struct AST_name_n_t {
     struct AST_name_n_t     *last;
     NAMETABLE_id_t          name;
 } AST_name_n_t;
-
 
 /*
  *  A S T _ i m p o r t _ n _ t
@@ -793,7 +816,6 @@ typedef struct AST_import_n_t {
     AST_interface_n_t     *interface;
 } AST_import_n_t;
 
-
 /*
  *  A S T _ e x p o r t _ k _ t
  */
@@ -804,8 +826,6 @@ typedef enum {
     AST_type_k,
     AST_cpp_quote_k
 } AST_export_k_t;
-
-
 
 /*
  *  A S T _ e x p o r t _ n _ t
@@ -825,15 +845,13 @@ typedef struct AST_export_n_t {
     } thing_p;
 } AST_export_n_t;
 
-
-
 //this is for CPP_quotes take place inside interface (from Brian originally, extended by wfu
 typedef struct AST_cpp_quote_n_t {
     fe_info_t              *fe_info;
     be_info_t              be_info;
 
     struct AST_cpp_quotes_n_t *next;
-    struct AST_cpp_quotes_n_t *last;      
+    struct AST_cpp_quotes_n_t *last;
     STRTAB_str_t           text;
 } AST_cpp_quote_n_t;
 
@@ -908,7 +926,6 @@ typedef struct AST_constant_n_t {
     boolean int_signed;
 } AST_constant_n_t;
 
-
 /*
  *  A S T _ t y p e _ k _ t
  */
@@ -932,7 +949,6 @@ typedef enum {
     AST_null_k,	 AST_interface_k
 } AST_type_k_t;
 
-
 /*
  *  A S T _ t y p e _ n _ t
  */
@@ -954,7 +970,6 @@ typedef struct AST_type_n_t {
 	struct AST_interface_n_t   *interface;	  /*  "   == interface_k */
     } type_structure;
 
-
     /* type attributes */
     AST_flags_t           flags;
     struct AST_type_n_t   *xmit_as_type;
@@ -969,7 +984,6 @@ typedef struct AST_type_n_t {
     NAMETABLE_id_t      iid_is_name;    /* name of iis_is */
 } AST_type_n_t;
 
-
 /*
  *  A S T _ r e p _ a s _ n _ t
  */
@@ -983,7 +997,6 @@ typedef struct AST_rep_as_n_t {
     struct IR_tup_n_t   *data_tups;     /* Intermediate rep tuples */
 } AST_rep_as_n_t;
 
-
 /*
  *  A S T _ c s _ c h a r _ n _ t
  */
@@ -995,7 +1008,6 @@ typedef struct AST_cs_char_n_t {
     IR_info_t           ir_info;
     struct IR_tup_n_t   *data_tups;     /* Intermediate rep tuples */
 } AST_cs_char_n_t;
-
 
 /*
  *  A S T _ a r r a y _ n _ t
@@ -1009,7 +1021,6 @@ typedef struct AST_array_n_t {
     struct AST_array_index_n_t *index_vec;  /* a vector of size index_count */
 } AST_array_n_t;
 
-
 /*
  *  A S T _ a r r a y _ i n d e x _ n _ t
  */
@@ -1021,7 +1032,6 @@ typedef struct AST_array_index_n_t {
     AST_constant_n_t    *lower_bound; /* defined iff (flags & FIXED_LOWER) */
     AST_constant_n_t    *upper_bound; /* defined iff (flags & FIXED_UPPER) */
 } AST_array_index_n_t;
-
 
 /*
  *  A S T _ d i s c _ u n i o n _ n _ t
@@ -1036,7 +1046,6 @@ typedef struct AST_disc_union_n_t {
     struct AST_type_n_t *discrim_type;
     struct AST_arm_n_t  *arms;
 } AST_disc_union_n_t;
-
 
 /*
  *  A S T _ a r m _ n _ t
@@ -1072,7 +1081,6 @@ typedef struct AST_arm_n_t {
     struct AST_case_label_n_t *labels;
 } AST_arm_n_t;
 
-
 /*
  *  A S T _ c a s e _ l a b e l _ n _ t
  */
@@ -1086,7 +1094,6 @@ typedef struct AST_case_label_n_t {
     AST_constant_n_t          *value;
 } AST_case_label_n_t;
 
-
 /*
  *  A S T _ e n u m e r a t i o n _ n _ t
  */
@@ -1096,7 +1103,6 @@ typedef struct AST_enumeration_n_t {
     be_info_t        be_info;
     AST_constant_n_t *enum_constants;
 } AST_enumeration_n_t;
-
 
 /*
  *  A S T _ p i p e _ n _ t
@@ -1108,7 +1114,6 @@ typedef struct AST_pipe_n_t {
     AST_type_n_t *base_type;
 } AST_pipe_n_t;
 
-
 /*
  *  A S T _ p o i n t e r _ n _ t
  */
@@ -1118,7 +1123,6 @@ typedef struct AST_pointer_n_t {
     be_info_t    be_info;
     AST_type_n_t *pointee_type;
 } AST_pointer_n_t;
-
 
 /*
  *  A S T _ s t r u c t u r e _ n _ t
@@ -1130,7 +1134,6 @@ typedef struct AST_structure_n_t {
     struct AST_field_n_t *fields;
     NAMETABLE_id_t       tag_name;     /* NAMETABLE_NIL_ID if no tag */
 } AST_structure_n_t;
-
 
 /*
  *  A S T _ f i e l d _ n _t
@@ -1217,7 +1220,6 @@ typedef struct AST_exp_n_t {
     } exp;
 } AST_exp_n_t;   /* const expression block */
 
-
 /*
  *  A S T _ f i e l d _ r e f _ n _ t
  *
@@ -1232,12 +1234,11 @@ typedef struct AST_field_ref_n_t {
     union {
         struct AST_field_n_t     *f_ref;
         struct AST_parameter_n_t *p_ref;
-        int                       integer; 
+        int                       integer;
     } ref;
     unsigned long xtra_opcode;
     unsigned long xtra_argument;
 } AST_field_ref_n_t;
-
 
 /*
  *  A S T _ p a r a m e t e r _ n _ t
@@ -1275,7 +1276,6 @@ typedef struct AST_parameter_n_t {
     int                       param_num;
     struct AST_operation_n_t  *uplink; /* points to op. containing parameter */
 } AST_parameter_n_t;
-
 
 /*
  *  A S T _ o p e r a t i o n _ n _ t

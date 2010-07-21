@@ -1,28 +1,55 @@
 /*
- * 
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
-#if	!defined(_CS_S_H)
-#define _CS_S_H
+
 /*
 **  NAME
 **
@@ -40,6 +67,9 @@
 **
 */
 
+#if	!defined(_CS_S_H)
+#define _CS_S_H
+
 /*
  * ISO 10646:1992, UCS-2, Level 2
  * Universal Code Set (encoding) for DCE
@@ -47,7 +77,7 @@
 #define UCS2_L2		0x0010101
 
 /*
- * When rpc_ns_mgmt_*** routines are extended in the future to, 
+ * When rpc_ns_mgmt_*** routines are extended in the future to,
  * deal with attributes other than code sets, the new attribute
  * specifier needs to be added here.
  */
@@ -62,7 +92,6 @@
 #define	RPC_CS_EVAL_TAGS		0
 #define RPC_CS_EVAL_METHOD		1
 
-
 /*
  * Code sets interoperability connection models
  */
@@ -73,8 +102,7 @@
 #define	RPC_EVAL_INTERMEDIATE_MODEL	0x0005
 #define	RPC_EVAL_UNIVERSAL_MODEL	0x0006
 
-
-/* 
+/*
  * Extension to an import context handle.  The new field 'eval_routines'
  * in 'rpc_lkup_rep_t' will be the following data structure.
  */
@@ -82,7 +110,6 @@ typedef struct {
 	unsigned32		num;
 	rpc_cs_eval_list_p	list;
 } rpc_cs_eval_func_t, *rpc_cs_eval_func_p_t;
-
 
 /*
  * R P C _ C S _ C O D E S E T _ I 1 4 Y _ D A T A
@@ -105,7 +132,6 @@ typedef struct codeset_i14y_data {
 	error_status_t		status;
 } rpc_cs_codeset_i14y_data, *rpc_cs_codeset_i14y_data_p;
 
-
 /*
  * Internal routine to attach the code set interoperability
  * attributes to a binding handle.  This routine is not intended
@@ -116,7 +142,6 @@ extern void rpc_cs_binding_set_method (
     /* [in] */ rpc_cs_method_eval_p_t method_p,
     /* [out] */ error_status_t *status
 );
-
 
 /*
  * prototype declarations for locally defined routines

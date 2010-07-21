@@ -1,24 +1,55 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
+
 /*
 **
 **  NAME
@@ -27,7 +58,7 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
@@ -53,11 +84,11 @@ static int n_calls = 0,
     n_maybe = 0,
     n_brd_maybe = 0;
 
-static struct 
+static struct
 {
     unsigned32      count;
     uuid_p_t        uuid[3];
-} object_vec = 
+} object_vec =
 {
     3,
     {
@@ -66,7 +97,6 @@ static struct
         (uuid_p_t) &FooObj1
     }
 };
-
 
 
 /***************************************************************************/
@@ -89,10 +119,10 @@ void perf_init
 
 /***************************************************************************/
 
-void perf_info 
+void perf_info
 (
     handle_t                h __attribute__(unused),
-    unsigned32           *n, 
+    unsigned32           *n,
     unsigned32           *nm,
     unsigned32           *nb,
     unsigned32           *nbm
@@ -106,7 +136,7 @@ void perf_info
 
 /***************************************************************************/
 
-void perf_null 
+void perf_null
 (
     handle_t                h __attribute__(unused)
 )
@@ -116,7 +146,7 @@ void perf_null
 
 /***************************************************************************/
 
-void perf_null_idem 
+void perf_null_idem
 (
     handle_t                h __attribute__(unused)
 )
@@ -126,7 +156,7 @@ void perf_null_idem
 
 /***************************************************************************/
 
-void perf_in 
+void perf_in
 (
     handle_t                h __attribute__(unused),
     perf_data_t             d,
@@ -136,7 +166,7 @@ void perf_in
 )
 {
     unsigned long           i, rsum;
-    
+
     common();
 
     if (! verify)
@@ -154,7 +184,7 @@ void perf_in
 
 /***************************************************************************/
 
-void perf_in_idem 
+void perf_in_idem
 (
     handle_t                h __attribute__(unused),
     perf_data_t             d,
@@ -168,7 +198,7 @@ void perf_in_idem
 
 /***************************************************************************/
 
-void perf_out 
+void perf_out
 (
     handle_t                h __attribute__(unused),
     perf_data_t             d,
@@ -179,7 +209,6 @@ void perf_out
 )
 {
     unsigned long           i;
-
 
     common();
 
@@ -198,7 +227,7 @@ void perf_out
 
 /***************************************************************************/
 
-void perf_out_idem 
+void perf_out_idem
 (
     handle_t                h,
     perf_data_t             d,
@@ -213,7 +242,7 @@ void perf_out_idem
 
 /***************************************************************************/
 
-void perf_brd 
+void perf_brd
 (
     handle_t                h,
     idl_char                *name
@@ -221,13 +250,13 @@ void perf_brd
 {
     print_binding_info ("perf_brd", h);
     common();
-    n_brd++; 
+    n_brd++;
     gethostname(name, 256);
 }
 
 /***************************************************************************/
 
-void perf_maybe 
+void perf_maybe
 (
     handle_t                h
 )
@@ -239,7 +268,7 @@ void perf_maybe
 
 /***************************************************************************/
 
-void perf_brd_maybe 
+void perf_brd_maybe
 (
     handle_t                h
 )
@@ -251,7 +280,7 @@ void perf_brd_maybe
 
 /***************************************************************************/
 
-void perf_fp_test 
+void perf_fp_test
 (
     handle_t                h __attribute__(unused),
     float                   *f1,
@@ -278,7 +307,7 @@ void perf_fp_test
 static boolean32            got_fwd_bindings = false;
 static rpc_binding_vector_p_t fwd_bv;
 
-void perf_register_b 
+void perf_register_b
 (
     handle_t                h,
     idl_boolean             global __attribute__(unused),
@@ -290,9 +319,8 @@ void perf_register_b
     unsigned int                     i;
     unsigned32              xst;
     extern rpc_if_handle_t    perfb_v1_0_s_ifspec;
-    extern perfb_v1_0_epv_t   perfb_mgr_epv; 
+    extern perfb_v1_0_epv_t   perfb_mgr_epv;
     extern rpc_binding_vector_p_t bv;
-
 
     print_binding_info ("perf_register_b", h);
 
@@ -321,7 +349,7 @@ void perf_register_b
          * Need to come up with a vector of handles to the newly created
          * endpoint.  This is a real hack (the ordering of the handles
          * is presumptious), but it should work for the purposes of this
-         * test.  The correct thing to do would be to convert all the bindings 
+         * test.  The correct thing to do would be to convert all the bindings
          * to binding-strings and filter out all duplicates.
          */
 
@@ -332,7 +360,7 @@ void perf_register_b
             *st = -1;   /* !!! */
             return;
         }
-                   
+
         /*
          * Free all the pre-existing handles and shuffle the new ones to the
          * beginning of the vector (adjust the count appropriately).
@@ -343,7 +371,7 @@ void perf_register_b
 
         for (i = bv->count; i < fwd_bv->count; i++)
         {
-            rpc_binding_copy(fwd_bv->binding_h[i], 
+            rpc_binding_copy(fwd_bv->binding_h[i],
                     &fwd_bv->binding_h[i-bv->count], st);
             rpc_binding_free(&fwd_bv->binding_h[i], st);
         }
@@ -367,11 +395,11 @@ void perf_register_b
         got_fwd_bindings = true;
     }
 
-    rpc_server_register_if(perfb_v1_0_s_ifspec, 
+    rpc_server_register_if(perfb_v1_0_s_ifspec,
                     (uuid_p_t) NULL, (rpc_mgr_epv_t) &perfb_mgr_epv, st);
     if (*st != 0)
     {
-        fprintf(stderr, "*** Can't rpc_server_register_if - %s\n", 
+        fprintf(stderr, "*** Can't rpc_server_register_if - %s\n",
                 error_text (*st));
         return;
     }
@@ -381,7 +409,7 @@ void perf_register_b
 
     if (*st != 0)
     {
-        fprintf(stderr, "*** Can't rpc_ep_register - %s\n", 
+        fprintf(stderr, "*** Can't rpc_ep_register - %s\n",
                 error_text (*st));
         rpc_server_unregister_if(perfb_v1_0_s_ifspec, (uuid_p_t) NULL, &xst);
         if (xst != 0)
@@ -412,7 +440,7 @@ void perf_unregister_b
         *st = -1;   /* !!! */
     }
 
-    rpc_ep_unregister(perfb_v1_0_s_ifspec, fwd_bv, 
+    rpc_ep_unregister(perfb_v1_0_s_ifspec, fwd_bv,
                             (uuid_vector_p_t) &object_vec, &st1);
     if (st1 != 0)
     {
@@ -433,7 +461,7 @@ void perf_unregister_b
 
 /***************************************************************************/
 
-void perf_exception 
+void perf_exception
 (
     handle_t                h
 )
@@ -453,7 +481,7 @@ void perf_exception
      */
 
     RAISE (exc_e_intdiv);
-    
+
 }
 
 /***************************************************************************/
@@ -481,7 +509,7 @@ static void slow
                 printf("    ...awake!\n");
                 break;
 
-            case perf_slow_cpu: 
+            case perf_slow_cpu:
                 printf("+ CPU looping for %lu seconds...\n", secs);
                 while ((unsigned32)(time(0) - start_time) < secs)
                 {
@@ -490,7 +518,7 @@ static void slow
                 printf("    ...done!\n");
                 break;
 
-            case perf_slow_io: 
+            case perf_slow_io:
             {
                 char *heap = (char *) malloc(secs);
                 int f, n;
@@ -528,7 +556,6 @@ static void slow
                     }
                     printf("    ...read %d bytes (%ld)\n", n, i);
                 }
-
 
 DONE:
                 printf("    ...done!\n");
@@ -584,7 +611,7 @@ DONE:
 
 /***************************************************************************/
 
-void perf_null_slow 
+void perf_null_slow
 (
     handle_t                h,
     perf_slow_mode_t        mode,
@@ -592,7 +619,7 @@ void perf_null_slow
 )
 {
   int oc = 0;
-  
+
   if (mode == perf_slow_cpu)
     oc = pthread_setcancel(CANCEL_OFF);
 
@@ -606,7 +633,7 @@ void perf_null_slow
 
 /***************************************************************************/
 
-void perf_null_slow_idem 
+void perf_null_slow_idem
 (
     handle_t                h,
     perf_slow_mode_t        mode,
@@ -614,7 +641,7 @@ void perf_null_slow_idem
 )
 {
   int oc =0;
-  
+
   if (mode == perf_slow_cpu)
     oc = pthread_setcancel(CANCEL_OFF);
 
@@ -628,7 +655,7 @@ void perf_null_slow_idem
 
 /***************************************************************************/
 
-void perf_shutdown 
+void perf_shutdown
 (
     handle_t                h
 )
@@ -646,7 +673,6 @@ struct shutdown_info
 {
     unsigned32      secs;
 };
-
 
 static void *shutdown_thread
 (
@@ -676,7 +702,6 @@ static void *shutdown_thread
     return NULL;
 }
 
-
 void perf_shutdown2
 (
     handle_t                h __attribute__(unused),
@@ -693,16 +718,15 @@ void perf_shutdown2
     p = (struct shutdown_info *) malloc (sizeof *p);
     p->secs = secs;
 
-    pthread_create (&thread, pthread_attr_default, 
+    pthread_create (&thread, pthread_attr_default,
 	shutdown_thread, (void *) p);
     pthread_detach (&thread);
 }
 
-
 
 /***************************************************************************/
 
-void perf_call_callback 
+void perf_call_callback
 (
     handle_t                h,
     unsigned32           idem
@@ -711,7 +735,6 @@ void perf_call_callback
     unsigned                     i;
     unsigned32           c, passes;
     unsigned32          st;
-
 
     print_binding_info ("perf_call_callback", h);
     common();
@@ -742,7 +765,7 @@ void perf_call_callback
 
 /***************************************************************************/
 
-struct context 
+struct context
 {
     unsigned long   magic;
     unsigned long   data;
@@ -842,11 +865,10 @@ void perf_brd_fault
 )
 {
     common();
-    n_brd++; 
+    n_brd++;
     print_binding_info ("perf_brd_fault", h);
     RAISE (rpc_x_unknown_remote_fault);
 }
-
 
 
 /***************************************************************************/

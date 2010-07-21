@@ -1,26 +1,55 @@
 /*
- * 
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **      ndrmi2.c
@@ -37,7 +66,6 @@
 #if HAVE_CONFIG_H
 #include <config.h>
 #endif
-
 
 #include <dce/idlddefs.h>
 #include <ndrmi.h>
@@ -74,7 +102,7 @@ void rpc_ss_ndr_marsh_pointee
     rpc_void_p_t pointee_addr,      /* address of pointee */
     idl_boolean register_node,      /* TRUE => this is the pointee of a
                                         deferred [ptr] pointer */
-    IDL_pointee_desc_t *p_pointee_desc, /* Data describing pointee 
+    IDL_pointee_desc_t *p_pointee_desc, /* Data describing pointee
                                - not used unless pointee is non-fixed array
                                                 or non-encapsulated union */
     IDL_msp_t IDL_msp
@@ -475,7 +503,7 @@ void rpc_ss_ndr_m_struct_pointees
                 {
                     offset = *offset_vec_ptr;
                     rpc_ss_ndr_m_dfc_arr_ptees(field_defn_index,
-                                        (idl_byte *)struct_addr+offset, 
+                                        (idl_byte *)struct_addr+offset,
                                         NULL, NULL, 0, IDL_msp);
                 }
                 offset_vec_ptr++;
@@ -622,7 +650,7 @@ void rpc_ss_ndr_m_struct_pointees
                 field_defn_ptr = IDL_msp->IDL_type_vec + field_defn_index;
                 if (*(rpc_void_p_t *)((idl_byte *)struct_addr+offset) != NULL)
                 {
-                    rpc_ss_pointee_desc_from_data( field_defn_ptr, 
+                    rpc_ss_pointee_desc_from_data( field_defn_ptr,
                             *(rpc_void_p_t *)((idl_byte *)struct_addr+offset),
                             struct_addr,
                             struct_offset_vec_ptr, &pointee_desc, IDL_msp );
@@ -637,7 +665,7 @@ void rpc_ss_ndr_m_struct_pointees
                 offset = *offset_vec_ptr;
                 offset_vec_ptr++;
                 field_defn_ptr = IDL_msp->IDL_type_vec + field_defn_index;
-                rpc_ss_pointee_desc_from_data( field_defn_ptr, 
+                rpc_ss_pointee_desc_from_data( field_defn_ptr,
                             *(rpc_void_p_t *)((idl_byte *)struct_addr+offset),
                             struct_addr,
                             struct_offset_vec_ptr, &pointee_desc, IDL_msp );
@@ -754,7 +782,7 @@ static void rpc_ss_ndr_m_f_or_c_arr_ptees
         {
             if (*(rpc_void_p_t *)array_elt_addr != NULL)
             {
-                rpc_ss_pointee_desc_from_data( defn_vec_ptr, 
+                rpc_ss_pointee_desc_from_data( defn_vec_ptr,
                                            *(rpc_void_p_t *)array_elt_addr,
                                            NULL, NULL, &pointee_desc, IDL_msp );
                 rpc_ss_ndr_marsh_pointee( defn_vec_ptr, *array_elt_addr,
@@ -789,7 +817,7 @@ void rpc_ss_ndr_m_dfc_arr_ptees
     idl_ulong_int dimensionality;
     IDL_bound_pair_t *bounds_list;
 
-    defn_vec_ptr = IDL_msp->IDL_type_vec + defn_index; 
+    defn_vec_ptr = IDL_msp->IDL_type_vec + defn_index;
     dimensionality = (idl_ulong_int)*defn_vec_ptr;
     defn_vec_ptr++;
     /* By design defn_vec_ptr is longword aligned */
@@ -816,7 +844,7 @@ void rpc_ss_ndr_m_dfc_arr_ptees
 	if (IDL_M_FLAGS_TEST(flags,IDL_M_CONF_ARRAY))
 	  rpc_ss_mem_item_free(&IDL_msp->IDL_mem_handle, (byte_p_t)bounds_list);
     }
-    else 
+    else
 	rpc_ss_mem_item_free(&IDL_msp->IDL_mem_handle, (byte_p_t)bounds_list);
 }
 
@@ -849,7 +877,7 @@ static void rpc_ss_ndr_m_v_or_o_arr_ptees
 
     base_type = *defn_vec_ptr;
 
-    element_size = rpc_ss_type_size(defn_vec_ptr, IDL_msp); 
+    element_size = rpc_ss_type_size(defn_vec_ptr, IDL_msp);
     defn_vec_ptr++;
 
     if ( (base_type == IDL_DT_FIXED_STRUCT) || (base_type == IDL_DT_ENC_UNION) )
@@ -860,18 +888,17 @@ static void rpc_ss_ndr_m_v_or_o_arr_ptees
         element_size = *(IDL_msp->IDL_offset_vec + element_offset_index);
     }
 
-
     control_data = (IDL_varying_control_t *)rpc_ss_mem_alloc(
                                 &IDL_msp->IDL_mem_handle,
                                 dimensionality * sizeof(IDL_varying_control_t));
     control_data[dimensionality-1].subslice_size = element_size;
-    control_data[dimensionality-1].index_value = 
+    control_data[dimensionality-1].index_value =
                                             range_list[dimensionality-1].lower;
     for (i=dimensionality-2; i>=0; i--)
     {
         control_data[i].index_value = range_list[i].lower;
         control_data[i].subslice_size = control_data[i+1].subslice_size
-                                                            * Z_values[i+1];   
+                                                            * Z_values[i+1];
     }
 
     pointee_desc.dimensionality = 0;
@@ -904,7 +931,7 @@ static void rpc_ss_ndr_m_v_or_o_arr_ptees
                 /* Array of pointers */
                 if (*(rpc_void_p_t *)inner_slice_address != NULL)
                 {
-                    rpc_ss_pointee_desc_from_data( defn_vec_ptr, 
+                    rpc_ss_pointee_desc_from_data( defn_vec_ptr,
                                            *(rpc_void_p_t *)inner_slice_address,
                                            NULL, NULL, &pointee_desc, IDL_msp );
                     rpc_ss_ndr_marsh_pointee( defn_vec_ptr,
@@ -955,7 +982,7 @@ void rpc_ss_ndr_m_dvo_arr_ptees
     IDL_bound_pair_t *range_list;
     idl_boolean add_null;       /* Dummy argument in procedure call */
 
-    defn_vec_ptr = IDL_msp->IDL_type_vec + defn_index; 
+    defn_vec_ptr = IDL_msp->IDL_type_vec + defn_index;
     dimensionality = (idl_ulong_int)*defn_vec_ptr;
     defn_vec_ptr++;
     /* By design defn_vec_ptr is longword aligned */
@@ -989,10 +1016,10 @@ void rpc_ss_ndr_m_dvo_arr_ptees
     if (IDL_msp->IDL_type_vec[TVEC_INT_REP_OFFSET] == NDR_LOCAL_INT_REP)
     {
 	if (IDL_M_FLAGS_TEST(flags,IDL_M_CONF_ARRAY))
-	    rpc_ss_mem_item_free(&IDL_msp->IDL_mem_handle, 
+	    rpc_ss_mem_item_free(&IDL_msp->IDL_mem_handle,
 				 (byte_p_t)bounds_list);
     }
-    else 
+    else
 	rpc_ss_mem_item_free(&IDL_msp->IDL_mem_handle, (byte_p_t)bounds_list);
 
 }
@@ -1032,7 +1059,7 @@ void rpc_ss_pointee_desc_from_data
         p_pointee_desc->struct_offset_vec_ptr = struct_offset_vec_ptr;
         return;
     }
-    else 
+    else
         if ( (p_pointee_desc->pointee_type != IDL_DT_VARYING_ARRAY)
         && (p_pointee_desc->pointee_type != IDL_DT_CONF_ARRAY)
         && (p_pointee_desc->pointee_type != IDL_DT_OPEN_ARRAY) )
@@ -1061,7 +1088,7 @@ void rpc_ss_pointee_desc_from_data
             /* Some array description storage already exists, release it */
             rpc_ss_mem_item_free(&IDL_msp->IDL_mem_handle,
                                             (byte_p_t)p_pointee_desc->Z_values);
-        }    
+        }
         p_pointee_desc->Z_values = (idl_ulong_int *) rpc_ss_mem_alloc(
                                   &IDL_msp->IDL_mem_handle,
                                     dimensionality *

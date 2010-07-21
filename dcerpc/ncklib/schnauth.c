@@ -1,25 +1,55 @@
 /*
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
  *
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
  *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **  NAME
@@ -45,7 +75,6 @@
  */
 #define MAX_SERVER_PRINC_NAME_LEN 500
 
-
 GLOBAL unsigned32 rpc_g_schnauth_alloc_count = 0;
 GLOBAL unsigned32 rpc_g_schnauth_free_count = 0;
 
@@ -70,7 +99,6 @@ INTERNAL rpc_auth_epv_t rpc_g_schnauth_epv =
     rpc__schnauth_inq_sec_context,
     rpc__schnauth_inq_access_token,
 };
-
 
 /*
  * R P C _ _ S C H N A U T H _ B N D _ S E T _ A U T H
@@ -168,14 +196,12 @@ poison:
     *stp = st;
 }
 
-
 PRIVATE void rpc__schnauth_init
 (
         rpc_auth_epv_p_t *epv,
 	rpc_auth_rpc_prot_epv_tbl_t *rpc_prot_epv,
 	unsigned32 *st
 );
-
 
 #include <comp.h>
 void rpc__schnauth_init_func(void)
@@ -193,7 +219,6 @@ void rpc__schnauth_init_func(void)
 
     rpc__register_authn_protocol(auth, 1);
 }
-
 
 /*
  * R P C _ _ S C H N A U T H _ I N I T
@@ -229,7 +254,6 @@ PRIVATE void rpc__schnauth_init
 
     *st = rpc_s_ok;
 }
-
 
 /*
  * R P C _ _ S C H N A U T H _ F R E E _ I N F O
@@ -279,7 +303,6 @@ PRIVATE void rpc__schnauth_free_info
     *info = NULL;
 }
 
-
 /*
  * R P C _ _ S C H N A U T H _ M G T _ I N Q _ D E F
  *
@@ -301,7 +324,6 @@ PRIVATE void rpc__schnauth_mgt_inq_def
     *stp = rpc_s_ok;
 }
 
-
 /*
  * R P C _ _ S C H N A U T H _ S R V _ R E G _ A U T H
  *
@@ -320,7 +342,6 @@ PRIVATE void rpc__schnauth_srv_reg_auth
 
     *stp = rpc_s_ok;
 }
-
 
 /*
  * R P C _ _ S C H N A U T H _ I N Q _ M Y _ P R I N C _ N A M E
@@ -344,7 +365,6 @@ PRIVATE void rpc__schnauth_inq_my_princ_name
     *stp = rpc_s_ok;
 }
 
-
 /*
  * R P C _ _ S C H N A U T H _ F R E E _ K E Y
  *
@@ -358,7 +378,6 @@ PRIVATE void rpc__schnauth_free_key
     RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_ROUTINE_TRACE,
 		   ("(rpc__schnauth_free_key)\n"));
 }
-
 
 /*
  * R P C _ _ S C H N A U T H _ R E S O L V E _ I D E N T I T Y
@@ -378,7 +397,6 @@ PRIVATE error_status_t rpc__schnauth_resolve_identity
     return rpc_s_ok;
 }
 
-
 /*
  * R P C _ _ S C H N A U T H _ R E L E A S E _ I D E N T I T Y
  *
@@ -392,7 +410,6 @@ PRIVATE void rpc__schnauth_release_identity
     RPC_DBG_PRINTF(rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_ROUTINE_TRACE,
 		   ("(rpc__schnauth_release_identity)\n"));
 }
-
 
 /*
  * R P C _ _ S C H N A U T H _ I N Q _ S E C _ C O N T E X T

@@ -1,27 +1,55 @@
 /*
- * 
- * (c) Copyright 1990 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1990 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1990 DIGITAL EQUIPMENT CORPORATION
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
-#ifndef _CNASSOC_H
-#define _CNASSOC_H 1
+
 /*
 **
 **  NAME
@@ -39,7 +67,9 @@
 **
 */
 
-
+#ifndef _CNASSOC_H
+#define _CNASSOC_H 1
+
 /******************************************************************************/
 /*
  * R P C _ C N _ A S S O C _ A C B _ I N C _ R E F
@@ -146,7 +176,7 @@ error "***Make sure memcmp works on this version of UUIDs***"
     rpc__cn_assoc_queue_dummy_frag(assoc);\
     RPC_CALL_UNLOCK (((rpc_call_rep_t *) assoc->call_rep));\
 }
- 
+
 
 /******************************************************************************/
 /*
@@ -161,7 +191,7 @@ rpc_cn_assoc_t *rpc__cn_assoc_request (
     unsigned16                  * /* context_id */,
     rpc_cn_sec_context_p_t      * /* sec */,
     unsigned32                  * /* st */ );
-    
+
 /*
  * R P C _ _ C N _ A S S O C _ L I S T E N
  */
@@ -170,7 +200,7 @@ rpc_cn_assoc_t *rpc__cn_assoc_listen (
     rpc_socket_t                 /* newsock */,
     unsigned_char_p_t            /* endpoint */,
     unsigned32                  * /* st */ );
-    
+
 /*
  * R P C _ _ C N _ A S S O C _ A L L O C
  */
@@ -189,7 +219,7 @@ PRIVATE void rpc__cn_assoc_dealloc (
     unsigned32                  * /* st */ );
 
 /*
- * R P C _ _ C N _ A S S O C _ A B O R T 
+ * R P C _ _ C N _ A S S O C _ A B O R T
  */
 
 void rpc__cn_assoc_abort (
@@ -333,7 +363,7 @@ PRIVATE void rpc__cn_assoc_sec_free (
     rpc_cn_sec_context_p_t      */* sec */ );
 
 /*
- * R P C _ _ C N _ A S S O C _ P O S T _ E R R O R 
+ * R P C _ _ C N _ A S S O C _ P O S T _ E R R O R
  */
 
 PRIVATE void rpc__cn_assoc_post_error (
@@ -345,10 +375,9 @@ PRIVATE void rpc__cn_assoc_post_error (
  */
 
 PRIVATE unsigned32  rpc__cn_assoc_sm_protocol_error (
-    pointer_t                    /* spc_struct */, 
+    pointer_t                    /* spc_struct */,
     pointer_t                   /* event_param */,
     pointer_t                   /* sm */ );
-
 
 /*
  * R P C _ _ C N _ A S S O C _ S T A T U S _ T O _ P R E J
@@ -357,7 +386,6 @@ PRIVATE unsigned32  rpc__cn_assoc_sm_protocol_error (
 PRIVATE unsigned32  rpc__cn_assoc_status_to_prej (
     unsigned32                  /* prej */ );
 
-
 /*
  * R P C _ _ C N _ A S S O C _ P R E J _ T O _ S T A T U S
  */
@@ -365,14 +393,12 @@ PRIVATE unsigned32  rpc__cn_assoc_status_to_prej (
 PRIVATE unsigned32  rpc__cn_assoc_prej_to_status (
     unsigned32                  /* prej */ );
 
-
 /*
  * R P C _ _ C N _ A S S O C _ P P R O V _ T O _ S T A T U S
  */
 
 PRIVATE unsigned32  rpc__cn_assoc_pprov_to_status (
     unsigned32                  /* pprov */ );
-
 
 /*
  * R P C _ _ C N _ A S S O C _ A C B _ C R E A T E
@@ -392,7 +418,6 @@ void rpc__cn_assoc_acb_free ( rpc_cn_assoc_p_t /* assoc */ );
 
 PRIVATE void rpc__cn_assoc_acb_dealloc (rpc_cn_assoc_p_t/* assoc */ );
 
-
 /*
  * R P C _ _ C N _ A S S O C _ G R P _ A L L O C
  */
@@ -401,7 +426,7 @@ PRIVATE rpc_cn_local_id_t rpc__cn_assoc_grp_alloc (
     rpc_addr_p_t             /* rpc_addr */,
     rpc_transport_info_p_t    /* prot_info */,
     unsigned32               /* type */,
-    unsigned32               /* rem_id */,                                                             
+    unsigned32               /* rem_id */,
     unsigned32              * /* st */ );
 
 /*
@@ -468,7 +493,7 @@ PRIVATE void rpc__cn_assoc_grp_tbl_init (void);
  */
 
 PRIVATE unsigned32  rpc__cn_grp_sm_protocol_error (
-    pointer_t                    /* spc_struct */, 
+    pointer_t                    /* spc_struct */,
     pointer_t                   /* event_param */,
     pointer_t                   /* sm */);
 

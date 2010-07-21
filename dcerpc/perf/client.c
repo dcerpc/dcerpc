@@ -1,24 +1,55 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **  NAME
 **
@@ -203,15 +234,6 @@ struct timeval
 
 #endif
 
-
-
-
-
-
-
-
-
-
 
 /*
  * Print how to use this program
@@ -222,7 +244,6 @@ int             test;
 
 {
     int             i;
-
 
     if (test != -1)
     {
@@ -406,7 +427,6 @@ char                *name;
     unsigned32          st;
     handle_t            h;
 
-
     rpc_binding_from_string_binding
         ((idl_char *) name, (rpc_binding_handle_t *) &h, &st);
 
@@ -543,7 +563,6 @@ handle_t    rh;
         exit(1);
     }
 }
-
 
 
 /*
@@ -903,7 +922,6 @@ char *name;
     }
 }
 
-
 static void stats_test (test, argc, argv)
 
 int                 test;
@@ -1019,7 +1037,7 @@ char                *argv[];
 
 	DO_NOT_CLOBBER(rh);
 	DO_NOT_CLOBBER(rsum);
-	 
+
     if (argc < 4)
     {
         usage(test);
@@ -1272,7 +1290,6 @@ perfc_v2_0_epv_t perfc_v2_mgr_epv =
     perfc_cb_idem
 };
 
-
 /*
  * Callback test
  */
@@ -1287,7 +1304,6 @@ char                *argv[];
     unsigned32          st;
     unsigned long       idem;
     unsigned short      passes, i;
-
 
     if (argc < 6)
     {
@@ -1348,7 +1364,6 @@ char                *argv[];
 {
     handle_t            rh;
     unsigned32       x;
-
 
     if (argc < 3)
     {
@@ -1455,7 +1470,6 @@ char                *argv[];
  * did not detect the cancel as expected_; you should be able to
  * follow the test printout and verify this visually.
  */
-
 
 /*
  * Determine if a cancel is pending (and clear it).
@@ -1654,7 +1668,6 @@ unsigned long           slow_secs;
 	pending = cancel_was_pending();
 	oc = pthread_setcancel(CANCEL_OFF);
 
-
         fprintf(stderr, "    *** cancel exception NOT raised!\n");
         if (pending)
         {
@@ -1837,7 +1850,6 @@ char                *argv[];
     }
 }
 
-
 
 /*
  * Looping test
@@ -1876,7 +1888,6 @@ char                *argv[];
     static handle_t     first_handle = NULL;
 #endif
 
-
     d = (unsigned32 *)malloc(MSIZE);
 
     switch (test)
@@ -1914,7 +1925,6 @@ char                *argv[];
         fprintf (stderr, "\nERROR: calls/pass must be > 0.\n\n");
         exit (1);
     }
-
 
 #ifdef _POSIX_THREADS
     if (multithread)
@@ -2353,7 +2363,6 @@ char *argv[];
     ENDTRY
 }
 
-
 
 #ifdef _POSIX_THREADS
 
@@ -2364,7 +2373,6 @@ struct task_info_t
     int     argc;
     char    **argv;
 };
-
 
 /*
  * Base procedure for multithreading test
@@ -2426,7 +2434,7 @@ char                *argv[];
     pthread_t           tasks[MAX_TASKS];
 
 	DO_NOT_CLOBBER(i);
-	 
+
     if (n_tasks > MAX_TASKS)
     {
         fprintf(stderr, "%d is too many tasks (max is %d)\n", n_tasks, MAX_TASKS);
@@ -2684,7 +2692,7 @@ fork_test_replay:
 	case 'B':
 	    socket_buf_size = atoi(optarg);
 	    break;
-   
+
         default:
             usage(-1);
         }

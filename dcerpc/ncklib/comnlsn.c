@@ -1,26 +1,55 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **  NAME:
@@ -69,7 +98,6 @@
 *****************************************************************************
 */
 
-
 /*
  * Some defaults related to select() fd_sets.
  */
@@ -95,7 +123,6 @@
         *d++ = *s++; \
    }
 #endif
-
 
 /*
  * Miscellaneous Data Declarations
@@ -130,23 +157,22 @@ INTERNAL void lthread (
 
 INTERNAL void lthread_loop (void);
 
-
 
 /*
  * R P C _ _ N L S N _ A C T I V A T E _ D E S C
  *
  * Mark that the specified descriptor is now "live" -- i.e., that events
  * on it should be processed.  This routine is also responsible for
- * starting up a listener thread if once doesn't already exist.  
+ * starting up a listener thread if once doesn't already exist.
  *
  * Note that once a socket has been activated, it is should never be
  * removed and not closed from the set of sockets that are
  * select(2)'d on, because we always must always "drain" the socket
  * of events (via recv or accept) so it doesn't get "clogged up"
- * with stuff (that would consume system resources). 
+ * with stuff (that would consume system resources).
  */
 
-PRIVATE void rpc__nlsn_activate_desc 
+PRIVATE void rpc__nlsn_activate_desc
 (
     rpc_listener_state_p_t  lstate,
     unsigned32              idx,
@@ -189,7 +215,7 @@ PRIVATE void rpc__nlsn_activate_desc
  * events on it should NOT be processed.
  */
 
-PRIVATE void rpc__nlsn_deactivate_desc 
+PRIVATE void rpc__nlsn_deactivate_desc
 (
     rpc_listener_state_p_t  lstate,
     unsigned32              idx,
@@ -231,7 +257,7 @@ PRIVATE void rpc__nlsn_deactivate_desc
     {
         copy_listener_state(lstate);
     }
-    else 
+    else
     {
         lstate->reload_pending = true;
         dcethread_interrupt_throw (listener_thread);
@@ -241,7 +267,7 @@ PRIVATE void rpc__nlsn_deactivate_desc
             RPC_COND_WAIT (lstate->cond, lstate->mutex);
         }
     }
-} 
+}
 
 
 
@@ -253,7 +279,7 @@ PRIVATE void rpc__nlsn_deactivate_desc
  * from the listener thread.
  */
 
-INTERNAL void copy_listener_state 
+INTERNAL void copy_listener_state
 (
     rpc_listener_state_p_t  lstate
 )
@@ -308,7 +334,7 @@ INTERNAL void copy_listener_state
  * Startup routine for the listen thread.
  */
 
-INTERNAL void lthread 
+INTERNAL void lthread
 (
     rpc_listener_state_p_t  lstate
 )
@@ -321,7 +347,7 @@ INTERNAL void lthread
      * go away, as on a fork, the handle_cancel boolean will be set
      * appropriately before the cancel is posted.
      */
-              
+
     while (listener_should_handle_cancels)
     {
         /*
@@ -337,7 +363,7 @@ INTERNAL void lthread
         DCETHREAD_TRY
         {
             lthread_loop ();
-        }     
+        }
         DCETHREAD_CATCH(dcethread_interrupt_e)
         {
 #ifdef NON_CANCELLABLE_IO_SELECT
@@ -375,7 +401,7 @@ INTERNAL void lthread_loop (void)
          */
 
         do
-        { 
+        {
             RPC_SELECT_FDSET_COPY(listener_readfds, readfds_copy, listener_nfds);
 
             /*
@@ -391,7 +417,7 @@ INTERNAL void lthread_loop (void)
              * dcethread_enableasync_throw(1) will not deliver
              * a pending cancel nor will the cancel be delivered asynchronously,
              * thus the need for dcethread_checkinterrupt.
-             * 
+             *
              */
 #ifdef NON_CANCELLABLE_IO_SELECT
             dcethread_enableasync_throw(1);
@@ -409,10 +435,10 @@ INTERNAL void lthread_loop (void)
             {
                 if (errno != EINTR)
                 {
-                    RPC_DBG_GPRINTF 
+                    RPC_DBG_GPRINTF
                         (("(lthread_loop) select failed: %d, errno=%d\n",
                         n_found, errno));
-                
+
                     /*
                      * Check for pending cancels.  Select might return
                      * EIO (and not check for a pending cancel) because
@@ -477,7 +503,7 @@ PRIVATE void rpc__nlsn_fork_handler
   rpc_listener_state_p_t  lstate,
   rpc_fork_stage_id_t stage
 )
-{ 
+{
     unsigned32 st;
 
     switch ((int)stage)
@@ -517,7 +543,7 @@ PRIVATE void rpc__nlsn_fork_handler
             RPC_MUTEX_UNLOCK (lstate->mutex);
             break;
 
-        case RPC_C_POSTFORK_CHILD:  
+        case RPC_C_POSTFORK_CHILD:
             /*
              * Unset the flag that says the listern thread has been started
              */

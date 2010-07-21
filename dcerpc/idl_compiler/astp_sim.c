@@ -1,24 +1,55 @@
 /*
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
  *
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2009 Apple Inc. All rights reserved
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
  *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
+
 /*
 **
 **  NAME
@@ -57,7 +88,6 @@ static void AST_set_oper_has_ins_outs (
     ASTP_parameter_count_t *param_count
 );
 
-
 
 /*
  *
@@ -79,7 +109,7 @@ ASTP_type_attr_n_t *AST_array_bound_info
     attr_node_p = NEW (ASTP_type_attr_n_t);
 
     attr_node_p->is_expr = false;
-	 
+
     attr_node_p->kind = kind ;
     attr_node_p->b.simple.name = name;
     attr_node_p->b.simple.pointer = is_pointer;
@@ -97,7 +127,7 @@ ASTP_type_attr_n_t * AST_array_bound_from_expr
 )
 {
     ASTP_type_attr_n_t *attr_node_p;
-	 
+
     attr_node_p = NEW (ASTP_type_attr_n_t);
 
     attr_node_p->is_expr = true;
@@ -118,7 +148,7 @@ ASTP_type_attr_n_t * AST_range_from_expr
 )
 {
     ASTP_type_attr_n_t *attr_node_p;
-	 
+
     attr_node_p = NEW (ASTP_type_attr_n_t);
 
     attr_node_p->is_expr = true;
@@ -138,7 +168,6 @@ ASTP_type_attr_n_t * AST_range_from_expr
 /*---------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------*/
-
 
 /*
  *
@@ -185,7 +214,6 @@ AST_constant_n_t *AST_char_constant
 
 /*---------------------------------------------------------------------*/
 
-
 /*
  *  A S T _ c o n s t a n t _ n o d e
  *  =================================
@@ -213,7 +241,6 @@ AST_constant_n_t *AST_constant_node
 }
 
 /*---------------------------------------------------------------------*/
-
 
 /*
  *  A S T _ c r e a t e _ o p e r a t i o n _ n o d e
@@ -274,7 +301,6 @@ ASTP_declarator_n_t *AST_declarator_node
 
 /*---------------------------------------------------------------------*/
 
-
 /*
  *  A S T _ d e c l a r a t o r _ o p e r a t i o n
  *  ===============================================
@@ -291,7 +317,6 @@ ASTP_declarator_n_t *AST_declarator_node
  *      op_node -- ASTP_node_t for arrays or function ptrs.
  *      pointer_count -- Number of levels of indirection (number of *'s)
  */
-
 
 void AST_declarator_operation
 (
@@ -316,7 +341,6 @@ void AST_declarator_operation
         return;
      }
 
-
     /*
      * Create and initialize the new declarator operation
      */
@@ -330,7 +354,6 @@ void AST_declarator_operation
         declarator_op->op_info.pointer_count = pointer_count;
     else
         declarator_op->op_info.node = op_info;
-
 
     /*
      * Link it into the operation list for the specified declarator
@@ -348,7 +371,6 @@ void AST_declarator_operation
 }
 
 /*---------------------------------------------------------------------*/
-
 
 /*
  *  A S T _ d e c l a r a t o r _ t o _ p a r a m s
@@ -407,12 +429,10 @@ AST_parameter_n_t  *AST_declarator_to_param
     new_parameter->type = new_type;
     ASTP_validate_forward_ref(location, new_type);
 
-
     /* Set field attributes, if specified. */
     new_parameter->field_attrs =
         AST_set_field_attrs(location, attributes, (ASTP_node_t *)new_parameter,
                             new_parameter->type);
-
 
     /*
      * Set the boolean attributes parsed in the source.
@@ -434,7 +454,6 @@ AST_parameter_n_t  *AST_declarator_to_param
 }
 
 /*-------------------------------------------------------------------*/
-
 
 /*
  *  A S T _ e n u m e r a t o r _ n o d e
@@ -487,38 +506,32 @@ AST_type_n_t *AST_enumerator_node
     if (overflow)
         log_error(location->lineno, NIDL_TOOMANYELEM, "enum", NULL) ;
 
-
     /*
      * Allocate and initialize the enumeration node
      */
     enum_node_ptr = NEW (AST_enumeration_n_t);
     type_node_ptr = AST_type_node(location, AST_enum_k);
 
-
     /*
      * Initialize enum node contents
      */
      enum_node_ptr->enum_constants = constant_list;
-
 
     /*
      * Initialize type node contents
      */
     type_node_ptr->type_structure.enumeration = enum_node_ptr;
 
-
     /*
      * Set the source information
      */
     ASTP_set_fe_info (location, &enum_node_ptr->fe_info, fe_enumeration_n_k);
-
 
     /*
      * Return the type node
      */
     return type_node_ptr;
 }
-
 
 /*---------------------------------------------------------------------*/
 
@@ -600,7 +613,7 @@ AST_cpp_quote_n_t *AST_cpp_quote_node
     /* Build cpp_quote node */
     cpp_quote_node_ptr = NEW (AST_cpp_quote_n_t);
     cpp_quote_node_ptr->text = text;
-    
+
     ASTP_set_fe_info (location, &cpp_quote_node_ptr->fe_info, fe_cpp_quote_n_k);
 
     return cpp_quote_node_ptr;
@@ -819,7 +832,6 @@ static void AST_finish_operation_node
         !AST_UNIQUE_SET(operation_node_p->result))
           AST_SET_PTR (operation_node_p->result);
 
-
     /*
      * Traverse through list of parameter nodes filling
      * in uplink field to the operation node
@@ -1013,7 +1025,6 @@ AST_name_n_t *AST_name_node
     return name_node_ptr;
 }
 
-
 /*
  *  A S T _ i n i t
  *  ===============
@@ -1055,7 +1066,6 @@ void AST_init
 
 /*---------------------------------------------------------------------*/
 
-
 /*
  *  A S T _ i n t e g e r _ c o n s t a n t
  *  =====================================
@@ -1082,10 +1092,7 @@ AST_constant_n_t *AST_integer_constant
     return constant_node_p;
 }
 
-
 /*---------------------------------------------------------------------*/
-
-
 
 /*
  *  A S T _ i n t e r f a c e _ n o d e
@@ -1186,7 +1193,6 @@ AST_type_n_t *AST_lookup_named_type
 {
     AST_type_n_t *type_node_ptr;
 
-
     type_node_ptr =
                 (AST_type_n_t *) ASTP_lookup_binding(location,
 					type_name, fe_type_n_k, TRUE);
@@ -1285,10 +1291,8 @@ AST_type_n_t *AST_lookup_type_node
             break;
     }
 
-
     return type_node_ptr;
 }
-
 
 /*---------------------------------------------------------------------*/
 
@@ -1320,13 +1324,11 @@ AST_constant_n_t *AST_named_constant
         named_const_node_p = zero_constant_p;
     }
 
-
     return named_const_node_p;
 
 }
 
 /*---------------------------------------------------------------------*/
-
 
 /*
  *
@@ -1438,7 +1440,6 @@ AST_operation_n_t *AST_operation_node
     (operation_node_p->result)->type = result_type;
     (operation_node_p->result)->uplink = operation_node_p;
 
-
     /*
      *  Propagate operation attributes that belong on the parameter to
      *  parameter node for op result
@@ -1456,7 +1457,6 @@ AST_operation_n_t *AST_operation_node
 
     ASTP_CLR_ATTR(attributes,
           (ASTP_STRING|ASTP_CONTEXT|ASTP_REF|ASTP_UNIQUE|ASTP_PTR));
-
 
     /*
      * Propagate type attributes to parameter node for op result
@@ -1478,7 +1478,6 @@ AST_operation_n_t *AST_operation_node
         log_error(location->lineno, NIDL_ANONTYPE, identifier, NULL);
     }
 
-
     /* Update the operation count of the interface node */
     operation_node_p->op_number = the_interface->op_count++;
 
@@ -1494,12 +1493,10 @@ AST_operation_n_t *AST_operation_node
      */
     AST_finish_operation_node(operation_node_p);
 
-
     /*
      * Bind the operation node to the operation name.
      */
     ASTP_add_name_binding (location, op_name, operation_node_p);
-
 
     /*
      * Free the list of declarators, and the function operation.
@@ -1511,7 +1508,6 @@ AST_operation_n_t *AST_operation_node
 }
 
 /*---------------------------------------------------------------------*/
-
 
 /*
  *  A S T _ p a r a m e t e r _ n o d e
@@ -1537,7 +1533,6 @@ AST_parameter_n_t * AST_parameter_node
 
 /*---------------------------------------------------------------------*/
 
-
 /*
  *  A S T _ f i n i s h _ i n t e r f a c e _ n o d e
  *  =================================================
@@ -1560,7 +1555,6 @@ void AST_finish_interface_node
 
 /*---------------------------------------------------------------------*/
 
-
 AST_rep_as_n_t *AST_represent_as_node
 (
     parser_location_p location,
@@ -1582,7 +1576,6 @@ AST_rep_as_n_t *AST_represent_as_node
 
 /*---------------------------------------------------------------------*/
 
-
 AST_cs_char_n_t *AST_cs_char_node
 (
     parser_location_p location,
@@ -1602,7 +1595,6 @@ AST_cs_char_n_t *AST_cs_char_node
 }
 
 /*---------------------------------------------------------------------*/
-
 
 /*
  *  A S T _ p a r s e _ p o r t
@@ -1658,7 +1650,6 @@ void ASTP_parse_port
         strncpy(protocol_buf,protocol_start,protocol_end - protocol_start);
         protocol_buf[protocol_end - protocol_start] = '\0';
         protocol_id = STRTAB_add_string(protocol_buf);
-
 
         /*
          * After the protocol should be the endpoint.  It should
@@ -1727,10 +1718,8 @@ void ASTP_parse_port
         (interface_p->endpoints)[i] = endpoint_id;
     }
 
-
 }
 /*---------------------------------------------------------------------*/
-
 
 /*
  *  A S T _ s t r i n g _ c o n s t a n t
@@ -1752,7 +1741,6 @@ AST_constant_n_t *AST_string_constant
 }
 
 /*---------------------------------------------------------------------*/
-
 
 /*
  *  A S T _ t y p e _ n o d e
@@ -1832,7 +1820,6 @@ AST_type_n_t *AST_type_node
     return type_node_ptr;
 }
 
-
 /*---------------------------------------------------------------------*/
 
 /*
@@ -1858,7 +1845,6 @@ AST_type_p_n_t *AST_type_ptr_node
 
     return type_p_node;
 }
-
 
 /*---------------------------------------------------------------------*/
 
@@ -1891,7 +1877,6 @@ AST_export_n_t *AST_types_to_exports
 
     AST_type_p_n_t *type_p;             /* For list traversing */
 
-
     for (type_p = type_p_list; type_p != (AST_type_p_n_t *) NULL;
         type_p = type_p->next)
     {
@@ -1905,18 +1890,12 @@ AST_export_n_t *AST_types_to_exports
     /* Free the no longer needed linked list of type pointer nodes */
     ASTP_free_simple_list((ASTP_node_t *)type_p_list);
 
-
     return export_list;
 }
 
 /*-----------------------------------------------------------------*/
 
-
-
-
 /*---------------------------------------------------------------------*/
-
-
 
 /*
  *  A S T _ s e t _ o p e r _ h a s _ i n s _ o u t s
@@ -1971,14 +1950,10 @@ static void AST_set_oper_has_ins_outs
         AST_SET_HAS_OUTS(operation_node);
     }
 
-
     return;
 }
 
-
 /*---------------------------------------------------------------------*/
-
-
 
 /*
  *  A S T _ s y n t h e s i z e _ p a r a m _ t o _ o p e r_  a t t r s
@@ -2038,14 +2013,10 @@ static void AST_synthesize_param_to_oper_attr
         }
     }
 
-
     return;
 }
 
-
 /*---------------------------------------------------------------------*/
-
-
 
 /*
  *  A S T _ e n u m _ c o n s t a n t
@@ -2082,22 +2053,18 @@ AST_constant_n_t *AST_enum_constant
 	  */
 	 ASTP_add_name_binding (location, identifier, constant_node_ptr);
 
-
 	 /* set the value */
 
 	 constant_node_ptr->value.int_val = exp->exp.constant.val.integer;
 	 constant_node_ptr->int_signed = exp->exp.constant.int_signed;
-	 
+
 	 /*
 	  * Return the new constant node
 	  */
 	 return constant_node_ptr;
 }
 
-
 /*---------------------------------------------------------------------*/
-
-
 
 /*
  *  A S T _ p i p e _ n o d e
@@ -2116,25 +2083,21 @@ AST_type_n_t *AST_pipe_node
     AST_pipe_n_t *pipe_node_ptr;        /* pipe node */
     AST_type_n_t *type_node_ptr;        /* type node pointing to the pipe */
 
-
     /*
      * Allocate and initialize the pipe node
      */
     pipe_node_ptr = NEW (AST_pipe_n_t);
     type_node_ptr = AST_type_node(location, AST_pipe_k);
 
-
     /*
      * Initialize pipe node contents
      */
      pipe_node_ptr->base_type = pipe_type;
 
-
     /*
      * Initialize type node contents
      */
     type_node_ptr->type_structure.pipe = pipe_node_ptr;
-
 
     /*
      * Set the source information
@@ -2146,7 +2109,6 @@ AST_type_n_t *AST_pipe_node
      */
     return type_node_ptr;
 }
-
 
 /*---------------------------------------------------------------------*/
 /* preserve coding style vim: set tw=78 sw=4 : */

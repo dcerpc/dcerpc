@@ -1,25 +1,55 @@
 /*
- * 
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **  NAME:
@@ -75,7 +105,7 @@
     The DSM does not currently itself provide mutual exclusion, although
     it must be used in such a context (the caller is currently assumed
     to do the mutex).
-    
+
     Function summary:
 
     dsm_create     - create a new, empty data store in a named file
@@ -86,20 +116,20 @@
     dsm_write      - write a block to the backing store, stable upon completion
     dsm_free       - free a block
 
-    dsm_read       - successively step through the store, returning each 
+    dsm_read       - successively step through the store, returning each
                       active record
     dsm_marker_reset - reset the marker used by dsm_read to the beginning
 
     dsm_get_info
     dsm_set_info   - allow access to application-defined per-file info
-    
+
     dsm_get_stats  - get statistics about file size, free space, etc.
 
     dsm_reclaim    - reclaim free space in data store
 
-    dsm_detach     - mark a block free on the backing store (allow simple 
+    dsm_detach     - mark a block free on the backing store (allow simple
                       update paradigm)
-    dsm_write_hdr  - write only the beginning of a record (a small header can 
+    dsm_write_hdr  - write only the beginning of a record (a small header can
                       be updated atomically)
 
 (see below for details on calling sequences and use)
@@ -121,7 +151,7 @@ const long dsm_err_invalid_pointer    = 0x1C0B000A;
 const long dsm_err_info_too_long      = 0x1C0B000B;
 const long dsm_err_file_busy          = 0x1C0B000C;
 const long dsm_err_invalid_marker     = 0x1C0B000D;
- 
+
 typedef void          * dsm_handle_t;
 typedef unsigned long   dsm_marker_t;
 
@@ -159,7 +189,7 @@ void dsm_open(
     [in, string]  char    * fname,  /* filename */
     [out] dsm_handle_t    * dsh,    /* data store handle */
     [out] error_status_t  * st      /* status */
-);    
+);
 
 /** dsm_close(&dsh, &st)
 
@@ -206,7 +236,7 @@ void dsm_write(
     of a record can be written more efficiently than the general case, in
     support of the common case of maintaining more volatile information about
     a record in a header.  dsm_write_hdr is equivalent to dsm_write, except
-    that only the first len bytes are written (len being <= 48).  (It is 
+    that only the first len bytes are written (len being <= 48).  (It is
     expected that len will generally be expressed as a sizeof expression).
 */
 
@@ -263,7 +293,7 @@ void dsm_detach(
     DSM provides a mechanism for an application to maintain a small amount
     (up to 256 bytes) of its own information pertaining to an entire data
     store, such as version information.  dsm_set_info copies len bytes of
-    application information from info into the data store header.  
+    application information from info into the data store header.
     dsm_get_info retrieves len bytes from the data store into info.  len
     is presumed to be constant, typically a sizeof expression, and is not
     stored in the data store.
@@ -294,7 +324,7 @@ void dsm_set_info(
     record, and with dsm_err_no_more_entries when there are no more valid
     entries.  Note that if the data store is changed between dsm_read
     calls (e.g. by another task, or if a marker is stored over time) it
-    is not guaranteed that all records will be seen.  However, the 
+    is not guaranteed that all records will be seen.  However, the
     behavior of dsm_read is well-defined in such circumstances and should
     see as many records as possible consistent with a linear pass through
     the data store, without abnormal behavior.
@@ -315,13 +345,13 @@ void dsm_marker_reset(
 /** dsm_locate(dsh, marker, &p, &st)
 
     Returns a pointer to a dsm block, given a marker identifying that block, as
-    returned by dsm_read (the marker returned by a dsm_read call corresponds 
+    returned by dsm_read (the marker returned by a dsm_read call corresponds
     to the record returned by that call), or by dsm_inq_marker.  A marker,
     unlike a pointer, is valid across datastore closes.  An application could
     store a marker in a file before closing a datastore, and later relocate
     a pointer to the storage (after reopening the datastore) with dsm_locate.
     Freeing a block clearly invalidates any markers to it.  A marker clearly
-    only applies to the datastore it originally pertained to.  It is not 
+    only applies to the datastore it originally pertained to.  It is not
     meaningful to locate a reset marker.
 */
 
@@ -344,7 +374,7 @@ void dsm_inq_marker(
 );
 /** dsm_inq_size(dsh, p, &size, &st)
 
-    Returns (in the "size" parameter) the size in bytes allocated to the 
+    Returns (in the "size" parameter) the size in bytes allocated to the
     given dsm block.  This may be larger than the amount requested when
     the block was allocated.
 */
@@ -373,32 +403,32 @@ void dsm_get_stats(
 /** dsm_reclaim(dsh, name, tempname, oldname, pct, &st): boolean
 
     DSM datastores grow as required, without limit, but will not shrink;
-    that is, if you allocate (and write) a large amount of data, and 
+    that is, if you allocate (and write) a large amount of data, and
     subsequently free it, the space occupied on the disk and in memory
     becomes eligible for reuse by new DSM records, but is not returned
     to the operating system.  dsm_reclaim is used to reclaim this "high
     water mark" free storage.  It makes a new copy of a datastore
     without the excess storage (DSM stable memory requirements make it
     impossible to reclaim space "in place"), if more than a specified
-    percentage of the file is free space.  
+    percentage of the file is free space.
 
     dsm_reclaim takes a handle to a DSM datastore.  If the handle contains
-    NULL, dsm_reclaim opens the data store, does the reclaim (if appropriate), 
-    and then closes the data store.  If the handle points to an open data 
-    store, DSM returns a handle to the original data store (if no reclaim 
-    was done) or to the reclaimed data store.  In some error cases, DSM 
-    returns a NULL handle even though the input handle pointed to an open 
+    NULL, dsm_reclaim opens the data store, does the reclaim (if appropriate),
+    and then closes the data store.  If the handle points to an open data
+    store, DSM returns a handle to the original data store (if no reclaim
+    was done) or to the reclaimed data store.  In some error cases, DSM
+    returns a NULL handle even though the input handle pointed to an open
     data store.
 
-    dsm_reclaim also takes 3 filenames: the datastore name, the 'old' name, 
-    and the 'new' name; typical examples might be "mydb", "mydb.bak", and 
-    "mydb.new".  The following sequence is applied: 
+    dsm_reclaim also takes 3 filenames: the datastore name, the 'old' name,
+    and the 'new' name; typical examples might be "mydb", "mydb.bak", and
+    "mydb.new".  The following sequence is applied:
 
             if handle is NULL, open mydb
             check mydb stats
             if freespace doesn't exceed specified percent
-                if handle is NULL, close mydb 
-                return 
+                if handle is NULL, close mydb
+                return
 
             create "mydb.new"
             for every record in mydb, make a copy in mydb.new
@@ -407,15 +437,15 @@ void dsm_get_stats(
             rename "mydb.new" to "mydb"
             if handle is non-NULL, open mydb
 
-    dsm_reclaim returns true if the file was reclaimed, false otherwise (in case 
-    of error or under free_pct).  If the input handle pointed to an open data 
+    dsm_reclaim returns true if the file was reclaimed, false otherwise (in case
+    of error or under free_pct).  If the input handle pointed to an open data
     store then the returned handle points to an open data store (except in certain
     error cases when it contains NULL).
 
-    NB: Since data is moved around in the datastore during dsm_reclaim, 
-    markers and pointers into the DSM datastore are invalid after 
+    NB: Since data is moved around in the datastore during dsm_reclaim,
+    markers and pointers into the DSM datastore are invalid after
     dsm_reclaim and their use will yield indeterminate results.  It
-    is best to invoke dsm_reclaim on a closed data store or immediately 
+    is best to invoke dsm_reclaim on a closed data store or immediately
     after opening the data store.
 
     Observe that this is really at a higher level than DSM per se; dsm_reclaim
@@ -424,9 +454,9 @@ void dsm_get_stats(
     variations on this basic algorithm.  This particular sequence is safe in
     the face of crashes.  There should be two files in any case: if "mydb"
     exists, it should be used; if it doesn't then "mydb.bak" contains the old
-    version and "mydb.new" the new (reclaimed) one.  (if "mydb.new" and "mydb" 
-    both exist, "mydb.new" probably contains an incompletely reclaimed copy, and 
-    should be discarded).  
+    version and "mydb.new" the new (reclaimed) one.  (if "mydb.new" and "mydb"
+    both exist, "mydb.new" probably contains an incompletely reclaimed copy, and
+    should be discarded).
 
 */
 

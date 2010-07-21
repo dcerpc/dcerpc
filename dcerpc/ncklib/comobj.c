@@ -1,26 +1,55 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **  NAME
@@ -29,7 +58,7 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
@@ -60,7 +89,6 @@
 INTERNAL rpc_list_t obj_registry[RPC_C_OBJ_REGISTRY_SIZE] = { {0,0} };
 INTERNAL rpc_mutex_t obj_mutex;
 
-
 /*
  * an object registry list entry
  */
@@ -70,7 +98,6 @@ typedef struct
     idl_uuid_t          object_uuid;
     idl_uuid_t          type_uuid;
 } rpc_obj_rgy_entry_t, *rpc_obj_rgy_entry_p_t;
-
 
 /*
  * Function registered by applicationthrough rpc_object_set_inq_fn.
@@ -86,7 +113,7 @@ INTERNAL rpc_object_inq_fn_t inq_fn = NULL;
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Initializes this module.
 **
 **  INPUTS:             none
@@ -108,7 +135,7 @@ INTERNAL rpc_object_inq_fn_t inq_fn = NULL;
 **--
 **/
 
-PRIVATE void rpc__obj_init 
+PRIVATE void rpc__obj_init
 (
     unsigned32                  *status
 )
@@ -119,8 +146,6 @@ PRIVATE void rpc__obj_init
     *status = rpc_s_ok;
 }
 
-
-
 /*
 **++
 **
@@ -129,10 +154,10 @@ PRIVATE void rpc__obj_init
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Initializes this module.
 **
-**  INPUTS:             stage   The stage of the fork we are 
+**  INPUTS:             stage   The stage of the fork we are
 **                              currently handling.
 **
 **  INPUTS/OUTPUTS:     none
@@ -154,7 +179,7 @@ PRIVATE void rpc__obj_fork_handler
 (
     rpc_fork_stage_id_t stage
 )
-{   
+{
     unsigned32 i;
 
     switch ((int)stage)
@@ -163,13 +188,13 @@ PRIVATE void rpc__obj_fork_handler
                 break;
         case RPC_C_POSTFORK_PARENT:
                 break;
-        case RPC_C_POSTFORK_CHILD:  
+        case RPC_C_POSTFORK_CHILD:
 
                 inq_fn = NULL;
-            
+
                 /*
                  * Empty the Object Registry Table
-                 */                                  
+                 */
                 for (i = 0; i < RPC_C_OBJ_REGISTRY_SIZE; i++)
                 {
                     obj_registry[i].next = NULL;
@@ -202,7 +227,7 @@ PRIVATE void rpc__obj_fork_handler
 **  then be found using the results of a call to the rpc_server_register_if
 **  routine.
 **
-**  INPUTS:  
+**  INPUTS:
 **
 **      object_uuid     The object to be registered.
 **
@@ -230,7 +255,7 @@ PRIVATE void rpc__obj_fork_handler
 **--
 **/
 
-PUBLIC void rpc_object_set_type 
+PUBLIC void rpc_object_set_type
 (
     uuid_p_t                object_uuid,
     uuid_p_t                type_uuid,
@@ -239,8 +264,7 @@ PUBLIC void rpc_object_set_type
 {
     rpc_obj_rgy_entry_p_t   obj_entry;
     unsigned32              index;
-    
-    
+
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
 
@@ -258,13 +282,13 @@ PUBLIC void rpc_object_set_type
         *status = rpc_s_invalid_object;
         return;
     }
-    
+
     /*
      * compute a hash value using the object uuid - check the status
      * from uuid_hash to make sure the uuid has a valid format
      */
     index = (uuid_hash (object_uuid, status)) % RPC_C_OBJ_REGISTRY_SIZE;
-    
+
     if (*status != uuid_s_ok)
     {
         return;
@@ -318,7 +342,7 @@ PUBLIC void rpc_object_set_type
                 sizeof (rpc_obj_rgy_entry_t),
                 RPC_C_MEM_OBJ_RGY_ENTRY,
                 RPC_C_MEM_WAITOK);
-            
+
             /*
              * initialize the entry
              */
@@ -372,8 +396,8 @@ PUBLIC void rpc_object_set_type
 **  will execute, but the type UUID will not be returned. This can be
 **  useful to determine if an object is registered without requiring a
 **  return value to be supplied.
-** 
-**  INPUTS:  
+**
+**  INPUTS:
 **
 **      object_uuid     The object being looked up.
 **
@@ -400,7 +424,7 @@ PUBLIC void rpc_object_set_type
 **--
 **/
 
-PUBLIC void rpc_object_inq_type 
+PUBLIC void rpc_object_inq_type
 (
     uuid_p_t                object_uuid,
     idl_uuid_t                  *type_uuid,
@@ -409,7 +433,6 @@ PUBLIC void rpc_object_inq_type
 {
     rpc_obj_rgy_entry_p_t   obj_entry;
     unsigned32              index;
-
 
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
@@ -520,7 +543,7 @@ PUBLIC void rpc_object_inq_type
 **--
 **/
 
-PUBLIC void rpc_object_set_inq_fn 
+PUBLIC void rpc_object_set_inq_fn
 (
     rpc_object_inq_fn_t     inq_fn_arg,
     unsigned32              *status
@@ -532,4 +555,3 @@ PUBLIC void rpc_object_set_inq_fn
     inq_fn = inq_fn_arg;
     *status = rpc_s_ok;
 }
-

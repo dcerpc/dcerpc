@@ -1,26 +1,55 @@
 /*
- * 
- * (c) Copyright 1990 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1990 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1990 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **
@@ -30,8 +59,8 @@
 **
 **  FACILITY:
 **
-**    Remote procedure call (RPC) 
-**  
+**    Remote procedure call (RPC)
+**
 **  ABSTRACT:
 **
 **  Set of routines supporting operations that create and manipulate the
@@ -56,20 +85,20 @@
 **  DESCRIPTION:
 **
 **  Releases memory used by a tower that was dynamically created.
-**  Towers are dynamically created by calling the 
+**  Towers are dynamically created by calling the
 **  rpc__tower_from_tower_ref routine.
 **
 **  INPUTS:             none
 **
-**  INPUT/OUTPUTS:          
+**  INPUT/OUTPUTS:
 **
 **      tower           Canonical representation of a protocol tower.
 **                      Nulled on return.
 **
-**  OUTPUTS:            
+**  OUTPUTS:
 **
 **      status          Returns the status code from the free
-**                      operation. This status code indicates whether the 
+**                      operation. This status code indicates whether the
 **                      routine completed successfully and, if not, why.
 **                      Returns rpc_s_ok.
 **
@@ -84,7 +113,7 @@
 **--
 */
 
-PRIVATE void rpc__tower_free 
+PRIVATE void rpc__tower_free
 (
     twr_p_t             *tower,
     unsigned32          *status
@@ -108,25 +137,25 @@ PRIVATE void rpc__tower_free
 **
 **  DESCRIPTION:
 **
-**  This routine creates the canonical representation of a protocol tower 
-**  from a runtime reference representation of a protocol tower. 
+**  This routine creates the canonical representation of a protocol tower
+**  from a runtime reference representation of a protocol tower.
 **
-**  INPUTS:             
+**  INPUTS:
 **
 **      tower_ref       Runtime reference representation of a protocol tower.
 **
 **  INPUT/OUTPUTS:      none
 **
-**  OUTPUTS:            
+**  OUTPUTS:
 **
 **      tower           Returns a pointer to the canonical representation
 **                      of a protocol tower.
 **
 **      status          Returns the status code from the
-**                      tower from tower_ref operation. This status code 
+**                      tower from tower_ref operation. This status code
 **                      indicates whether the routine completed
 **                      successfully and, if not, why.
-**                      Returns 
+**                      Returns
 **                          rpc_s_ok
 **                      or status from a called routine.
 **
@@ -143,7 +172,7 @@ PRIVATE void rpc__tower_free
 **--
 */
 
-PRIVATE void rpc__tower_from_tower_ref 
+PRIVATE void rpc__tower_from_tower_ref
 (
     rpc_tower_ref_p_t       tower_ref,
     twr_p_t                 *tower,
@@ -152,12 +181,11 @@ PRIVATE void rpc__tower_from_tower_ref
 {
     byte_p_t                tower_p;
     unsigned16              twr_rep_16;
-    unsigned32              i, 
+    unsigned32              i,
                             floor_size,
                             octet_length;
 
-
-    /* 
+    /*
      * Calculate the size of the tower octet string.
      */
     for (i = 0, octet_length = 0;
@@ -172,12 +200,12 @@ PRIVATE void rpc__tower_from_tower_ref
     octet_length += RPC_C_TOWER_FLR_COUNT_SIZE;
 
     /*
-     * Allocate the tower structure to hold the 
+     * Allocate the tower structure to hold the
      * canonical representation of the tower.
      */
-    RPC_MEM_ALLOC ( 
-        *tower, 
-        twr_p_t, 
+    RPC_MEM_ALLOC (
+        *tower,
+        twr_p_t,
         sizeof (twr_t) + octet_length - 1,
         RPC_C_MEM_TOWER, RPC_C_MEM_WAITOK );
 
@@ -193,14 +221,13 @@ PRIVATE void rpc__tower_from_tower_ref
     tower_p = (*tower)->tower_octet_string;
 
     /*
-     * Convert the tower count to little endian 
+     * Convert the tower count to little endian
      * and copy it to the octet string.
      */
     twr_rep_16 = tower_ref->count;
     RPC_RESOLVE_ENDIAN_INT16 (twr_rep_16);
-    memcpy ((char *)tower_p, 
+    memcpy ((char *)tower_p,
             (char *)&twr_rep_16, RPC_C_TOWER_FLR_COUNT_SIZE);
-
 
     tower_p += RPC_C_TOWER_FLR_COUNT_SIZE;
 
@@ -209,8 +236,8 @@ PRIVATE void rpc__tower_from_tower_ref
      */
     for (i=0; i < tower_ref->count; i++)
     {
-        floor_size = 
-            RPC_C_TOWER_FLR_LHS_COUNT_SIZE  + 
+        floor_size =
+            RPC_C_TOWER_FLR_LHS_COUNT_SIZE  +
             tower_ref->floor[i]->prot_id_count +
             RPC_C_TOWER_FLR_RHS_COUNT_SIZE  +
             tower_ref->floor[i]->address_count;
@@ -234,21 +261,21 @@ PRIVATE void rpc__tower_from_tower_ref
 **
 **  DESCRIPTION:
 **
-**  Creates a runtime reference representation of a protocol tower 
+**  Creates a runtime reference representation of a protocol tower
 **  from a canonical representation of a protocol tower.
 **
-**  INPUTS:             
+**  INPUTS:
 **
 **      tower           Canonical representation of a protocol tower.
 **
 **  INPUT/OUTPUTS:      none
 **
-**  OUTPUTS:            
+**  OUTPUTS:
 **
-**      tower_ref       Returns a pointer to a reference representation 
+**      tower_ref       Returns a pointer to a reference representation
 **                      of a protocol tower.
 **      status          Returns the status code from the tower to tower ref
-**                      operation. This status code indicates whether the 
+**                      operation. This status code indicates whether the
 **                      routine completed successfully and, if not, why.
 **                      Returns
 **                          rpc_s_ok
@@ -259,13 +286,13 @@ PRIVATE void rpc__tower_from_tower_ref
 **  IMPLICIT OUTPUTS:   none
 **
 **  FUNCTION VALUE:     void
-**  
+**
 **  SIDE EFFECTS:       none
 **
 **--
 */
 
-PRIVATE void rpc__tower_to_tower_ref 
+PRIVATE void rpc__tower_to_tower_ref
 (
     twr_p_t             tower,
     rpc_tower_ref_p_t   *tower_ref,
@@ -274,20 +301,19 @@ PRIVATE void rpc__tower_to_tower_ref
 {
     unsigned16              floor_count;
 
-
     CODING_ERROR (status);
 
     /*
      * Get the tower floor count and correct for proper endian.
      */
-    memcpy ((char *) &floor_count, (char *) tower->tower_octet_string, 
+    memcpy ((char *) &floor_count, (char *) tower->tower_octet_string,
             RPC_C_TOWER_FLR_COUNT_SIZE);
     RPC_RESOLVE_ENDIAN_INT16 (floor_count);
 
     /*
      * Allocate and initialize the tower reference structure to be returned.
      */
-    rpc__tower_ref_alloc (tower->tower_octet_string, floor_count, 1, 
+    rpc__tower_ref_alloc (tower->tower_octet_string, floor_count, 1,
         tower_ref, status);
 
     /*
@@ -305,7 +331,7 @@ PRIVATE void rpc__tower_to_tower_ref
 **
 **  DESCRIPTION:
 **
-**  Creates a binding handle from a canonical representation of a 
+**  Creates a binding handle from a canonical representation of a
 **  protocol tower.  After the caller is finished with the binding, the
 **  rpc_binding_free routine must be called to release the memory used
 **  by the binding.
@@ -313,18 +339,18 @@ PRIVATE void rpc__tower_to_tower_ref
 **  Note, this is an SPI routine - available to outside the runtime,
 **  but only to other DCE components.
 **
-**  INPUTS:             
+**  INPUTS:
 **
 **      prot_tower          A single protocol tower (DNA$Tower attribute value)
 **                          to convert to a binding handle.
 **
 **  INPUT/OUTPUTS:          none
 **
-**  OUTPUTS:            
+**  OUTPUTS:
 **
 **      binding             Returns a binding handle.
 **      status              Returns the status code from the tower-to-binding
-**                          operation. This status code indicates whether the 
+**                          operation. This status code indicates whether the
 **                          routine completed successfully and, if not, why.
 **                          Returns
 **                              rpc_s_ok
@@ -335,13 +361,13 @@ PRIVATE void rpc__tower_to_tower_ref
 **  IMPLICIT OUTPUTS:       none
 **
 **  FUNCTION VALUE:         void
-**  
+**
 **  SIDE EFFECTS:           none
 **
 **--
 */
 
-PUBLIC void rpc_tower_to_binding 
+PUBLIC void rpc_tower_to_binding
 (
     byte_p_t                prot_tower,
     rpc_binding_handle_t    *binding,
@@ -351,7 +377,6 @@ PUBLIC void rpc_tower_to_binding
     rpc_binding_rep_p_t     binding_rep;
     rpc_protocol_id_t       prot_id;
     rpc_addr_p_t            rpc_addr;
-
 
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
@@ -375,7 +400,7 @@ PUBLIC void rpc_tower_to_binding
     /*
      * Allocate and initialize a binding rep.
      */
-    binding_rep = rpc__binding_alloc 
+    binding_rep = rpc__binding_alloc
                     (false, &uuid_g_nil_uuid, prot_id, rpc_addr, status);
 
     /*
@@ -401,28 +426,28 @@ PUBLIC void rpc_tower_to_binding
 **
 **  Creates a vector of twr_t's from a binding handle. After the caller is
 **  finished with the tower vector, the rpc_tower_vector_free routine must be
-**  called to release the memory used by the vector. 
+**  called to release the memory used by the vector.
 **
 **  Note, this is an SPI routine - available to outside the runtime,
 **  but only to other DCE components.
 **
-**  INPUTS:             
+**  INPUTS:
 **
 **      if_spec             Interface spec to combine with a binding
 **                          handle to form a tower vector.
 **
-**      binding             Binding handle to combine with an interface 
+**      binding             Binding handle to combine with an interface
 **                          spec to form a tower vector.
 **
 **  INPUT/OUTPUTS:          none
 **
-**  OUTPUTS:            
+**  OUTPUTS:
 **
 **      tower_vector        Returns an allocated tower vector.
 **
-**      status              Returns the status code from the 
-**                          tower-vector-from-binding operation. 
-**                          This status code indicates whether the 
+**      status              Returns the status code from the
+**                          tower-vector-from-binding operation.
+**                          This status code indicates whether the
 **                          routine completed successfully and, if not, why.
 **                          Returns
 **                              rpc_s_ok
@@ -434,13 +459,13 @@ PUBLIC void rpc_tower_to_binding
 **  IMPLICIT OUTPUTS:       none
 **
 **  FUNCTION VALUE:         void
-**  
+**
 **  SIDE EFFECTS:           none
 **
 **--
 */
 
-PUBLIC void rpc_tower_vector_from_binding 
+PUBLIC void rpc_tower_vector_from_binding
 (
     rpc_if_handle_t         if_spec,
     rpc_binding_handle_t    binding,
@@ -470,7 +495,7 @@ PUBLIC void rpc_tower_vector_from_binding
      * Convert the binding to a vector of tower refs.
      */
 
-    rpc__tower_ref_vec_from_binding ((rpc_if_rep_p_t)if_spec, binding, 
+    rpc__tower_ref_vec_from_binding ((rpc_if_rep_p_t)if_spec, binding,
         &tower_ref_vector, status);
 
     if (*status != rpc_s_ok)
@@ -486,10 +511,10 @@ PUBLIC void rpc_tower_vector_from_binding
      * Allocate a rpc_tower_vector_t based on the number of returned
      * tower refs.
      */
-    RPC_MEM_ALLOC ( 
-        *twr_vector, 
-        rpc_tower_vector_p_t, 
-        sizeof (rpc_tower_vector_t) + (tower_ref_vector->count - 1) * 
+    RPC_MEM_ALLOC (
+        *twr_vector,
+        rpc_tower_vector_p_t,
+        sizeof (rpc_tower_vector_t) + (tower_ref_vector->count - 1) *
             sizeof (twr_p_t),
         RPC_C_MEM_TOWER_VECTOR,
         RPC_C_MEM_WAITOK );
@@ -512,16 +537,16 @@ PUBLIC void rpc_tower_vector_from_binding
             goto CLEANUP;
         }
     }
-   
+
 CLEANUP:
     /*
-     * Free the tower_ref_vector returned from 
+     * Free the tower_ref_vector returned from
      * rpc__tower_ref_vec_from_binding().
      */
     rpc__tower_ref_vec_free (&tower_ref_vector, &temp_status);
 
     /*
-     * If we got this far successfully, return whatever the result from 
+     * If we got this far successfully, return whatever the result from
      * rpc__tower_ref_vec_free(). Otherwise, return the previous error
      * in status.
      */
@@ -541,12 +566,12 @@ CLEANUP:
 **
 **  DESCRIPTION:
 **
-**  Releases memory associated with a tower vector, 
+**  Releases memory associated with a tower vector,
 **  including the towers as well as the vector.
 **
 **  INPUTS:             none
 **
-**  INPUT/OUTPUTS:          
+**  INPUT/OUTPUTS:
 **
 **      twr_vector      The tower vector to free. Nulled on return.
 **
@@ -556,8 +581,8 @@ CLEANUP:
 **                      operation. This status code is a value that
 **                      indicates whether the routine completed
 **                      successfully and, if not, why.
-**                      Returns 
-**                          rpc_s_ok 
+**                      Returns
+**                          rpc_s_ok
 **                          or status from a called routine.
 **
 **  IMPLICIT INPUTS:    none
@@ -571,7 +596,7 @@ CLEANUP:
 **--
 */
 
-PRIVATE void rpc_tower_vector_free 
+PRIVATE void rpc_tower_vector_free
 (
     rpc_tower_vector_p_t    *twr_vector,
     unsigned32              *status
@@ -579,11 +604,10 @@ PRIVATE void rpc_tower_vector_free
 {
     unsigned32      i;
 
-
     CODING_ERROR (status);
 
     /*
-     * Free each tower reference in the vector.  
+     * Free each tower reference in the vector.
      */
     for (i=0; i < (*twr_vector)->count; i++)
     {
@@ -604,4 +628,3 @@ PRIVATE void rpc_tower_vector_free
     *status = rpc_s_ok;
     return;
 }
-

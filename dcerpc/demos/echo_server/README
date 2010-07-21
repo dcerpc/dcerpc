@@ -1,7 +1,56 @@
+# Copyright (c) 2010 Apple Inc. All rights reserved.
+#
+# @APPLE_LICENSE_HEADER_START@
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+# 1.  Redistributions of source code must retain the above copyright
+#     notice, this list of conditions and the following disclaimer.
+# 2.  Redistributions in binary form must reproduce the above copyright
+#     notice, this list of conditions and the following disclaimer in the
+#     documentation and/or other materials provided with the distribution.
+# 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+#     contributors may be used to endorse or promote products derived from
+#     this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+# EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+# DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+# THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Portions of this software have been released under the following terms:
+#
+# (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+# (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+# (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+# Portions Copyright (c) 2010 Apple Inc.
+# To anyone who acknowledges that this file is provided "AS IS"
+# without any express or implied warranty:
+# permission to use, copy, modify, and distribute this file for any
+# purpose is hereby granted without fee, provided that the above
+# copyright notices and this notice appears in all source code copies,
+# and that none of the names of Open Software Foundation, Inc., Hewlett-
+# Packard Company, Apple Inc. or Digital Equipment Corporation be used
+# in advertising or publicity pertaining to distribution of the software
+# without specific, written prior permission.  Neither Open Software
+# Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+# Equipment Corporation makes any representations about the suitability
+# of this software for any purpose.
+#
+#
+# @APPLE_LICENSE_HEADER_END@
+#
 
 Demo Applet:	Echo Server
 ===========================
-
 
 This RPC application implements a simple single-function RPC server
 interface. The function ReverseIt() accepts as input an array of
@@ -18,7 +67,6 @@ Build Instructions
 	  Solaris with Transarc DCE and AIX with IBM's DCE product.
 	  Edit the makefile and run make.
 
-
 Running the Application
 -----------------------
 
@@ -30,16 +78,14 @@ Running the Application
 
 		#  /etc/rc.d/init.d/ rc.dcerpcd start
 
-
 	2.  Start the echo_server, you do not need to be root to
 	    do this:
 
 		./echo_server
 
-
 	3. The Echo client can be run on any machine on the internet,
 	   or it can simply be run on the same host as that the
-	   echo server runs on.  
+	   echo server runs on.
 
 	   Run the echo_client, telling it the host where to look
 	   for the echo server. i.e.:
@@ -53,13 +99,9 @@ Running the Application
 		./echo_client -h acs4.bu.edu -u     <= call using UDP RPC
 		./echo_client -h acs4.bu.edu -t	    <= call using TCP RPC
 
-
 	4. You can feed the echo client large gobs of text from
 	   a flatfile as well as from the prompt.  Here's how you can
 	   see what a Unix man page looks like printed in reverse. :)
 
 		$ man gcc > /tmp/blah
 		$ ./echo_client -h localhost < /tmp/blah
-
-
-

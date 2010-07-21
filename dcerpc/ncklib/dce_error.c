@@ -1,28 +1,57 @@
 /*
- * 
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
- */
-/*
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
 
 /*
- *  OSF DCE Version 1.0 
+ *  OSF DCE Version 1.0
  */
 /*
 **
@@ -93,14 +122,14 @@
 **  SCOPE:              PUBLIC - declared in dce_error.h
 **
 **  DESCRIPTION:
-**      
-**  Returns a text string in a user provided buffer associated with a given 
-**  error status code. In the case of errors a text string will also be 
+**
+**  Returns a text string in a user provided buffer associated with a given
+**  error status code. In the case of errors a text string will also be
 **  returned indicating the nature of the error.
 **
 **  INPUTS:
 **
-**      status_to_convert   A DCE error status code to be converted to 
+**      status_to_convert   A DCE error status code to be converted to
 **                          text form.
 **
 **  INPUTS/OUTPUTS:         None.
@@ -110,7 +139,7 @@
 **      error_text          A user provided buffer to hold the text
 **                          equivalent of status_to_convert or
 **                          a message indicating what error occurred.
-**                          
+**
 **
 **      status              The result of the operation. One of:
 **                           0  -  success
@@ -160,7 +189,7 @@ static void dce_get_msg(
     {
         *status = -1;
     }
-    
+
     /*
      * check for ok input status
      */
@@ -179,7 +208,7 @@ static void dce_get_msg(
      */
     facility_code = (status_to_convert & FACILITY_CODE_MASK)
         >> FACILITY_CODE_SHIFT;
-        
+
     component_code = (status_to_convert & COMPONENT_CODE_MASK)
         >> COMPONENT_CODE_SHIFT;
 
@@ -192,7 +221,7 @@ static void dce_get_msg(
     if (facility_code == 0 || facility_code > sizeof (facility_names) / sizeof (char *))
     {
         sprintf ((char *) error_text, "status %08lx (unknown facility)", status_to_convert);
-        return; 
+        return;
     }
 
     facility_name = facility_names[facility_code - 1];
@@ -233,24 +262,23 @@ static void dce_get_msg(
          * If we did not succeed in opening message file using NLSPATH,
          * try to open the message file in a well-known default area
          */
-         
+
         sprintf (alt_filename,
                  RPC_DEFAULT_NLSPATH,
                  filename_prefix);
         catd = (nl_catd) catopen (alt_filename, 0);
-            
+
         if (catd == (nl_catd) -1)
         {
             sprintf ((char *) error_text, "status %08lx", status_to_convert);
             return;
         }
-    }    
+    }
 
     /*
      * try to get the specified message from the file
      */
     message = (char *) catgets (catd, 1, status_code, NO_MESSAGE);
-
 
     /*
      * if everything went well, return the resulting message
@@ -272,7 +300,7 @@ static void dce_get_msg(
 #else
     sprintf ((char *) error_text, "status %08lx", status_to_convert);
 #endif
-}        
+}
 void dce_error_inq_text (
 unsigned long           status_to_convert,
 dce_error_string_t      error_text,

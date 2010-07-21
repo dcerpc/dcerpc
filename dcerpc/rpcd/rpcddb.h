@@ -1,28 +1,54 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
-#ifndef RPCDDB_H
-#define RPCDDB_H
 
 /*
 **
@@ -32,7 +58,7 @@
 **
 **  FACILITY:
 **
-**      RPC Daemon Basic Database Routines - header file 
+**      RPC Daemon Basic Database Routines - header file
 **
 **  ABSTRACT:
 **
@@ -40,6 +66,9 @@
 **
 **
 */
+
+#ifndef RPCDDB_H
+#define RPCDDB_H
 
 /*
  *  Database entry list and hash table management typedefs
@@ -68,19 +97,16 @@ typedef struct
     db_list_t       interface_list;
 } db_lists_t, *db_lists_p_t;
 
-
 #define db_c_nbucket  64
 
 typedef db_list_t   db_hash_table_t[db_c_nbucket];
 
-typedef struct 
+typedef struct
 {
     db_list_t           entry_list;
     db_hash_table_t     object_table;
     db_hash_table_t     interface_table;
 } db_lists_mgmt_t;
-
-
 
 /*
  * The header of a persistant endpoint database file.
@@ -113,7 +139,7 @@ struct db {
  * All other fields are stablely stored on the disk.
  */
 
-typedef struct 
+typedef struct
 {
     db_lists_t              lists;
     unsigned16              read_nrefs;     /* # readers of this entry who have given up db_lock */
@@ -138,12 +164,11 @@ typedef struct
 } db_entry_t, *db_entry_p_t;
 
 /*
- *  Max read references to an entry (must fit epdb_entry_t.read_nrefs - unsigned16) 
+ *  Max read references to an entry (must fit epdb_entry_t.read_nrefs - unsigned16)
  *  Leave some room for sliv_task1 and sliv_task2 so they don't need to check
  *  for overflow.
  */
 #define db_c_max_read_nrefs     0x0fff0
-
 
 PRIVATE void db_open
     (
@@ -153,7 +178,7 @@ PRIVATE void db_open
         error_status_t      *status
     );
 
-/*  
+/*
  * Update entry in place on disk
  */
 PRIVATE void db_update_entry
@@ -162,7 +187,6 @@ PRIVATE void db_update_entry
         db_entry_p_t    entp,
         error_status_t  *status
     );
-
 
 PRIVATE void db_init_lists
     (
@@ -174,13 +198,13 @@ PRIVATE void db_lists_add
         struct db       *h,
         db_entry_t      *entp
     );
-        
+
 PRIVATE void db_lists_remove
     (
         struct db       *h,
         db_entry_t      *entp
     );
-        
+
 PRIVATE void db_htable_add
     (
         db_hash_table_t     htable,
@@ -224,13 +248,12 @@ PRIVATE db_lists_t *db_list_next
         db_lists_t          *entp
     );
 
-
 PRIVATE void db_save_context
     (
         struct db           *h,
         ept_lookup_handle_t *entry_handle,
         db_list_type_t      list_type,
-        db_lists_t          *lp, 
+        db_lists_t          *lp,
         unsigned32          pass
     );
 
@@ -271,7 +294,6 @@ PRIVATE void db_init_lock
     (
         struct db *h
     );
-
 
 PRIVATE void db_to_ept_ecode
     (

@@ -1,26 +1,55 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2009 Apple Inc. All rights reserved.
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **  NAME:
@@ -69,7 +98,6 @@ void rpc_binding_copy
     [out]       rpc_binding_handle_t    *dst_binding_handle,
     [out]       unsigned32              *status
 );
-
 
 /*
  * R P C _ B I N D I N G _ F R E E
@@ -232,12 +260,12 @@ void rpc_binding_inq_auth_info
  * R P C _ B I N D I N G _ I N Q _ A U T H _ C A L L E R
  *
  * Return an opaque handle on version 1.1+ authentication and
- * authorization information from a binding handle to an 
+ * authorization information from a binding handle to an
  * authenticated client.  The clients credentials are
  * obtained by calling the sec_cred_ interface.
  * Server-only.
  *
- * This call replaces rpc_binding_inq_auth_client(), which is 
+ * This call replaces rpc_binding_inq_auth_client(), which is
  * supported for backward compatibility purposes.
  */
 void rpc_binding_inq_auth_caller
@@ -254,7 +282,7 @@ void rpc_binding_inq_auth_caller
 /*
  * R P C _ B I N D I N G _ I N Q _ A U T H _ C L I E N T
  *
- * Return version 1.0.x authentication and authorization information 
+ * Return version 1.0.x authentication and authorization information
  * from a binding handle to an authenticated client.  Server-only.
  * This call is superceded by rpc_binding_inq_auth_caller(), but is
  * retained for backward compatibility purposes.   Server-only.
@@ -343,7 +371,7 @@ void rpc_server_inq_call_attributes
     [out]       rpc_call_attributes_t   *attributes,
     [out]       unsigned32               *status
 );
- 
+
 /*
  * R P C _ B I N D I N G _ I N Q _ S E C U R I T Y _ C O N T E X T
  *
@@ -814,12 +842,12 @@ void rpc_ep_register_no_replace
  *
  * Resolve a partially bound server handle into a fully bound
  * handle.
- * 
+ *
  */
 void rpc_ep_resolve_binding
 (
     [in]        rpc_binding_handle_t    binding_h,
-    [in]        rpc_if_handle_t         if_spec, 
+    [in]        rpc_if_handle_t         if_spec,
     [out]       unsigned32              *status
 );
 
@@ -1083,7 +1111,7 @@ void rpc_mgmt_ep_unregister
 /*
  * R P C _ M G M T _ I N Q _ S E R V E R _ P R I N C _ N A M E
  *
- * Obtain server principal name information for the specified server 
+ * Obtain server principal name information for the specified server
  * from the RPC runtime.
  */
 void rpc_mgmt_inq_server_princ_name
@@ -1230,7 +1258,6 @@ void rpc_ns_binding_unexport
     [in]        uuid_vector_p_t         object_uuid_vector,
     [out]       unsigned32              *status
 );
-
 
 /*************************************************************************/
 /**********************  Name Services Entry object  *********************/
@@ -1462,7 +1489,6 @@ void rpc_ns_mgmt_handle_set_exp_age
     [out]       unsigned32              *status
 );
 
-
 /*************************************************************************/
 /*********************  Name Services Profile object  ********************/
 /*************************************************************************/
@@ -1585,7 +1611,7 @@ void rpc_string_free
  *   - Conformant array is used, since a number of code sets supported in a
  *     host will vary.
  *   - This data structure is moved from codesets.idl to rpc.idl, because if
- *     this data structure is defined in codesets.idl, the IDL generated stub 
+ *     this data structure is defined in codesets.idl, the IDL generated stub
  *     cannot be compiled with undefined symbol error.  This data structure
  *     needs to be defined here.
  */
@@ -1641,7 +1667,7 @@ void rpc_ns_mgmt_read_attr_begin
 /*
  * R P C _ N S _ M G M T _ R E A D _ A T T R _ N E X T
  *
- * Read code set attribute (or others in the future) based on the inquiry 
+ * Read code set attribute (or others in the future) based on the inquiry
  * context.
  */
 void rpc_ns_mgmt_read_attr_next
@@ -1692,7 +1718,6 @@ void rpc_ns_mgmt_read_codesets
     [out]	error_status_t		*status
 );
 
-
 /*
  * R P C _ N S _ I M P O R T _ C T X _ A D D _ E V A L
  *
@@ -1709,7 +1734,6 @@ void rpc_ns_import_ctx_add_eval
     [out]	error_status_t		*status
 );
 
-
 /*
  * R P C _ C S _ E V A L _ W I T H _ U N I V E R S A L
  *
@@ -1723,7 +1747,6 @@ void rpc_cs_eval_with_universal
     [in]	void			*args,
     [in, out]	void			**cntx
 );
-
 
 /*
  * R P C _ C S _ E V A L _ W I T H O U T _ U N I V E R S A L
@@ -1739,9 +1762,8 @@ void rpc_cs_eval_without_universal
     [in, out]	void			**cntx
 );
 
-
 /*
- * R P C _ C S _ C H A R  _ S E T _ C O M P A T _ C H E C K 
+ * R P C _ C S _ C H A R  _ S E T _ C O M P A T _ C H E C K
  *
  * Client character set and server character set compatibility is
  * to be evaluated.
@@ -1751,7 +1773,6 @@ void rpc_cs_char_set_compat_check (
     [in]	unsigned32			server_codeset,
     [out]	error_status_t			*status
 );
-
 
 /*
  * Code set interoperability checking data types and routines
@@ -1778,12 +1799,11 @@ void rpc_cs_char_set_compat_check (
 typedef struct {
         unsigned32              stag;
         unsigned32              drtag;
-	unsigned16		stag_max_bytes;	
+	unsigned16		stag_max_bytes;
         unsigned32              client_tag;
-	unsigned16		client_max_bytes;	
+	unsigned16		client_max_bytes;
 	rpc_ns_handle_t		type_handle;
 } rpc_cs_tags_eval_t, *rpc_cs_tags_eval_p_t;
-
 
 /*
  * R P C _ C S _ M E T H O D _ E V A L _ T
@@ -1797,8 +1817,8 @@ typedef struct {
  * tags		: rpc_cs_tags_eval_t.  See above.
  * server	: server's supported code sets.
  * client	: client's supported code sets.
- * cs_stub_eval_func  : When 'fixed' is not true, 
- *			it points to code set I14Y evaluation routine.  
+ * cs_stub_eval_func  : When 'fixed' is not true,
+ *			it points to code set I14Y evaluation routine.
  */
 typedef struct {
         unsigned32              method;
@@ -1816,13 +1836,12 @@ typedef struct {
  * automatic code set conversion is enabled.  The content will be either
  * 'rpc_cs_tags_eval_t' data or 'rpc_cs_method_eval_t' data.  See above.
  */
-typedef union switch(short key) 
+typedef union switch(short key)
 {
 case 0:	rpc_cs_tags_eval_t	tags_key;
 case 1:
 default:	rpc_cs_method_eval_t	method_key;
 } rpc_cs_evaluation_t;
-
 
 /*
  * Evaluation Function List Structures
@@ -1838,7 +1857,7 @@ typedef struct rpc_eval_lists {
 	rpc_cs_eval_list_p	next;
 } rpc_cs_eval_list_t, *rpc_cs_eval_list_p_t;
 
-/* 
+/*
  * R P C _ C S _ B I N D I N G _ S E T _ T A G S
  *
  * Set the tags value into rpc binding handle.
@@ -1852,7 +1871,7 @@ void rpc_cs_binding_set_tags (
         [out]		error_status_t		*status
 );
 
-/* 
+/*
  * R P C _ C S _ B I N D I N G _ S E T _ E V A L
  *
  * Set in-stub evaluation routine into rpc binding handle.
@@ -1866,7 +1885,7 @@ void rpc_cs_binding_set_eval (
         [out]		error_status_t		*status
 );
 
-/* 
+/*
  * R P C _ R G Y _ G E T _ C O D E S E T S
  *
  * Get server's or client's supported code sets.
@@ -1879,8 +1898,7 @@ void rpc_rgy_get_codesets (
         [out]		error_status_t		*status
 );
 
-
-/* 
+/*
  * R P C _ R G Y _ G E T _ M A X _ B Y T E S
  *
  * Get the code set's maximum number of bytes per a character.
@@ -1892,8 +1910,7 @@ void rpc_rgy_get_max_bytes (
         [out]		error_status_t		*status
 );
 
-
-/* 
+/*
  * D C E _ C S _ L O C _ T O _ R G Y
  *
  * Convert code set name to code set registry value (code set)
@@ -1907,8 +1924,7 @@ void dce_cs_loc_to_rgy (
         [out]		error_status_t		*status
 );
 
-
-/* 
+/*
  * D C E _ C S _ R G Y _ T O _ L O C
  *
  * Convert code set registry value (code set) to code set name
@@ -1922,7 +1938,7 @@ void dce_cs_rgy_to_loc (
         [out]		error_status_t		*status
 );
 
-/* 
+/*
  * R P C _ N S _ M G M T _ F R E E _ A T T R _ D A T A
  *
  * Free an attribute allocated by the runtime
@@ -1932,8 +1948,7 @@ void rpc_ns_mgmt_free_attr_data (
         [out]		error_status_t		*status
 );
 
-
-/* 
+/*
  * R P C _ N S _ M G M T _ F R E E _ C O D E S E T S
  *
  * Free a codesets array allocated by the runtime
@@ -1942,7 +1957,6 @@ void rpc_ns_mgmt_free_codesets (
         [in, out]	rpc_codeset_mgmt_p_t	*codesets,
         [out]		error_status_t		*status
 );
-
 
 /*
  * R P C _ I M P E R S O N A T E _ N A M E D _ P I P E _ C L I E N T
@@ -1955,7 +1969,6 @@ void rpc_impersonate_named_pipe_client
     [in]    rpc_binding_handle_t    binding_handle,
     [out]   unsigned32              *status
 );
-
 
 /*
  * R P C _ R E V E R T _ T O _ S E L F

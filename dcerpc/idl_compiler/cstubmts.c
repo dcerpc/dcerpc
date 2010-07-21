@@ -1,24 +1,55 @@
 /*
- * 
- * (c) Copyright 1993 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1993 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1993 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
+
 /*
 **  NAME:
 **
@@ -58,7 +89,6 @@ static AST_interface_n_t * the_interface = NULL;
 static AST_cpp_quote_n_t * global_cppquotes = NULL;
 
 static AST_cpp_quote_n_t * global_cppquotes_post = NULL;
-
 
 /******************************************************************************/
 /*                                                                            */
@@ -112,7 +142,7 @@ void CSPELL_csr_header
 	char op_internal_name[3 * MAX_ID];
 	NAMETABLE_id_t emitted_name;
 	AST_parameter_n_t * handle_param = NULL;
-	
+
 	if (use_internal_name) {
 		sprintf(op_internal_name, "op%d_csr", p_operation->op_number);
 		emitted_name = NAMETABLE_add_id(op_internal_name);
@@ -140,9 +170,8 @@ void CSPELL_csr_header
 	/* restore skipped handle params */
 	if (handle_param)
 		p_operation->parameters->next = handle_param;
-	
-}
 
+}
 
 /******************************************************************************/
 /*                                                                            */
@@ -172,7 +201,6 @@ static void CSPELL_client_stub_routine
     BE_get_comm_stat_info( p_operation, &comm_stat_info );
     BE_get_fault_stat_info( p_operation, &fault_stat_info );
 
-	 
     /* Routine header */
     CSPELL_csr_header(fid, p_interface_name, p_operation,
         use_internal_name);
@@ -236,7 +264,7 @@ static void CSPELL_client_stub_routine
     }
     else
     {
-	/* 
+	/*
 	 *  To support those platforms which do not allow both a CATCH and
 	 *  FINALLY clause on the same TRY, we generate one TRY block with a
 	 *  catch clause nested inside another TRY block with the FINALLY
@@ -283,8 +311,6 @@ static void CSPELL_client_stub_routine
         fprintf(fid, "IDL_lang_c_k");
     fprintf(fid, ";\n");
 
-
-
     if (AST_HAS_FULL_PTRS_SET(p_operation) &&
         (AST_HAS_IN_PTRS_SET(p_operation) || AST_HAS_OUT_PTRS_SET(p_operation)))
     {
@@ -305,7 +331,6 @@ static void CSPELL_client_stub_routine
                              &BE_handle_info, &cs_info, false);
 
 /* WEZ:setup the handle here ? */
-	 
 
     CSPELL_call_start(fid, &BE_handle_info, p_interface, p_operation, op_num,
                         &comm_stat_info, &fault_stat_info);
@@ -335,7 +360,6 @@ static void CSPELL_client_stub_routine
 
     CSPELL_test_transceive_status(fid);
 
-
     /* Unmarshall the outs */
         DDBE_spell_marsh_or_unmar( fid, p_operation, "rpc_ss_ndr_unmar_interp",
                                 "&IDL_ms", BE_client_side, BE_unmarshalling_k );
@@ -360,7 +384,7 @@ static void CSPELL_client_stub_routine
         fprintf(fid, "IDL_auto_binding_failure:;\n");
     }
     else {
-	/* 
+	/*
 	 *  Add the matching ENDTRY for the nested TRY/CATCH block, if
 	 *  necessary, as decribed above.
 	 */
@@ -430,7 +454,6 @@ static void CSPELL_client_stub_routine
     }
     fprintf(fid, "DCETHREAD_ENDTRY\n");
 
-
     /* Set the return value */
     if ( (p_operation->result->type->kind != AST_void_k)
        )
@@ -463,9 +486,8 @@ void DDBE_spell_pickling_stub
     BE_get_comm_stat_info( p_operation, &comm_stat_info );
     BE_get_fault_stat_info( p_operation, &fault_stat_info );
 
-
     BE_setup_client_handle (fid, p_interface, p_operation, &BE_handle_info);
-    encode_decode = (AST_ENCODE_SET(p_operation) 
+    encode_decode = (AST_ENCODE_SET(p_operation)
                                             && AST_DECODE_SET(p_operation));
 
     CSPELL_csr_header(fid, p_interface_name, p_operation, use_internal_name);
@@ -498,7 +520,6 @@ void DDBE_spell_pickling_stub
      * Does operation use I-char machinery? If so, declare any needed variables
      */
     BE_cs_analyze_and_spell_vars(fid, p_operation, BE_client_side, &cs_info);
-
 
     /*
      * Start of executable code
@@ -542,10 +563,10 @@ void DDBE_spell_pickling_stub
         action_type = "IDL_encoding_k";
     else
         action_type = "IDL_decoding_k";
-    fprintf(fid, 
+    fprintf(fid,
 "idl_es_before_interp_call(%c%s,(rpc_if_handle_t)&IDL_ifspec,\n",
                 BE_handle_info.deref_assoc, BE_handle_info.assoc_name);
-    fprintf(fid, 
+    fprintf(fid,
 "  IDL_type_vec,%d,%s,&IDL_es_transfer_syntax,(IDL_msp_t)IDL_msp);\n",
                 p_operation->op_number, action_type);
 
@@ -554,7 +575,7 @@ void DDBE_spell_pickling_stub
                              &BE_handle_info, &cs_info, true);
 
         if (encode_decode)
-            fprintf(fid, 
+            fprintf(fid,
                     "if (IDL_es_state_p->IDL_action == IDL_encoding_k)\n{\n");
         if (AST_ENCODE_SET(p_operation))
             DDBE_spell_marsh_or_unmar( fid, p_operation,
@@ -687,7 +708,6 @@ void DDBE_gen_cstub
     DDBE_spell_rtn_vec( fid, dd_vip, cmd_opt, cmd_val, TRUE );
     DDBE_spell_type_vec( fid, dd_vip, cmd_opt, cmd_val );
 
-
     /*
      * Emit operation definitions
      */
@@ -714,8 +734,6 @@ void DDBE_gen_cstub
             BE_pop_malloc_ctx();
         }
     }
-
-
 
     if (cmd_opt[opt_cepv]) {
         /*

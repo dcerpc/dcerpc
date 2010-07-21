@@ -1,24 +1,55 @@
 /*
- * 
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
+
 /*
 **  NAME:
 **
@@ -185,7 +216,6 @@
         of the exponent.  In increasing order of significance they are:  X2,
         X1.  SN is the sign bit.
 
-
     VAX D Floating (for illustration only)
     ==============
 
@@ -209,7 +239,6 @@
         |     FRAC6        |        7              8
         +------------------+
 
-
     VAX G Floating
     ==============
 
@@ -232,8 +261,6 @@
         +------------------+
         |     FRAC6        |        7              8
         +------------------+
-
-
 
     IEEE single
     ===========
@@ -277,10 +304,8 @@
         |       F7         |    7           |   X2   |   F1    |    7
         +------------------+                +--------+---------+
 
-
     Cray single
     ===========
-
 
         |<---- 8 bits ---->|
 
@@ -316,10 +341,8 @@
 #       include <stdlib.h>
 #   endif
 
-
 int ndr_cray64_to_ieee32(unsigned32 *cray_flt, unsigned32 *ieee_flt);
 int ndr_ieee32_to_cray64(unsigned32 *ieee_flt, unsigned32 *cray_flt);
-
 
 #define INTERNAL static
 #define PUBLIC
@@ -645,7 +668,6 @@ INTERNAL void cvt_cray_to_ieee_single
 #include <pkieees.c.h>
 
 }
-
 
 /*
  * Note 32 bit NDR floats for a cray are represented as IEEE 32 bit values.
@@ -1354,7 +1376,6 @@ INTERNAL void cvt_ieee_single_to_cray
 
 }
 
-
 /*
  * This routine is not "internal" because cray idl_base.h macros need to invoke
  * it directly.
@@ -1678,7 +1699,7 @@ INTERNAL void cvt_ibm_short_to_cray
 **
 */
 
-#if CRAY_FLOAT 
+#if CRAY_FLOAT
 INTERNAL void cvt_ibm_long_to_cray
 (
     CVT_IBM_LONG input_value,
@@ -2380,7 +2401,6 @@ INTERNAL void cvt_float
                             (CVT_BYTE *)srcp, cvt_options, (CVT_BYTE *)dstp);
                     break;
 
-
                 default:
                     abort();
             }
@@ -2489,7 +2509,6 @@ PUBLIC void ndr_cvt_short_float
               (unsigned_char_t *)srcp, (unsigned_char_t *)dstp,
               ndr_false);
 }
-
 
 /*
  * N D R _ C V T _ L O N G _ F L O A T

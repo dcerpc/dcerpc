@@ -1,22 +1,55 @@
 $ ++
-$ !  
-$ !  (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
-$ !  (c) Copyright 1989 HEWLETT-PACKARD COMPANY
-$ !  (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+$ !
+$ !  Copyright (c) 2010 Apple Inc. All rights reserved.
+$ !
+$ !  @APPLE_LICENSE_HEADER_START@
+$ !
+$ !  Redistribution and use in source and binary forms, with or without
+$ !  modification, are permitted provided that the following conditions
+$ !  are met:
+$ !
+$ !  1.  Redistributions of source code must retain the above copyright
+$ !      notice, this list of conditions and the following disclaimer.
+$ !  2.  Redistributions in binary form must reproduce the above copyright
+$ !      notice, this list of conditions and the following disclaimer in the
+$ !      documentation and/or other materials provided with the distribution.
+$ !  3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+$ !      contributors may be used to endorse or promote products derived from
+$ !      this software without specific prior written permission.
+$ !
+$ !  THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+$ !  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+$ !  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+$ !  DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+$ !  DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+$ !  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+$ !  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+$ !  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+$ !  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+$ !  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+$ !
+$ !  Portions of this software have been released under the following terms:
+$ !
+$ !  (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+$ !  (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+$ !  (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+$ !  Portions Copyright (c) 2010 Apple Inc.
 $ !  To anyone who acknowledges that this file is provided "AS IS"
 $ !  without any express or implied warranty:
-$ !                  permission to use, copy, modify, and distribute this
-$ !  file for any purpose is hereby granted without fee, provided that
-$ !  the above copyright notices and this notice appears in all source
-$ !  code copies, and that none of the names of Open Software
-$ !  Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
-$ !  Corporation be used in advertising or publicity pertaining to
-$ !  distribution of the software without specific, written prior
-$ !  permission.  Neither Open Software Foundation, Inc., Hewlett-
-$ !  Packard Company, nor Digital Equipment Corporation makes any
-$ !  representations about the suitability of this software for any
-$ !  purpose.
-$ !  
+$ !  permission to use, copy, modify, and distribute this file for any
+$ !  purpose is hereby granted without fee, provided that the above
+$ !  copyright notices and this notice appears in all source code copies,
+$ !  and that none of the names of Open Software Foundation, Inc., Hewlett-
+$ !  Packard Company, Apple Inc. or Digital Equipment Corporation be used
+$ !  in advertising or publicity pertaining to distribution of the software
+$ !  without specific, written prior permission.  Neither Open Software
+$ !  Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+$ !  Equipment Corporation makes any representations about the suitability
+$ !  of this software for any purpose.
+$ !
+$ !
+$ !  @APPLE_LICENSE_HEADER_END@
+$ !
 $ !
 $ !  NAME:
 $ !
@@ -39,7 +72,7 @@ $ --
 $ +
 $  These two symbols must have the same integer value.
 $ -
-$set 1 
+$set 1
 
 1 2074
 
@@ -183,7 +216,7 @@ $ and is put into the generated stubs.
 $ User Action:
 $ Correct the syntax of the <kw>(endpoint) specification.
 
-24 Warning: Extraneous punctuation character \"%1$s\" ignored 
+24 Warning: Extraneous punctuation character \"%1$s\" ignored
 $ Explanation:
 $ A punctuation character was found in a location
 $ where it is not allowed in the IDL language syntax.
@@ -431,15 +464,15 @@ $ The IDL code uses an array with bounds that are not fixed
 $ and does not specify the appropriate size attributes.
 $ User Action:
 $ Modify the array declaration to include the appropriate
-$ <kw>([max_is]) or <kw>([size_is]) attribute.  
+$ <kw>([max_is]) or <kw>([size_is]) attribute.
 $ If the array is a parameter, use an additional parameter to
 $ specify size information.  If the array is a field
 $ in a structure, use an additional field to
 $ specify size information.
-$ The IDL code uses an array with bounds that are not fixed 
+$ The IDL code uses an array with bounds that are not fixed
 $ and does not specify the appropriate size attributes.
 $ Modify the array declaration to include the appropriate
-$ <kw>([min_is]), <kw>([max_is]), or <kw>([size_is]) attribute.  
+$ <kw>([min_is]), <kw>([max_is]), or <kw>([size_is]) attribute.
 $ If the array is a parameter, use an additional parameter to
 $ specify the missing size information.  If the array is a field
 $ in a structure, use an additional field to
@@ -756,7 +789,7 @@ $ the end of the interface definition.
 $ The source file may be incomplete.
 $ User Action:
 $ Complete the interface definition.
-$ 
+$
 
 85 Unexpected end-of-file near '%2$.*1$s'
 $ Explanation:
@@ -1387,7 +1420,7 @@ $ array. Remove one of the attributes.
 158 A [max_is] variable must be a small, short, or long integer
 $ Explanation:
 $ The <kw>([max_is]) attribute specifies a field or parameter that contains
-$ the upper bound of a conformant array.  Array bounds 
+$ the upper bound of a conformant array.  Array bounds
 $ must be integers which are not <kw>(hyper).
 $ User Action:
 $ Change the upper bound field or parameter referenced by the
@@ -1451,7 +1484,7 @@ $ less than <v>(number).
 164 A [min_is] variable must be a small, short, or long integer
 $ Explanation:
 $ The <kw>([min_is]) attribute specifies a field or parameter that contains
-$ the lower bound of a conformant array.  Array bounds 
+$ the lower bound of a conformant array.  Array bounds
 $ must be integers that are not <kw>(hyper).
 $ User Action:
 $ Change the lower bound field or parameter referenced by the
@@ -1770,7 +1803,7 @@ $ parameter or under a full pointer."
 
 203 Full pointers to context handles are not allowed
 $ Explanation:
-$ IDL does not allow full pointers 
+$ IDL does not allow full pointers
 $ to context handles.
 $ User Action:
 $ If the declaration has the <kw>([ptr]) attribute, either explicitly
@@ -2011,24 +2044,24 @@ $ Remove the <kw>([v1_array]) attribute from the array declaration.
 224 The attribute [v1_array] cannot occur with the [min_is] or [first_is] attributes
 $ Explanation:
 $ The only valid array attributes for the
-$ <kw>([v1_array]) attribute are 
-$ <kw>([max_is]), <kw>([last_is]), and 
-$ <kw>([length_is]). 
+$ <kw>([v1_array]) attribute are
+$ <kw>([max_is]), <kw>([last_is]), and
+$ <kw>([length_is]).
 $ User Action:
-$ If you require compatibility with NCS 
+$ If you require compatibility with NCS
 $ Version 1 NIDL, the lower bound
 $ of the array must be fixed; therefore,
-$ remove the 
+$ remove the
 $ <kw>([first_is]) attribute and change the array declaration.
 $ Otherwise, remove the <kw>([v1_array]) attribute.
 $ The only valid array attributes for the
-$ <kw>([v1_array]) attribute are 
-$ <kw>([max_is]), <kw>([size_is]), <kw>([last_is]), and 
-$ <kw>([length_is]). 
-$ If you require compatibility with NCS 
+$ <kw>([v1_array]) attribute are
+$ <kw>([max_is]), <kw>([size_is]), <kw>([last_is]), and
+$ <kw>([length_is]).
+$ If you require compatibility with NCS
 $ Version 1 NIDL, the lower bound
 $ of the array must be fixed; therefore,
-$ remove the <kw>([min_is]) or 
+$ remove the <kw>([min_is]) or
 $ <kw>([first_is]) attribute and change the array declaration.
 $ Otherwise, remove the <kw>([v1_array]) attribute.
 
@@ -2289,14 +2322,14 @@ $ Explanation:
 $ The first parameter in an operation is a <kw>(handle) parameter,
 $ which is either of type <kw>(handle_t) or a type
 $ with the <kw>([handle]) attribute.
-$ A binding handle parameter cannot have the <kw>([unique]) 
+$ A binding handle parameter cannot have the <kw>([unique])
 $ attribute because it cannot be <kw>(NULL).
 $ User Action:
 $ Remove the <kw>([unique]) attribute from the parameter.
 
 253 The attribute [unique] is valid only for pointer types or array parameter types
 $ Explanation:
-$ The <kw>([unique]) attribute modifies the default behavior 
+$ The <kw>([unique]) attribute modifies the default behavior
 $ of any pointer type or an array parameter data type.
 $ It is not valid on other data types.
 $ Note that a <kw>(void *) object is not considered a pointer.
@@ -2317,7 +2350,7 @@ $ context handle is not valid.
 
 255 A [unique] function result is not valid
 $ Explanation:
-$ Unlike <kw>([out]) parameters, there is never any 
+$ Unlike <kw>([out]) parameters, there is never any
 $ preexisting storage in the caller for
 $ pointer-valued function results.
 $ The pointer always points to new storage.
@@ -3297,4 +3330,3 @@ $ parameter.
 374 A constant [size_is] or [length_is] requires a constant [min_is] or [first_is]
 
 375 Correlation checking will not be performed for attributes that occur after the field or parameter they modify
-

@@ -1,28 +1,55 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
-#ifndef _COMSOC_H
-#define _COMSOC_H	1
+
 /*
 **
 **  NAME:
@@ -31,24 +58,24 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
 **  The internal network "socket" object interface.  A very thin veneer
 **  over the BSD socket abstraction interfaces.  This makes life a little
 **  easier when porting to different environments.
-**  
+**
 **  All operations return a standard error value of type
 **  rpc_socket_error_t, operate on socket handles of type rpc_socket_t
 **  and socket addresses of type rpc_socket_addr_t.  These are the types
 **  that one should use when coding.
-**  
+**
 **  Note that there is a distinction between local runtime internal
 **  representations of socket addresses and architected (on-the-wire)
 **  representations used by location services.  This interface specifies
 **  the local runtime internal representation.
-**  
+**
 **  Operations that return an error value always set the value
 **  appropriately.  A value other than rpc_c_socket_ok indicates failure;
 **  the values of additional output parameters are undefined.  Other
@@ -57,6 +84,8 @@
 **
 */
 
+#ifndef _COMSOC_H
+#define _COMSOC_H	1
 
 /*
  * Include platform-specific socket definitions
@@ -326,12 +355,11 @@ PRIVATE rpc_socket_error_t rpc__socket_open (
         rpc_socket_t * sock
     );
 
-
 /*
  * R P C _ _ S O C K E T _ O P E N _ B A S I C
  *
- * A special version of socket_open that is used *only* by 
- * the low level initialization code when it is trying to 
+ * A special version of socket_open that is used *only* by
+ * the low level initialization code when it is trying to
  * determine what network services are supported by the host OS.
  */
 
@@ -341,7 +369,6 @@ PRIVATE rpc_socket_error_t rpc__socket_open_basic (
         rpc_network_protocol_id_t  /*net_prot*/,
         rpc_socket_basic_t * /*sock*/
     );
-
 
 /*
  * R P C _ _ S O C K E T _ C L O S E
@@ -354,7 +381,6 @@ PRIVATE rpc_socket_error_t rpc__socket_open_basic (
 PRIVATE rpc_socket_error_t rpc__socket_close (
         rpc_socket_t /*sock*/
     );
-
 
 /*
  * R P C _ _ S O C K E T _ C L O S E _ B A S I C
@@ -396,7 +422,6 @@ PRIVATE rpc_socket_error_t rpc__socket_connect (
 	rpc_cn_assoc_t* /*assoc*/
     );
 
-
 /*
  * R P C _ _ S O C K E T _ A C C E P T
  *
@@ -406,7 +431,7 @@ PRIVATE rpc_socket_error_t rpc__socket_connect (
  * of addr.sa.  This operation fills in addr.sa and sets addr.len to
  * the new size of the field.  This is used only by Connection oriented
  * Protocol Services.
- * 
+ *
  * (see BSD UNIX accept(2)).
  */
 
@@ -415,7 +440,6 @@ PRIVATE rpc_socket_error_t rpc__socket_accept (
         rpc_addr_p_t  /*addr*/,
         rpc_socket_t * /*newsock*/
     );
-
 
 /*
  * R P C _ _ S O C K E T _ L I S T E N
@@ -430,7 +454,6 @@ PRIVATE rpc_socket_error_t rpc__socket_listen (
         rpc_socket_t /*sock*/,
         int /*backlog*/
     );
-
 
 /*
  * R P C _ _ S O C K E T _ S E N D M S G
@@ -449,7 +472,6 @@ PRIVATE rpc_socket_error_t rpc__socket_sendmsg (
         size_t * /*cc*/             /* returned number of bytes actually sent */
     );
 
-
 /*
  * R P C _ _ S O C K E T _ R E C V F R O M
  *
@@ -459,7 +481,7 @@ PRIVATE rpc_socket_error_t rpc__socket_sendmsg (
  * operation fills in addr.sa and sets addr.len to the new size of the
  * field.  An error status as well as the actual number of bytes received
  * are also returned.
- * 
+ *
  * (see BSD UNIX recvfrom(2)).
  */
 
@@ -471,7 +493,6 @@ PRIVATE rpc_socket_error_t rpc__socket_recvfrom (
         size_t * /*cc*/             /* returned number of bytes actually rcvd */
     );
 
-
 /*
  * R P C _ _ S O C K E T _ R E C V M S G
  *
@@ -480,7 +501,7 @@ PRIVATE rpc_socket_error_t rpc__socket_recvfrom (
  * set to the actual size of addr.sa.  This operation fills in addr.sa
  * and sets addr.len to the new size of the field.  An error code as
  * well as the actual number of bytes received are also returned.
- * 
+ *
  * (see BSD UNIX recvmsg(2)).
  */
 
@@ -491,7 +512,6 @@ PRIVATE rpc_socket_error_t rpc__socket_recvmsg (
         rpc_addr_p_t  /*addr*/,  /* addr of sender */
         size_t * /*cc*/             /* returned number of bytes actually rcvd */
     );
-
 
 /*
  * R P C _ _ S O C K E T _ I N Q _ A D D R
@@ -541,7 +561,6 @@ PRIVATE rpc_socket_error_t rpc__socket_inq_peer_endpoint (
         rpc_addr_p_t /*addr*/
     );
 
-
 /*
  * R P C _ _ S O C K E T _ S E T _ B R O A D C A S T
  *
@@ -553,24 +572,22 @@ PRIVATE rpc_socket_error_t rpc__socket_set_broadcast (
         rpc_socket_t /*sock*/
     );
 
-
 /*
  * R P C _ _ S O C K E T _ S E T _ B U F S
  *
  * Set the socket's send and receive buffer sizes and return the new
  * values.
- * 
+ *
  * (similar to BSD UNIX setsockopt()).
  */
 
 PRIVATE rpc_socket_error_t rpc__socket_set_bufs (
-        rpc_socket_t  /*sock*/, 
-        unsigned32  /*txsize*/, 
-        unsigned32  /*rxsize*/, 
-        unsigned32 * /*ntxsize*/, 
+        rpc_socket_t  /*sock*/,
+        unsigned32  /*txsize*/,
+        unsigned32  /*rxsize*/,
+        unsigned32 * /*ntxsize*/,
         unsigned32 * /*nrxsize*/
     );
-
 
 /*
  * R P C _ _ S O C K E T _ S E T _ N B I O
@@ -583,7 +600,6 @@ PRIVATE rpc_socket_error_t rpc__socket_set_bufs (
 PRIVATE rpc_socket_error_t rpc__socket_set_nbio (
         rpc_socket_t /*sock*/
     );
-
 
 /*
  * R P C _ _ S O C K E T _ S E T _ C L O S E _ O N _ E X E C

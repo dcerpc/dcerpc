@@ -1,23 +1,55 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
+
 /*
  */
 /*
@@ -46,13 +78,13 @@
 **
 **
 */
-  
+
 [
- uuid(e1af8308-5d1f-11c9-91a4-08002b14a0fa), version(3.0), 
- endpoint("ncadg_ip_udp:[135]", "ncadg_dds:[12]", "ncacn_ip_tcp:[135]", 
+ uuid(e1af8308-5d1f-11c9-91a4-08002b14a0fa), version(3.0),
+ endpoint("ncadg_ip_udp:[135]", "ncadg_dds:[12]", "ncacn_ip_tcp:[135]",
           "ncacn_dnet_nsp:[#69]", "ncalrpc:[epmapper]"
           /* "ncacn_np:[\\PIPE\\epmapper]" */),
- pointer_default(ptr) 
+ pointer_default(ptr)
 ]
 
 interface ept
@@ -63,17 +95,14 @@ import "dce/rpctypes.idl";
 
 const long ept_max_annotation_size  = 64;
 
-
-typedef struct 
+typedef struct
 {
                 idl_uuid_t      object;
                 twr_p_t     tower;
     [string]    char        annotation[ept_max_annotation_size];
 } ept_entry_t, *ept_entry_p_t;
 
-
 typedef [context_handle] void *ept_lookup_handle_t;
-
 
 /*
  * E P T _ I N S E R T
@@ -91,7 +120,6 @@ void ept_insert(
     [out]           error_status_t      *status
 );
 
-
 /*
  * E P T _ D E L E T E
  *
@@ -107,11 +135,10 @@ void ept_delete(
     [out]           error_status_t      *status
 );
 
-
 /*
  * E P T _ L O O K U P
  *
- * Lookup entries in an endpoint map.  
+ * Lookup entries in an endpoint map.
  *
  */
 
@@ -123,14 +150,13 @@ void ept_lookup(
     [in]            rpc_if_id_p_t       interface_id,
     [in]            unsigned32          vers_option,
     [in, out]       ept_lookup_handle_t *entry_handle,
-    [in, range(0,500)] 
+    [in, range(0,500)]
                     unsigned32          max_ents,
     [out]           unsigned32          *num_ents,
-    [out, length_is(*num_ents), size_is(max_ents)]  
-                    ept_entry_t         entries[],    
+    [out, length_is(*num_ents), size_is(max_ents)]
+                    ept_entry_t         entries[],
     [out]           error_status_t      *status
 );
-
 
 /*
  * E P T _ M A P
@@ -148,11 +174,10 @@ void ept_map(
     [in, range(0,500)]
                     unsigned32          max_towers,
     [out]           unsigned32          *num_towers,
-    [out, length_is(*num_towers), size_is(max_towers)]  
+    [out, length_is(*num_towers), size_is(max_towers)]
                     twr_p_t             towers[],
     [out]           error_status_t      *status
 );
-
 
 /*
  * E P T _ L O O K U P _ H A N D L E _ F R E E
@@ -165,7 +190,6 @@ void ept_lookup_handle_free(
     [in, out]       ept_lookup_handle_t *entry_handle,
     [out]           error_status_t      *status
 );
-
 
 /*
  * E P T _ I N Q _ O B J E C T
@@ -185,9 +209,9 @@ void ept_inq_object(
  *
  * Delete matching entries from an endpoint map.
  *
- * All entries that match the tower's interface uuid, 
- * version, and network address are deleted.  If an 
- * object uuid is specified, the entries which are 
+ * All entries that match the tower's interface uuid,
+ * version, and network address are deleted.  If an
+ * object uuid is specified, the entries which are
  * deleted must also match the object uuid.
  */
 

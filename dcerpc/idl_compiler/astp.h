@@ -1,24 +1,55 @@
 /*
- * 
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2009 Apple Inc. All rights reserved
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
+
 /*
 **  NAME
 **
@@ -69,7 +100,6 @@
 #define ASTP_C_LONG_MIN         (-2147483647 - 1)
 #define ASTP_C_ULONG_MAX        4294967295.0
 #define ASTP_C_ULONG_MIN        0
-
 
 /*
  *  Boolean Attributes Flags for Operations, Parameters, Types and Fields
@@ -185,7 +215,6 @@
             ASTP_SMALL | ASTP_CONTEXT |  ASTP_UNIQUE | \
             ASTP_REF | ASTP_PTR
 
-
 /*
  * ASTP (Private) definitions for the boolean attributes for an interface.
  * These are identical to the common definitions defined in AST.H.
@@ -200,7 +229,6 @@
 #define ASTP_IF_VERSION         0x00000100
 #define ASTP_IF_EXCEPTIONS      0x00000200
 
-
 /*
  * Macro for manipulating interface boolean attributes.
  */
@@ -213,7 +241,6 @@
 #define ASTP_IF_AF_SET(if,attribute)       \
     (((if)->fe_info->type_specific.if_flags & (attribute)) != 0)
 
-
 /*
  * Macros for checking and clearing attributes in an ASTP_attr_flag_t structure.
  */
@@ -222,7 +249,6 @@
 
 #define ASTP_CLR_ATTR(__attr_ptr,__flags)   \
     (__attr_ptr)->attr_flags &= (~(__flags))
-
 
 /* AST Private structure types */
 
@@ -244,7 +270,6 @@ typedef struct ASTP_attributes_t
 
 } ASTP_attributes_t;
 
-
 /*
  * Structure for the singly-linked list used to build the AST.
  *
@@ -261,7 +286,6 @@ typedef struct ASTP_node_t
     struct ASTP_node_t  *next;
     struct ASTP_node_t  *last;
 } ASTP_node_t, *ASTP_node_t_p;
-
 
 typedef enum
 {
@@ -367,7 +391,6 @@ typedef struct ASTP_declarator_n_t
     struct ASTP_declarator_op_n_t   *last_op;
 } ASTP_declarator_n_t;
 
-
 /*
  * Representation of operations that can be performed on declarators to produce
  * various types (pointer, array, function_pointer).
@@ -387,7 +410,6 @@ typedef struct ASTP_declarator_op_n_t
     } op_info;
 } ASTP_declarator_op_n_t;
 
-
 /*
  * A Tag ref node is created for each forward reference to a
  * struct/union via it's tag name (e.g.  struct foo).  It
@@ -405,7 +427,6 @@ typedef struct ASTP_tag_ref_n_t
     AST_type_n_t        *type_node_ptr; /* Type node that referenced tag */
 } ASTP_tag_ref_n_t;
 
-
 /*
  * Structure to hold count of input/output parameters needing marshalling
  * used to formulate operation synthesized attributes AST_HAS_INS/AST_HAS_OUTS.
@@ -415,7 +436,6 @@ typedef struct ASTP_parameter_count_t
     int  in_params;
     int  out_params;
 } ASTP_parameter_count_t;
-
 
 boolean ASTP_expr_is_simple(
     parser_location_p location,
@@ -481,7 +501,6 @@ AST_constant_n_t * AST_constant_from_exp(
  */
 extern int              interface_pointer_class;
 
-
 /*
  *  Operation, Parameter, Type Attributes
  */
@@ -489,18 +508,15 @@ extern AST_type_n_t         *ASTP_transmit_as_type;
 extern AST_type_n_t         *ASTP_switch_type;
 extern AST_case_label_n_t   *ASTP_case;
 
-
 /*
  *  Interface just parsed
  */
 extern AST_interface_n_t * the_interface;
 
-
 //centeris wfu
 extern AST_cpp_quote_n_t * global_cppquotes; //store cppquote nodes that appear in front of interfaces
 
 extern AST_cpp_quote_n_t * global_cppquotes_post; //store cppquote nodes that appear behind the last parsed interface
-
 
 /* list of imports that occurred outside of interfaces */
 extern AST_import_n_t * global_imports;
@@ -711,7 +727,6 @@ AST_export_n_t *AST_types_to_exports(
     AST_type_p_n_t *type_p_list
 );
 
-
 AST_array_n_t *AST_array_node(
     parser_location_p location,
     AST_type_n_t *element_type_ptr
@@ -721,7 +736,6 @@ AST_array_index_n_t *AST_array_index_node(
     parser_location_p	location,
     unsigned short array_size
 );
-
 
 ASTP_array_index_n_t *ASTP_array_index_node(
     parser_location_p location,
@@ -745,7 +759,6 @@ AST_constant_n_t *AST_char_constant(
     parser_location_p location,
     char value
 );
-
 
 AST_arm_n_t *AST_declarator_to_arm(
     parser_location_p location,
@@ -785,7 +798,6 @@ AST_constant_n_t *AST_enum_constant(
     NAMETABLE_id_t identifier,
     AST_exp_n_t * exp
 );
-
 
 AST_constant_n_t *AST_finish_constant_node(
     parser_location_p location,

@@ -1,26 +1,55 @@
 /*
- * 
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **      ndrui5.c
@@ -37,7 +66,6 @@
 #if HAVE_CONFIG_H
 #include <config.h>
 #endif
-
 
 #include <dce/idlddefs.h>
 #include <ndrui.h>
@@ -64,7 +92,7 @@ void rpc_ss_ndr_u_conf_cs_struct_hdr
     idl_ulong_int conf_arr_shadow_index,    /* [in] index in shadow of
                                                             conformant array */
     idl_boolean allocate,           /* [in] TRUE=>structure must be allocated */
-    IDL_cs_shadow_elt_t *cs_shadow, 
+    IDL_cs_shadow_elt_t *cs_shadow,
                            /* [out] convert type and local value of [size_is] */
     rpc_void_p_t *p_param_addr, /* [out] NULL or where to put address of
                                                         allocated structure */
@@ -126,7 +154,7 @@ void rpc_ss_ndr_unmar_cs_array
     rpc_void_p_t array_addr,        /* [in] */
     IDL_cs_shadow_elt_t *cs_shadow,  /* [in] ignored for fixed array */
     idl_ulong_int *Z_values,        /* [in] ignored if array not conformant */
-    idl_ulong_int array_shadow_index, /* [in] ignored if array not conformant 
+    idl_ulong_int array_shadow_index, /* [in] ignored if array not conformant
                                         Position of array in cs-shadow */
     idl_byte **p_defn_vec_ptr,     /* [in] Points at DT_..._ARRAY
                                       [out] Points after array definition */
@@ -241,7 +269,7 @@ void rpc_ss_ndr_unmar_cs_array
     if ((array_type == IDL_DT_FIXED_ARRAY)
         || (array_type == IDL_DT_CONF_ARRAY))
     {
-        rpc_ss_ndr_u_fix_or_conf_arr(1, &w_storage_len, cs_type_defn_ptr, 
+        rpc_ss_ndr_u_fix_or_conf_arr(1, &w_storage_len, cs_type_defn_ptr,
                                      wdata, 0, IDL_msp);
         w_data_len = w_storage_len;
     }
@@ -687,7 +715,7 @@ void rpc_ss_ndr_u_cs_array_param
         IDL_DISCARD_LONG_FROM_VECTOR(type_vec_ptr);
                                             /* Discard full array definition */
         IDL_GET_LONG_FROM_VECTOR(array_defn_index, type_vec_ptr);
-        array_defn_ptr = IDL_msp->IDL_type_vec + array_defn_index; 
+        array_defn_ptr = IDL_msp->IDL_type_vec + array_defn_index;
         array_defn_ptr++;       /* Dimensionality must be 1 */
 
         /* Skip over lower bound entirely and upper bound kind and type */
@@ -704,7 +732,7 @@ void rpc_ss_ndr_u_cs_array_param
                                IDL_msp);
     }
 
-    rpc_ss_ndr_unmar_cs_array(IDL_msp->IDL_param_vec[param_index], 
+    rpc_ss_ndr_unmar_cs_array(IDL_msp->IDL_param_vec[param_index],
                               param_cs_shadow,
                               Z_values, param_index-1, p_type_vec_ptr, IDL_msp);
 }
@@ -762,4 +790,3 @@ void rpc_ss_alloc_out_cs_conf_array
 
     *p_type_vec_ptr = type_vec_ptr;
 }
-

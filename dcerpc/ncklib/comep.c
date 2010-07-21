@@ -1,26 +1,55 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **  NAME
@@ -29,7 +58,7 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
@@ -77,7 +106,6 @@ typedef struct {
     ept_entry_t             entries[MAX_ENTS];
 } mgmt_ep_inq_rep_t, *mgmt_ep_inq_rep_p_t;
 
-
 INTERNAL void ep_register (
         rpc_if_handle_t         ifspec,
         rpc_binding_vector_t    *binding_vec,
@@ -124,20 +152,20 @@ INTERNAL void rpc__ep_mem_free (
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**   
+**
 **  Adds server address information to the endpoint mapper database.
 **  A server routine calls this routine only if the server has dynamically
 **  generated endpoints.
 **
 **  INPUTS:
 **
-**      ifspec          Interface specification to register with the 
+**      ifspec          Interface specification to register with the
 **                      endpoint mapper.
 **
-**      binding_vec     Vector of binding handles over which the server 
+**      binding_vec     Vector of binding handles over which the server
 **                      can receive RPCs.
 **
-**      object_uuid_vec A vector of object UUIDs offered by the server. 
+**      object_uuid_vec A vector of object UUIDs offered by the server.
 **                      The server application constructs this vector.
 **
 **      annotation      A character string comment applied to each cross-
@@ -163,7 +191,7 @@ INTERNAL void rpc__ep_mem_free (
 **--
 **/
 
-PUBLIC void rpc_ep_register 
+PUBLIC void rpc_ep_register
 (
     rpc_if_handle_t             ifspec,
     rpc_binding_vector_t        *binding_vec,
@@ -183,18 +211,18 @@ PUBLIC void rpc_ep_register
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**   
+**
 **  Like rpc_ep_register, except doesn't replace any existing entries.
 **
 **  INPUTS:
 **
-**      ifspec          Interface specification to register with the 
+**      ifspec          Interface specification to register with the
 **                      endpoint mapper.
 **
-**      binding_vec     Vector of binding handles over which the server 
+**      binding_vec     Vector of binding handles over which the server
 **                      can receive RPCs.
 **
-**      object_uuid_vec A vector of object UUIDs offered by the server. 
+**      object_uuid_vec A vector of object UUIDs offered by the server.
 **                      The server application constructs this vector.
 **
 **      annotation      A character string comment applied to each cross-
@@ -220,7 +248,7 @@ PUBLIC void rpc_ep_register
 **--
 **/
 
-PUBLIC void rpc_ep_register_no_replace 
+PUBLIC void rpc_ep_register_no_replace
 (
     rpc_if_handle_t             ifspec,
     rpc_binding_vector_t        *binding_vec,
@@ -240,18 +268,18 @@ PUBLIC void rpc_ep_register_no_replace
 **  SCOPE:              INTERNAL
 **
 **  DESCRIPTION:
-**   
+**
 **  Common routine for rpc_ep_register*.
 **
 **  INPUTS:
 **
-**      ifspec          Interface specification to register with the 
+**      ifspec          Interface specification to register with the
 **                      endpoint mapper.
 **
-**      binding_vec     Vector of binding handles over which the server 
+**      binding_vec     Vector of binding handles over which the server
 **                      can receive RPCs.
 **
-**      object_uuid_vec A vector of object UUIDs offered by the server. 
+**      object_uuid_vec A vector of object UUIDs offered by the server.
 **                      The server application constructs this vector.
 **
 **      annotation      A character string comment applied to each cross-
@@ -278,7 +306,7 @@ PUBLIC void rpc_ep_register_no_replace
 **--
 **/
 
-INTERNAL void ep_register 
+INTERNAL void ep_register
 (
     rpc_if_handle_t             ifspec,
     rpc_binding_vector_t        *binding_vec,
@@ -292,7 +320,7 @@ INTERNAL void ep_register
     rpc_if_rep_p_t              if_rep = (rpc_if_rep_p_t) ifspec;
     rpc_binding_handle_t        ep_binding = NULL;
     unsigned32                  i, j;
-    unsigned32                  curr_hand = 0, curr_tower = 0, curr_obj = 0; 
+    unsigned32                  curr_hand = 0, curr_tower = 0, curr_obj = 0;
     unsigned32                  st;
     rpc_tower_ref_vector_p_t    tower_vec;
 
@@ -309,7 +337,7 @@ INTERNAL void ep_register
     {
         *status = rpc_s_no_bindings;
         return;
-    }          
+    }
 
 #ifndef __hpux__
     /*
@@ -403,14 +431,14 @@ INTERNAL void ep_register
     /*
      * Allocate the EP entry structure to avoid taking up stack space.
      */
-    
-    RPC_MEM_ALLOC(ept_entry, ept_entry_t *, sizeof *ept_entry, 
+
+    RPC_MEM_ALLOC(ept_entry, ept_entry_t *, sizeof *ept_entry,
             RPC_C_MEM_EPT_ENTRY, RPC_C_MEM_NOWAIT);
 
     rpc__strncpy(ept_entry->annotation, annotation, ept_max_annotation_size - 1);
 
     for (curr_hand = 0; curr_hand < binding_vec->count; curr_hand++)
-    {                
+    {
         rpc_binding_rep_p_t binding_rep = (rpc_binding_rep_p_t) binding_vec->binding_h[curr_hand];
         /*
          * Skip over NULL entries.
@@ -440,7 +468,7 @@ INTERNAL void ep_register
         {
             rpc__tower_from_tower_ref(tower_vec->tower[curr_tower], &ept_entry->tower, status);
             if (*status != rpc_s_ok)
-                break; 
+                break;
 
             if (object_uuid_vec == NULL || object_uuid_vec->count == 0)
             {
@@ -461,13 +489,13 @@ INTERNAL void ep_register
                         dcethread_interrupt_throw(dcethread_self());
                     if (*status != rpc_s_ok)
                         break;
-                }         
+                }
             }
 
             rpc__tower_free(&ept_entry->tower, &st);
 
             if (*status != rpc_s_ok)
-                break; 
+                break;
         }
 
         rpc__tower_ref_vec_free(&tower_vec, &st);
@@ -476,28 +504,28 @@ INTERNAL void ep_register
             break;
     }
 
-    rpc_binding_free(&ep_binding, &st);       
+    rpc_binding_free(&ep_binding, &st);
     RPC_MEM_FREE(ept_entry, RPC_C_MEM_EPT_ENTRY);
 
     /*
-     * Handle any error conditions.  Try to unregister anything that was 
+     * Handle any error conditions.  Try to unregister anything that was
      * successfully registered.  Since we were trying to register the
-     * cross product of two vectors we need to separate recovery into 
+     * cross product of two vectors we need to separate recovery into
      * 1) binding handles for which all objects were successfully registered
      * and 2) binding handles for which some of the objects were successfully
-     * registered.  
-     * Punt on the fact that multiple towers can be derived from each binding 
-     * handle - all towers associated with a binding handle will be unregistered 
+     * registered.
+     * Punt on the fact that multiple towers can be derived from each binding
+     * handle - all towers associated with a binding handle will be unregistered
      * by rpc_ep_unregister.
      */
 
     if ((*status != rpc_s_ok) && (*status != rpc_s_comm_failure) &&
         (curr_hand > 0 || curr_tower > 0 || curr_obj > 0))
-    {   
+    {
         rpc_binding_vector_p_t  bvp;
         uuid_vector_p_t         ovp = NULL;
         unsigned32              bv_size, ov_size;
-                     
+
         /*
          * First alloc a binding vector large enough to hold the number
          * of handles for which all objects were successfully registered.
@@ -518,20 +546,20 @@ INTERNAL void ep_register
          * If there were any handles that were fully registered,
          * unregister them now.
          */
-    
+
         if (curr_hand > 0)
         {
             bvp->count = curr_hand;
             for (j = 0; j < bvp->count; j++)
                 bvp->binding_h[j] = binding_vec->binding_h[j];
-    
+
             rpc_ep_unregister(ifspec, bvp, object_uuid_vec, &st);
         }
 
         /*
          * If we got part way through registering the towers associated
-         * with a binding handle for an object, behave as if we registered 
-         * all the towers associated with the binding handle and the object, 
+         * with a binding handle for an object, behave as if we registered
+         * all the towers associated with the binding handle and the object,
          * ie. increment the curr_obj.
          */
         if (curr_tower > 0) curr_obj++;
@@ -544,7 +572,7 @@ INTERNAL void ep_register
          */
 
         if (curr_obj > 0)
-        { 
+        {
             /*
              * First create the partial object vector.
              */
@@ -570,7 +598,7 @@ INTERNAL void ep_register
              */
 
             bvp->count = 1;
-            bvp->binding_h[0] = binding_vec->binding_h[curr_hand]; 
+            bvp->binding_h[0] = binding_vec->binding_h[curr_hand];
 
             rpc_ep_unregister(ifspec, bvp, ovp, &st);
 
@@ -589,14 +617,14 @@ INTERNAL void ep_register
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**   
+**
 **  Removes server address information from the endpoint mapper database.
 **  A server calls this routine only if the server has previously
 **  registered dynamically allocated endpoints.
 **
 **  INPUTS:
 **
-**      ifspec          Interface specification to unregister with the 
+**      ifspec          Interface specification to unregister with the
 **                      endpoint mapper.
 **
 **      binding_vec     Vector of binding handles to unregister
@@ -624,14 +652,14 @@ INTERNAL void ep_register
 **--
 **/
 
-PUBLIC void rpc_ep_unregister 
+PUBLIC void rpc_ep_unregister
 (
     rpc_if_handle_t             ifspec,
     rpc_binding_vector_t        *binding_vec,
     uuid_vector_t               *object_uuid_vec,
     unsigned32                  *status
 )
-{ 
+{
     ept_entry_t                 *ept_entry;
     rpc_if_rep_p_t              if_rep = (rpc_if_rep_p_t) ifspec;
     rpc_binding_handle_t        ep_binding = NULL;
@@ -653,7 +681,7 @@ PUBLIC void rpc_ep_unregister
     {
         *status = rpc_s_no_bindings;
         return;
-    }          
+    }
 
 #ifndef __hpux__
     /*
@@ -723,10 +751,10 @@ PUBLIC void rpc_ep_unregister
     /*
      * Allocate the EP entry structure to avoid taking up stack space.
      */
-    
-    RPC_MEM_ALLOC(ept_entry, ept_entry_t *, sizeof *ept_entry, 
+
+    RPC_MEM_ALLOC(ept_entry, ept_entry_t *, sizeof *ept_entry,
             RPC_C_MEM_EPT_ENTRY, RPC_C_MEM_NOWAIT);
-    
+
     ept_entry->annotation[0] = 0;
 
     /*
@@ -744,7 +772,7 @@ PUBLIC void rpc_ep_unregister
     lstatus = rpc_s_ok;
 
     for (i = 0; i < binding_vec->count; i++)
-    {    
+    {
         /*
          * Skip over NULL entries.
          */
@@ -806,7 +834,7 @@ PUBLIC void rpc_ep_unregister
 
                         continue;
                     }
-                }         
+                }
             }
 
             if (st != rpc_s_ok)
@@ -818,7 +846,7 @@ PUBLIC void rpc_ep_unregister
             rpc__tower_free(&ept_entry->tower, &st);
         }
 
-        rpc__tower_ref_vec_free(&tower_vec, &st); 
+        rpc__tower_ref_vec_free(&tower_vec, &st);
     }
 
     *status = lstatus;
@@ -834,7 +862,7 @@ PUBLIC void rpc_ep_unregister
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**   
+**
 **  Creates an inquiry context for viewing the elements in a local or
 **  remote endpoint map database.
 **
@@ -870,7 +898,7 @@ PUBLIC void rpc_ep_unregister
 **--
 **/
 
-PUBLIC void rpc_mgmt_ep_elt_inq_begin 
+PUBLIC void rpc_mgmt_ep_elt_inq_begin
 (
     rpc_binding_handle_t    input_binding,
     unsigned32              inquiry_type,
@@ -921,7 +949,7 @@ PUBLIC void rpc_mgmt_ep_elt_inq_begin
      * Fill context's object and interface specs.  If object isn't being
      * matched, use nil_uuid.  If interface isn't being matched, use
      * nil_uuid and versions = 0.
-     */ 
+     */
 
     uuid_create_nil(&UUID_NIL, &tmp_st);
 
@@ -968,7 +996,7 @@ PUBLIC void rpc_mgmt_ep_elt_inq_begin
             case rpc_c_vers_major_only:
             case rpc_c_vers_upto:
                 break;
-    
+
             default:
                 *status = rpc_s_invalid_vers_option;
                 rpc_binding_free(&ep_binding, &tmp_st);
@@ -976,7 +1004,7 @@ PUBLIC void rpc_mgmt_ep_elt_inq_begin
                 return;
         }
     }
-     
+
     *inquiry_context = (rpc_ep_inq_handle_t) chp;
 
     *status = rpc_s_ok;
@@ -991,7 +1019,7 @@ PUBLIC void rpc_mgmt_ep_elt_inq_begin
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**   
+**
 **  Returns one element at a time from a local or remote endpoint map
 **  database.
 **
@@ -1023,7 +1051,7 @@ PUBLIC void rpc_mgmt_ep_elt_inq_begin
 **
 **--
 **/
-PUBLIC void rpc_mgmt_ep_elt_inq_next 
+PUBLIC void rpc_mgmt_ep_elt_inq_next
 (
     rpc_ep_inq_handle_t       inquiry_context,
     rpc_if_id_t               *if_id,
@@ -1058,7 +1086,7 @@ PUBLIC void rpc_mgmt_ep_elt_inq_next
     {
         *status = rpc_s_invalid_inquiry_context;
         return;
-    } 
+    }
 
     if (if_id == NULL)
     {
@@ -1067,7 +1095,7 @@ PUBLIC void rpc_mgmt_ep_elt_inq_next
     }
 
     /*
-     * Continue processing towers until we find one with a protseq 
+     * Continue processing towers until we find one with a protseq
      * supported by this runtime.
      */
     while (!supported_tower)
@@ -1090,23 +1118,23 @@ PUBLIC void rpc_mgmt_ep_elt_inq_next
              * allocation.
              */
             rpc_ss_swap_client_alloc_free (
-                rpc__ep_mem_alloc, rpc__ep_mem_free, 
+                rpc__ep_mem_alloc, rpc__ep_mem_free,
                 &old_allocate, &old_free);
 
             /*
              *  No entries stashed away so read some from ept database
              */
-            (*ept_v3_0_c_epv.ept_lookup)(chp->ep_binding, 
+            (*ept_v3_0_c_epv.ept_lookup)(chp->ep_binding,
                 chp->inquiry_type, &chp->object, &chp->if_id, chp->vers_option,
-                &chp->entry_handle, MAX_ENTS, &chp->num_ents, chp->entries, 
+                &chp->entry_handle, MAX_ENTS, &chp->num_ents, chp->entries,
                 status);
 
             /*
-             * Restore the memory allocation scheme in effect before 
+             * Restore the memory allocation scheme in effect before
              * we got here.
              */
             rpc_ss_swap_client_alloc_free (
-                old_allocate, old_free, 
+                old_allocate, old_free,
                 &tmp_allocate, &tmp_free);
 
             if (*status != rpc_s_ok)
@@ -1118,13 +1146,13 @@ PUBLIC void rpc_mgmt_ep_elt_inq_next
                 return;
             }
             chp->next_ent = 0;
-        } 
-     
+        }
+
         entp = &(chp->entries[chp->next_ent]);
 
         if (binding != NULL)
         {
-            rpc_tower_to_binding(entp->tower->tower_octet_string, binding, 
+            rpc_tower_to_binding(entp->tower->tower_octet_string, binding,
                                     status);
 
             /*
@@ -1157,7 +1185,7 @@ PUBLIC void rpc_mgmt_ep_elt_inq_next
         if (supported_tower)
         {
             tower_to_if_id(entp->tower, if_id, status);
-            if (*status != rpc_s_ok) 
+            if (*status != rpc_s_ok)
                 return;
 
             if (object_uuid != NULL)
@@ -1172,7 +1200,7 @@ PUBLIC void rpc_mgmt_ep_elt_inq_next
                     unsigned_char_p_t,
                     asize,
                     RPC_C_MEM_STRING,
-                    RPC_C_MEM_WAITOK); 
+                    RPC_C_MEM_WAITOK);
 
                 rpc__strncpy(*annotation, entp->annotation, (asize-1));
              }
@@ -1187,8 +1215,8 @@ PUBLIC void rpc_mgmt_ep_elt_inq_next
              *  context to the caller.
              *  Free the towers.
              */
-            for (i = 0, entp = &(chp->entries[0]); 
-                i < chp->num_ents; 
+            for (i = 0, entp = &(chp->entries[0]);
+                i < chp->num_ents;
                 i++, entp++)
             {
                 rpc__ep_mem_free (NULL, (pointer_t) entp->tower);
@@ -1196,7 +1224,7 @@ PUBLIC void rpc_mgmt_ep_elt_inq_next
 
             chp->num_ents = 0;
             chp->next_ent = 0;
-                          
+
             /*
              * If entry handle is NULL, all matching entries have been read
              * so mark context as done.
@@ -1217,13 +1245,13 @@ PUBLIC void rpc_mgmt_ep_elt_inq_next
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**   
+**
 **  Deletes the inquiry context for viewing the elements in a local or
 **  remote endpoint map database.
 **
 **  INPUTS:             none
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **      inquiry_context
 **
@@ -1248,7 +1276,7 @@ PUBLIC void rpc_mgmt_ep_elt_inq_done
     unsigned32              *status
 )
 {
-    mgmt_ep_inq_rep_t       *chp; 
+    mgmt_ep_inq_rep_t       *chp;
     ept_entry_t             *entp;
     unsigned32              i;
 
@@ -1279,7 +1307,7 @@ PUBLIC void rpc_mgmt_ep_elt_inq_done
     for (i = 0, entp = &(chp->entries[0]); i < chp->num_ents; i++, entp++)
         rpc__ep_mem_free (NULL, (pointer_t) entp->tower);
 
-    RPC_MEM_FREE(chp, RPC_C_MEM_INQ_REP); 
+    RPC_MEM_FREE(chp, RPC_C_MEM_INQ_REP);
 
     *inquiry_context = NULL;
 
@@ -1294,12 +1322,12 @@ PUBLIC void rpc_mgmt_ep_elt_inq_done
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**   
+**
 **  Removes server address information from an endpoint map database.
 **
 **  INPUTS:             none
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **      input_binding
 **
@@ -1322,7 +1350,7 @@ PUBLIC void rpc_mgmt_ep_elt_inq_done
 **--
 **/
 
-PUBLIC void rpc_mgmt_ep_unregister 
+PUBLIC void rpc_mgmt_ep_unregister
 (
     rpc_binding_handle_t    input_binding,
     rpc_if_id_p_t           if_id,
@@ -1355,7 +1383,7 @@ PUBLIC void rpc_mgmt_ep_unregister
       NULL, /* server_epv */
       NULL /* manager epv */
     };
-    
+
     if (if_id == NULL)
     {
         *status = rpc_s_no_interfaces;
@@ -1406,9 +1434,9 @@ PUBLIC void rpc_mgmt_ep_unregister
         object_speced = false;
         uuid_create_nil(&UUID_NIL, &tmp_st);
         objp = &UUID_NIL;
-    }    
+    }
     else
-    {  
+    {
         object_speced = true;
         objp = object_uuid;
     }
@@ -1433,10 +1461,10 @@ PUBLIC void rpc_mgmt_ep_unregister
 **  SCOPE:              INTERNAL
 **
 **  DESCRIPTION:
-**   
+**
 **  Return a binding to an endpoint mapper.
 **
-**  INPUTS: 
+**  INPUTS:
 **
 **      input_binding   Binding from which we should derive a binding on the
 **                      endpoint mapper.  Can be NULL to mean the endpoint
@@ -1501,7 +1529,7 @@ INTERNAL void get_ep_binding
             rpc__strncpy(protseq_str, protseq_vector->protseq[i], slen);
             rpc__strncpy(&protseq_str[slen], (unsigned_char_t *) ":", 1);
 
-            rpc_binding_from_string_binding(protseq_str, output_binding, status); 
+            rpc_binding_from_string_binding(protseq_str, output_binding, status);
             if (*status == rpc_s_ok)
                 break;
         }
@@ -1524,21 +1552,21 @@ INTERNAL void get_ep_binding
          */
 
         RPC_BINDING_VALIDATE_CLIENT((rpc_binding_rep_p_t) input_binding, status);
-    
+
         rpc_binding_copy(input_binding, output_binding, status);
         if (*status != rpc_s_ok)
             return;
-        
+
         rpc_binding_reset(*output_binding, status);
         if (*status != rpc_s_ok)
-        { 
+        {
             rpc_binding_free(output_binding, &tmp_st);
             return;
         }
-    
+
         rpc_mgmt_set_com_timeout (*output_binding, rpc_c_binding_default_timeout, status);
         if (*status != rpc_s_ok)
-        { 
+        {
             rpc_binding_free(output_binding, &tmp_st);
             return;
         }
@@ -1546,7 +1574,7 @@ INTERNAL void get_ep_binding
         rpc_binding_set_auth_info (*output_binding, NULL, rpc_c_authn_level_default,
                                     rpc_c_authn_none, NULL, rpc_c_authz_none, status);
         if (*status != rpc_s_ok)
-        { 
+        {
             rpc_binding_free(output_binding, &tmp_st);
             return;
         }
@@ -1562,10 +1590,10 @@ INTERNAL void get_ep_binding
 **  SCOPE:              PRIVATE
 **
 **  DESCRIPTION:
-**   
+**
 **  Return a binding to an endpoint mapper.
 **
-**  INPUTS: 
+**  INPUTS:
 **
 **      input_binding   Binding from which we should derive a binding on the
 **                      endpoint mapper.  Can be NULL to mean the endpoint
@@ -1607,10 +1635,10 @@ PRIVATE void rpc_binding_to_epmap
 **  SCOPE:              INTERNAL
 **
 **  DESCRIPTION:
-**   
+**
 **  Convert a tower to an interface ID.
 **
-**  INPUTS: 
+**  INPUTS:
 **
 **      tower
 **
@@ -1644,7 +1672,7 @@ INTERNAL void tower_to_if_id
     unsigned32      tmp_st;
 
     rpc__tower_to_tower_ref(tower, &tref, status);
-    if (*status != rpc_s_ok) 
+    if (*status != rpc_s_ok)
         return;
 
     if (tref->count < RPC_C_NUM_RPC_FLOORS)
@@ -1718,7 +1746,7 @@ INTERNAL void tower_to_if_id
 **        binding       A partially bound server binding handle to resolve to
 **                      a fully bound server binding handle.
 **
-**  OUTPUTS:            
+**  OUTPUTS:
 **
 **        status        Returns the status code from the resolve binding
 **                      operation. This status code is a value that indicates
@@ -1737,7 +1765,7 @@ INTERNAL void tower_to_if_id
 **
 **  FUNCTION VALUE:     none
 **
-**  SIDE EFFECTS:       
+**  SIDE EFFECTS:
 **
 **      This routine does not check for concurrent use of the
 **      binding handle. It is up to the user of this routine to
@@ -1750,7 +1778,7 @@ INTERNAL void tower_to_if_id
 **--
 **/
 
-PUBLIC void rpc_ep_resolve_binding 
+PUBLIC void rpc_ep_resolve_binding
 (
     rpc_binding_handle_t  binding_h,
     rpc_if_handle_t       if_spec_h,
@@ -1758,7 +1786,7 @@ PUBLIC void rpc_ep_resolve_binding
 )
 {
     rpc_binding_rep_p_t     binding_rep = (rpc_binding_rep_p_t) binding_h;
-    
+
     assert(binding_rep != NULL);
 
     CODING_ERROR (status);
@@ -1771,7 +1799,7 @@ PUBLIC void rpc_ep_resolve_binding
 
     /*
      * Determine whther the specified binding handle is
-     * partially or fully bound.        
+     * partially or fully bound.
      */
     if (!binding_rep->addr_has_endpoint)
     {
@@ -1801,15 +1829,15 @@ PUBLIC void rpc_ep_resolve_binding
 **
 **  DESCRIPTION:
 **
-**      Find the correct endpoint information and plug it into the 
+**      Find the correct endpoint information and plug it into the
 **      binding rep. This routine is called by rpc_ep_resolve_binding
 **      when the binding is not fully bound.
 **
-**      We first check the i/f spec to see if the endpoint information 
-**      is there to use. If not, we make an RPC call to the endpoint 
+**      We first check the i/f spec to see if the endpoint information
+**      is there to use. If not, we make an RPC call to the endpoint
 **      mapper on the node specified in the binding handle to obtain
-**      the endpoint information for the specified interface. Then we 
-**      plug in the endpoint (returned from ep_map()) in the binding 
+**      the endpoint information for the specified interface. Then we
+**      plug in the endpoint (returned from ep_map()) in the binding
 **      handle.
 **
 **
@@ -1817,7 +1845,7 @@ PUBLIC void rpc_ep_resolve_binding
 **
 **      if_r            a pointer to the interface spec of interest
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **      binding_r       a pointer to the binding rep which requires an endpoint
 **
@@ -1838,7 +1866,7 @@ PUBLIC void rpc_ep_resolve_binding
 **--
 **/
 
-INTERNAL void ep_get_endpoint 
+INTERNAL void ep_get_endpoint
 (
     rpc_if_rep_p_t          if_r,
     rpc_binding_rep_p_t     binding_r,
@@ -1873,7 +1901,7 @@ INTERNAL void ep_get_endpoint
 	full_restore_flag = true;
 //	DO_NOT_CLOBBER(free_prot_version);
 	free_prot_version = true;
-	 
+
     CODING_ERROR (st);
 
     rpc_addr = &binding_r->rpc_addr;
@@ -1921,7 +1949,7 @@ INTERNAL void ep_get_endpoint
         rpc_binding_inq_object ((rpc_binding_handle_t) binding_r,
                                 &saved_object_uuid,
                                 st);
-        
+
         if (*st != rpc_s_ok)
         {
             return;
@@ -1935,7 +1963,7 @@ INTERNAL void ep_get_endpoint
         rpc_mgmt_inq_com_timeout ((rpc_binding_handle_t) binding_r,
                                   &saved_timeout, st);
 
-        if (*st != rpc_s_ok) 
+        if (*st != rpc_s_ok)
         {
             return;
         }
@@ -1959,17 +1987,15 @@ INTERNAL void ep_get_endpoint
             goto CLEANUP;
         }
 
-
         rpc_mgmt_set_com_timeout ((rpc_binding_handle_t) binding_r,
                                   rpc_c_binding_default_timeout, st);
 
-        if (*st != rpc_s_ok) 
+        if (*st != rpc_s_ok)
         {
             goto CLEANUP;
         }
 
         binding_r->auth_info = NULL;
-        
 
         /*
          * Construct a (fully-bound) handle to the Endpoint
@@ -1979,10 +2005,10 @@ INTERNAL void ep_get_endpoint
          * endpoint associated with the EP interface
          * (for the designated protocol sequence).
          */
-        rpc__if_set_wk_endpoint ((rpc_if_rep_p_t) ept_v3_0_c_ifspec, 
-                                 rpc_addr, 
+        rpc__if_set_wk_endpoint ((rpc_if_rep_p_t) ept_v3_0_c_ifspec,
+                                 rpc_addr,
                                  st);
-        if (*st != rpc_s_ok) 
+        if (*st != rpc_s_ok)
         {
             goto CLEANUP;
         }
@@ -2001,7 +2027,7 @@ INTERNAL void ep_get_endpoint
                                          &temp_prot_id,
                                          &temp_vers_major,
                                          &temp_vers_minor,
-                                         st); 
+                                         st);
 
            if (*st != rpc_s_ok)
            {
@@ -2032,14 +2058,14 @@ INTERNAL void ep_get_endpoint
          */
         (*rpc_g_protocol_id[binding_r->protocol_id].binding_epv
          ->binding_changed) (binding_r, st);
-        
-        if (*st != rpc_s_ok) 
+
+        if (*st != rpc_s_ok)
         {
             goto CLEANUP;
         }
 
         binding_r->addr_has_endpoint = true;
-        
+
         /*
          * In order to lookup entries in the endpoint mapper
          * database we need to provide a map tower which it will
@@ -2086,11 +2112,11 @@ INTERNAL void ep_get_endpoint
         /*
          * We want to get *all* of the compatible towers back from
          * the ep map so that we can randomly select one to provide
-         * an endpoint to the caller's binding handle. 
-         * We get all to the towers by allocating memory to hold 
+         * an endpoint to the caller's binding handle.
+         * We get all to the towers by allocating memory to hold
          * MAX_TOWERS compatible towers. If it turns out that
          * MAX_TOWERS is not sufficient, then we free the towers
-         * and try again allowing for MAX_TOWERS x 2 towers. 
+         * and try again allowing for MAX_TOWERS x 2 towers.
          * This continues ( x 3; x 4; ...) until we get them all
          * in one call.
          */
@@ -2126,10 +2152,10 @@ INTERNAL void ep_get_endpoint
                  * allocation.
                  */
                rpc_ss_swap_client_alloc_free (
-                   rpc__ep_mem_alloc, rpc__ep_mem_free, 
+                   rpc__ep_mem_alloc, rpc__ep_mem_free,
                    &old_allocate, &old_free);
 
-                (*ept_v3_0_c_epv.ept_map) 
+                (*ept_v3_0_c_epv.ept_map)
                 ((rpc_binding_handle_t) binding_r,
                  &saved_object_uuid,
                  map_tower,
@@ -2140,16 +2166,16 @@ INTERNAL void ep_get_endpoint
                  st);
 
                 /*
-                 * Restore the memory allocation scheme in effect before 
+                 * Restore the memory allocation scheme in effect before
                  * we got here
                  */
                 rpc_ss_swap_client_alloc_free (
-                    old_allocate, old_free, 
+                    old_allocate, old_free,
                     &tmp_allocate, &tmp_free);
 
                 /*
                  * If we got all  of the compatible bindings, we're
-                 * done with ep map. 
+                 * done with ep map.
                  * Otherwise, let's get rid of the ones returned (this was
                  * memory allocated by the stub) and we'll try again.
                  */
@@ -2163,9 +2189,9 @@ INTERNAL void ep_get_endpoint
                     {
                         rpc__ep_mem_free (NULL, (pointer_t) towers[j]);
                     }
-                    
+
                     RPC_MEM_FREE (towers, RPC_C_MEM_TOWER);
-                    
+
                     /*
                      * So we'll know what to do for cleanup.
                      */
@@ -2178,7 +2204,7 @@ INTERNAL void ep_get_endpoint
                     ((rpc_binding_handle_t) binding_r,
                      &map_lookup_handle,
                      &temp_status);
-                    
+
                     if (temp_status == rpc_s_call_cancelled)
                         dcethread_interrupt_throw(dcethread_self());
 
@@ -2190,12 +2216,12 @@ INTERNAL void ep_get_endpoint
                     if (temp_status != rpc_s_ok)
                     {
                         RPC_DBG_PRINTF (rpc_e_dbg_general, 1,
-                                        ("(ep_get_endpoint) call_rep->none binding_rep->%p ept_lookup_handle_free returned %x\n", 
+                                        ("(ep_get_endpoint) call_rep->none binding_rep->%p ept_lookup_handle_free returned %x\n",
                                          binding_r, temp_status));
                     }
 #endif
                 }
-            } 
+            }
         }
         DCETHREAD_CATCH_ALL(THIS_CATCH)
         {
@@ -2205,7 +2231,7 @@ INTERNAL void ep_get_endpoint
             *st = rpc_s_rpcd_comm_failure;
         }
         DCETHREAD_ENDTRY
-             
+
         if (*st != rpc_s_ok)
         {
             goto CLEANUP;
@@ -2263,9 +2289,9 @@ INTERNAL void ep_get_endpoint
 
 #ifdef DEBUG
         RPC_DBG_PRINTF (rpc_e_dbg_general, 1,
-                        ("(ep_get_endpoint) call_rep->none binding_rep->%p endpoint mapper returned %s\n", 
+                        ("(ep_get_endpoint) call_rep->none binding_rep->%p endpoint mapper returned %s\n",
                          binding_r, endpoint));
-#endif        
+#endif
 
         /*
          * Notify the protocol service that the binding has changed.
@@ -2280,17 +2306,17 @@ INTERNAL void ep_get_endpoint
 
         full_restore_flag = false;
     }
-  
+
 CLEANUP:
 
-    /* 
-     * If an error occurred, restore the caller's binding back to 
-     * its original condition before returning. 
+    /*
+     * If an error occurred, restore the caller's binding back to
+     * its original condition before returning.
      */
     if (full_restore_flag)
     {
         binding_r->addr_has_endpoint = false;
-        rpc__naf_addr_set_endpoint ((unsigned_char_p_t) "", rpc_addr, 
+        rpc__naf_addr_set_endpoint ((unsigned_char_p_t) "", rpc_addr,
             &temp_status);
     }
 
@@ -2365,7 +2391,7 @@ CLEANUP:
     if (tower_rpc_addr != NULL)
     {
         rpc__naf_addr_free (&tower_rpc_addr, &temp_status);
-        
+
         if (temp_status != rpc_s_ok)
         {
             goto EXIT;
@@ -2381,7 +2407,6 @@ CLEANUP:
             goto EXIT;
         }
     }
-
 
 EXIT:
     if (*st != rpc_s_ok)
@@ -2403,7 +2428,7 @@ EXIT:
 **  SCOPE:              INTERNAL
 **
 **  DESCRIPTION:
-**      
+**
 **  Wrapper around RPC_MEM_ALLOC to use in call to
 **  rpc_ss_swap_client_alloc_free.
 **
@@ -2428,14 +2453,13 @@ EXIT:
 **--
 **/
 
-INTERNAL idl_void_p_t rpc__ep_mem_alloc 
+INTERNAL idl_void_p_t rpc__ep_mem_alloc
 (
  idl_void_p_t	      context ATTRIBUTE_UNUSED,
  idl_size_t           size
 )
 {
     idl_void_p_t             ptr;
-
 
     RPC_MEM_ALLOC (
         ptr,
@@ -2455,7 +2479,7 @@ INTERNAL idl_void_p_t rpc__ep_mem_alloc
 **  SCOPE:              INTERNAL
 **
 **  DESCRIPTION:
-**      
+**
 **  Wrapper around RPC_MEM_FREE to use in call to
 **  rpc_ss_swap_client_alloc_free.
 **
@@ -2471,14 +2495,14 @@ INTERNAL idl_void_p_t rpc__ep_mem_alloc
 **
 **  IMPLICIT OUTPUTS:   none
 **
-**  FUNCTION VALUE:     none  
+**  FUNCTION VALUE:     none
 **
 **  SIDE EFFECTS:       none
 **
 **--
 **/
 
-INTERNAL void rpc__ep_mem_free 
+INTERNAL void rpc__ep_mem_free
 (
   idl_void_p_t         context ATTRIBUTE_UNUSED,
   pointer_t            ptr

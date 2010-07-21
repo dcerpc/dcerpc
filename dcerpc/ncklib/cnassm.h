@@ -1,25 +1,55 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
- */ 
-/*
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
+
 /*
 **
 **  NAME
@@ -28,7 +58,7 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
@@ -69,7 +99,6 @@
         return (*(st));\
     }\
 }
-
 
 
 /***********************************************************************/
@@ -130,13 +159,13 @@
 
 /***********************************************************************/
 /*
- * R P C _ C N _ A S S O C _ E V A L _ N E T W O R K _ E V E N T 
+ * R P C _ C N _ A S S O C _ E V A L _ N E T W O R K _ E V E N T
  *
  * This macro will be called by the network receiver thread when an
  * association network event is detected. The "scanned" bit in
  * the association is turned off. This bit is used in finding
  * associations to reclaim. The fragbuf is freed if provided as an
- * event parameter. 
+ * event parameter.
  */
 #define RPC_CN_ASSOC_EVAL_NETWORK_EVENT(assoc, event_id, fragbuf, st)\
 {\
@@ -160,7 +189,7 @@
  *
  * This macro will be called when user level events are detected. If
  * the association status is bad then don't evaluate the user event.
- * The "scanned" bit in the association is turned off. 
+ * The "scanned" bit in the association is turned off.
  */
 #define RPC_CN_ASSOC_EVAL_USER_EVENT(assoc, event_id, event_param, st)\
 {\
@@ -212,7 +241,7 @@
  * State values are incremented by 100 to distinguish them from
  * action routine indexes which are all < 100.  This was done as
  * an efficiency measure to the engine, rpc__cn_sm_eval_event().
- */ 
+ */
 #define RPC_C_ASSOC_ABORT_REQ  		101  /* user         */
 #define RPC_C_ASSOC_NO_CONN_IND         104  /* network      */
 #define RPC_C_ASSOC_ALLOCATE_REQ        109  /* user         */
@@ -225,11 +254,11 @@
  *
  * Note: calls_done is 12 in the architecture. I'm
  * making it 13 here so local_error will be 12 and therefore the same
- * as the server local_error event. 
+ * as the server local_error event.
  *
  * Note: shutdown_ind is 11 in the architecture. I'm
  * making it 14 here so shutdown_req will be 11 and therefore the same
- * as the server shutdown_req event. 
+ * as the server shutdown_req event.
  */
 #define RPC_C_ASSOC_REQ		        100  /* user         */
 #define RPC_C_ASSOC_REQUEST_CONN_ACK    102  /* network      */
@@ -247,7 +276,7 @@
 /*
  * Note: alter_context_resp is 4 in the architecture. I'm
  * making it 5 here so no_conn_ind will be 4 and therefore the same
- * as the client no_conn_ind event. 
+ * as the client no_conn_ind event.
  *
  * Note: accept_resp is 1 in the architecture. I'm making
  * it 13 here so abort_req will be 1 and therefore the same as the
@@ -270,12 +299,12 @@
  */
 
 #define	RPC_C_CLIENT_ASSOC_CLOSED	        100
-#define RPC_C_CLIENT_ASSOC_CONNECT_WAIT         101 
+#define RPC_C_CLIENT_ASSOC_CONNECT_WAIT         101
 #define RPC_C_CLIENT_ASSOC_INIT_WAIT            102
 #define RPC_C_CLIENT_ASSOC_OPEN                 103
-#define RPC_C_CLIENT_ASSOC_ACTIVE               104 
-#define RPC_C_CLIENT_ASSOC_CALL_DONE_WAIT       105 
-#define RPC_C_CLIENT_ASSOC_STATES	        106 
+#define RPC_C_CLIENT_ASSOC_ACTIVE               104
+#define RPC_C_CLIENT_ASSOC_CALL_DONE_WAIT       105
+#define RPC_C_CLIENT_ASSOC_STATES	        106
 
 /***********************************************************************/
 /*
@@ -292,13 +321,13 @@ EXTERNAL const char   *rpc_g_cn_assoc_client_states [];
 /*
  * S E R V E R   A S S O C   S T A T E S
  */
-#define RPC_C_SERVER_ASSOC_CLOSED               100 
-#define RPC_C_SERVER_ASSOC_REQUESTED            101 
-#define RPC_C_SERVER_ASSOC_AUTH3_WAIT           102 
-#define RPC_C_SERVER_ASSOC_AUTH3                103 
-#define RPC_C_SERVER_ASSOC_OPEN                 104 
-#define RPC_C_SERVER_ASSOC_WAIT			105 
-#define RPC_C_SERVER_ASSOC_STATES               106 
+#define RPC_C_SERVER_ASSOC_CLOSED               100
+#define RPC_C_SERVER_ASSOC_REQUESTED            101
+#define RPC_C_SERVER_ASSOC_AUTH3_WAIT           102
+#define RPC_C_SERVER_ASSOC_AUTH3                103
+#define RPC_C_SERVER_ASSOC_OPEN                 104
+#define RPC_C_SERVER_ASSOC_WAIT			105
+#define RPC_C_SERVER_ASSOC_STATES               106
 
 /***********************************************************************/
 /*

@@ -1,26 +1,55 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **  NAME:
@@ -36,9 +65,9 @@
 **      RPCD  Server Liveness Module.  Tasks to periodically ping servers
 **      which are registered in the endpoint database and mark them for
 **      deletion from the database if they do not respond.  One task
-**      also purges entries which are marked as deleted and which have 
+**      also purges entries which are marked as deleted and which have
 **      no read references to them.
-**      
+**
 **
 **
 */
@@ -54,7 +83,6 @@
 #include <rpcdepdbp.h>
 #include <rpcdutil.h>
 
-
 #define slive_c_long_wait   (15*60) /* 15 minutes */
 #define slive_c_short_wait  (1*60)  /* 1 minute */
 
@@ -64,10 +92,9 @@
 #define slive_c_short_comm_timeout          3
 
 /*  Number of consecutive failures to communicate with a server
- *  before it is deemed to be dead and is removed from the database  
+ *  before it is deemed to be dead and is removed from the database
  */
-#define slive_c_max_server_not_listening    20   
-
+#define slive_c_max_server_not_listening    20
 
 INTERNAL void sliv_task1
     (
@@ -86,7 +113,6 @@ INTERNAL boolean32 ping_server
         error_status_t  *status
     );
 
-
 
 /*  Start server alive tasks and init condition variable
  *  used by task1 to tell task2 that it should aggressively
@@ -101,22 +127,22 @@ error_status_t  *status;
 {
     dcethread_cond_init_throw(&h->sliv_task2_cv, NULL);
 
-    dcethread_create_throw(&h->sliv_task1_h, NULL, 
+    dcethread_create_throw(&h->sliv_task1_h, NULL,
             (void*) sliv_task1, (void *) h);
 
-    dcethread_create_throw(&h->sliv_task2_h, NULL, 
+    dcethread_create_throw(&h->sliv_task2_h, NULL,
             (void*) sliv_task2, (void *) h);
 
     *status = error_status_ok;
 }
 
-/*  Task1 runs a few times an hour 
+/*  Task1 runs a few times an hour
  *  It purges entries which are marked as deleted and
  *      have no read references to them.
  *  It also pings servers which have been reachable.
  *  If a server becomes not reachable, its destiny is passed
  *  off to Task2 which pings it more frequently and will
- *  mark it for deletion if it isn't reachable after 
+ *  mark it for deletion if it isn't reachable after
  *  slive_c_max_server_not_listening consecutive tries.
  */
 
@@ -140,17 +166,17 @@ void    *arg;
     gettimeofday(&now, &tz);
 
     while (true)
-    {    
+    {
         ru_sleep_until(&now, slive_c_long_wait);
 
         gettimeofday(&now, &tz);
 
         db_lock(h);
-                    
+
         ndeletes = 0;
         for (lp = db_list_first(&h->lists_mgmt, db_c_entry_list, NULL);
                 lp != NULL; lp = lp_next)
-        { 
+        {
             /*
              *  Point to next entry in list now because
              *  may delete this entry and remove it from
@@ -160,7 +186,7 @@ void    *arg;
 
             entp = (db_entry_t *) lp;
 
-            /*  If have done lots of deletes 
+            /*  If have done lots of deletes
              *  unlock db for a while so more
              *  important things can happen
              */
@@ -176,7 +202,7 @@ void    *arg;
                 entp->read_nrefs--;
             }
 
-            if (entp->delete_flag) 
+            if (entp->delete_flag)
             {
                 if (entp->read_nrefs == 0)
                 {
@@ -229,11 +255,11 @@ void    *arg;
 
     //DO_NOT_CLOBBER(waitsecs);
     //DO_NOT_CLOBBER(have_db_lock);
-	 
+
     h = (struct db *) arg;
 
     /*  let other init stuff get done */
-    ru_sleep(180);      
+    ru_sleep(180);
 
     gettimeofday(&now, &tz);
     waitsecs = slive_c_long_wait;
@@ -248,45 +274,45 @@ void    *arg;
 			  int __istat;
             waketime.tv_sec = now.tv_sec + waitsecs + 1;
             waketime.tv_nsec = 0;
-    
+
             /*  release lock and wait for task2 event or timeout or cancel
              */
-				
+
 				do	{
                                     __istat = dcethread_cond_timedwait_throw(&h->sliv_task2_cv, &h->lock, &waketime);
 				} while(__istat == EINTR);
-    
+
             /*  have lock now
              */
-    
+
             gettimeofday(&now, &tz);
             waitsecs = slive_c_long_wait;   /* so far no bad servers */
-    
+
             for (lp = db_list_first(&h->lists_mgmt, db_c_entry_list, NULL);
                     lp != NULL; lp = db_list_next(db_c_entry_list, lp))
-            { 
+            {
                 entp = (db_entry_t *) lp;
-    
+
                 if ((entp->ncomm_fails > 0) && (!entp->delete_flag))
                 {
                     entp->read_nrefs++;
                     have_db_lock = false;
                     db_unlock(h);
-    
+
                     dcethread_checkinterrupt();
-    
+
                     server_listening = ping_server(entp, rpc_c_binding_default_timeout, &status);
-    
+
                     db_lock(h);
                     have_db_lock = true;
                     entp->read_nrefs--;
-    
+
                     if (!server_listening)
-                    {   
+                    {
                         waitsecs = slive_c_short_wait;
                         entp->ncomm_fails++;
                         if (entp->ncomm_fails >= slive_c_max_server_not_listening)
-                        {    
+                        {
                             /*  Haven't communicated with server for
                              *  slive_c_max_server_not_listening consecutive tries
                              *  so mark entry as deleted in memory and on disk.
@@ -314,7 +340,7 @@ void    *arg;
         /*  received cancel or some other exception.
          *  just unlock database and exit task
          */
-        if (have_db_lock) 
+        if (have_db_lock)
             db_unlock(h);
         DCETHREAD_RERAISE;
     }
@@ -344,5 +370,3 @@ error_status_t  *status;
 
     return(is_listening);
 }
-
-

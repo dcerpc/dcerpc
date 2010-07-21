@@ -1,24 +1,55 @@
 /*
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
  *
- * (c) Copyright 1993 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1993 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1993 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
  *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
+
 /*
 **  NAME:
 **
@@ -68,12 +99,10 @@ static void         **cmd_val;  /* Array of command option values */
  */
 #define MAX(a,b) ((a) > (b))?(a):(b)
 
-
 /*
  * Macro to set the first argument to the larger of the two numbers
  */
 #define COPY_IF_LARGER(a,b) {if ((b) > (a)) (a) = (b);}
-
 
 /*
  * Macro to identify types that can contain mutable pointers.
@@ -87,7 +116,6 @@ static void         **cmd_val;  /* Array of command option values */
 	) \
     ||  (type_p)->kind == AST_disc_union_k)
 
-
 /*
  * Structure to allow us to keep track of type nodes we've visited.
  */
@@ -98,7 +126,6 @@ typedef struct visit_t
 } visit_t;
 
 static visit_t *visited_list;   /* List of visited types */
-
 
 /*
  * Structure to pass context which will allow mutli-purpose propagation
@@ -178,7 +205,6 @@ typedef struct
 
 } prop_ctx_t;
 
-
 /*
  * Necessary forward function declarations.
  */
@@ -209,7 +235,6 @@ static void type_visit
 
     visited_list = visit_p;
 }
-
 
 /*
 **  t y p e _ u n v i s i t
@@ -248,7 +273,6 @@ static void type_unvisit
     }
 }
 
-
 /*
 **  t y p e _ v i s i t e d
 **
@@ -270,7 +294,6 @@ static boolean type_visited
 
     return FALSE;
 }
-
 
 /*
 **  t y p e _ v i s i t _ f r e e
@@ -299,7 +322,7 @@ static void type_visit_free
 
 /*
 **  P R O P _ s e t _ n f _ c s _ c h a r _ p a r a m
-**  
+**
 **  Given a parameter that is a non-fixed array of [cs_char] base type:
 **   a) sets a flag on the first [in] and first [out] parameter(s) in the
 **      operation.
@@ -353,7 +376,7 @@ static void PROP_set_nf_cs_char_param
                         && param_p->type->type_structure.pointer->pointee_type
                            ->kind == AST_handle_k)))
                 continue;
-                
+
             if (AST_IN_SET(param_p))
             {
                 if (!done_first)
@@ -527,7 +550,6 @@ static void PROP_set_type_usage_attr
          (type_node_ptr->type_structure.pointer->pointee_type->array_rep_type != NULL))
               type_node_ptr->type_structure.pointer->pointee_type->array_rep_type->flags |= type_attr;
 
-
       /* Call other routine to do the rest */
       PROP_set_type_attr(type_node_ptr, type_attr);
 }
@@ -691,7 +713,6 @@ static boolean type_contains_context
 )
 {
 
-
     /* If type has context, return TRUE */
     if (AST_CONTEXT_RD_SET(type_p))
     {
@@ -788,7 +809,6 @@ static boolean type_contains_context
             break;
     }
 
-
     return FALSE;
 }
 
@@ -809,13 +829,11 @@ static boolean type_contains_ool
 )
 {
 
-
     /* If type has out-of-line, return TRUE */
     if (AST_OUT_OF_LINE_SET(type_p))
     {
         return TRUE;
     }
-
 
     /*
      * If type has a transmit_as type, check that for OOL instead of
@@ -823,7 +841,6 @@ static boolean type_contains_ool
      */
     if (type_p->xmit_as_type != NULL)
         return type_contains_ool(type_p->xmit_as_type);
-
 
     /*
      * If the type has already been visited, return FALSE.
@@ -911,7 +928,6 @@ static boolean type_contains_ool
             break;
     }
 
-
     return FALSE;
 }
 
@@ -933,7 +949,6 @@ static boolean type_contains_conformant
 )
 {
     AST_field_n_t       *field_p;       /* A field in the structure */
-
 
     /* If type is not a structure, return, doesn't apply */
     if (!(type_p->kind == AST_structure_k))
@@ -1407,7 +1422,6 @@ static void PROP_type_struct
 
     saved_parent_ctx = *ctx;
 
-
     /* Chase all fields in the structure. */
     for (field_p = struct_p->fields
         ;   field_p != NULL
@@ -1772,7 +1786,7 @@ static void PROP_type_info
             COPY_IF_LARGER(type_p->alignment_size,type_p->type_structure.array->element_type->alignment_size);
             type_p->ndr_size = type_p->type_structure.array->element_type->ndr_size;
             if (!AST_CONFORMANT_SET(type_p))
-            { 
+            {
                 int i;
                 for (i = type_p->type_structure.array->index_count - 1; i >= 0; i--)
                 {
@@ -1813,7 +1827,7 @@ static void PROP_type_info
 
 				if (ptee_type_p->kind == AST_interface_k)
 					ctx->has_interface = TRUE;
-				
+
             if (ptee_type_p->fe_info->fe_type_id != fe_ptr_info)
             {
                 ptee_type_p->fe_info->fe_type_id = fe_ptr_info;
@@ -1841,7 +1855,6 @@ static void PROP_type_info
                 else
                     PROP_type_info(ptee_type_p->array_rep_type,ctx);
             }
-
 
             /*
              *  Propagation for pa types:  If not a toplevel parameter with the
@@ -1956,12 +1969,11 @@ static void PROP_type_info
      * contains anonoymous types.  Since the type is anonymous
      * it is not processes during propagation of the exports list,
      * but because it is contained by a named type, propagation
-     * doesn't happen when it is used as parameter either.  
+     * doesn't happen when it is used as parameter either.
      */
     if ((type_p->name == NAMETABLE_NIL_ID) &&
 	(type_contains_conformant(type_p)))
 	    PROP_set_type_attr(type_p,AST_CONFORMANT);
-
 
     /*
      * For any properties that propagate upwards and are set in the context
@@ -2137,7 +2149,6 @@ static void type_process_in_out_attrs
                 if (set_out) PROP_set_type_usage_attr(field_p->type,AST_OUT_FIXED);
             }
 
-
             type_process_in_out_attrs(field_p->type,
                           set_in, set_out, set_out_pa_ref, AST_VARYING_SET(field_p)!=0);
         }
@@ -2223,7 +2234,6 @@ static boolean type_contains_mutable
 )
 {
 
-
     /* If mutable pointers do not apply to this type, return FALSE */
     if (!type_can_contain_pointer(type_p))
     {
@@ -2239,7 +2249,6 @@ static boolean type_contains_mutable
         return FALSE;
     else
         type_visit(type_p);     /* Mark as visited */
-
 
     /* Process all valid types, returning at first mutable pointer */
 
@@ -2315,7 +2324,6 @@ static boolean type_contains_mutable
             break;
     }
 
-
     return FALSE;
 }
 #endif
@@ -2337,7 +2345,6 @@ static boolean type_contains_pointer
 )
 {
 
-
     /* If pointers do not apply to this type, return FALSE */
     if (!type_can_contain_pointer(type_p))
     {
@@ -2353,7 +2360,6 @@ static boolean type_contains_pointer
         return FALSE;
     else
         type_visit(type_p);     /* Mark as visited */
-
 
     /*
      * If the type has the [transmit_as] attr, process its transmissible type.
@@ -2421,7 +2427,6 @@ static boolean type_contains_pointer
         default:
             break;
     }
-
 
     return FALSE;
 }
@@ -2579,7 +2584,6 @@ static void type_prop_ptr_attrs
 **
 **  Implicit Inputs:    visited_list - listhead for visited type nodes
 */
-
 
 static void type_prop_in_out_attrs
 (
@@ -2799,7 +2803,6 @@ static void type_prop
         PROP_set_type_usage_attr(type_p,AST_IN_LINE);
     }
 
-
     /*
      * Propagate the interface's [out_of_line] attribute (if any) to the type
      * node if it is a non-scalar type, unless the type node has the [in_line]
@@ -2813,7 +2816,6 @@ static void type_prop
     {
         PROP_set_type_usage_attr(type_p,AST_OUT_OF_LINE);
     }
-
 
     /*
      * If the type's [out_of_line] attribute is set, add the type node
@@ -2888,7 +2890,7 @@ static void type_prop
 
     /*
      * Propagate the size (ndr and alignment) based on any contained types.
-     * The ndr_size for a array/struct/union is the fixed size of the item. 
+     * The ndr_size for a array/struct/union is the fixed size of the item.
      * The alignment_size is the max of any contained type or the current
      * value alignment_size (which may have been set via the align attribute).
      *
@@ -2949,7 +2951,6 @@ static void param_prop
          AST_REF_SET(param_p) &&
          AST_OUT_SET(param_p) && !AST_IN_SET(param_p))
               PROP_set_type_usage_attr(type_p,AST_OUT_PA_REF);
-
 
     /*
      * Initialize the propagation context block
@@ -3245,7 +3246,7 @@ static void PROP_auto_heap
     /*
      *  Loop until the stack usage threshold is met, or we've put most
      *  everything on the heap already.
-     */    
+     */
     auto_heap_size = AUTO_HEAP_STACK_THRESHOLD;
     do {
         stack_size = 0;
@@ -3256,32 +3257,31 @@ static void PROP_auto_heap
             AST_type_n_t *surrogate_type = param_p->type;
             if (surrogate_type->kind == AST_pointer_k && !AST_PTR_SET(surrogate_type))
                 surrogate_type = surrogate_type->type_structure.pointer->pointee_type;
-            if (surrogate_type->ndr_size >= auto_heap_size) 
+            if (surrogate_type->ndr_size >= auto_heap_size)
                 AST_SET_HEAP(param_p);
-            if (!AST_HEAP_SET(param_p)) 
+            if (!AST_HEAP_SET(param_p))
                 stack_size += surrogate_type->ndr_size;
         }
 
         /* Process the operation result, if present. */
-        if (op_p->result != NULL) 
+        if (op_p->result != NULL)
         {
             AST_type_n_t *surrogate_type = op_p->result->type;
             if (surrogate_type->kind == AST_pointer_k && !AST_PTR_SET(surrogate_type))
                 surrogate_type = surrogate_type->type_structure.pointer->pointee_type;
-            if (surrogate_type->ndr_size >= auto_heap_size) 
+            if (surrogate_type->ndr_size >= auto_heap_size)
                 AST_SET_HEAP(op_p->result);
-            if (!AST_HEAP_SET(op_p->result)) 
+            if (!AST_HEAP_SET(op_p->result))
                 stack_size += surrogate_type->ndr_size;
         }
 
-        /* 
+        /*
          *  Half the size at which we move items to heap for the next pass
          *  through the loop.
          */
         auto_heap_size = auto_heap_size >> 2;
     } while ((stack_size > AUTO_HEAP_STACK_THRESHOLD) && (auto_heap_size > 4));
 }
-
 
 
 /*
@@ -3403,7 +3403,6 @@ static void operation_prop
     for (param_p = op_p->parameters ; param_p != NULL ; param_p = param_p->next)
         param_prop(param_p, op_p, int_p);
 
-
     /* Process the operation result, if any. */
 
     if (op_p->result != NULL)
@@ -3492,7 +3491,7 @@ static void interface_prop
     }
 
     /* Process any previous sibiling interfaces */
-    
+
     if (int_p->prev)
     {
         interface_prop(int_p->prev, parent_int_p);
@@ -3569,7 +3568,6 @@ static AST_type_p_n_t *PROP_remove_type_p
         return PROP_remove_type_p(list_root,type_p,pp);
     }
 }
-
 
 /*
 **
@@ -3741,7 +3739,6 @@ static void type_add_type_to_sp_list
      */
     if (type_node_ptr->xmit_as_type != NULL)
         type_node_ptr = type_node_ptr->xmit_as_type;
-
 
     /*
      * If the pointee is already on sp list then return
@@ -3960,7 +3957,6 @@ static void types_list_prop
 {
     AST_type_n_t        *type_p;        /* Ptr to a type node */
     NAMETABLE_id_t      *tag_name_p;    /* Ptr to tag name field to fill in */
-
 
     for ( ; typep_p != NULL ; typep_p = typep_p->next)
     {

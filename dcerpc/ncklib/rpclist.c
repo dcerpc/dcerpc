@@ -1,26 +1,55 @@
 /*
- * 
- * (c) Copyright 1990 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1990 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1990 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **  NAME
@@ -83,9 +112,9 @@ GLOBAL rpc_lookaside_rcb_t rpc_g_lookaside_rcb =
 **      mutex           The list specific mutex used to protect the
 **                      integrity of the list. If the NULL is
 **                      provided the global lookaside list mutex and
-**                      condition variable will be used.It is used when 
+**                      condition variable will be used.It is used when
 **                      blocking on or signalling condition
-**                      variables. Note that the neither 
+**                      variables. Note that the neither
 **                      rpc__list_element_alloc or _free ever
 **                      explicitly acquires or releases this mutex.
 **                      This must be done by the caller.
@@ -109,7 +138,7 @@ GLOBAL rpc_lookaside_rcb_t rpc_g_lookaside_rcb =
 **--
 **/
 
-PRIVATE void rpc__list_desc_init 
+PRIVATE void rpc__list_desc_init
 (
     rpc_list_desc_p_t               list_desc,
     unsigned32                      max_size,
@@ -169,7 +198,7 @@ PRIVATE void rpc__list_desc_init
 **
 **  IMPLICIT OUTPUTS:   none
 **
-**  FUNCTION VALUE:     
+**  FUNCTION VALUE:
 **
 **      return          Pointer to the allocated list element.
 **
@@ -178,7 +207,7 @@ PRIVATE void rpc__list_desc_init
 **--
 **/
 
-PRIVATE pointer_t rpc__list_element_alloc 
+PRIVATE pointer_t rpc__list_element_alloc
 (
     rpc_list_desc_p_t       list_desc,
     boolean32               block
@@ -282,23 +311,23 @@ PRIVATE pointer_t rpc__list_element_alloc
                 /*
                  * If we are using the global lookaside list lock
                  * then reaquire the global lookaside list lock and
-                 * wait on the global lookaside list condition 
+                 * wait on the global lookaside list condition
                  * variable otherwise use the caller's mutex and
-                 * condition variable. 
+                 * condition variable.
                  */
                 if (list_desc->use_global_mutex)
                 {
                     RPC_MUTEX_LOCK (rpc_g_lookaside_rcb.res_lock);
                     RPC_COND_TIMED_WAIT (rpc_g_lookaside_rcb.wait_flg,
                                          rpc_g_lookaside_rcb.res_lock,
-                                         &abstime); 
+                                         &abstime);
                     RPC_MUTEX_UNLOCK (rpc_g_lookaside_rcb.res_lock);
                 }
                 else
                 {
                     RPC_COND_TIMED_WAIT (*list_desc->cond,
                                          *list_desc->mutex,
-                                         &abstime); 
+                                         &abstime);
                 }
 
                 /*
@@ -389,7 +418,7 @@ PRIVATE pointer_t rpc__list_element_alloc
 **--
 **/
 
-PRIVATE void rpc__list_element_free 
+PRIVATE void rpc__list_element_free
 (
     rpc_list_desc_p_t       list_desc,
     pointer_t               list_element
@@ -408,7 +437,7 @@ PRIVATE void rpc__list_element_free
     {
         RPC_MUTEX_LOCK (rpc_g_lookaside_rcb.res_lock);
     }
-    
+
     if (list_desc->cur_size < list_desc->max_size)
     {
         list_desc->cur_size++;
@@ -417,7 +446,7 @@ PRIVATE void rpc__list_element_free
 
         /*
          * Now check whether any other thread is waiting for a lookaside list
-         * structure. 
+         * structure.
          */
         if (rpc_g_lookaside_rcb.waiter_cnt > 0)
         {
@@ -429,7 +458,7 @@ PRIVATE void rpc__list_element_free
              */
             if (list_desc->use_global_mutex)
             {
-                RPC_COND_SIGNAL (rpc_g_lookaside_rcb.wait_flg, 
+                RPC_COND_SIGNAL (rpc_g_lookaside_rcb.wait_flg,
                                  rpc_g_lookaside_rcb.res_lock);
             }
             else
@@ -441,7 +470,7 @@ PRIVATE void rpc__list_element_free
 
         /*
          * Release the global resource control lock for all lookaside
-         * lists if the caller doesn't have their own lock 
+         * lists if the caller doesn't have their own lock
          * since the structure has now been added to the list.
          */
         if (list_desc->use_global_mutex)
@@ -463,7 +492,7 @@ PRIVATE void rpc__list_element_free
         /*
          * Release the global resource control lock for all
          * lookaside lists if the caller doesn't have their own lock.
-         * 
+         *
          * We do it now because freeing an element to the heap is a relatively
          * time consuming operation.
          */
@@ -471,8 +500,8 @@ PRIVATE void rpc__list_element_free
         {
             RPC_MUTEX_UNLOCK (rpc_g_lookaside_rcb.res_lock);
         }
-       
-	memset (list_element, 0, list_desc->element_size); 
+
+	memset (list_element, 0, list_desc->element_size);
         RPC_MEM_FREE (list_element, list_desc->element_type);
     }
 
@@ -488,7 +517,7 @@ PRIVATE void rpc__list_element_free
 **
 **  DESCRIPTION:
 **
-**  Perform fork-related processing, depending on what stage of the 
+**  Perform fork-related processing, depending on what stage of the
 **  fork we are currently in.
 **
 **  INPUTS:
@@ -521,11 +550,11 @@ PRIVATE void rpc__list_fork_handler
                 break;
         case RPC_C_POSTFORK_PARENT:
                 break;
-        case RPC_C_POSTFORK_CHILD:  
+        case RPC_C_POSTFORK_CHILD:
                 /*
                  * Reset the lookaside waiter's count.
                  */
                 rpc_g_lookaside_rcb.waiter_cnt = 0;
                 break;
-    }  
+    }
 }

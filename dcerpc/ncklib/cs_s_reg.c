@@ -1,26 +1,55 @@
 /*
- * 
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **  NAME
@@ -50,10 +79,9 @@
 #include <dce/dce_cf.h>		/* Access to the backing store library */
 #include <langinfo.h>
 
-
 
-/* 
-** Local globals for code set registry access.  
+/*
+** Local globals for code set registry access.
 ** Code set registry is pointed by rpc_g_codesets_list.
 */
 static boolean		rpc_g_codesets_did_read;
@@ -76,7 +104,7 @@ static error_status_t	rpc_g_codesets_status;
 PRIVATE
 void name_sort
 (
-	entry_t		**codesets, 
+	entry_t		**codesets,
 	int		entry_count
 )
 {
@@ -110,7 +138,7 @@ void name_sort
 PRIVATE
 void priority_sort
 (
-	entry_t		**codesets, 
+	entry_t		**codesets,
 	int		entry_count
 )
 {
@@ -136,7 +164,6 @@ void priority_sort
 	}
 }
 
-
 /*
 **
 ** Binary Search for code set value
@@ -145,9 +172,9 @@ void priority_sort
 PRIVATE
 void c_binary_search
 (
-	entry_t		**codesets, 
-	int		low, 
-	int		high, 
+	entry_t		**codesets,
+	int		low,
+	int		high,
 	long		key_value,
 	entry_t		**code_entry
 )
@@ -184,7 +211,6 @@ void c_binary_search
 	}
 }
 
-
 /*
 **
 ** Binary Search for code set name
@@ -193,9 +219,9 @@ void c_binary_search
 PRIVATE
 void n_binary_search
 (
-	entry_t		**codesets, 
-	int		low, 
-	int		high, 
+	entry_t		**codesets,
+	int		low,
+	int		high,
 	char		*key_name,
 	entry_t		**code_entry
 )
@@ -249,10 +275,10 @@ rpc__codesets_really_read_file
 	int	CsrFile;
 	char	*code_set_registry_file;
 
-	/* 
+	/*
 	** Open the code set registry file.  The default path is
 	** "/usr/lib/nls/csr/code_set_registry.db"
-	*/ 
+	*/
 	dce_cf_get_csrgy_filename(&code_set_registry_file, &rpc_g_codesets_status);
 	if (rpc_g_codesets_status != dce_cf_st_ok)
 	{
@@ -415,7 +441,7 @@ rpc__codesets_read_registry_file
 		}
 	}
 
-	/* 
+	/*
 	** Sort the code set registry file by code set name
 	**/
 	if ((sort_name_save = (entry_t **)malloc(sizeof(entry_t *) * rpc_g_codesets_entry_count)) == NULL)
@@ -435,7 +461,7 @@ rpc__codesets_read_registry_file
 	sort_name_codesets = sort_name_save;
 	name_sort(sort_name_codesets, rpc_g_codesets_entry_count);
 
-	/* 
+	/*
 	** Sort the effective code set by priority
 	**/
 	if ((sort_priority_save = (entry_t **)malloc(sizeof(entry_t *) * rpc_g_codesets_effective_count)) == NULL)
@@ -452,9 +478,9 @@ rpc__codesets_read_registry_file
 	}
 	rpc_g_codesets_sort_by_priority = sort_priority_save;
 	sort_priority_codesets = sort_priority_save;
-	priority_sort(sort_priority_codesets, rpc_g_codesets_effective_count); 
+	priority_sort(sort_priority_codesets, rpc_g_codesets_effective_count);
 
-	/* 
+	/*
 	** Allocate an array for pointers to entry_t.  Code set registry
 	** is already sorted by code set id value.
 	*/
@@ -525,7 +551,7 @@ rpc__codesets_read_registry_file
 **--
 */
 
-PUBLIC 
+PUBLIC
 void dce_cs_loc_to_rgy
 (
 	idl_char		*local_code_set_name,
@@ -540,7 +566,6 @@ void dce_cs_loc_to_rgy
 	int		i;
 	unsigned16	*char_array;
 
-
 	CODING_ERROR (status);
 
 	rpc__codesets_read_registry_file(status);
@@ -552,7 +577,7 @@ void dce_cs_loc_to_rgy
 	epp = rpc_g_codesets_sort_by_name;
 
 	/* binary search */
-	n_binary_search(epp, 0, rpc_g_codesets_entry_count-1, (char *)local_code_set_name, &found); 
+	n_binary_search(epp, 0, rpc_g_codesets_entry_count-1, (char *)local_code_set_name, &found);
 
 	if (found == NULL)
 	{
@@ -635,7 +660,7 @@ void dce_cs_loc_to_rgy
 **--
 */
 
-PUBLIC 
+PUBLIC
 void dce_cs_rgy_to_loc
 (
 	unsigned32		rgy_code_set_value,
@@ -650,7 +675,6 @@ void dce_cs_rgy_to_loc
 	int		i;
 	unsigned16	*char_array;
 
-
 	CODING_ERROR (status);
 
 	rpc__codesets_read_registry_file(status);
@@ -663,7 +687,7 @@ void dce_cs_rgy_to_loc
 	i = rpc_g_codesets_entry_count;
 
 	/* binary search */
-	c_binary_search(epp, 0, rpc_g_codesets_entry_count-1, rgy_code_set_value, &found); 
+	c_binary_search(epp, 0, rpc_g_codesets_entry_count-1, rgy_code_set_value, &found);
 
 	if (found == NULL)
 	{
@@ -746,7 +770,7 @@ void dce_cs_rgy_to_loc
 **--
 */
 
-PUBLIC 
+PUBLIC
 void rpc_rgy_get_max_bytes
 (
 	unsigned32		tag,
@@ -758,7 +782,6 @@ void rpc_rgy_get_max_bytes
 	entry_t		*found = NULL;
 	int		i;
 	unsigned16	*char_array;
-
 
 	CODING_ERROR (status);
 
@@ -772,7 +795,7 @@ void rpc_rgy_get_max_bytes
 	i = rpc_g_codesets_entry_count;
 
 	/* binary search */
-	c_binary_search(epp, 0, rpc_g_codesets_entry_count-1, tag, &found); 
+	c_binary_search(epp, 0, rpc_g_codesets_entry_count-1, tag, &found);
 
 	if (found == NULL)
 	{
@@ -806,7 +829,7 @@ void rpc_rgy_get_max_bytes
 **
 **
 **  INPUTS: none
-**      
+**
 **  INPUT/OUPUTS:
 **
 **	args 		    Actually points to 'rpc_cs_codeset_i14y_data_p'
@@ -825,7 +848,7 @@ void rpc_rgy_get_max_bytes
 **--
 */
 
-PUBLIC 
+PUBLIC
 void rpc_rgy_get_codesets
 (
 	rpc_codeset_mgmt_p_t	*codesets_p,
@@ -850,7 +873,7 @@ void rpc_rgy_get_codesets
 	RPC_MEM_ALLOC (
 		*codesets_p,
 		rpc_codeset_mgmt_p_t,
-		sizeof(rpc_codeset_mgmt_t) + 
+		sizeof(rpc_codeset_mgmt_t) +
 		  (sizeof(rpc_cs_c_set_t) * (rpc_g_codesets_effective_count - 1)),
 		RPC_C_MEM_CDS_ATTR,
 		RPC_C_MEM_WAITOK);
@@ -871,7 +894,7 @@ void rpc_rgy_get_codesets
 		return;
 	}
 
-	/* 
+	/*
 	 * The top of the list is current locale's code set
 	 */
 	(*codesets_p)->codesets[0].c_set = current_rgy_codeset;

@@ -1,25 +1,55 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **  NAME:
@@ -52,7 +82,6 @@
 #include <comtwrflr.h>
 #include <comtwrref.h>
 
-
 #ifdef DEBUG
 
 static void print_bad_tower(
@@ -62,10 +91,10 @@ static void print_bad_tower(
 {
     unsigned32 i;
 
-    fprintf(stderr, "Bad tower (%s, line %d); length=%lu\n    octets:\n", 
+    fprintf(stderr, "Bad tower (%s, line %d); length=%lu\n    octets:\n",
             file, line, (unsigned long) tower->tower_length);
 
-    for (i = 0; i < tower->tower_length; i++)   
+    for (i = 0; i < tower->tower_length; i++)
         fprintf(stderr, "%02x", tower->tower_octet_string[i]);
 
     fprintf(stderr, "\n");
@@ -78,13 +107,12 @@ static void print_bad_tower(
 
 #else
 
-#define CHECK_TOWER_STATUS(tower, status) 
+#define CHECK_TOWER_STATUS(tower, status)
 
 #endif
 
-
 /*  Parse and check a tower
- *  Fill entp's fields derived from the tower 
+ *  Fill entp's fields derived from the tower
  */
 PRIVATE void tower_to_fields(tower, tfp, status)
 twr_p_t         tower;
@@ -112,9 +140,9 @@ error_status_t  *status;
     if (STATUS_OK(status))
         rpc__tower_flr_to_drep(tref->floor[1], &tfp->data_rep, status);
 
-    if (STATUS_OK(status)) 
-        rpc__tower_flr_to_rpc_prot_id(tref->floor[2],  
-            &tfp->rpc_protocol, &tfp->rpc_protocol_vers_major, 
+    if (STATUS_OK(status))
+        rpc__tower_flr_to_rpc_prot_id(tref->floor[2],
+            &tfp->rpc_protocol, &tfp->rpc_protocol_vers_major,
             &tfp->rpc_protocol_vers_minor, status);
 
     CHECK_TOWER_STATUS(tower, status);
@@ -170,7 +198,7 @@ error_status_t  *status;
     twr_p_t     dtp;
 
     *dest_tower = (twr_p_t) rpc_ss_allocate(sizeof(twr_t) + (src_tower->tower_length - 1));
-    if (*dest_tower == NULL) 
+    if (*dest_tower == NULL)
     {
         SET_STATUS(status, ept_s_no_memory);
         return;
@@ -178,7 +206,7 @@ error_status_t  *status;
 
     dtp = *dest_tower;
     dtp->tower_length = src_tower->tower_length;
-    memcpy((char *) dtp->tower_octet_string, (char *) src_tower->tower_octet_string, 
+    memcpy((char *) dtp->tower_octet_string, (char *) src_tower->tower_octet_string,
         src_tower->tower_length);
 
     SET_STATUS_OK(status);
@@ -188,10 +216,10 @@ error_status_t  *status;
 /*  Sleep until starttime + nsecs
  */
 PRIVATE void ru_sleep_until(starttime, nsecs)
-struct timeval  *starttime; 
+struct timeval  *starttime;
 unsigned32      nsecs;
 {
-    unsigned32      waketime; 
+    unsigned32      waketime;
     struct timeval  now;
     struct timezone tz;
     unsigned32      sleep_secs;
@@ -205,7 +233,6 @@ unsigned32      nsecs;
     }
 }
 
-
 /*  Sleep for nsecs
  */
 PRIVATE void ru_sleep(nsecs)
@@ -216,4 +243,3 @@ unsigned32      nsecs;
     sleeptime.tv_nsec = 0;
     dcethread_delay(&sleeptime);
 }
-

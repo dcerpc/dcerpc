@@ -1,26 +1,55 @@
 /*
- * 
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **      ndrmi3.c
@@ -38,7 +67,6 @@
 #if HAVE_CONFIG_H
 #include <config.h>
 #endif
-
 
 #include <dce/idlddefs.h>
 #include <ndrmi.h>
@@ -79,7 +107,7 @@ void rpc_ss_ndr_marsh_scalar
         case IDL_DT_DOUBLE:
             IDL_MARSH_ALIGN_MP( IDL_msp, 8 );
             rpc_ss_ndr_marsh_check_buffer( 8, IDL_msp );
-            rpc_marshall_long_float(IDL_msp->IDL_mp, 
+            rpc_marshall_long_float(IDL_msp->IDL_mp,
                                     *(idl_long_float *)param_addr);
             IDL_msp->IDL_mp += 8;
             IDL_msp->IDL_left_in_buff -= 8;
@@ -94,7 +122,7 @@ void rpc_ss_ndr_marsh_scalar
         case IDL_DT_FLOAT:
             IDL_MARSH_ALIGN_MP( IDL_msp, 4 );
             rpc_ss_ndr_marsh_check_buffer( 4, IDL_msp );
-            rpc_marshall_short_float(IDL_msp->IDL_mp, 
+            rpc_marshall_short_float(IDL_msp->IDL_mp,
                                     *(idl_short_float *)param_addr);
             IDL_msp->IDL_mp += 4;
             IDL_msp->IDL_left_in_buff -= 4;
@@ -228,7 +256,7 @@ void rpc_ss_ndr_marsh_bounded_scalar
             IDL_CHECK_RANGE_DOUBLE( *range_bounds, param_addr );
             IDL_MARSH_ALIGN_MP( IDL_msp, 8 );
             rpc_ss_ndr_marsh_check_buffer( 8, IDL_msp );
-            rpc_marshall_long_float(IDL_msp->IDL_mp, 
+            rpc_marshall_long_float(IDL_msp->IDL_mp,
                                     *(idl_long_float *)param_addr);
             IDL_msp->IDL_mp += 8;
             IDL_msp->IDL_left_in_buff -= 8;
@@ -244,7 +272,7 @@ void rpc_ss_ndr_marsh_bounded_scalar
             IDL_CHECK_RANGE_FLOAT( *range_bounds, param_addr );
             IDL_MARSH_ALIGN_MP( IDL_msp, 4 );
             rpc_ss_ndr_marsh_check_buffer( 4, IDL_msp );
-            rpc_marshall_short_float(IDL_msp->IDL_mp, 
+            rpc_marshall_short_float(IDL_msp->IDL_mp,
                                     *(idl_short_float *)param_addr);
             IDL_msp->IDL_mp += 4;
             IDL_msp->IDL_left_in_buff -= 4;
@@ -610,7 +638,7 @@ void rpc_ss_ndr_m_enc_union_or_ptees
     offset_vec_ptr = IDL_msp->IDL_offset_vec + offset_index + 1;
                                             /* + 1 to skip over union size */
     body_addr = (rpc_void_p_t)((idl_byte *)union_addr + *offset_vec_ptr);
-    
+
     if (pointees)
     {
         rpc_ss_ndr_marsh_union_ptees(defn_vec_ptr, switch_value, body_addr,
@@ -659,7 +687,7 @@ void rpc_ss_ndr_m_n_e_union_or_ptees
 
     rpc_ss_get_switch_from_data(switch_index, switch_type, struct_addr,
                                  struct_offset_vec_ptr, &switch_value, IDL_msp);
-    
+
     if (pointees)
     {
         rpc_ss_ndr_marsh_union_ptees(defn_vec_ptr, switch_value, union_addr,
@@ -727,7 +755,7 @@ void rpc_ss_ndr_ee_marsh_pipe_chunk
         chunk_bounds.lower = 1;
         chunk_bounds.upper = IDL_pipe_chunk_size;
         rpc_ss_ndr_m_fix_or_conf_arr( IDL_chunk_array, 1, &chunk_bounds,
-                                      p_pipe_state->IDL_msp->IDL_type_vec 
+                                      p_pipe_state->IDL_msp->IDL_type_vec
                                           + p_pipe_state->IDL_base_type_offset,
                                       IDL_M_CONF_ARRAY, p_pipe_state->IDL_msp );
     }
@@ -762,7 +790,7 @@ void rpc_ss_ndr_marsh_pipe
     element_size = rpc_ss_type_size(defn_vec_ptr, IDL_msp);
 
     do {
-        (*p_pipe->alloc)(p_pipe->state, 
+        (*p_pipe->alloc)(p_pipe->state,
                     (element_size > NIDL_PIPE_BUFF_SIZE/IDL_MIN_PIPE_CHUNK_SIZE)
                                 ? IDL_MIN_PIPE_CHUNK_SIZE * element_size
                                 : NIDL_PIPE_BUFF_SIZE,
@@ -1010,4 +1038,3 @@ void rpc_ss_ndr_marsh_v1_string
     rpc_ss_ndr_m_fix_or_conf_arr(param_addr, 1, &bounds_list, &dummy_defn_vec,
                                  flags, IDL_msp);
 }
-

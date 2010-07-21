@@ -1,25 +1,55 @@
 /*
- * 
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **  NAME:
@@ -48,12 +78,12 @@ import "dce/iovector.idl";
 /*************************  Common definitions  **************************/
 /*************************************************************************/
 
-/* 
- * Communications runtime status codes 
+/*
+ * Communications runtime status codes
  */
 const long  rpc_s_ok                            = error_status_ok;
 
-/* 
+/*
  * Opaque pointer for those arguments which are pointers to
  * internal structures.
  */
@@ -100,7 +130,7 @@ const long  rpc_c_invalid_protseq_id        = -1;
 
 /*
  * A transfer syntax representation. The transfer syntax values are
- * architected. 
+ * architected.
  */
 typedef struct
 {
@@ -121,7 +151,7 @@ typedef struct
 {
     rpc_syntax_id_t         id;
     unsigned32              index;
-    rpc_convert_epv_t       convert_epv;    
+    rpc_convert_epv_t       convert_epv;
 } rpc_transfer_syntax_t, *rpc_transfer_syntax_p_t;
 
 /*
@@ -160,7 +190,7 @@ typedef struct
 
 /*
  * Opaque interface handle representing the interface being used.
- */    
+ */
 typedef rpc_opaque_ptr_t    rpc_if_handle_t, *rpc_if_handle_p_t;
 
 /*
@@ -180,7 +210,7 @@ typedef void (*rpc_mgr_proc_t)
 );
 
 typedef rpc_mgr_proc_t *rpc_mgr_epv_t;
-       
+
 /*
  * Version 2 (NCS 2.0) server stub and stub EPV
  */
@@ -246,7 +276,7 @@ const long  rpc_c_mgmt_inq_princ_name           = 4;
  */
 typedef rpc_opaque_ptr_t    rpc_ns_handle_t, *rpc_ns_handle_p_t;
 
-/* 
+/*
  * Supported name service constants.
  */
 const long  rpc_c_ns_none                   = 0; /* No name service     */
@@ -357,11 +387,11 @@ const long rpc_c_authz_dce  = 2;  /* DCE PAC */
 const long rpc_c_authz_gss_name = 3; /* gss_name_t */
 
 /*
- * Truly opaque handle on authorization data 
+ * Truly opaque handle on authorization data
  *
- * An opaque handle on client authorization data obtained by 
+ * An opaque handle on client authorization data obtained by
  * calling rpc_binding_inq_auth_caller().  Unlike the deprecated
- * rpc_authz_handle_t type below, an instance of the 
+ * rpc_authz_handle_t type below, an instance of the
  * rpc_authz_cred_handle_t type is truly opaque.  It cannot be
  * cast to anything meaningful.  Credentials can only extracted
  * via calls to the sec_cred_ interface.
@@ -386,9 +416,9 @@ typedef void *rpc_authz_handle_t;
  * Signature of a server-application procedure routine that returns
  * encryption keys.
  */
-typedef void (*rpc_auth_key_retrieval_fn_t) 
+typedef void (*rpc_auth_key_retrieval_fn_t)
 (
-    [in]        void                    *arg, 
+    [in]        void                    *arg,
     [in]        unsigned_char_p_t       server_princ_name,
     [in]        unsigned32              key_type,
     [in]        unsigned32              key_ver,

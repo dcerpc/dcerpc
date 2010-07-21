@@ -1,26 +1,55 @@
 /*
- * 
- * (c) Copyright 1993 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1993 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1993 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **  NAME:
 **
@@ -40,15 +69,14 @@
 #include <config.h>
 #endif
 
-
 /*
 OVERALL OVERVIEW OF NODE MANAGEMENT ROUTINES AND STRUCTURES
 
 The RPC IDL compiler terms chunks of memory pointed to by [ptr] pointer
 parameters "nodes".  One of the primary datastructures used to manage these
-nodes is a tree.  The elements of trees are commonly called "nodes".  
+nodes is a tree.  The elements of trees are commonly called "nodes".
 Therfore, whenever I think the possibility of confusion exists, I will call
-the chunks passed in as parameters, "RPC nodes", and I will call the 
+the chunks passed in as parameters, "RPC nodes", and I will call the
 elements of the tree, "tree nodes".
 
 This module provides routines and data structures for node management,
@@ -67,43 +95,41 @@ The fundamental structure used in tracking nodes is named
 "rpc_ss_private_node_table_t". It contains:
         "rpc_ss_ptr_array_p_t", a pointer to the root node in a tree
                 used to convert from node numbers to node addresses,
-        "rpc_ss_hash_entry_t", a hash table used to convert from node 
+        "rpc_ss_hash_entry_t", a hash table used to convert from node
                 addresses to node numbers
         "rpc_ss_deleted_nodes_t *", a pointer to a list of pointers
                 to deleted nodes.
         several other support cells.
 
-
-
 STRUCTURES USED TO MAP NODE NUMBERS TO NODE ADDRESSES
 
 Historical note:
 
-When I initially designed and wrote this module, I envisioned the 
-structure used to map from node-number to node-address as a 
+When I initially designed and wrote this module, I envisioned the
+structure used to map from node-number to node-address as a
 multi-dimensional array which added dimensions as it needed to store more.
-In retrospect, I understand that it is simply an n-ary tree, which adds 
-a new superior node and pushes down the previous tree as a child of the 
-new (root) node.  Because people are more comfortable with trees that change 
-topology than they are with arrays whose dimensionality changes, I will 
+In retrospect, I understand that it is simply an n-ary tree, which adds
+a new superior node and pushes down the previous tree as a child of the
+new (root) node.  Because people are more comfortable with trees that change
+topology than they are with arrays whose dimensionality changes, I will
 describe it as a tree in this commentary.  For maintainability, the module
 might want to be updated at some point, changing the <mumble>_array names
-into names that reflect the tree-ness of the structure (and changing the 
+into names that reflect the tree-ness of the structure (and changing the
 small amount of commentary already in the module).
 
 End of historical note.
 
-The defined constant "rpc_ss_node_array_size" defines n in n-ary for this 
-tree.  In this discussion I will use rpc_ss_node_array_size == 3, which 
+The defined constant "rpc_ss_node_array_size" defines n in n-ary for this
+tree.  In this discussion I will use rpc_ss_node_array_size == 3, which
 happens to be its value when using the internal debugging driver for this
-module. 
+module.
 
-Each node in the tree holds rpc_ss_node_array_size node addresses if a 
+Each node in the tree holds rpc_ss_node_array_size node addresses if a
 leaf node, or the same number of pointers to child nodes if not a leaf.
 Each node is actually an array of unions of pointers to void and pointers
 to tree nodes.  (Module type rpc_ss_ptr_array_t.)
-When the primary node tracking structure (rpc_ss_pvt_node_table_t) is 
-created in rpc_ss_node_table_init, it points to a tree consisting of a 
+When the primary node tracking structure (rpc_ss_pvt_node_table_t) is
+created in rpc_ss_node_table_init, it points to a tree consisting of a
 single node.
 
             +----------+
@@ -115,11 +141,11 @@ single node.
            |  1  |  2  |  3  |   rpc_ss_ptr_array_t
            +-----+-----+-----+
 
-Each cell in the rpc_ss_ptr_array_t can point to a node, so this simple 
+Each cell in the rpc_ss_ptr_array_t can point to a node, so this simple
 initial structure can suffice for the first 3 nodes that are marshalled.
 (Actually, of course, the first rpc_ss_node_array_size nodes.)  When the
 fourth (e.g.) node is marshalled, we are out of room, and need to expand
-mapping structures.  We do this by inserting a new (root) node between the 
+mapping structures.  We do this by inserting a new (root) node between the
 existing tree node and the rpc_ss_pvt_node_table_t structure.
 
             +----------+
@@ -142,9 +168,8 @@ of indirection to the leaf nodes, we can handle (rpc_ss_node_array_size
 squared) nodes.
 
 It should be easy to see that when we need to process the 10th node in our
-example we will again be out of room, and of course we expand the 
+example we will again be out of room, and of course we expand the
 structure again by adding another level.  The structure now looks like this:
-
 
              +----------+
              |          |  rpc_ss_pvt_node_table_t
@@ -165,13 +190,12 @@ structure again by adding another level.  The structure now looks like this:
 |  1  |  2  |  3  |   rpc_ss_ptr_array_t
 +-----+-----+-----+
 
-It is important to note that this structure can be sparse.  Our discussion 
+It is important to note that this structure can be sparse.  Our discussion
 has used an example with node numbers incrementing from one, as indeed nodes
-are numbered on an original call.  However, it is entirely possible in a 
+are numbered on an original call.  However, it is entirely possible in a
 chained call that the first node marshalled is node 27 (e.g.).  In this case,
-only those tree nodes needed to map to node 27 are created.  The other cells 
+only those tree nodes needed to map to node 27 are created.  The other cells
 point to NULL, until a node that requires another tree node is processed.
-
 
              +----------+
              |          |  rpc_ss_pvt_node_table_t
@@ -193,10 +217,9 @@ point to NULL, until a node that requires another tree node is processed.
                         +-----+-----+-----+
 
 It is important to note that leaves are always at the same depth throughout
-the tree, and that all intervening tree nodes at the same level map the same 
-number of RPC nodes. (i.e., one level down, each tree node is capable of 
+the tree, and that all intervening tree nodes at the same level map the same
+number of RPC nodes. (i.e., one level down, each tree node is capable of
 mapping 9 nodes.)
-
 
 STRUCTURES USED TO MAP NODE ADDRESSES TO NODE NUMBERS
 
@@ -204,18 +227,18 @@ Well, after all that, we can map node numbers into addresses of nodes.
 However, the RPC system is presented with addresses of user data to pass
 to a remote system.  For that we need to map the other way.
 
-We use a hash table that uses chaining to resolve conflicts.  The hash 
-algorithm is: shift right 5 bits (to accommodate malloc, which generally 
+We use a hash table that uses chaining to resolve conflicts.  The hash
+algorithm is: shift right 5 bits (to accommodate malloc, which generally
 returns chunks aligned to some boundary), and then masked to the size
 of the hash table, currently 256 slots long.
 
-The size of the table is arbitrary, but depends on two factors.  If it is 
+The size of the table is arbitrary, but depends on two factors.  If it is
 smaller, we get more conflicts and realize less advantage from having
-a hash table at all.  However, the hash table is simply an array of 
+a hash table at all.  However, the hash table is simply an array of
 rpc_ss_hash_entry_t, whose size is 16 bytes on 32-bit address systems.
 Since the entire array has to be nulled out during the init routine,
 rpc_ss_init_node_table, we don't want it to be too large--some customers
-(notably Sun Microsystems) have noticed the time it takes to zero this 
+(notably Sun Microsystems) have noticed the time it takes to zero this
 structure and asked us to reduce it.
 
 The structure rpc_ss_hash_entry_t contains
@@ -236,64 +259,62 @@ There are two fundamental problems with the current hash system:
 
 This section describes changes to address these problems.
 
-First and foremost, we need to implement a high speed hash table 
-instrumentation system, so we can see the hash table utilization in 
+First and foremost, we need to implement a high speed hash table
+instrumentation system, so we can see the hash table utilization in
 practice.  Is the hash table too small?  Is the hash algorithm appropriate?
 Are the chains too long?  We don't know!
 
-Above, we talked about the tension between wanting to increase the size 
-of the hash table, and wanting to decrease its size.  The hash table is 
-currently an array of hash entries, allocating extra hash entries if it 
+Above, we talked about the tension between wanting to increase the size
+of the hash table, and wanting to decrease its size.  The hash table is
+currently an array of hash entries, allocating extra hash entries if it
 needs to chain as a result of a collision. So the first change:
 
 Change the hash table contained in the rpc_ss_node_table_t into an array
 of POINTERS to rpc_ss_hash_entry_t, rather than an array of the entries
 themselves. This makes the array one fourth the size, and should cut
 its initialization time by 4.  This also allows us to make the hash table
-512 or 1024 entries if we find it necessary, without getting performance 
+512 or 1024 entries if we find it necessary, without getting performance
 significantly worse than it is now (better, for the 512 case).
 
-Second change: allocate 10, 50, 100... (choose appropriate n) hash entries 
-at once from the allocator. Keep the address of the array of hash table 
+Second change: allocate 10, 50, 100... (choose appropriate n) hash entries
+at once from the allocator. Keep the address of the array of hash table
 entries and the index of the last one used in the rpc_ss_node_table_t.  Then
 allocating a hash entry is simply a matter of bumping a count, until we need
 another batch.  This does not need to happen at the creation of the node table,
 and this array does not have to be zeroed at allocation. The node table can
 be initialized such that the first hash entry allocation will result in a
-chunk allocation with no extra code. These chunks do not have to be kept track 
-of after all the entries in the chunk have been used, so they do not need to 
-be chained.  Simply allocate a new one, point to it from the 
+chunk allocation with no extra code. These chunks do not have to be kept track
+of after all the entries in the chunk have been used, so they do not need to
+be chained.  Simply allocate a new one, point to it from the
 rpc_ss_node_table_t, and forget about the old one.
 
-Third change: there are many times we need to scan the list of hash entries 
+Third change: there are many times we need to scan the list of hash entries
 linked off the hash entry array.  Currently, this is a linear unordered list,
 so the average walk length is 1/2 the length of the list if the entry is
 found and the length of the list if the entry is not found.  Since every node
-is looked up before it is inserted (to find out if it has to be inserted), we 
+is looked up before it is inserted (to find out if it has to be inserted), we
 have a large miss rate (full length walks).  This code could be much faster
-if the collision resolution were a [balanced] binary tree rather than a 
-linked list.  There is currently binary tree code in compiler module 
-nametbl.c, that could be adapted to this purpose.  The tree would have to be 
+if the collision resolution were a [balanced] binary tree rather than a
+linked list.  There is currently binary tree code in compiler module
+nametbl.c, that could be adapted to this purpose.  The tree would have to be
 balanced occasionally, since there will likely be non-random insertion.
 Note that if this change is made, the technique used to delete addresses
-from the hash table needs to be changed.  Currently, there are several 
+from the hash table needs to be changed.  Currently, there are several
 sites in the module that zero out the address field in the hash entry to
 delete it.  That doesn't work in a binary tree, because the value is used
-to navigate the tree.  I suggest that we use one of the two pad bytes to 
+to navigate the tree.  I suggest that we use one of the two pad bytes to
 implement a "deleted" flag.  This means that the same value could be in the
 tree several times, but that's OK.  Only one of them could be not "deleted".
 
 END OF COMMENTS FOR IMPROVING THE HASH TABLE
 
-
-
 ROUTINE DESCRIPTIONS FOR MANAGING THE NUMBER-TO-ADDRESS TREE
 
 Routine rpc_ss_expand_array recursively adds enough superior tree nodes until
-the tree is capable of mapping at least the node number passed in.  This is 
-an internal support routine, called only by other routines in this module. 
-It does not actually record any node information in the tree, it just makes 
-the tree deep enough to accomodate the node with a specified number. 
+the tree is capable of mapping at least the node number passed in.  This is
+an internal support routine, called only by other routines in this module.
+It does not actually record any node information in the tree, it just makes
+the tree deep enough to accomodate the node with a specified number.
 
 The parameters are:
         array - actually a pointer to a pointer to the root node in the tree.
@@ -308,7 +329,7 @@ The parameters are:
         depth - The number of levels currently in the tree.
         num -   The number of the RPC node that we are preparing to map.
                 When we are done, currently_mapped >= num.
-        p_mem_h - a pointer to a memory handle for the run time's memory 
+        p_mem_h - a pointer to a memory handle for the run time's memory
                 management system.
 
 The routine allocates a new tree node, pointed to by cell t_array, zeros
@@ -318,12 +339,11 @@ depth and currently_mapped cells and finally checks that currently_mapped >=
 num.  If not, it recurses. (Does that mean that the first call is a curse?)
 
 This routine does not populate the subtree that will be needed to actually
-manage the node about to be added.  That happens in the next routine, 
+manage the node about to be added.  That happens in the next routine,
 rpc_ss_register_node_num.
 
-
-Routine rpc_ss_register_node_num is an internal support routine, called only 
-by other routines in this module.  It actually places the node address 
+Routine rpc_ss_register_node_num is an internal support routine, called only
+by other routines in this module.  It actually places the node address
 information in the tree in a way that associates it with the nude's number.
 
 The parameters are:
@@ -332,25 +352,25 @@ The parameters are:
                 RPC nodes mapped by the tree.
         root_depth - a pointer to the cell recording the depth of the tree.
         num - the numberof the node to be registered.
-        ptr - a pointer to the RPC node to be registered.  This is the 
+        ptr - a pointer to the RPC node to be registered.  This is the
                 value that will ultimately be stored in the tree.
         p_mem_h - a pointer to a memory handle for the run time's memory
                 management system.
 
 First, the routine checks that the tree is deep enough to
-accommodate the node to be registered (=managed), and if not, it calls the 
+accommodate the node to be registered (=managed), and if not, it calls the
 previous routine, rpc_ss_expand_array.  One call is guaranteed to make
-the tree deep enough, no matter what node number is passed in (unless an 
+the tree deep enough, no matter what node number is passed in (unless an
 exception is raised due to lack of memory).
 
 The routine then walks the tree to the leaf level in a loop, updating local
-copies of array (tree root), depth and mapped (number of RPC nodes mapped by 
-the (sub-) tree). It also uses the parameter num as a local, since it was 
+copies of array (tree root), depth and mapped (number of RPC nodes mapped by
+the (sub-) tree). It also uses the parameter num as a local, since it was
 passed by value resulting in a local copy already. Each time it drops a level
 in the tree, it has to re-map the node number to be an offset in the range
 of node numbers mapped by this portion of the tree.  (At the top level,
 the node number is already a one-based offset into the range of node numbers
-mapped, since at the top level, all the node numbers are mapped.) 
+mapped, since at the top level, all the node numbers are mapped.)
 Let's look at an example.
 
 Remember our early example of three levels, mapping node numbers from 1 - 27?
@@ -375,7 +395,7 @@ Here it is again:
 |  1  |  2  |  3  |   rpc_ss_ptr_array_t
 +-----+-----+-----+
 
-The address of the cell in the rpc_ss_pvt_node_table_t which points 
+The address of the cell in the rpc_ss_pvt_node_table_t which points
 to the tree is passed in to the routine.  Let's say we are looking for node
 six.
 
@@ -384,7 +404,7 @@ We have the following state:
         depth = 3
         mapped = 27
 
-First, we find the number of RPC nodes mapped by each tree node in the level 
+First, we find the number of RPC nodes mapped by each tree node in the level
 below this one, so we can figure out which array cell in this level.
 
      mapped = mapped / rpc_ss_node_array_size; = 27 / 3 = 9
@@ -394,20 +414,20 @@ This lets us find the index to use, by using integer division:
      index = (num-1) / mapped; = 5 / 9 = 0
 
 Then we update the node number (offset) to be an offset into the subtree we
-are about to walk to, the subtree pointed to by the selected index at this 
+are about to walk to, the subtree pointed to by the selected index at this
 level (0).
 
      num = num - (index * mapped); = 6 - ( 0 * 9 ) = 6;
 
-OK, so in this example the first iteration didn't change the offset.  This 
+OK, so in this example the first iteration didn't change the offset.  This
 will be true anytime we are walking the tree through the zeroth index.
 
-Now we are ready to descend a level in the tree, but first we have to make 
+Now we are ready to descend a level in the tree, but first we have to make
 sure it is there.  We check, and yes, the tree node mapping RPC nodes 1 - 9
-is present. Therefore, we point our local cell "array" at the subtree, 
+is present. Therefore, we point our local cell "array" at the subtree,
 decrement depth and head back up to the top of the loop.
 
-Current state:        
+Current state:
         array = & tree node that maps RPC nodes 1 - 9
         depth = 2
         mapped = 9
@@ -421,7 +441,6 @@ Go through the same machinations as before:
 Again, we're ready to descend a level, and we check and find there is NO NODE!
 So we allocate one, clear it out, and hook it into the node we are currently
 working on.  The tree now looks like this:
-
 
                      +----------+
                      |          |  rpc_ss_pvt_node_table_t
@@ -452,7 +471,7 @@ We pop back up to the top of the loop, with the current state:
         mapped = 3
         num = 3
 
-The loop terminates if depth <= 1 (it will never be < 1, unless there is a 
+The loop terminates if depth <= 1 (it will never be < 1, unless there is a
 bug somewhere...), so we are done with the loop.
 
 Now we simply index into our leaf tree node using the new value in num,
@@ -460,9 +479,9 @@ our offset into the node number range mapped in this node (3), and store
 the parameter ptr, which is the address of the RPC node we wish to register.
 
 While this description is rather long, it should be noted that in practice
-this tree is very flat, therefore, we execute the loop a small number of 
-times. The loop is executed (depth-1) times, and the tree stores 
-rpc_ss_node_array_size to the depth power RPC nodes. At the time this is 
+this tree is very flat, therefore, we execute the loop a small number of
+times. The loop is executed (depth-1) times, and the tree stores
+rpc_ss_node_array_size to the depth power RPC nodes. At the time this is
 written (21-Mar-93), the production value for rpc_ss_node_array_size is 50,
 so a tree with depth 3 stores 125,000 RPC nodes, and navigating this tree
 requires just two trips through the loop.
@@ -472,9 +491,9 @@ The remaining routines that use the node tree are used by the RPC runtime
 or stubs.
 
 Routine rpc_ss_lookup_node_by_num takes a node number and returns the address
-of the corresponding RPC node if the node has been registered, otherwise it 
+of the corresponding RPC node if the node has been registered, otherwise it
 returns NULL.  The parameters are:
-        tab - an rpc_ss_node_table_t, really a pointer to void, which gets 
+        tab - an rpc_ss_node_table_t, really a pointer to void, which gets
                 mapped to a pointer to an rpc_ss_pvt_node_table_t, the real
                 node table structure.
         num - the number of the node to be looked up.
@@ -486,8 +505,8 @@ If the node number is zero, that indicates a NULL pointer was passed.
 If the node number is greater than the tree currently maps, then the node
 can't possibly be in the tree, so don't look for it.  Return NULL.
 
-Now, we perform a tree walk exactly as described for routine 
-rpc_ss_register_node_num, except that if we reach a child pointer that is 
+Now, we perform a tree walk exactly as described for routine
+rpc_ss_register_node_num, except that if we reach a child pointer that is
 NULL, we return NULL, rather than allocating a child node.
 When we reach a leaf node (depth == 1), return the content of the leaf node
 array indexed by the offset (number).
@@ -496,40 +515,36 @@ That is the last of the routines that ONLY manipulate the tree.  Now we
 will look at the few routines that only manipulate the hash table.  Then we
 will look at those that manipulate the two of them together.
 
-
 ROUTINES THAT MANIPULATE THE HASH TABLE
 
 Macro get_hash_chain_head implements the hash algorithm described above.
-
 
 Routine rpc_ss_find_hash_entry takes two parameters:
         - str, the node table
         - ptr, the address whose hash entry we are trying to find
 
-The routine finds the head of the hash chain for the address and then loops 
-through the entries in the chain until it finds the match or the end of the 
-chain. 
+The routine finds the head of the hash chain for the address and then loops
+through the entries in the chain until it finds the match or the end of the
+chain.
 
 The interesting thing about this routine is that it always returns a hash
-entry--but the returned entry may not match the input.  If this happens, it 
+entry--but the returned entry may not match the input.  If this happens, it
 means the address is not registered in the hash table.
 
-This routine is currently a significant performance bottleneck if there are 
-a large (> 1000) number of nodes being passed in the interface, or if the 
-hash distribution is not good (i.e., anytime there are a large number of 
-hash conflicts).  This is because it performs a walk of a linear list, the 
+This routine is currently a significant performance bottleneck if there are
+a large (> 1000) number of nodes being passed in the interface, or if the
+hash distribution is not good (i.e., anytime there are a large number of
+hash conflicts).  This is because it performs a walk of a linear list, the
 chain used to resolve hash conflicts.  Currently we do not have any way
 of gathering info about the length of the lists in actual use.  This is a
 problem that needs to be resolved.
 
-
 Well, that concludes the routines that manipulate ONLY the hash table.
 The remainder of the routines in the module manipulate both.
 
-
 Routine rpc_ss_register_node_by_num is the fundamental routine that registers
-the correspondence between an RPC node's address and its node number.  Even 
-though it is in the **EXTERNAL ROUTINES** section, it is an internal routine. 
+the correspondence between an RPC node's address and its node number.  Even
+though it is in the **EXTERNAL ROUTINES** section, it is an internal routine.
 
 MAINTENANCE NOTE***
 Routine rpc_ss_register_node_by_num should be moved to the internal support
@@ -542,14 +557,13 @@ Its parameters are:
         ptr -- the node's address.
 
 First, we make sure that the "high water mark" for node numbers is at least
-as high as this one.  This assures us that we will not assign potentially 
-overlapping node numbers during the call.  Then we place an entry in the 
+as high as this one.  This assures us that we will not assign potentially
+overlapping node numbers during the call.  Then we place an entry in the
 hash table and in the node number tree.  The callers of this routine have
 already made sure that the node is not already registered.
 
-This is one of the places that would need to be changed if we were to make 
+This is one of the places that would need to be changed if we were to make
 any of the changes to the hash table recommended above.
-
 
 Routine rpc_ss_register_node is a marshalling assist routine.  It has four
 parameters:
@@ -563,27 +577,26 @@ parameters:
 The routine returns as a long, the node number of the node, whether or not
 it has been marshalled previously.
 
-The first step is to find out if the node is already registered by calling 
-rpc_ss_lookup_node_by_ptr.  If it has been, and if we are in the process 
+The first step is to find out if the node is already registered by calling
+rpc_ss_lookup_node_by_ptr.  If it has been, and if we are in the process
 of marshalling, then we look up whether it has already been marshalled.
 Then we set the marshalled flag for this node to true.  (Currently, we only
 do that if it is not already set to true, but it is more efficient to do it
-unconditionally--should be changed in the future.)   Routine 
-rpc_ss_lookup_node_by_ptr's description (below) describes a desireable 
+unconditionally--should be changed in the future.)   Routine
+rpc_ss_lookup_node_by_ptr's description (below) describes a desireable
 change to make this routine more efficient.  Make sure you see it.
-If the node was already registered, we're done... simply return the node 
+If the node was already registered, we're done... simply return the node
 number.
 
-If it wasn't already registered, this is the first time we have seen this 
-address (more accurately, this node...  we may have seen this address before 
+If it wasn't already registered, this is the first time we have seen this
+address (more accurately, this node...  we may have seen this address before
 when it represented another node that was deleted.  On deletion, its registry
-was erased).  We increment the highest seen node number and use that as the  
-number for this node, and call rpc_ss_register_node_by_num.  If we are in the 
-process of marshalling, we mark the node as marshalled in the hash table 
+was erased).  We increment the highest seen node number and use that as the
+number for this node, and call rpc_ss_register_node_by_num.  If we are in the
+process of marshalling, we mark the node as marshalled in the hash table
 entry, but as NOT already marshalled in the [out] parameter.  This means that
 we will marshall it this time, but not subsequent times.  Then we return the
 node number and exit.
-
 
 Routine rpc_ss_unregister_node is called when a node is deleted to remove
 the node number <-> address mapping.  It's parameters are:
@@ -591,47 +604,45 @@ the node number <-> address mapping.  It's parameters are:
         ptr -- the address of the node being deleted
 
 The interesting fact for this routine is that we ONLY remove the address from
-the hash table.  We do nothing with the node number tree. This is because we 
+the hash table.  We do nothing with the node number tree. This is because we
 are  concerned about having a new node with the same address as a previous
-(deleted) node NOT be a match.  The first time we see the new node, its 
+(deleted) node NOT be a match.  The first time we see the new node, its
 address won't be in the hash table (since this routine deleted the former
 node's registration), and therefore it will get a new node number.
-If we add new capabilities (callbacks) in which we are concerned about 
+If we add new capabilities (callbacks) in which we are concerned about
 getting a false match by node number, then we would have to revisit
 this routine and also take care of the node number tree.
 
 We remove the address from the hash table by simply NULLing our the address
-field of the hash entry.  We don't bother unlinking and deallocating the 
+field of the hash entry.  We don't bother unlinking and deallocating the
 entry.  This has an implication for the hash table if we make the chains
-into a binary tree.  Since the tree is navigated by key value, we can't 
+into a binary tree.  Since the tree is navigated by key value, we can't
 null out one of the key values.  We either have to really delete the node
-from the tree, or we have to flag the tree node as being for a deleted RPC 
+from the tree, or we have to flag the tree node as being for a deleted RPC
 node.
 
-
-Routine rpc_ss_lookup_node_by_ptr is used to map from a pointer to a node 
+Routine rpc_ss_lookup_node_by_ptr is used to map from a pointer to a node
 number. Its parameters are:
         tab -- the address of the node table
         ptr -- the address of the RPC node to look up
 
-This routine operates  in a relatively straightforward way.  It performs a 
+This routine operates  in a relatively straightforward way.  It performs a
 rpc_ss_find_hash_entry, and if the lookup succeeds, it pulls the node number
-out of the hash entry.  If the lookup in the hash table fails, this routine 
-returns node number 0, a reserved node number used to indicate the NULL 
+out of the hash entry.  If the lookup in the hash table fails, this routine
+returns node number 0, a reserved node number used to indicate the NULL
 pointer.
 
-Here is the performance change mentioned above:  This routine is used by 
-other routines in this module, and is followed by a call to 
-rpc_ss_find_hash_entry--which this routine just did!  Therefore, a desired 
+Here is the performance change mentioned above:  This routine is used by
+other routines in this module, and is followed by a call to
+rpc_ss_find_hash_entry--which this routine just did!  Therefore, a desired
 change would be to have an additional [out] parameter to pass back the
-hash entry.  Before doing this, we need to find out if the stubs ever 
-accessed this routine from generated code, or if it is used only by the 
-stub support library.  If there is any possibility that there is stub code 
+hash entry.  Before doing this, we need to find out if the stubs ever
+accessed this routine from generated code, or if it is used only by the
+stub support library.  If there is any possibility that there is stub code
 out there that references this routine, then we need to clone the routine
 and modify the clone.
 
-
-On to a group of three very similar routines.  They are 
+On to a group of three very similar routines.  They are
         rpc_ss_return_pointer_to_node
         rpc_ss_lookup_pointer_to_node and
         rpc_ss_inquire_pointer_to_node
@@ -646,8 +657,8 @@ is rpc_ss_init_node_table.  Its parameters are:
         tab -- an [out] parameter, the address of the node table
         p_mem_h -- the address of the memory handle
 
-This routine allocates a new node table and initializes it (mostly to 
-zero/NULL).  It pre-expands the node number tree to be one level deep 
+This routine allocates a new node table and initializes it (mostly to
+zero/NULL).  It pre-expands the node number tree to be one level deep
 (assuming that we'll be marshalling at least one node--this doesn't really
 have to be done now).
 */
@@ -691,7 +702,6 @@ have to be done now).
 #   define  DTOPEN          do {;} while (0) /* DTOPEN */
 #   define  DTRACE(ARGS)    do {;} while (0) /* DTRACE */
 #endif
-
 
 /******************************************************************************/
 /*                                                                            */
@@ -752,7 +762,6 @@ typedef union rpc_ss_ptr_array_element_t {
     union rpc_ss_ptr_array_element_t *array_ptr;    /* next level in array  */
 } rpc_ss_ptr_array_element_t;
 
-
 typedef rpc_ss_ptr_array_element_t rpc_ss_ptr_array_t [rpc_ss_node_array_size];
 
 typedef rpc_ss_ptr_array_t * rpc_ss_ptr_array_p_t;
@@ -812,7 +821,6 @@ typedef struct rpc_ss_pvt_node_table_t {
 */
 #define get_hash_chain_head(ghch_str,ghch_ptr) \
 &(ghch_str->hash_table[(((long)ghch_ptr>>5) & (RPC_SS_NODE_HASH_TABLE_SIZE-1))])
-
 
 /******************************************************************************/
 /*                                                                            */
@@ -905,7 +913,7 @@ static void rpc_ss_expand_array
 **      rpc_ss_register_node_num
 **
 **          This internal support routine expands the multilevel array to the
-**          proper size to contain the specified node number and then 
+**          proper size to contain the specified node number and then
 **          inserts the specified node number and node address pair into the
 **          node table.
 **
@@ -1088,7 +1096,6 @@ static void rpc_ss_register_node_by_num
     hash_entry->ptr = ptr;
     hash_entry->marshalled = idl_false;
     hash_entry->unmarshalled = idl_false;
-
 
 #ifdef HASH_STATS
     printf ("Hash value: %03d Hash chain:", (((long)ptr>>5) & 0xff));
@@ -1312,7 +1319,7 @@ void rpc_ss_ndr_unmar_deletes
     rpc_ss_ndr_unmar_by_copying(delete_count, 4, (rpc_void_p_t)delete_list,
                                 IDL_msp);
 #else
-    rpc_ss_ndr_unmar_by_looping(delete_count, IDL_DT_ULONG, 
+    rpc_ss_ndr_unmar_by_looping(delete_count, IDL_DT_ULONG,
                                 (rpc_void_p_t)delete_list, 4, 0, IDL_msp);
 #endif
 
@@ -1363,9 +1370,8 @@ byte_p_t rpc_ss_lookup_node_by_num
     RPC_SS_LOOKUP_NODE_BY_NUM_N;
 #endif
 
-
     /* Node number 0 is reserved for NULL pointers */
-    if (num == 0) 
+    if (num == 0)
     {
 
 #ifdef PERFMON
@@ -1492,7 +1498,6 @@ idl_ulong_int rpc_ss_register_node
             hash_entry->marshalled = idl_true;
         }
 
-
 #ifdef PERFMON
     RPC_SS_REGISTER_NODE_X;
 #endif
@@ -1523,7 +1528,6 @@ idl_ulong_int rpc_ss_register_node
 
     return num;
 }
-
 
 /*
 **++
@@ -1697,7 +1701,6 @@ void rpc_ss_replace_address
 /*End of disabled code.*/
 #endif
 
-
 /*
 **++
 **  FUNCTIONAL DESCRIPTION:
@@ -1714,7 +1717,7 @@ void rpc_ss_replace_address
 **          Also returned is a flag indicating if the node has been
 **          unmarshalled.  If the node has previously been unmarshalled, then
 **          this indicates that the stub that it need not do it again.  Upon the
-**          next call to this routine for this node number, the unmarshalled 
+**          next call to this routine for this node number, the unmarshalled
 **          flag will be set to
 **          true, thus after the first call to rpc_ss_return_pointer_to_node for
 **          a specific node, the stub must unmarshall its value.
@@ -1776,7 +1779,6 @@ byte_p_t rpc_ss_return_pointer_to_node
     else
         if (new_node != NULL) *new_node = (long)idl_false;
 
-
     /* Return unmarshalled flag */
     hash_entry = rpc_ss_find_hash_entry (str, p);
     *has_been_unmarshalled = hash_entry->unmarshalled;
@@ -1790,7 +1792,6 @@ byte_p_t rpc_ss_return_pointer_to_node
 
     return p;
 }
-
 
 /*
 **++
@@ -1876,7 +1877,6 @@ byte_p_t rpc_ss_lookup_pointer_to_node
     return p;
 }
 
-
 /*
 **++
 **  FUNCTIONAL DESCRIPTION:
@@ -1932,14 +1932,12 @@ byte_p_t rpc_ss_inquire_pointer_to_node
     hash_entry = rpc_ss_find_hash_entry (str, p);
     *has_been_unmarshalled = hash_entry->unmarshalled;
 
-
 #ifdef PERFMON
     RPC_SS_INQUIRE_POINTER_TO_NODE_X;
 #endif
 
     return p;
 }
-
 
 /*
 **++
@@ -1999,7 +1997,6 @@ void rpc_ss_init_node_table
 
 }
 
-
 /****************************************************************************/
 /*                                                                          */
 /*                        Unit Testing support                              */
@@ -2053,8 +2050,6 @@ rpc_ss_register_node_by_num (str, 17, 50);
 
 node=rpc_ss_register_node (str, (char*)1064, 0, 0);
 printf ("%d (18)\n", node);
-
-
 
 node=rpc_ss_lookup_node_by_ptr (str, (char*)50);
 printf ("%d (17)\n", node);

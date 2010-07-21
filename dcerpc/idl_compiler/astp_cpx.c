@@ -1,26 +1,55 @@
 /*
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
  *
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2009 Apple Inc. All rights reserved
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
  *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **  NAME
@@ -74,14 +103,11 @@ static void AST_find_self_reference (
     AST_type_n_t       *current_type_node_ptr
 );
 
-
 
 /*
  * External References
  */
 extern int error_count;     /* number of errors detected thus far */
-
-
 
 
 
@@ -189,7 +215,6 @@ ASTP_array_index_n_t *ASTP_array_index_node
 
 /*---------------------------------------------------------------------*/
 
-
 /*
  *  A S T _ a r r a y _ i n d e x _ n o d e
  *  =======================================
@@ -209,7 +234,6 @@ AST_array_index_n_t *AST_array_index_node
     unsigned short      i;
     AST_array_index_n_t *index_vector,
                         *index_node;
-
 
     index_vector = NEW_VEC (AST_array_index_n_t, array_size);
 
@@ -234,7 +258,6 @@ AST_array_index_n_t *AST_array_index_node
  *
  */
 
-
 AST_array_n_t *AST_array_node
 (
     parser_location_p location,
@@ -244,7 +267,6 @@ AST_array_n_t *AST_array_node
     AST_array_n_t *array_node_ptr;
 
     array_node_ptr = NEW (AST_array_n_t);
-
 
     /* Link in the element type */
     array_node_ptr->element_type = element_type_ptr;
@@ -346,7 +368,6 @@ AST_type_n_t *AST_structure_node
     structure_node_ptr->tag_name = identifier;
     ASTP_set_fe_info(location, &structure_node_ptr->fe_info, fe_structure_n_k);
 
-
     /*
      * If this struct has a tag, check and see if we have already had a
      * reference to this tag name.
@@ -358,7 +379,6 @@ AST_type_n_t *AST_structure_node
          * Check for a binding for this tag
          */
         tag_type_node_ptr = (AST_type_n_t *) NAMETABLE_lookup_tag_binding(identifier);
-
 
         /*
          * If we didn't find a [def_as_tag] type node above, allocate a new one,
@@ -432,7 +452,6 @@ AST_type_n_t *AST_structure_node
         }
     }
 
-
     /*
      * Create and fill in fields of type node for the struct.  Because this is
      * the type node for a struct, the name will be filled in by the typedef
@@ -464,7 +483,6 @@ AST_type_n_t *AST_structure_node
             tag_type_node_ptr->array_rep_type->type_structure.array->element_type = type_node_ptr;
     }
 
-
     /*
      * Return the resulting type node
      */
@@ -472,8 +490,6 @@ AST_type_n_t *AST_structure_node
 }
 
 /*---------------------------------------------------------------------*/
-
-
 
 /*
  *  A S T _ l a b e l _ a r m
@@ -502,7 +518,6 @@ AST_arm_n_t *AST_label_arm
 
 /*---------------------------------------------------------------------*/
 
-
 /*
  *  A S T _ c a s e _ l a b e l _ n o d e
  *  =====================================
@@ -526,7 +541,6 @@ AST_case_label_n_t *AST_case_label_node
     case_label_node->default_label = FALSE;
     case_label_node->value = case_label;
 
-
     /*
      * Set source information
      */
@@ -539,7 +553,6 @@ AST_case_label_n_t *AST_case_label_node
 }
 
 /*---------------------------------------------------------------------*/
-
 
 /*
  *  A S T _ d e f a u l t _ c a s e _ l a b e l _ n o d e
@@ -567,7 +580,6 @@ AST_case_label_n_t *AST_default_case_label_node
 }
 
 /*---------------------------------------------------------------------*/
-
 
 /*
  *  A S T _ d i s c _ u n i o n _ n o d e
@@ -604,7 +616,6 @@ AST_type_n_t *AST_disc_union_node
     disc_union_node_ptr->arms = arm_list;
     ASTP_set_fe_info (location, &disc_union_node_ptr->fe_info, fe_disc_union_n_k);
 
-
     /*
      * If this union has a tag, check and see if we have already had a
      * reference to this tag name.
@@ -616,7 +627,6 @@ AST_type_n_t *AST_disc_union_node
          * Check for a binding for this tag
          */
         tag_type_node_ptr = (AST_type_n_t *) NAMETABLE_lookup_tag_binding(identifier);
-
 
         /*
          * If we didn't find a [def_as_tag] type node above, allocate a new one,
@@ -690,7 +700,6 @@ AST_type_n_t *AST_disc_union_node
         }
     }
 
-
     /*
      * Create and fill in fields of type node for the union.  Because this is
      * the type node for a union, the name will be filled in by the typedef
@@ -731,8 +740,6 @@ AST_type_n_t *AST_disc_union_node
 
 /*---------------------------------------------------------------------*/
 
-
-
 /*
  *
  *  A S T _ a r m _ n o d e
@@ -760,12 +767,10 @@ AST_arm_n_t *AST_arm_node
     arm_node_ptr->name = name;
     arm_node_ptr->type = type;
 
-
     /*
      * Set source information
      */
     ASTP_set_fe_info (location, &arm_node_ptr->fe_info, fe_arm_n_k);
-
 
     /*
      * Bind arm name (if not null) to the arm node, give an error if it
@@ -774,13 +779,11 @@ AST_arm_n_t *AST_arm_node
     if (name != NAMETABLE_NIL_ID)
         ASTP_add_name_binding (location, name, arm_node_ptr);
 
-
     /*
      * Return the new arm node
      */
     return arm_node_ptr;
 }
-
 
 /*
  *  A S T _ f i e l d _ n o d e
@@ -798,7 +801,6 @@ AST_field_n_t * AST_field_node
 {
     AST_field_n_t * field_node_ptr;
 
-
     /*
      * Create and initialize a node to contain a field of a structure.
      */
@@ -809,7 +811,6 @@ AST_field_n_t * AST_field_node
      * Set source information
      */
     ASTP_set_fe_info (location, &field_node_ptr->fe_info, fe_field_n_k);
-
 
     /*
      * Bind field name to the field node, give an error if it
@@ -824,8 +825,6 @@ AST_field_n_t * AST_field_node
 }
 
 /*---------------------------------------------------------------------*/
-
-
 
 /*
  *  A S T _ d e c l a r a t o r s _ t o _ f i e l d s
@@ -881,10 +880,8 @@ AST_field_n_t *AST_declarators_to_fields
         ASTP_validate_forward_ref(location, new_field->type);
     }
 
-
     /* Free declarator list */
     ASTP_free_declarators(declarators_ptr);
-
 
     /* Return the list of fields */
     return field_list;
@@ -892,8 +889,6 @@ AST_field_n_t *AST_declarators_to_fields
 }
 
 /*---------------------------------------------------------------------*/
-
-
 
 /*
  *  A S T _ d e c l a r a t o r _ t o _ a r m s
@@ -914,7 +909,6 @@ AST_arm_n_t *AST_declarator_to_arm
     AST_arm_n_t * arm_list = NULL;
     AST_arm_n_t * new_arm;
     ASTP_declarator_n_t * dp;
-
 
     if (declarator == NULL)
     {
@@ -997,7 +991,6 @@ AST_arm_n_t *AST_declarator_to_arm
         ASTP_validate_forward_ref(location, new_arm->type);
     }
 
-
     /* Free declarator list */
     ASTP_free_declarators(declarator);
 
@@ -1005,8 +998,6 @@ AST_arm_n_t *AST_declarator_to_arm
 }
 
 /*---------------------------------------------------------------------*/
-
-
 
 /*
  *  A S T _ t y p e _ w i t h _ a t t r s _ f r o m _ t a g
@@ -1074,7 +1065,6 @@ AST_type_n_t *AST_type_from_tag
         tag_type_node_ptr->fe_info->tag_name = identifier;
         ASTP_save_tag_ref(identifier, kind, tag_type_node_ptr);
 
-
         /*
          * Bind this type node to the tag so further references to it will
          * resolve to this instance of the type node.
@@ -1082,16 +1072,13 @@ AST_type_n_t *AST_type_from_tag
         ASTP_add_tag_binding(location, identifier,tag_type_node_ptr);
      }
 
-
     /*
      * Return the new type
      */
     return tag_type_node_ptr;
 }
 
-
 /*---------------------------------------------------------------------*/
-
 
 /*
  * A S T P _ p a t c h _ t a g _ r e f e r e n c e s
@@ -1158,7 +1145,6 @@ void ASTP_patch_tag_references
                 }
             }
 
-
             /* Update the type node that references this tag */
             tag_ref_node_ptr->type_node_ptr->type_structure = type_node_ptr->type_structure;
             FE_CLEAR(tag_ref_node_ptr->type_node_ptr->fe_info->flags,FE_INCOMPLETE);
@@ -1192,7 +1178,6 @@ void ASTP_patch_tag_references
 		 NIDL_NAMENOTFND, identifier, NULL);
         }
     }
-
 
     /*
      * If there have been no errors, check if each of the types that
@@ -1254,7 +1239,6 @@ void ASTP_patch_tag_references
 
 /*---------------------------------------------------------------------*/
 
-
 /*
  *  A S T P _ c h e c k _ c h a i n
  *  ===============================
@@ -1313,7 +1297,6 @@ static int ASTP_check_chain
 
 /*---------------------------------------------------------------------*/
 
-
 /*
  *  A S T _ f i n d _ s e l f _ r e f e r e n c e
  *  ==================================================
@@ -1335,7 +1318,6 @@ static void AST_find_self_reference
     AST_field_n_t   *fp;
     AST_arm_n_t     *ap;
 
-
     /*
      * If the current type node exists in the active type chain, then
      * it and all types that follow it in the active type chain are self
@@ -1344,13 +1326,11 @@ static void AST_find_self_reference
      if (ASTP_check_chain(location, interface_node_ptr, active_type_chain,
                         current_type_node_ptr)) return;
 
-
     /*
      * Link the current node into the active chain
      */
      link_node.next = active_type_chain;
      link_node.type = current_type_node_ptr;
-
 
     /*
      * Otherwise, check subtypes of this type
@@ -1427,8 +1407,6 @@ static void AST_find_self_reference
 
 /*---------------------------------------------------------------------*/
 
-
-
 /*
  *  A S T P _ p r o c e s s _ s p _ t y p e
  *  =======================================
@@ -1458,7 +1436,6 @@ static void ASTP_process_sp_type
      */
      if (FE_TEST(type_node_ptr->fe_info->flags,FE_SELF_POINTING)) return;
 
-
     /*
      * Mark the specified node as self-pointing
      */
@@ -1474,7 +1451,6 @@ static void ASTP_process_sp_type
             ASTP_process_sp_type(location, interface_node_ptr,
                     type_node_ptr->type_structure.pointer->pointee_type->array_rep_type);
 
-
     /*
      *  Don't want both the def_as_tag node and the assoicated type node on the
      *  list.  Put only the original on the sp list, but mark the def_as_tag
@@ -1488,7 +1464,6 @@ static void ASTP_process_sp_type
         AST_SET_SELF_POINTER(type_node_ptr);
         FE_SET(type_node_ptr->fe_info->flags,FE_SELF_POINTING);
      }
-
 
     /*
      * If the node is an anonymous pointer then it does not need to be

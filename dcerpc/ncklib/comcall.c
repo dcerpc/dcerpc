@@ -1,26 +1,55 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **  NAME
@@ -29,7 +58,7 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
@@ -56,7 +85,7 @@
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**      
+**
 **  Begin a Remote Procedure Call. This is the first in a sequence of calls
 **  by the client stub. It returns the information needed to marshal input
 **  arguments. This routine is intended for use by the client stub only.
@@ -111,7 +140,7 @@
 **--
 **/
 
-PUBLIC void rpc_call_start 
+PUBLIC void rpc_call_start
 (
     rpc_binding_handle_t    binding_h,
     unsigned32              flags,
@@ -129,12 +158,11 @@ PUBLIC void rpc_call_start
     CODING_ERROR (status);
     RPC_VERIFY_INIT ();
 
-
     RPC_BINDING_VALIDATE(binding_rep, status);
     if (*status != rpc_s_ok)
     {
         *call_handle = NULL;
-        return;              
+        return;
     }
     RPC_IF_VALIDATE((rpc_if_rep_p_t) ifspec_h, status);
     if (*status != rpc_s_ok)
@@ -173,7 +201,7 @@ PUBLIC void rpc_call_start
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**      
+**
 **  Transmit a vector of marshaled arguments to the remote thread. Use the
 **  call handle as the identifier of the RPC being performed. This routine
 **  is intended for use by the client or server stub only.
@@ -206,16 +234,16 @@ PUBLIC void rpc_call_start
 **--
 **/
 
-PUBLIC void rpc_call_transmit 
+PUBLIC void rpc_call_transmit
 (
     rpc_call_handle_t       call_h,
     rpc_iovector_p_t        call_args,
     unsigned32              *status
 )
-{ 
+{
     RPC_LOG_CALL_TRANSMIT_NTR;
     CODING_ERROR (status);
-    
+
     /*
      * dispatch to the appropriate protocol service
      */
@@ -234,7 +262,7 @@ PUBLIC void rpc_call_transmit
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**      
+**
 **  Transmit a vector of marshaled arguments to the remote thread. Use the
 **  call handle as the identifier of the RPC being performed. Block until
 **  the first buffer of marshaled output arguments has been received. This
@@ -274,7 +302,7 @@ PUBLIC void rpc_call_transmit
 **--
 **/
 
-PUBLIC void rpc_call_transceive 
+PUBLIC void rpc_call_transceive
 (
     rpc_call_handle_t       call_h,
     rpc_iovector_p_t        in_call_args,
@@ -282,10 +310,10 @@ PUBLIC void rpc_call_transceive
     ndr_format_t            *remote_ndr_fmt,
     unsigned32              *status
 )
-{ 
+{
     RPC_LOG_CALL_TRANSCEIVE_NTR;
     CODING_ERROR (status);
-    
+
     /*
      * dispatch to the appropriate protocol service
      */
@@ -305,7 +333,7 @@ PUBLIC void rpc_call_transceive
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**      
+**
 **  Return a buffer of marshaled arguments from the remote thread. This
 **  routine is intended for use by the client or server stub only.
 **
@@ -336,7 +364,7 @@ PUBLIC void rpc_call_transceive
 **--
 **/
 
-PUBLIC void rpc_call_receive 
+PUBLIC void rpc_call_receive
 (
     rpc_call_handle_t       call_h,
     rpc_iovector_elt_t      *call_args,
@@ -345,7 +373,7 @@ PUBLIC void rpc_call_receive
 {
     RPC_LOG_CALL_RECEIVE_NTR;
     CODING_ERROR (status);
-    
+
     /*
      * dispatch to the appropriate protocol service
      */
@@ -364,7 +392,7 @@ PUBLIC void rpc_call_receive
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**      
+**
 **  This routine will block until all marshaled RPC output arguments have
 **  been transmitted and acknowledged. It is provided for use by the server
 **  stub when the marshaled arguments are contained in buffers which are on
@@ -394,14 +422,14 @@ PUBLIC void rpc_call_receive
 **--
 **/
 
-PUBLIC void rpc_call_block_until_free 
+PUBLIC void rpc_call_block_until_free
 (
     rpc_call_handle_t       call_h,
     unsigned32              *status
 )
-{ 
+{
     CODING_ERROR (status);
-    
+
     /*
      * dispatch to the appropriate protocol service
      */
@@ -417,7 +445,7 @@ PUBLIC void rpc_call_block_until_free
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**      
+**
 **  Forward a cancel to the remote RPC thread by the call handle
 **  provided. This routine is intended for use by the client stub only.
 **
@@ -445,14 +473,14 @@ PUBLIC void rpc_call_block_until_free
 **--
 **/
 
-PUBLIC void rpc_call_cancel 
+PUBLIC void rpc_call_cancel
 (
     rpc_call_handle_t       call_h,
     unsigned32              *status
 )
-{ 
+{
     CODING_ERROR (status);
-    
+
     /*
      * dispatch to the appropriate protocol service
      */
@@ -468,7 +496,7 @@ PUBLIC void rpc_call_cancel
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**      
+**
 **  End a Remote Procedure Call. This is the last in a sequence of calls by
 **  the client or server stub. This routine is intended for use by the
 **  client stub only.
@@ -498,15 +526,15 @@ PUBLIC void rpc_call_cancel
 **--
 **/
 
-PUBLIC void rpc_call_end 
+PUBLIC void rpc_call_end
 (
     rpc_call_handle_t       *call_h,
     unsigned32              *status
 )
-{ 
+{
     RPC_LOG_CALL_END_NTR;
     CODING_ERROR (status);
-    
+
     /*
      * dispatch to the appropriate protocol service
      */
@@ -524,7 +552,7 @@ PUBLIC void rpc_call_end
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**      
+**
 **  Forward an exception to the remote RPC thread identified by the call
 **  handle. This routine is intended for use by the client or server stub
 **  only.
@@ -555,22 +583,22 @@ PUBLIC void rpc_call_end
 **--
 **/
 
-PUBLIC void rpc_call_transmit_fault 
+PUBLIC void rpc_call_transmit_fault
 (
     rpc_call_handle_t       call_h,
     rpc_iovector_p_t        call_fault_info,
     unsigned32              *status
 )
-{ 
+{
     CODING_ERROR (status);
-    
+
     /*
      * dispatch to the appropriate protocol service
      */
     (*rpc_g_protocol_id[((rpc_call_rep_p_t) (call_h))->protocol_id].call_epv
         ->call_transmit_fault)
             ((rpc_call_rep_p_t) call_h, call_fault_info, status);
-} 
+}
 
 /*
 **++
@@ -580,7 +608,7 @@ PUBLIC void rpc_call_transmit_fault
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**      
+**
 **  Return a buffer of marshaled fault information from the remote thread. This
 **  routine is intended for use by the client or server stub only.
 **
@@ -623,10 +651,10 @@ rpc_call_handle_t       call_h;
 rpc_iovector_elt_t      *fault_info;
 ndr_format_t            *remote_ndr_fmt;
 unsigned32              *status;
-        
+
 {
     CODING_ERROR (status);
-    
+
     /*
      * dispatch to the appropriate protocol service
      */
@@ -644,7 +672,7 @@ unsigned32              *status;
 **  SCOPE:              PUBLIC - declared in rpc.idl
 **
 **  DESCRIPTION:
-**      
+**
 **  Return a boolean indicating whether the manager routine for the
 **  RPC identified by the call handle has begun executing.
 **
@@ -675,14 +703,14 @@ unsigned32              *status;
 **--
 **/
 
-PUBLIC boolean32 rpc_call_did_mgr_execute 
+PUBLIC boolean32 rpc_call_did_mgr_execute
 (
     rpc_call_handle_t       call_h,
     unsigned32              *status
 )
 {
     CODING_ERROR (status);
-    
+
     /*
      * dispatch to the appropriate protocol service
      */

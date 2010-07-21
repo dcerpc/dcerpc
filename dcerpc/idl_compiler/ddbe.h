@@ -1,24 +1,55 @@
 /*
- * 
- * (c) Copyright 1992 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1992 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1992 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
+
 /*
 **
 **  NAME:
@@ -103,7 +134,6 @@
              && AST_CONFORMANT_SET(param_p->type->type_structure. \
                                    pointer->pointee_type->array_rep_type)) ))
 
-
 #define DDBE_param_is_p_array(param_p) \
     (param_p->type->kind == AST_pointer_k \
     && param_p->type->type_structure.pointer->pointee_type->kind == AST_array_k)
@@ -122,7 +152,6 @@
 (AST_STRING_SET(param_p) \
  || (AST_REF_SET(param_p) && DDBE_param_is_p_array(param_p) \
      && AST_STRING_SET(param_p->type->type_structure.pointer->pointee_type)))
-
 
 /*
  * The data needed by a data driven stub and marshalling interpreter is:
@@ -167,7 +196,6 @@ typedef enum DDBE_vec_kind_t {
     DDBE_vec_type_kind_k    /* Interpreter tag for scalar data type         */
 } DDBE_vec_kind_t;
 
-
 /*
  * A linked list of DDBE_vec_rep_t nodes is used to describe the data needed to
  * spell the vector definitions.
@@ -189,7 +217,6 @@ typedef struct DDBE_vec_rep_t {
     DDBE_vec_kind_t     kind;       /* Kind of this entry */
 } DDBE_vec_rep_t;
 
-
 /*
  * The 'indirection stack' is a linked list of the following data structure.
  */
@@ -205,7 +232,6 @@ typedef struct DDBE_ind_stack_t {
     boolean     in_flatarr;         /* TRUE => in array flattened definition */
 } DDBE_ind_stack_t;
 
-
 /*
  * The 'tuple stack' is a linked list of the following data structure.
  */
@@ -213,7 +239,6 @@ typedef struct DDBE_tup_stack_t {
     struct DDBE_tup_stack_t *next;  /* Pointer to next entry on stack */
     IR_tup_n_t              *tup_p; /* Pointer to IREP tuple */
 } DDBE_tup_stack_t;
-
 
 /*
  * The DDBE keeps a global state that is used to maintain information while
@@ -350,11 +375,10 @@ typedef struct DDBE_vectors_t {
     contain a pointer to the referenced vector entry.  In either case, a
     subsequent processing pass can sequentially walk the vector and resolve
     the indirections with actual indices.
-    
+
     13) The remainder of DDBE_vectors_t fields are flags whose purpose should be
     fairly obvious from the code.
 */
-
 
 /************************************/
 /*  Private DDBE data hung off AST  */
@@ -424,7 +448,6 @@ typedef struct DDBE_param_i_t {
     unsigned long   type_index;         /* Type vector index for this param */
 } DDBE_param_i_t;
 
-
 /**************************/
 /*  Public DDBE routines  */
 /**************************/
@@ -441,7 +464,6 @@ extern boolean DDBE_main(           /* Main rtn for Data Driven Backend */
     AST_interface_n_t   *int_p,     /* [in] ptr to interface node */
     DDBE_vectors_t      **p_vip     /*[out] vector information pointer */
 );
-
 
 /***********************/
 /*  Property routines  */
@@ -465,7 +487,6 @@ extern boolean DDBE_param_is_array_of_kind(
 extern boolean DDBE_cfmt_arr_local_rep(
     AST_parameter_n_t   *param_p    /* [in] Ptr to AST parameter node */
 );
-
 
 /**********************************************/
 /*  Public speller support routines and data  */

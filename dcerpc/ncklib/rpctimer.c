@@ -1,26 +1,55 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **  NAME
@@ -29,7 +58,7 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
@@ -60,7 +89,6 @@ INTERNAL boolean timer_task_was_running = false;
 
 INTERNAL void timer_loop (void);
 
-
 INTERNAL void rpc__timer_set_int (
         rpc_timer_p_t            /*t*/,
         rpc_timer_proc_p_t       /*proc*/,
@@ -68,9 +96,8 @@ INTERNAL void rpc__timer_set_int (
         rpc_clock_t              /*freq*/
     );
 
-
 /*
- * Mutex lock macros 
+ * Mutex lock macros
  */
 
 #define RPC_TIMER_LOCK_INIT(junk)   RPC_MUTEX_INIT (rpc_g_timer_mutex)
@@ -99,7 +126,7 @@ INTERNAL void timer_loop(void)
         rpc_clock_t next;
         struct timespec next_ts;
         rpc_clock_t max_step;
-        
+
 	/*
 	 * It would be real nice if we could figure out a way to get
 	 * the system time global variable mapped read-only into our
@@ -113,7 +140,7 @@ INTERNAL void timer_loop(void)
          * wake up at least once every 50 seconds, so we don't confuse
          * the underlying rpc__clock_update() code.
          */
-        max_step = RPC_CLOCK_SEC(50);   
+        max_step = RPC_CLOCK_SEC(50);
         if (next == 0 || next > max_step)
             next = max_step;
 
@@ -137,18 +164,18 @@ INTERNAL void rpc__timer_prod
         rpc_clock_t trigger
 )
 {
-                    
+
     RPC_DBG_PRINTF(rpc_e_dbg_timer, 5, (
         "(rpc__timer_prod) timer backup; old %ld, new %ld\n",
         rpc_timer_cur_trigger, trigger
         ));
-    /* 
+    /*
      * forestall "double pokes", which appear to
      * happen occasionally.
      */
     rpc_timer_cur_trigger = trigger;
     RPC_COND_SIGNAL(rpc_g_timer_cond, rpc_g_timer_mutex);
-    
+
 }
 
 
@@ -159,10 +186,10 @@ INTERNAL void rpc__timer_prod
  **/
 
 PRIVATE void rpc__timer_init(void)
-{    
+{
     RPC_TIMER_LOCK_INIT (0);
     RPC_TIMER_COND_INIT (0);
-    
+
     running_list            = NULL;
     rpc_timer_high_trigger  = 0;
     rpc_timer_head          = NULL;
@@ -171,7 +198,7 @@ PRIVATE void rpc__timer_init(void)
     rpc_g_long_sleep	    = 0;
     timer_task_running      = false;
     timer_task_was_running  = false;
-    
+
     /*
      * Initialize the current time...
      */
@@ -189,19 +216,18 @@ PRIVATE void rpc__timer_init(void)
 #endif /* NO_RPC_TIMER_THREAD */
 }
 
-
 #ifdef ATFORK_SUPPORTED
 /*
- **  R P C _ _ T I M E R _ F O R K _ H A N D L E R 
+ **  R P C _ _ T I M E R _ F O R K _ H A N D L E R
  **
  **  Handle timer related fork issues.
- **/ 
+ **/
 
 PRIVATE void rpc__timer_fork_handler
 (
     rpc_fork_stage_id_t stage
 )
-{  
+{
 #ifndef NO_RPC_TIMER_THREAD
     switch ((int)stage)
     {
@@ -231,7 +257,7 @@ PRIVATE void rpc__timer_fork_handler
                 timer_task_was_running = true;
                 timer_task_running = false;
             }
-            break;   
+            break;
 
         case RPC_C_POSTFORK_PARENT:
             if (timer_task_was_running)
@@ -248,7 +274,7 @@ PRIVATE void rpc__timer_fork_handler
             RPC_TIMER_UNLOCK(0);
             break;
 
-        case RPC_C_POSTFORK_CHILD:  
+        case RPC_C_POSTFORK_CHILD:
             timer_task_was_running = false;
             timer_task_running = false;
             stop_timer = 0;
@@ -256,25 +282,25 @@ PRIVATE void rpc__timer_fork_handler
             break;
     }
 #endif /* NO_RPC_TIMER_THREAD */
-}   
+}
 #endif /* ATFORK_SUPPORTED */
 
 
 /*
-** R P C _ _ T I M E R _ S E T 
-** 
+** R P C _ _ T I M E R _ S E T
+**
 ** Lock timer lock, add timer to timer callout queue, and unlock timer lock.
-** 
+**
 */
 
-PRIVATE void rpc__timer_set 
+PRIVATE void rpc__timer_set
 (
     rpc_timer_p_t           t,
     rpc_timer_proc_p_t      proc,
     pointer_t               parg,
     rpc_clock_t             freq
 )
-{    
+{
     RPC_TIMER_LOCK (0);
     rpc__timer_set_int (t, proc, parg, freq);
     RPC_TIMER_UNLOCK (0);
@@ -285,27 +311,26 @@ PRIVATE void rpc__timer_set
 **
 **  Insert a routine to be called from the rpc_timer periodic callout queue.
 **  The entry address, a single argument to be passed when the routine is
-**  called,  together with the frequency with which the routine is to be 
-**  called are inserted into a rpc_timer_t structure provided by the 
+**  called,  together with the frequency with which the routine is to be
+**  called are inserted into a rpc_timer_t structure provided by the
 **  caller and pointed to by 't', which is placed in the queue.
 */
 
-
-INTERNAL void rpc__timer_set_int 
+INTERNAL void rpc__timer_set_int
 (
     rpc_timer_p_t           t,
     rpc_timer_proc_p_t      proc,
     pointer_t               parg,
     rpc_clock_t             freq
 )
-{    
+{
     rpc_timer_p_t       list_ptr, prev_ptr;
-    
+
     /*
      * Insert the routine calling address, the argument to be passed and
      * the frequency into the rpc_timer_t structure.
-     */       
-    
+     */
+
     t->proc = proc;
     t->parg = parg;
     t->frequency = freq;
@@ -317,33 +342,33 @@ INTERNAL void rpc__timer_set_int
      * called.
      */
     if (rpc_timer_head != NULL && t->trigger >= rpc_timer_high_trigger)
-    {            
+    {
         rpc_timer_tail->next = t;
         rpc_timer_tail = t;
         t->next = 0;
         rpc_timer_high_trigger = t->trigger;
         return;
-    }          
-    
+    }
+
     /*
      * Handle the case in which the element gets inserted somewhere
      * into the middle of the list.
-     */                             
-    
+     */
+
     prev_ptr = NULL;
     for (list_ptr = rpc_timer_head; list_ptr; list_ptr = list_ptr->next )
     {
         if (t->trigger < list_ptr->trigger)
         {
             if (list_ptr == rpc_timer_head)
-            {         
+            {
                 t->next = rpc_timer_head;
                 rpc_timer_head = t;
                 /*
                  * If the next time the timer thread will wake up is
                  * in the future, prod it.
                  */
-                if (rpc_timer_cur_trigger > t->trigger) 
+                if (rpc_timer_cur_trigger > t->trigger)
                     rpc__timer_prod(t->trigger);
             }
             else
@@ -355,19 +380,19 @@ INTERNAL void rpc__timer_set_int
             return;
         }
         prev_ptr = list_ptr;
-    }  
-    
+    }
+
     /*
      * The only way to get this far is when the head pointer is NULL.  Either
      * we just started up, or possibly there's been no RPC activity and all the
      * monitors have removed themselves.
-     */    
+     */
     assert (rpc_timer_head == NULL);
-    
+
     rpc_timer_head = rpc_timer_tail = t;
     t->next = NULL;
     rpc_timer_high_trigger = t->trigger;
-    if (rpc_timer_cur_trigger > t->trigger) 
+    if (rpc_timer_cur_trigger > t->trigger)
         rpc__timer_prod(t->trigger);
 }
 
@@ -378,20 +403,20 @@ INTERNAL void rpc__timer_set_int
  **   't'.  Then modify the 'frequency' attribute.
  **/
 
-PRIVATE void rpc__timer_adjust 
+PRIVATE void rpc__timer_adjust
 (
     rpc_timer_p_t           t,
-    rpc_clock_t             frequency           
+    rpc_clock_t             frequency
 )
-{   
+{
     rpc_timer_p_t       ptr;
-    
+
     /*
      * First see if the monitor being adjusted is currently running.
      * If so, just reset the frequency field, when the monitor is rescheduled
      * it will be queued in the proper place.
-     */                             
-    
+     */
+
     RPC_TIMER_LOCK (0);
     for (ptr = running_list; ptr != NULL; ptr = ptr->next)
     {
@@ -402,14 +427,14 @@ PRIVATE void rpc__timer_adjust
             return;
         }
     }
-    
+
     RPC_TIMER_UNLOCK (0);
     /*
      * Otherwise, we need to remove the monitor from its current position
      * in the queue, adjust the frequency, and then replace it in the correct
      * position.
      */
-    
+
     rpc__timer_clear (t);
     t->frequency = frequency;
     rpc__timer_set (t, t->proc, t->parg, t->frequency);
@@ -421,23 +446,23 @@ PRIVATE void rpc__timer_adjust
  **  Remove an rpc_timer_t structure from the rpc_timer scheduling queue.
  **/
 
-PRIVATE void rpc__timer_clear 
+PRIVATE void rpc__timer_clear
 (
     rpc_timer_p_t           t
 )
-{  
+{
     rpc_timer_p_t       list_ptr, prev = NULL;
-    
+
     RPC_TIMER_LOCK (0);
-    
+
     /*
      * First see if the monitor being cleared is currently running.
      * If so, remove it from the running list.
-     */  
-    
+     */
+
     for (list_ptr = running_list; list_ptr; prev = list_ptr, list_ptr = list_ptr->next)
     {
-        if (list_ptr == t)                  
+        if (list_ptr == t)
         {
             if (prev == NULL)
                 running_list = running_list->next;
@@ -447,17 +472,17 @@ PRIVATE void rpc__timer_clear
             return;
         }
     }
-    
+
     /*
      * Next, see if the specified timer element is in the list.
      */
-    
+
     prev = NULL;
     for (list_ptr = rpc_timer_head; list_ptr;
         prev = list_ptr, list_ptr = list_ptr->next)
     {
         if (list_ptr == t)
-        {                   
+        {
             /*
              * If this element was at the head of the list...
              */
@@ -470,7 +495,7 @@ PRIVATE void rpc__timer_clear
                 rpc_timer_head = t->next;
             }
             else
-            {      
+            {
                 /*
                  * Unlink element from list.  If the element was at the end
                  * of the list, reset the tail pointer and high trigger value.
@@ -484,9 +509,9 @@ PRIVATE void rpc__timer_clear
             }
             RPC_TIMER_UNLOCK (0);
             return;
-        }                 
-    }   
-    
+        }
+    }
+
     RPC_TIMER_UNLOCK (0);
 }
 
@@ -499,29 +524,29 @@ PRIVATE void rpc__timer_clear
 **  to be run.  Return 0 if the queue is empty.
 **  The mutex, RPC_TIMER_LOCK, is LOCKED while this routine is running
 **  and while any routines which may be calld are running.
-**  
+**
 **  the parameter NEXT is set to the "next" time to wake up, if any
 **  (suitable for passing to RPC_COND_TIMED_WAIT).
 **/
 
 PRIVATE rpc_clock_t rpc__timer_callout (void)
-{                              
+{
     rpc_clock_t      ret_val;
     rpc_timer_p_t   ptr, prev;
 
-#if 0    
+#if 0
     RPC_TIMER_LOCK (0);
 #endif
 
     RPC_TIMER_LOCK_ASSERT(0);
-    
+
     /*
      * Go through list, running routines which have trigger counts which
      * have expired.
      */
-    
+
     while (rpc_timer_head && rpc_timer_head->trigger <= rpc_g_clock_curr)
-    { 
+    {
         ptr = rpc_timer_head;
         rpc_timer_head = rpc_timer_head->next;
         ptr->next = running_list;
@@ -530,15 +555,15 @@ PRIVATE rpc_clock_t rpc__timer_callout (void)
         RPC_TIMER_UNLOCK (0);
         (*ptr->proc) (ptr->parg);
         RPC_TIMER_LOCK (0);
-        
-        /* 
+
+        /*
          * We need to handle two situations here depending on whether
          * the monitor routine has deleted itself from the timer queue.
          * If so, we'll know this from the fact that it will be gone
          * from the running list.  If not, we need to update the head
          * pointer here, and reschedule the current monitor.
-         */                                
-        
+         */
+
         if (ptr == running_list)
         {
             running_list = running_list->next;
@@ -552,18 +577,17 @@ PRIVATE rpc_clock_t rpc__timer_callout (void)
                 {
                     prev->next = ptr->next;
 
-                    rpc__timer_set_int 
+                    rpc__timer_set_int
                         (ptr, ptr->proc, ptr->parg, ptr->frequency);
 
                 }
-            } 
+            }
         }
     }
-    
-    
+
     ret_val = (rpc_timer_head == NULL) ? 0
         : (rpc_timer_head->trigger - rpc_g_clock_curr);
-    
-    RPC_TIMER_LOCK_ASSERT(0);    
+
+    RPC_TIMER_LOCK_ASSERT(0);
     return (ret_val);
-} 
+}

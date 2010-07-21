@@ -1,26 +1,55 @@
 /*
- * 
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **  NAME
 **
@@ -28,7 +57,7 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
@@ -180,7 +209,7 @@ GLOBAL rpc_cn_auth_epv_t rpc_g_noauth_cn_epv =
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **      Determine whether the authentication protocol requires a
 **      3-way authentication handshake. If true the client is expected to
 **      provide an rpc_auth3 PDU before the security context is fully
@@ -211,7 +240,6 @@ INTERNAL boolean32 rpc__noauth_cn_three_way (void)
     RPC_DBG_PRINTF (rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_ROUTINE_TRACE,
                     ("(rpc__noauth_cn_three_way)\n"));
 
-
     return (false);
 }
 
@@ -224,7 +252,7 @@ INTERNAL boolean32 rpc__noauth_cn_three_way (void)
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **      Determine whether the established security context will be
 **      valid (i. e. timely) for the next 300 seconds. If
 **      not this routine will try to renew the context.
@@ -239,7 +267,7 @@ INTERNAL boolean32 rpc__noauth_cn_three_way (void)
 **
 **  INPUTS/OUTPUTS:     none
 **
-**  OUTPUTS:            
+**  OUTPUTS:
 **
 **      st              The return status of this routine.
 **
@@ -253,14 +281,14 @@ INTERNAL boolean32 rpc__noauth_cn_three_way (void)
 **      information rep and RPC auth information rep will
 **      still be valid in 300 seconds, false if not.
 **
-**  SIDE EFFECTS:       
+**  SIDE EFFECTS:
 **
 **      The context may be renewed.
 **
 **--
 **/
 
-INTERNAL boolean32 rpc__noauth_cn_context_valid 
+INTERNAL boolean32 rpc__noauth_cn_context_valid
 (
     rpc_cn_sec_context_p_t          sec,
     unsigned32                      *st
@@ -299,7 +327,7 @@ INTERNAL boolean32 rpc__noauth_cn_context_valid
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **      Create an auth information rep data structure with and
 **      add a reference to it. This is called on the server
 **      side. The fields will be initialized to NULL values.
@@ -314,7 +342,7 @@ INTERNAL boolean32 rpc__noauth_cn_context_valid
 **
 **  INPUTS/OUTPUTS:     none
 **
-**  OUTPUTS:            
+**  OUTPUTS:
 **
 **      info            A pointer to the auth information rep structure
 **                      containing RPC protocol indenpendent information.
@@ -326,14 +354,14 @@ INTERNAL boolean32 rpc__noauth_cn_context_valid
 **
 **  FUNCTION VALUE:     none
 **
-**  SIDE EFFECTS:       
+**  SIDE EFFECTS:
 **
 **      The newly create auth info will have a reference count of 1.
 **
 **--
 **/
 
-INTERNAL void rpc__noauth_cn_create_info 
+INTERNAL void rpc__noauth_cn_create_info
 (
     rpc_authn_level_t                authn_level,
     rpc_auth_info_p_t                *auth_info,
@@ -363,10 +391,10 @@ INTERNAL void rpc__noauth_cn_create_info
     /*
      * Allocate storage for a noauth info structure from heap.
      */
-    RPC_MEM_ALLOC (noauth_info, 
-                   rpc_noauth_info_p_t, 
-                   sizeof (rpc_noauth_info_t), 
-                   RPC_C_MEM_NOAUTH_INFO, 
+    RPC_MEM_ALLOC (noauth_info,
+                   rpc_noauth_info_p_t,
+                   sizeof (rpc_noauth_info_t),
+                   RPC_C_MEM_NOAUTH_INFO,
                    RPC_C_MEM_WAITOK);
 
     /*
@@ -399,7 +427,7 @@ INTERNAL void rpc__noauth_cn_create_info
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **      Determine whether the client's credentials stored in the
 **      security context are different from those in the auth info.
 **      If they are not the same return true, else false.
@@ -412,7 +440,7 @@ INTERNAL void rpc__noauth_cn_create_info
 **
 **  INPUTS/OUTPUTS:     none
 **
-**  OUTPUTS:            
+**  OUTPUTS:
 **
 **      st              The return status of this routine.
 **
@@ -427,9 +455,9 @@ INTERNAL void rpc__noauth_cn_create_info
 **      false if not.
 **
 **      The md5 checksum algorithm requires the use of the session key
-**      to encrypt the CRC(assoc_uuid).  Since the session key will 
+**      to encrypt the CRC(assoc_uuid).  Since the session key will
 **      change when the credential changes, this routine sets the flag
-**      indicating that a (potentially) valid encrypted crc is now 
+**      indicating that a (potentially) valid encrypted crc is now
 **      invalid, forcing a recomputation.
 **
 **  SIDE EFFECTS:       none
@@ -437,7 +465,7 @@ INTERNAL void rpc__noauth_cn_create_info
 **--
 **/
 
-INTERNAL boolean32 rpc__noauth_cn_cred_changed 
+INTERNAL boolean32 rpc__noauth_cn_cred_changed
 (
     rpc_cn_sec_context_p_t          sec,
     unsigned32                      *st
@@ -484,11 +512,11 @@ INTERNAL boolean32 rpc__noauth_cn_cred_changed
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **      Determine whether the client's credentials are still
 **      valid. If not this routine will try to renew the credentials.
 **      If they cannot be renewed an error is returned. This routine
-**      is called from the client side. 
+**      is called from the client side.
 **
 **  INPUTS:
 **
@@ -496,7 +524,7 @@ INTERNAL boolean32 rpc__noauth_cn_cred_changed
 **
 **  INPUTS/OUTPUTS:     none
 **
-**  OUTPUTS:            
+**  OUTPUTS:
 **
 **      st              The return status of this routine.
 **
@@ -511,7 +539,7 @@ INTERNAL boolean32 rpc__noauth_cn_cred_changed
 **--
 **/
 
-INTERNAL void rpc__noauth_cn_cred_refresh 
+INTERNAL void rpc__noauth_cn_cred_refresh
 (
     rpc_auth_info_p_t               auth_info,
     unsigned32                      *st
@@ -553,7 +581,7 @@ INTERNAL void rpc__noauth_cn_cred_refresh
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **      This routine will format the auth_value field of
 **      either an rpc_bind or rpc_alter_context PDU. This is
 **      called from the client side association state machine.
@@ -568,14 +596,14 @@ INTERNAL void rpc__noauth_cn_cred_refresh
 **      auth_value      A pointer to the auth_value field in the rpc_bind or
 **                      rpc_alter_context PDU authentication trailer.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **      auth_value_len  On input, the lenght, in bytes of the available space
 **                      for the auth_value field. On output, the lenght in
 **                      bytes used in encoding the auth_value field. Zero if
 **                      an error status is returned.
 **
-**  OUTPUTS:            
+**  OUTPUTS:
 **
 **      st              The return status of this routine.
 **
@@ -590,7 +618,7 @@ INTERNAL void rpc__noauth_cn_cred_refresh
 **--
 **/
 
-INTERNAL void rpc__noauth_cn_fmt_client_req 
+INTERNAL void rpc__noauth_cn_fmt_client_req
 (
     rpc_cn_assoc_sec_context_p_t    assoc_sec,
     rpc_cn_sec_context_p_t          sec,
@@ -650,7 +678,7 @@ INTERNAL void rpc__noauth_cn_fmt_client_req
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **      This routine will format the auth_value field of
 **      either an rpc_bind_ack or rpc_alter_context_response
 **      PDU. The authentication protocol encoding in the
@@ -680,7 +708,7 @@ INTERNAL void rpc__noauth_cn_fmt_client_req
 **      auth_value      A pointer to the auth_value field in the rpc_bind or
 **                      rpc_alter_context PDU authentication trailer.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **      auth_value_len  On input, the length, in bytes of the available space
 **                      for the auth_value field. On output, the length in
@@ -700,7 +728,7 @@ INTERNAL void rpc__noauth_cn_fmt_client_req
 **--
 **/
 
-INTERNAL void rpc__noauth_cn_fmt_srvr_resp 
+INTERNAL void rpc__noauth_cn_fmt_srvr_resp
 (
     unsigned32                      verify_st,
     rpc_cn_assoc_sec_context_p_t    assoc_sec,
@@ -754,20 +782,20 @@ INTERNAL void rpc__noauth_cn_fmt_srvr_resp
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **      This routine will free an NCA Connection RPC auth
 **      information rep.
 **
-**  INPUTS:             
+**  INPUTS:
 **
 **      info            A pointer to the auth information rep structure
 **                      containing RPC protocol indenpendent information.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **      cn_info         A pointer to the RPC auth information rep structure
 **                      containing NCA Connection specific
-**                      information. NULL on output. 
+**                      information. NULL on output.
 **
 **  OUTPUTS:            none
 **
@@ -782,9 +810,9 @@ INTERNAL void rpc__noauth_cn_fmt_srvr_resp
 **--
 **/
 
-INTERNAL void rpc__noauth_cn_free_prot_info 
+INTERNAL void rpc__noauth_cn_free_prot_info
 (
-    rpc_auth_info_p_t               info,    
+    rpc_auth_info_p_t               info,
     rpc_cn_auth_info_p_t            *cn_info
 )
 {
@@ -813,7 +841,7 @@ INTERNAL void rpc__noauth_cn_free_prot_info
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **      This routine will create and return an NCA Connection
 **      RPC auth information rep.
 **
@@ -824,7 +852,7 @@ INTERNAL void rpc__noauth_cn_free_prot_info
 **
 **  INPUTS/OUTPUTS:     none
 **
-**  OUTPUTS:            
+**  OUTPUTS:
 **
 **      cn_info         A pointer to the RPC auth information rep structure
 **                      containing NCA Connection specific information.
@@ -841,7 +869,7 @@ INTERNAL void rpc__noauth_cn_free_prot_info
 **--
 **/
 
-INTERNAL void rpc__noauth_cn_get_prot_info 
+INTERNAL void rpc__noauth_cn_get_prot_info
 (
     rpc_auth_info_p_t               info,
     rpc_cn_auth_info_p_t            *cn_info,
@@ -871,10 +899,10 @@ INTERNAL void rpc__noauth_cn_get_prot_info
     /*
      * Allocate storage for a noauth cn info structure from heap.
      */
-    RPC_MEM_ALLOC (noauth_cn_info, 
-                   rpc_noauth_cn_info_p_t, 
-                   sizeof (rpc_noauth_cn_info_t), 
-                   RPC_C_MEM_NOAUTH_CN_INFO, 
+    RPC_MEM_ALLOC (noauth_cn_info,
+                   rpc_noauth_cn_info_p_t,
+                   sizeof (rpc_noauth_cn_info_t),
+                   RPC_C_MEM_NOAUTH_CN_INFO,
                    RPC_C_MEM_WAITOK);
 
     /*
@@ -895,7 +923,7 @@ INTERNAL void rpc__noauth_cn_get_prot_info
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **      This routine will format the auth_value field of
 **      a call level PDU, namely an rpc_request, rpc_response
 **      rpc_fault, rpc_remote_alert or rpc_orphaned PDU. It will
@@ -917,14 +945,14 @@ INTERNAL void rpc__noauth_cn_get_prot_info
 **      auth_value      A pointer to the auth_value field in the rpc_bind or
 **                      rpc_alter_context PDU authentication trailer.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **      auth_value_len  On input, the lenght, in bytes of the available space
 **                      for the auth_value field. On output, the lenght in
 **                      bytes used in encoding the auth_value field. Zero if
 **                      an error status is returned.
 **
-**  OUTPUTS:            
+**  OUTPUTS:
 **
 **      st              The return status of this routine.
 **
@@ -939,7 +967,7 @@ INTERNAL void rpc__noauth_cn_get_prot_info
 **--
 **/
 
-INTERNAL void rpc__noauth_cn_pre_call 
+INTERNAL void rpc__noauth_cn_pre_call
 (
     rpc_cn_assoc_sec_context_p_t    assoc_sec,
     rpc_cn_sec_context_p_t          sec,
@@ -1013,15 +1041,15 @@ INTERNAL void rpc__noauth_cn_pre_call
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **      This routine will perform per-packet security
 **      processing on a packet before it is sent. This
 **      includes checksumming and encryption.
 **
 **      Note that in some cases, the data is copied to
-**      a contiguous buffer for checksumming and 
+**      a contiguous buffer for checksumming and
 **      encryption.  In these cases, the contiguous
-**      iov element should be used instead of the original 
+**      iov element should be used instead of the original
 **      iovector.
 **
 **  INPUTS:
@@ -1033,7 +1061,7 @@ INTERNAL void rpc__noauth_cn_pre_call
 **                      information rep.
 **      iov             A pointer to the iovector containing the PDU
 **                      about to be sent. The appropriate per-packet security
-**                      services will be applied to it. 
+**                      services will be applied to it.
 **      iovlen          The length, in bytes, of the PDU.
 **      out_iov         An iovector element.  This iovector element
 **                      will describe packet if the original iov
@@ -1042,7 +1070,7 @@ INTERNAL void rpc__noauth_cn_pre_call
 **
 **  INPUTS/OUTPUTS:     none
 **
-**  OUTPUTS:            
+**  OUTPUTS:
 **
 **      st              The return status of this routine.
 **
@@ -1057,7 +1085,7 @@ INTERNAL void rpc__noauth_cn_pre_call
 **--
 **/
 
-INTERNAL void rpc__noauth_cn_pre_send 
+INTERNAL void rpc__noauth_cn_pre_send
 (
     rpc_cn_assoc_sec_context_p_t    assoc_sec,
     rpc_cn_sec_context_p_t          sec,
@@ -1095,7 +1123,7 @@ INTERNAL void rpc__noauth_cn_pre_send
         return;
     }
 #endif
-    
+
     out_iov->base = NULL;
     switch (ptype)
     {
@@ -1133,7 +1161,7 @@ INTERNAL void rpc__noauth_cn_pre_send
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **      This routine will perform per-packet security
 **      processing on a packet after it is received. This
 **      includes decryption and verification of checksums.
@@ -1156,7 +1184,7 @@ INTERNAL void rpc__noauth_cn_pre_send
 **
 **  INPUTS/OUTPUTS:     none
 **
-**  OUTPUTS:            
+**  OUTPUTS:
 **
 **      st              The return status of this routine.
 **
@@ -1171,7 +1199,7 @@ INTERNAL void rpc__noauth_cn_pre_send
 **--
 **/
 
-INTERNAL void rpc__noauth_cn_recv_check 
+INTERNAL void rpc__noauth_cn_recv_check
 (
     rpc_cn_assoc_sec_context_p_t    assoc_sec,
     rpc_cn_sec_context_p_t          sec,
@@ -1258,7 +1286,7 @@ INTERNAL void rpc__noauth_cn_recv_check
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **      This routine will locate and return the association
 **      UUID CRC contained in the auth_value field of an
 **      authentication trailer of an rpc_bind, rpc_bind_ack,
@@ -1272,7 +1300,7 @@ INTERNAL void rpc__noauth_cn_recv_check
 **
 **  INPUTS/OUTPUTS:     none
 **
-**  OUTPUTS:            
+**  OUTPUTS:
 **
 **      assoc_uuid_crc  The association UUID CRC contained in the auth_value
 **                      field.
@@ -1288,7 +1316,7 @@ INTERNAL void rpc__noauth_cn_recv_check
 **--
 **/
 
-INTERNAL void rpc__noauth_cn_tlr_uuid_crc 
+INTERNAL void rpc__noauth_cn_tlr_uuid_crc
 (
     pointer_t               auth_value,
     unsigned32              auth_value_len,
@@ -1317,7 +1345,7 @@ INTERNAL void rpc__noauth_cn_tlr_uuid_crc
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **      This routine will byte swap all the appropriate fields
 **      of the the auth_value field of an authentication
 **      trailer. It will also convert any characters from
@@ -1331,7 +1359,7 @@ INTERNAL void rpc__noauth_cn_tlr_uuid_crc
 **                      RunTime Extensions Specification Version OSF TX1.0.9
 **                      pre 1003 for details), of the remote machine.
 **
-**  INPUTS/OUTPUTS:     
+**  INPUTS/OUTPUTS:
 **
 **      pkt_p           A pointer to the entire packet.
 **
@@ -1348,7 +1376,7 @@ INTERNAL void rpc__noauth_cn_tlr_uuid_crc
 **--
 **/
 
-INTERNAL void rpc__noauth_cn_tlr_unpack 
+INTERNAL void rpc__noauth_cn_tlr_unpack
 (
     rpc_cn_packet_p_t       pkt_p,
     unsigned32              auth_value_len,
@@ -1368,7 +1396,7 @@ INTERNAL void rpc__noauth_cn_tlr_unpack
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **      This routine will decode the auth_value field of
 **      either an rpc_bind or rpc_alter_context PDU. Any
 **      error encountered while authenticating the client
@@ -1392,7 +1420,7 @@ INTERNAL void rpc__noauth_cn_tlr_unpack
 **
 **  INPUTS/OUTPUTS:     none
 **
-**  OUTPUTS:            
+**  OUTPUTS:
 **
 **      st              The return status of this routine.
 **
@@ -1407,7 +1435,7 @@ INTERNAL void rpc__noauth_cn_tlr_unpack
 **--
 **/
 
-INTERNAL void rpc__noauth_cn_vfy_client_req 
+INTERNAL void rpc__noauth_cn_vfy_client_req
 (
     rpc_cn_assoc_sec_context_p_t    assoc_sec,
     rpc_cn_sec_context_p_t          sec,
@@ -1423,7 +1451,7 @@ INTERNAL void rpc__noauth_cn_vfy_client_req
                     ("(rpc__noauth_cn_vfy_client_req)\n"));
 
     priv_auth_value = (rpc_cn_bind_auth_value_priv_t *)auth_value;
-    
+
     RPC_DBG_PRINTF (rpc_e_dbg_auth, RPC_C_CN_DBG_AUTH_PKT,
                     ("(rpc__noauth_cn_vfy_client_req) prot->%x level->%x key_id->%x assoc_uuid_crc->%x xmit_seq->%x recv_seq->%x\n",
                     rpc_c_authn_dce_dummy,
@@ -1454,7 +1482,7 @@ INTERNAL void rpc__noauth_cn_vfy_client_req
 **  SCOPE:              INTERNAL - declared locally
 **
 **  DESCRIPTION:
-**      
+**
 **      This routine will decode auth_value field either an
 **      rpc_bind_ack or rpc_alter_context_response PDU. If the
 **      credentials field of the auth_value field contains an
@@ -1478,7 +1506,7 @@ INTERNAL void rpc__noauth_cn_vfy_client_req
 **
 **  INPUTS/OUTPUTS:     none
 **
-**  OUTPUTS:            
+**  OUTPUTS:
 **
 **      st              The return status of this routine.
 **
@@ -1493,7 +1521,7 @@ INTERNAL void rpc__noauth_cn_vfy_client_req
 **--
 **/
 
-INTERNAL void rpc__noauth_cn_vfy_srvr_resp 
+INTERNAL void rpc__noauth_cn_vfy_srvr_resp
 (
     rpc_cn_assoc_sec_context_p_t    assoc_sec,
     rpc_cn_sec_context_p_t          sec,
@@ -1527,8 +1555,7 @@ INTERNAL void rpc__noauth_cn_vfy_srvr_resp
     *st = rpc_s_ok;
 }
 
-
-PRIVATE rpc_protocol_id_t       rpc__noauth_cn_init 
+PRIVATE rpc_protocol_id_t       rpc__noauth_cn_init
 (
     rpc_auth_rpc_prot_epv_p_t       *epv,
     unsigned32                      *st

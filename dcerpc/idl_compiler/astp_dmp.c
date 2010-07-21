@@ -1,26 +1,55 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **  NAME
@@ -39,7 +68,6 @@
 **
 */
 
-
 #include <nidl.h>
 #include <astp.h>
 #include <astp_dmp.h>
@@ -53,7 +81,6 @@
 #define NODE_ADDR_FMT            "@ %08lX H"
 
 static char *debug_dump = NULL;
-
 
 /*
  *  Forward declarations of dump routines
@@ -115,7 +142,6 @@ static void AST_dump_enumerators  (
     int indentation
 );
 
-
 static void AST_dump_field_attrs (
     ASTP_node_t  *parent_node,
     AST_type_n_t *type_node,
@@ -135,7 +161,6 @@ static void print_type_name (
     AST_type_k_t type,
     int indentation
 );
-
 
 
 
@@ -197,7 +222,6 @@ void AST_dump_nametable_id
     }
 }
 
-
 #if 0 /* Currently, Unused */
 static void print_boolean
 (
@@ -213,7 +237,6 @@ static void print_boolean
         printf(format, "false") ;
 }
 #endif
-
 
 void AST_dump_interface
 (
@@ -383,7 +406,6 @@ void AST_dump_interface
         AST_dump_simple_types_list (if_n_p->sp_types, 1);
     };
 
-
     if (if_n_p->pa_types != NULL) {
         printf("\nPointed-at types list:\n");
         AST_dump_simple_types_list (if_n_p->pa_types, 1);
@@ -441,7 +463,6 @@ static void AST_dump_export_list
     for (ep = export_list_ptr; ep; ep = ep->next)
         AST_dump_exported_item (ep);
 }
-
 
 static void AST_dump_exported_item
 (
@@ -509,7 +530,6 @@ static void AST_dump_ports_list
     }
 }
 
-
 #if 0 /* Currently unused */
 
 void AST_dump_types_list
@@ -519,7 +539,6 @@ void AST_dump_types_list
 )
 {
     AST_type_p_n_t *type_ptr;
-
 
     for (type_ptr = type_p_list; type_ptr; type_ptr = type_ptr->next)
     {
@@ -531,8 +550,6 @@ void AST_dump_types_list
 }
 
 #endif
-
-
 
 static void AST_dump_simple_types_list
 (
@@ -643,7 +660,6 @@ void AST_dump_constant
 
 }
 
-
 static void print_type_name
 (
     char   *format,
@@ -742,7 +758,6 @@ static void AST_dump_array
                         indentation);
 }
 
-
 static void AST_dump_indices
 (
     AST_array_index_n_t *index_node_ptr,
@@ -773,7 +788,6 @@ static void AST_dump_indices
 
     }
 }
-
 
 void AST_dump_type
 (
@@ -819,7 +833,6 @@ void AST_dump_type
        }
     }
 
-
     if (type_n_p->xmit_as_type != NULL) {
         indent (indentation);
         dump_nametable_id ("Transmit type = %s\n",
@@ -837,7 +850,6 @@ void AST_dump_type
         dump_nametable_id ("I-char type = %s\n",
                                 type_n_p->cs_char_type->type_name);
     }
-
 
     if (AST_UNALIGN_SET(type_n_p)) {
         indent (indentation);
@@ -953,14 +965,12 @@ void AST_dump_type
         printf ("[v1_enum]\n");
     }
 
-
     if (type_n_p->defined_as != NULL) {
         indent (indentation);
         dump_nametable_id ("Defined as Named type %s\n", type_n_p->defined_as->name);
         dump_node_address("Defined as Type node ",
                             (char *)type_n_p->defined_as, indentation);
     }
-
 
     switch (type_n_p->kind) {
 
@@ -1026,9 +1036,6 @@ void AST_dump_type
     --visit_count ;
 }
 
-
-
-
 static void AST_dump_enumerators
 (
     AST_enumeration_n_t *enum_node_ptr,
@@ -1044,7 +1051,6 @@ static void AST_dump_enumerators
         AST_dump_constant (cp, indentation);
     }
 }
-
 
 static void AST_dump_structure
 (
@@ -1129,8 +1135,6 @@ static void AST_dump_structure
 
 }
 
-
-
 static void AST_dump_disc_union
 (
     AST_disc_union_n_t * disc_union_node_ptr,
@@ -1155,7 +1159,6 @@ static void AST_dump_disc_union
 
 }
 
-
 static void AST_dump_arm
 (
     AST_arm_n_t  * arm_node_ptr,
@@ -1163,8 +1166,6 @@ static void AST_dump_arm
 )
 {
     AST_case_label_n_t * lp;
-
-
 
     /*
      * Output the labels
@@ -1177,7 +1178,6 @@ static void AST_dump_arm
         else
             AST_dump_constant (lp->value, indentation);
     }
-
 
     /*
      * Output the name and type of this arm
@@ -1225,7 +1225,6 @@ static void AST_dump_arm
         printf("Arm type = NULL\n");
     }
 }
-
 
 void AST_dump_operation
 (
@@ -1374,7 +1373,6 @@ void AST_dump_operation
         printf ("[has transmit_as types] \n");
     }
 
-
     indent (indentation);
     printf ("routine parameters\n");
     for (pp = operation_node_ptr->parameters; pp != NULL; pp = pp->next) {
@@ -1390,7 +1388,6 @@ void AST_dump_operation
             printf("\n\n***Consistancy Check Failure***: Uplink not set\n\n");
     }
 }
-
 
 void AST_dump_parameter
 (
@@ -1649,7 +1646,6 @@ static void AST_dump_field_ref
     AST_field_ref_n_t *reference_ptr;
     unsigned short  i;
 
-
     for (i=0, reference_ptr = field_ref_vector;
          i < dimension;
          i++, reference_ptr++)
@@ -1688,7 +1684,6 @@ static void AST_dump_field_ref
     }
 
 }
-
 
 void AST_enable_hex_dump (void)
 {

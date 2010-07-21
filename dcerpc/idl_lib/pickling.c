@@ -1,24 +1,55 @@
 /*
- * 
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
+
 /*
 **
 **      pickling.c
@@ -45,7 +76,7 @@
 #include <lsysdep.h>
 
 static rpc_syntax_id_t ndr_transfer_syntax_id = {
-    {0x8a885d04, 0x1ceb, 0x11c9, 0x9f, 0xe8, {0x8, 0x0, 0x2b, 0x10, 0x48, 
+    {0x8a885d04, 0x1ceb, 0x11c9, 0x9f, 0xe8, {0x8, 0x0, 0x2b, 0x10, 0x48,
 0x60}},
     2};
 
@@ -760,7 +791,7 @@ static void idl_es_get_encoding_uuid
 /******************************************************************************/
 static void idl_es_get_encoding_header
 (
-    idl_es_pvt_header_t *p_pickle_header,       /* [out] local copy of pickle 
+    idl_es_pvt_header_t *p_pickle_header,       /* [out] local copy of pickle
                                                          header */
     IDL_msp_t IDL_msp
 )
@@ -957,7 +988,7 @@ void idl_es_before_interp_call
 
     //DO_NOT_CLOBBER(p_es_state);
     p_es_state = NULL;
-	 
+
     /* If we get any abnormal condition we need to cope with the situation
         where this is a dynamic encoding and the operation is not the first
         that used the handle. In this case we need to release the encoding
@@ -1063,7 +1094,7 @@ void idl_es_before_interp_call
 /******************************************************************************/
 static void idl_es_encode_dyn_size
 (
-    IDL_dyn_buff_link_t *p_list_elt,    /* [in] pointer to list of 
+    IDL_dyn_buff_link_t *p_list_elt,    /* [in] pointer to list of
                                                     intermediate buffers */
     idl_ulong_int *p_dyn_size           /* [out] size of encoding */
 )
@@ -1086,7 +1117,7 @@ static void idl_es_encode_dyn_size
 /******************************************************************************/
 static void idl_es_encode_dyn_copy_rel
 (
-    IDL_dyn_buff_link_t *p_list_elt,    /* [in] pointer to list of 
+    IDL_dyn_buff_link_t *p_list_elt,    /* [in] pointer to list of
                                                     intermediate buffers */
     idl_byte *dyn_buff,      /* [out] location to copy intermediate buffer to */
     IDL_msp_t IDL_msp
@@ -1156,7 +1187,7 @@ void idl_es_after_interp_call
                     && (IDL_msp->IDL_data_addr == IDL_msp->IDL_buff_addr) )
                 {
                     /* Intermediate buffer can be handed off to user */
-                    p_iovec_elt = 
+                    p_iovec_elt =
                            p_es_state->IDL_dyn_buff_chain_head->IDL_p_iovec_elt;
                     *(p_es_state->IDL_p_buff_addr) = (idl_byte *)
                                                     (p_iovec_elt->buff_addr);
@@ -1384,7 +1415,6 @@ void idl_es_handle_free
     *st = error_status_ok;
 }
 
-
 /******************************************************************************/
 /*                                                                            */
 /*  idl_es_set_attrs - API routine                                            */
@@ -1402,7 +1432,6 @@ void idl_es_set_attrs(
 	*st = error_status_ok;
 	return;
 }
-
 
 /******************************************************************************/
 /*                                                                            */

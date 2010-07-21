@@ -1,25 +1,55 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **  NAME:
@@ -28,7 +58,7 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
@@ -40,12 +70,12 @@
 **  a call to an application server and (sometimes) the application server
 **  makes a call on one of these procedures back to the application client.
 **  (The application server is thus transiently a "client.)
-**  
+**
 **  All application clients must be prepared to handle calls on this
 **  interface.  (Note that these calls are typically transparently handled
 **  by the client's runtime environment and not be the application client
 **  itself.)
-**  
+**
 **  Note well that calls made on this interface are not "real callbacks".
 **  (They're sometimes called "who-are-you [or WAY] callbacks".)  Whereas
 **  the activity ID in the headers of packets that are parts of real
@@ -59,7 +89,7 @@
 **
 */
 
-[uuid(333A2276-0000-0000-0D00-00809C000000), version(3)] 
+[uuid(333A2276-0000-0000-0D00-00809C000000), version(3)]
 interface conv
 {
 
@@ -98,7 +128,7 @@ interface conv
  * we're promising is that it isn't executed more than once.)
  */
 
-[idempotent] 
+[idempotent]
 void conv_who_are_you(
         [in]    handle_t        h,
         [in]    idl_uuid_t          *actuid,
@@ -107,10 +137,9 @@ void conv_who_are_you(
         [out]   unsigned32      *st
 );
 
-
 /*
  * C O N V _ W H O _ A R E _ Y O U 2
- *                  
+ *
  * This is a newer version of "conv_who_are_you" and has a superset of
  * the older call's semantics.  The additional semantics are that this
  * call returns a UUID that uniquely identifies the client's address
@@ -119,7 +148,7 @@ void conv_who_are_you(
  * a remote call to the server (e.g., in case the server application
  * is holding state on behalf of the client and it wants to discard or
  * otherwise clean up this state if the client crashes).
- *                  
+ *
  * For compatibility with old clients, servers do not (should not) call
  * this procedure to get client sequence number information.  Rather,
  * they call this procedure if, in the course of processing a client's
@@ -130,7 +159,7 @@ void conv_who_are_you(
  * an EXTRA call to get the CAS UUID).
  */
 
-[idempotent] 
+[idempotent]
 void conv_who_are_you2(
         [in]    handle_t        h,
         [in]    idl_uuid_t          *actuid,
@@ -140,10 +169,9 @@ void conv_who_are_you2(
         [out]   unsigned32      *st
 );
 
-
 /*
  * C O N V _ A R E _ Y O U _ T H E R E
- * 
+ *
  * This interface is used for server to client "liveness" checking.
  * If a server is in the process of receiving input from a client and
  * has not received any data for a period of time defined by the liveness
@@ -152,14 +180,13 @@ void conv_who_are_you2(
  * dead.
  */
 
-[idempotent] 
+[idempotent]
 void conv_are_you_there(
         [in]    handle_t        h,
         [in]    idl_uuid_t          *actuid,
         [in]    unsigned32      boot_time,
         [out]   unsigned32      *st
 );
-
 
 /*
  * C O N V _ W H O _ A R E _ Y O U _ A U T H
@@ -180,18 +207,18 @@ void conv_are_you_there(
  * the authenticator abstraction.)
  */
 
-[idempotent] 
+[idempotent]
 void conv_who_are_you_auth(
         [in]    handle_t        h,
         [in]    idl_uuid_t          *actuid,
         [in]    unsigned32      boot_time,
-        [in, size_is(in_len)]    
+        [in, size_is(in_len)]
                 byte            in_data[],
         [in]    signed32        in_len,
         [in]    signed32        out_max_len,
         [out]   unsigned32      *seq,
         [out]   idl_uuid_t          *cas_uuid,
-        [out, length_is(*out_len), size_is(out_max_len)]    
+        [out, length_is(*out_len), size_is(out_max_len)]
                 byte            out_data[],
         [out]   signed32        *out_len,
         [out]   unsigned32      *st
@@ -199,14 +226,14 @@ void conv_who_are_you_auth(
 
 /*
  * C O N V _ W H O _ A R E _ Y O U _ A U T H _ M O R E
- * 
+ *
  * This routine is used, in conjunction with the conv_who_are_you_auth()
  * operation, for retrieving oversized PACs.  In the event that a client's
  * credentials are too large to fit within a single DG packet, the server
- * can retrieve the PAC, packet by packet, by repeated calls on this 
- * operation.  
+ * can retrieve the PAC, packet by packet, by repeated calls on this
+ * operation.
  *
- * Note that because the "conv" interface is serviced directly by the 
+ * Note that because the "conv" interface is serviced directly by the
  * the DG protocol (as opposed to being handled by a call executor thread),
  * there is no additional client overhead with retrieving the PAC by
  * multiple single-packet calls, rather than a single multiple-packet call.
@@ -215,8 +242,8 @@ void conv_who_are_you_auth(
  * to the DG protocol's internal handling of the conv interface.
  *
  * Logically, this call returns
- * 
- *        client_credentials[index ... (index+out_max_len-1)] 
+ *
+ *        client_credentials[index ... (index+out_max_len-1)]
  */
 
 [idempotent]
@@ -232,5 +259,4 @@ void conv_who_are_you_auth_more(
         [out]   unsigned32      *st
 );
 
- 
 }

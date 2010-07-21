@@ -1,24 +1,55 @@
 /*
- * 
- * (c) Copyright 1993 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1993 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1993 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2009-2010 Apple Inc. All rights reserved.
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
+
 /*
  **
  **  NAME:
@@ -43,7 +74,6 @@
 #include <cspeldcl.h>
 #include <genpipes.h>
 #include <bedeck.h>
-
 
 /*
  * The following define, typedef, and four static functions are the
@@ -161,7 +191,6 @@ static void CSPELL_type_tail
 		}
 }
 
-
 /*
  * spell_name
  *
@@ -178,7 +207,6 @@ void spell_name
 	NAMETABLE_id_to_string (name, &str);
 	fprintf (fid, "%s", str);
 }
-
 
 static void CSPELL_type_exp (
 		FILE *fid,
@@ -200,7 +228,6 @@ boolean CSPELL_scalar_type_suffix
 )
 {
 	boolean result = true;
-
 
 	/* prepend a 'u' for unsigned types */
 	switch (tp->kind) {
@@ -372,7 +399,6 @@ static void CSPELL_array_bounds
 	}
 }
 
-
 /*
  * CSPELL_pipe_struct_routine_decl
  *
@@ -442,7 +468,6 @@ static void CSPELL_pipe_def
 	fprintf( fid, "rpc_ss_pipe_state_t state;\n" );
 	fprintf( fid, "} " );
 }
-
 
 /*
  * CSPELL_type_exp
@@ -750,7 +775,6 @@ static void CSPELL_type_exp
 
 }
 
-
 /*
  * CSPELL_typed_name
  */
@@ -772,7 +796,6 @@ void CSPELL_typed_name
 	spell_name (fid, name);
 	CSPELL_type_tail (fid, &tail, encoding_services);
 }
-
 
 /*
  * CSPELL_function_def_header
@@ -796,7 +819,6 @@ void CSPELL_function_def_header
 	CSPELL_type_tail ( fid, &tail,
 			(AST_ENCODE_SET(oper) || AST_DECODE_SET(oper)) );
 }
-
 
 /*
  * CSPELL_type_exp_simple
@@ -825,7 +847,6 @@ void CSPELL_var_decl
 	CSPELL_typed_name (fid, type, name, NULL, false, true, false);
 	fprintf (fid, ";\n");
 }
-
 
 /*
  * CSPELL_cast_exp
@@ -867,8 +888,6 @@ void CSPELL_ptr_cast_exp
 	CSPELL_cast_exp(fid, &pointer_type);
 }
 
-
-
 /*
  * DDBE_spell_manager_param_cast
  *
@@ -906,7 +925,7 @@ void DDBE_spell_manager_param_cast
 			array_slice_type.type_structure.array = &array_slice_desc;
 			tp_for_type_exp = &array_slice_type;
 		}
-	} 
+	}
 	else
 		tp_for_type_exp = tp;
 	CSPELL_type_exp (fid, tp_for_type_exp, &tail, NULL, false, false, true);
@@ -966,4 +985,3 @@ void CSPELL_restore_stub_warnings
 )
 {
 }
-

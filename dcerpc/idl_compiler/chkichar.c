@@ -1,24 +1,55 @@
 /*
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
  *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
  *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
+
 /*
 **
 **  NAME:
@@ -45,7 +76,6 @@
 #include <command.h>    /* Command option defs */
 #include <errors.h>     /* Error reporting functions */
 #include <message.h>    /* reporting functions */
-
 
 /*
 **  C H K _ p a r a m _ c s
@@ -97,7 +127,7 @@ void CHK_param_cs
     if (AST_CS_STAG_SET(param_p) && !AST_IN_SET(param_p))
     {
         ASTP_attr_flag_t attr2 = ASTP_IN;
-        CHECKER_error(param_p, NIDL_PRMDEPATTR, "cs_stag", 
+        CHECKER_error(param_p, NIDL_PRMDEPATTR, "cs_stag",
             KEYWORDS_lookup_text(AST_attribute_to_token(&attr2)));
     }
 
@@ -105,7 +135,7 @@ void CHK_param_cs
     if (AST_CS_DRTAG_SET(param_p) && !AST_IN_SET(param_p))
     {
         ASTP_attr_flag_t attr2 = ASTP_IN;
-        CHECKER_error(param_p, NIDL_PRMDEPATTR, "cs_drtag", 
+        CHECKER_error(param_p, NIDL_PRMDEPATTR, "cs_drtag",
             KEYWORDS_lookup_text(AST_attribute_to_token(&attr2)));
     }
 
@@ -113,7 +143,7 @@ void CHK_param_cs
     if (AST_CS_RTAG_SET(param_p) && !AST_OUT_SET(param_p))
     {
         ASTP_attr_flag_t attr2 = ASTP_OUT;
-        CHECKER_error(param_p, NIDL_PRMDEPATTR, "cs_rtag", 
+        CHECKER_error(param_p, NIDL_PRMDEPATTR, "cs_rtag",
             KEYWORDS_lookup_text(AST_attribute_to_token(&attr2)));
     }
 
@@ -207,7 +237,6 @@ void CHK_param_cs
                             OPT_STD_EXTENDED);
 }
 
-
 /*
 **  C H K _ o p _ c s
 **
@@ -256,7 +285,6 @@ void CHK_op_cs
                             OPT_STD_EXTENDED);
 }
 
-
 /*
 **  C H K _ f i e l d _ c s
 **
@@ -297,7 +325,6 @@ void CHK_field_cs
         CHECKER_error(field_p, NIDL_ARRTYPATTR, "cs_char");
 }
 
-
 /*
 **  C H K _ p i p e _ b a s e _ t y p e _ c s
 **
@@ -318,7 +345,6 @@ void CHK_pipe_base_type_cs
         || FE_TEST(type_p->fe_info->flags, FE_CT_CS_CHAR))
         CHECKER_error(type_p, NIDL_PIPECTYPE, "cs_char");
 }
-
 
 /*
 **  C H K _ t y p e _ c s

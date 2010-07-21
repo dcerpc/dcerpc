@@ -1,28 +1,55 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2009-2010 Apple Inc. All rights reserved.
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
-#ifndef _CNNET_H
-#define _CNNET_H	1
+
 /*
 **
 **  NAME
@@ -31,7 +58,7 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
@@ -40,12 +67,14 @@
 **
 */
 
+#ifndef _CNNET_H
+#define _CNNET_H	1
 
 /*
  * C O N N E C T I O N   S T A T E S
  */
 #define RPC_C_CN_CLOSED         0
-#define RPC_C_CN_CONNECTING     1  
+#define RPC_C_CN_CONNECTING     1
 #define RPC_C_CN_OPEN           2
 
 /*
@@ -97,18 +126,18 @@ PRIVATE void rpc__cn_network_use_socket (
     unsigned32                  /* out */   * /*st*/);
 
 /*
- * R P C _ _ C N _ N E T W O R K _ U S E _ P R O T S E Q 
+ * R P C _ _ C N _ N E T W O R K _ U S E _ P R O T S E Q
  */
 
 PRIVATE void rpc__cn_network_use_protseq (
-    rpc_protseq_id_t            /* pseq_id */, 
+    rpc_protseq_id_t            /* pseq_id */,
     unsigned32                  /* max_calls */,
     rpc_addr_p_t                /* rpc_addr */,
     unsigned_char_p_t           /* endpoint */,
     unsigned32                  */* st */);
 
 /*
- * R P C _ _ C N _ N E T W O R K _ M O N 
+ * R P C _ _ C N _ N E T W O R K _ M O N
  */
 
 PRIVATE void rpc__cn_network_mon (
@@ -118,7 +147,7 @@ PRIVATE void rpc__cn_network_mon (
     unsigned32              */* st */);
 
 /*
- * R P C _ _ C N _ N E T W O R K _ S T O P _ M O N 
+ * R P C _ _ C N _ N E T W O R K _ S T O P _ M O N
  */
 
 PRIVATE void rpc__cn_network_stop_mon (
@@ -151,7 +180,7 @@ PRIVATE void rpc__cn_network_close (
     unsigned32              */* st */);
 
 /*
- * R P C _ _ C N _ N E T W O R K _ S E L E C T _ D I S P A T C H 
+ * R P C _ _ C N _ N E T W O R K _ S E L E C T _ D I S P A T C H
  */
 
 PRIVATE void rpc__cn_network_select_dispatch (
@@ -187,13 +216,11 @@ PRIVATE void rpc__cn_network_close_connect (
     rpc_cn_assoc_p_t        /* assoc */,
     unsigned32              */* st */);
 
-
 /*
  * R P C _ _ C N _ N E T W O R K _ C O N N E C T _ F A I L
  */
 
 PRIVATE boolean32 rpc__cn_network_connect_fail (unsigned32);
-
 
 /*
  * These two are internal API's so you can tweak the TCP buffering.
@@ -226,8 +253,3 @@ PRIVATE void rpc__cn_network_getpeereid (
         unsigned32              */* st */);
 
 #endif /* _CNNET_H */
-
-
-
-
-

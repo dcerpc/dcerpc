@@ -1,25 +1,55 @@
 /*
- * 
- * (c) Copyright 1993 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1993 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1993 DIGITAL EQUIPMENT CORPORATION
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **  NAME:
 **
@@ -101,8 +131,6 @@ typedef struct
     rpc_mgr_epv_t               manager_epv;
 } rpc_if_rep_t, *rpc_if_rep_p_t;
 
-
-
 /***************************************************************************/
 
 /*
@@ -110,7 +138,6 @@ typedef struct
  */
 typedef char rpc_trans_tab_t [256];
 typedef rpc_trans_tab_t * rpc_trans_tab_p_t;
-
 
 /***************************************************************************/
 
@@ -129,10 +156,10 @@ typedef rpc_trans_tab_t * rpc_trans_tab_p_t;
 
 /***************************************************************************/
 
-/* 
- * Force stubs that are linked into the Apollo global library to use the 
- * shared version of malloc.  
- */  
+/*
+ * Force stubs that are linked into the Apollo global library to use the
+ * shared version of malloc.
+ */
 
 #ifdef STUBS_NEED_SHARED_MALLOC
 #  include <local/shlib.h>
@@ -152,7 +179,7 @@ typedef rpc_trans_tab_t * rpc_trans_tab_p_t;
 # define DCETHREAD_USE_THROW
 # define DCETHREAD_CHECKED
 # include <dce/dcethread.h>
-#else  
+#else
 # include <cma.h>
 #endif /* STUBS_USE_PTHREADS */
 
@@ -191,7 +218,6 @@ typedef rpc_trans_tab_t * rpc_trans_tab_p_t;
  */
 
 typedef pointer_t rpc_void_p_t ;
-
 
 /***************************************************************************/
 
@@ -286,11 +312,10 @@ globalref ndr_format_t ndr_g_local_drep;
     pfm_signal (st);\
     }
 
-
 /***************************************************************************/
 
 /*
- * include machine specific marshalling code 
+ * include machine specific marshalling code
  */
 
 #include <dce/marshall.h>
@@ -355,8 +380,6 @@ typedef ndr_ulong_int rpc_op_t;
 #define rpc_convert_boolean(src_drep, dst_drep, mp, dst)\
     rpc_unmarshall_boolean(mp, dst)
 
-
-
 #define rpc_marshall_byte(mp, src)\
     *(ndr_byte *)mp = src
 
@@ -365,8 +388,6 @@ typedef ndr_ulong_int rpc_op_t;
 
 #define rpc_convert_byte(src_drep, dst_drep, mp, dst)\
     rpc_unmarshall_byte(mp, dst)
-
-
 
 #define rpc_marshall_char(mp, src)\
     *(ndr_char *)mp = src
@@ -381,7 +402,6 @@ typedef ndr_ulong_int rpc_op_t;
         dst = (*ndr_g_ebcdic_to_ascii) [*(ndr_char *)mp];\
     else\
         dst = (*ndr_g_ascii_to_ebcdic) [*(ndr_char *)mp]
-
 
 #define rpc_marshall_enum(mp, src)\
     *(ndr_short_int *)mp = (ndr_short_int)src
@@ -399,8 +419,6 @@ typedef ndr_ulong_int rpc_op_t;
         _d[0]=_s[1]; _d[1]=_s[0];\
         dst = _sh;\
         }
-
-
 
 #ifdef TWO_BYTE_ENUMS
 #define rpc_marshall_v1_enum(mp, src)\
@@ -439,7 +457,6 @@ typedef ndr_ulong_int rpc_op_t;
         }
 #endif /* TWO_BYTE_ENUMS */
 
-
 #define rpc_marshall_small_int(mp, src)\
     *(ndr_small_int *)mp = src
 
@@ -449,8 +466,6 @@ typedef ndr_ulong_int rpc_op_t;
 #define rpc_convert_small_int(src_drep, dst_drep, mp, dst)\
     rpc_unmarshall_small_int(mp, dst)
 
-
-
 #define rpc_marshall_usmall_int(mp, src)\
     *(ndr_usmall_int *)mp = src
 
@@ -459,8 +474,6 @@ typedef ndr_ulong_int rpc_op_t;
 
 #define rpc_convert_usmall_int(src_drep, dst_drep, mp, dst)\
     rpc_unmarshall_usmall_int(mp, dst)
-
-
 
 #define rpc_marshall_short_int(mp, src)\
     *(ndr_short_int *)mp = src
@@ -477,8 +490,6 @@ typedef ndr_ulong_int rpc_op_t;
         _d[0]=_s[1]; _d[1]=_s[0];\
         }
 
-
-
 #define rpc_marshall_ushort_int(mp, src)\
     *(ndr_ushort_int *)mp = (ndr_ushort_int)src
 
@@ -493,8 +504,6 @@ typedef ndr_ulong_int rpc_op_t;
         ndr_byte *_s = (ndr_byte *) mp;\
         _d[0]=_s[1]; _d[1]=_s[0];\
         }
-
-
 
 #define rpc_marshall_long_int(mp, src)\
     *(ndr_long_int *)mp = src
@@ -511,8 +520,6 @@ typedef ndr_ulong_int rpc_op_t;
         _d[0]=_s[3]; _d[1]=_s[2]; _d[2]=_s[1]; _d[3]=_s[0];\
         }
 
-
-
 #define rpc_marshall_ulong_int(mp, src)\
     *(ndr_ulong_int *)mp = (ndr_ulong_int)src
 
@@ -527,8 +534,6 @@ typedef ndr_ulong_int rpc_op_t;
         ndr_byte *_s = (ndr_byte *) mp;\
         _d[0]=_s[3]; _d[1]=_s[2]; _d[2]=_s[1]; _d[3]=_s[0];\
         }
-
-
 
 #define rpc_marshall_hyper_int(mp, src) {\
     *(ndr_hyper_int *)mp = *(ndr_hyper_int *)&src;\
@@ -548,8 +553,6 @@ typedef ndr_ulong_int rpc_op_t;
         _d[4]=_s[3]; _d[5]=_s[2]; _d[6]=_s[1]; _d[7]=_s[0];\
         }
 
-
-
 #define rpc_marshall_uhyper_int(mp, src) {\
     *(ndr_uhyper_int *)mp = *(ndr_uhyper_int *)&src;\
     }
@@ -567,8 +570,6 @@ typedef ndr_ulong_int rpc_op_t;
         _d[0]=_s[7]; _d[1]=_s[6]; _d[2]=_s[5]; _d[3]=_s[4];\
         _d[4]=_s[3]; _d[5]=_s[2]; _d[6]=_s[1]; _d[7]=_s[0];\
         }
-
-
 
 #define rpc_marshall_short_float(mp, src) {\
     ndr_short_float tmp;\
@@ -588,8 +589,6 @@ typedef ndr_ulong_int rpc_op_t;
             (short_float_p_t)mp,\
             (short_float_p_t)&dst);\
         }
-
-
 
 #define rpc_marshall_long_float(mp, src)\
     *(ndr_long_float *)mp = src
@@ -627,7 +626,6 @@ typedef ndr_ulong_int rpc_op_t;
 
 #define RPC_SS_THREADS_ONCE(once_block_addr,init_routine) dcethread_once_throw( \
     once_block_addr,(dcethread_initroutine)init_routine)
-
 
 #define RPC_SS_THREADS_MUTEX_T dcethread_mutex
 
@@ -817,7 +815,6 @@ byte_p_t rpc_sm_mem_alloc   (
     error_status_t *        /*The status parameter if alloc returns NULL */
 );
 
-
 /*
  * rpc_ss_mem_free
  *
@@ -825,8 +822,6 @@ byte_p_t rpc_sm_mem_alloc   (
  */
 
 void rpc_ss_mem_free   (rpc_ss_mem_handle *);
-
-
 
 /*
  * rpc_ss_mem_release
@@ -865,7 +860,6 @@ void rpc_ss_mem_item_free   (
 void rpc_ss_mem_dealloc   ( byte_p_t );
 #endif
 
-
 /*
  * To avoid passing parameter lists of excessive length, a set of values
  * needed while unmarshalling a complex parameter is held in a parameter
@@ -887,7 +881,6 @@ typedef struct rpc_ss_marsh_state_t
     unsigned long   version;          /* Version number field */
 } rpc_ss_marsh_state_t;
 
-
 /*
  * MARSHALLING AND UNMARSHALLING OF NODES
  */
@@ -897,9 +890,9 @@ typedef enum { rpc_ss_mutable_node_k, rpc_ss_old_ref_node_k,
                rpc_ss_unique_node_k
 } rpc_ss_node_type_k_t;
 
-/* 
+/*
  * Use address of a function as "an address which cannot be a valid data
- *   address" 
+ *   address"
  */
 
 #define RPC_SS_NEW_UNIQUE_NODE (-1)
@@ -909,12 +902,12 @@ typedef enum { rpc_ss_mutable_node_k, rpc_ss_old_ref_node_k,
  */
 
 void rpc_ss_init_node_table   (
-    volatile rpc_ss_node_table_t *, 
+    volatile rpc_ss_node_table_t *,
     rpc_ss_mem_handle *
 );
 
 void rpc_ss_enable_reflect_deletes  (
- rpc_ss_node_table_t 
+ rpc_ss_node_table_t
 );
 
 idl_ulong_int rpc_ss_register_node   (
@@ -923,7 +916,6 @@ idl_ulong_int rpc_ss_register_node   (
     long  /*marshalling*/,
     long * /*has_been_marshalled*/
 );
-
 
 byte_p_t rpc_ss_lookup_node_by_num   (
     rpc_ss_node_table_t  /*tab*/,
@@ -950,7 +942,6 @@ void rpc_ss_unregister_node   (
     byte_p_t  /*ptr*/
 );
 
-
 #define NIDL_BUFF_SIZE 2048
 
 void rpc_ss_marsh_change_buff   (
@@ -971,11 +962,9 @@ void rpc_ss_init_client_once   (void);
 
 void rpc_ss_init_server_once   (void);
 
-
 void rpc_ss_init_allocate_once  (void);
 
 void rpc_ss_init_context_once   (void);
-
 
 #define RPC_SS_INIT_CLIENT if(!rpc_ss_client_is_set_up)rpc_ss_init_client_once();
 
@@ -984,7 +973,6 @@ void rpc_ss_init_context_once   (void);
 #define RPC_SS_INIT_ALLOCATE if(!rpc_ss_allocate_is_set_up)rpc_ss_init_allocate_once();
 
 #define RPC_SS_INIT_CONTEXT if(!rpc_ss_context_is_set_up)rpc_ss_init_context_once();
-
 
 #ifdef MEMORY_NOT_WRITTEN_SERIALLY
 
@@ -1021,7 +1009,6 @@ void rpc_ss_new_recv_buff   (
     rpc_mp_t * /*p_mp*/,
     volatile error_status_t * /*st*/
 );
-
 
 /*
  * SUPPORT FOR MULTI-THREADING
@@ -1067,7 +1054,6 @@ void rpc_ss_get_support_ptrs  (
 );
 
 void rpc_ss_destroy_support_ptrs   (void);
-
 
 void rpc_ss_client_establish_alloc  (rpc_ss_marsh_state_t *);
 
@@ -1117,7 +1103,6 @@ void rpc_ss_initialize_callee_pipe   (
 
 #define rpc_p_pipe_state ((rpc_ss_ee_pipe_state_t *)state)
 
-
 /*
  *    CONTEXT HANDLE STUFF
  */
@@ -1131,7 +1116,7 @@ typedef struct
 extern RPC_SS_THREADS_MUTEX_T rpc_ss_context_table_mutex;
 
 /*
- * typedef for context rundown procedure 
+ * typedef for context rundown procedure
  */
 
 typedef void (*ctx_rundown_fn_p_t)(rpc_ss_context_t);
@@ -1151,8 +1136,6 @@ void rpc_ss_er_ctx_from_wire   (
     ndr_boolean             ,            /* TRUE for [in, out] parameters */
     volatile error_status_t *
 );
-
-
 
 void rpc_ss_ee_ctx_to_wire   (
     rpc_ss_context_t        ,   /* [in] opaque pointer */
@@ -1175,7 +1158,7 @@ void rpc_ss_ctx_client_ref_count_inc   (
 );
 
 void rpc_ss_ctx_client_ref_count_dec   (
-  handle_t h, 
+  handle_t h,
   error_status_t *
 );
 
@@ -1198,12 +1181,12 @@ void rpc_ss_init_callee_ctx_tables   (void);
 #define uuid_tOue rpc_ss_u_uuid
 
 void rpc_ss_m_uuid  (
-   idl_uuid_t *, 
+   idl_uuid_t *,
    rpc_ss_marsh_state_t *
 );
 
 void rpc_ss_u_uuid   (
-   idl_uuid_t *, 
+   idl_uuid_t *,
    rpc_ss_marsh_state_t *
 );
 
@@ -1219,7 +1202,7 @@ void rpc_ss_mr_boolean   (
 
 void rpc_ss_ur_boolean   (
     idl_boolean **,
-    rpc_ss_node_type_k_t, 
+    rpc_ss_node_type_k_t,
     rpc_ss_marsh_state_t *
 );
 
@@ -1242,7 +1225,7 @@ void rpc_ss_mr_byte   (
 );
 
 void rpc_ss_ur_byte   (
-    idl_byte **, 
+    idl_byte **,
     rpc_ss_node_type_k_t,
     rpc_ss_marsh_state_t *
 );
@@ -1254,8 +1237,8 @@ void rpc_ss_me_byte   (
 );
 
 void rpc_ss_ue_byte   (
-    idl_byte **, 
-    rpc_ss_node_type_k_t , 
+    idl_byte **,
+    rpc_ss_node_type_k_t ,
     rpc_ss_marsh_state_t *
 );
 
@@ -1282,7 +1265,6 @@ void rpc_ss_ue_char   (
     rpc_ss_node_type_k_t ,
     rpc_ss_marsh_state_t *
 );
-
 
 void rpc_ss_mr_enum   (
     int *,
@@ -1380,7 +1362,6 @@ void rpc_ss_ue_long_int  (
     rpc_ss_marsh_state_t *
 );
 
-
 void  rpc_ss_mr_hyper_int  (
     idl_hyper_int *,
     rpc_ss_node_type_k_t ,
@@ -1417,7 +1398,6 @@ void rpc_ss_ur_usmall_int  (
     rpc_ss_marsh_state_t *
 );
 
-
 void rpc_ss_me_usmall_int   (
     idl_usmall_int *,
     rpc_ss_node_type_k_t ,
@@ -1425,13 +1405,13 @@ void rpc_ss_me_usmall_int   (
 );
 
 void rpc_ss_ue_usmall_int  (
-    idl_usmall_int **, 
+    idl_usmall_int **,
     rpc_ss_node_type_k_t ,
     rpc_ss_marsh_state_t *
 );
 
 void rpc_ss_mr_ushort_int  (
-    idl_ushort_int *, 
+    idl_ushort_int *,
     rpc_ss_node_type_k_t,
     rpc_ss_marsh_state_t *
 );
@@ -1444,7 +1424,7 @@ void rpc_ss_ur_ushort_int  (
 
 void rpc_ss_me_ushort_int  (
     idl_ushort_int *,
-    rpc_ss_node_type_k_t, 
+    rpc_ss_node_type_k_t,
     rpc_ss_marsh_state_t *
 );
 
@@ -1461,7 +1441,7 @@ void rpc_ss_mr_ulong_int  (
 );
 
 void rpc_ss_ur_ulong_int  (
-    idl_ulong_int **, 
+    idl_ulong_int **,
     rpc_ss_node_type_k_t ,
     rpc_ss_marsh_state_t *
 );
@@ -1473,19 +1453,19 @@ void rpc_ss_me_ulong_int  (
 );
 
 void rpc_ss_ue_ulong_int  (
-    idl_ulong_int **, 
+    idl_ulong_int **,
     rpc_ss_node_type_k_t ,
     rpc_ss_marsh_state_t *
 );
 
 void rpc_ss_mr_uhyper_int  (
-    idl_uhyper_int *, 
+    idl_uhyper_int *,
     rpc_ss_node_type_k_t,
     rpc_ss_marsh_state_t *
 );
 
 void rpc_ss_ur_uhyper_int  (
-    idl_uhyper_int **, 
+    idl_uhyper_int **,
     rpc_ss_node_type_k_t ,
     rpc_ss_marsh_state_t *
 );
@@ -1497,7 +1477,7 @@ void rpc_ss_me_uhyper_int (
 );
 
 void rpc_ss_ue_uhyper_int  (
-    idl_uhyper_int **, 
+    idl_uhyper_int **,
     rpc_ss_node_type_k_t ,
     rpc_ss_marsh_state_t *
 );
@@ -1521,13 +1501,13 @@ void rpc_ss_me_short_float  (
 );
 
 void rpc_ss_ue_short_float  (
-    idl_short_float **, 
+    idl_short_float **,
     rpc_ss_node_type_k_t ,
     rpc_ss_marsh_state_t *
 );
 
 void rpc_ss_mr_long_float  (
-    idl_long_float *, 
+    idl_long_float *,
     rpc_ss_node_type_k_t,
     rpc_ss_marsh_state_t *
 );
@@ -1539,13 +1519,13 @@ void rpc_ss_ur_long_float   (
 );
 
 void rpc_ss_me_long_float  (
-    idl_long_float *, 
+    idl_long_float *,
     rpc_ss_node_type_k_t ,
     rpc_ss_marsh_state_t *
 );
 
 void rpc_ss_ue_long_float  (
-    idl_long_float **, 
+    idl_long_float **,
     rpc_ss_node_type_k_t ,
     rpc_ss_marsh_state_t *
 );
@@ -1555,8 +1535,8 @@ void rpc_ss_ue_long_float  (
  */
 
 void rpc_ss_make_import_cursor_valid  (
-     RPC_SS_THREADS_MUTEX_T *, 
-     rpc_ns_import_handle_t  *, 
+     RPC_SS_THREADS_MUTEX_T *,
+     rpc_ns_import_handle_t  *,
      rpc_if_handle_t ,
      error_status_t *
 );
@@ -1597,7 +1577,6 @@ void rpc_ss_call_end_2   (
     volatile error_status_t *
 );
 
-
 /*
  * NDR CONVERSIONS
  */
@@ -1615,8 +1594,8 @@ void ndr_cvt_string   (
 );
 
 void ndr_cvt_short_float   (
-        ndr_format_t, 
-        ndr_format_t, 
+        ndr_format_t,
+        ndr_format_t,
         short_float_p_t,
         short_float_p_t
 );
@@ -1625,16 +1604,14 @@ void ndr_cvt_long_float   (
         ndr_format_t ,
         ndr_format_t ,
         long_float_p_t ,
-        long_float_p_t 
+        long_float_p_t
 );
-
 
 /*
  *  Support routines for marshalling and unmarshalling [string]
  */
 
 idl_ulong_int rpc_ss_strsiz   ( idl_char *, idl_ulong_int);
-
 
 /*
  * STATUS CODE CONVERSIONS
@@ -1661,7 +1638,6 @@ void rpc_ss_bind_authn_client (
     rpc_if_handle_t         ,       /* [in] Interface handle */
     error_status_t          *       /*[out] Return status */
 );
-
 
 #endif  /* !defined(NCK) || defined(NCK_NEED_MARSHALLING) */
 

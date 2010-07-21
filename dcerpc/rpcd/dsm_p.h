@@ -1,26 +1,55 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **  NAME:
@@ -48,7 +77,6 @@
 #include  <errno.h>
 #include  <sys/file.h>
 
-
 /*
  * lseek direction macros
  */
@@ -69,8 +97,8 @@
 
 /*  Records in the data store file are laid out contiguously.  Each record begins with
     a preheader used by DSM (not seen by user).  Each record is padded to a length that
-    ensures clean alignment (at least 8-byte); the preheader is of such a length that 
-    the user data is also cleanly aligned after the preheader.  
+    ensures clean alignment (at least 8-byte); the preheader is of such a length that
+    the user data is also cleanly aligned after the preheader.
 
     We want to arrange that our header fits within a page, as well as a reasonable chunk
     of the beginning of the user data, so the client can have atomic header writes.
@@ -78,7 +106,7 @@
 
 #if defined (vms)
 #   define PAGE_SIZE   512              /* length of system page */
-#else 
+#else
 #if defined(__linux__)
 #   define PAGE_SIZE   4096
 #elif !defined(PAGE_SIZE)
@@ -124,8 +152,7 @@
 /*  Cleanup handling.  Earlier model was based on Apollo PFM, no current
     contender fits that model (combining exception handling and status codes)
     so here's a placeholder using strictly local gotos (pfm is based on
-    nonlocal gotos aka longjmp).  Assumes error_status_t *st in scope. 
-
+    nonlocal gotos aka longjmp).  Assumes error_status_t *st in scope.
 
     CLEANUP {
         stuff
@@ -160,18 +187,18 @@ typedef struct page_t {     /* generic page */
         +--------+--------+--------+--------+  \
         |         space for link ptr        |   |
         +--------+--------+--------+--------+   |
-        |         size of user data         |   |    
+        |         size of user data         |   |
         +--------+--------+--------+--------+    > preheader (16 bytes)
         |     offset in file of preheader   |   |
         +--------+--------+--------+--------+   |
         |  FREE  | cookie |    (unused)     |   |
         +--------+--------+--------+--------+  /
-        |  user data...       
+        |  user data...
         +--------+
 */
 
 typedef struct block_t {        /* block preheader */
-    struct block_t *link;       /* link to next block on (free) list [meaningless in file] */                    
+    struct block_t *link;       /* link to next block on (free) list [meaningless in file] */
     unsigned long   size;       /* size of user data */
     unsigned long   loc;        /* location (offset) of preheader in file */
     boolean         isfree;     /* true iff free */
@@ -221,8 +248,7 @@ typedef struct dsm_db_t {       /* dsm handle info (what dsm_handle_t really poi
 
 typedef struct dsm_db_t * dsm_handle;   /* internal version of opaque handle */
 
-
-/* private function prototypes; copied here to force type checking and loosen 
+/* private function prototypes; copied here to force type checking and loosen
    sequence.
 */
 
@@ -247,4 +273,3 @@ private block_t *   cache_lookup        (dsm_handle,dsm_marker_t);
 #endif
 public void         dsm__lock_file      (int, error_status_t *);
 public int          dsm__flush_file     (int);
-

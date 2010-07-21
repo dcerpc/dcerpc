@@ -1,24 +1,55 @@
 /*
- * 
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
+
 /*
 **
 **  NAME:
@@ -37,7 +68,7 @@
 **  %a%private_begin
 **
 **
-**  %a%private_end  
+**  %a%private_end
 */
 
 #ifndef IREPH_INCL
@@ -173,7 +204,6 @@ typedef enum {
     IR_bnd_string_k
 } IR_bound_k_t;
 
-
 /*
  * IR_limit_k_t defines the kinds of array data limits.
  */
@@ -213,7 +243,6 @@ typedef struct IR_expr_n_t {
 
 typedef IR_expr_n_t *IR_expr_t;
 
-
 /*
  * IR_arg_t defines the various possible argument types in tuples.
  */
@@ -238,7 +267,6 @@ typedef union IR_arg_t {
     byte                        byt_val;
 } IR_arg_t;
 
-
 /*
  * IR_tup_n_t is the basic data element of the intermediate representation.
  * Each IR_tup_n_t is a tuple consisting of an operation-code, flags, and 0 or
@@ -253,7 +281,6 @@ typedef struct IR_tup_n_t {
     IR_flags_t          flags;
 } IR_tup_n_t;
 
-
 /*
  * Macro that evaluates to TRUE if a tuple list has no meaningful data entries.
  * Macro necessary because IREP generation can insert no-op sentinel entry.
@@ -263,7 +290,6 @@ typedef struct IR_tup_n_t {
 #define IR_NO_IREP(tup_p) \
     ( (tup_p) == NULL || \
       ((tup_p)->next == NULL && (tup_p)->opcode == IR_op_noop_k) )
-
 
 /*
  * Macro to determine if an instance of a type is a string array.
@@ -276,7 +302,6 @@ typedef struct IR_tup_n_t {
  && (((inst_p) == NULL && (AST_STRING_SET(type_p) || AST_STRING0_SET(type_p))) \
      || ((inst_p) != NULL \
          && (AST_STRING_SET(inst_p) || AST_STRING0_SET(inst_p)))))
-
 
 /*
  * Macro to determine if an instance of a type is a stringified pointer.
@@ -308,7 +333,6 @@ typedef struct IR_tup_n_t {
          || ((inst_p) != NULL && (inst_p)->field_attrs != NULL \
              && ((inst_p)->field_attrs->max_is_vec != NULL \
                  || (inst_p)->field_attrs->size_is_vec != NULL))))
-
 
 /********************************************************/
 /*  Data structures and API for maintaining data scope  */

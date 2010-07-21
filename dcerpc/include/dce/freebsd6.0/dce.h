@@ -1,26 +1,55 @@
 /*
- * 
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 #if !defined(_DCE_H)
 #define _DCE_H
 
@@ -31,13 +60,13 @@ extern "C" {
 /*
  * Common definitions for DCE
  * This is a machine specific file that must be ported to each platform.
- */ 
+ */
 
 #define DCE_VERSION "1.1"
 #define DCE_MAJOR_VERSION 1
 #define DCE_MINOR_VERSION 1
 
-/* 
+/*
  * Define the endianess of the platform. Pulled in from machine/endian.h.
  */
 
@@ -49,26 +78,26 @@ extern "C" {
 #define FALSE 0
 #define TRUE 1
 
-/* 
- * The following allows for the support of both old and new style 
- * function definitions and prototypes.  All DCE code is required to 
- * be ANSI C compliant and to use prototypes.  For those components 
- * that wish to support old-style definitions, the following macros 
+/*
+ * The following allows for the support of both old and new style
+ * function definitions and prototypes.  All DCE code is required to
+ * be ANSI C compliant and to use prototypes.  For those components
+ * that wish to support old-style definitions, the following macros
  * must be used.
  *
  *  Define a function like this:
- *      int foo 
+ *      int foo
  *              (
- *              int a, 
+ *              int a,
  *              void *b,
  *              struct bar *c
  *              )
  */
 
-/* 
- * For those components wishing to support platforms where void 
- * pointers are not available, they can use the following typedef for 
- * a generic pointer type.  If they are supporting such platforms they 
+/*
+ * For those components wishing to support platforms where void
+ * pointers are not available, they can use the following typedef for
+ * a generic pointer type.  If they are supporting such platforms they
  * must use this.
  */
 #if defined(__STDC__)
@@ -81,9 +110,9 @@ extern "C" {
   typedef char * pointer_t;
 #endif                                  /* defined(_DCE_VOID_) */
 
-/* 
- * Here is a macro that can be used to support token concatenation in 
- * an ANSI and non-ANSI environment.  Support of non-ANSI environments 
+/*
+ * Here is a macro that can be used to support token concatenation in
+ * an ANSI and non-ANSI environment.  Support of non-ANSI environments
  * is not required, but where done, this macro must be used.
  */
 #if defined(__STDC__)
@@ -105,20 +134,20 @@ extern const char *dceshared_path;
 /* If DCE_DEBUG is defined then debugging code is activated. */
 /* #define DCE_DEBUG */
 
-/* 
+/*
  * Machine dependent typedefs for boolean, byte, and (un)signed integers.
  * All DCE code should be using these typedefs where applicable.
  * The following are defined in nbase.h:
  *     unsigned8       unsigned  8 bit integer
  *     unsigned16      unsigned 16 bit integer
  *     unsigned32      unsigned 32 bit integer
- *     signed8           signed  8 bit integer       
+ *     signed8           signed  8 bit integer
  *     signed16          signed 16 bit integer
  *     signed32          signed 32 bit integer
- * Define the following from idl types in idlbase.h (which is included 
+ * Define the following from idl types in idlbase.h (which is included
  * by nbase.h:
  *     byte            unsigned  8 bits
- *     boolean         unsigned  8 bits   
+ *     boolean         unsigned  8 bits
  * Define (un)signed64 to be used with the U64* macros
  */
 #include <dce/nbase.h>
@@ -146,8 +175,8 @@ typedef struct unsigned128_s_t {
     unsigned long hihi;
 } unsigned128;
 
-/* 
- * Serviceability and perhaps other DCE-wide include files 
+/*
+ * Serviceability and perhaps other DCE-wide include files
  * will be included here.  This is a sample only.
  */
 #if 0

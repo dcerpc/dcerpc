@@ -1,35 +1,53 @@
 /*
- * Copyright (c) 2008, Likewise Software, Inc.
- * All rights reserved.
- */
-
-/*
- * Copyright (c) 2007, Novell, Inc.
- * All rights reserved.
- * 
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the Novell, Inc. nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
+ * To anyone who acknowledges that this file is provided "AS IS"
+ * without any express or implied warranty:
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
 
 #include <config.h>
@@ -74,7 +92,6 @@
  * would be a Bad Idea.
  */
 
-
 /* !!! HACK !!!
  *
  * Certain versions of SPARC Solaris 10 have a regression in the behavior of pthread_atfork()
@@ -112,15 +129,15 @@ static void
 __dcethread_pre_fork(void)
 {
     unsigned int i;
-    
+
     pthread_rwlock_rdlock(&atfork_lock);
-    
+
     for (i = 0; i < atfork_handlers_len; i++)
     {
 	if (atfork_handlers[i].pre_fork)
 	    atfork_handlers[i].pre_fork(atfork_handlers[i].user_state);
     }
-    
+
     pthread_rwlock_unlock(&atfork_lock);
 }
 
@@ -130,13 +147,13 @@ __dcethread_parent_fork(void)
     unsigned int i;
 
     pthread_rwlock_rdlock(&atfork_lock);
-    
+
     for (i = 0; i < atfork_handlers_len; i++)
     {
 	if (atfork_handlers[i].parent_fork)
 	    atfork_handlers[i].parent_fork(atfork_handlers[i].user_state);
     }
-    
+
     pthread_rwlock_unlock(&atfork_lock);
 }
 
@@ -146,13 +163,13 @@ __dcethread_child_fork(void)
     unsigned int i;
 
     pthread_rwlock_rdlock(&atfork_lock);
-    
+
     for (i = 0; i < atfork_handlers_len; i++)
     {
 	if (atfork_handlers[i].child_fork)
 	    atfork_handlers[i].child_fork(atfork_handlers[i].user_state);
     }
-    
+
     pthread_rwlock_unlock(&atfork_lock);
 }
 
@@ -179,23 +196,23 @@ int
 dcethread_atfork(void *user_state, void (*pre_fork)(void *), void (*parent_fork)(void *), void (*child_fork)(void *))
 {
     dcethread_atfork_handler handler;
-    
+
     dcethread_atfork_init();
 
     pthread_rwlock_wrlock(&atfork_lock);
-    
+
     if (atfork_handlers_len >= ATFORK_MAX_HANDLERS)
     {
 	pthread_rwlock_unlock(&atfork_lock);
 	return dcethread__set_errno(ENOMEM);
     }
-    
+
     /* Fill in struct */
     handler.user_state = user_state;
     handler.pre_fork = pre_fork;
     handler.child_fork = child_fork;
     handler.parent_fork = parent_fork;
-    
+
 #ifndef AVOID_PTHREAD_ATFORK
     /* If no handlers have been registered yet, register our proxy functions exactly once with the
        real pthread_atfork */
@@ -207,13 +224,13 @@ dcethread_atfork(void *user_state, void (*pre_fork)(void *), void (*parent_fork)
 	    return -1;
 	}
     }
-#endif    
+#endif
 
     /* Add handler to array */
     atfork_handlers[atfork_handlers_len++] = handler;
-	
+
     pthread_rwlock_unlock(&atfork_lock);
-    
+
     return dcethread__set_errno(0);
 }
 
@@ -270,7 +287,7 @@ pre_handler(void *_data)
 {
     MU_TRACE("Fork pre handler active in thread %p", dcethread_self());
     ((struct called_s*) _data)->pre = 1;
-} 
+}
 
 static void
 parent_handler(void *_data)
@@ -283,8 +300,7 @@ static void
 child_handler(void *_data)
 {
     ((struct called_s*) _data)->child = 1;
-}  
-
+}
 
 MU_TEST(dcethread_atfork, basic)
 {

@@ -1,26 +1,55 @@
 /*
- * 
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
  * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
  * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
  * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved.
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **      ndrui3.c
@@ -39,7 +68,6 @@
 #include <config.h>
 #endif
 
-
 #include <dce/idlddefs.h>
 #include <ndrui.h>
 #include <lsysdep.h>
@@ -53,7 +81,7 @@
 void rpc_ss_ndr_unmar_scalar
 (
     /* [in] */  idl_byte type_byte,
-    /* [in] */  rpc_void_p_t param_addr,  /* Address item is to be marshalled 
+    /* [in] */  rpc_void_p_t param_addr,  /* Address item is to be marshalled
                                                 into */
     IDL_msp_t IDL_msp
 )
@@ -205,7 +233,7 @@ void rpc_ss_ndr_unmar_bounded_scalar
 (
     /* [in] */  IDL_bound_pair_t *range_bounds,
     /* [in] */  idl_byte type_byte,
-    /* [in] */  rpc_void_p_t param_addr,  /* Address item is to be marshalled 
+    /* [in] */  rpc_void_p_t param_addr,  /* Address item is to be marshalled
                                                 into */
     IDL_msp_t IDL_msp
 )
@@ -426,7 +454,7 @@ static void rpc_ss_ndr_unmar_union_body
             IDL_DISCARD_LONG_FROM_VECTOR(arm_type_ptr);
                                        /* Properties byte and full array defn */
             IDL_GET_LONG_FROM_VECTOR(defn_index, arm_type_ptr);
-            rpc_ss_ndr_unmar_fixed_arr(defn_index, body_addr, 
+            rpc_ss_ndr_unmar_fixed_arr(defn_index, body_addr,
                                        0, IDL_msp);
             break;
         case IDL_DT_ENC_UNION:
@@ -456,7 +484,7 @@ static void rpc_ss_ndr_unmar_union_body
                            /* DT_VARYING, properties byte and full array defn */
             IDL_GET_LONG_FROM_VECTOR(defn_index, arm_type_ptr);
             rpc_ss_ndr_unmar_varying_arr(IDL_msp->IDL_type_vec + defn_index,
-                                         idl_false, body_addr, 
+                                         idl_false, body_addr,
                                          0, IDL_msp);
             break;
         case IDL_DT_VOID:
@@ -654,7 +682,7 @@ void rpc_ss_ndr_u_enc_union_or_ptees
     offset_vec_ptr = IDL_msp->IDL_offset_vec + offset_index + 1;
                                             /* + 1 to skip over union size */
     body_addr = (rpc_void_p_t)((idl_byte *)union_addr + *offset_vec_ptr);
-    
+
     if (pointees)
     {
         rpc_ss_ndr_unmar_union_ptees(defn_vec_ptr, switch_value, body_addr,
@@ -735,7 +763,7 @@ void rpc_ss_ndr_u_n_e_union_ptees
     if (struct_addr != NULL)
         rpc_ss_get_switch_from_data(switch_index, switch_type, struct_addr,
                                  struct_offset_vec_ptr, &switch_value, IDL_msp);
-    
+
     rpc_ss_ndr_unmar_union_ptees(defn_vec_ptr, switch_value, union_addr,
                                                                       IDL_msp);
 }
@@ -1029,7 +1057,7 @@ void rpc_ss_ndr_unmar_xmit_as
                                      array_dims,
                                      correl_bounds_list,
                                      correl_range_list,
-                                     IDL_msp );    
+                                     IDL_msp );
 #else
             IDL_ADV_DEFN_PTR_OVER_BOUNDS(array_defn_ptr, array_dims);
             array_defn_ptr += array_dims * IDL_DATA_LIMIT_PAIR_WIDTH;
@@ -1107,7 +1135,7 @@ void rpc_ss_ndr_unmar_xmit_as
             array_defn_ptr = IDL_msp->IDL_type_vec + array_defn_index;
             array_dims = (idl_ulong_int)*array_defn_ptr;
             array_defn_ptr++;
-            array_defn_ptr += array_dims * (IDL_FIXED_BOUND_PAIR_WIDTH 
+            array_defn_ptr += array_dims * (IDL_FIXED_BOUND_PAIR_WIDTH
                                                 + IDL_DATA_LIMIT_PAIR_WIDTH);
             /* Now array_defn_ptr points at base type, drop through to
                     open array case */
@@ -1259,7 +1287,7 @@ void rpc_ss_ndr_u_v1_varying_arr
         {
             rpc_ss_ndr_arr_align_and_opt( IDL_unmarshalling_k, 1, &base_type,
                              array_defn_ptr, &unmarshall_by_copying, IDL_msp );
-            if ( rpc_ss_bug_1_thru_31(IDL_BUG_1, IDL_msp) 
+            if ( rpc_ss_bug_1_thru_31(IDL_BUG_1, IDL_msp)
                         && ( (base_type == IDL_DT_FIXED_STRUCT)
                                 || (base_type == IDL_DT_ENC_UNION)
                                 || (base_type == IDL_DT_TRANSMIT_AS) ) )
@@ -1300,4 +1328,3 @@ void rpc_ss_ndr_unmar_v1_string
     rpc_ss_ndr_u_fix_or_conf_arr( 1, &pseudo_Z_value, &dummy_defn_vec,
                                     param_addr, flags, IDL_msp );
 }
-

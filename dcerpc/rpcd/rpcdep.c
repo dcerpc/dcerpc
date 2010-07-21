@@ -1,25 +1,55 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **  NAME:
@@ -51,14 +81,12 @@
 
 #include <twrp.h>
 
-
-
 /* ====================================================================== */
 /*
  * DCE 1.0 ept_ manager routines.
  */
 
-GLOBAL ept_v3_0_epv_t ept_v3_0_mgr_epv = 
+GLOBAL ept_v3_0_epv_t ept_v3_0_mgr_epv =
 {
     ept_insert,
     ept_delete,
@@ -160,9 +188,9 @@ INTERNAL int is_unpriv_handle( handle_t h, error_status_t *st )
         }
 
         addr_count = bv->count;
-        local_netaddr = (unsigned_char_p_t *) malloc( 
+        local_netaddr = (unsigned_char_p_t *) malloc(
                         (size_t) (addr_count * sizeof(unsigned_char_p_t)));
-        if (local_netaddr == NULL) 
+        if (local_netaddr == NULL)
         {
             rpc_string_free(&client_netaddr,&status1);
             rpc_binding_vector_free(&bv,&status1);
@@ -170,7 +198,7 @@ INTERNAL int is_unpriv_handle( handle_t h, error_status_t *st )
             return(1);
         }
 
-        for ( i=0; i < bv->count; i++ ) 
+        for ( i=0; i < bv->count; i++ )
         {
             rpc_binding_to_string_binding(bv->binding_h[i],&stb,&status);
             if (! STATUS_OK(&status))
@@ -295,7 +323,7 @@ PRIVATE void ept_insert(
 	error_status_t      *status)
 {
     epdb_handle_t   epdb;
-    ept_entry_t     *entp; 
+    ept_entry_t     *entp;
     unsigned32             i;
     error_status_t  tmp_st;
 
@@ -327,7 +355,7 @@ PRIVATE void ept_insert(
         epdb_insert(epdb, entp, replace, status);
         if (! STATUS_OK(status))
         {
-            if (dflag) 
+            if (dflag)
                 show_st("ept_insert  Unable to update endpoint database", status);
 
             ept_delete(h, i, entries, &tmp_st);
@@ -344,7 +372,7 @@ PRIVATE void ept_delete(
 
 {
     epdb_handle_t   epdb;
-    ept_entry_t     *entp; 
+    ept_entry_t     *entp;
     unsigned32             i;
     error_status_t  tmp_st;
 
@@ -366,7 +394,7 @@ PRIVATE void ept_delete(
         epdb_delete(epdb, entp, status);
         if (! STATUS_OK(status))
         {
-            if (dflag) 
+            if (dflag)
                 show_st("ept_delete  Unable to update endpoint database", status);
             return;
         }
@@ -397,7 +425,7 @@ PRIVATE void ept_lookup(
                max_ents, num_ents, entries, status);
 
     if (dflag)
-        printf("ept_lookup  entry_handle %p  *entry_handle %p  *num_ents %lu\n", 
+        printf("ept_lookup  entry_handle %p  *entry_handle %p  *num_ents %lu\n",
                entry_handle, *entry_handle, (unsigned long) *num_ents);
 }
 
@@ -425,22 +453,22 @@ PRIVATE void ept_map(
 #ifdef RPC_LLB
     if ((*status == ept_s_not_registered) ||
         (*status == ept_s_invalid_context) ||
-    /*  
+    /*
      * If finished with ept dbase, search llb dbase
      */
-        ((*status == rpc_s_ok) && 
+        ((*status == rpc_s_ok) &&
          ((*num_towers < max_towers) ||
           ((entry_handle != NULL) && (*entry_handle == NULL)) )) )
     {
         h = lbdb_inq_handle();
         lbdb_map(h, object, map_tower, entry_handle,
                max_towers, num_towers, towers, status);
-                        
+
     }
 #endif
 
     if (dflag)
-        printf("ept_map  entry_handle %p  *entry_handle %p  *num_towers %lu\n", 
+        printf("ept_map  entry_handle %p  *entry_handle %p  *num_towers %lu\n",
                entry_handle, *entry_handle, (unsigned long) *num_towers);
 }
 
@@ -505,4 +533,3 @@ PRIVATE void ept_lookup_handle_t_rundown(
     epdb = epdb_inq_handle();
     epdb_delete_lookup_handle(epdb,  &entry_handle);
 }
-

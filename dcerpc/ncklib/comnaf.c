@@ -1,24 +1,55 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
+
 /*
  */
 /*
@@ -29,7 +60,7 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
@@ -59,7 +90,7 @@
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Dispatch to a Network Address Family Service to create an RPC Address.
 **
 **  INPUTS:
@@ -69,13 +100,13 @@
 **
 **      naf_id          The NAF ID of the RPC Address
 **
-**      endpoint        The string containing the endpoint to be placed 
+**      endpoint        The string containing the endpoint to be placed
 **                      in the RPC Address
 **
 **      netaddr         The string containing the network address to be
 **                      placed in the RPC Address
 **
-**      network_options A vector of network options tag and value strings 
+**      network_options A vector of network options tag and value strings
 **                      to be placed in the RPC Address
 **
 **  INPUTS/OUTPUTS:     none
@@ -100,7 +131,7 @@
 **--
 **/
 
-PRIVATE void rpc__naf_addr_alloc 
+PRIVATE void rpc__naf_addr_alloc
 (
     rpc_protseq_id_t        protseq_id,
     rpc_naf_id_t            naf_id,
@@ -131,7 +162,7 @@ PRIVATE void rpc__naf_addr_alloc
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Dispatch to a Network Address Family Service to free an RPC Address.
 **
 **  INPUTS:             none
@@ -158,7 +189,7 @@ PRIVATE void rpc__naf_addr_alloc
 **--
 **/
 
-PRIVATE void rpc__naf_addr_free 
+PRIVATE void rpc__naf_addr_free
 (
     rpc_addr_p_t            *rpc_addr,
     unsigned32              *status
@@ -175,7 +206,6 @@ PRIVATE void rpc__naf_addr_free
     RPC_LOG_NAF_ADDR_FREE_XIT;
 }
 
-
 /*
 **++
 **
@@ -184,10 +214,10 @@ PRIVATE void rpc__naf_addr_free
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Dispatch to a Network Address Family Service to free a vector of
 **  RPC Addresses.  Each address and the vector itself are freed.
-**  
+**
 **  Note that we ignore NULL entries in the vector.  This is to make
 **  it easy for recipients of a vector to "steal" the pointers to RPC
 **  Addresses and put them in some other data structure.  After the
@@ -214,7 +244,7 @@ PRIVATE void rpc__naf_addr_free
 **--
 **/
 
-PRIVATE void rpc__naf_addr_vector_free 
+PRIVATE void rpc__naf_addr_vector_free
 (
     rpc_addr_vector_p_t     *rpc_addr_vec,
     unsigned32              *status
@@ -248,7 +278,7 @@ PRIVATE void rpc__naf_addr_vector_free
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Dispatch to a Network Address Family Service to copy an RPC Address.
 **
 **  INPUTS:
@@ -278,7 +308,7 @@ PRIVATE void rpc__naf_addr_vector_free
 **--
 **/
 
-PRIVATE void rpc__naf_addr_copy 
+PRIVATE void rpc__naf_addr_copy
 (
     rpc_addr_p_t            src_rpc_addr,
     rpc_addr_p_t            *dst_rpc_addr,
@@ -304,8 +334,8 @@ PRIVATE void rpc__naf_addr_copy
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
-**  Like rpc__naf_addr_copy, except uses storage from an existing target 
+**
+**  Like rpc__naf_addr_copy, except uses storage from an existing target
 **  address, if there is one (thus saving the malloc).
 **
 **  INPUTS:
@@ -335,7 +365,7 @@ PRIVATE void rpc__naf_addr_copy
 **--
 **/
 
-PRIVATE void rpc__naf_addr_overcopy 
+PRIVATE void rpc__naf_addr_overcopy
 (
     rpc_addr_p_t            src_rpc_addr,
     rpc_addr_p_t            *dst_rpc_addr,
@@ -373,13 +403,13 @@ PRIVATE void rpc__naf_addr_overcopy
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Dispatch to a Network Address Family Service to set the endpoint in
 **  an RPC Address.
 **
 **  INPUTS:
 **
-**      endpoint        The string containing the endpoint to be placed 
+**      endpoint        The string containing the endpoint to be placed
 **                      in the RPC Address
 **
 **  INPUTS/OUTPUTS:
@@ -404,7 +434,7 @@ PRIVATE void rpc__naf_addr_overcopy
 **--
 **/
 
-PRIVATE void rpc__naf_addr_set_endpoint 
+PRIVATE void rpc__naf_addr_set_endpoint
 (
     unsigned_char_p_t       endpoint,
     rpc_addr_p_t            *rpc_addr,
@@ -426,7 +456,7 @@ PRIVATE void rpc__naf_addr_set_endpoint
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Dispatch to a Network Address Family Service to inquire the endpoint
 **  in an RPC Address.
 **
@@ -457,7 +487,7 @@ PRIVATE void rpc__naf_addr_set_endpoint
 **--
 **/
 
-PRIVATE void rpc__naf_addr_inq_endpoint 
+PRIVATE void rpc__naf_addr_inq_endpoint
 (
     rpc_addr_p_t            rpc_addr,
     unsigned_char_t         **endpoint,
@@ -479,7 +509,7 @@ PRIVATE void rpc__naf_addr_inq_endpoint
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Dispatch to a Network Address Family Service to set the network address
 **  in an RPC Address.
 **
@@ -510,7 +540,7 @@ PRIVATE void rpc__naf_addr_inq_endpoint
 **--
 **/
 
-PRIVATE void rpc__naf_addr_set_netaddr 
+PRIVATE void rpc__naf_addr_set_netaddr
 (
     unsigned_char_p_t       netaddr,
     rpc_addr_p_t            *rpc_addr,
@@ -532,7 +562,7 @@ PRIVATE void rpc__naf_addr_set_netaddr
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Dispatch to a Network Address Family Service to obtain the network
 **  address from an RPC Address.
 **
@@ -585,13 +615,13 @@ PRIVATE void rpc__naf_addr_inq_netaddr
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Dispatch to a Network Address Family Service to set the network options
 **  in an RPC Address.
 **
 **  INPUTS:
 **
-**      network_options A network options string 
+**      network_options A network options string
 **
 **  INPUTS/OUTPUTS:
 **
@@ -637,7 +667,7 @@ PRIVATE void rpc__naf_addr_set_options
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Dispatch to a Network Address Family Service to obtain the network
 **  options from an RPC Address.
 **
@@ -689,7 +719,7 @@ PRIVATE void rpc__naf_addr_inq_options
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Dispatch to a Network Address Family Service to return a vector
 **  of RPC Addresses that reflect all the local network addresses
 **  the supplied socket descriptor will listen on.  The endpoints
@@ -734,7 +764,7 @@ PRIVATE void rpc__naf_desc_inq_addr
     unsigned32              *status
 )
 {
-    rpc_naf_id_t naf_id;                                     
+    rpc_naf_id_t naf_id;
 
     naf_id = RPC_PROTSEQ_INQ_NAF_ID(protseq_id);
 
@@ -798,10 +828,10 @@ PRIVATE void rpc__naf_desc_inq_network
     /*
      * Determine the network address family.
      */
-     
+
     rpc__naf_desc_inq_naf_id (desc, naf_id, status);
     if (*status != rpc_s_ok) return;
-    
+
     /*
      * Vector to the appropriate NAF routine to ascertain the
      * rest of the network information for this descriptor.
@@ -855,7 +885,7 @@ PRIVATE void rpc__naf_desc_inq_network
 **--
 **/
 
-PRIVATE void rpc__naf_desc_inq_naf_id 
+PRIVATE void rpc__naf_desc_inq_naf_id
 (
     rpc_socket_t              desc,
     rpc_naf_id_t              *naf_id,
@@ -882,7 +912,7 @@ PRIVATE void rpc__naf_desc_inq_naf_id
 #else
     addr->len = (long) (&(addr->sa.data) - &(addr->sa));
 #endif /* AIX32 */
-    
+
     addr->sa.family = 0;
     serr = rpc__socket_inq_endpoint (desc, addr);
 
@@ -891,11 +921,11 @@ PRIVATE void rpc__naf_desc_inq_naf_id
         *status = rpc_s_cant_inq_socket;
         goto error;
     }
-    
+
     /* On some systems, getsockname fails silently on UNIX
        domain sockets.  This has been seen on HP-UX, Darwin, and AIX.
        Detect this case and try getpeername instead */
-    if (addr->sa.family == 0)   
+    if (addr->sa.family == 0)
     {
         serr = rpc__socket_getpeername (desc, addr);
 
@@ -960,7 +990,7 @@ error:
 **--
 **/
 
-PRIVATE void rpc__naf_desc_inq_protseq_id 
+PRIVATE void rpc__naf_desc_inq_protseq_id
 (
     rpc_socket_t              desc,
     rpc_network_protocol_id_t protocol_id,
@@ -971,20 +1001,20 @@ PRIVATE void rpc__naf_desc_inq_protseq_id
     rpc_protseq_id_t         i;           /* index into protseq table */
     rpc_naf_id_t             naf_id;      /* naf id returned to us */
     rpc_network_if_id_t      socket_type; /* network protocol type */
-    
+
     CODING_ERROR (status);
 
     /*
      * Determine the correct network address family.
      */
-     
+
     rpc__naf_desc_inq_naf_id (desc, &naf_id, status);
     if (*status != rpc_s_ok) return;
 
     /*
      * Determine the rest of the network stuff.
      */
-     
+
     rpc__naf_desc_inq_network
         (desc, &naf_id, &socket_type, &protocol_id, status);
     if (*status != rpc_s_ok) return;
@@ -1059,7 +1089,7 @@ PRIVATE void rpc__naf_desc_inq_protseq_id
 **--
 **/
 
-PRIVATE void rpc__naf_desc_inq_peer_addr 
+PRIVATE void rpc__naf_desc_inq_peer_addr
 (
     rpc_socket_t             desc,
     rpc_protseq_id_t         protseq_id,
@@ -1067,7 +1097,7 @@ PRIVATE void rpc__naf_desc_inq_peer_addr
     unsigned32              *status
 )
 {
-    rpc_naf_id_t naf_id;                                     
+    rpc_naf_id_t naf_id;
 
     naf_id = RPC_PROTSEQ_INQ_NAF_ID(protseq_id);
 
@@ -1087,7 +1117,7 @@ PRIVATE void rpc__naf_desc_inq_peer_addr
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Dispatch to a Network Address Family Service to find out the size
 **  of the largest possible transport service data unit (TSDU); i.e.,
 **  the size of the largest transport protocol data unit (TPDU) that
@@ -1119,14 +1149,14 @@ PRIVATE void rpc__naf_desc_inq_peer_addr
 **--
 **/
 
-PRIVATE void rpc__naf_inq_max_tsdu 
+PRIVATE void rpc__naf_inq_max_tsdu
 (
     rpc_protseq_id_t pseq_id,
     unsigned32 *max_tsdu,
     unsigned32     *status
 )
 {
-    rpc_naf_id_t naf_id;                                     
+    rpc_naf_id_t naf_id;
     rpc_network_if_id_t iftype;
     rpc_network_protocol_id_t protocol;
 
@@ -1150,13 +1180,13 @@ PRIVATE void rpc__naf_inq_max_tsdu
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Dispatch to a Network Address Family Service to find out the size
 **  of the largest transport protocol data unit (TPDU) that can be sent
 **  to a particular address without being fragmented along the way.
 **
 **  INPUTS:
-**   
+**
 **      rpc_addr        The address that forms the path of interest
 **
 **  INPUTS/OUTPUTS:
@@ -1180,7 +1210,7 @@ PRIVATE void rpc__naf_inq_max_tsdu
 **--
 **/
 
-PRIVATE void rpc__naf_inq_max_pth_unfrg_tpdu 
+PRIVATE void rpc__naf_inq_max_pth_unfrg_tpdu
 (
     rpc_addr_p_t rpc_addr,
     unsigned32 *max_tpdu,
@@ -1191,7 +1221,7 @@ PRIVATE void rpc__naf_inq_max_pth_unfrg_tpdu
      * dispatch to the appropriate NAF service
      */
     (*rpc_g_naf_id[rpc_addr->sa.family].epv->naf_inq_max_pth_unfrg_tpdu)
-        (rpc_addr, RPC_PROTSEQ_INQ_NET_IF_ID(rpc_addr->rpc_protseq_id), 
+        (rpc_addr, RPC_PROTSEQ_INQ_NET_IF_ID(rpc_addr->rpc_protseq_id),
         RPC_PROTSEQ_INQ_NET_PROT_ID(rpc_addr->rpc_protseq_id), max_tpdu, status);
 }
 
@@ -1204,7 +1234,7 @@ PRIVATE void rpc__naf_inq_max_pth_unfrg_tpdu
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Dispatch to a Network Address Family Service to find out the
 **  size of the largest transport protocol data unit (TPDU) that can
 **  fit (without fragmentation) through the "widest" network interface
@@ -1235,14 +1265,14 @@ PRIVATE void rpc__naf_inq_max_pth_unfrg_tpdu
 **--
 **/
 
-PRIVATE void rpc__naf_inq_max_loc_unfrg_tpdu 
+PRIVATE void rpc__naf_inq_max_loc_unfrg_tpdu
 (
     rpc_protseq_id_t pseq_id,
     unsigned32 *max_tpdu,
     unsigned32     *status
 )
 {
-    rpc_naf_id_t naf_id;                                     
+    rpc_naf_id_t naf_id;
     rpc_network_if_id_t iftype;
     rpc_network_protocol_id_t protocol;
 
@@ -1266,14 +1296,14 @@ PRIVATE void rpc__naf_inq_max_loc_unfrg_tpdu
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Dispatch to a Network Address Family Service to find out what the maximum
 **  transport protocol data unit size is for that address family.
 **
 **  INPUTS:
 **
 **      naf_id          The Netork Address Family we're interested in.
-**      prot_seq        The protocol sequence 
+**      prot_seq        The protocol sequence
 **
 **  INPUTS/OUTPUTS:
 **
@@ -1298,12 +1328,12 @@ PRIVATE void rpc__naf_inq_max_loc_unfrg_tpdu
 **--
 **/
 
-PRIVATE void rpc__naf_get_broadcast 
+PRIVATE void rpc__naf_get_broadcast
 (
     rpc_naf_id_t            naf_id,
     rpc_protseq_id_t        protseq_id,
     rpc_addr_vector_p_t     *rpc_addrs,
-     unsigned32 	    *status 
+     unsigned32 	    *status
 )
 {
     /*
@@ -1322,7 +1352,7 @@ PRIVATE void rpc__naf_get_broadcast
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Dispatch to a Network Address Family Service to determine if the two
 **  input addresses are equal.
 **
@@ -1351,13 +1381,13 @@ PRIVATE void rpc__naf_get_broadcast
 **--
 **/
 
-PRIVATE boolean rpc__naf_addr_compare 
+PRIVATE boolean rpc__naf_addr_compare
 (
     rpc_addr_p_t            addr1,
     rpc_addr_p_t            addr2,
     unsigned32              *status
 )
-{   
+{
     /*
      * Handle NULL pointers here.
      */
@@ -1387,7 +1417,7 @@ PRIVATE boolean rpc__naf_addr_compare
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Dispatch to a Network Address Family Service to set the option
 **  for the transport which will result in the transport "pushing" onto
 **  the network everything it is given as it is given.
@@ -1420,13 +1450,13 @@ PRIVATE boolean rpc__naf_addr_compare
 **--
 **/
 
-PRIVATE void rpc__naf_set_pkt_nodelay 
+PRIVATE void rpc__naf_set_pkt_nodelay
 (
     rpc_socket_t            desc,
     rpc_addr_p_t            rpc_addr,
     unsigned32              *status
 )
-{   
+{
     rpc_naf_id_t            naf_id;
 
     /*
@@ -1454,7 +1484,7 @@ PRIVATE void rpc__naf_set_pkt_nodelay
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Dispatch to a Network Address Family Service to determine
 **  whether the connection represented by the network descriptor given
 **  is closed.
@@ -1468,7 +1498,7 @@ PRIVATE void rpc__naf_set_pkt_nodelay
 **
 **      none
 **
-**  OUTPUTS:           
+**  OUTPUTS:
 **
 **      status          A value indicating the return status of the routine
 **
@@ -1476,7 +1506,7 @@ PRIVATE void rpc__naf_set_pkt_nodelay
 **
 **  IMPLICIT OUTPUTS:   none
 **
-**  FUNCTION VALUE:     
+**  FUNCTION VALUE:
 **
 **      boolean         true if the connection is closed, false otherwise.
 **
@@ -1485,12 +1515,12 @@ PRIVATE void rpc__naf_set_pkt_nodelay
 **--
 **/
 
-PRIVATE boolean rpc__naf_is_connect_closed 
+PRIVATE boolean rpc__naf_is_connect_closed
 (
     rpc_socket_t            desc,
     unsigned32              *status
 )
-{   
+{
     rpc_naf_id_t            naf_id;
 
     /*
@@ -1510,7 +1540,7 @@ PRIVATE boolean rpc__naf_is_connect_closed
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Create an RPC addr from a aockaddr.
 **
 **  INPUTS:
@@ -1539,7 +1569,7 @@ PRIVATE boolean rpc__naf_is_connect_closed
 **--
 **/
 
-PRIVATE void rpc__naf_addr_from_sa 
+PRIVATE void rpc__naf_addr_from_sa
 (
     sockaddr_p_t     sockaddr,
     unsigned32       sockaddr_len,
@@ -1578,8 +1608,8 @@ PRIVATE void rpc__naf_addr_from_sa
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
-**  Dispatch to a Network Address Family Service to create lower tower 
+**
+**  Dispatch to a Network Address Family Service to create lower tower
 **  floors from an RPC addr.
 **
 **  INPUTS:
@@ -1606,7 +1636,7 @@ PRIVATE void rpc__naf_addr_from_sa
 **--
 **/
 
-PRIVATE void rpc__naf_tower_flrs_from_addr 
+PRIVATE void rpc__naf_tower_flrs_from_addr
 (
     rpc_addr_p_t       rpc_addr,
     twr_p_t            *lower_flrs,
@@ -1630,7 +1660,7 @@ PRIVATE void rpc__naf_tower_flrs_from_addr
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Dispatch to a Network Address Family Service to create an RPC addr
 **  from a protocol tower.
 **
@@ -1660,7 +1690,7 @@ PRIVATE void rpc__naf_tower_flrs_from_addr
 **--
 **/
 
-PRIVATE void rpc__naf_tower_flrs_to_addr 
+PRIVATE void rpc__naf_tower_flrs_to_addr
 (
   byte_p_t           tower_octet_string,
   rpc_addr_p_t       *rpc_addr,
@@ -1683,7 +1713,7 @@ PRIVATE void rpc__naf_tower_flrs_to_addr
 
     /*
      * Need a tower_ref_t in order to determine the protocol sequence for
-     * this tower. 
+     * this tower.
      */
 
     /*
@@ -1698,13 +1728,13 @@ PRIVATE void rpc__naf_tower_flrs_to_addr
     }
 
     /*
-     * Allocate a tower_ref_t, with flr_count floors and 
+     * Allocate a tower_ref_t, with flr_count floors and
      * initialize the tower ref with the tower_octet_string. We are in
      * the import path here, we must have a complete tower. So start at
      * floor 1.
      * beginning at floor 1.
      */
-    rpc__tower_ref_alloc (tower_octet_string, (unsigned32) flr_count, 1, 
+    rpc__tower_ref_alloc (tower_octet_string, (unsigned32) flr_count, 1,
         &tower_ref, status);
 
     if (*status != rpc_s_ok)
@@ -1755,7 +1785,7 @@ PRIVATE void rpc__naf_tower_flrs_to_addr
         return;
     }
 
-    /* 
+    /*
      * Set the protocol sequence id into the RPC addr.
      */
     (*rpc_addr)->rpc_protseq_id = protseq_id;
@@ -1774,22 +1804,22 @@ PRIVATE void rpc__naf_tower_flrs_to_addr
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Dispatch to a Network Address Family Service to set a protocol
 **  sequence's port restriction structure.
-**  
+**
 **
 **  INPUTS:
 **
 **      protseq_id
 **                      The protocol sequence id to set port restriction
-**                      on. 
+**                      on.
 **      n_elements
 **                      The number of port ranges passed in.
 **
 **      first_port_name_list
 **                      An array of pointers to strings containing the
-**                      lower bound port names. 
+**                      lower bound port names.
 **
 **      last_port_name_list
 **                      An array of pointers to strings containing the
@@ -1807,34 +1837,34 @@ PRIVATE void rpc__naf_tower_flrs_to_addr
 **
 **  FUNCTION VALUE:     void
 **
-**  SIDE EFFECTS:       
+**  SIDE EFFECTS:
 **
 **--
 **/
 
-PRIVATE void rpc__naf_set_port_restriction 
+PRIVATE void rpc__naf_set_port_restriction
 (
      rpc_protseq_id_t            protseq_id,
      unsigned32                  n_elements,
      unsigned_char_p_t           *first_port_name_list,
      unsigned_char_p_t           *last_port_name_list,
      unsigned32                  *status
-)               
+)
 {
 
     rpc_naf_id_t        naf_id;
 
-    /* 
+    /*
      * Dispatch to appropriate NAF service.
      */
 
     naf_id = RPC_PROTSEQ_INQ_NAF_ID (protseq_id);
 
-    (*rpc_g_naf_id[naf_id].epv->naf_set_port_restriction) 
+    (*rpc_g_naf_id[naf_id].epv->naf_set_port_restriction)
         (protseq_id,
-         n_elements,            
-         first_port_name_list, 
-         last_port_name_list,  
+         n_elements,
+         first_port_name_list,
+         last_port_name_list,
          status);
 }                                       /* rpc__naf_set_port_restriction */
 
@@ -1847,8 +1877,8 @@ PRIVATE void rpc__naf_set_port_restriction
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
-**  Provides the next restricted port to try to bind to.  
+**
+**  Provides the next restricted port to try to bind to.
 **
 **  INPUTS:
 **
@@ -1861,7 +1891,7 @@ PRIVATE void rpc__naf_set_port_restriction
 **  OUTPUTS:
 **
 **      port_name
-**                      A pointer to an address-family-specific port name.  
+**                      A pointer to an address-family-specific port name.
 **
 **      status
 **
@@ -1886,15 +1916,15 @@ PRIVATE void rpc__naf_get_next_restricted_port
 
     rpc_naf_id_t        naf_id;
 
-    /* 
+    /*
      * Dispatch to appropriate NAF service.
      */
 
     naf_id = RPC_PROTSEQ_INQ_NAF_ID (protseq_id);
 
-    (*rpc_g_naf_id[naf_id].epv->naf_get_next_restricted_port) 
+    (*rpc_g_naf_id[naf_id].epv->naf_get_next_restricted_port)
         (protseq_id, port_name, status);
-    
+
 }                                       /* rpc__naf_get_next_restricted_port */
 
 
@@ -1906,7 +1936,7 @@ PRIVATE void rpc__naf_get_next_restricted_port
 **  SCOPE:              PRIVATE - declared in com.h
 **
 **  DESCRIPTION:
-**      
+**
 **  Dispatch to a Network Address Family Service to find out the size
 **  of the largest fragment size that can be sent to a particular
 **  address

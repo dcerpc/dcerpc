@@ -1,10 +1,55 @@
 /*
- * echo_client  : demo DCE RPC application
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
  *
- * Jim Doyle, jrd@bu.edu, 09-05-1998
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
+ * To anyone who acknowledges that this file is provided "AS IS"
+ * without any express or implied warranty:
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
  *
  *
+ * @APPLE_LICENSE_HEADER_END@
  */
+
 #if HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -50,7 +95,7 @@ static void usage(void)
 int main(int argc, char *argv[])
 {
 
-  /* 
+  /*
    * command line processing and options stuff
    */
 
@@ -73,11 +118,11 @@ int main(int argc, char *argv[])
   int ok;
   unsigned32 in_num = 5;
   unsigned32 out_num;
-  
+
   /*
    * Process the cmd line args
    */
-  
+
     while ((c = getopt(argc, (char * const *)argv, "h:utvi:")) != EOF)
     {
       switch (c)
@@ -104,7 +149,7 @@ int main(int argc, char *argv[])
 
   if (!use_tcp && !use_udp) use_tcp=1;
 
-  if (use_udp) 
+  if (use_udp)
     protocol = "udp";
   else
     protocol = "tcp";
@@ -117,15 +162,14 @@ int main(int argc, char *argv[])
    *  3. the desired transport protocol (UDP or TCP)
    */
 
-  if (get_client_rpc_binding(&echo_server, 
-		      rpc_host, 
-		      echon_v1_0_c_ifspec, 
+  if (get_client_rpc_binding(&echo_server,
+		      rpc_host,
+		      echon_v1_0_c_ifspec,
 		      protocol) == 0)
     {
       printf ("Couldnt obtain RPC server binding. exiting.\n");
       exit(1);
     }
-
 
   /*
    * Do the RPC call
@@ -155,7 +199,7 @@ int main(int argc, char *argv[])
 
   rpc_binding_free(&echo_server, &status);
   exit(0);
-  
+
 }
 
 /*==========================================================================
@@ -196,14 +240,12 @@ get_client_rpc_binding(
    *  The binding handle resolution is handled by the runtime library
    */
 
-
   if (strcmp(protocol, "udp")==0)
     protocol_family = "ncadg_ip_udp";
   else
     protocol_family = "ncacn_ip_tcp";
 
-
-  sprintf(partial_string_binding, "%s:%s[]", 
+  sprintf(partial_string_binding, "%s:%s[]",
 	  protocol_family,
 	  hostname);
 
@@ -211,7 +253,7 @@ get_client_rpc_binding(
 				  binding_handle,
 				  &status);
       chk_dce_err(status, "string2binding()", "get_client_rpc_binding", 1);
-  
+
   /*
    * Resolve the partial binding handle using the endpoint mapper
    */
@@ -232,7 +274,6 @@ get_client_rpc_binding(
         chk_dce_err(status, "binding2string()", "get_client_rpc_binding", 1);
 
   printf("fully resolving binding for server is: %s\n", resolved_binding);
-
 
   return 1;
 }

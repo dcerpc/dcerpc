@@ -1,28 +1,61 @@
 #!/bin/sh
 #
-# 
-# (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
-# (c) Copyright 1989 HEWLETT-PACKARD COMPANY
-# (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+#
+# Copyright (c) 2010 Apple Inc. All rights reserved.
+#
+# @APPLE_LICENSE_HEADER_START@
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+# 1.  Redistributions of source code must retain the above copyright
+#     notice, this list of conditions and the following disclaimer.
+# 2.  Redistributions in binary form must reproduce the above copyright
+#     notice, this list of conditions and the following disclaimer in the
+#     documentation and/or other materials provided with the distribution.
+# 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+#     contributors may be used to endorse or promote products derived from
+#     this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+# EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+# DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+# THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Portions of this software have been released under the following terms:
+#
+# (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+# (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+# (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+# Portions Copyright (c) 2010 Apple Inc.
 # To anyone who acknowledges that this file is provided "AS IS"
 # without any express or implied warranty:
-#                 permission to use, copy, modify, and distribute this
-# file for any purpose is hereby granted without fee, provided that
-# the above copyright notices and this notice appears in all source
-# code copies, and that none of the names of Open Software
-# Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
-# Corporation be used in advertising or publicity pertaining to
-# distribution of the software without specific, written prior
-# permission.  Neither Open Software Foundation, Inc., Hewlett-
-# Packard Company, nor Digital Equipment Corporation makes any
-# representations about the suitability of this software for any
-# purpose.
-# 
+# permission to use, copy, modify, and distribute this file for any
+# purpose is hereby granted without fee, provided that the above
+# copyright notices and this notice appears in all source code copies,
+# and that none of the names of Open Software Foundation, Inc., Hewlett-
+# Packard Company, Apple Inc. or Digital Equipment Corporation be used
+# in advertising or publicity pertaining to distribution of the software
+# without specific, written prior permission.  Neither Open Software
+# Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+# Equipment Corporation makes any representations about the suitability
+# of this software for any purpose.
+#
+#
+# @APPLE_LICENSE_HEADER_END@
+#
 #
 
 #
 # Unix Bourne shell script for running perf client tests
-# The parameter passed in is a string binding.  
+# The parameter passed in is a string binding.
 
 # Usage:
 #           run_client.sh `string binding returned by server`
@@ -42,13 +75,13 @@ do
     case $ARG in
     -d)
         DEBUG="-d"
-        shift 
+        shift
         ;;
     -pc)
         PC=true
-        shift 
+        shift
         ;;
-    *) 
+    *)
         break
         ;;
     esac
@@ -58,9 +91,9 @@ echo "Testing against $1..."
 
 protocol=`expr "$1" : "\(.*\):"`
 
-${CLIENT} ${DEBUG} 0 $1 3 400 y n                # Null call  
+${CLIENT} ${DEBUG} 0 $1 3 400 y n                # Null call
 ${CLIENT} ${DEBUG} 0 $1 3 400 y y                # Null idempotent call
-${CLIENT} ${DEBUG} 1 $1 3 50 y n 3000            # Ins 
+${CLIENT} ${DEBUG} 1 $1 3 50 y n 3000            # Ins
 ${CLIENT} ${DEBUG} 1 $1 3 50 y y 3000            # Ins, idempotent
 ${CLIENT} ${DEBUG} 2 $1 3 50 y n 3000            # Outs
 ${CLIENT} ${DEBUG} 2 $1 3 50 y y 3000            # Outs idempotent

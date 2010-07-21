@@ -1,25 +1,55 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **  NAME
@@ -28,7 +58,7 @@
 **
 **  FACILITY:
 **
-**      Remote Procedure Call (RPC) 
+**      Remote Procedure Call (RPC)
 **
 **  ABSTRACT:
 **
@@ -72,11 +102,11 @@ unsigned32 socket_buf_size = 0;  /* os default */
 
 rpc_binding_vector_p_t bv;
 
-static struct 
+static struct
 {
     unsigned32      count;
     uuid_p_t        uuid[2];
-} object_vec = 
+} object_vec =
 {
     2,
     {
@@ -188,7 +218,7 @@ static int setup_thread_pools()
         return 0;
 
     rpc_server_create_thread_pool(2, &thread_poolh, &st);
-    if (st != error_status_ok) 
+    if (st != error_status_ok)
     {
         fprintf(stderr, "Cannot create thread pool - %s\n", error_text(st));
         return -1;
@@ -196,7 +226,7 @@ static int setup_thread_pools()
     pool_active = true;
 
     rpc_server_set_thread_pool_fn(thread_pool_fn, &st);
-    if (st != error_status_ok) 
+    if (st != error_status_ok)
     {
         fprintf(stderr, "Cannot set thread pool fn - %s\n", error_text(st));
         return 1;
@@ -228,7 +258,7 @@ idl_boolean wait_flg;
         return 0;
 
     rpc_server_set_thread_pool_fn(NULL, &st);
-    if (st != error_status_ok) 
+    if (st != error_status_ok)
     {
         fprintf(stderr, "Cannot thread pool fn NULL - %s\n", error_text(st));
         return 1;
@@ -238,7 +268,7 @@ idl_boolean wait_flg;
     {
         pool_active = false;
         rpc_server_free_thread_pool(&thread_poolh, wait_flg, &st);
-        if (st != error_status_ok) 
+        if (st != error_status_ok)
         {
             fprintf(stderr, "Cannot free thread pool - %s\n", error_text(st));
             return -1;
@@ -268,7 +298,7 @@ static void register_ifs ()
         exit(1);
     }
 
-    rpc_server_register_if (perfg_v1_0_s_ifspec, (uuid_p_t) &FooType, 
+    rpc_server_register_if (perfg_v1_0_s_ifspec, (uuid_p_t) &FooType,
         (rpc_mgr_epv_t) &foo_perfg_epv, &st);
 
     if (st != 0)
@@ -277,7 +307,7 @@ static void register_ifs ()
         exit(1);
     }
 
-    rpc_server_register_if (perfg_v1_0_s_ifspec, (uuid_p_t) &BarType, 
+    rpc_server_register_if (perfg_v1_0_s_ifspec, (uuid_p_t) &BarType,
         (rpc_mgr_epv_t) &bar_perfg_epv, &st);
 
     if (st != 0)
@@ -369,20 +399,20 @@ unsigned32          max_calls;
         }
         else if (strcmp(argv[i], "notif") == 0)
         {
-            rpc_server_use_protseq 
+            rpc_server_use_protseq
                 ((unsigned_char_p_t) argv[i + 1], max_calls, &st);
             i += 1;
         }
         else if (strcmp(argv[i], "ep") == 0)
         {
-            rpc_server_use_protseq_ep 
+            rpc_server_use_protseq_ep
                 ((unsigned_char_p_t) argv[i + 1], max_calls,
                     (unsigned_char_p_t) argv[i + 2], &st);
             i += 2;
         }
         else
         {
-            rpc_server_use_protseq_if 
+            rpc_server_use_protseq_if
                 ((unsigned_char_p_t) argv[i], max_calls, perf_v2_0_s_ifspec, &st);
         }
 
@@ -434,8 +464,8 @@ void usage(void)
     fprintf(stderr, "              <max calls> <protseq spec> [<protseq spec> ...]\n");
     fprintf(stderr, "  -d: Turns on NCK runtime debug output\n");
     fprintf(stderr, "  -D: Turns on default NCK runtime debug output\n");
-    fprintf(stderr, "  -s: Disable remote shutdown\n");    
-    fprintf(stderr, "  -S: Number of times to run listen loop (default = 1)\n");    
+    fprintf(stderr, "  -s: Disable remote shutdown\n");
+    fprintf(stderr, "  -S: Number of times to run listen loop (default = 1)\n");
     fprintf(stderr, "  -p: Accept authentication using <authn proto> to <principal>\n");
     fprintf(stderr, "  -r: Use reserved threads\n");
     fprintf(stderr, "  -e: Register with endpoint map at startup\n");
@@ -456,7 +486,7 @@ void usage(void)
  *
  * Print out binding info (location and auth info) for a server binding.  This
  * routine is called (selectively) from manager routines.
- */ 
+ */
 
 void print_binding_info(text, h)
 
@@ -468,7 +498,6 @@ handle_t    h;
     unsigned32          authn_level, authn_protocol, authz_protocol;
     unsigned_char_p_t   server_princ, client_princ;
     unsigned_char_p_t   name;
-
 
     if (h == NULL)
     {
@@ -493,8 +522,8 @@ handle_t    h;
         return;
     }
 
-    rpc_binding_inq_auth_client 
-        (h, (rpc_authz_handle_t *) &client_princ, &server_princ, 
+    rpc_binding_inq_auth_client
+        (h, (rpc_authz_handle_t *) &client_princ, &server_princ,
         &authn_level, &authn_protocol, &authz_protocol, &st);
 
     if (st == rpc_s_binding_has_no_auth)
@@ -508,42 +537,42 @@ handle_t    h;
     else
     {
         printf("(authentication info follows)\n");
-    
+
         printf("    authn protocol: %s\n    authz protocol: %s\n    level: %s\n    server princ: \"%s\"\n",
-            authn_names[authn_protocol], 
+            authn_names[authn_protocol],
             authz_names[authz_protocol],
-            authn_level_names[authn_level], 
+            authn_level_names[authn_level],
             server_princ == NULL ? "(NULL)" : (char *) server_princ);
-    
+
         if (server_princ != NULL)
         {
             rpc_string_free (&server_princ, &st);
         }
-    
-        switch (authz_protocol) 
+
+        switch (authz_protocol)
         {
         case rpc_c_authz_name:
-            printf("    client princ: \"%s\"\n", 
+            printf("    client princ: \"%s\"\n",
                 client_princ == NULL ? "(NULL)" : (char *) client_princ);
             break;
-    
+
 #ifdef AUTH_KRB
         case rpc_c_authz_dce:
         {
             sec_id_pac_t    *pac = (sec_id_pac_t *) client_princ;
             unsigned16      i;
-        
+
             printf("    PAC: uid %d, gid %d, ngroups %d:",
                 pac->principal.uuid.time_low,
                 pac->group.uuid.time_low,
                 pac->num_groups);
-            for (i = 0; i < pac->num_groups; i++) 
+            for (i = 0; i < pac->num_groups; i++)
             {
                 printf (" %d", pac->groups[i].uuid.time_low);
             }
             printf ("\n");
             break;
-        }    
+        }
 #endif /* AUTH_KRB */
         default:
             printf("    unknown authorization protocol\n");
@@ -570,7 +599,6 @@ void rpc__cn_inq_sock_buffsize (
         unsigned32	* /* rsize */,
         unsigned32	* /* ssize */,
         unsigned32  * /* st */);
-
 
 extern int lookup_name(char *table[], char *s);
 
@@ -618,7 +646,7 @@ char                *argv[];
         case 'p':
             if ((s = (char *)strtok(optarg, ",")) == NULL)
                 usage();
-            authn_protocol = strcmp(s, "default") == 0 ? 
+            authn_protocol = strcmp(s, "default") == 0 ?
                                 rpc_c_authn_default : lookup_name(authn_names, s);
 
             if ((auth_principal = (idl_char *) strtok(NULL, ",")) == NULL)
@@ -627,14 +655,14 @@ char                *argv[];
             keytab = (idl_char *) strtok(NULL, " ");
 
             VRprintf(2, ("+ Authentication params; authn_protocol: %s, auth_principal: %s, keytab: %s\n",
-                authn_protocol == (unsigned32)rpc_c_authn_default ? 
-                    "default" : authn_names[authn_protocol], 
+                authn_protocol == (unsigned32)rpc_c_authn_default ?
+                    "default" : authn_names[authn_protocol],
                 auth_principal,
                 keytab == NULL ?
                    (idl_char *) "<not specified>" : keytab
                 ));
 
-            rpc_server_register_auth_info 
+            rpc_server_register_auth_info
                 ((unsigned_char_p_t) auth_principal, authn_protocol, NULL, keytab, &st);
             if (st != rpc_s_ok)
             {
@@ -761,19 +789,19 @@ char                *argv[];
         while (true)
         {
             VRprintf(1, ("+ Listening...\n"));
-    
+
             rpc_server_listen(max_calls, &st);
             if (st != rpc_s_ok)
             {
                 fprintf(stderr, "*** Listen returns - %s\n", error_text(st));
                 exit(1);
             }
-    
+
             if (++i >= server_loops)
             {
                 break;
             }
-    
+
             /*
              * Unreserve threads on the last server_loop iteration.
              */
@@ -782,8 +810,8 @@ char                *argv[];
                 VRprintf (1, ("+ Returned from listen; unreserving threads\n"));
                 teardown_thread_pools(true /* block */);
             }
-    
-            VRprintf (2, ("+ Returned from listen; sleeping for %d secs\n", 
+
+            VRprintf (2, ("+ Returned from listen; sleeping for %d secs\n",
                         SERVER_LOOP_SLEEP_TIME));
             SLEEP (SERVER_LOOP_SLEEP_TIME);
         }

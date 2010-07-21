@@ -1,26 +1,55 @@
 /*
- * 
- * (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- * Portions Copyright (c) 2010 Apple Inc. All rights reserved
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * Portions Copyright (c) 2010 Apple Inc.
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
- *                 permission to use, copy, modify, and distribute this
- * file for any purpose is hereby granted without fee, provided that
- * the above copyright notices and this notice appears in all source
- * code copies, and that none of the names of Open Software
- * Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- * Corporation be used in advertising or publicity pertaining to
- * distribution of the software without specific, written prior
- * permission.  Neither Open Software Foundation, Inc., Hewlett-
- * Packard Company, nor Digital Equipment Corporation makes any
- * representations about the suitability of this software for any
- * purpose.
- * 
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
-/*
- */
+
 /*
 **
 **  NAME:
@@ -34,8 +63,8 @@
 **  ABSTRACT:
 **
 **  This daemon is a catch all for DCE RPC support functions.  This server
-**  exports the DCE 1.0 endpoint map (ept_) network interfaces and, optionally,  
-**  the NCS 1.5.1 llb_ network interfaces and .  Additionally, this server 
+**  exports the DCE 1.0 endpoint map (ept_) network interfaces and, optionally,
+**  the NCS 1.5.1 llb_ network interfaces and .  Additionally, this server
 **  provides the RPC forwarding map function used by non-connection oriented
 **  protocol services.
 **
@@ -53,7 +82,7 @@ EXTERNAL ept_v3_0_epv_t ept_v3_0_mgr_epv;
 EXTERNAL llb__v4_0_epv_t llb_v4_0_mgr_epv;
 #endif
 
-#ifdef ENABLE_DCOM 
+#ifdef ENABLE_DCOM
 # include <objex.h>
 EXTERNAL	IObjectExporter_v0_0_epv_t objex_mgr_epv;
 #endif
@@ -125,7 +154,6 @@ INTERNAL void init
         error_status_t  *status
     );
 
-
 INTERNAL void fwd_map
     (
         uuid_p_t                object,
@@ -141,19 +169,18 @@ INTERNAL void fwd_map
         error_status_t          *status
     );
 
-
 
 /*
- * These implementation constants can be redefined in the system specific 
+ * These implementation constants can be redefined in the system specific
  * config files if necessary (e.g. common/ultrix_mips.h).
  */
 
 #ifdef DCELOCAL_PATH
 #  define rpcd_c_database_name_prefix1 DCELOCAL_PATH
-#  define rpcd_c_database_name_prefix2 "/var/rpc/" 
+#  define rpcd_c_database_name_prefix2 "/var/rpc/"
 #else
 
-#ifndef rpcd_c_database_name_prefix1 
+#ifndef rpcd_c_database_name_prefix1
 #  define rpcd_c_database_name_prefix1 "/tmp/"
 #endif
 
@@ -175,8 +202,7 @@ INTERNAL void fwd_map
 #   define rpcd_c_logfile_name "rpcd.log"
 #endif
 
-
-/* 
+/*
  *  Optional list of protocol sequences which rpcd will use.
  *  List is specified on the command line
  */
@@ -193,7 +219,6 @@ GLOBAL   boolean32      dflag = false;
 
 INTERNAL boolean32      foreground = false;
 
-
 INTERNAL char           rpcd_version_str[] =
 #ifdef ENABLE_DCOM
 	"rpcd/orpcd version freedce 1.1";
@@ -203,13 +228,12 @@ INTERNAL char           rpcd_version_str[] =
 
 GLOBAL   idl_uuid_t         nil_uuid;
 
-
 
 PRIVATE boolean32 check_st_bad(
 	const char      *str,
 	const error_status_t  *st)
 {
-    if (STATUS_OK(st)) 
+    if (STATUS_OK(st))
         return false;
 
     show_st(str, st);
@@ -248,8 +272,8 @@ INTERNAL void usage(void)
     fprintf(stderr, "  all protseqs are listened on.\n");
 }
 
-/* 
- * match_command 
+/*
+ * match_command
  * takes a key and string as input and returns whether the
  * string matches the key where at least min_len characters
  * of the key are required to be specified.
@@ -275,7 +299,6 @@ long min_len;
 }
 #endif
 
-
 /*
  *  Process args
  */
@@ -287,7 +310,6 @@ INTERNAL void process_args(
     unsigned32      status;
     extern int      optind;
     extern char     *optarg;
-    
 
     /*
      * Process args.
@@ -337,7 +359,7 @@ INTERNAL void process_args(
 
         if (num_protseq >= MAX_PROTSEQ_ARGS)
         {
-            SET_STATUS(&status, ept_s_cant_perform_op); 
+            SET_STATUS(&status, ept_s_cant_perform_op);
             show_st("Too many protseq args", &status);
             return;
         }
@@ -355,31 +377,31 @@ INTERNAL void register_ifs(
     ept_v3_0_epv_t* _epv = &ept_v3_0_mgr_epv;
     rpc_mgr_epv_t epv = (rpc_mgr_epv_t) _epv;
 
-    rpc_server_register_if(ept_v3_0_s_ifspec, (uuid_p_t)NULL, 
+    rpc_server_register_if(ept_v3_0_s_ifspec, (uuid_p_t)NULL,
             epv, status);
     if (check_st_bad("Unable to rpc_server_register_if for ept", status))
         return;
 
 #ifdef RPC_LLB
-    rpc_server_register_if(llb__v4_0_s_ifspec, (uuid_p_t)NULL, 
+    rpc_server_register_if(llb__v4_0_s_ifspec, (uuid_p_t)NULL,
             (rpc_mgr_epv_t) &llb_v4_0_mgr_epv, status);
     if (check_st_bad("Unable to rpc_server_register_if for llb", status))
         return;
 #endif
 
-#ifdef ENABLE_DCOM 
+#ifdef ENABLE_DCOM
 	 rpc_server_register_if(IObjectExporter_v0_0_s_ifspec, (uuid_p_t)NULL,
 			 (rpc_mgr_epv_t)&objex_mgr_epv, status);
 	 if (check_st_bad("Unable to rpc_server_register_if for orpc", status))
 		 return;
 #endif
-	 
+
 }
 
 /*
  * Arrange to handle calls on the protocol sequences of interest.
  * Note that while both interfaces specify well know endpoints,
- * the ept_ endpoints are a superset of the llb_ endpoints (which 
+ * the ept_ endpoints are a superset of the llb_ endpoints (which
  * precludes us from doing a "use_protseq_if" on both).
  */
 INTERNAL void use_protseqs(
@@ -390,7 +412,7 @@ INTERNAL void use_protseqs(
     if (use_all_protseqs)
     {
         rpc_server_use_all_protseqs_if(0, ept_v3_0_s_ifspec, status);
-        if (! STATUS_OK(status)) 
+        if (! STATUS_OK(status))
         {
             if (*status == rpc_s_cant_bind_sock)
                 show_st("Verify that no other rpcd/llbd is running", status);
@@ -403,7 +425,7 @@ INTERNAL void use_protseqs(
         for (i = 0; i < num_protseq; i++)
         {
             rpc_server_use_protseq_if(protseq[i], 0, ept_v3_0_s_ifspec, status);
-            if (! STATUS_OK(status)) 
+            if (! STATUS_OK(status))
             {
                 if (*status == rpc_s_cant_bind_sock)
                     show_st("Verify that no other rpcd/llbd is running", status);
@@ -412,7 +434,6 @@ INTERNAL void use_protseqs(
             }
         }
     }
-
 
     /*
      * If folks are interested, tell em what we're listening on...
@@ -431,7 +452,7 @@ INTERNAL void use_protseqs(
             return;
 
         for (i = 0; i < bv->count; i++)
-        {   
+        {
             rpc_binding_to_string_binding(bv->binding_h[i], &bstr, &st);
             printf("    %s\n", bstr);
             rpc_string_free(&bstr, &st);
@@ -468,8 +489,8 @@ INTERNAL void init(
     fname = NULL;
     dname = NULL;
 
-    fname = (unsigned_char_p_t) malloc(strlen(rpcd_c_database_name_prefix1) + 
-                                       strlen(rpcd_c_database_name_prefix2) + 
+    fname = (unsigned_char_p_t) malloc(strlen(rpcd_c_database_name_prefix1) +
+                                       strlen(rpcd_c_database_name_prefix2) +
                                        strlen(rpcd_c_ep_database_name) + 1);
     if (!fname) {
 	*status = rpc_s_no_memory;
@@ -480,7 +501,7 @@ INTERNAL void init(
     sprintf((char *) fname, "%s%s%s", rpcd_c_database_name_prefix1,
             rpcd_c_database_name_prefix2, rpcd_c_ep_database_name);
 
-    dname = (unsigned_char_p_t) malloc(strlen(rpcd_c_database_name_prefix1) + 
+    dname = (unsigned_char_p_t) malloc(strlen(rpcd_c_database_name_prefix1) +
                                        strlen(rpcd_c_database_name_prefix2) + 1);
     if (!dname) {
 	*status = rpc_s_no_memory;
@@ -506,10 +527,10 @@ INTERNAL void init(
 
     free(fname);
     free(dname);
-    
+
 #ifdef RPC_LLB
-    fname = (unsigned_char_p_t) malloc(strlen(rpcd_c_database_name_prefix1) + 
-                                       strlen(rpcd_c_database_name_prefix2) + 
+    fname = (unsigned_char_p_t) malloc(strlen(rpcd_c_database_name_prefix1) +
+                                       strlen(rpcd_c_database_name_prefix2) +
                                        strlen(rpcd_c_llb_database_name) + 1);
     sprintf((char *) fname, "%s%s%s", rpcd_c_database_name_prefix1,
             rpcd_c_database_name_prefix2, rpcd_c_llb_database_name);
@@ -550,7 +571,7 @@ INTERNAL void init(
  * Eventually, we probably want to get all packets from a single activity
  * to a single server (assuming that we can figure out how take advantage
  * of selecting different potential servers in the face of stale entries).
- * 
+ *
  */
 INTERNAL void fwd_map(
 	uuid_p_t                object,
@@ -570,15 +591,15 @@ INTERNAL void fwd_map(
 
     /*
      * Forwarding algorithm:
-     * Consult ep database (and possibly the llb database) to see if 
-     * anybody has registered the matching interface/object uuids.  
+     * Consult ep database (and possibly the llb database) to see if
+     * anybody has registered the matching interface/object uuids.
      */
 
     num_ents = 0;
 
     h = epdb_inq_handle();
-    epdb_fwd(h, object, interface, data_rep, 
-             rpc_protocol, rpc_protocol_vers_major, rpc_protocol_vers_minor, 
+    epdb_fwd(h, object, interface, data_rep,
+             rpc_protocol, rpc_protocol_vers_major, rpc_protocol_vers_minor,
              addr, NULL, 1L, &num_ents, fwd_addr, status);
 
 #ifdef RPC_LLB
@@ -586,7 +607,7 @@ INTERNAL void fwd_map(
         ((*status == rpc_s_ok) && (num_ents == 0)) )
     {
         h = lbdb_inq_handle();
-        lbdb_fwd(h, object, &interface->uuid, addr, 
+        lbdb_fwd(h, object, &interface->uuid, addr,
                         NULL, 1L, &num_ents, fwd_addr, status);
     }
 #endif
@@ -610,7 +631,7 @@ INTERNAL void fwd_map(
 
 //#if defined(UNIX) || defined(unix)
 
-#define RPCD_PID_FILE "/var/run/dcerpcd.pid" 
+#define RPCD_PID_FILE "/var/run/dcerpcd.pid"
 #define PID_FILE_CONTENTS_SIZE ((9 * 2) + 2)
 #define RPCD_DAEMON_NAME "dcerpcd"
 
@@ -818,7 +839,6 @@ error:
         exit(1);
     }
 }
-
 
 INTERNAL void attach_log_file(void)
 {
@@ -1132,7 +1152,7 @@ int main(int argc, char *argv[])
      * Must be root (pid=0) to be able to start llbd
      */
     uid = getuid();
-    if (uid != 0) {  
+    if (uid != 0) {
         fprintf(stderr, "(rpcd) Must be root to start rpcd, your uid = %d \n", uid);
         exit(2);
     }
@@ -1144,7 +1164,7 @@ int main(int argc, char *argv[])
      * If not debugging, fork off a process to be the rpcd.  The parent exits.
      */
 
-    if (!dflag && !foreground) 
+    if (!dflag && !foreground)
     {
         start_as_daemon();
     }
@@ -1258,7 +1278,7 @@ int main(int argc, char *argv[])
     {
         exit(1);
     }
-    
+
     /*
      * Wait for listener thread to exit
      */
