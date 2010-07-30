@@ -1,28 +1,82 @@
 %{
 
 /*
+ * Copyright (c) 2010 Apple Inc. All rights reserved.
  *
- *  (c) Copyright 1989 OPEN SOFTWARE FOUNDATION, INC.
- *  (c) Copyright 1989 HEWLETT-PACKARD COMPANY
- *  (c) Copyright 1989 DIGITAL EQUIPMENT CORPORATION
- *  Portions Copyright (c) 2009-2010 Apple Inc. All rights reserved
- *  To anyone who acknowledges that this file is provided "AS IS"
- *  without any express or implied warranty:
- *                  permission to use, copy, modify, and distribute this
- *  file for any purpose is hereby granted without fee, provided that
- *  the above copyright notices and this notice appears in all source
- *  code copies, and that none of the names of Open Software
- *  Foundation, Inc., Hewlett-Packard Company, or Digital Equipment
- *  Corporation be used in advertising or publicity pertaining to
- *  distribution of the software without specific, written prior
- *  permission.  Neither Open Software Foundation, Inc., Hewlett-
- *  Packard Company, nor Digital Equipment Corporation makes any
- *  representations about the suitability of this software for any
- *  purpose.
+ * @APPLE_LICENSE_HEADER_START@
  *
- */
-
-/*
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Portions of this software have been released under the following terms:
+ *
+ * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ *
+ * To anyone who acknowledges that this file is provided "AS IS"
+ * without any express or implied warranty:
+ * permission to use, copy, modify, and distribute this file for any
+ * purpose is hereby granted without fee, provided that the above
+ * copyright notices and this notice appears in all source code copies,
+ * and that none of the names of Open Software Foundation, Inc., Hewlett-
+ * Packard Company, Apple Inc. or Digital Equipment Corporation be used
+ * in advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.  Neither Open Software
+ * Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+ * Equipment Corporation makes any representations about the suitability
+ * of this software for any purpose.
+ *
+ * Copyright (c) 2007, Novell, Inc. All rights reserved.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Novell Inc. ("Apple") nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * 3. Neither the name of the Novell, Inc. nor the names of its contributors may be used to endorse or promote
+ * products derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
 
  /*
@@ -78,8 +132,8 @@ void read_c_comment(yyscan_t scanner); /* from nidl_l.l */
 static int yywrap(yyscan_t scanner)
 {
 
-   /* 
-    * Free the Flex buffer, yy_curent_buffer and yy_delete_buffer() 
+   /*
+    * Free the Flex buffer, yy_curent_buffer and yy_delete_buffer()
     * are FLEX interfaces to the internal buffering system.
     */
 
@@ -88,7 +142,6 @@ static int yywrap(yyscan_t scanner)
 #else
    acf_yy_delete_buffer(yy_current_buffer); /* free the FLEX buffer */
 #endif
-
 
    acf_yylineno = 1;
    return 1;
@@ -131,7 +184,6 @@ static keyword_entry acf_keywords[] =   /* Table of keywords and values */
 
 %}
 
-
 delim           [ \t\n\f]
 ws              {delim}+
 letter          [A-Za-z_$]
@@ -150,7 +202,6 @@ other           .
 %option noyywrap
 
 %%
-
 
 {ws}        { /* White space: No action, and no return */ }
 '\n'        { /* GNUFLEX doesnt automatically track line #'s */
