@@ -30,9 +30,9 @@
  *
  * Portions of this software have been released under the following terms:
  *
- * (c) Copyright 1991 OPEN SOFTWARE FOUNDATION, INC.
- * (c) Copyright 1991 HEWLETT-PACKARD COMPANY
- * (c) Copyright 1991 DIGITAL EQUIPMENT CORPORATION
+ * (c) Copyright 1989-1993 OPEN SOFTWARE FOUNDATION, INC.
+ * (c) Copyright 1989-1993 HEWLETT-PACKARD COMPANY
+ * (c) Copyright 1989-1993 DIGITAL EQUIPMENT CORPORATION
  *
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty:
