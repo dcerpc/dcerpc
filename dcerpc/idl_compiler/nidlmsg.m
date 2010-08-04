@@ -40,10 +40,10 @@ $ !  permission to use, copy, modify, and distribute this file for any
 $ !  purpose is hereby granted without fee, provided that the above
 $ !  copyright notices and this notice appears in all source code copies,
 $ !  and that none of the names of Open Software Foundation, Inc., Hewlett-
-$ !  Packard Company, Apple Inc. or Digital Equipment Corporation be used
+$ !  Packard Company or Digital Equipment Corporation be used
 $ !  in advertising or publicity pertaining to distribution of the software
 $ !  without specific, written prior permission.  Neither Open Software
-$ !  Foundation, Inc., Hewlett-Packard Company, Apple Inc. nor Digital
+$ !  Foundation, Inc., Hewlett-Packard Company nor Digital
 $ !  Equipment Corporation makes any representations about the suitability
 $ !  of this software for any purpose.
 $ !
@@ -57,12 +57,9 @@ $ !      notice, this list of conditions and the following disclaimer.
 $ !  2.  Redistributions in binary form must reproduce the above copyright
 $ !      notice, this list of conditions and the following disclaimer in the
 $ !      documentation and/or other materials provided with the distribution.
-$ !  3.  Neither the name of Novell Inc. ("Apple") nor the names of its
-$ !      contributors may be used to endorse or promote products derived from
-$ !      this software without specific prior written permission.
-$ !
-$ !  3. Neither the name of the Novell, Inc. nor the names of its contributors may be used to endorse or promote
-$ !  products derived from this software without specific prior written permission.
+$ !  3.  Neither the name of Novell Inc. nor the names of its contributors
+$ !      may be used to endorse or promote products derived from this
+$ !      software without specific prior written permission.
 $ !
 $ !  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 $ !  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
