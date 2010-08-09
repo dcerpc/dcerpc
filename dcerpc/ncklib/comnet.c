@@ -205,14 +205,13 @@ PUBLIC void rpc_server_inq_bindings
     unsigned32              *status
 )
 {
-    unsigned int                     nd_index;       /* network info table index    */
-    unsigned int                     bv_index;       /* binding vector index        */
-    unsigned32                     av_index;       /* RPC Address vector index    */
+    unsigned int            nd_index;       /* network info table index    */
+    unsigned int            bv_index;       /* binding vector index        */
+    unsigned32              av_index;       /* RPC Address vector index    */
     rpc_binding_vector_p_t  bvp, new_bvp;   /* local ptr to binding vector */
-    rpc_naf_id_t            nafid;          /* network family id           */
     rpc_addr_vector_p_t     addr_vec;       /* rpc addrs of network desc   */
     rpc_binding_rep_p_t     binding_rep;
-    unsigned int                     i;
+    unsigned int            i;
     unsigned32              xstatus;
 
     CODING_ERROR (status);
@@ -246,13 +245,10 @@ PUBLIC void rpc_server_inq_bindings
          */
         if (lsock->busy && lsock->is_server)
         {
-            nafid = RPC_PROTSEQ_INQ_NAF_ID (lsock->protseq_id);
-
             /*
              * Get all the RPC Addresses represented by this descriptor.
              */
-            (*RPC_NAF_INQ_EPV(nafid)->naf_desc_inq_addr)
-                (lsock->protseq_id, lsock->desc, &addr_vec, status);
+            rpc__naf_desc_inq_addr (lsock->protseq_id, lsock->desc, &addr_vec, status);
 
             if (*status != rpc_s_ok)
             {
