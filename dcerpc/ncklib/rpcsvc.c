@@ -81,8 +81,11 @@
 #include <stdarg.h>
 
 #if HAVE_CRASHREPORTERCLIENT_H
+
 #include <CrashReporterClient.h>
+
 #else
+
 /*
  * The following symbol is reference by Crash Reporter symbolicly
  * (instead of through undefined references. To get strip(1) to know
@@ -100,6 +103,7 @@ asm(".desc ___crashreporter_info__, 0x10");
 #define CRSetCrashLogMessage(msg) do { \
     __crashreporter_info__ = (msg);
 } while (0)
+
 #endif
 
 /*
@@ -239,8 +243,8 @@ PRIVATE char * rpc__svc_fmt_dbg_msg (char *format, ...)
 
     if( (bptr = malloc(RPC__SVC_DBG_MSG_SZ*sizeof(char))) == NULL )
     {
-	/* die horribly */
-	abort();
+        /* die horribly */
+        abort();
     }
 
     va_start (arg_ptr, format);
