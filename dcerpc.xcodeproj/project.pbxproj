@@ -3131,7 +3131,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "set -e\nmkdir -p ${DSTROOT}/usr/local/share/misc\ncp -X ${SHARED_DERIVED_FILE_DIR}/idl.cat ${DSTROOT}/usr/local/share/misc";
+			shellScript = "set -e\nxcrun install -d ${DSTROOT}/${DCEIDL_CATALOG_PATH}\ncp -X ${SHARED_DERIVED_FILE_DIR}/idl.cat ${DSTROOT}/${DCEIDL_CATALOG_PATH}";
 			showEnvVarsInLog = 0;
 		};
 		DD81451C1087DAD200EAA9D9 /* Create rpc dir */ = {
