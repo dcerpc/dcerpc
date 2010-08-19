@@ -826,14 +826,8 @@ INTERNAL unsigned32     transmit_req_action_rtn
     else
 #endif
     {
-        call_rep->alloc_hint = 0;
-        for (i = 0,
-             iov_elt_p = stub_data_p->elt;   /* first iovector element */
-             i < stub_data_p->num_elt;
-             i++, iov_elt_p++)
-        {
-            call_rep->alloc_hint += iov_elt_p->data_len;
-        }
+        /* Fill in the alloc_hint */
+        call_rep->alloc_hint = rpc__cn_get_alloc_hint(stub_data_p);
 
         for (i = 0,
              iov_elt_p = stub_data_p->elt;   /* first iovector element */

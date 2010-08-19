@@ -163,6 +163,17 @@ PRIVATE void rpc__cn_dealloc_buffered_data (
      rpc_cn_call_rep_p_t /*call_rep*/
     );
 
+/***********************************************************************/
+/*
+ * R P C _ _ C N _ G E T _ A L L O C _ H I N T
+ *
+ */
+
+PRIVATE unsigned32 rpc__cn_get_alloc_hint (
+    rpc_iovector_p_t /* stub_data_p */
+    );
+
+
 /*
  * Macro to fix up the iovector in the call_rep so that we have
  * only the cached protocol header (and no stub data).

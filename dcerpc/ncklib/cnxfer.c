@@ -629,7 +629,8 @@ PRIVATE void rpc__cn_transmit_buffers
     }
     else
     {
-        if (RPC_CN_PKT_FLAGS (header_p) & (RPC_C_CN_FLAGS_FIRST_FRAG | RPC_C_CN_FLAGS_LAST_FRAG))
+        if ( (RPC_CN_PKT_FLAGS (header_p) & RPC_C_CN_FLAGS_FIRST_FRAG) &&
+            (RPC_CN_PKT_FLAGS (header_p) & RPC_C_CN_FLAGS_LAST_FRAG) )
         {
             /* single fragment being set, so we can calculate alloc_hint */
             RPC_CN_PKT_ALLOC_HINT (header_p) = RPC_CN_CREP_ACC_BYTCNT (call_rep) -
@@ -893,4 +894,54 @@ PRIVATE void rpc__cn_dealloc_buffered_data
         }
         RPC_CN_CREP_IOV (call_rep) [cur_iov_index].buff_addr = NULL;
     }
+}
+
+/*
+ **++
+ **
+ **  ROUTINE NAME:       rpc__cn_get_alloc_hint
+ **
+ **  SCOPE:              PRIVATE
+ **
+ **  DESCRIPTION:
+ **
+ **  Walks through all the iov elements and adds up their data lengths.
+ **  The total amount is the alloc_hint.
+ **
+ **  INPUTS:
+ **
+ **      stub_data_p     iovector containing data to be added up
+ **
+ **  INPUTS/OUTPUTS:     none
+ **
+ **  OUTPUTS:            none
+ **
+ **  IMPLICIT INPUTS:    none
+ **
+ **  IMPLICIT OUTPUTS:   none
+ **
+ **  FUNCTION VALUE:     sum of the data lengths which is alloc_hint
+ **
+ **  SIDE EFFECTS:       none
+ **
+ **--
+ **/
+
+PRIVATE unsigned32 rpc__cn_get_alloc_hint
+(
+ rpc_iovector_p_t stub_data_p
+)
+{
+    rpc_iovector_elt_p_t iov_elt_p;
+    unsigned32 i;
+    unsigned32 alloc_hint = 0;
+
+    for (i = 0, iov_elt_p = stub_data_p->elt;
+         i < stub_data_p->num_elt;
+         i++, iov_elt_p++)
+    {
+        alloc_hint += iov_elt_p->data_len;
+    }
+
+    return (alloc_hint);
 }
