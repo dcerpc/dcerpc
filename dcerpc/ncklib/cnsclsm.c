@@ -1725,8 +1725,8 @@ INTERNAL unsigned32     send_call_resp_action_rtn
     sm_p->cur_state = RPC_C_SERVER_CALL_CALL_RESPONSE;
     if  (status == 0)
     {
-	abort_resp_action_rtn( spc_struct, event_param, sm);
-	return(rpc_s_ok);
+        abort_resp_action_rtn( spc_struct, event_param, sm);
+        return(rpc_s_ok);
     }
     status = rpc_s_ok;
 
@@ -1760,6 +1760,14 @@ INTERNAL unsigned32     send_call_resp_action_rtn
     else
     {
 #endif
+        call_rep->alloc_hint = 0;
+        for (i = 0, iov_elt_p = stub_data_p->elt;
+             i < stub_data_p->num_elt;
+             i++, iov_elt_p++)
+        {
+            call_rep->alloc_hint += iov_elt_p->data_len;
+        }
+
         status = rpc_s_ok;
         for (i = 0, iov_elt_p = stub_data_p->elt;
              i < stub_data_p->num_elt;

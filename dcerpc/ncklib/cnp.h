@@ -459,6 +459,7 @@ typedef struct rpc_cn_call_rep_s_t
     rpc_cn_fragbuf_t                    *prot_header;
     rpc_cn_fragbuf_t                    *prot_tlr;
     unsigned32                          max_seg_size;
+    unsigned32                          alloc_hint;
     rpc_cn_buffered_output_t            buffered_output;
     unsigned16                          context_id;
     unsigned16                          num_pkts;

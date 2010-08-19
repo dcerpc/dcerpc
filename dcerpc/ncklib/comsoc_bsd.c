@@ -157,11 +157,11 @@ int ioctl(int d, int request, ...);
  */
 
 #ifndef RPC_C_SOCKET_MAX_RCVBUF
-#  define RPC_C_SOCKET_MAX_RCVBUF (32 * 1024)
+#  define RPC_C_SOCKET_MAX_RCVBUF (64 * 1024)
 #endif
 
 #ifndef RPC_C_SOCKET_MAX_SNDBUF
-#  define RPC_C_SOCKET_MAX_SNDBUF (32 * 1024)
+#  define RPC_C_SOCKET_MAX_SNDBUF (64 * 1024)
 #endif
 
 /*
@@ -1226,7 +1226,7 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_set_bufs
         if (e == -1)
         {
             RPC_DBG_GPRINTF
-(("(rpc__bsd_socket_set_bufs) WARNING: set sndbuf (%d) failed - error = %d\n",
+                (("(rpc__bsd_socket_set_bufs) WARNING: set sndbuf (%d) failed - error = %d\n",
                 txsize, errno));
         }
     }
@@ -1238,7 +1238,7 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_set_bufs
         if (e == -1)
         {
             RPC_DBG_GPRINTF
-(("(rpc__bsd_socket_set_bufs) WARNING: set rcvbuf (%d) failed - error = %d\n",
+                (("(rpc__bsd_socket_set_bufs) WARNING: set rcvbuf (%d) failed - error = %d\n",
                 rxsize, errno));
         }
     }
@@ -1252,7 +1252,7 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_set_bufs
     if (e == -1)
     {
         RPC_DBG_GPRINTF
-(("(rpc__bsd_socket_set_bufs) WARNING: get sndbuf failed - error = %d\n", errno));
+            (("(rpc__bsd_socket_set_bufs) WARNING: get sndbuf failed - error = %d\n", errno));
         *ntxsize = RPC_C_SOCKET_GUESSED_SNDBUF;
     }
 
@@ -1262,7 +1262,7 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_set_bufs
     if (e == -1)
     {
         RPC_DBG_GPRINTF
-(("(rpc__bsd_socket_set_bufs) WARNING: get rcvbuf failed - error = %d\n", errno));
+            (("(rpc__bsd_socket_set_bufs) WARNING: get rcvbuf failed - error = %d\n", errno));
         *nrxsize = RPC_C_SOCKET_GUESSED_RCVBUF;
     }
 

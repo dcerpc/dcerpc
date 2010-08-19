@@ -1959,6 +1959,10 @@ INTERNAL unsigned32     do_assoc_req_action_rtn
     rpc_cn_sm_ctlblk_t          *sm_p;
     unsigned8                   *end_of_pkt;    /* ptr to 1 byte past end of packet */
     unsigned8                   *end_ptr;
+    rpc_socket_error_t          serr;
+    unsigned32                  ssize = 0;
+    unsigned32                  rsize = 0;
+    unsigned32                  status;
 
     RPC_CN_DBG_RTN_PRINTF (SERVER do_assoc_req_action_rtn);
 
@@ -2054,10 +2058,47 @@ INTERNAL unsigned32     do_assoc_req_action_rtn
              */
             RPC_CN_PKT_MAX_XMIT_FRAG (req_header) = RPC_C_ASSOC_MUST_RECV_FRAG_SIZE;
         }
-        RPC_CN_PKT_MAX_XMIT_FRAG (resp_header) =
-        MIN (rpc_g_cn_large_frag_size, RPC_CN_PKT_MAX_RECV_FRAG (req_header));
-        RPC_CN_PKT_MAX_RECV_FRAG (resp_header) =
-        MIN (rpc_g_cn_large_frag_size, RPC_CN_PKT_MAX_XMIT_FRAG (req_header));
+
+        /* Set socket's max send/receive sizes to same as max fragment size. */
+        serr = rpc__socket_set_bufs (assoc->cn_ctlblk.cn_sock,
+                                     rpc_g_cn_large_frag_size,
+                                     rpc_g_cn_large_frag_size,
+                                     &ssize,
+                                     &rsize);
+        if (!RPC_SOCKET_IS_ERR (serr))
+        {
+            /* update socket buffer sizes with their actual values */
+            rpc__cn_set_sock_buffsize(rsize, ssize, &status);
+        }
+        else
+        {
+            /* 0 means we could not get any of the max sizes */
+            ssize = 0;
+            rsize = 0;
+        }
+
+        if ( (ssize != 0) && (ssize < rpc_g_cn_large_frag_size) )
+        {
+            RPC_CN_PKT_MAX_XMIT_FRAG (resp_header) =
+                MIN (ssize, RPC_CN_PKT_MAX_RECV_FRAG (req_header));
+        }
+        else
+        {
+            RPC_CN_PKT_MAX_XMIT_FRAG (resp_header) =
+            MIN (rpc_g_cn_large_frag_size, RPC_CN_PKT_MAX_RECV_FRAG (req_header));
+        }
+
+        if ( (rsize != 0) && (rsize < rpc_g_cn_large_frag_size) )
+        {
+            RPC_CN_PKT_MAX_RECV_FRAG (resp_header) =
+                MIN (rsize, RPC_CN_PKT_MAX_XMIT_FRAG (req_header));
+        }
+        else
+        {
+            RPC_CN_PKT_MAX_RECV_FRAG (resp_header) =
+                MIN (rpc_g_cn_large_frag_size, RPC_CN_PKT_MAX_XMIT_FRAG (req_header));
+        }
+
         assoc->assoc_max_xmit_frag = RPC_CN_PKT_MAX_XMIT_FRAG (resp_header);
         assoc->assoc_max_recv_frag = RPC_CN_PKT_MAX_RECV_FRAG (resp_header);
 

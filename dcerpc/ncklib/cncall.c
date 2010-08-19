@@ -464,6 +464,11 @@ PRIVATE rpc_call_rep_t *rpc__cn_call_start
     call_rep->u.client.fault_data = NULL;
 
     /*
+     * Initialize alloc_hint to 0
+     */
+    call_rep->alloc_hint = 0;
+
+    /*
      * Include any cancels detected while serializing access to the
      * binding handle. These will be forwarded when the first
      * request fragment is sent. The absolute cancel timeout time

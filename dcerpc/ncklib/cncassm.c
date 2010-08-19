@@ -4399,8 +4399,8 @@ INTERNAL unsigned32     retry_assoc_action_rtn
     status = version_mismatch_pred_rtn(spc_struct, event_param);
     if ( status == 0)
     {
-	mark_abort_action_rtn(spc_struct, event_param, sm);
-	sm_p->cur_state = RPC_C_CLIENT_ASSOC_CLOSED;
+        mark_abort_action_rtn(spc_struct, event_param, sm);
+        sm_p->cur_state = RPC_C_CLIENT_ASSOC_CLOSED;
         return (assoc->assoc_status);
     }
 
@@ -4410,7 +4410,7 @@ INTERNAL unsigned32     retry_assoc_action_rtn
      */
     if (assoc->assoc_vers_minor == RPC_C_CN_PROTO_VERS_COMPAT)
     {
-	sm_p->cur_state = RPC_C_CLIENT_ASSOC_INIT_WAIT;
+        sm_p->cur_state = RPC_C_CLIENT_ASSOC_INIT_WAIT;
         return(rpc_s_ok);
     }
 
@@ -4427,7 +4427,7 @@ INTERNAL unsigned32     retry_assoc_action_rtn
 
     if (status != rpc_s_ok)
     {
-	sm_p->cur_state = RPC_C_CLIENT_ASSOC_INIT_WAIT;
+        sm_p->cur_state = RPC_C_CLIENT_ASSOC_INIT_WAIT;
         return(status);
     }
 
@@ -4650,12 +4650,16 @@ INTERNAL void send_pdu
     unsigned32                  auth_space;
     unsigned32                  i;
     rpc_cn_assoc_grp_t          *assoc_grp ATTRIBUTE_UNUSED;
-    boolean			first_frag, done;
-    unsigned8			flags = 0;
+    boolean                     first_frag, done;
+    unsigned8                   flags = 0;
     unsigned32                  auth_len_remain;
     pointer_t                   last_auth_pos;
     static unsigned32           rpc_g_next_bind_key_id = 0;
-    unsigned8			version;
+    unsigned8                   version;
+    rpc_socket_error_t          serr;
+    unsigned32                  ssize = 0;
+    unsigned32                  rsize = 0;
+    unsigned32                  status;
 
     RPC_CN_DBG_RTN_PRINTF (CLIENT send_pdu);
 
@@ -4670,18 +4674,18 @@ INTERNAL void send_pdu
 
     if (pdu_type != RPC_C_CN_PKT_AUTH3)
     {
-	header_size = RPC_CN_PKT_SIZEOF_BIND_HDR;
+        header_size = RPC_CN_PKT_SIZEOF_BIND_HDR;
 
-	/*
-	 * Clear the control fields of the presentation context list.
-	 */
-	pres_cont_list = (rpc_cn_pres_cont_list_t *)
-	    ((unsigned8 *)(header) + header_size);
-	memset (pres_cont_list, 0, sizeof (rpc_cn_pres_cont_list_t));
+        /*
+         * Clear the control fields of the presentation context list.
+         */
+        pres_cont_list = (rpc_cn_pres_cont_list_t *)
+            ((unsigned8 *)(header) + header_size);
+        memset (pres_cont_list, 0, sizeof (rpc_cn_pres_cont_list_t));
     }
     else
     {
-	header_size = RPC_CN_PKT_SIZEOF_AUTH3_HDR;
+        header_size = RPC_CN_PKT_SIZEOF_AUTH3_HDR;
     }
 
     /*
@@ -4774,21 +4778,63 @@ INTERNAL void send_pdu
                        sizeof (rpc_cn_pres_cont_elem_t);
     }
 
+    /* Set socket's max send/receive sizes to same as max fragment size. */
+    serr = rpc__socket_set_bufs (assoc->cn_ctlblk.cn_sock,
+                                 rpc_g_cn_large_frag_size,
+                                 rpc_g_cn_large_frag_size,
+                                 &ssize,
+                                 &rsize);
+    if (!RPC_SOCKET_IS_ERR (serr))
+    {
+        /* update socket buffer sizes with their actual values */
+        rpc__cn_set_sock_buffsize(rsize, ssize, &status);
+    }
+    else
+    {
+        /* 0 means we could not get any of the max sizes */
+        ssize = 0;
+        rsize = 0;
+    }
+
     if (pdu_type != RPC_C_CN_PKT_AUTH3)
     {
-	/*
-	 * Set up common entried in the PDU.
-	 */
-	RPC_CN_PKT_MAX_XMIT_FRAG (header) = rpc_g_cn_large_frag_size;
-	RPC_CN_PKT_MAX_RECV_FRAG (header) = rpc_g_cn_large_frag_size;
+        /*
+         * Set up common entries in the PDU.
+         */
+        if ( (ssize != 0) && (ssize < rpc_g_cn_large_frag_size) )
+        {
+            RPC_CN_PKT_MAX_XMIT_FRAG (header) = ssize;
+        }
+        else
+        {
+            RPC_CN_PKT_MAX_XMIT_FRAG (header) = rpc_g_cn_large_frag_size;
+        }
 
-	RPC_CN_PKT_ASSOC_GROUP_ID (header) = grp_id;
+        if ( (rsize != 0) && (rsize < rpc_g_cn_large_frag_size) )
+        {
+            RPC_CN_PKT_MAX_RECV_FRAG (header) = rsize;
+        }
+        else
+        {
+            RPC_CN_PKT_MAX_RECV_FRAG (header) = rpc_g_cn_large_frag_size;
+        }
 
-	/* use negotiated minor version number */
-	assoc->bind_packets_sent = 0;
-    } else {
-	RPC_CN_PKT_AUTH3_MAX_XMIT_FRAG (header) = rpc_g_cn_large_frag_size;
-	RPC_CN_PKT_AUTH3_MAX_RECV_FRAG (header) = rpc_g_cn_large_frag_size;
+        RPC_CN_PKT_ASSOC_GROUP_ID (header) = grp_id;
+
+        /* use negotiated minor version number */
+        assoc->bind_packets_sent = 0;
+    }
+    else
+    {
+        if (ssize != 0)
+            RPC_CN_PKT_AUTH3_MAX_XMIT_FRAG (header) = ssize;
+        else
+            RPC_CN_PKT_AUTH3_MAX_XMIT_FRAG (header) = rpc_g_cn_large_frag_size;
+
+        if (rsize != 0)
+            RPC_CN_PKT_AUTH3_MAX_RECV_FRAG (header) = rsize;
+        else
+            RPC_CN_PKT_AUTH3_MAX_RECV_FRAG (header) = rpc_g_cn_large_frag_size;
     }
 
     /* use negotiated minor version number */

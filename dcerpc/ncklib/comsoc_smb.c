@@ -156,6 +156,8 @@ typedef struct rpc_smb_socket_s
     SMBHANDLE handle;
     SMBFID hFile;
 #endif
+    size_t maxSendBufferSize;
+    size_t maxRecvBufferSize;
     rpc_smb_buffer_t sendbuffer;
     rpc_smb_buffer_t recvbuffer;
     struct
@@ -599,6 +601,16 @@ rpc__smb_socket_create(
     dcethread_mutex_init_throw(&sock->lock, NULL);
     dcethread_cond_init_throw(&sock->event, NULL);
 
+#if HAVE_SMBCLIENT_FRAMEWORK
+    sock->handle = NULL;
+    sock->hFile = 0;
+    sock->maxSendBufferSize = 0;
+    sock->maxRecvBufferSize = 0;
+#else
+    sock->maxSendBufferSize = 8192;
+    sock->maxRecvBufferSize = 8192;
+#endif
+
 #if HAVE_LIKEWISE_LWIO
     err = LwNtStatusToErrno(LwIoOpenContextShared(&sock->context));
     if (err)
@@ -645,60 +657,60 @@ rpc__smb_socket_destroy(
 
     if (!sock)
     {
-	return;
+        return;
     }
 
 #if HAVE_LIKEWISE_LWIO
     if (sock->accept_backlog.queue)
     {
-	for (i = 0; i < sock->accept_backlog.capacity; i++)
-	{
-	    if (sock->accept_backlog.queue[i])
-	    {
-		NtCtxCloseFile(sock->context, sock->accept_backlog.queue[i]);
-	    }
-	}
+        for (i = 0; i < sock->accept_backlog.capacity; i++)
+        {
+            if (sock->accept_backlog.queue[i])
+            {
+                NtCtxCloseFile(sock->context, sock->accept_backlog.queue[i]);
+            }
+        }
 
-	close(sock->accept_backlog.selectfd[0]);
-	close(sock->accept_backlog.selectfd[1]);
+        close(sock->accept_backlog.selectfd[0]);
+        close(sock->accept_backlog.selectfd[1]);
 
-	free(sock->accept_backlog.queue);
+        free(sock->accept_backlog.queue);
     }
 
     if (sock->np && sock->context)
     {
-	NtCtxCloseFile(sock->context, sock->np);
+        NtCtxCloseFile(sock->context, sock->np);
     }
 
     if (sock->context)
     {
-	LwIoCloseContext(sock->context);
+        LwIoCloseContext(sock->context);
     }
 
 #elif HAVE_SMBCLIENT_FRAMEWORK
 
     if (sock->hFile != 0)
     {
-	SMBCloseFile(sock->handle, sock->hFile);
-	sock->hFile = 0;
+        SMBCloseFile(sock->handle, sock->hFile);
+        sock->hFile = 0;
     }
 
     if (sock->handle)
     {
-	SMBReleaseServer(sock->handle);
-	sock->handle = NULL;
+        SMBReleaseServer(sock->handle);
+        sock->handle = NULL;
     }
 
 #endif
 
     if (sock->sendbuffer.base)
     {
-	free(sock->sendbuffer.base);
+        free(sock->sendbuffer.base);
     }
 
     if (sock->recvbuffer.base)
     {
-	free(sock->recvbuffer.base);
+        free(sock->recvbuffer.base);
     }
 
     rpc__smb_transport_info_destroy(&sock->info);
@@ -707,7 +719,6 @@ rpc__smb_socket_destroy(
     dcethread_cond_destroy_throw(&sock->event);
 
     free(sock);
-
 }
 
 INTERNAL
@@ -1560,8 +1571,7 @@ smb_data_do_recv(
 
     do
     {
-        /* FIXME: magic number */
-        serr = rpc__smb_buffer_ensure_available(&smb->recvbuffer, 8192);
+        serr = rpc__smb_buffer_ensure_available(&smb->recvbuffer, smb->maxRecvBufferSize);
         if (serr)
         {
             goto error;
@@ -1675,6 +1685,7 @@ smb_data_do_recv(
             /* assume all the data got sent */
             rpc__smb_buffer_settle(&smb->sendbuffer);
             sent_data = 0;
+            cursor = smb->sendbuffer.base;
         }
 #endif
 
@@ -1775,8 +1786,7 @@ rpc__smb_socket_do_recv(
 
     do
     {
-        /* FIXME: magic number */
-        serr = rpc__smb_buffer_ensure_available(&smb->recvbuffer, 8192);
+        serr = rpc__smb_buffer_ensure_available(&smb->recvbuffer, smb->maxRecvBufferSize);
         if (serr)
         {
             goto error;
@@ -2046,17 +2056,58 @@ rpc__smb_socket_set_broadcast(
 INTERNAL
 rpc_socket_error_t
 rpc__smb_socket_set_bufs(
+#if HAVE_SMBCLIENT_FRAMEWORK
+    rpc_socket_t sock,
+#else
     rpc_socket_t sock ATTRIBUTE_UNUSED,
+#endif
     unsigned32 txsize ATTRIBUTE_UNUSED,
     unsigned32 rxsize ATTRIBUTE_UNUSED,
     unsigned32 *ntxsize ATTRIBUTE_UNUSED,
     unsigned32 *nrxsize ATTRIBUTE_UNUSED
 )
 {
+#if HAVE_SMBCLIENT_FRAMEWORK
+    rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
+    SMBServerPropertiesV1 server_properties;
+    NTSTATUS status;
+
+    if ( (smb->handle) && (smb->maxSendBufferSize == 0) )
+    {
+        /* try to get the max transaction size that is supported */
+        bzero(&server_properties, sizeof(server_properties));
+        status = SMBGetServerProperties(smb->handle, &server_properties, kPropertiesVersion, sizeof(server_properties));
+        if (NT_SUCCESS(status))
+        {
+            smb->maxSendBufferSize = (unsigned32) MIN (server_properties.maxWriteBytes, server_properties.maxTransactBytes);
+            smb->maxRecvBufferSize = (unsigned32) MIN (server_properties.maxReadBytes, server_properties.maxTransactBytes);
+
+            /* round down to nearest 1K */
+            smb->maxSendBufferSize = (smb->maxSendBufferSize / 1024) * 1024;
+            smb->maxRecvBufferSize = (smb->maxRecvBufferSize / 1024) * 1024;
+
+            /* fragments can not be bigger than UInt16 */
+            if (smb->maxSendBufferSize > UINT16_MAX)
+                smb->maxSendBufferSize = UINT16_MAX;
+
+            if (smb->maxRecvBufferSize > UINT16_MAX)
+                smb->maxRecvBufferSize = UINT16_MAX;
+        }
+    }
+
+    *ntxsize = (unsigned32) smb->maxSendBufferSize;
+    *nrxsize = (unsigned32) smb->maxRecvBufferSize;
+
+    return (RPC_C_SOCKET_OK);
+
+#else
+
     RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_set_bufs called\n"));
     rpc_socket_error_t serr = RPC_C_SOCKET_ENOTSUP;
 
     return serr;
+
+#endif
 }
 
 INTERNAL

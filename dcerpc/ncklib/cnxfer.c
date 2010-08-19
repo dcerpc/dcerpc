@@ -461,9 +461,9 @@ PRIVATE void rpc__cn_add_new_iovector_elmt
     if (iov_p->data_len == 0)
     {
         if (iov_p->buff_dealloc != (rpc_buff_dealloc_fn_t) NULL)
-	{
-	    (iov_p->buff_dealloc) (iov_p->buff_addr);
-	}
+        {
+            (iov_p->buff_dealloc) (iov_p->buff_addr);
+        }
         RPC_CN_CREP_IOVLEN (call_rep) --;
         RPC_CN_CREP_CUR_IOV_INDX (call_rep) --;
     }
@@ -614,9 +614,35 @@ PRIVATE void rpc__cn_transmit_buffers
     /*
      * Set the alloc hint; appears that NetApp's RPC implementation
      * depends on this.
+     * Three possible cases to deal with
+     * 1) call_rep->alloc_hint is not 0 - just use that value
+     * 2) call_rep->alloc_hint is 0 AND both first/last frag flags set -
+            calculate alloc_hint
+     * 3) call_rep->alloc_hint is 0 AND both first/last frag flags not set -
+            leave alloc_hint at 0 so its ignored and print warning
+            since this should not happen.
      */
-    RPC_CN_PKT_ALLOC_HINT (header_p) = RPC_CN_CREP_ACC_BYTCNT (call_rep) -
-                                       RPC_CN_CREP_SIZEOF_HDR (call_rep);
+    if (call_rep->alloc_hint != 0)
+    {
+        RPC_CN_PKT_ALLOC_HINT (header_p) = call_rep->alloc_hint;
+        call_rep->alloc_hint -= (RPC_CN_CREP_ACC_BYTCNT (call_rep) - RPC_CN_CREP_SIZEOF_HDR (call_rep));
+    }
+    else
+    {
+        if (RPC_CN_PKT_FLAGS (header_p) & (RPC_C_CN_FLAGS_FIRST_FRAG | RPC_C_CN_FLAGS_LAST_FRAG))
+        {
+            /* single fragment being set, so we can calculate alloc_hint */
+            RPC_CN_PKT_ALLOC_HINT (header_p) = RPC_CN_CREP_ACC_BYTCNT (call_rep) -
+                RPC_CN_CREP_SIZEOF_HDR (call_rep);
+        }
+        else
+        {
+            /* not a single fragment, yet call_rep->alloc_hint is 0
+             print out a warning as this should be fixed */
+            RPC_DBG_PRINTF (rpc_es_dbg_general, RPC_C_CN_DBG_GENERAL,
+                            ("(rpc__cn_transmit_buffers) setting alloc_hint is 0\n"));
+        }
+    }
 
     if (RPC_CALL_IS_CLIENT (((rpc_call_rep_t *) call_rep)))
     {

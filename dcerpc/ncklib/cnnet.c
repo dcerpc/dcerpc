@@ -807,6 +807,12 @@ INTERNAL pointer_t rpc__cn_network_init_desc
                          *desc,
                          RPC_SOCKET_ETOI (serr)));
     }
+    else
+    {
+        /* update socket buffer sizes with their actual values */
+        rpc__cn_set_sock_buffsize(rsize, ssize, status);
+
+    }
 
     RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_BUFFS,
                     ("(rpc__cn_network_init_desc) desc->%p desired_sndbuf %u, desired_rcvbuf %u\n",
@@ -1250,7 +1256,12 @@ PRIVATE void rpc__cn_network_req_connect
                              assoc,
                              assoc->cn_ctlblk.cn_sock,
                              RPC_SOCKET_ETOI (serr)));
-        } else {
+        }
+        else
+        {
+            /* update socket buffer sizes with their actual values */
+            rpc__cn_set_sock_buffsize(rsize, ssize, st);
+
             RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_BUFFS,
                             ("(rpc__cn_network_req_connect) desc->%p desired_sndbuf %u, desired_rcvbuf %u\n",
                              assoc->cn_ctlblk.cn_sock, rpc_g_cn_socket_read_buffer, rpc_g_cn_socket_write_buffer));

@@ -135,7 +135,7 @@
  * an architectural requirement which is checked in cnfbuf.h.
  */
 
-#define RPC_C_CN_LARGE_FRAG_SIZE        4096
+#define RPC_C_CN_LARGE_FRAG_SIZE        UINT16_MAX   /* BIND max xmit/recv field is UInt16 */
 #define RPC_C_CN_SMALL_FRAG_SIZE        256
 
 /*
