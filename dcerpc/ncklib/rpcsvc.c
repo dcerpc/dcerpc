@@ -101,7 +101,7 @@ char *__crashreporter_info__ = NULL;
 asm(".desc ___crashreporter_info__, 0x10");
 
 #define CRSetCrashLogMessage(msg) do { \
-    __crashreporter_info__ = (msg);
+    __crashreporter_info__ = (msg); \
 } while (0)
 
 #endif

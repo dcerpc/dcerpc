@@ -210,7 +210,12 @@ dnl Checks for header files.
 AC_CHECK_HEADERS(features.h sys/cdefs.h dlfcn.h sys/time.h)
 AC_CHECK_HEADERS(getopt.h sys/sockio.h sys/un.h nl_types.h)
 AC_CHECK_HEADERS(net/if_dl.h execinfo.h sys/fd_set.h)
-AC_CHECK_HEADERS(CrashReporterClient.h)
+AC_CHECK_HEADERS(CrashReporterClient.h,,,
+[[
+#if HAVE_CRASHREPORTERCLIENT_H
+# include <CrashReporterClient.h>
+#endif
+]])
 
 AC_CHECK_FUNCS(scandir getpeereid)
 
