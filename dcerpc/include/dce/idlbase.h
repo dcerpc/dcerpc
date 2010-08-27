@@ -203,8 +203,17 @@
 /***************************************************************************/
 
 /*
- * define true and false
+ * Define true and false. If we are in C++, then we get it for free. If we are
+ * in C99 then we get it from stdbool.h. Otherwise we make our own.
  */
+
+#if !defined(__cplusplus)
+
+#if __STDC_VERSION__ >= 199901L
+
+#include <stdbool.h>
+
+#else /* __STDC_VERSION__ >= 199901L */
 
 #ifndef true
 
@@ -219,6 +228,10 @@
 #ifndef false
 #   define false       FALSE
 #endif /* false */
+
+#endif /* __STDC_VERSION__ >= 199901L */
+#endif /* !defined(__cplusplus) */
+
 
 /***************************************************************************/
 
