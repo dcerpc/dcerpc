@@ -229,84 +229,84 @@ INTERNAL void rpc__gssauth_cn_vfy_srvr_resp (
 	unsigned32			/* out */    * /*st*/
     );
 
-INTERNAL rpc_cn_auth_epv_t rpc_g_gssauth_negotiate_cn_epv =
+INTERNAL const rpc_cn_auth_epv_t rpc_g_gssauth_negotiate_cn_epv =
 {
-	rpc__gssauth_cn_three_way_gss,
-	rpc__gssauth_cn_context_valid,
-	rpc__gssauth_negotiate_cn_create_info,
-	rpc__gssauth_cn_cred_changed,
-	rpc__gssauth_cn_cred_refresh,
-	rpc__gssauth_cn_fmt_client_req,
-	rpc__gssauth_cn_fmt_srvr_resp,
-	rpc__gssauth_cn_free_prot_info,
-	rpc__gssauth_cn_get_prot_info,
-	rpc__gssauth_cn_pre_call,
-	rpc__gssauth_cn_pre_send,
-	rpc__gssauth_cn_recv_check,
-	rpc__gssauth_cn_tlr_uuid_crc,
-	rpc__gssauth_cn_tlr_unpack,
-	rpc__gssauth_cn_vfy_client_req,
-	rpc__gssauth_cn_vfy_srvr_resp
+    .three_way      = rpc__gssauth_cn_three_way_gss,
+    .context_valid  = rpc__gssauth_cn_context_valid,
+    .create_info    = rpc__gssauth_negotiate_cn_create_info,
+    .cred_changed   = rpc__gssauth_cn_cred_changed,
+    .cred_refresh   = rpc__gssauth_cn_cred_refresh,
+    .fmt_client_req = rpc__gssauth_cn_fmt_client_req,
+    .fmt_srvr_resp  = rpc__gssauth_cn_fmt_srvr_resp,
+    .free_prot_info = rpc__gssauth_cn_free_prot_info,
+    .get_prot_info  = rpc__gssauth_cn_get_prot_info,
+    .pre_call       = rpc__gssauth_cn_pre_call,
+    .pre_send       = rpc__gssauth_cn_pre_send,
+    .recv_check     = rpc__gssauth_cn_recv_check,
+    .tlr_uuid_crc   = rpc__gssauth_cn_tlr_uuid_crc,
+    .tlr_unpack     = rpc__gssauth_cn_tlr_unpack,
+    .vfy_client_req = rpc__gssauth_cn_vfy_client_req,
+    .vfy_srvr_resp  = rpc__gssauth_cn_vfy_srvr_resp
 };
 
-INTERNAL rpc_cn_auth_epv_t rpc_g_gssauth_mskrb_cn_epv =
+INTERNAL const rpc_cn_auth_epv_t rpc_g_gssauth_mskrb_cn_epv =
 {
-	rpc__gssauth_cn_three_way_gss,
-	rpc__gssauth_cn_context_valid,
-	rpc__gssauth_mskrb_cn_create_info,
-	rpc__gssauth_cn_cred_changed,
-	rpc__gssauth_cn_cred_refresh,
-	rpc__gssauth_cn_fmt_client_req,
-	rpc__gssauth_cn_fmt_srvr_resp,
-	rpc__gssauth_cn_free_prot_info,
-	rpc__gssauth_cn_get_prot_info,
-	rpc__gssauth_cn_pre_call,
-	rpc__gssauth_cn_pre_send,
-	rpc__gssauth_cn_recv_check,
-	rpc__gssauth_cn_tlr_uuid_crc,
-	rpc__gssauth_cn_tlr_unpack,
-	rpc__gssauth_cn_vfy_client_req,
-	rpc__gssauth_cn_vfy_srvr_resp
+    .three_way      =   rpc__gssauth_cn_three_way_gss,
+    .context_valid  =   rpc__gssauth_cn_context_valid,
+    .create_info    =   rpc__gssauth_mskrb_cn_create_info,
+    .cred_changed   =   rpc__gssauth_cn_cred_changed,
+    .cred_refresh   =   rpc__gssauth_cn_cred_refresh,
+    .fmt_client_req =   rpc__gssauth_cn_fmt_client_req,
+    .fmt_srvr_resp  =   rpc__gssauth_cn_fmt_srvr_resp,
+    .free_prot_info =   rpc__gssauth_cn_free_prot_info,
+    .get_prot_info  =   rpc__gssauth_cn_get_prot_info,
+    .pre_call       =   rpc__gssauth_cn_pre_call,
+    .pre_send       =   rpc__gssauth_cn_pre_send,
+    .recv_check     =   rpc__gssauth_cn_recv_check,
+    .tlr_uuid_crc   =   rpc__gssauth_cn_tlr_uuid_crc,
+    .tlr_unpack     =   rpc__gssauth_cn_tlr_unpack,
+    .vfy_client_req =   rpc__gssauth_cn_vfy_client_req,
+    .vfy_srvr_resp  =   rpc__gssauth_cn_vfy_srvr_resp
 };
 
-INTERNAL rpc_cn_auth_epv_t rpc_g_gssauth_winnt_cn_epv =
+INTERNAL const rpc_cn_auth_epv_t rpc_g_gssauth_winnt_cn_epv =
 {
-	rpc__gssauth_cn_three_way_winnt,
-	rpc__gssauth_cn_context_valid,
-	rpc__gssauth_winnt_cn_create_info,
-	rpc__gssauth_cn_cred_changed,
-	rpc__gssauth_cn_cred_refresh,
-	rpc__gssauth_cn_fmt_client_req,
-	rpc__gssauth_cn_fmt_srvr_resp,
-	rpc__gssauth_cn_free_prot_info,
-	rpc__gssauth_cn_get_prot_info,
-	rpc__gssauth_cn_pre_call,
-	rpc__gssauth_cn_pre_send,
-	rpc__gssauth_cn_recv_check,
-	rpc__gssauth_cn_tlr_uuid_crc,
-	rpc__gssauth_cn_tlr_unpack,
-	rpc__gssauth_cn_vfy_client_req,
-	rpc__gssauth_cn_vfy_srvr_resp
+    .three_way      =   rpc__gssauth_cn_three_way_winnt,
+    .context_valid  =   rpc__gssauth_cn_context_valid,
+    .create_info    =   rpc__gssauth_winnt_cn_create_info,
+    .cred_changed   =   rpc__gssauth_cn_cred_changed,
+    .cred_refresh   =   rpc__gssauth_cn_cred_refresh,
+    .fmt_client_req =   rpc__gssauth_cn_fmt_client_req,
+    .fmt_srvr_resp  =   rpc__gssauth_cn_fmt_srvr_resp,
+    .free_prot_info =   rpc__gssauth_cn_free_prot_info,
+    .get_prot_info  =   rpc__gssauth_cn_get_prot_info,
+    .pre_call       =   rpc__gssauth_cn_pre_call,
+    .pre_send       =   rpc__gssauth_cn_pre_send,
+    .recv_check     =   rpc__gssauth_cn_recv_check,
+    .tlr_uuid_crc   =   rpc__gssauth_cn_tlr_uuid_crc,
+    .tlr_unpack     =   rpc__gssauth_cn_tlr_unpack,
+    .vfy_client_req =   rpc__gssauth_cn_vfy_client_req,
+    .vfy_srvr_resp  =   rpc__gssauth_cn_vfy_srvr_resp
 };
 
-INTERNAL rpc_cn_auth_epv_t rpc_g_gssauth_netlogon_cn_epv =
+INTERNAL const rpc_cn_auth_epv_t rpc_g_gssauth_netlogon_cn_epv =
 {
-	rpc__gssauth_cn_three_way_gss,
-	rpc__gssauth_cn_context_valid,
-	rpc__gssauth_netlogon_cn_create_info,
-	rpc__gssauth_cn_cred_changed,
-	rpc__gssauth_cn_cred_refresh,
-	rpc__gssauth_cn_fmt_client_req,
-	rpc__gssauth_cn_fmt_srvr_resp,
-	rpc__gssauth_cn_free_prot_info,
-	rpc__gssauth_cn_get_prot_info,
-	rpc__gssauth_cn_pre_call,
-	rpc__gssauth_cn_pre_send,
-	rpc__gssauth_cn_recv_check,
-	rpc__gssauth_cn_tlr_uuid_crc,
-	rpc__gssauth_cn_tlr_unpack,
-	rpc__gssauth_cn_vfy_client_req,
-	rpc__gssauth_cn_vfy_srvr_resp
+    .three_way      =   rpc__gssauth_cn_three_way_gss,
+    .context_valid  =   rpc__gssauth_cn_context_valid,
+    .create_info    =   rpc__gssauth_netlogon_cn_create_info,
+    .cred_changed   =   rpc__gssauth_cn_cred_changed,
+    .cred_refresh   =   rpc__gssauth_cn_cred_refresh,
+    .fmt_client_req =   rpc__gssauth_cn_fmt_client_req,
+    .fmt_srvr_resp  =   rpc__gssauth_cn_fmt_srvr_resp,
+    .free_prot_info =   rpc__gssauth_cn_free_prot_info,
+    .get_prot_info  =   rpc__gssauth_cn_get_prot_info,
+    .pre_call       =   rpc__gssauth_cn_pre_call,
+    .pre_send       =   rpc__gssauth_cn_pre_send,
+    .recv_check     =   rpc__gssauth_cn_recv_check,
+    .tlr_uuid_crc   =   rpc__gssauth_cn_tlr_uuid_crc,
+    .tlr_unpack     =   rpc__gssauth_cn_tlr_unpack,
+    .vfy_client_req =   rpc__gssauth_cn_vfy_client_req,
+    .vfy_srvr_resp  =   rpc__gssauth_cn_vfy_srvr_resp
 };
 
 /*****************************************************************************/

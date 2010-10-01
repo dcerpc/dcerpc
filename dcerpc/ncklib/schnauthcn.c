@@ -209,24 +209,24 @@ INTERNAL void rpc__schnauth_cn_vfy_srvr_resp (
         unsigned32                      * /*st*/
     );
 
-GLOBAL rpc_cn_auth_epv_t rpc_g_schnauth_cn_epv =
+INTERNAL const rpc_cn_auth_epv_t rpc_g_schnauth_cn_epv =
 {
-    rpc__schnauth_cn_three_way,
-    rpc__schnauth_cn_context_valid,
-    rpc__schnauth_cn_create_info,
-    rpc__schnauth_cn_cred_changed,
-    rpc__schnauth_cn_cred_refresh,
-    rpc__schnauth_cn_fmt_client_req,
-    rpc__schnauth_cn_fmt_srvr_resp,
-    rpc__schnauth_cn_free_prot_info,
-    rpc__schnauth_cn_get_prot_info,
-    rpc__schnauth_cn_pre_call,
-    rpc__schnauth_cn_pre_send,
-    rpc__schnauth_cn_recv_check,
-    rpc__schnauth_cn_tlr_uuid_crc,
-    rpc__schnauth_cn_tlr_unpack,
-    rpc__schnauth_cn_vfy_client_req,
-    rpc__schnauth_cn_vfy_srvr_resp
+    .three_way      = rpc__schnauth_cn_three_way,
+    .context_valid  = rpc__schnauth_cn_context_valid,
+    .create_info    = rpc__schnauth_cn_create_info,
+    .cred_changed   = rpc__schnauth_cn_cred_changed,
+    .cred_refresh   = rpc__schnauth_cn_cred_refresh,
+    .fmt_client_req = rpc__schnauth_cn_fmt_client_req,
+    .fmt_srvr_resp  = rpc__schnauth_cn_fmt_srvr_resp,
+    .free_prot_info = rpc__schnauth_cn_free_prot_info,
+    .get_prot_info  = rpc__schnauth_cn_get_prot_info,
+    .pre_call       = rpc__schnauth_cn_pre_call,
+    .pre_send       = rpc__schnauth_cn_pre_send,
+    .recv_check     = rpc__schnauth_cn_recv_check,
+    .tlr_uuid_crc   = rpc__schnauth_cn_tlr_uuid_crc,
+    .tlr_unpack     = rpc__schnauth_cn_tlr_unpack,
+    .vfy_client_req = rpc__schnauth_cn_vfy_client_req,
+    .vfy_srvr_resp  = rpc__schnauth_cn_vfy_srvr_resp
 };
 
 /*****************************************************************************/
