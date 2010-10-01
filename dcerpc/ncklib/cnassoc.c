@@ -3324,6 +3324,10 @@ INTERNAL void rpc__cn_assoc_open
     }
 #endif
 
+    RPC_DBG_PRINTF (rpc_es_dbg_general, RPC_C_CN_DBG_GENERAL,
+	    ("(%s) RPC_CN_ASSOC_EVAL_USER_EVENT(.., RPC_C_ASSOC_REQ,...) returned %#08x, %#08x\n",
+		 __func__, assoc->assoc_status, *st));
+
     *st = assoc->assoc_status;
     if (*st != rpc_s_ok)
     {
@@ -3512,6 +3516,10 @@ unsigned32              *st
      */
     if (RPC_CN_AUTH_REQUIRED (info))
     {
+	RPC_DBG_PRINTF (rpc_e_dbg_auth, RPC_C_CN_DBG_GENERAL,
+		("(%s) auth required principal=%s level=%u protocol=%u\n",
+		 __func__, info->server_princ_name,
+		 info->authn_level, info->authn_protocol));
         /*
          * Scan all previously negotiated security contexts.
          */
