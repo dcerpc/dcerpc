@@ -3881,12 +3881,20 @@ INTERNAL void rpc__cn_assoc_process_auth_tlr
         local_auth_value_len = RPC_CN_PKT_AUTH_LEN(req_header);
     }
 
+    /*
+     * Verifing the auth tlr may involve making rpc requests which could end up
+     * calling rpc__cn_binding_alloc().  Drop the global lock so we do not
+     * deadlock.
+     */
+    RPC_CN_UNLOCK ();
+
     RPC_CN_AUTH_VFY_CLIENT_REQ (&assoc->security,
                                 sec,
                                 (pointer_t)local_auth_value,
                                 local_auth_value_len,
-				old_client,
+                                old_client,
                                 &sec->sec_status);
+    RPC_CN_LOCK ();
 
     if (sec->sec_status == rpc_s_ok)
     {
