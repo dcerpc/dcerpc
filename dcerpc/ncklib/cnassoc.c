@@ -1909,6 +1909,7 @@ PRIVATE void rpc__cn_assoc_send_frag
         if (out_iov.iov_base != NULL)
         {
             iovp = &out_iov;
+            iovcnt = 1;
             bytes_to_send = iovp->iov_len;
             free_iov_buffer = true;
             save_base = iovp->iov_base;
