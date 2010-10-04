@@ -271,113 +271,6 @@ typedef struct rpc_bsd_socket_s
     rpc_bsd_transport_info_t info;
 } rpc_bsd_socket_t, *rpc_bsd_socket_p_t;
 
-/*
- * Macros for performance critical operations.
- */
-
-inline static void RPC_SOCKET_SENDMSG(
-	rpc_socket_t sock,
-	rpc_socket_iovec_p_t iovp,
-	int iovlen,
-	rpc_addr_p_t addrp,
-	volatile size_t *ccp,
-	volatile rpc_socket_error_t *serrp
-    )
-{
-	struct msghdr msg;
-	rpc_bsd_socket_p_t lrpc = (rpc_bsd_socket_p_t) sock->data.pointer;
-sendmsg_again:
-	memset(&msg, 0, sizeof(msg));
-	RPC_LOG_SOCKET_SENDMSG_NTR;
-	RPC_SOCKET_INIT_MSGHDR(&msg);
-	if ((addrp) != NULL)
-	{
-		RPC_SOCKET_FIX_ADDRLEN(addrp);
-		msg.msg_name = (caddr_t) &(addrp)->sa;
-		msg.msg_namelen = (addrp)->len;
-	}
-	else
-	{
-		msg.msg_name = (caddr_t) NULL;
-	}
-	msg.msg_iov = (struct iovec *) iovp;
-	msg.msg_iovlen = iovlen;
-	*(ccp) = dcethread_sendmsg (lrpc->fd, (struct msghdr *) &msg, 0);
-	*(serrp) = (*(ccp) == (size_t) -1) ? errno : RPC_C_SOCKET_OK;
-	RPC_LOG_SOCKET_SENDMSG_XIT;
-	if (*(serrp) == EINTR)
-	{
-		goto sendmsg_again;
-	}
-}
-
-inline static void RPC_SOCKET_RECVFROM
-(
-    rpc_socket_t        sock,
-    byte_p_t            buf,        /* buf for rcvd data */
-    int                 buflen,     /* len of above buf */
-    rpc_addr_p_t        from,       /* addr of sender */
-    volatile size_t     *ccp,       /* returned number of bytes actually rcvd */
-	 volatile rpc_socket_error_t *serrp
-)
-{
-	rpc_bsd_socket_p_t lrpc = (rpc_bsd_socket_p_t) sock->data.pointer;
-recvfrom_again:
-	if ((from) != NULL) RPC_SOCKET_FIX_ADDRLEN(from);
-	RPC_LOG_SOCKET_RECVFROM_NTR;
-	*(ccp) = dcethread_recvfrom (lrpc->fd, (char *) buf, (int) buflen, (int) 0,
-			(struct sockaddr *) (&(from)->sa), (&(from)->len));
-	*(serrp) = (*(ccp) == (size_t) -1) ? errno : RPC_C_SOCKET_OK;
-	RPC_LOG_SOCKET_RECVFROM_XIT;
-	RPC_SOCKET_FIX_ADDRLEN(from);
-	if (*(serrp) == EINTR)
-	{
-		goto recvfrom_again;
-	}
-
-}
-
-inline static void RPC_SOCKET_RECVMSG
-(
-    rpc_socket_t        sock,
-    rpc_socket_iovec_p_t iovp,       /* array of bufs for rcvd data */
-    int                 iovlen,      /* number of bufs */
-    rpc_addr_p_t        addrp,       /* addr of sender */
-    volatile size_t     *ccp,        /* returned number of bytes actually rcvd */
-	 volatile rpc_socket_error_t *serrp
-)
-{
-	rpc_bsd_socket_p_t lrpc = (rpc_bsd_socket_p_t) sock->data.pointer;
-	struct msghdr msg;
-recvmsg_again:
-	memset(&msg, 0, sizeof(msg));
-	RPC_LOG_SOCKET_RECVMSG_NTR;
-	RPC_SOCKET_INIT_MSGHDR(&msg);
-	if ((addrp) != NULL)
-	{
-		RPC_SOCKET_FIX_ADDRLEN(addrp);
-		msg.msg_name = (caddr_t) &(addrp)->sa;
-		msg.msg_namelen = (addrp)->len;
-	}
-	else
-	{
-		msg.msg_name = (caddr_t) NULL;
-	}
-	msg.msg_iov = (struct iovec *) iovp;
-	msg.msg_iovlen = iovlen;
-	*(ccp) = dcethread_recvmsg (lrpc->fd, (struct msghdr *) &msg, 0);
-	if ((addrp) != NULL)
-	{
-		(addrp)->len = msg.msg_namelen;
-	}
-	*(serrp) = (*(ccp) == (size_t) -1) ? errno : RPC_C_SOCKET_OK;
-	RPC_LOG_SOCKET_RECVMSG_XIT;
-	if (*(serrp) == EINTR)
-	{
-		goto recvmsg_again;
-	}
-}
-
 INTERNAL rpc_socket_error_t
 rpc__bsd_socket_set_default_options (
                                      rpc_socket_basic_t sockfd)
@@ -1045,14 +938,53 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_sendmsg
 (
     rpc_socket_t        sock,
     rpc_socket_iovec_p_t iov,       /* array of bufs of data to send */
-    int                 iov_len,    /* number of bufs */
+    int                 iovcnt,     /* number of bufs */
     rpc_addr_p_t        addr,       /* addr of receiver */
     size_t              *cc         /* returned number of bytes actually sent */
 )
 {
-    rpc_socket_error_t serr;
+    ssize_t             ret;
+    rpc_socket_error_t  serr;
+    struct msghdr       msg;
+    rpc_bsd_socket_p_t  lrpc = (rpc_bsd_socket_p_t) sock->data.pointer;
 
-    RPC_SOCKET_SENDMSG(sock, iov, iov_len, addr, cc, &serr);
+    *cc = 0;
+
+sendmsg_again:
+
+    memset(&msg, 0, sizeof(msg));
+    RPC_LOG_SOCKET_SENDMSG_NTR;
+    RPC_SOCKET_INIT_MSGHDR(&msg);
+    if ((addr) != NULL)
+    {
+        RPC_SOCKET_FIX_ADDRLEN(addr);
+        msg.msg_name = (caddr_t) &(addr)->sa;
+        msg.msg_namelen = (addr)->len;
+    }
+    else
+    {
+        msg.msg_name = (caddr_t) NULL;
+    }
+    msg.msg_iov = iov;
+    msg.msg_iovlen = iovcnt;
+
+    ret = dcethread_sendmsg (lrpc->fd, &msg, 0);
+    if (ret == (size_t) -1)
+    {
+        serr = errno;
+    }
+    else
+    {
+        serr = RPC_C_SOCKET_OK;
+        *cc = ret;
+    }
+
+    RPC_LOG_SOCKET_SENDMSG_XIT;
+    if (serr == EINTR)
+    {
+        goto sendmsg_again;
+    }
+
     return (serr);
 }
 
@@ -1078,9 +1010,40 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_recvfrom
     size_t              *cc         /* returned number of bytes actually rcvd */
 )
 {
-    rpc_socket_error_t serr = RPC_C_SOCKET_OK;
+    ssize_t             ret;
+    rpc_socket_error_t  serr;
+    struct msghdr       msg;
+    rpc_bsd_socket_p_t  lrpc = (rpc_bsd_socket_p_t) sock->data.pointer;
 
-    RPC_SOCKET_RECVFROM (sock, buf, len, from, cc, &serr);
+    *cc = 0;
+
+recvfrom_again:
+    if (from != NULL)
+    {
+        RPC_SOCKET_FIX_ADDRLEN(from);
+    }
+
+    RPC_LOG_SOCKET_RECVFROM_NTR;
+
+    ret = dcethread_recvfrom(lrpc->fd, buf, len, 0 /* flags */,
+                    &from->sa, &from->len);
+    if (ret == (size_t) -1)
+    {
+        serr = errno;
+    }
+    else
+    {
+        serr = RPC_C_SOCKET_OK;
+        *cc = ret;
+    }
+
+    RPC_LOG_SOCKET_RECVFROM_XIT;
+    RPC_SOCKET_FIX_ADDRLEN(from);
+    if (serr == EINTR)
+    {
+        goto recvfrom_again;
+    }
+
     return serr;
 }
 
@@ -1100,14 +1063,58 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_recvmsg
 (
     rpc_socket_t        sock,
     rpc_socket_iovec_p_t iov,       /* array of bufs for rcvd data */
-    int                 iov_len,    /* number of bufs */
+    int                 iovcnt,    /* number of bufs */
     rpc_addr_p_t        addr,       /* addr of sender */
     size_t              *cc         /* returned number of bytes actually rcvd */
 )
 {
-    rpc_socket_error_t serr = RPC_C_SOCKET_OK;
+    ssize_t             ret;
+    rpc_socket_error_t  serr;
+    struct msghdr       msg;
+    rpc_bsd_socket_p_t  lrpc = (rpc_bsd_socket_p_t) sock->data.pointer;
 
-    RPC_SOCKET_RECVMSG(sock, iov, iov_len, addr, cc, &serr);
+    *cc = 0;
+
+recvmsg_again:
+
+    memset(&msg, 0, sizeof(msg));
+    RPC_LOG_SOCKET_RECVMSG_NTR;
+    RPC_SOCKET_INIT_MSGHDR(&msg);
+    if (addr != NULL)
+    {
+        RPC_SOCKET_FIX_ADDRLEN(addr);
+        msg.msg_name = (caddr_t) &addr->sa;
+        msg.msg_namelen = addr->len;
+    }
+    else
+    {
+        msg.msg_name = (caddr_t) NULL;
+    }
+    msg.msg_iov =  iov;
+    msg.msg_iovlen = iovcnt;
+
+    ret = dcethread_recvmsg (lrpc->fd, &msg, 0);
+    if (ret == (ssize_t)-1)
+    {
+        serr = errno;
+    }
+    else
+    {
+        serr = RPC_C_SOCKET_OK;
+        *cc = ret;
+    }
+
+    RPC_LOG_SOCKET_RECVMSG_XIT;
+    if (serr == EINTR)
+    {
+        goto recvmsg_again;
+    }
+
+    if (addr != NULL)
+    {
+        addr->len = msg.msg_namelen;
+    }
+
     return serr;
 }
 
