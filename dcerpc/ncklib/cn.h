@@ -151,14 +151,16 @@ typedef struct rpc_cn_auth_info_s_t
  * R P C _ C N _ S E C _ C O N T E X T _ T
  */
 
-#define RPC_C_SEC_STATE_INVALID			0
-#define RPC_C_SEC_STATE_INCOMPLETE		1
-#define RPC_C_SEC_STATE_COMPLETE		2
+typedef enum {
+    RPC_C_SEC_STATE_INVALID     = 0,
+    RPC_C_SEC_STATE_INCOMPLETE  = 1,
+    RPC_C_SEC_STATE_COMPLETE    = 2
+} rpc_cn_sec_state_t;
 
 typedef struct rpc_cn_sec_context_s_t
 {
     rpc_list_t           link;         /* MUST BE 1ST                    */
-    unsigned8            sec_state;
+    rpc_cn_sec_state_t   sec_state;
     unsigned32           sec_status;
     unsigned32           sec_key_id;
     unsigned32           sec_last_call_id;
