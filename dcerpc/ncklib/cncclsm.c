@@ -137,6 +137,60 @@ GLOBAL const char     *rpc_g_cn_call_client_states [] =
     "CALL_FAILED_DNE  ",
     "CALL_FAILED      "
 };
+
+PRIVATE void rpc__cn_call_sm_trace
+(
+    rpc_cn_call_rep_t   *crep,
+    unsigned32          event_id,
+    unsigned32          id,
+    const char          *file ATTRIBUTE_UNUSED,
+    const char          *funcname ATTRIBUTE_UNUSED,
+    int                 lineno ATTRIBUTE_UNUSED
+)
+{
+    if (RPC_CALL_IS_CLIENT(&crep->common))
+    {
+        RPC_DBG_PRINTF (rpc_e_dbg_cn_state, RPC_C_CN_DBG_CALL_SM_TRACE,
+            ("(%s) STATE CLIENT CALL:   %d state->%s event->%s\n",
+             funcname, id,
+             RPC_CN_CALL_CLIENT_STATE((crep)->call_state.cur_state),
+             RPC_CN_CALL_CLIENT_EVENT(event_id)));
+    }
+    else
+    {
+        RPC_DBG_PRINTF (rpc_e_dbg_cn_state, RPC_C_CN_DBG_CALL_SM_TRACE,
+            ("(%s) STATE SERVER CALL:   %d state->%s event->%s\n",
+             funcname, id,
+             RPC_CN_CALL_SERVER_STATE((crep)->call_state.cur_state),
+             RPC_CN_CALL_SERVER_EVENT(event_id)));
+    }
+}
+
+PRIVATE void rpc__cn_call_sm_trace_state
+(
+    rpc_cn_call_rep_t   *crep,
+    unsigned32          id,
+    const char          *file ATTRIBUTE_UNUSED,
+    const char          *funcname ATTRIBUTE_UNUSED,
+    int                 lineno ATTRIBUTE_UNUSED
+)
+{
+    if (RPC_CALL_IS_CLIENT(&crep->common))
+    {
+        RPC_DBG_PRINTF (rpc_e_dbg_cn_state, RPC_C_CN_DBG_CALL_SM_TRACE,
+            ("(%s) STATE CLIENT CALL:   %d new state->%s\n",
+             funcname, id,
+             RPC_CN_CALL_CLIENT_STATE(crep->call_state.cur_state)));
+    }
+    else
+    {
+        RPC_DBG_PRINTF (rpc_e_dbg_cn_state, RPC_C_CN_DBG_CALL_SM_TRACE,
+            ("(%s) STATE SERVER CALL:   %d new state->%s\n",
+             funcname, id,
+             RPC_CN_CALL_SERVER_STATE(crep->call_state.cur_state)));
+    }
+}
+
 #endif /* DEBUG */
 
 

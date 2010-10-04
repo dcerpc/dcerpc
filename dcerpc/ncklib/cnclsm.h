@@ -195,32 +195,46 @@ PRIVATE unsigned32     rpc__cn_call_sm_protocol_error (
     );
 
 
+#ifdef DEBUG
+
+#define RPC_CN_CALL_CLIENT_STATE(state) ( \
+    rpc_g_cn_call_client_states[ (state) - RPC_C_CN_STATEBASE ] \
+)
+
+#define RPC_CN_CALL_CLIENT_EVENT(event_id) ( \
+    rpc_g_cn_call_client_events[ (event_id) - RPC_C_CN_STATEBASE ] \
+)
+
+#define RPC_CN_CALL_SERVER_STATE(state) ( \
+    rpc_g_cn_call_server_states[ (state) - RPC_C_CN_STATEBASE ] \
+)
+
+#define RPC_CN_CALL_SERVER_EVENT(event_id) ( \
+    rpc_g_cn_call_server_events[ (event_id) - RPC_C_CN_STATEBASE ] \
+)
+
+#endif
 /***********************************************************************/
 /*
  * R P C _ C N _ C A L L _ S M _ T R C
  */
 #ifdef DEBUG
-#define RPC_CN_CALL_SM_TRC(crep, event_id, id)\
-{\
-    if (RPC_CALL_IS_CLIENT((rpc_call_rep_t *)(crep)))\
-    {\
-        RPC_DBG_PRINTF (rpc_e_dbg_cn_state, RPC_C_CN_DBG_CALL_SM_TRACE, \
-                        ("STATE CLIENT CALL:   %x state->%s event->%s\n",\
-                         id, \
-                         rpc_g_cn_call_client_states[(crep)->call_state.cur_state-RPC_C_CN_STATEBASE],\
-                         rpc_g_cn_call_client_events[event_id-RPC_C_CN_STATEBASE]));\
-    }\
-    else\
-    {\
-        RPC_DBG_PRINTF (rpc_e_dbg_cn_state, RPC_C_CN_DBG_CALL_SM_TRACE, \
-                        ("STATE SERVER CALL:   %x state->%s event->%s\n",\
-                         id, \
-                         rpc_g_cn_call_server_states[(crep)->call_state.cur_state-RPC_C_CN_STATEBASE],\
-                         rpc_g_cn_call_server_events[event_id-RPC_C_CN_STATEBASE]));\
-    }\
-}
+
+PRIVATE void rpc__cn_call_sm_trace (
+    rpc_cn_call_rep_t *         /* call rep */,
+    unsigned32                  /* event_id */,
+    unsigned32                  /* id */,
+    const char *                /* file */,
+    const char *                /* funcname */,
+    int                         /* lineno */);
+
+#define RPC_CN_CALL_SM_TRC(crep, event_id, id) \
+    rpc__cn_call_sm_trace(crep, event_id, id, __FILE__, __func__, __LINE__)
+
 #else
+
 #define RPC_CN_CALL_SM_TRC(crep, event_id, id)
+
 #endif
 
 
@@ -229,25 +243,21 @@ PRIVATE unsigned32     rpc__cn_call_sm_protocol_error (
  * R P C _ C N _ C A L L _ S M _ T R C _ S T A T E
  */
 #ifdef DEBUG
-#define RPC_CN_CALL_SM_TRC_STATE(crep, id)\
-{\
-    if (RPC_CALL_IS_CLIENT((rpc_call_rep_t *)(crep)))\
-    {\
-        RPC_DBG_PRINTF (rpc_e_dbg_cn_state, RPC_C_CN_DBG_CALL_SM_TRACE, \
-                        ("STATE CLIENT CALL:   %x new state->%s\n",\
-                         id, \
-                         rpc_g_cn_call_client_states[(crep)->call_state.cur_state-RPC_C_CN_STATEBASE])); \
-    }\
-    else\
-    {\
-        RPC_DBG_PRINTF (rpc_e_dbg_cn_state, RPC_C_CN_DBG_CALL_SM_TRACE, \
-                        ("STATE SERVER CALL:   %x new state->%s\n",\
-                         id, \
-                         rpc_g_cn_call_server_states[(crep)->call_state.cur_state-RPC_C_CN_STATEBASE])); \
-    }\
-}
+
+PRIVATE void rpc__cn_call_sm_trace_state (
+    rpc_cn_call_rep_t *         /* call rep */,
+    unsigned32                  /* id */,
+    const char *                /* file */,
+    const char *                /* funcname */,
+    int                         /* lineno */);
+
+#define RPC_CN_CALL_SM_TRC_STATE(crep, id) \
+    rpc__cn_call_sm_trace_state(crep, id, __FILE__, __func__, __LINE__)
+
 #else
+
 #define RPC_CN_CALL_SM_TRC_STATE(crep, id)
+
 #endif
 
 /***********************************************************************/
