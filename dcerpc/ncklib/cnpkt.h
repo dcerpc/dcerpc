@@ -412,6 +412,16 @@ typedef unsigned16 rpc_cn_pres_reject_reason_t;
 #define RPC_C_CN_PREJ_USER_DATA_NOT_READABLE          6 /* not used */
 #define RPC_C_CN_PREJ_NO_PSAP_AVAILABLE               7 /* not used */
 
+/* MS-RPCE bind rejection extensions */
+
+/* Authentication type requested by client is not recognized by server. */
+#define RPC_C_CN_PREJ_AUTH_TYPE_NOT_RECOGNIZED        8
+
+/* This rejection code is used when an unrecoverable error is detected by
+ * the underlying security package.
+ */
+#define RPC_C_CN_PREJ_INVALID_CHECKSUM                9
+
 /*
  *****************************************************************************
  *

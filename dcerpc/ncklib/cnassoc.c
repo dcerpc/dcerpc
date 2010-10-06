@@ -3084,6 +3084,12 @@ unsigned32      prej
         case RPC_C_CN_PREJ_REASON_NOT_SPECIFIED:
         return (rpc_s_too_many_rem_connects);
 
+        case RPC_C_CN_PREJ_AUTH_TYPE_NOT_RECOGNIZED:
+        return (rpc_s_unknown_authn_service);
+
+        case RPC_C_CN_PREJ_INVALID_CHECKSUM:
+        return (rpc_s_invalid_checksum);
+
         default:
         return (rpc_s_unknown_reject);
     }
