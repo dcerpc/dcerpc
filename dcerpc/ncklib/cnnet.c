@@ -99,6 +99,7 @@
 #include <cnid.h>       /* NCA Connection local ID service */
 #include <cnassoc.h>    /* NCA Connection association service */
 #include <cnassm.h>     /* NCA Connection association state machine */
+#include <cnasgsm.h>    /* NCA Connection association group state machine */
 #include <cnfbuf.h>     /* NCA Connection fragment buffer service */
 #include <cncall.h>     /* NCA Connection call service */
 #include <cnnet.h>
@@ -2269,6 +2270,8 @@ PRIVATE void rpc__cn_network_close
     CODING_ERROR(st);
     RPC_CN_DBG_RTN_PRINTF (rpc__cn_network_close);
 
+    RPC_CN_LOCK ();
+
     /*
      * Get the association group using the group id contained in the
      * binding handle.
@@ -2281,23 +2284,55 @@ PRIVATE void rpc__cn_network_close
 
     /*
      * If the association group control block can't be found
-     * return an error.
+     * return the error from the lookup.
      */
-    if (RPC_CN_LOCAL_ID_VALID (grp_id))
+    assoc_grp = RPC_CN_ASSOC_GRP (grp_id);
+    if (assoc_grp != NULL)
     {
         rpc_cn_assoc_t *assoc;
 
         /*
          * We now have the association group control block we've been
          * looking for. Free it.
+         *
+         * We used to just call rpc__cn_assoc_abort on the first
+	 * association in the group, but this results in an empty
+	 * association group.  Subsequent RPCs will find this empty
+	 * group and fail with rpc_s_connection_closed. Since we want
+	 * to blow away the underlying transport, taking down the whole
+	 * association group along with it is the right thing to do.
          */
 
-        assoc_grp = RPC_CN_ASSOC_GRP (grp_id);
-        assert (assoc_grp != NULL);
-        assoc = (rpc_cn_assoc_t *)assoc_grp->grp_assoc_list.next;
-        rpc__cn_assoc_abort (assoc, st);
+        for (;;)
+        {
+
+            RPC_LIST_FIRST (assoc_grp->grp_assoc_list,
+                    assoc, rpc_cn_assoc_p_t);
+
+            if (assoc == NULL)
+            {
+                /*
+                 * If everything went through the association group state
+                 * machine correctly, then we should not have an association
+                 * group with no associations.
+                 */
+                RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
+                            ("(%s) deallocating empty assoc_grp->%p grp_id->%#08x",
+                             __func__, assoc_grp, assoc_grp->grp_id));
+                rpc__cn_assoc_grp_dealloc (assoc_grp->grp_id);
+                break;
+            }
+
+            RPC_CN_ASSOC_GRP_EVAL_EVENT (assoc_grp,
+                                        RPC_C_ASSOC_GRP_REM_ASSOC,
+                                        assoc,
+                                        assoc_grp->grp_status);
+        }
+
         *st = rpc_s_ok;
     }
+
+    RPC_CN_UNLOCK ();
 }
 
 /*
