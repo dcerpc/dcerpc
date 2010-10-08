@@ -100,6 +100,7 @@
 #include <cnassoc.h>    /* NCA Connection association service */
 #include <cnassm.h>     /* NCA Connection association state machine */
 #include <cnasgsm.h>    /* NCA Connection association group state machine */
+#include <cnsm.h>       /* NCA Connection state machine declarations */
 #include <cnfbuf.h>     /* NCA Connection fragment buffer service */
 #include <cncall.h>     /* NCA Connection call service */
 #include <cnnet.h>
