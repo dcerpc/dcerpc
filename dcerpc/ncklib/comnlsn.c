@@ -126,40 +126,18 @@
  * Some defaults related to select() fd_sets.
  */
 
-#ifndef RPC_C_SELECT_NFDBITS
-#  define RPC_C_SELECT_NFDBITS      NFDBITS
-#endif
-
-#ifndef RPC_SELECT_FD_MASK_T
-#  define RPC_SELECT_FD_MASK_T      fd_mask
-#endif
-
-#ifndef RPC_SELECT_FD_SET_T
-#  define RPC_SELECT_FD_SET_T       fd_set
-#endif
-
-#ifndef RPC_SELECT_FD_COPY
-#  define RPC_SELECT_FDSET_COPY(src_fd_set,dst_fd_set,nfd) { \
-    int i; \
-    RPC_SELECT_FD_MASK_T *s = (RPC_SELECT_FD_MASK_T *) &src_fd_set; \
-    RPC_SELECT_FD_MASK_T *d = (RPC_SELECT_FD_MASK_T *) &dst_fd_set; \
-    for (i = 0; i < (nfd); i += RPC_C_SELECT_NFDBITS) \
-        *d++ = *s++; \
-   }
-#endif
-
 /*
  * Miscellaneous Data Declarations
  */
 
-INTERNAL dcethread*                  listener_thread;
-INTERNAL volatile boolean                    listener_thread_running = false;
-INTERNAL volatile boolean                    listener_thread_was_running = false;
+INTERNAL dcethread*                 listener_thread;
+INTERNAL volatile boolean           listener_thread_running = false;
+INTERNAL volatile boolean           listener_thread_was_running = false;
 INTERNAL volatile boolean           listener_should_handle_cancels = false;
 
 INTERNAL rpc_listener_state_t       listener_state_copy;
 
-INTERNAL RPC_SELECT_FD_SET_T        listener_readfds;
+INTERNAL fd_set                     listener_readfds;
 INTERNAL int                        listener_nfds = 0;
 
 /*
@@ -167,7 +145,7 @@ INTERNAL int                        listener_nfds = 0;
  * deal with systems that have an extremely large fd_set.  For now,
  * at least keep this off the stack.
  */
-INTERNAL RPC_SELECT_FD_SET_T        readfds_copy;
+INTERNAL fd_set                     readfds_copy;
 
 
 
@@ -426,7 +404,7 @@ INTERNAL void lthread_loop (void)
 
         do
         {
-            RPC_SELECT_FDSET_COPY(listener_readfds, readfds_copy, listener_nfds);
+            FD_COPY(&listener_readfds, &readfds_copy);
 
             /*
              * Block waiting for packets.  We ocassionally need to see
