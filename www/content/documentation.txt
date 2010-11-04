@@ -37,9 +37,15 @@ The [RPC Internals][internals] document is
 dated and incomplete, but provides a useful insight into some of
 the source code architecture and conventions.
 
+The [porting guide][porting] contains some historical information
+about porting DCE/RPC to new platforms. It's not particularly
+relevant any more, but it occasionally explains some of the rationale
+for the strange things that you find in the source.
+
 [c706]: http://www.opengroup.org/onlinepubs/9629399/
 [rpce]: http://msdn.microsoft.com/en-us/library/cc243560.aspx
 [msrpc]: http://msdn.microsoft.com/en-us/library/aa378651.aspx
 [dce12]: http://www.opengroup.org/bookstore/catalog/t151x.htm
 [oreilly]: http://openlibrary.org/books/OL555525M/Microsoft_RPC_programming_guide
 [internals]: /documentation/rpc-internals.pdf
+[porting]: /documentation/rpc-porting.pdf
