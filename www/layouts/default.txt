@@ -1,0 +1,76 @@
+---
+extension: html
+filter:    erb
+---
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title><%= @page.title %></title>
+   <meta name="author" content="<%= @page.author %>" />
+
+   <!--- Blueprint CSS Framework -->
+   <link rel="stylesheet" href="/css/blueprint/screen.css" type="text/css" media="screen, projection">
+   <link rel="stylesheet" href="/css/blueprint/print.css" type="text/css" media="print">
+   <!--[if IE]>
+      <link rel="stylesheet" href="/css/blueprint/ie.css" type="text/css" media="screen, projection">
+   <![endif]-->
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/coderay.css" type="text/css" />
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/site.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+
+<div class="container">
+
+   <div class="column span-20 prepend-2 append-2 first last" id="header">
+     <a href="/">
+     <p class="title">dcerpc.org</p>
+     </a>
+     <hr>
+   </div>
+
+   <div class="column span-15 prepend-2 first">
+      <h1><%= @page.title %></h1>
+      <hr />
+      <%= @content %>
+   </div>
+
+   <div class="column span-5 append-2 last">
+
+      <div class="box">
+	<a href="source.html">source</a>
+      </div>
+
+      <div class="box">
+	<a href="documentation.html">documentation</a>
+      </div>
+
+      <div class="box">
+	<a href="contributing.html">contributing</a>
+      </div>
+
+   </div>
+
+   <div class="cmall quiet column span-20 prepend-2 append-2 first last" id="footer">
+     <hr />
+     <em>
+DCE/RPC is a free software project by Apple Inc. Sources are
+available under the 3-clause BSD license.
+Hosting provided by <a href="http://macosforge.org">Mac OS
+Forge</a>. Use of this site is subject to the <a href="
+http://www.macosforge.org/terms/">Mac OS Forge Terms of Use</a>.
+
+This website was created with <a href="http://webby.rubyforge.org">Webby</a>
+
+     </em>
+   </div>
+
+</div>
+</body>
+</html>

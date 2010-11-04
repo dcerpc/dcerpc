@@ -1,0 +1,58 @@
+---
+title:      Contributing
+created_at: 2010-10-10 21:08:27.249191 -07:00
+filter:
+  - erb
+  - markdown
+---
+## Mailing lists
+
+For questions, answers, feedback and other general discussion please
+join the <a
+href="http://lists.macosforge.org/mailman/listinfo.cgi/dcerpc-devel">dcerpc-devel</a>
+mailing list.
+
+Changes to the DCE/RPC source code are posted to the <a
+href="http://lists.macosforge.org/mailman/listinfo.cgi/dcerpc-changes">dcerpc-changes</a> mailing list.
+
+## Licensing
+
+All code and documentation must be contributed under the 3-clause
+BSD license below.
+
+We do not require copyright assignment, however we ask that you
+assert your rights to the code you contribute by filing a
+<a href="https://www.macruby.org/trac/newticket">Trac ticket</a>
+with your contribution.
+
+<pre>
+Copyright (c) 2010 Apple Inc. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1.  Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+2.  Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+3.  Neither the name of Apple Inc. ("Apple") nor the names of its
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+</pre>
+
+h2. Projects
+
+There a lots of
