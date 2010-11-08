@@ -4,4 +4,8 @@ task :default => :build
 desc 'deploy the site to the webserver'
 task :deploy => [:build, 'deploy:rsync']
 
+SITE.host = 'dcerpc.macosforge.org'
+SITE.remote_dir = '/www/hosts/www.dcerpc.org/'
+SITE.rsync_args = ['--omit-dir-times']
+
 # EOF
