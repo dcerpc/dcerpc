@@ -79,6 +79,6 @@ ticket][trac] with your contribution.
     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
     THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-[mailing-list]: http://lists.macosforge.org/mailman/listinfo.cgi/dcerpc
-[trac]: https://www.dcerpc.org/trac/newticket
+[mailing-list]: http://lists.macosforge.org/mailman/listinfo/dcerpc-dev
+[trac]: https://dcerpc.macosforge.org/trac/newticket
 [libdispatch]: http://libdispatch.macosforge.org/
