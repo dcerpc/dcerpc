@@ -1,5 +1,6 @@
 ---
 title:      Documentation
+order:      3
 created_at: 2010-10-10 21:29:52.503144 -07:00
 filter:
   - erb
