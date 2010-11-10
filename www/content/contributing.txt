@@ -45,14 +45,40 @@ are some ideas:
 
 * Replace the DCEThreads runtime with [libdispatch][libdispatch].
 
-## Licensing
-
-All code and documentation must be contributed under the 3-clause
-BSD license below.
+## Contributing Code
 
 We do not require copyright assignment, however we ask that you
 assert your rights to the code you contribute by filing a [Trac
 ticket][trac] with your contribution.
+
+If you are sending in modifications to existing DCE/RPC code, you
+agree by submitting your modifications that the modifications are
+licensed under the existing license terms of the files you are
+modifying (i.e. BSD License). Please also add your copyright (name
+and year) to the relevant files for modifications that include more
+than 10 lines of code.
+
+If you are submitting new files for inclusion in the DCE/RPC project
+hosted here which are written by you (no code copied from another
+source), you agree by submitting the files that your contributions
+are licensed under the BSD License. Please include your copyright
+(name and year) and the BSD License in your submitted files.
+
+If you are not the author of the modifications, you agree to include
+the original copyright notices and licensing terms with your
+submission, to the extent that they exist. If there wasn't a copyright
+notice or license in the original sources, please make a note of
+it.
+
+Generally, we can only take in contributions that are licensed under
+the BSD License in order to maintain license compatibility within
+the project. Contact us if you believe an exception is warranted,
+prior to submitting the code.
+
+## Licensing
+
+DCE/RPC code and documentation is licensed contributed under the 3-clause
+BSD license below.
 
     Copyright (c) 2010 Apple Inc. All rights reserved.
 
