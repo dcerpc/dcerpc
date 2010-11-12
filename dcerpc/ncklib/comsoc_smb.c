@@ -96,7 +96,26 @@
 #include <SMBClient/smbclient.h>
 #include <nttypes.h>
 rpc_socket_error_t rpc_smb_ntstatus_to_rpc_error(NTSTATUS status);
+
+#if !defined(kSMBOptionAllowGuestAuth)
+#define kSMBOptionAllowGuestAuth 0
 #endif
+
+#if !defined(kSMBOptionAllowAnonymousAuth)
+#define kSMBOptionAllowAnonymousAuth 0
+#endif
+
+#if defined(kPropertiesVersion)
+#define HAVE_SMBCLIENT_SMBGETSERVERPROPERTIES
+#endif
+
+#define SMBCLIENT_CONNECTION_FLAGS ( \
+    kSMBOptionNoPrompt          | \
+    kSMBOptionAllowGuestAuth    | \
+    kSMBOptionAllowAnonymousAuth \
+)
+
+#endif /* HAVE_SMBCLIENT_FRAMEWORK */
 
 #if HAVE_LW_BASE_H
 #include <lw/base.h>
@@ -297,8 +316,8 @@ rpc_smb_transport_info_free(
 
     if (info)
     {
-	rpc__smb_transport_info_destroy((rpc_smb_transport_info_p_t) info);
-	free(info);
+        rpc__smb_transport_info_destroy((rpc_smb_transport_info_p_t) info);
+        free(info);
     }
 }
 
@@ -859,6 +878,118 @@ rpc__smb_socket_bind(
     return serr;
 }
 
+#if HAVE_SMBCLIENT_FRAMEWORK
+INTERNAL
+rpc_socket_error_t
+rpc__smbclient_connect(
+    rpc_smb_socket_p_t  smb,
+    const char *        netaddr,
+    const char *        pipename
+)
+{
+    rpc_socket_error_t  serr = RPC_C_SOCKET_OK;
+    char *              smbpath = NULL;
+    NTSTATUS            status;
+    boolean             have_mountpath = false;
+
+    if (netaddr[0] == '/')
+    {
+        struct statfs fsBuf;
+
+        /* see if its a mountpath instead of a host addr */
+        if (statfs ((char *) netaddr, &fsBuf) != 0)
+        {
+            RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
+               ("rpc__smb_socket_connect - statfs failed errno %d\n", errno));
+        }
+        else
+        {
+            /* its a mountpath, so use a different api
+             to find the existing smb session to share */
+            have_mountpath = 1;
+        }
+    }
+
+    if (have_mountpath == 0)
+    {
+        /* its not a mount path, so just pass in the URL string */
+
+#if defined(kPropertiesVersion)
+        smbpath = SMBCreateURLString(NULL, NULL,  NULL, netaddr, NULL, -1);
+#else
+        /* Ick. Max OS 10.6 ... only have the old API. */
+        asprintf(&smbpath, "smb://%s", netaddr);
+#endif
+        if (smbpath == NULL)
+        {
+            RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
+                   ("rpc__smb_socket_connect - smbpath malloc failed\n"));
+            serr = RPC_C_SOCKET_ENOMEM;
+            goto error;
+        }
+    }
+
+    /* Never have a username or password here. Either we use an already
+     * existing authenticated session, or log in as guest, or fail. Never
+     * prompt for a username or password so always set kSMBOptionNoPrompt,
+     * but do allow guest or anonymous logins.
+     */
+
+    if (have_mountpath == 0)
+    {
+        RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
+               ("rpc__smb_socket_connect - SMBOpenServerEx <%s>\n",
+                smbpath));
+        status = SMBOpenServerEx(smbpath, &smb->handle, SMBCLIENT_CONNECTION_FLAGS);
+    }
+    else
+    {
+        RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
+               ("rpc__smb_socket_connect - SMBOpenServerWithMountPoint <%s>\n",
+                netaddr));
+#if defined(kPropertiesVersion)
+        status = SMBOpenServerWithMountPoint(netaddr, NULL,
+                        &smb->handle, SMBCLIENT_CONNECTION_FLAGS);
+#else
+        status = 0xC00000CC; /* STATUS_BAD_NETWORK_NAME */
+#endif
+    }
+
+    if (!NT_SUCCESS(status))
+    {
+        RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
+               ("rpc__smb_socket_connect - SMBOpenServerEx failed 0x%x\n",
+                status));
+        serr = rpc_smb_ntstatus_to_rpc_error (status);
+        goto error;
+    }
+
+    status = SMBCreateFile(smb->handle, pipename,
+           GENERIC_READ | GENERIC_WRITE,        /* dwDesiredAccess */
+           FILE_SHARE_READ | FILE_SHARE_WRITE,  /* dwShareMode */
+           NULL,                                /* lpSecurityAttributes */
+           FILE_OPEN,                           /* dwCreateDisposition */
+           0x0000,                              /* dwFlagsAndAttributes */
+           &smb->hFile);
+
+    if (!NT_SUCCESS(status))
+    {
+        RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
+                       ("rpc__smb_socket_connect - SMBCreateFile failed 0x%x\n",
+                        status));
+        serr = rpc_smb_ntstatus_to_rpc_error (status);
+        goto error;
+    }
+
+error:
+    if (smbpath)
+        free(smbpath);
+
+    return serr;
+}
+
+#endif /* HAVE_SMBCLIENT_FRAMEWORK */
+
 INTERNAL
 rpc_socket_error_t
 rpc__smb_socket_connect(
@@ -880,12 +1011,6 @@ rpc__smb_socket_connect(
     IO_FILE_NAME filename = { 0 };
     IO_STATUS_BLOCK io_status = { 0 };
     size_t len;
-#elif HAVE_SMBCLIENT_FRAMEWORK
-    char* smbpath = NULL;
-    NTSTATUS status;
-    unsigned32 have_mountpath = 0;
-    int ret;
-    struct statfs fsBuf;
 #endif
 
     RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_connect called\n"));
@@ -930,98 +1055,13 @@ rpc__smb_socket_connect(
     snprintf (smbpath, len, "\\rdr\\%s\\IPC$\\%s",
               (char*) netaddr, (char*) pipename);
 #elif HAVE_SMBCLIENT_FRAMEWORK
-    if (netaddr[0] == '/')
-    {
-        /* see if its a mountpath instead of a host addr */
-        ret = statfs ((char *) netaddr, &fsBuf);
-        if (ret != 0)
-        {
-            RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
-                           ("rpc__smb_socket_connect - statfs failed %d errno %d\n",
-                            ret, errno));
-        }
-        else
-        {
-            /* its a mountpath, so use a different api
-             to find the existing smb session to share */
-            have_mountpath = 1;
-        }
-    }
-
-    if (have_mountpath == 0)
-    {
-        /* its not a mount path, so just pass in the URL string */
-        smbpath = SMBCreateURLString(NULL, NULL,  NULL, netaddr, NULL, -1);
-        if (smbpath == NULL)
-        {
-            RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
-                           ("rpc__smb_socket_connect - smbpath malloc failed\n"));
-            serr = RPC_C_SOCKET_ENOMEM;
-            goto error;
-        }
-    }
-
+    serr = rpc__smbclient_connect(smb, netaddr, pipename);
 #else
     serr = RPC_C_SOCKET_ENOTSUP;
     goto error;
 #endif
 
-#if HAVE_SMBCLIENT_FRAMEWORK
-
-#define SMBCLIENT_CONNECTION_FLAGS ( \
-    kSMBOptionNoPrompt		| \
-    kSMBOptionAllowGuestAuth	| \
-    kSMBOptionAllowAnonymousAuth \
-)
-
-    /* Never have a username or password here. Either we use an already
-     * existing authenticated session, or log in as guest, or fail. Never
-     * prompt for a username or password so always set kSMBOptionNoPrompt,
-     * but do allow guest or anonymous logins.
-     */
-
-    if (have_mountpath == 0)
-    {
-        RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
-                       ("rpc__smb_socket_connect - SMBOpenServerEx <%s>\n",
-                        smbpath));
-        status = SMBOpenServerEx(smbpath, &smb->handle, SMBCLIENT_CONNECTION_FLAGS);
-    }
-    else
-    {
-        RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
-                       ("rpc__smb_socket_connect - SMBOpenServerWithMountPoint <%s>\n",
-                        netaddr));
-        status = SMBOpenServerWithMountPoint(netaddr, NULL,
-			&smb->handle, SMBCLIENT_CONNECTION_FLAGS);
-    }
-
-    if (!NT_SUCCESS(status))
-    {
-        RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
-                       ("rpc__smb_socket_connect - SMBOpenServerEx failed 0x%x\n",
-                        status));
-        serr = rpc_smb_ntstatus_to_rpc_error (status);
-        goto error;
-    }
-
-    status = SMBCreateFile(smb->handle, pipename,
-                           GENERIC_READ | GENERIC_WRITE,        /* dwDesiredAccess */
-                           FILE_SHARE_READ | FILE_SHARE_WRITE,  /* dwShareMode: FILE_SHARE_ALL */
-                           NULL,                                /* lpSecurityAttributes */
-                           FILE_OPEN,                           /* dwCreateDisposition: OPEN_EXISTING */
-                           0x0000,                              /* dwFlagsAndAttributes */
-                           &smb->hFile);
-    if (!NT_SUCCESS(status))
-    {
-        RPC_DBG_PRINTF(rpc_e_dbg_general, 7,
-                       ("rpc__smb_socket_connect - SMBCreateFile failed 0x%x\n",
-                        status));
-        serr = rpc_smb_ntstatus_to_rpc_error (status);
-        goto error;
-    }
-
-#elif HAVE_LIKEWISE_LWIO
+#if HAVE_LIKEWISE_LWIO
 
     serr = NtStatusToErrno(
         LwRtlCStringAllocatePrintf(
@@ -1108,9 +1148,6 @@ done:
         RtlMemoryFree(filename.FileName);
     }
 
-#endif
-
-#if HAVE_LIKEWISE_LWIO || HAVE_SMBCLIENT_FRAMEWORK
     if (smbpath)
     {
         free(smbpath);
@@ -1830,7 +1867,7 @@ error:
 
     return serr;
 #else
-	return RPC_C_SOCKET_ENOTSUP;
+        return RPC_C_SOCKET_ENOTSUP;
 #endif
 
 }
@@ -2053,61 +2090,71 @@ rpc__smb_socket_set_broadcast(
     return serr;
 }
 
+#if HAVE_SMBCLIENT_FRAMEWORK && HAVE_SMBCLIENT_SMBGETSERVERPROPERTIES
 INTERNAL
-rpc_socket_error_t
-rpc__smb_socket_set_bufs(
-#if HAVE_SMBCLIENT_FRAMEWORK
+rpc__smbclient_set_bufs(
     rpc_socket_t sock,
-#else
-    rpc_socket_t sock ATTRIBUTE_UNUSED,
-#endif
-    unsigned32 txsize ATTRIBUTE_UNUSED,
-    unsigned32 rxsize ATTRIBUTE_UNUSED,
-    unsigned32 *ntxsize ATTRIBUTE_UNUSED,
-    unsigned32 *nrxsize ATTRIBUTE_UNUSED
+    unsigned32 *ntxsize,
+    unsigned32 *nrxsize
 )
 {
-#if HAVE_SMBCLIENT_FRAMEWORK
     rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
     SMBServerPropertiesV1 server_properties;
     NTSTATUS status;
 
-    if ( (smb->handle) && (smb->maxSendBufferSize == 0) )
+    if ( !smb->handle || (smb->maxSendBufferSize == 0) )
     {
-        /* try to get the max transaction size that is supported */
-        bzero(&server_properties, sizeof(server_properties));
-        status = SMBGetServerProperties(smb->handle, &server_properties, kPropertiesVersion, sizeof(server_properties));
-        if (NT_SUCCESS(status))
-        {
-            smb->maxSendBufferSize = (unsigned32) MIN (server_properties.maxWriteBytes, server_properties.maxTransactBytes);
-            smb->maxRecvBufferSize = (unsigned32) MIN (server_properties.maxReadBytes, server_properties.maxTransactBytes);
+        return (RPC_C_SOCKET_OK);
+    }
 
-            /* round down to nearest 1K */
-            smb->maxSendBufferSize = (smb->maxSendBufferSize / 1024) * 1024;
-            smb->maxRecvBufferSize = (smb->maxRecvBufferSize / 1024) * 1024;
+    memset(&server_properties, 0, sizeof(server_properties));
 
-            /* fragments can not be bigger than UInt16 */
-            if (smb->maxSendBufferSize > UINT16_MAX)
-                smb->maxSendBufferSize = UINT16_MAX;
+    /* try to get the max transaction size that is supported */
+    status = SMBGetServerProperties(smb->handle, &server_properties,
+            kPropertiesVersion, sizeof(server_properties));
+    if (NT_SUCCESS(status))
+    {
+        smb->maxSendBufferSize = (unsigned32) MIN (server_properties.maxWriteBytes, server_properties.maxTransactBytes);
+        smb->maxRecvBufferSize = (unsigned32) MIN (server_properties.maxReadBytes, server_properties.maxTransactBytes);
 
-            if (smb->maxRecvBufferSize > UINT16_MAX)
-                smb->maxRecvBufferSize = UINT16_MAX;
-        }
+        /* round down to nearest 1K */
+        smb->maxSendBufferSize = (smb->maxSendBufferSize / 1024) * 1024;
+        smb->maxRecvBufferSize = (smb->maxRecvBufferSize / 1024) * 1024;
+
+        /* fragments can not be bigger than UInt16 */
+        if (smb->maxSendBufferSize > UINT16_MAX)
+            smb->maxSendBufferSize = UINT16_MAX;
+
+        if (smb->maxRecvBufferSize > UINT16_MAX)
+            smb->maxRecvBufferSize = UINT16_MAX;
     }
 
     *ntxsize = (unsigned32) smb->maxSendBufferSize;
     *nrxsize = (unsigned32) smb->maxRecvBufferSize;
 
     return (RPC_C_SOCKET_OK);
+}
+#endif
 
-#else
-
-    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_set_bufs called\n"));
+INTERNAL
+rpc_socket_error_t
+rpc__smb_socket_set_bufs(
+    rpc_socket_t sock ATTRIBUTE_UNUSED,
+    unsigned32 txsize ATTRIBUTE_UNUSED,
+    unsigned32 rxsize ATTRIBUTE_UNUSED,
+    unsigned32 *ntxsize ATTRIBUTE_UNUSED,
+    unsigned32 *nrxsize ATTRIBUTE_UNUSED
+)
+{
     rpc_socket_error_t serr = RPC_C_SOCKET_ENOTSUP;
 
-    return serr;
+    RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_socket_set_bufs called\n"));
 
+#if HAVE_SMBCLIENT_FRAMEWORK && HAVE_SMBCLIENT_SMBGETSERVERPROPERTIES
+    serr = rpc__smbclient_set_bufs(sock, ntxsize, nrxsize);
 #endif
+
+    return serr;
 }
 
 INTERNAL
@@ -2369,11 +2416,11 @@ rpc__smb_socket_duplicate(
     const void *        sockrep /* pointer to native representation */
     )
 {
-    const int *		sockfd = (const int *)sockrep;
+    const int *         sockfd = (const int *)sockrep;
     rpc_socket_error_t  serr = RPC_C_SOCKET_OK;
 
     RPC_DBG_GPRINTF(("(rpc__smb_socket_duplicate) sockfd=%d\n",
-		sockfd ? *sockfd : -1));
+                sockfd ? *sockfd : -1));
 
     if (sockfd == NULL || *sockfd == -1) {
         return RPC_C_SOCKET_ENOTSOCK;
@@ -2381,13 +2428,13 @@ rpc__smb_socket_duplicate(
 
     if (protseq_id != rpc_c_protseq_id_ncacn_np)
     {
-	return RPC_C_SOCKET_EINVAL;
+        return RPC_C_SOCKET_EINVAL;
     }
 
     rpc__smb_socket_destruct(sock);
 
     serr = rpc_g_bsd_socket_vtbl.socket_construct(sock,
-	    rpc_c_protseq_id_ncalrpc, NULL);
+            rpc_c_protseq_id_ncalrpc, NULL);
     if (RPC_SOCKET_IS_ERR(serr)) {
         return serr;
     }
@@ -2398,7 +2445,7 @@ rpc__smb_socket_duplicate(
     sock->pseq_id = protseq_id;
 
     serr = rpc_g_bsd_socket_vtbl.socket_duplicate(sock,
-	    rpc_c_protseq_id_ncacn_np, sockrep);
+            rpc_c_protseq_id_ncacn_np, sockrep);
     if (RPC_SOCKET_IS_ERR(serr)) {
         return serr;
     }
