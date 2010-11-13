@@ -427,6 +427,8 @@ AC_SUBST(GSSAPI_INCLUDES)
 AC_SUBST(GSSAPI_LDFLAGS)
 AC_SUBST(GSSAPI_LIBS)
 
+AC_CHECK_HEADERS(krb5.h gssapi/gssapi.h gssapi/gssapi_krb5.h gssapi/gssapi_ext.h)
+
 tmp_LDFLAGS="$LDFLAGS"
 LDFLAGS="$GSSAPI_LDFLAGS $LDFLAGS"
 AC_CHECK_LIB(gssapi_krb5, gss_wrap, [GSSAPI_LIBS="-lgssapi_krb5"], [])

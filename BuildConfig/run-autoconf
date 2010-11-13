@@ -132,6 +132,15 @@ else
     message "configure exists, skipping buildconf phase"
 fi
 
+case $(sw_vers -productVersion) in
+    10.6.*)
+	PLATFORM_CONFIGURE_OPTIONS=--disable-gss_negotiate
+	;;
+    *)
+	PLATFORM_CONFIGURE_OPTIONS=
+	;;
+esac
+
 if configure_is_required ; then
     message "running configure"
     ./configure \
@@ -141,6 +150,7 @@ if configure_is_required ; then
 	CXX=$(xcrun -find c++) \
 	CFLAGS="-arch $SDKARCH -isysroot $SDKROOT" \
 	CXXFLAGS="-arch $SDKARCH -isysroot $SDKROOT" \
+	${PLATFORM_CONFIGURE_OPTIONS} \
 	--disable-dependency-tracking \
 	--enable-idldumpers \
 	--disable-ncadg \
