@@ -77,8 +77,8 @@ prior to submitting the code.
 
 ## Licensing
 
-DCE/RPC code and documentation is licensed contributed under the 3-clause
-BSD license below.
+DCE/RPC code and documentation contributions must be licensed under
+the 3-clause BSD license below.
 
     Copyright (c) 2010 Apple Inc. All rights reserved.
 
