@@ -99,7 +99,6 @@
 #include <cnid.h>       /* NCA Connection local ID service */
 #include <cnassoc.h>    /* NCA Connection association service */
 #include <cnassm.h>     /* NCA Connection association state machine */
-#include <cnasgsm.h>    /* NCA Connection association group state machine */
 #include <cnsm.h>       /* NCA Connection state machine declarations */
 #include <cnfbuf.h>     /* NCA Connection fragment buffer service */
 #include <cncall.h>     /* NCA Connection call service */
@@ -2297,37 +2296,28 @@ PRIVATE void rpc__cn_network_close
          * looking for. Free it.
          *
          * We used to just call rpc__cn_assoc_abort on the first
-	 * association in the group, but this results in an empty
-	 * association group.  Subsequent RPCs will find this empty
-	 * group and fail with rpc_s_connection_closed. Since we want
-	 * to blow away the underlying transport, taking down the whole
-	 * association group along with it is the right thing to do.
+	     * association in the group, but this results in an empty
+	     * association group.  Subsequent RPCs will find this empty
+	     * group and fail with rpc_s_connection_closed. Make sure to
+	     * go through the entire list and abort them all.
          */
 
         for (;;)
         {
-
-            RPC_LIST_FIRST (assoc_grp->grp_assoc_list,
-                    assoc, rpc_cn_assoc_p_t);
+            RPC_LIST_FIRST (assoc_grp->grp_assoc_list, assoc, rpc_cn_assoc_p_t);
 
             if (assoc == NULL)
             {
-                /*
-                 * If everything went through the association group state
-                 * machine correctly, then we should not have an association
-                 * group with no associations.
-                 */
-                RPC_DBG_PRINTF (rpc_e_dbg_general, RPC_C_CN_DBG_ERRORS,
-                            ("(%s) deallocating empty assoc_grp->%p grp_id->%#08x",
-                             __func__, assoc_grp, assoc_grp->grp_id));
-                rpc__cn_assoc_grp_dealloc (assoc_grp->grp_id);
                 break;
             }
-
-            RPC_CN_ASSOC_GRP_EVAL_EVENT (assoc_grp,
-                                        RPC_C_ASSOC_GRP_REM_ASSOC,
-                                        assoc,
-                                        assoc_grp->grp_status);
+            else
+            {
+                /*
+                 * rpc__cn_assoc_abort will close the network connection
+                 * and free up the socket
+                 */
+                rpc__cn_assoc_abort(assoc, st);
+            }
         }
 
         *st = rpc_s_ok;
