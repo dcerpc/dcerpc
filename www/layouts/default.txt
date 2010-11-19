@@ -67,13 +67,16 @@ filter:    erb
     id="footer">
      <hr />
      <em>
-DCE/RPC is a free software project by Apple Inc. Sources are
-available under the 3-clause BSD license.
-Hosting provided by <a href="http://macosforge.org">Mac OS
-Forge</a>. Use of this site is subject to the <a href="
+DCE/RPC is an open source software project
+made available primarily under a BSD license (
+<a href="http://dcerpc.macosforge.org/source.html">full license text</a>).
+Hosting provided by
+<a href="http://macosforge.org">Mac OS Forge</a>.
+Use of this site is subject to the
+<a href="
 http://www.macosforge.org/terms/">Mac OS Forge Terms of Use</a>.
-
-This website was created with <a href="http://webby.rubyforge.org">Webby</a>
+This website was created with
+<a href="http://webby.rubyforge.org">Webby</a>.
      </em>
    </div>
 
