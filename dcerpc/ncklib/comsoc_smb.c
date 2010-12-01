@@ -373,7 +373,12 @@ rpc__smb_transport_info_equal(
              (smb_info1->creds != NULL && smb_info2->creds != NULL &&
               LwIoCompareCredss(smb_info1->creds, smb_info2->creds))));
 #else
-    return (smb_info1->schannel == smb_info2->schannel);
+    if ((smb_info1 != NULL) && (smb_info2 != NULL))
+    {
+        return (smb_info1->schannel == smb_info2->schannel);
+    }
+
+    return (smb_info1 == smb_info2);
 #endif
 }
 

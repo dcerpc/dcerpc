@@ -2310,11 +2310,14 @@ rpc__bsd_socket_transport_info_equal(
     rpc_bsd_transport_info_p_t bsd_info1 = (rpc_bsd_transport_info_p_t) info1;
     rpc_bsd_transport_info_p_t bsd_info2 = (rpc_bsd_transport_info_p_t) info2;
 
-    return
-        (bsd_info2 == NULL) ||
-        (bsd_info2 != NULL &&
-         bsd_info1->peer_uid == bsd_info2->peer_uid &&
-         bsd_info1->peer_gid == bsd_info2->peer_gid);
+    if ((bsd_info1 != NULL) && (bsd_info2 != NULL))
+    {
+        return
+            (bsd_info1->peer_uid == bsd_info2->peer_uid &&
+             bsd_info1->peer_gid == bsd_info2->peer_gid);
+    }
+
+    return (bsd_info1 == bsd_info2);
 }
 
 INTERNAL
