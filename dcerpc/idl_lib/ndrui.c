@@ -1175,7 +1175,7 @@ void rpc_ss_ndr_u_var_or_open_arr
     /* [in] */  idl_byte *defn_vec_ptr, /* On entry points at array base info */
     /* [in] */  rpc_void_p_t array_addr,
     /* [in] */ IDL_bound_pair_t *range_list,
-    /* [in] */ idl_ulong_int flags ATTRIBUTE_UNUSED,
+    /* [in] */ idl_ulong_int flags,
     IDL_msp_t IDL_msp
 )
 {
@@ -1188,9 +1188,10 @@ void rpc_ss_ndr_u_var_or_open_arr
     idl_ulong_int element_count;
     IDL_varying_control_t *control_data;
     IDL_varying_control_t normal_control_data[IDL_NORMAL_DIMS];
-    int i;
+    idl_ulong_int i;
     idl_byte *inner_slice_address;  /* Address of 1-dim subset of array */
     int dim;    /* Index through array dimensions */
+    char *cptr;
 
     if ( (*defn_vec_ptr == IDL_DT_STRING)
         || (*defn_vec_ptr == IDL_DT_V1_STRING) )
@@ -1201,9 +1202,9 @@ void rpc_ss_ndr_u_var_or_open_arr
 
     if (Z_values != NULL)   /* NULL possible for transmit_as case */
     {
-        for (i=0; (unsigned32)i<dimensionality; i++)
+        for (i=0; i < dimensionality; i++)
         {
-            if ( ((unsigned32)(range_list[i].upper - range_list[i].lower) > Z_values[i])
+            if ( ((unsigned32)(range_list[i].upper - range_list[i].lower) != Z_values[i])
                 || ((unsigned32)(range_list[i].lower) > Z_values[i])
                 || ((unsigned32)(range_list[i].upper) > Z_values[i]) )
             {
@@ -1258,6 +1259,19 @@ void rpc_ss_ndr_u_var_or_open_arr
             {
                 rpc_ss_ndr_unmar_by_copying( element_count, element_size,
                                          copy_addr, IDL_msp );
+
+                /* If it is a string, make sure its null terminated */
+                if (flags & IDL_M_IS_STRING) {
+                    /* point to start of last element */
+                    cptr = copy_addr;
+                    cptr += (element_count * element_size) - element_size;
+                    /* (element_size) number of bytes should be 0 */
+                    for (i = 0; i < element_size; i++, cptr++) {
+                        if (*cptr != 0x00) {
+                            DCETHREAD_RAISE(rpc_x_protocol_error);
+                        }
+                    }
+                }
             }
             if (base_type == IDL_DT_FIXED_STRUCT)
             {
