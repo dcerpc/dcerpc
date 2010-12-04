@@ -1200,20 +1200,43 @@ void rpc_ss_ndr_u_var_or_open_arr
         dimensionality--;
     }
 
+    /*
+     * Z_value for each dimension of the array represents the size (bounds) of the array.
+     * If Z_value is equal to upper - lower, then its a contiguous array
+     * example: Z_value = 5, upper = 5, lower = 0 array elements 0, 1, 2, 3, 4
+     * If Z_value is > than upper - lower, then its a non contigous array
+     * example: Z_value = 10, upper = 10, lower = 0 array elements 0, 1, 2, 7, 8, 9
+     */
     if (Z_values != NULL)   /* NULL possible for transmit_as case */
     {
-        for (i=0; i < dimensionality; i++)
+        for (i = 0; i < dimensionality; i++)
         {
-            if ( ((unsigned32)(range_list[i].upper - range_list[i].lower) != Z_values[i])
-                || ((unsigned32)(range_list[i].lower) > Z_values[i])
-                || ((unsigned32)(range_list[i].upper) > Z_values[i]) )
+            if (range_list[i].upper < range_list[i].lower)
             {
-                /* Bogus data stream with A,B values outside of Z bound value */
+                /* Upper should never be less than lower. */
                 DCETHREAD_RAISE(rpc_x_invalid_bound);
+            }
+
+            if (flags & IDL_M_IS_STRING)
+            {
+                if ((unsigned32)(range_list[i].upper - range_list[i].lower) != Z_values[i])
+                {
+                    /* For a string, it should be contiguous array */
+                    DCETHREAD_RAISE(rpc_x_invalid_bound);
+                }
+            }
+            else
+            {
+                /* Could be a non contiguous array */
+                if ((unsigned32)(range_list[i].upper - range_list[i].lower) > Z_values[i])
+                {
+                    /* Bogus data stream with A, B values outside of Z bound value */
+                    DCETHREAD_RAISE(rpc_x_invalid_bound);
+                }
             }
         }
     }
-    for (i=0; (unsigned32)i<dimensionality; i++)
+    for (i = 0; (unsigned32) i < dimensionality; i++)
     {
         if (range_list[i].upper == range_list[i].lower)
         {
@@ -1310,7 +1333,7 @@ void rpc_ss_ndr_u_var_or_open_arr
     control_data[dimensionality-1].subslice_size = element_size;
     control_data[dimensionality-1].index_value =
                                             range_list[dimensionality-1].lower;
-    for (i=dimensionality-2; i>=0; i--)
+    for (i = dimensionality-2; i >= 0; i--)
     {
         control_data[i].index_value = range_list[i].lower;
         assert (Z_values != NULL);
