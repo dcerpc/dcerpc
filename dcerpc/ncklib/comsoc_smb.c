@@ -1600,7 +1600,7 @@ smb_data_do_recv(
     rpc_smb_socket_p_t smb = (rpc_smb_socket_p_t) sock->data.pointer;
     size_t bytes_requested = 0;
     size_t bytes_read = 0;
-    NTSTATUS status = NT_STATUS_SUCCESS;
+    NTSTATUS status = STATUS_SUCCESS;
 #if !SMB_NP_NO_TRANSACTIONS
     unsigned char* cursor = smb->sendbuffer.base;
     rpc_cn_common_hdr_p_t packet;
