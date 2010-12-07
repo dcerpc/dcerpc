@@ -1217,6 +1217,13 @@ void rpc_ss_ndr_u_var_or_open_arr
                 DCETHREAD_RAISE(rpc_x_invalid_bound);
             }
 
+            if (((unsigned32)(range_list[i].upper) > Z_values[i])
+                || ((unsigned32)(range_list[i].lower) > Z_values[i]))
+            {
+                /* Upper and lower should never be less than Z_values. */
+                DCETHREAD_RAISE(rpc_x_invalid_bound);
+            }
+
             if (flags & IDL_M_IS_STRING)
             {
                 if ((unsigned32)(range_list[i].upper - range_list[i].lower) != Z_values[i])
