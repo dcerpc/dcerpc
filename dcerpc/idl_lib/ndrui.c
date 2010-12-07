@@ -1220,7 +1220,7 @@ void rpc_ss_ndr_u_var_or_open_arr
             if (((unsigned32)(range_list[i].upper) > Z_values[i])
                 || ((unsigned32)(range_list[i].lower) > Z_values[i]))
             {
-                /* Upper and lower should never be less than Z_values. */
+                /* Upper and lower should never be greater than Z_values. */
                 DCETHREAD_RAISE(rpc_x_invalid_bound);
             }
 
