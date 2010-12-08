@@ -69,7 +69,7 @@ filter:    erb
      <em>
 DCE/RPC is an open source software project
 made available primarily under a BSD license
-(<a href="http://dcerpc.macosforge.org/source.html">full license text</a>).
+(<a href="http://dcerpc.org/source.html">full license text</a>).
 Hosting provided by
 <a href="http://macosforge.org">Mac OS Forge</a>.
 Use of this site is subject to the
