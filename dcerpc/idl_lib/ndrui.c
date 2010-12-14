@@ -1224,22 +1224,12 @@ void rpc_ss_ndr_u_var_or_open_arr
                 DCETHREAD_RAISE(rpc_x_invalid_bound);
             }
 
-            if (flags & IDL_M_IS_STRING)
+            /* TO DO - Add more Z_values checks before we call this function <8767011> */
+
+            if ((unsigned32)(range_list[i].upper - range_list[i].lower) > Z_values[i])
             {
-                if ((unsigned32)(range_list[i].upper - range_list[i].lower) != Z_values[i])
-                {
-                    /* For a string, it should be contiguous array */
-                    DCETHREAD_RAISE(rpc_x_invalid_bound);
-                }
-            }
-            else
-            {
-                /* Could be a non contiguous array */
-                if ((unsigned32)(range_list[i].upper - range_list[i].lower) > Z_values[i])
-                {
-                    /* Bogus data stream with A, B values outside of Z bound value */
-                    DCETHREAD_RAISE(rpc_x_invalid_bound);
-                }
+                /* Bogus data stream with A, B values outside of Z bound value */
+                DCETHREAD_RAISE(rpc_x_invalid_bound);
             }
         }
     }
@@ -2515,8 +2505,9 @@ void rpc_ss_ndr_unmar_check_bounds_correlation
 
     rpc_ss_ndr_unmar_cf_early(p_defn_vec_ptr, dimensionality,
                               &early_list, IDL_msp);
-    if (early_list == NULL)
+    if (early_list == NULL) {
         return;
+    }
 
     if (p_correl_bounds_list == NULL)
     {
@@ -2626,8 +2617,9 @@ void rpc_ss_ndr_unmar_check_range_correlation
 
     rpc_ss_ndr_unmar_cf_early(p_defn_vec_ptr, dimensionality,
                               &early_list, IDL_msp);
-    if (early_list == NULL)
+    if (early_list == NULL) {
         return;
+    }
 
     if (dimensionality > IDL_NORMAL_DIMS)
         correl_range_list = NULL;
