@@ -1190,7 +1190,7 @@ void rpc_ss_ndr_u_var_or_open_arr
     IDL_varying_control_t normal_control_data[IDL_NORMAL_DIMS];
     idl_ulong_int i;
     idl_byte *inner_slice_address;  /* Address of 1-dim subset of array */
-    int dim;    /* Index through array dimensions */
+    int dim;    /* Index through array dimensions. Has to be signed! */
     char *cptr;
 
     if ( (*defn_vec_ptr == IDL_DT_STRING)
@@ -1330,17 +1330,21 @@ void rpc_ss_ndr_u_var_or_open_arr
     control_data[dimensionality-1].subslice_size = element_size;
     control_data[dimensionality-1].index_value =
                                             range_list[dimensionality-1].lower;
-    for (i = dimensionality-2; i >= 0; i--)
+
+    if (dimensionality >= 2)
     {
-        control_data[i].index_value = range_list[i].lower;
-        assert (Z_values != NULL);
-        control_data[i].subslice_size = control_data[i+1].subslice_size
-                                                            * Z_values[i+1];
+        for (i = dimensionality - 2; i >= 0; i--)
+        {
+            control_data[i].index_value = range_list[i].lower;
+            assert (Z_values != NULL);
+            control_data[i].subslice_size = control_data[i+1].subslice_size
+                                                                * Z_values[i+1];
+        }
     }
 
     do {
         inner_slice_address = (idl_byte *)array_addr;
-        for (i=0; (unsigned32)i<dimensionality; i++)
+        for (i = 0; (unsigned32)i < dimensionality; i++)
         {
             inner_slice_address += control_data[i].index_value
                                         * control_data[i].subslice_size;
@@ -1350,6 +1354,7 @@ void rpc_ss_ndr_u_var_or_open_arr
                                          - range_list[dimensionality-1].lower,
                  base_type, (rpc_void_p_t)inner_slice_address,
                  element_size, element_defn_index, IDL_msp);
+
         dim = dimensionality - 2;
         while (dim >= 0)
         {
