@@ -143,7 +143,6 @@ typedef struct rpc_smb_transport_info_s
 #if HAVE_LIKEWISE_LWIO
     PIO_CREDS creds;
 #endif
-    boolean schannel;
 } rpc_smb_transport_info_t, *rpc_smb_transport_info_p_t;
 
 typedef enum rpc_smb_state_e
@@ -242,7 +241,6 @@ rpc_smb_ntstatus_to_rpc_error(
 void
 rpc_smb_transport_info_from_lwio_creds(
     void* creds ATTRIBUTE_UNUSED,
-    boolean schannel,
     rpc_transport_info_handle_t* info,
     unsigned32* st
     )
@@ -264,8 +262,6 @@ rpc_smb_transport_info_from_lwio_creds(
         goto error;
     }
 #endif
-
-    smb_info->schannel = schannel;
 
     *info = (rpc_transport_info_handle_t) smb_info;
 
@@ -368,16 +364,14 @@ rpc__smb_transport_info_equal(
     RPC_DBG_PRINTF(rpc_e_dbg_general, 7, ("rpc__smb_transport_info_equal called\n"));
 
 #if HAVE_LIKEWISE_LWIO
-    return (smb_info1->schannel == smb_info2->schannel &&
-            ((smb_info1->creds == NULL && smb_info2->creds == NULL) ||
-             (smb_info1->creds != NULL && smb_info2->creds != NULL &&
-              LwIoCompareCredss(smb_info1->creds, smb_info2->creds))));
+    return
+        (smb_info2 == NULL
+         && smb_info1->creds == NULL) ||
+        (smb_info2 != NULL &&
+         ((smb_info1->creds == NULL && smb_info2->creds == NULL) ||
+          (smb_info1->creds != NULL && smb_info2->creds != NULL &&
+           LwIoCompareCredss(smb_info1->creds, smb_info2->creds))));
 #else
-    if ((smb_info1 != NULL) && (smb_info2 != NULL))
-    {
-        return (smb_info1->schannel == smb_info2->schannel);
-    }
-
     return (smb_info1 == smb_info2);
 #endif
 }
@@ -2348,8 +2342,6 @@ rpc__smb_socket_inq_transport_info(
         serr = RPC_C_SOCKET_ENOMEM;
         goto error;
     }
-
-    smb_info->schannel = smb->info.schannel;
 
     if (smb->info.creds)
     {
