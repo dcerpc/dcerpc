@@ -175,7 +175,7 @@ PRIVATE void rpc__dg_ccall_free_prep (
         rpc_dg_ccall_p_t /*ccall*/
     );
 
-PRIVATE void rpc__dg_ccall_timer ( pointer_t /*p*/ );
+PRIVATE void rpc__dg_ccall_timer ( dce_pointer_t /*p*/ );
 
 PRIVATE void rpc__dg_ccall_xmit_cancel_quit (
         rpc_dg_ccall_p_t  /*ccall*/,

@@ -209,7 +209,7 @@ PRIVATE void rpc__cn_network_close (
 
 PRIVATE void rpc__cn_network_select_dispatch (
     rpc_socket_t            /* desc */,
-    pointer_t               /* priv_info */,
+    dce_pointer_t               /* priv_info */,
     boolean32               /* is_active */,
     unsigned32              */* st */);
 

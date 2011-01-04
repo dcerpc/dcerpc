@@ -314,7 +314,7 @@ PRIVATE void rpc__noauth_srv_reg_auth
 (
         unsigned_char_p_t server_name,
         rpc_auth_key_retrieval_fn_t get_key_func,
-        pointer_t arg,
+        dce_pointer_t arg,
         unsigned32 *stp
 )
 {

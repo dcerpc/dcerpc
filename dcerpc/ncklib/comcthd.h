@@ -143,7 +143,7 @@ PRIVATE void rpc__cthread_invoke_null (
         unsigned32              /*if_ver*/,
         unsigned32              /*if_opnum*/,
         rpc_prot_cthread_executor_fn_t /*cthread_executor*/,
-        pointer_t               /*call_args*/,
+        dce_pointer_t               /*call_args*/,
         unsigned32              * /*status*/
     );
 

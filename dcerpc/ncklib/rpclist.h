@@ -137,8 +137,8 @@
 
 typedef struct
 {
-    pointer_t   next;   /* next element of list                     */
-    pointer_t   last;   /* last element of list in a descriptor or  */
+    dce_pointer_t   next;   /* next element of list                     */
+    dce_pointer_t   last;   /* last element of list in a descriptor or  */
                         /* pointer to the prior element in an element */
 } rpc_list_t, *rpc_list_p_t;
 
@@ -149,7 +149,7 @@ typedef struct
  */
 
 typedef void (*rpc_list_element_alloc_fn_t) (
-        pointer_t   /*list_element*/
+        dce_pointer_t   /*list_element*/
     );
 
 /***********************************************************************/
@@ -159,7 +159,7 @@ typedef void (*rpc_list_element_alloc_fn_t) (
  */
 
 typedef void (*rpc_list_element_free_fn_t) (
-        pointer_t   /*list_element*/
+        dce_pointer_t   /*list_element*/
     );
 
 /***********************************************************************/
@@ -276,17 +276,17 @@ EXTERNAL rpc_lookaside_rcb_t rpc_g_lookaside_rcb;
 { \
     ((rpc_list_p_t) (insert_element))->next = \
         ((rpc_list_p_t) (list_element))->next;  \
-    ((rpc_list_p_t) (insert_element))->last = (pointer_t) (list_element); \
+    ((rpc_list_p_t) (insert_element))->last = (dce_pointer_t) (list_element); \
     if (((rpc_list_p_t) (list_element))->next == NULL) \
         { \
-            (list).last = (pointer_t) (insert_element); \
+            (list).last = (dce_pointer_t) (insert_element); \
         } \
     else \
         { \
             ((rpc_list_p_t) (((rpc_list_p_t) (list_element))->next))->last = \
-                    (pointer_t) (insert_element); \
+                    (dce_pointer_t) (insert_element); \
         } \
-    ((rpc_list_p_t) (list_element))->next = (pointer_t) (insert_element); \
+    ((rpc_list_p_t) (list_element))->next = (dce_pointer_t) (insert_element); \
 }
 
 /***********************************************************************/
@@ -307,16 +307,16 @@ EXTERNAL rpc_lookaside_rcb_t rpc_g_lookaside_rcb;
 { \
     if (RPC_LIST_EMPTY (list)) \
     { \
-        (list).next = (list).last = (pointer_t) (list_element); \
+        (list).next = (list).last = (dce_pointer_t) (list_element); \
         ((rpc_list_p_t) (list_element))->next = NULL; \
-        ((rpc_list_p_t) (list_element))->last = (pointer_t) &(list); \
+        ((rpc_list_p_t) (list_element))->last = (dce_pointer_t) &(list); \
     } \
     else \
     { \
-        ((rpc_list_p_t) (list_element))->next = (pointer_t) ((list).next); \
-        ((rpc_list_p_t) (list_element))->last = (pointer_t) &(list); \
-        ((rpc_list_p_t)((list).next))->last = (pointer_t) (list_element); \
-        (list).next = (pointer_t) (list_element); \
+        ((rpc_list_p_t) (list_element))->next = (dce_pointer_t) ((list).next); \
+        ((rpc_list_p_t) (list_element))->last = (dce_pointer_t) &(list); \
+        ((rpc_list_p_t)((list).next))->last = (dce_pointer_t) (list_element); \
+        (list).next = (dce_pointer_t) (list_element); \
     } \
 }
 
@@ -338,15 +338,15 @@ EXTERNAL rpc_lookaside_rcb_t rpc_g_lookaside_rcb;
 { \
     if (RPC_LIST_EMPTY (list)) \
     { \
-        list.next = (pointer_t) (list_element); \
-        ((rpc_list_p_t) (list_element))->last = (pointer_t) &(list); \
+        list.next = (dce_pointer_t) (list_element); \
+        ((rpc_list_p_t) (list_element))->last = (dce_pointer_t) &(list); \
     } \
     else \
     { \
-        ((rpc_list_p_t) (list.last))->next = (pointer_t) (list_element); \
+        ((rpc_list_p_t) (list.last))->next = (dce_pointer_t) (list_element); \
         ((rpc_list_p_t) (list_element))->last = list.last; \
     } \
-    list.last = (pointer_t) (list_element); \
+    list.last = (dce_pointer_t) (list_element); \
     ((rpc_list_p_t) (list_element))->next = NULL; \
 }
 
@@ -604,7 +604,7 @@ PRIVATE void rpc__list_desc_init (
  *
  */
 
-PRIVATE pointer_t rpc__list_element_alloc (
+PRIVATE dce_pointer_t rpc__list_element_alloc (
         rpc_list_desc_p_t            /*list_desc*/,
         boolean32                    /*block*/
     );
@@ -617,7 +617,7 @@ PRIVATE pointer_t rpc__list_element_alloc (
 
 PRIVATE void rpc__list_element_free (
         rpc_list_desc_p_t        /*list_desc*/,
-        pointer_t                /*list_element*/
+        dce_pointer_t                /*list_element*/
     );
 
 /***********************************************************************/

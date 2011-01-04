@@ -137,7 +137,7 @@ typedef struct {
 /* ========================================================================= */
 
 INTERNAL void rpc__dg_scall_timer (
-        pointer_t  /*p*/
+        dce_pointer_t  /*p*/
     );
 
 INTERNAL rpc_dg_scall_p_t scall_init (
@@ -511,7 +511,7 @@ PRIVATE void rpc__dg_scall_orphan_call
 
 INTERNAL void rpc__dg_scall_timer
 (
-    pointer_t p
+    dce_pointer_t p
 )
 {
     rpc_dg_scall_p_t scall = (rpc_dg_scall_p_t) p;

@@ -189,9 +189,9 @@ EXTERNAL const char   *rpc_g_cn_call_server_states [];
  * during an illegal state transition.
  */
 PRIVATE unsigned32     rpc__cn_call_sm_protocol_error (
-        pointer_t /* sc_struct */,
-        pointer_t /* event_param */,
-	pointer_t /* sm		 */
+        dce_pointer_t /* sc_struct */,
+        dce_pointer_t /* event_param */,
+	dce_pointer_t /* sm		 */
     );
 
 
@@ -289,8 +289,8 @@ PRIVATE void rpc__cn_call_sm_trace_state (
             RPC_CN_PKT_CALL_ID (RPC_CN_FRAGBUF_PKT_HDR (fragbuf))) \
         { \
             RPC_CN_CALL_SM_TRC (crep, event_id, (RPC_CN_PKT_CALL_ID ((rpc_cn_packet_p_t) RPC_CN_CREP_SEND_HDR (crep))));\
-            st = rpc__cn_sm_eval_event (event_id, (pointer_t) fragbuf, \
-                 (pointer_t) crep, &(crep->call_state)); \
+            st = rpc__cn_sm_eval_event (event_id, (dce_pointer_t) fragbuf, \
+                 (dce_pointer_t) crep, &(crep->call_state)); \
             RPC_CN_CALL_SM_TRC_STATE (crep, (RPC_CN_PKT_CALL_ID ((rpc_cn_packet_p_t) RPC_CN_CREP_SEND_HDR (crep)))); \
         } \
         else \
@@ -330,8 +330,8 @@ PRIVATE void rpc__cn_call_sm_trace_state (
     if (st == rpc_s_ok)\
     {\
         RPC_CN_CALL_SM_TRC (crep, event_id, (RPC_CN_PKT_CALL_ID (RPC_CN_FRAGBUF_PKT_HDR (fragbuf))));\
-        st = rpc__cn_sm_eval_event (event_id, (pointer_t)fragbuf, \
-             (pointer_t)(crep), &((crep)->call_state)); \
+        st = rpc__cn_sm_eval_event (event_id, (dce_pointer_t)fragbuf, \
+             (dce_pointer_t)(crep), &((crep)->call_state)); \
         RPC_CN_CALL_SM_TRC_STATE (crep, (RPC_CN_PKT_CALL_ID ((rpc_cn_packet_p_t) RPC_CN_CREP_SEND_HDR (crep))));\
     }\
 }
@@ -347,7 +347,7 @@ PRIVATE void rpc__cn_call_sm_trace_state (
  *
  *    rpc_cn_call_rep_p_t       crep;
  *    unsigned8                 event;
- *    pointer_t                 spc_struct;
+ *    dce_pointer_t                 spc_struct;
  *    unsigned32                st;
  *
  * RPC_CN_CALL_EVAL_EVENT (event_id, spc_struct, crep, st);
@@ -356,8 +356,8 @@ PRIVATE void rpc__cn_call_sm_trace_state (
 #define RPC_CN_CALL_EVAL_EVENT(event_id, spc_struct, crep, st)\
 { \
     RPC_CN_CALL_SM_TRC (crep, event_id, (RPC_CN_PKT_CALL_ID ((rpc_cn_packet_p_t) RPC_CN_CREP_SEND_HDR (crep))));\
-    st = rpc__cn_sm_eval_event ((event_id), (pointer_t)(spc_struct), \
-                                (pointer_t)(crep), \
+    st = rpc__cn_sm_eval_event ((event_id), (dce_pointer_t)(spc_struct), \
+                                (dce_pointer_t)(crep), \
                                 &(crep)->call_state); \
     RPC_CN_CALL_SM_TRC_STATE (crep, (RPC_CN_PKT_CALL_ID ((rpc_cn_packet_p_t) RPC_CN_CREP_SEND_HDR (crep)))); \
 }

@@ -139,7 +139,7 @@ PRIVATE void rpc__noauth_dg_pre_send
         rpc_dg_pkt_hdr_p_t hdrp,
         rpc_socket_iovec_p_t iov,
         int iovlen,
-        pointer_t cksum,
+        dce_pointer_t cksum,
         error_status_t *st
 )
 {
@@ -155,7 +155,7 @@ PRIVATE void rpc__noauth_dg_recv_ck
 (
         rpc_auth_info_p_t info,
         rpc_dg_recvq_elt_p_t pkt,
-        pointer_t cksum,
+        dce_pointer_t cksum,
         error_status_t *st
 )
 {

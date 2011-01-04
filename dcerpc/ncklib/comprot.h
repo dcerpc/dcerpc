@@ -320,7 +320,7 @@ typedef void (*rpc_prot_net_close_fn_t) (
 
 typedef void (*rpc_prot_net_select_disp_fn_t) (
         rpc_socket_t                /* in  */    /*desc*/,
-        pointer_t                   /* in  */    /*priv_info*/,
+        dce_pointer_t                   /* in  */    /*priv_info*/,
         boolean32                   /* in  */    /*is_active*/,
         unsigned32                  /* out */   * /*st*/
     );

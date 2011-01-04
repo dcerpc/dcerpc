@@ -241,7 +241,7 @@ typedef rpc_trans_tab_t * rpc_trans_tab_p_t;
  * Untyped pointer for portability
  */
 
-typedef pointer_t rpc_void_p_t ;
+typedef dce_pointer_t rpc_void_p_t ;
 
 /***************************************************************************/
 

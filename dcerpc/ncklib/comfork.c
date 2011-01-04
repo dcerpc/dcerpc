@@ -133,15 +133,15 @@ INTERNAL struct atfork_user_data_t
 /* ========================================================================= */
 
 INTERNAL void _pre_fork (
-        pointer_t   /*arg*/
+        dce_pointer_t   /*arg*/
     );
 
 INTERNAL void _post_fork_child (
-        pointer_t   /*arg*/
+        dce_pointer_t   /*arg*/
     );
 
 INTERNAL void _post_fork_parent (
-        pointer_t   /*arg*/
+        dce_pointer_t   /*arg*/
     );
 
 /* ========================================================================= */
@@ -154,7 +154,7 @@ INTERNAL void _post_fork_parent (
  */
 INTERNAL void _pre_fork
 (
-  pointer_t arg
+  dce_pointer_t arg
 )
 {
     RPC_DBG_PRINTF(rpc_e_dbg_atfork, 1,
@@ -187,7 +187,7 @@ INTERNAL void _pre_fork
 
 INTERNAL void _post_fork_child
 (
-  pointer_t arg
+  dce_pointer_t arg
 )
 {
     RPC_DBG_PRINTF(rpc_e_dbg_atfork, 1,
@@ -221,7 +221,7 @@ INTERNAL void _post_fork_child
 
 INTERNAL void _post_fork_parent
 (
-  pointer_t arg
+  dce_pointer_t arg
 )
 {
     RPC_DBG_PRINTF(rpc_e_dbg_atfork, 1,
@@ -270,7 +270,7 @@ PRIVATE void rpc__atfork
     rpc__atfork_user_data.post_p = 0;
     rpc__atfork_user_data.post_c = 0;
 
-    dcethread_atfork_throw((pointer_t)(&rpc__atfork_user_data), _pre_fork,
+    dcethread_atfork_throw((dce_pointer_t)(&rpc__atfork_user_data), _pre_fork,
             _post_fork_parent, _post_fork_child);
 }
 

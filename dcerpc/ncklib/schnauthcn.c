@@ -123,9 +123,9 @@ INTERNAL void rpc__schnauth_cn_cred_refresh (
 INTERNAL void rpc__schnauth_cn_fmt_client_req (
         rpc_cn_assoc_sec_context_p_t      /* assoc_sec */,
         rpc_cn_sec_context_p_t            /* sec */,
-        pointer_t                         /* auth_value */,
+        dce_pointer_t                         /* auth_value */,
         unsigned32                      * /* auth_value_len */,
-        pointer_t                       * /* last_auth_pos */,
+        dce_pointer_t                       * /* last_auth_pos */,
         unsigned32                      * /* auth_len_remain */,
         unsigned32                        /* old_server */,
         unsigned32                      * /* st */
@@ -135,9 +135,9 @@ INTERNAL void rpc__schnauth_cn_fmt_srvr_resp (
         unsigned32                       /*verify_st*/,
         rpc_cn_assoc_sec_context_p_t     /*assoc_sec*/,
         rpc_cn_sec_context_p_t           /*sec*/,
-        pointer_t                        /*req_auth_value*/,
+        dce_pointer_t                        /*req_auth_value*/,
         unsigned32                       /*req_auth_value_len*/,
-        pointer_t                        /*auth_value*/,
+        dce_pointer_t                        /*auth_value*/,
         unsigned32                      * /*auth_value_len*/
     );
 
@@ -155,7 +155,7 @@ INTERNAL void rpc__schnauth_cn_get_prot_info (
 INTERNAL void rpc__schnauth_cn_pre_call (
         rpc_cn_assoc_sec_context_p_t     /*assoc_sec*/,
         rpc_cn_sec_context_p_t           /*sec*/,
-        pointer_t                        /*auth_value*/,
+        dce_pointer_t                        /*auth_value*/,
         unsigned32                      * /*auth_value_len*/,
         unsigned32                      * /*st*/
     );
@@ -181,7 +181,7 @@ INTERNAL void rpc__schnauth_cn_recv_check (
     );
 
 INTERNAL void rpc__schnauth_cn_tlr_uuid_crc (
-        pointer_t                /*auth_value*/,
+        dce_pointer_t                /*auth_value*/,
         unsigned32               /*auth_value_len*/,
         unsigned32              * /*uuid_crc*/
     );
@@ -195,7 +195,7 @@ INTERNAL void rpc__schnauth_cn_tlr_unpack (
 INTERNAL void rpc__schnauth_cn_vfy_client_req (
         rpc_cn_assoc_sec_context_p_t    /* assoc_sec */,
         rpc_cn_sec_context_p_t          /* sec */,
-        pointer_t                       /* auth_value */,
+        dce_pointer_t                       /* auth_value */,
         unsigned32                      /* auth_value_len */,
 	unsigned32		        /* old_client */,
         unsigned32                      * /* st */
@@ -204,7 +204,7 @@ INTERNAL void rpc__schnauth_cn_vfy_client_req (
 INTERNAL void rpc__schnauth_cn_vfy_srvr_resp (
         rpc_cn_assoc_sec_context_p_t     /*assoc_sec*/,
         rpc_cn_sec_context_p_t           /*sec*/,
-        pointer_t                        /*auth_value*/,
+        dce_pointer_t                        /*auth_value*/,
         unsigned32                       /*auth_value_len*/,
         unsigned32                      * /*st*/
     );
@@ -656,9 +656,9 @@ INTERNAL void rpc__schnauth_cn_fmt_client_req
 (
    rpc_cn_assoc_sec_context_p_t      assoc_sec,
    rpc_cn_sec_context_p_t            sec,
-   pointer_t                         auth_value,
+   dce_pointer_t                         auth_value,
    unsigned32                      * auth_value_len,
-   pointer_t                       * last_auth_pos ATTRIBUTE_UNUSED,
+   dce_pointer_t                       * last_auth_pos ATTRIBUTE_UNUSED,
    unsigned32                      * auth_len_remain ATTRIBUTE_UNUSED,
    unsigned32                        old_server ATTRIBUTE_UNUSED,
    unsigned32                      * st
@@ -769,9 +769,9 @@ INTERNAL void rpc__schnauth_cn_fmt_srvr_resp
     unsigned32                      verify_st,
     rpc_cn_assoc_sec_context_p_t    assoc_sec,
     rpc_cn_sec_context_p_t          sec,
-    pointer_t                       req_auth_value ATTRIBUTE_UNUSED,
+    dce_pointer_t                       req_auth_value ATTRIBUTE_UNUSED,
     unsigned32                      req_auth_value_len ATTRIBUTE_UNUSED,
-    pointer_t                       auth_value,
+    dce_pointer_t                       auth_value,
     unsigned32                      *auth_value_len
 )
 {
@@ -1020,7 +1020,7 @@ INTERNAL void rpc__schnauth_cn_pre_call
 (
     rpc_cn_assoc_sec_context_p_t    assoc_sec,
     rpc_cn_sec_context_p_t          sec,
-    pointer_t                       auth_value ATTRIBUTE_UNUSED,
+    dce_pointer_t                       auth_value ATTRIBUTE_UNUSED,
     unsigned32                      *auth_value_len,
     unsigned32                      *st
 )
@@ -1083,7 +1083,7 @@ INTERNAL void rpc__schnauth_cn_wrap_pdu
     unsigned_char_p_t pdu_blob;
     unsigned32 pdu_blob_len;
     unsigned16 packet_len, stub_len, auth_pad_len;
-    pointer_t base;
+    dce_pointer_t base;
     uint32 sec_level;
     struct schn_auth_ctx *schn_ctx = NULL;
     struct schn_blob input_token, output_token;
@@ -1122,7 +1122,7 @@ INTERNAL void rpc__schnauth_cn_wrap_pdu
 
     out_iov->iov_len = packet_len;
     RPC_MEM_ALLOC(out_iov->iov_base,
-		  pointer_t,
+		  dce_pointer_t,
 		  out_iov->iov_len,
 		  RPC_C_MEM_SCHNAUTH_INFO,
 		  RPC_C_MEM_WAITOK);
@@ -1573,7 +1573,7 @@ INTERNAL void rpc__schnauth_cn_recv_check
 
 INTERNAL void rpc__schnauth_cn_tlr_uuid_crc
 (
-    pointer_t               auth_value,
+    dce_pointer_t               auth_value,
     unsigned32              auth_value_len,
     unsigned32              *uuid_crc
 )
@@ -1694,7 +1694,7 @@ INTERNAL void rpc__schnauth_cn_vfy_client_req
 (
     rpc_cn_assoc_sec_context_p_t    assoc_sec,
     rpc_cn_sec_context_p_t          sec,
-    pointer_t                       auth_value,
+    dce_pointer_t                       auth_value,
     unsigned32                      auth_value_len ATTRIBUTE_UNUSED,
     unsigned32		            old_client ATTRIBUTE_UNUSED,
     unsigned32                      *st
@@ -1782,7 +1782,7 @@ INTERNAL void rpc__schnauth_cn_vfy_srvr_resp
 (
     rpc_cn_assoc_sec_context_p_t    assoc_sec,
     rpc_cn_sec_context_p_t          sec,
-    pointer_t                       auth_value ATTRIBUTE_UNUSED,
+    dce_pointer_t                       auth_value ATTRIBUTE_UNUSED,
     unsigned32                      auth_value_len ATTRIBUTE_UNUSED,
     unsigned32                      *st
 )

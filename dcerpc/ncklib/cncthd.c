@@ -132,7 +132,7 @@
 **/
 
 PRIVATE void rpc__cn_call_executor
-(pointer_t arg, boolean32 call_was_queued ATTRIBUTE_UNUSED)
+(dce_pointer_t arg, boolean32 call_was_queued ATTRIBUTE_UNUSED)
 {
     rpc_binding_rep_t           *binding_r;
     rpc_cn_call_rep_t           *call_r;

@@ -734,7 +734,7 @@ typedef unsigned32 rpc_authn_level_t;
  * If it's "true", then the "privs" field is valid, otherwise the
  * "auth_identity" field is valid.
  */
-typedef pointer_t rpc_prot_auth_info_p_t;
+typedef dce_pointer_t rpc_prot_auth_info_p_t;
 
 typedef struct
 {
@@ -868,7 +868,7 @@ typedef struct rpc_handle_s_t
     unsigned                    addr_has_endpoint: 1;
     unsigned32                  timeout;    /* com timeout */
     signed32                    calls_in_progress;
-    pointer_t                   ns_specific;
+    dce_pointer_t                   ns_specific;
     rpc_clock_t                 call_timeout_time;  /* max execution time */
     rpc_protocol_version_p_t    protocol_version;
     rpc_cs_evaluation_t    	cs_eval;	/* code set i14y */
@@ -901,7 +901,7 @@ typedef unsigned_char_t rpc_string_binding_t[RPC_C_STRING_BINDING_MAX];
  *      the Call Thread Service when the thread is woken up
  */
 typedef void (*rpc_prot_cthread_executor_fn_t) (
-        pointer_t               /* args */,
+        dce_pointer_t               /* args */,
         boolean32               /* call_was_queued */
     );
 
@@ -937,9 +937,9 @@ typedef struct
     unsigned        is_queued : 1;
     rpc_prot_cthread_executor_fn_t
                     executor;
-    pointer_t       optargs;
+    dce_pointer_t       optargs;
     dcethread*      thread_h;       /* valid iff !is_queued */
-    pointer_t       qelt;           /* valid iff is_queued */
+    dce_pointer_t       qelt;           /* valid iff is_queued */
     unsigned        : 0;            /* force alignment; see above */
 } rpc_cthread_pvt_info_t, *rpc_cthread_pvt_info_p_t;
 
@@ -1392,7 +1392,7 @@ PRIVATE void rpc__network_add_desc (
         boolean32                   /* is_server */,
         boolean32                   /* is_dynamic */,
         rpc_protseq_id_t            /* rpc_protseq_id */,
-        pointer_t                   /* priv_info */,
+        dce_pointer_t                   /* priv_info */,
         unsigned32                  * /* status */
     );
 
@@ -1403,13 +1403,13 @@ PRIVATE void rpc__network_remove_desc (
 
 PRIVATE void rpc__network_set_priv_info (
         rpc_socket_t                /* desc */,
-        pointer_t                   /* priv_info */,
+        dce_pointer_t                   /* priv_info */,
         unsigned32                  * /* status */
     );
 
 PRIVATE void rpc__network_inq_priv_info (
         rpc_socket_t                /* desc */,
-        pointer_t                   */* priv_info */,
+        dce_pointer_t                   */* priv_info */,
         unsigned32                  * /* status */
     );
 
@@ -1711,7 +1711,7 @@ PRIVATE unsigned_char_p_t rpc__stralloc ( unsigned_char_p_t);
  */
 
 typedef void (*rpc_g_ns_specific_free_fn_t) (
-        pointer_t   * /* ns_specific*/
+        dce_pointer_t   * /* ns_specific*/
     );
 
 EXTERNAL rpc_g_ns_specific_free_fn_t  rpc_g_ns_specific_free_fn;

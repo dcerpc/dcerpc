@@ -148,7 +148,7 @@ INTERNAL void rpc__gssauth_netlogon_bnd_set_auth (
 INTERNAL void rpc__gssauth_srv_reg_auth (
 	unsigned_char_p_t		/* in  */    /*server_princ_name*/,
 	rpc_auth_key_retrieval_fn_t	/* in  */    /*get_key_func*/,
-	pointer_t			/* in  */    /*arg*/,
+	dce_pointer_t			/* in  */    /*arg*/,
 	unsigned32			/* out */    * /*st*/
     );
 
@@ -735,7 +735,7 @@ INTERNAL void rpc__gssauth_srv_reg_auth
 (
 	unsigned_char_p_t server_name ATTRIBUTE_UNUSED,
 	rpc_auth_key_retrieval_fn_t get_key_func ATTRIBUTE_UNUSED,
-	pointer_t arg ATTRIBUTE_UNUSED,
+	dce_pointer_t arg ATTRIBUTE_UNUSED,
 	unsigned32 *stp
 )
 {

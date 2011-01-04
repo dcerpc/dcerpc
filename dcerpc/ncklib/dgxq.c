@@ -442,7 +442,7 @@ PRIVATE void rpc__dg_xmitq_elt_xmit
         unsigned32 st;
         int overhead;
 
-        pointer_t cksum = last_xqe->body->args + last_xqe->body_len;
+        dce_pointer_t cksum = last_xqe->body->args + last_xqe->body_len;
 
         (*auth_epv->pre_send) (key_info, xqe, &xq->hdr, iov, iovlen, cksum, &st);
         if (st != 0)

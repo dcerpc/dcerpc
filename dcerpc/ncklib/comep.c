@@ -164,7 +164,7 @@ INTERNAL idl_void_p_t rpc__ep_mem_alloc (
 
 INTERNAL void rpc__ep_mem_free (
 	idl_void_p_t /* context */,
-        pointer_t  /*ptr*/
+        dce_pointer_t  /*ptr*/
     );
 
 
@@ -1243,7 +1243,7 @@ PUBLIC void rpc_mgmt_ep_elt_inq_next
                 i < chp->num_ents;
                 i++, entp++)
             {
-                rpc__ep_mem_free (NULL, (pointer_t) entp->tower);
+                rpc__ep_mem_free (NULL, (dce_pointer_t) entp->tower);
             }
 
             chp->num_ents = 0;
@@ -1329,7 +1329,7 @@ PUBLIC void rpc_mgmt_ep_elt_inq_done
     rpc_binding_free(&chp->ep_binding, status);
 
     for (i = 0, entp = &(chp->entries[0]); i < chp->num_ents; i++, entp++)
-        rpc__ep_mem_free (NULL, (pointer_t) entp->tower);
+        rpc__ep_mem_free (NULL, (dce_pointer_t) entp->tower);
 
     RPC_MEM_FREE(chp, RPC_C_MEM_INQ_REP);
 
@@ -2211,7 +2211,7 @@ INTERNAL void ep_get_endpoint
                 {
                     for (j = 0; j < num_towers; ++j)
                     {
-                        rpc__ep_mem_free (NULL, (pointer_t) towers[j]);
+                        rpc__ep_mem_free (NULL, (dce_pointer_t) towers[j]);
                     }
 
                     RPC_MEM_FREE (towers, RPC_C_MEM_TOWER);
@@ -2350,7 +2350,7 @@ CLEANUP:
         {
             if (towers[i] != NULL)
             {
-                rpc__ep_mem_free (NULL, (pointer_t) towers[i]);
+                rpc__ep_mem_free (NULL, (dce_pointer_t) towers[i]);
             }
         }
 
@@ -2529,7 +2529,7 @@ INTERNAL idl_void_p_t rpc__ep_mem_alloc
 INTERNAL void rpc__ep_mem_free
 (
   idl_void_p_t         context ATTRIBUTE_UNUSED,
-  pointer_t            ptr
+  dce_pointer_t            ptr
 )
 {
     RPC_MEM_FREE (ptr, RPC_C_MEM_TOWER);

@@ -101,7 +101,7 @@
  */
 
 PRIVATE void rpc__cn_call_executor (
-        pointer_t       /* call_r */,
+        dce_pointer_t       /* call_r */,
         boolean32       /* call_was_queued */
     );
 #endif /* _CNCTHD_H */

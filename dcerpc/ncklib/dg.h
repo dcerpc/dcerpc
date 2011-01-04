@@ -2325,7 +2325,7 @@ typedef void (*rpc_dg_auth_pre_send_fn_t) (
         rpc_dg_pkt_hdr_p_t              ,
         rpc_socket_iovec_p_t             /*iov*/,
         int                              /*iovlen*/,
-        pointer_t                        /*cksum*/,
+        dce_pointer_t                        /*cksum*/,
         unsigned32                      * /*st*/
     );
 
@@ -2335,7 +2335,7 @@ typedef void (*rpc_dg_auth_pre_send_fn_t) (
 typedef void (*rpc_dg_auth_recv_ck_fn_t) (
         rpc_key_info_p_t                /*info*/,
         rpc_dg_recvq_elt_p_t             /*pkt*/,
-        pointer_t                        /*cksum*/,
+        dce_pointer_t                        /*cksum*/,
         unsigned32                      * /*st*/
     );
 
@@ -2505,7 +2505,7 @@ PRIVATE boolean32 rpc__dg_call_did_mgr_execute (
  * Prototypes of routines used in the DG RPC Protocol Service (network).
  */
 
-PRIVATE pointer_t rpc__dg_network_init_desc (
+PRIVATE dce_pointer_t rpc__dg_network_init_desc (
         rpc_socket_t * /*sock*/,
         rpc_protseq_id_t  /*pseq_id*/,
         unsigned32 * /*st*/
@@ -2542,7 +2542,7 @@ PRIVATE void rpc__dg_network_close (
     );
 PRIVATE void rpc__dg_network_select_dispatch (
         rpc_socket_t  /*desc*/,
-        pointer_t  /*si*/,
+        dce_pointer_t  /*si*/,
         boolean32  /*is_active*/,
         unsigned32 * /*st*/
     );

@@ -900,7 +900,7 @@ PRIVATE void rpc__dg_call_wait
                     "(rpc__dg_call_wait) waiting on network event\n"));
 
             rpc__dg_network_select_dispatch(ccall->c.sock_ref->sock,
-                (pointer_t) ccall->c.sock_ref, (boolean32) true, st);
+                (dce_pointer_t) ccall->c.sock_ref, (boolean32) true, st);
         }
         else
         {
@@ -956,7 +956,7 @@ PRIVATE void rpc__dg_call_wait
             RPC_DG_CALL_UNLOCK(&ccall->c);
 
             oc = dcethread_enableinterrupt_throw(0);
-            rpc__dg_execute_call((pointer_t) &ccall->cbk_scall->c, false);
+            rpc__dg_execute_call((dce_pointer_t) &ccall->cbk_scall->c, false);
             dcethread_enableinterrupt_throw(oc);
 
             RPC_DG_CALL_LOCK(&ccall->c);

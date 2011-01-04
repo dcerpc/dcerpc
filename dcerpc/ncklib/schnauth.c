@@ -368,7 +368,7 @@ PRIVATE void rpc__schnauth_srv_reg_auth
 (
         unsigned_char_p_t server_name  ATTRIBUTE_UNUSED,
         rpc_auth_key_retrieval_fn_t get_key_func  ATTRIBUTE_UNUSED,
-        pointer_t arg  ATTRIBUTE_UNUSED,
+        dce_pointer_t arg  ATTRIBUTE_UNUSED,
         unsigned32 *stp
 )
 {

@@ -399,9 +399,9 @@ PRIVATE void rpc__cn_assoc_post_error (
  */
 
 PRIVATE unsigned32  rpc__cn_assoc_sm_protocol_error (
-    pointer_t                    /* spc_struct */,
-    pointer_t                   /* event_param */,
-    pointer_t                   /* sm */ );
+    dce_pointer_t                    /* spc_struct */,
+    dce_pointer_t                   /* event_param */,
+    dce_pointer_t                   /* sm */ );
 
 /*
  * R P C _ _ C N _ A S S O C _ S T A T U S _ T O _ P R E J
@@ -517,8 +517,8 @@ PRIVATE void rpc__cn_assoc_grp_tbl_init (void);
  */
 
 PRIVATE unsigned32  rpc__cn_grp_sm_protocol_error (
-    pointer_t                    /* spc_struct */,
-    pointer_t                   /* event_param */,
-    pointer_t                   /* sm */);
+    dce_pointer_t                    /* spc_struct */,
+    dce_pointer_t                   /* event_param */,
+    dce_pointer_t                   /* sm */);
 
 #endif

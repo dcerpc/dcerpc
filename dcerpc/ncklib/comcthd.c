@@ -363,7 +363,7 @@ INTERNAL void cthread_call_executor (
     );
 
 INTERNAL void cthread_reaper (
-        pointer_t    /*arg*/
+        dce_pointer_t    /*arg*/
     );
 
 INTERNAL cthread_pool_elt_p_t cthread_pool_alloc (
@@ -703,7 +703,7 @@ INTERNAL void cthread_call_executor
 
 INTERNAL void cthread_reaper
 (
-  pointer_t   unused_arg ATTRIBUTE_UNUSED
+  dce_pointer_t   unused_arg ATTRIBUTE_UNUSED
 )
 {
     cthread_pool_elt_p_t    p, np;
@@ -1526,7 +1526,7 @@ INTERNAL void cthread_pool_queue_call
         assert (qelt != NULL);
 
         qelt->call_rep = call_rep;
-        pvt->qelt = (pointer_t)qelt;
+        pvt->qelt = (dce_pointer_t)qelt;
 
         RPC_LIST_ADD_TAIL (p->call_queue, qelt, cthread_queue_elt_p_t);
         p->n_queued++;
@@ -2369,7 +2369,7 @@ PRIVATE void rpc__cthread_invoke_null
     unsigned32              if_ver,
     unsigned32              if_opnum,
     rpc_prot_cthread_executor_fn_t cthread_executor,
-    pointer_t               args,
+    dce_pointer_t               args,
     unsigned32              *status
 )
 {

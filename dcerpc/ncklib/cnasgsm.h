@@ -161,8 +161,8 @@
 {\
     RPC_CN_ASSOC_GRP_SM_TRC (assoc_grp, event_id);\
     st = rpc__cn_sm_eval_event ((event_id),\
-                                (pointer_t) (event_param),\
-                                (pointer_t) (assoc_grp),\
+                                (dce_pointer_t) (event_param),\
+                                (dce_pointer_t) (assoc_grp),\
                                 &((assoc_grp)->grp_state));\
     if ((assoc_grp)->grp_state.cur_state == RPC_C_ASSOC_GRP_CLOSED)\
     {\

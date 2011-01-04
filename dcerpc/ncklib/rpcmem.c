@@ -93,7 +93,7 @@
 
 #include <commonp.h>
 
-PRIVATE pointer_t rpc__mem_alloc
+PRIVATE dce_pointer_t rpc__mem_alloc
 (
     size_t size,
     unsigned32 type,
@@ -122,15 +122,15 @@ PRIVATE pointer_t rpc__mem_alloc
     return addr;
 }
 
-PRIVATE pointer_t rpc__mem_realloc
+PRIVATE dce_pointer_t rpc__mem_realloc
 (
-    pointer_t addr,
+    dce_pointer_t addr,
     unsigned32 size,
     unsigned32 type,
     unsigned32 flags ATTRIBUTE_UNUSED
 )
 {
-    RPC_MEM_REALLOC_IL(addr, pointer_t, size, type, flags);
+    RPC_MEM_REALLOC_IL(addr, dce_pointer_t, size, type, flags);
 
 #ifdef DEBUG
     if ((type & 0xff) == rpc_g_dbg_switches[rpc_es_dbg_mem_type])
@@ -152,7 +152,7 @@ PRIVATE pointer_t rpc__mem_realloc
 
 PRIVATE void rpc__mem_free
 (
-    pointer_t addr,
+    dce_pointer_t addr,
     unsigned32 type
 )
 {

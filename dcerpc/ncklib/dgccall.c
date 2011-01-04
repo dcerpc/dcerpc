@@ -2007,7 +2007,7 @@ INTERNAL void ccall_uncache
 
 PRIVATE void rpc__dg_ccall_timer
 (
-    pointer_t p
+    dce_pointer_t p
 )
 {
     rpc_dg_ccall_p_t ccall = (rpc_dg_ccall_p_t) p;

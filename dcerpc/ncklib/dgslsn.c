@@ -1469,7 +1469,7 @@ PRIVATE boolean rpc__dg_do_request
             rpc__cthread_invoke_null(
                 (rpc_call_rep_p_t) scall, &hdrp->object,
                 &hdrp->if_id, hdrp->if_vers, hdrp->opnum,
-                rpc__dg_execute_call, (pointer_t) scall,
+                rpc__dg_execute_call, (dce_pointer_t) scall,
                 &st);
 
             switch ((int)st)

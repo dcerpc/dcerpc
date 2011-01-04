@@ -273,8 +273,8 @@ PRIVATE void rpc__cn_sm_init_event_list
 PRIVATE unsigned32     rpc__cn_sm_eval_event
 (
   unsigned32              event_id,
-  pointer_t               event_parameter,
-  pointer_t               spc_struct,
+  dce_pointer_t               event_parameter,
+  dce_pointer_t               spc_struct,
   rpc_cn_sm_ctlblk_t      *sm
 )
 {

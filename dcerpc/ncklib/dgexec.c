@@ -236,7 +236,7 @@ INTERNAL void queue_mapped_reject
 
 PRIVATE void rpc__dg_execute_call
 (
-    pointer_t scall_,
+    dce_pointer_t scall_,
     boolean32 call_was_queued ATTRIBUTE_UNUSED
 )
 {

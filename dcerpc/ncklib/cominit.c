@@ -391,7 +391,7 @@ INTERNAL void init_once(void)
 	 * create the per-thread context key
 	 */
 	dcethread_keycreate_throw (&rpc_g_thread_context_key,
-			(void (*) (pointer_t)) thread_context_destructor);
+			(void (*) (dce_pointer_t)) thread_context_destructor);
 
 	/*
 	 * Initialize the timer service.

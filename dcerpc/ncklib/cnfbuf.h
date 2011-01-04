@@ -150,7 +150,7 @@ EXTERNAL unsigned32 rpc_g_cn_large_frag_size;
  */
 
 #define RPC_CN_FRAGBUF_SET_DATA_P(fbp)\
-    (fbp)->data_p = (pointer_t) RPC_CN_ALIGN_PTR((fbp)->data_area, 8);
+    (fbp)->data_p = (dce_pointer_t) RPC_CN_ALIGN_PTR((fbp)->data_area, 8);
 
 /***********************************************************************/
 /*

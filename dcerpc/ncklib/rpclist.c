@@ -231,13 +231,13 @@ PRIVATE void rpc__list_desc_init
 **--
 **/
 
-PRIVATE pointer_t rpc__list_element_alloc
+PRIVATE dce_pointer_t rpc__list_element_alloc
 (
     rpc_list_desc_p_t       list_desc,
     boolean32               block
 )
 {
-    volatile pointer_t  element = NULL;
+    volatile dce_pointer_t  element = NULL;
     unsigned32          wait_cnt;
     struct timespec     delta;
     struct timespec     abstime;
@@ -280,7 +280,7 @@ PRIVATE pointer_t rpc__list_element_alloc
             }
 #endif
             list_desc->cur_size--;
-            RPC_LIST_REMOVE_HEAD (list_desc->list_head, element, pointer_t);
+            RPC_LIST_REMOVE_HEAD (list_desc->list_head, element, dce_pointer_t);
 
             /*
              * Release the global resource control lock for all lookaside
@@ -312,7 +312,7 @@ PRIVATE pointer_t rpc__list_element_alloc
              * heap.
              */
             RPC_MEM_ALLOC (element,
-                           pointer_t,
+                           dce_pointer_t,
                            list_desc->element_size,
                            list_desc->element_type,
                            RPC_C_MEM_NOWAIT);
@@ -445,7 +445,7 @@ PRIVATE pointer_t rpc__list_element_alloc
 PRIVATE void rpc__list_element_free
 (
     rpc_list_desc_p_t       list_desc,
-    pointer_t               list_element
+    dce_pointer_t               list_element
 )
 {
     RPC_LOG_LIST_ELT_FREE_NTR;
@@ -466,7 +466,7 @@ PRIVATE void rpc__list_element_free
     {
         list_desc->cur_size++;
 
-        RPC_LIST_ADD_TAIL (list_desc->list_head, list_element, pointer_t);
+        RPC_LIST_ADD_TAIL (list_desc->list_head, list_element, dce_pointer_t);
 
         /*
          * Now check whether any other thread is waiting for a lookaside list

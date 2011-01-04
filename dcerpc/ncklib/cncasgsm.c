@@ -167,14 +167,14 @@ GLOBAL const char     *rpc_g_cn_grp_client_states [] =
  * The action routine prototypes.
  */
 INTERNAL unsigned32     incr_assoc_count_action_rtn (
-    pointer_t /*spc_struct*/,
-    pointer_t /*event_param*/,
-    pointer_t /*sm*/);
+    dce_pointer_t /*spc_struct*/,
+    dce_pointer_t /*event_param*/,
+    dce_pointer_t /*sm*/);
 
 INTERNAL unsigned32     decr_assoc_count_action_rtn (
-    pointer_t /*spc_struct*/,
-    pointer_t /*event_param*/,
-    pointer_t /*sm*/);
+    dce_pointer_t /*spc_struct*/,
+    dce_pointer_t /*event_param*/,
+    dce_pointer_t /*sm*/);
 
 /*
  * The action table itself.
@@ -377,9 +377,9 @@ GLOBAL rpc_cn_sm_state_entry_p_t rpc_g_cn_client_grp_sm [] =
 
 INTERNAL unsigned32     incr_assoc_count_action_rtn
 (
-  pointer_t       spc_struct,
-  pointer_t       event_param,
-  pointer_t       sm
+  dce_pointer_t       spc_struct,
+  dce_pointer_t       event_param,
+  dce_pointer_t       sm
 )
 {
     rpc_cn_assoc_grp_t          *assoc_grp;
@@ -448,9 +448,9 @@ INTERNAL unsigned32     incr_assoc_count_action_rtn
 
 INTERNAL unsigned32     decr_assoc_count_action_rtn
 (
-  pointer_t       spc_struct,
-  pointer_t       event_param,
-  pointer_t	  sm
+  dce_pointer_t       spc_struct,
+  dce_pointer_t       event_param,
+  dce_pointer_t	  sm
 )
 {
     rpc_cn_assoc_grp_t  *assoc_grp;

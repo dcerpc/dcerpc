@@ -433,7 +433,7 @@ PRIVATE void rpc__cn_binding_free
      * Put the binding rep back on the lookaside list.
      */
     rpc__list_element_free (&rpc_g_cn_binding_lookaside_list,
-                            (pointer_t) *binding_r);
+                            (dce_pointer_t) *binding_r);
 
     /*
      * Null the caller's pointer to this memory.

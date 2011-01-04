@@ -282,7 +282,7 @@ typedef idl_byte byte_t ;
 
 #ifndef CLOBBER_PTR
 #  ifdef DCE_RPC_DEBUG
-#    define CLOBBER_PTR(p) (*(pointer_t *)&(p) = (pointer_t) 0xdeaddead)
+#    define CLOBBER_PTR(p) (*(dce_pointer_t *)&(p) = (dce_pointer_t) 0xdeaddead)
 #  else
 #    define CLOBBER_PTR(p)
 #  endif

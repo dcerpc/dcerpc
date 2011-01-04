@@ -95,7 +95,7 @@
 #define _DGEXEC_H
 
 PRIVATE void rpc__dg_execute_call    (
-        pointer_t  /*scall_*/,
+        dce_pointer_t  /*scall_*/,
         boolean32  /*call_was_queued*/
     );
 

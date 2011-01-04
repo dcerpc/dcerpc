@@ -487,7 +487,7 @@ INTERNAL void use_protseq
     {
         rpc__dg_network_sock_reference(eltp);
         rpc__network_add_desc(socket_desc, is_server, (endpoint == NULL),
-                                pseq_id, (pointer_t) eltp, st);
+                                pseq_id, (dce_pointer_t) eltp, st);
 
         if (*st != rpc_s_ok)
         {

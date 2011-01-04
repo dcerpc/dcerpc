@@ -116,7 +116,7 @@ INTERNAL void timer_loop (void);
 INTERNAL void rpc__timer_set_int (
         rpc_timer_p_t            /*t*/,
         rpc_timer_proc_p_t       /*proc*/,
-        pointer_t                /*parg*/,
+        dce_pointer_t                /*parg*/,
         rpc_clock_t              /*freq*/
     );
 
@@ -321,7 +321,7 @@ PRIVATE void rpc__timer_set
 (
     rpc_timer_p_t           t,
     rpc_timer_proc_p_t      proc,
-    pointer_t               parg,
+    dce_pointer_t               parg,
     rpc_clock_t             freq
 )
 {
@@ -344,7 +344,7 @@ INTERNAL void rpc__timer_set_int
 (
     rpc_timer_p_t           t,
     rpc_timer_proc_p_t      proc,
-    pointer_t               parg,
+    dce_pointer_t               parg,
     rpc_clock_t             freq
 )
 {

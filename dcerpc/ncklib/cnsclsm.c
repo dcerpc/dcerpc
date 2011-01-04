@@ -154,33 +154,33 @@ GLOBAL const char     *rpc_g_cn_call_server_states [] =
  */
 INTERNAL unsigned8 disconnected_maybe_pred_rtn
     (
-	pointer_t spc_struct,
-        pointer_t event_param
+	dce_pointer_t spc_struct,
+        dce_pointer_t event_param
     ) ATTRIBUTE_UNUSED;
 INTERNAL unsigned8 request_fault_pred_rtn
     (
-        pointer_t spc_struct,
-        pointer_t event_param
+        dce_pointer_t spc_struct,
+        dce_pointer_t event_param
     ) ATTRIBUTE_UNUSED;
 INTERNAL unsigned8 response_fault_pred_rtn
     (
-        pointer_t spc_struct,
-        pointer_t event_param
+        dce_pointer_t spc_struct,
+        dce_pointer_t event_param
     ) ATTRIBUTE_UNUSED;
 INTERNAL unsigned8 last_recv_frag_pred_rtn
     (
-        pointer_t spc_struct,
-        pointer_t event_param
+        dce_pointer_t spc_struct,
+        dce_pointer_t event_param
     ) ATTRIBUTE_UNUSED;
 INTERNAL unsigned8 first_frag_pred_rtn
     (
-        pointer_t spc_struct,
-        pointer_t event_param
+        dce_pointer_t spc_struct,
+        dce_pointer_t event_param
     ) ATTRIBUTE_UNUSED;
 INTERNAL unsigned8 disc_last_send_pred_rtn
     (
-        pointer_t spc_struct,
-        pointer_t event_param
+        dce_pointer_t spc_struct,
+        dce_pointer_t event_param
     ) ATTRIBUTE_UNUSED;
 
 
@@ -216,56 +216,56 @@ INTERNAL unsigned8 disc_last_send_pred_rtn
  * The action routine prototypes.
  */
 INTERNAL unsigned32     handle_first_frag_action_rtn (
-        pointer_t  /*spc_struct*/,
-        pointer_t /*event_param*/,
-	pointer_t /*sm*/
+        dce_pointer_t  /*spc_struct*/,
+        dce_pointer_t /*event_param*/,
+	dce_pointer_t /*sm*/
     );
 INTERNAL unsigned32     handle_frag_action_rtn (
-        pointer_t  /*spc_struct*/,
-        pointer_t /*event_param*/,
-	pointer_t /*sm*/
+        dce_pointer_t  /*spc_struct*/,
+        dce_pointer_t /*event_param*/,
+	dce_pointer_t /*sm*/
     );
 INTERNAL unsigned32     send_call_resp_action_rtn (
-        pointer_t  /*spc_struct*/,
-        pointer_t /*event_param*/,
-	pointer_t /*sm*/
+        dce_pointer_t  /*spc_struct*/,
+        dce_pointer_t /*event_param*/,
+	dce_pointer_t /*sm*/
     );
 INTERNAL unsigned32     send_call_fault_action_rtn (
-        pointer_t  /*spc_struct*/,
-        pointer_t /*event_param*/,
-	pointer_t /*sm*/
+        dce_pointer_t  /*spc_struct*/,
+        dce_pointer_t /*event_param*/,
+	dce_pointer_t /*sm*/
     );
 INTERNAL unsigned32     process_alert_msg_action_rtn (
-        pointer_t  /*spc_struct*/,
-        pointer_t /*event_param*/,
-	pointer_t /*sm*/
+        dce_pointer_t  /*spc_struct*/,
+        dce_pointer_t /*event_param*/,
+	dce_pointer_t /*sm*/
     );
 
 INTERNAL unsigned32     abort_resp_action_rtn (
-        pointer_t  /*spc_struct*/,
-        pointer_t /*event_param*/,
-	pointer_t /*sm*/
+        dce_pointer_t  /*spc_struct*/,
+        dce_pointer_t /*event_param*/,
+	dce_pointer_t /*sm*/
     );
 
 INTERNAL unsigned32     abort_resp_send_fault_action_rtn (
-        pointer_t  /*spc_struct*/,
-        pointer_t /*event_param*/,
-	pointer_t /*sm*/
+        dce_pointer_t  /*spc_struct*/,
+        dce_pointer_t /*event_param*/,
+	dce_pointer_t /*sm*/
     );
 INTERNAL unsigned32     stop_orphan_action_rtn (
-        pointer_t  /*spc_struct*/,
-        pointer_t /*event_param*/,
-	pointer_t /*sm*/
+        dce_pointer_t  /*spc_struct*/,
+        dce_pointer_t /*event_param*/,
+	dce_pointer_t /*sm*/
     );
 INTERNAL unsigned32     discard_fragment_action_rtn (
-        pointer_t  /*spc_struct*/,
-        pointer_t /*event_param*/,
-	pointer_t /*sm*/
+        dce_pointer_t  /*spc_struct*/,
+        dce_pointer_t /*event_param*/,
+	dce_pointer_t /*sm*/
     );
 INTERNAL unsigned32     call_end_action_rtn (
-        pointer_t  /*spc_struct*/,
-        pointer_t /*event_param*/,
-	pointer_t /*sm*/
+        dce_pointer_t  /*spc_struct*/,
+        dce_pointer_t /*event_param*/,
+	dce_pointer_t /*sm*/
     );
 
 /*
@@ -451,8 +451,8 @@ GLOBAL rpc_cn_sm_state_entry_p_t rpc_g_cn_server_call_sm [] =
 
 INTERNAL unsigned8 disconnected_maybe_pred_rtn
 (
-  pointer_t       spc_struct,
-  pointer_t       event_param
+  dce_pointer_t       spc_struct,
+  dce_pointer_t       event_param
 )
 {
     RPC_CN_DBG_RTN_PRINTF(SERVER disconnected_maybe_pred_rtn);
@@ -523,8 +523,8 @@ INTERNAL unsigned8 disconnected_maybe_pred_rtn
 
 INTERNAL unsigned8 disc_last_send_pred_rtn
 (
-  pointer_t       spc_struct,
-  pointer_t       event_param ATTRIBUTE_UNUSED
+  dce_pointer_t       spc_struct,
+  dce_pointer_t       event_param ATTRIBUTE_UNUSED
 )
 {
     RPC_CN_DBG_RTN_PRINTF(SERVER disc_last_send_pred_rtn);
@@ -673,8 +673,8 @@ INTERNAL unsigned8 disc_last_send_pred_rtn
 
 INTERNAL unsigned8 request_fault_pred_rtn
 (
-  pointer_t       spc_struct,
-  pointer_t       event_param ATTRIBUTE_UNUSED
+  dce_pointer_t       spc_struct,
+  dce_pointer_t       event_param ATTRIBUTE_UNUSED
 )
 {
     rpc_cn_call_rep_p_t call_rep;
@@ -829,8 +829,8 @@ INTERNAL unsigned8 request_fault_pred_rtn
 
 INTERNAL unsigned8 response_fault_pred_rtn
 (
-  pointer_t       spc_struct,
-  pointer_t       event_param ATTRIBUTE_UNUSED
+  dce_pointer_t       spc_struct,
+  dce_pointer_t       event_param ATTRIBUTE_UNUSED
 )
 {
     rpc_cn_packet_p_t   header_p;
@@ -981,8 +981,8 @@ INTERNAL unsigned8 response_fault_pred_rtn
 
 INTERNAL unsigned8 last_recv_frag_pred_rtn
 (
-  pointer_t       spc_struct ATTRIBUTE_UNUSED,
-  pointer_t       event_param
+  dce_pointer_t       spc_struct ATTRIBUTE_UNUSED,
+  dce_pointer_t       event_param
 )
 {
 
@@ -1106,8 +1106,8 @@ INTERNAL unsigned8 last_recv_frag_pred_rtn
 
 INTERNAL unsigned8 first_frag_pred_rtn
 (
-  pointer_t       spc_struct ATTRIBUTE_UNUSED,
-  pointer_t       event_param
+  dce_pointer_t       spc_struct ATTRIBUTE_UNUSED,
+  dce_pointer_t       event_param
 )
 {
     RPC_CN_DBG_RTN_PRINTF(SERVER first_frag_pred_rtn);
@@ -1355,9 +1355,9 @@ INTERNAL unsigned8 first_frag_pred_rtn
 **/
 INTERNAL unsigned32     handle_first_frag_action_rtn
 (
-  pointer_t       spc_struct,
-  pointer_t       event_param,
-  pointer_t       sm
+  dce_pointer_t       spc_struct,
+  dce_pointer_t       event_param,
+  dce_pointer_t       sm
 )
 {
     unsigned32              status;
@@ -1461,7 +1461,7 @@ INTERNAL unsigned32     handle_first_frag_action_rtn
             auth_tlr->reserved = 0;
             RPC_CN_AUTH_PRE_CALL (RPC_CN_ASSOC_SECURITY (call_rep->assoc),
                                   call_rep->sec,
-                                  (pointer_t) auth_tlr->auth_value,
+                                  (dce_pointer_t) auth_tlr->auth_value,
                                   &auth_value_len,
                                   &status);
             if (status != rpc_s_ok)
@@ -1598,9 +1598,9 @@ INTERNAL unsigned32     handle_first_frag_action_rtn
 **/
 INTERNAL unsigned32     handle_frag_action_rtn
 (
-  pointer_t       spc_struct,
-  pointer_t       event_param,
-  pointer_t       sm
+  dce_pointer_t       spc_struct,
+  dce_pointer_t       event_param,
+  dce_pointer_t       sm
 )
 {
     unsigned32              status;
@@ -1697,9 +1697,9 @@ INTERNAL unsigned32     handle_frag_action_rtn
 
 INTERNAL unsigned32     send_call_resp_action_rtn
 (
-  pointer_t       spc_struct,
-  pointer_t       event_param,
-  pointer_t       sm
+  dce_pointer_t       spc_struct,
+  dce_pointer_t       event_param,
+  dce_pointer_t       sm
 )
 {
     rpc_cn_call_rep_p_t     call_rep;
@@ -1879,9 +1879,9 @@ INTERNAL unsigned32     send_call_resp_action_rtn
 **/
 INTERNAL unsigned32     send_call_fault_action_rtn
 (
-  pointer_t       spc_struct,
-  pointer_t       event_param,
-  pointer_t       sm
+  dce_pointer_t       spc_struct,
+  dce_pointer_t       event_param,
+  dce_pointer_t       sm
 )
 {
     rpc_cn_call_rep_p_t     call_rep;
@@ -2100,9 +2100,9 @@ INTERNAL unsigned32     send_call_fault_action_rtn
 **/
 INTERNAL unsigned32     process_alert_msg_action_rtn
 (
-  pointer_t       spc_struct,
-  pointer_t       event_param,
-  pointer_t       sm
+  dce_pointer_t       spc_struct,
+  dce_pointer_t       event_param,
+  dce_pointer_t       sm
 )
 {
     rpc_cn_call_rep_p_t     call_rep;
@@ -2199,9 +2199,9 @@ INTERNAL unsigned32     process_alert_msg_action_rtn
 **/
 INTERNAL unsigned32     abort_resp_action_rtn
 (
-  pointer_t       spc_struct,
-  pointer_t       event_param ATTRIBUTE_UNUSED,
-  pointer_t       sm ATTRIBUTE_UNUSED
+  dce_pointer_t       spc_struct,
+  dce_pointer_t       event_param ATTRIBUTE_UNUSED,
+  dce_pointer_t       sm ATTRIBUTE_UNUSED
 )
 {
     rpc_cn_call_rep_p_t     call_rep;
@@ -2295,9 +2295,9 @@ INTERNAL unsigned32     abort_resp_action_rtn
 **/
 INTERNAL unsigned32     abort_resp_send_fault_action_rtn
 (
-  pointer_t       spc_struct,
-  pointer_t       event_param,
-  pointer_t       sm
+  dce_pointer_t       spc_struct,
+  dce_pointer_t       event_param,
+  dce_pointer_t       sm
 )
 {
     unsigned32              status;
@@ -2537,9 +2537,9 @@ INTERNAL unsigned32     abort_resp_send_fault_action_rtn
 
 INTERNAL unsigned32     stop_orphan_action_rtn
 (
-  pointer_t       spc_struct,
-  pointer_t       event_param,
-  pointer_t       sm
+  dce_pointer_t       spc_struct,
+  dce_pointer_t       event_param,
+  dce_pointer_t       sm
 )
 {
     rpc_cn_call_rep_p_t     call_rep;
@@ -2686,9 +2686,9 @@ INTERNAL unsigned32     stop_orphan_action_rtn
 **/
 INTERNAL unsigned32     discard_fragment_action_rtn
 (
-  pointer_t       spc_struct ATTRIBUTE_UNUSED,
-  pointer_t       event_param,
-  pointer_t       sm ATTRIBUTE_UNUSED
+  dce_pointer_t       spc_struct ATTRIBUTE_UNUSED,
+  dce_pointer_t       event_param,
+  dce_pointer_t       sm ATTRIBUTE_UNUSED
 )
 {
     rpc_cn_fragbuf_p_t  fragbuf_p;
@@ -2745,9 +2745,9 @@ INTERNAL unsigned32     discard_fragment_action_rtn
 **/
 INTERNAL unsigned32     call_end_action_rtn
 (
-  pointer_t       spc_struct,
-  pointer_t       event_param ATTRIBUTE_UNUSED,
-  pointer_t       sm
+  dce_pointer_t       spc_struct,
+  dce_pointer_t       event_param ATTRIBUTE_UNUSED,
+  dce_pointer_t       sm
 )
 {
     rpc_cn_call_rep_p_t     call_rep;
@@ -2889,9 +2889,9 @@ INTERNAL unsigned32     call_end_action_rtn
 **/
 PRIVATE unsigned32     rpc__cn_call_sm_protocol_error
 (
-  pointer_t       spc_struct,
-  pointer_t       event_param ATTRIBUTE_UNUSED,
-  pointer_t       sm
+  dce_pointer_t       spc_struct,
+  dce_pointer_t       event_param ATTRIBUTE_UNUSED,
+  dce_pointer_t       sm
 )
 {
     rpc_cn_call_rep_p_t call_rep;

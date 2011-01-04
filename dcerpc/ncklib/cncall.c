@@ -599,7 +599,7 @@ PRIVATE rpc_call_rep_t *rpc__cn_call_start
             auth_tlr->reserved = 0;
             RPC_CN_AUTH_PRE_CALL (RPC_CN_ASSOC_SECURITY (call_rep->assoc),
                                   call_rep->sec,
-                                  (pointer_t) auth_tlr->auth_value,
+                                  (dce_pointer_t) auth_tlr->auth_value,
                                   &auth_value_len,
                                   st);
             RPC_CN_CREP_ADJ_IOV_FOR_TLR (call_rep, header_p, auth_value_len);
@@ -786,7 +786,7 @@ PRIVATE void rpc__cn_call_transmit
 	    if (RPC_CN_PKT_PTYPE(header_p) == RPC_C_CN_PKT_FAULT)
 	    {
 
-		frag_buf->data_p = (pointer_t)
+		frag_buf->data_p = (dce_pointer_t)
 				   (RPC_CN_PKT_FAULT_STUB_DATA(header_p));
 
 		/*
@@ -1142,12 +1142,12 @@ PRIVATE void rpc__cn_call_transceive
                  */
                 if (RPC_CN_PKT_PTYPE(header_p) == RPC_C_CN_PKT_RESPONSE)
                 {
-                    frag_buf->data_p = (pointer_t)
+                    frag_buf->data_p = (dce_pointer_t)
                                       (RPC_CN_PKT_RESP_STUB_DATA(header_p));
                 }
                 else if (RPC_CN_PKT_PTYPE(header_p) == RPC_C_CN_PKT_FAULT)
                 {
-                    frag_buf->data_p = (pointer_t)
+                    frag_buf->data_p = (dce_pointer_t)
                         RPC_CN_PKT_FAULT_STUB_DATA (header_p);
                     /*
                      * We had conservatively assumed that the call
@@ -1450,25 +1450,25 @@ PRIVATE void rpc__cn_call_receive
      */
     if (RPC_CN_PKT_PTYPE(header_p) == RPC_C_CN_PKT_RESPONSE)
     {
-        frag_buf->data_p = (pointer_t)
+        frag_buf->data_p = (dce_pointer_t)
                       (RPC_CN_PKT_RESP_STUB_DATA(header_p));
     }
     else if (RPC_CN_PKT_PTYPE(header_p) == RPC_C_CN_PKT_REQUEST)
     {
         if (RPC_CN_PKT_OBJ_UUID_PRESENT (header_p))
         {
-                frag_buf->data_p = (pointer_t)
+                frag_buf->data_p = (dce_pointer_t)
                     RPC_CN_PKT_RQST_STUB_DATA_W_OBJ (header_p);
         }
         else
         {
-            frag_buf->data_p = (pointer_t)
+            frag_buf->data_p = (dce_pointer_t)
                 RPC_CN_PKT_RQST_STUB_DATA_NO_OBJ (header_p);
         }
     }
     else if (RPC_CN_PKT_PTYPE(header_p) == RPC_C_CN_PKT_FAULT)
     {
-        frag_buf->data_p = (pointer_t) RPC_CN_PKT_FAULT_STUB_DATA (header_p);
+        frag_buf->data_p = (dce_pointer_t) RPC_CN_PKT_FAULT_STUB_DATA (header_p);
         /*
          * We had conservatively assumed that the call
          * has executed as soon as the call started.
@@ -1910,7 +1910,7 @@ PRIVATE void rpc__cn_call_end
          * Free the call_rep itself.
          */
         rpc__list_element_free (&rpc_g_cn_call_lookaside_list,
-                                (pointer_t) call_rep);
+                                (dce_pointer_t) call_rep);
         *call_r = NULL;
     }
     else
@@ -3029,7 +3029,7 @@ PRIVATE void rpc__cn_call_start_cancel_timer
             call_r->u.client.cancel.thread_h = dcethread_self ();
             rpc__timer_set (&call_r->u.client.cancel.timer,
                             (rpc_timer_proc_p_t) rpc__cn_call_cancel_timer,
-                            (pointer_t) call_r,
+                            (dce_pointer_t) call_r,
                             (rpc_clock_t) RPC_CLOCK_SEC (call_r->u.client.cancel.timeout_time));
         }
     }

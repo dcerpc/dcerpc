@@ -161,7 +161,7 @@ typedef enum {
  */
 
 #define RPC_DG_CALL_SET_TIMER(call, proc, freq) { \
-    rpc__timer_set(&(call)->timer, (proc), (pointer_t) (call), (freq)); \
+    rpc__timer_set(&(call)->timer, (proc), (dce_pointer_t) (call), (freq)); \
     RPC_DG_CALL_REFERENCE(call); \
 }
 

@@ -162,12 +162,12 @@ GLOBAL const char     *rpc_g_cn_grp_server_states [] =
  * The predicate routine prototypes.
  */
 INTERNAL unsigned8 server_refs_pred_rtn (
-    pointer_t spc_struct,
-    pointer_t event_param);
+    dce_pointer_t spc_struct,
+    dce_pointer_t event_param);
 
 INTERNAL unsigned8 server_assoc_count_pred_rtn (
-    pointer_t spc_struct,
-    pointer_t event_param) ATTRIBUTE_UNUSED;
+    dce_pointer_t spc_struct,
+    dce_pointer_t event_param) ATTRIBUTE_UNUSED;
 
 
 /***********************************************************************/
@@ -188,24 +188,24 @@ INTERNAL unsigned8 server_assoc_count_pred_rtn (
  * The action routine prototypes.
  */
 INTERNAL unsigned32     create_group_id_action_rtn (
-    pointer_t  /*spc_struct*/,
-    pointer_t  /*event_param*/,
-    pointer_t  /*sm*/);
+    dce_pointer_t  /*spc_struct*/,
+    dce_pointer_t  /*event_param*/,
+    dce_pointer_t  /*sm*/);
 
 INTERNAL unsigned32     incr_assoc_count_action_rtn (
-    pointer_t  /*spc_struct*/,
-    pointer_t  /*event_param*/,
-    pointer_t  /*sm*/);
+    dce_pointer_t  /*spc_struct*/,
+    dce_pointer_t  /*event_param*/,
+    dce_pointer_t  /*sm*/);
 
 INTERNAL unsigned32     decr_assoc_count_action_rtn (
-    pointer_t  /*spc_struct*/,
-    pointer_t  /*event_param*/,
-    pointer_t  /*sm*/);
+    dce_pointer_t  /*spc_struct*/,
+    dce_pointer_t  /*event_param*/,
+    dce_pointer_t  /*sm*/);
 
 INTERNAL unsigned32     rundown_handles_action_rtn (
-    pointer_t  /*spc_struct*/,
-    pointer_t  /*event_param*/,
-    pointer_t  /*sm*/);
+    dce_pointer_t  /*spc_struct*/,
+    dce_pointer_t  /*event_param*/,
+    dce_pointer_t  /*sm*/);
 
 /*
  * The action table itself.
@@ -370,8 +370,8 @@ GLOBAL rpc_cn_sm_state_entry_p_t rpc_g_cn_server_grp_sm [] =
 
 INTERNAL unsigned8 server_refs_pred_rtn
 (
-  pointer_t       spc_struct,
-  pointer_t       event_param ATTRIBUTE_UNUSED
+  dce_pointer_t       spc_struct,
+  dce_pointer_t       event_param ATTRIBUTE_UNUSED
 )
 {
 
@@ -500,8 +500,8 @@ INTERNAL unsigned8 server_refs_pred_rtn
 
 INTERNAL unsigned8 server_assoc_count_pred_rtn
 (
-  pointer_t       spc_struct,
-  pointer_t       event_param
+  dce_pointer_t       spc_struct,
+  dce_pointer_t       event_param
 )
 {
     rpc_cn_assoc_grp_t          *assoc_grp;
@@ -659,9 +659,9 @@ INTERNAL unsigned8 server_assoc_count_pred_rtn
 
 INTERNAL unsigned32     create_group_id_action_rtn
 (
-  pointer_t       spc_struct,
-  pointer_t       event_param ATTRIBUTE_UNUSED,
-  pointer_t       sm
+  dce_pointer_t       spc_struct,
+  dce_pointer_t       event_param ATTRIBUTE_UNUSED,
+  dce_pointer_t       sm
 )
 {
     rpc_cn_assoc_grp_t          *assoc_grp;
@@ -722,9 +722,9 @@ INTERNAL unsigned32     create_group_id_action_rtn
 
 INTERNAL unsigned32     incr_assoc_count_action_rtn
 (
-  pointer_t       spc_struct,
-  pointer_t       event_param,
-  pointer_t       sm
+  dce_pointer_t       spc_struct,
+  dce_pointer_t       event_param,
+  dce_pointer_t       sm
 )
 {
     rpc_cn_assoc_grp_t          *assoc_grp;
@@ -794,9 +794,9 @@ INTERNAL unsigned32     incr_assoc_count_action_rtn
 
 INTERNAL unsigned32     decr_assoc_count_action_rtn
 (
-  pointer_t       spc_struct,
-  pointer_t       event_param,
-  pointer_t       sm
+  dce_pointer_t       spc_struct,
+  dce_pointer_t       event_param,
+  dce_pointer_t       sm
 )
 {
     rpc_cn_assoc_grp_t          *assoc_grp;
@@ -889,9 +889,9 @@ INTERNAL unsigned32     decr_assoc_count_action_rtn
 
 INTERNAL unsigned32     rundown_handles_action_rtn
 (
-  pointer_t       spc_struct,
-  pointer_t       event_param,
-  pointer_t       sm
+  dce_pointer_t       spc_struct,
+  dce_pointer_t       event_param,
+  dce_pointer_t       sm
 )
 {
     rpc_cn_assoc_grp_t          *assoc_grp;

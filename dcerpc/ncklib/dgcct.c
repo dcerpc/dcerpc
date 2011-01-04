@@ -156,7 +156,7 @@ INTERNAL rpc_dg_cct_elt_p_t ccte_create (
     );
 
 INTERNAL void cct_timer_fn (
-        pointer_t  /*p*/
+        dce_pointer_t  /*p*/
     );
 
 INTERNAL void create_activity_uuid (
@@ -272,7 +272,7 @@ INTERNAL rpc_dg_cct_elt_p_t ccte_create
     if (num_cct_entries == 1)
     {
         rpc__timer_set(&cct_timer, cct_timer_fn,
-           (pointer_t) NULL, RPC_CLOCK_SEC(rpc_g_dg_cct_mon_int));
+           (dce_pointer_t) NULL, RPC_CLOCK_SEC(rpc_g_dg_cct_mon_int));
     }
 
     return (ccte);
@@ -380,7 +380,7 @@ PRIVATE void rpc__dg_cct_get
 
 INTERNAL void cct_timer_fn
 (
-    pointer_t junk ATTRIBUTE_UNUSED
+    dce_pointer_t junk ATTRIBUTE_UNUSED
 )
 {
     rpc_dg_cct_elt_p_t ccte, prev_ccte, next_ccte;

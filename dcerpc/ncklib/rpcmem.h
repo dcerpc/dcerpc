@@ -308,7 +308,7 @@ EXTERNAL rpc_mem_stats_elt_t rpc_g_mem_stats[];
         (addr) = (cast) rpc__mem_realloc(addr, size, type, flags)
 
 #  define RPC_MEM_FREE(addr, type) \
-        rpc__mem_free((pointer_t)(addr), type)
+        rpc__mem_free((dce_pointer_t)(addr), type)
 #endif
 
 /*
@@ -411,21 +411,21 @@ EXTERNAL rpc_mem_stats_elt_t rpc_g_mem_stats[];
     RPC_LOG_MEM_FREE_XIT; \
 }
 
-PRIVATE pointer_t rpc__mem_alloc (
+PRIVATE dce_pointer_t rpc__mem_alloc (
         size_t /*size*/,
         unsigned32 /*type*/,
         unsigned32  /*flags*/
     );
 
-PRIVATE pointer_t rpc__mem_realloc (
-        pointer_t  /*addr*/,
+PRIVATE dce_pointer_t rpc__mem_realloc (
+        dce_pointer_t  /*addr*/,
         unsigned32 /*size*/,
         unsigned32 /*type*/,
         unsigned32  /*flags*/
     );
 
 PRIVATE void rpc__mem_free (
-        pointer_t   /*addr*/,
+        dce_pointer_t   /*addr*/,
         unsigned32  /*type*/
     );
 

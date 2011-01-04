@@ -1043,7 +1043,7 @@ INTERNAL void receive_dispatch
                 {
                     assoc->call_rep = NULL;
                     rpc__list_element_free (&rpc_g_cn_call_lookaside_list,
-                                            (pointer_t) call_r);
+                                            (dce_pointer_t) call_r);
                     break;
                 }
 
@@ -1208,7 +1208,7 @@ INTERNAL void receive_dispatch
                                           call_r->u.server.if_vers,
                                           (unsigned32) call_r->opnum,
                                           rpc__cn_call_executor,
-                                          (pointer_t) call_r,
+                                          (dce_pointer_t) call_r,
                                           &st);
 
                 /*
@@ -1747,7 +1747,7 @@ INTERNAL void receive_packet
          */
         fbp->data_size = frag_length;
         memcpy ((*ovf_fragbuf_p)->data_p,
-                (pointer_t)((unsigned8 *)(fbp->data_p) + fbp->data_size),
+                (dce_pointer_t)((unsigned8 *)(fbp->data_p) + fbp->data_size),
                 (*ovf_fragbuf_p)->data_size);
     }
 

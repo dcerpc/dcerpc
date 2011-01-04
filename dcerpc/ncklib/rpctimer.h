@@ -97,7 +97,7 @@
 **
 **      1) the address of the rpc_timer_t variable
 **      2) the address of the routine to run
-**      3) a pointer_t value to be sent to the routine when run
+**      3) a dce_pointer_t value to be sent to the routine when run
 **      4) the frequency with which the routine should be run
 **
 **  The pointer value used will most often be the address of the data
@@ -130,7 +130,7 @@
 **          ...
 **
 **      void foo_mon( parg )
-**      pointer_t parg;
+**      dce_pointer_t parg;
 **      {
 **          if( rpc__clock_aged( parg->timestamp, rpc_timer_sec( 1 ) )
 **          {
@@ -145,7 +145,7 @@
 #ifndef _RPCTIMER_H
 #define _RPCTIMER_H
 
-typedef void (*rpc_timer_proc_p_t) ( pointer_t );
+typedef void (*rpc_timer_proc_p_t) ( dce_pointer_t );
 
 /*
  * This type is used to create a list of periodic functions ordered by
@@ -157,7 +157,7 @@ typedef struct rpc_timer_t
     rpc_clock_t          trigger;
     rpc_clock_t          frequency;
     rpc_timer_proc_p_t   proc;
-    pointer_t            parg;
+    dce_pointer_t            parg;
 } rpc_timer_t, *rpc_timer_p_t;
 
 /*
@@ -183,7 +183,7 @@ PRIVATE void rpc__timer_shutdown (void);
 PRIVATE void rpc__timer_set (
     rpc_timer_p_t /*t*/,
     rpc_timer_proc_p_t /*proc*/,
-    pointer_t /*parg*/,
+    dce_pointer_t /*parg*/,
     rpc_clock_t  /*freq*/
 );
 

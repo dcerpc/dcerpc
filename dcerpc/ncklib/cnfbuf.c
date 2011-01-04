@@ -141,7 +141,7 @@ PRIVATE void rpc__cn_fragbuf_free
     memset ((char *) buffer_p, 0, sizeof (rpc_cn_fragbuf_t));
 #endif
     rpc__list_element_free (&rpc_g_cn_lg_fbuf_lookaside_list,
-                            (pointer_t) buffer_p);
+                            (dce_pointer_t) buffer_p);
 }
 
 /*
@@ -185,7 +185,7 @@ PRIVATE void rpc__cn_smfragbuf_free
     memset ((char *) buffer_p, 0, sizeof (rpc_cn_fragbuf_t));
 #endif
     rpc__list_element_free (&rpc_g_cn_sm_fbuf_lookaside_list,
-                            (pointer_t) buffer_p );
+                            (dce_pointer_t) buffer_p );
 }
 
 /*
@@ -265,7 +265,7 @@ PRIVATE rpc_cn_fragbuf_p_t rpc__cn_fragbuf_alloc
      * Set the data pointer to an 8 byte aligned boundary.
      */
 
-    fbp->data_p = (pointer_t) RPC_CN_ALIGN_PTR(fbp->data_area, 8);
+    fbp->data_p = (dce_pointer_t) RPC_CN_ALIGN_PTR(fbp->data_area, 8);
     memset (fbp->data_area, 0, fbp->max_data_size);
 
     /*
@@ -380,7 +380,7 @@ PRIVATE rpc_cn_fragbuf_p_t rpc__cn_fragbuf_alloc_dyn
      * Set the data pointer to an 8 byte aligned boundary.
      */
 
-    fbp->data_p = (pointer_t) RPC_CN_ALIGN_PTR(fbp->data_area, 8);
+    fbp->data_p = (dce_pointer_t) RPC_CN_ALIGN_PTR(fbp->data_area, 8);
     memset(fbp->data_area, 0, fbp->max_data_size);
 
     /*

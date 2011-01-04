@@ -227,9 +227,9 @@ typedef void (*rpc_cn_auth_cred_refresh_fn_t) (
 typedef void (*rpc_cn_auth_fmt_client_req_fn_t) (
         rpc_cn_assoc_sec_context_p_t      /* assoc_sec */,
         rpc_cn_sec_context_p_t            /* sec */,
-        pointer_t                         /* auth_value */,
+        dce_pointer_t                         /* auth_value */,
         unsigned32                      * /* auth_value_len */,
-        pointer_t                       * /* last_auth_pos */,
+        dce_pointer_t                       * /* last_auth_pos */,
         unsigned32                      * /* auth_len_remain */,
         unsigned32                        /* old_server */,
         unsigned32                      * /* st */
@@ -239,9 +239,9 @@ typedef void (*rpc_cn_auth_fmt_srvr_resp_fn_t) (
         unsigned32                     /*  verify_st */,
         rpc_cn_assoc_sec_context_p_t   /*  assoc_sec */,
         rpc_cn_sec_context_p_t         /*  sec */,
-        pointer_t                      /*  req_auth_value */,
+        dce_pointer_t                      /*  req_auth_value */,
         unsigned32                     /*  req_auth_value_len */,
-        pointer_t                      /*  auth_value */,
+        dce_pointer_t                      /*  auth_value */,
         unsigned32                      * /* auth_value_len */
     );
 
@@ -259,7 +259,7 @@ typedef void (*rpc_cn_auth_get_prot_info_fn_t) (
 typedef void (*rpc_cn_auth_pre_call_fn_t) (
         rpc_cn_assoc_sec_context_p_t   /*  assoc_sec */,
         rpc_cn_sec_context_p_t         /*  sec */,
-        pointer_t                      /*  auth_value */,
+        dce_pointer_t                      /*  auth_value */,
         unsigned32                     * /*  auth_value_len */,
         unsigned32                      * /* st */
     );
@@ -285,7 +285,7 @@ typedef void (*rpc_cn_auth_recv_check_fn_t) (
     );
 
 typedef void (*rpc_cn_auth_tlr_uuid_crc_fn_t) (
-        pointer_t               /* auth_value */,
+        dce_pointer_t               /* auth_value */,
         unsigned32              /* auth_value_len */,
         unsigned32              * /* uuid_crc */
     );
@@ -301,7 +301,7 @@ typedef boolean32 (*rpc_cn_auth_three_way_fn_t) (void);
 typedef void (*rpc_cn_auth_vfy_client_req_fn_t) (
         rpc_cn_assoc_sec_context_p_t    /* assoc_sec */,
         rpc_cn_sec_context_p_t          /* sec */,
-        pointer_t                       /* auth_value */,
+        dce_pointer_t                       /* auth_value */,
         unsigned32                      /* auth_value_len */,
 	unsigned32		        /* old_client */,
         unsigned32                      * /* st */
@@ -310,7 +310,7 @@ typedef void (*rpc_cn_auth_vfy_client_req_fn_t) (
 typedef void (*rpc_cn_auth_vfy_srvr_resp_fn_t) (
         rpc_cn_assoc_sec_context_p_t    /* assoc_sec */,
         rpc_cn_sec_context_p_t          /* sec */,
-        pointer_t                       /* auth_value */,
+        dce_pointer_t                       /* auth_value */,
         unsigned32                      /* auth_value_len */,
         unsigned32                      * /* st */
     );

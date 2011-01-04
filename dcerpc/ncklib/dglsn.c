@@ -3140,7 +3140,7 @@ INTERNAL unsigned32 recv_dispatch
 PRIVATE void rpc__dg_network_select_dispatch
 (
     rpc_socket_t sock ATTRIBUTE_UNUSED,
-    pointer_t sp_,
+    dce_pointer_t sp_,
     boolean32 is_active,
     unsigned32 *st
 )

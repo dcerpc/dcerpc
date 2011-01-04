@@ -1096,7 +1096,7 @@ PUBLIC void rpc_server_register_auth_info
 
     (*rpc_g_authn_protocol_id[authn_protocol]
         .epv->server_register_auth_info)
-            (server_princ_name, get_key_func, (pointer_t) arg, st);
+            (server_princ_name, get_key_func, (dce_pointer_t) arg, st);
 }
 
 /*

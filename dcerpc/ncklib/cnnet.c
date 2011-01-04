@@ -143,7 +143,7 @@ INTERNAL void rpc__cn_network_serr_to_status (
     rpc_socket_error_t       /*serr*/,
     unsigned32              *st);
 
-INTERNAL pointer_t rpc__cn_network_init_desc (
+INTERNAL dce_pointer_t rpc__cn_network_init_desc (
     rpc_socket_t                * /*desc*/,
     boolean32                    /*spawned*/,
     rpc_protseq_id_t             /*pseq_id*/,
@@ -279,7 +279,7 @@ PRIVATE void rpc__cn_network_use_socket
 )
 {
 
-    pointer_t priv_info;
+    dce_pointer_t priv_info;
 
     /*
      * Initialize the socket.
@@ -371,7 +371,7 @@ PRIVATE void rpc__cn_network_use_protseq
     unsigned32          created_sock_index;
     rpc_socket_t        sock;
     rpc_socket_error_t  serr;
-    pointer_t           priv_info;
+    dce_pointer_t           priv_info;
     rpc_socket_t        *sock_list;
     unsigned32          backlog;
     unsigned32          temp_status;
@@ -693,7 +693,7 @@ PRIVATE void rpc__cn_network_use_protseq
 **--
 **/
 
-INTERNAL pointer_t rpc__cn_network_init_desc
+INTERNAL dce_pointer_t rpc__cn_network_init_desc
 (
   rpc_socket_t            *desc,
   boolean32               spawned,
@@ -878,7 +878,7 @@ INTERNAL pointer_t rpc__cn_network_init_desc
     }
 
     *status = rpc_s_ok;
-    return ((pointer_t) endpoint);
+    return ((dce_pointer_t) endpoint);
 }
 
 
@@ -982,7 +982,7 @@ PRIVATE void rpc__cn_network_inq_prot_vers
 PRIVATE void rpc__cn_network_select_dispatch
 (
   rpc_socket_t            desc,
-  pointer_t               priv_info,
+  dce_pointer_t               priv_info,
   boolean32               is_active,
   unsigned32              *st
 )

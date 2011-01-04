@@ -127,9 +127,9 @@ extern "C" {
 #endif                                  /* defined(__STDC__) */
 
 #if defined(_DCE_VOID_)
-  typedef void * pointer_t;
+  typedef void * dce_pointer_t;
 #else                                   /* defined(_DCE_VOID_) */
-  typedef char * pointer_t;
+  typedef char * dce_pointer_t;
 #endif                                  /* defined(_DCE_VOID_) */
 
 /*

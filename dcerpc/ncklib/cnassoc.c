@@ -2945,9 +2945,9 @@ PRIVATE void rpc__cn_assoc_post_error
 **/
 PRIVATE unsigned32 rpc__cn_assoc_sm_protocol_error
 (
-  pointer_t       spc_struct,
-  pointer_t       event_param ATTRIBUTE_UNUSED,
-  pointer_t       sm ATTRIBUTE_UNUSED
+  dce_pointer_t       spc_struct,
+  dce_pointer_t       event_param ATTRIBUTE_UNUSED,
+  dce_pointer_t       sm ATTRIBUTE_UNUSED
 )
 {
     rpc_cn_assoc_t      *assoc;
@@ -3931,7 +3931,7 @@ PRIVATE void rpc__cn_assoc_sec_free
      * Free the security context element.
      */
     rpc__list_element_free (&rpc_g_cn_sec_lookaside_list,
-                            (pointer_t) (*sec));
+                            (dce_pointer_t) (*sec));
 
     *sec = NULL;
 }
@@ -4037,7 +4037,7 @@ PRIVATE void rpc__cn_assoc_syntax_free
      * Free the presentation context element.
      */
     rpc__list_element_free (&rpc_g_cn_syntax_lookaside_list,
-                            (pointer_t) *syntax);
+                            (dce_pointer_t) *syntax);
     *syntax = NULL;
 }
 
@@ -4554,7 +4554,7 @@ PRIVATE void rpc__cn_assoc_acb_dealloc
          * list.
          */
         rpc__list_element_free (&rpc_g_cn_assoc_lookaside_list,
-                                (pointer_t) assoc);
+                                (dce_pointer_t) assoc);
     }
     RPC_LOG_CN_ASSOC_ACB_DEAL_XIT;
 }
@@ -4906,7 +4906,7 @@ INTERNAL rpc_cn_local_id_t rpc__cn_assoc_grp_create
             if (new_assoc_grp[i].grp_assoc_list.next != NULL)
             {
                 ((rpc_list_p_t)(new_assoc_grp[i].grp_assoc_list.next))->last =
-                    (pointer_t)&new_assoc_grp[i].grp_assoc_list;
+                    (dce_pointer_t)&new_assoc_grp[i].grp_assoc_list;
             }
         }
 
@@ -5804,7 +5804,7 @@ PRIVATE void rpc__cn_assoc_grp_tbl_init (void)
 
     rpc__timer_set (&rpc_g_cn_assoc_grp_tbl.grp_client_timer,
                     (rpc_timer_proc_p_t) rpc__cn_assoc_timer_reclaim,
-                    (pointer_t) RPC_C_CN_ASSOC_GRP_CLIENT,
+                    (dce_pointer_t) RPC_C_CN_ASSOC_GRP_CLIENT,
                     RPC_CLOCK_SEC (client_disc_time));
 
     x = getenv("RPC_SERVER_DISC_TIME");
@@ -5815,7 +5815,7 @@ PRIVATE void rpc__cn_assoc_grp_tbl_init (void)
 
     rpc__timer_set (&rpc_g_cn_assoc_grp_tbl.grp_server_timer,
                     (rpc_timer_proc_p_t) rpc__cn_assoc_timer_reclaim,
-                    (pointer_t) RPC_C_CN_ASSOC_GRP_SERVER,
+                    (dce_pointer_t) RPC_C_CN_ASSOC_GRP_SERVER,
                     RPC_CLOCK_SEC (server_disc_time));
 
     /*
@@ -5869,9 +5869,9 @@ PRIVATE void rpc__cn_assoc_grp_tbl_init (void)
 
 PRIVATE unsigned32     rpc__cn_grp_sm_protocol_error
 (
-    pointer_t       spc_struct,
-    pointer_t       event_param ATTRIBUTE_UNUSED,
-    pointer_t       sm ATTRIBUTE_UNUSED
+    dce_pointer_t       spc_struct,
+    dce_pointer_t       event_param ATTRIBUTE_UNUSED,
+    dce_pointer_t       sm ATTRIBUTE_UNUSED
 )
 {
     rpc_cn_assoc_grp_t  *assoc_grp;

@@ -112,7 +112,7 @@ typedef struct
     rpc_protseq_id_t            protseq_id;
     rpc_protocol_id_t           protocol_id;
     rpc_prot_network_epv_p_t    network_epv;
-    pointer_t                   priv_info;      /* prot service private info */
+    dce_pointer_t                   priv_info;      /* prot service private info */
     unsigned                    busy: 1;        /* T => contains valid data */
     unsigned                    is_server: 1;   /* T => created via use_protseq */
     unsigned                    is_dynamic: 1;  /* T => dynamically alloc'd endpoint */

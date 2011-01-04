@@ -139,7 +139,7 @@ INTERNAL int rpc_g_dg_sct_timeout = SCTE_TIMEOUT_INTERVAL;
 
 /* ========================================================================= */
 
-INTERNAL void rpc__dg_sct_timer ( pointer_t );
+INTERNAL void rpc__dg_sct_timer ( dce_pointer_t );
 
 /* ========================================================================= */
 
@@ -498,7 +498,7 @@ PRIVATE rpc_dg_sct_elt_p_t rpc__dg_sct_get
     if (num_sct_entries == 1)
     {
         rpc__timer_set(&sct_timer, rpc__dg_sct_timer,
-           (pointer_t) NULL, RPC_CLOCK_SEC(rpc_g_dg_sct_mon_int));
+           (dce_pointer_t) NULL, RPC_CLOCK_SEC(rpc_g_dg_sct_mon_int));
     }
 
     /*
@@ -519,7 +519,7 @@ PRIVATE rpc_dg_sct_elt_p_t rpc__dg_sct_get
 
 INTERNAL void rpc__dg_sct_timer
 (
-    pointer_t junk ATTRIBUTE_UNUSED
+    dce_pointer_t junk ATTRIBUTE_UNUSED
 )
 {
     rpc_dg_sct_elt_p_t scte, prev_scte;

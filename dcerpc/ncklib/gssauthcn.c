@@ -143,9 +143,9 @@ INTERNAL void rpc__gssauth_cn_cred_refresh (
 INTERNAL void rpc__gssauth_cn_fmt_client_req (
 	rpc_cn_assoc_sec_context_p_t	/* in */     /*assoc_sec*/,
 	rpc_cn_sec_context_p_t		/* in */     /*sec*/,
-	pointer_t			/* in/out */ /*auth_value*/,
+	dce_pointer_t			/* in/out */ /*auth_value*/,
 	unsigned32			/* in/out */ * /*auth_value_len*/,
-	pointer_t			/* in/out */ * /*last_auth_pos*/,
+	dce_pointer_t			/* in/out */ * /*last_auth_pos*/,
 	unsigned32			/* out */    * /*auth_len_remain*/,
 	unsigned32			/* in */     /*old_server*/,
 	unsigned32			/* out */    * /*st*/
@@ -155,9 +155,9 @@ INTERNAL void rpc__gssauth_cn_fmt_srvr_resp (
 	unsigned32			/* in */     /*verify_st*/,
 	rpc_cn_assoc_sec_context_p_t	/* in */     /*assoc_sec*/,
 	rpc_cn_sec_context_p_t		/* in */     /*sec*/,
-	pointer_t			/* in */     /*req_auth_value*/,
+	dce_pointer_t			/* in */     /*req_auth_value*/,
 	unsigned32			/* in */     /*req_auth_value_len*/,
-	pointer_t			/* in/out */ /*auth_value*/,
+	dce_pointer_t			/* in/out */ /*auth_value*/,
 	unsigned32			/* in/out */ * /*auth_value_len*/
     );
 
@@ -175,7 +175,7 @@ INTERNAL void rpc__gssauth_cn_get_prot_info (
 INTERNAL void rpc__gssauth_cn_pre_call (
 	rpc_cn_assoc_sec_context_p_t	/* in */     /*assoc_sec*/,
 	rpc_cn_sec_context_p_t		/* in */     /*sec*/,
-	pointer_t			/* in/out */ /*auth_value*/,
+	dce_pointer_t			/* in/out */ /*auth_value*/,
 	unsigned32			/* in/out */ * /*auth_value_len*/,
 	unsigned32			/* in/out */ * /*st*/
     );
@@ -201,7 +201,7 @@ INTERNAL void rpc__gssauth_cn_recv_check (
     );
 
 INTERNAL void rpc__gssauth_cn_tlr_uuid_crc (
-	pointer_t			/* in */     /*auth_value*/,
+	dce_pointer_t			/* in */     /*auth_value*/,
 	unsigned32			/* in */     /*auth_value_len*/,
 	unsigned32			/* out */    * /*uuid_crc*/
     );
@@ -215,7 +215,7 @@ INTERNAL void rpc__gssauth_cn_tlr_unpack (
 INTERNAL void rpc__gssauth_cn_vfy_client_req (
 	rpc_cn_assoc_sec_context_p_t	/* in */     /*assoc_sec*/,
 	rpc_cn_sec_context_p_t		/* in */     /*sec*/,
-	pointer_t			/* in */     /*auth_value*/,
+	dce_pointer_t			/* in */     /*auth_value*/,
 	unsigned32			/* in */     /*auth_value_len*/,
 	unsigned32			/* in */     /*old_client*/,
 	unsigned32			/* out */    * /*st*/
@@ -224,7 +224,7 @@ INTERNAL void rpc__gssauth_cn_vfy_client_req (
 INTERNAL void rpc__gssauth_cn_vfy_srvr_resp (
 	rpc_cn_assoc_sec_context_p_t	/* in */     /*assoc_sec*/,
 	rpc_cn_sec_context_p_t		/* in */     /*sec*/,
-	pointer_t			/* in/out */ /*auth_value*/,
+	dce_pointer_t			/* in/out */ /*auth_value*/,
 	unsigned32			/* in */     /*auth_value_len*/,
 	unsigned32			/* out */    * /*st*/
     );
@@ -1087,9 +1087,9 @@ INTERNAL void rpc__gssauth_cn_fmt_client_req
 (
 	rpc_cn_assoc_sec_context_p_t	assoc_sec ATTRIBUTE_UNUSED,
 	rpc_cn_sec_context_p_t		sec,
-	pointer_t			auth_value,
+	dce_pointer_t			auth_value,
 	unsigned32			*auth_value_len,
-	pointer_t			*last_auth_pos ATTRIBUTE_UNUSED,
+	dce_pointer_t			*last_auth_pos ATTRIBUTE_UNUSED,
 	unsigned32			*auth_len_remain,
 	unsigned32			old_server ATTRIBUTE_UNUSED,
 	unsigned32			*st
@@ -1233,9 +1233,9 @@ INTERNAL void rpc__gssauth_cn_fmt_srvr_resp
 	unsigned32			verify_st,
 	rpc_cn_assoc_sec_context_p_t    assoc_sec,
 	rpc_cn_sec_context_p_t		sec,
-	pointer_t			req_auth_value ATTRIBUTE_UNUSED /*TODO*/,
+	dce_pointer_t			req_auth_value ATTRIBUTE_UNUSED /*TODO*/,
 	unsigned32			req_auth_value_len ATTRIBUTE_UNUSED /*TODO*/,
-	pointer_t			auth_value,
+	dce_pointer_t			auth_value,
 	unsigned32			*auth_value_len
 )
 {
@@ -1504,7 +1504,7 @@ INTERNAL void rpc__gssauth_cn_pre_call
 (
 	rpc_cn_assoc_sec_context_p_t	assoc_sec,
 	rpc_cn_sec_context_p_t		sec,
-	pointer_t			auth_value,
+	dce_pointer_t			auth_value,
 	unsigned32			*auth_value_len,
 	unsigned32			*st
 )
@@ -2309,7 +2309,7 @@ INTERNAL void rpc__gssauth_cn_recv_check
 
 INTERNAL void rpc__gssauth_cn_tlr_uuid_crc
 (
-	pointer_t		auth_value ATTRIBUTE_UNUSED /*TODO*/,
+	dce_pointer_t		auth_value ATTRIBUTE_UNUSED /*TODO*/,
 	unsigned32		auth_value_len ATTRIBUTE_UNUSED /*TODO*/,
 	unsigned32		*uuid_crc
 )
@@ -2426,7 +2426,7 @@ INTERNAL void rpc__gssauth_cn_vfy_client_req
 (
 	rpc_cn_assoc_sec_context_p_t	assoc_sec,
 	rpc_cn_sec_context_p_t		sec,
-	pointer_t			auth_value,
+	dce_pointer_t			auth_value,
 	unsigned32			auth_value_len,
 	unsigned32			old_client ATTRIBUTE_UNUSED /*TODO*/,
 	unsigned32			*st
@@ -2552,7 +2552,7 @@ INTERNAL void rpc__gssauth_cn_vfy_srvr_resp
 (
 	rpc_cn_assoc_sec_context_p_t	assoc_sec,
 	rpc_cn_sec_context_p_t		sec,
-	pointer_t			auth_value,
+	dce_pointer_t			auth_value,
 	unsigned32			auth_value_len,
 	unsigned32			*st
 )

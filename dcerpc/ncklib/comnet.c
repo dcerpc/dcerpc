@@ -1762,7 +1762,7 @@ PRIVATE void rpc__network_add_desc
     boolean32               is_server,
     boolean32               is_dynamic,
     rpc_protseq_id_t        rpc_protseq_id,
-    pointer_t               priv_info,
+    dce_pointer_t               priv_info,
     unsigned32              *status
 )
 {
@@ -2085,7 +2085,7 @@ PRIVATE void rpc__network_init
 PRIVATE void rpc__network_set_priv_info
 (
     rpc_socket_t            desc,
-    pointer_t               priv_info,
+    dce_pointer_t               priv_info,
     unsigned32              *status
 )
 {
@@ -2151,7 +2151,7 @@ PRIVATE void rpc__network_set_priv_info
 PRIVATE void rpc__network_inq_priv_info
 (
     rpc_socket_t            desc,
-    pointer_t               *priv_info,
+    dce_pointer_t               *priv_info,
     unsigned32              *status
 )
 {

@@ -195,8 +195,8 @@
 {\
     RPC_CN_ASSOC_SM_TRC (assoc, event_id);\
     st = rpc__cn_sm_eval_event ((event_id),\
-                                (pointer_t) (fragbuf),\
-                                (pointer_t) (assoc),\
+                                (dce_pointer_t) (fragbuf),\
+                                (dce_pointer_t) (assoc),\
                                 &((assoc)->assoc_state));\
     assoc->assoc_flags &= ~RPC_C_CN_ASSOC_SCANNED;\
     if ((fragbuf) != NULL)\
@@ -222,8 +222,8 @@
     if (st == rpc_s_ok)\
     {\
         st = rpc__cn_sm_eval_event ((event_id),\
-                                    (pointer_t) (event_param),\
-                                    (pointer_t) (assoc),\
+                                    (dce_pointer_t) (event_param),\
+                                    (dce_pointer_t) (assoc),\
                                     &((assoc)->assoc_state));\
         assoc->assoc_flags &= ~RPC_C_CN_ASSOC_SCANNED;\
     }\

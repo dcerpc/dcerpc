@@ -283,9 +283,9 @@ typedef rpc_cn_sm_state_entry_t         rpc_cn_sm_state_tbl_entry_t[];
  */
 
 typedef unsigned32     (*rpc_cn_sm_action_fn_t) (
-    pointer_t   /*spc_struct*/,
-    pointer_t   /*event_parameter*/,
-    pointer_t   /*sm*/);
+    dce_pointer_t   /*spc_struct*/,
+    dce_pointer_t   /*event_parameter*/,
+    dce_pointer_t   /*sm*/);
 
 typedef rpc_cn_sm_action_fn_t      *rpc_cn_sm_action_fn_p_t;
 
@@ -294,8 +294,8 @@ typedef rpc_cn_sm_action_fn_t      *rpc_cn_sm_action_fn_p_t;
  */
 
 typedef unsigned8 (*rpc_cn_sm_predicate_fn_t) (
-    pointer_t   /*spc_struct*/,
-    pointer_t   /*event_parameter*/);
+    dce_pointer_t   /*spc_struct*/,
+    dce_pointer_t   /*event_parameter*/);
 
 typedef rpc_cn_sm_predicate_fn_t   *rpc_cn_sm_predicate_fn_p_t;
 
@@ -306,7 +306,7 @@ typedef rpc_cn_sm_predicate_fn_t   *rpc_cn_sm_predicate_fn_p_t;
 typedef struct
 {
     unsigned8                           event_id;
-    pointer_t                           event_param;
+    dce_pointer_t                           event_param;
 } rpc_cn_sm_event_entry_t, *rpc_cn_sm_event_entry_p_t;
 
 /*
@@ -368,7 +368,7 @@ struct rpc_cn_fragbuf_s_t
     rpc_list_t                  link;   /* MUST BE 1ST */
     unsigned32                  max_data_size;
     rpc_cn_fragbuf_dealloc_fn_t fragbuf_dealloc;
-    pointer_t                   data_p;
+    dce_pointer_t                   data_p;
     unsigned32                  data_size;
     unsigned8                   overhead_area[RPC_C_CN_OVERHEAD_SIZE];
     unsigned8                   data_area[1];
