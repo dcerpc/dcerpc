@@ -626,7 +626,8 @@ INTERNAL rpc_cn_sm_state_tbl_entry_t auth3_state =
 INTERNAL rpc_cn_sm_state_tbl_entry_t open_state =
 {
     /* event 0 - ind */
-    ILLEGAL_TRANSITION,
+    /* call DO_ASSOC so we can send a bind_nack */
+	{DO_ASSOC},
 
     /* event 1 - abort_req */
 	 {REM_MARK_ABORT},
@@ -1973,21 +1974,6 @@ INTERNAL unsigned32     do_assoc_req_action_rtn
     sm_p = (rpc_cn_sm_ctlblk_t *)sm;
 
     /*
-     * Since this is a new association we don't yet have an
-     * association UUID CRC (and will not unless a client on this
-     * association uses security).
-     */
-    assoc->security.assoc_have_uuid_crc = false;
-
-    /*
-     * Mark the current security context as NULL. This will be
-     * filled in when we have successfully established a security
-     * context. It will be used by the action routine which actually
-     * sends the rpc_bind_ack PDU.
-     */
-    assoc->security.assoc_current_sec_context = NULL;
-
-    /*
      * The event parameter is a pointer to the fragbuf containing
      * the rpc_bind PDU.
      */
@@ -2018,6 +2004,28 @@ INTERNAL unsigned32     do_assoc_req_action_rtn
         RPC_C_CN_PROTO_VERS_MINOR + 1;
     }
 #endif
+
+    if (sm_p->cur_state == RPC_C_SERVER_ASSOC_OPEN)
+    {
+        /* Server connection is already bound so reject another Bind request */
+        assoc->assoc_status = rpc_s_protocol_error;
+        goto done;
+    }
+
+    /*
+     * Since this is a new association we don't yet have an
+     * association UUID CRC (and will not unless a client on this
+     * association uses security).
+     */
+    assoc->security.assoc_have_uuid_crc = false;
+
+    /*
+     * Mark the current security context as NULL. This will be
+     * filled in when we have successfully established a security
+     * context. It will be used by the action routine which actually
+     * sends the rpc_bind_ack PDU.
+     */
+    assoc->security.assoc_current_sec_context = NULL;
 
     if ((RPC_CN_PKT_VERS (req_header) != RPC_C_CN_PROTO_VERS) ||
         (RPC_CN_PKT_VERS_MINOR (req_header) > RPC_C_CN_PROTO_VERS_MINOR))
@@ -2260,6 +2268,7 @@ INTERNAL unsigned32     do_assoc_req_action_rtn
     }
 #endif
 
+done:
     /*
      * An rpc_bind_nak PDU will be sent if the association status is
      * not OK. Assume it will be the only fragment sent.
