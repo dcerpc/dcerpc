@@ -135,7 +135,7 @@ librpc_la_SOURCES=dce_error.c rpcclock.c rpcdbg.c rpclist.c \
  rpclog.c rpcmem.c rpcmutex.c rpcrand.c rpctimer.c
 
 dcerpc.cat: dcerpc.m
-	$(GENCAT) $@ $<
+	$(GENCAT) -o $@ $<
 
 ######################################################################
 ## COMPONENT: transport - comprises of libtrans convenience lib

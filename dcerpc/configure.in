@@ -270,6 +270,8 @@ AM_CONDITIONAL(TARGET_OS_DARWIN, test x$target_os = xdarwin)
 AC_CHECK_FUNCS(pthread_setugid_np)
 AC_CHECK_HEADERS(sys/kauth.h sys/syscall.h)
 
+AC_CHECK_FUNCS(strlcpy strlcat)
+
 if test x"$localstatedir" = x"/var"; then
     rpccachedir="$localstatedir/lib/likewise"
 else
@@ -704,6 +706,7 @@ idl_compiler/Makefile
 idl_compiler/sysdep.h
 idl_lib/Makefile
 ncklib/Makefile
+dcelib/Makefile
 ncklib/include/aix5.2.0.0/Makefile
 ncklib/include/linux-gnu/Makefile
 ncklib/include/freebsd6.0/Makefile
