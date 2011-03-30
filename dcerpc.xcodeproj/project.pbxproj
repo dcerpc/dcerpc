@@ -3830,6 +3830,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = dce;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -3837,6 +3838,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = dce;
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
@@ -3845,6 +3847,7 @@
 			baseConfigurationReference = DD501C071073C24800473324 /* stubs.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = nck_stubs;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -3853,6 +3856,7 @@
 			baseConfigurationReference = DD501C071073C24800473324 /* stubs.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = nck_stubs;
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
@@ -3861,6 +3865,7 @@
 			baseConfigurationReference = D6A1244F11067218007B04CF /* ncklib.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = nck;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -3869,6 +3874,7 @@
 			baseConfigurationReference = D6A1244F11067218007B04CF /* ncklib.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = nck;
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
@@ -3877,6 +3883,7 @@
 			baseConfigurationReference = DD501C071073C24800473324 /* stubs.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = mgmt_stubs;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -3885,6 +3892,7 @@
 			baseConfigurationReference = DD501C071073C24800473324 /* stubs.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = mgmt_stubs;
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
@@ -3972,6 +3980,7 @@
 			baseConfigurationReference = DD88282E10730E8F00FBF62B /* idl.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = idl;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -3980,6 +3989,7 @@
 			baseConfigurationReference = DD88282E10730E8F00FBF62B /* idl.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = idl;
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
@@ -3988,6 +3998,7 @@
 			baseConfigurationReference = DD88283910730EF100FBF62B /* uuid.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = uuid;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -3996,6 +4007,7 @@
 			baseConfigurationReference = DD88283910730EF100FBF62B /* uuid.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = uuid;
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
