@@ -695,13 +695,13 @@ PRIVATE rpc_cn_assoc_t *rpc__cn_assoc_request
             assoc = rpc__cn_assoc_acb_alloc (true,
                                              RPC_C_CN_ASSOC_CLIENT,
                                              st);
-	    if (*st != rpc_s_ok) {
-		if (i_hold_grp_new_mutex) {
-		    grp_new_in_progress = false;
-		    RPC_COND_BROADCAST (grp_new_wt, rpc_g_global_mutex);
-		}
-		return NULL;
-	    }
+            if (*st != rpc_s_ok) {
+                if (i_hold_grp_new_mutex) {
+                    grp_new_in_progress = false;
+                    RPC_COND_BROADCAST (grp_new_wt, rpc_g_global_mutex);
+                }
+                return NULL;
+            }
 
             /*
              * We have an association control block. Send an
@@ -5476,7 +5476,7 @@ PRIVATE rpc_cn_local_id_t rpc__cn_assoc_grp_lkup_by_addr
                     /* address do not match, so continue searching */
                     continue;
                 }
-
+#ifndef __APPLE__
                 if (!transport_info)
                 {
                     /* addresses matched, but no transport_info to check, so
@@ -5484,7 +5484,7 @@ PRIVATE rpc_cn_local_id_t rpc__cn_assoc_grp_lkup_by_addr
                     *st = rpc_s_ok;
                     return (assoc_grp[i].grp_id);
                 }
-
+#endif
                 if (rpc__transport_info_equal(assoc_grp[i].grp_transport_info, transport_info))
                 {
                     /* addresses matched and transport_info matched, so
@@ -5707,6 +5707,7 @@ PRIVATE rpc_cn_local_id_t rpc__cn_assoc_grp_lkup_by_id
             (assoc_grp->grp_flags & type) &&
             (assoc_grp->grp_state.cur_state == RPC_C_ASSOC_GRP_ACTIVE) )
         {
+#ifndef __APPLE__
             if (!transport_info)
             {
                 /* grp_ids matched, but no transport_info to check, so
@@ -5715,7 +5716,7 @@ PRIVATE rpc_cn_local_id_t rpc__cn_assoc_grp_lkup_by_id
                 RPC_LOG_CN_GRP_ID_LKUP_XIT;
                 return (grp_id);
             }
-
+#endif
             if (rpc__transport_info_equal(assoc_grp->grp_transport_info, transport_info))
             {
                 /* grp_ids matched and transport_info matched, so

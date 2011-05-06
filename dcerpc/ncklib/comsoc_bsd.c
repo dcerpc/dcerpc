@@ -1621,10 +1621,10 @@ INTERNAL rpc_socket_error_t rpc__bsd_socket_sendpeereid
     if (ep_uid == 0 || ep_uid == getuid())
     {
         if (pipe(pipefd) != 0)
-	{
-            serr = errno;
-            goto error;
-	}
+        {
+                serr = errno;
+                goto error;
+        }
     }
 
     iovec.iov_base     = &empty_buf;
@@ -2315,9 +2315,12 @@ rpc__bsd_socket_transport_info_equal(
         return
             (bsd_info1->peer_uid == bsd_info2->peer_uid &&
              bsd_info1->peer_gid == bsd_info2->peer_gid);
+    } else if (bsd_info1 == bsd_info2){
+        return true;
     }
 
-    return (bsd_info1 == bsd_info2);
+    rpc_bsd_transport_info_p_t tmp = bsd_info1 != NULL ? bsd_info1: bsd_info2;
+    return  (tmp->peer_uid == getuid() && tmp->peer_gid == getgid());
 }
 
 INTERNAL
