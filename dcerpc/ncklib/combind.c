@@ -1624,7 +1624,7 @@ PUBLIC void rpc_string_binding_parse
     {
         if (*string_object_uuid != NULL)
         {
-            rpc__strsqz (*string_object_uuid);
+            rpc__strsqz (*string_object_uuid, TRUE);
         }
         else
         {
@@ -1643,7 +1643,7 @@ PUBLIC void rpc_string_binding_parse
     {
         if (*protseq != NULL)
         {
-            rpc__strsqz (*protseq);
+            rpc__strsqz (*protseq, TRUE);
         }
         else
         {
@@ -1662,7 +1662,12 @@ PUBLIC void rpc_string_binding_parse
     {
         if (*netaddr != NULL)
         {
-            rpc__strsqz (*netaddr);
+#if HAVE_SMBCLIENT_FRAMEWORK
+            /* This handles Bonjour names which may have spaces/tabs */
+            rpc__strsqz (*netaddr, FALSE);
+#else
+            rpc__strsqz (*netaddr, TRUE);
+#endif
         }
         else
         {
@@ -1681,7 +1686,7 @@ PUBLIC void rpc_string_binding_parse
     {
         if (*endpoint != NULL)
         {
-            rpc__strsqz (*endpoint);
+            rpc__strsqz (*endpoint, TRUE);
         }
         else
         {
@@ -1700,7 +1705,7 @@ PUBLIC void rpc_string_binding_parse
     {
         if (*network_options != NULL)
         {
-            rpc__strsqz (*network_options);
+            rpc__strsqz (*network_options, TRUE);
 
             /*
              * clip the trailing separator off the network options string

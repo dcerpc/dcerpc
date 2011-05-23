@@ -1699,7 +1699,7 @@ PRIVATE void rpc__strncpy (
         size_t                      /* max_length */
     );
 
-PRIVATE unsigned32 rpc__strsqz ( unsigned_char_p_t);
+PRIVATE unsigned32 rpc__strsqz ( unsigned_char_p_t, boolean32);
 
 PRIVATE unsigned_char_p_t rpc__stralloc ( unsigned_char_p_t);
 

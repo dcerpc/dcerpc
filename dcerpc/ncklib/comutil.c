@@ -550,6 +550,7 @@ PRIVATE void rpc__strncpy
 **  INPUTS/OUTPUTS:
 **
 **      string          A pointer to the string to be compressed.
+**      boolean32       A flag whether to strip spaces/tabs or not
 **
 **  OUTPUTS:            none
 **
@@ -570,11 +571,12 @@ PRIVATE void rpc__strncpy
 
 PRIVATE unsigned32 rpc__strsqz
 (
-    unsigned_char_t         *string
+    unsigned_char_t         *string,
+    boolean32               strip_space_tabs
 )
 {
     unsigned_char_p_t   ptr1, ptr2;
-    unsigned32          count;
+     unsigned32          count;
 
     /*
      * make sure there's something to do before we start
@@ -611,11 +613,19 @@ PRIVATE unsigned32 rpc__strsqz
             /*
              * if we're not escaped, eliminate spaces and tabs
              */
-            if (*ptr1 != ' ' && *ptr1 != '\t')
+            if (strip_space_tabs) {
+                if (*ptr1 != ' ' && *ptr1 != '\t')
+                {
+                    *(ptr2++) = *ptr1;
+                    count++;
+                }
+            }
+            else
             {
                 *(ptr2++) = *ptr1;
                 count++;
             }
+
         }
     }
 
