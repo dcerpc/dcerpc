@@ -106,7 +106,7 @@ rpc_socket_error_t rpc_smb_ntstatus_to_rpc_error(NTSTATUS status);
 #endif
 
 #if defined(kPropertiesVersion)
-#define HAVE_SMBCLIENT_SMBGETSERVERPROPERTIES
+#define HAVE_SMBCLIENT_SMBGETSERVERPROPERTIES 1
 #endif
 
 #define SMBCLIENT_CONNECTION_FLAGS ( \

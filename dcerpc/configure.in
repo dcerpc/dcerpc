@@ -137,11 +137,7 @@ AC_OBJEXT
 AC_C_INLINE
 XAC_C_ATTRIBUTE_UNUSED
 
-AC_PROG_LEX
-case $ac_cv_prog_LEX in
-    *flex) ;;
-    *) AC_MSG_ERROR([could not find flex]) ;;
-esac
+AC_CHECK_PROGS([FLEX], [flex])
 
 AC_PROG_YACC
 AC_PATH_PROG(BISON, bison)
