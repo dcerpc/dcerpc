@@ -59,7 +59,7 @@ nidl_l.c nidl_l.h: nidl_l.l
 idl.cat default_msg.h:	nidlmsg.m
 	$(RM) $(RMFLAGS) default_msg.h idl.cat
 	$(SED) -e '/^\$$/d;/^$$/d;s/^[^ ]* /"/;s/$$/",/;' $(srcdir)/nidlmsg.m > default_msg.h
-	$(GENCAT) -o idl.cat $(srcdir)/nidlmsg.m
+	$(GENCAT) idl.cat $(srcdir)/nidlmsg.m
 
 # Keep the generated parsers in the tarball
 EXTRA_DIST=nidlmsg.m acf_y.c acf_y.h acf_l.c nidl_y.c nidl_y.h nidl_l.c
