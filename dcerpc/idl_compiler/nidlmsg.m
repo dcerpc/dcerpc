@@ -813,7 +813,6 @@ $ the end of the interface definition.
 $ The source file may be incomplete.
 $ User Action:
 $ Complete the interface definition.
-$
 
 85 Unexpected end-of-file near '%2$.*1$s'
 $ Explanation:
