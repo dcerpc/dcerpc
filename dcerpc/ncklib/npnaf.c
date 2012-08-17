@@ -355,6 +355,7 @@ PRIVATE void rpc__np_naf_init_func(void)
             {0x00,   { 0, 0, 0, 0, 0, {0} }} } }
 	};
 	static rpc_protseq_id_elt_t seq_ids[] = {
+#if HAVE_SMBCLIENT_FRAMEWORK
     {                                   /* Connection-RPC / NP / NB */
         0,
         0, /* Does not use endpoint mapper */
@@ -367,6 +368,7 @@ PRIVATE void rpc__np_naf_init_func(void)
         (rpc_port_restriction_list_p_t) NULL,
         &rpc_g_smb_socket_vtbl
     },
+#endif
     {                                   /* Connection-RPC / UXD */
         0,
         0, /* Does not use endpoint mapper */
