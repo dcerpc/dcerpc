@@ -299,8 +299,13 @@ AC_DEFINE_UNQUOTED([RPC_C_UXD_DIR], ["$rpcd_cv_rpc_c_uxd_dir"], [unix domain soc
 AC_MSG_CHECKING(pthread library and requirements)
 AC_MSG_RESULT()
 
-AC_ARG_WITH(pthread-ext-dir,      [  --with-pthread-ext-dir=DIR       base directory of pthread extension library])
-AC_ARG_WITH(pthread-ext-libdir,      [  --with-pthread-ext-libdir=DIR       directory of pthread extension library. (defaults to --with-pthread-ext-dir/lib)])
+AC_ARG_WITH(pthread-ext-dir,
+	AC_HELP_STRING([--with-pthread-ext-dir=DIR],
+		       [base directory of pthread extension library]))
+
+AC_ARG_WITH(pthread-ext-libdir,
+	AC_HELP_STRING([--with-pthread-ext-libdir=DIR],
+		       [directory of pthread extension library (defaults to --with-pthread-ext-dir/lib)]))
 
 if test -n "$with_pthread_ext_dir"; then
   CPPFLAGS="$CPPFLAGS -I$with_pthread_ext_dir/include"
@@ -314,7 +319,9 @@ if test -n "$with_pthread_ext_libdir"; then
   LDFLAGS="$LDFLAGS -L$with_pthread_ext_libdir"
 fi
 
-AC_ARG_WITH(pthread-ext-rpath,      [  --with-pthread-ext-rpath=DIR       directory where the pthread extension will be installed at runtime. Defaults to --with-pthread-ext-libdir value.],
+AC_ARG_WITH(pthread-ext-rpath,
+	AC_HELP_STRING([--with-pthread-ext-rpath=DIR],
+		[directory where the pthread extension will be installed at runtime (defaults to --with-pthread-ext-libdir value)]),
     [pthread_ext_rpath="$withval"],
     [pthread_ext_rpath="$with_pthread_ext_libdir"])
 
@@ -426,7 +433,7 @@ AC_SUBST(IDL_CC)
 
 AC_ARG_WITH(
 	gssapi-dir,
-	[  --with-gssapi-dir=<prefix>      look for gssapi libraries in <prefix>],
+	AC_HELP_STRING([--with-gssapi-dir=DIR], [look for gssapi libraries in DIR]),
 	[
 	    GSSAPI_INCLUDES="-I$withval/include"
 	    GSSAPI_LDFLAGS="-L$withval/`basename $libdir`"
@@ -435,7 +442,7 @@ AC_ARG_WITH(
 
 AC_ARG_WITH(
 	gssapi-libdir,
-	[  --with-gssapi-libdir=<libdir>   look for gssapi libraries in <libdir>],
+	AC_HELP_STRING([--with-gssapi-libdir=DIR], [look for gssapi libraries in DIR]),
 	[
 	    GSSAPI_LDFLAGS="-L$withval"
 	],
@@ -460,7 +467,7 @@ LDFLAGS="$tmp_LDFLAGS"
 
 AC_ARG_WITH(
 	schannel-dir,
-	[  --with-schannel-dir=<prefix>    look for libschannel in <prefix>],
+	AC_HELP_STRING([--with-schannel-dir=DIR], [look for libschannel in DIR]),
 	[
 	    SCHANNEL_INCLUDES="-I$withval/include"
 	    SCHANNEL_LDFLAGS="-L$withval/`basename $libdir`"
@@ -469,7 +476,7 @@ AC_ARG_WITH(
 
 AC_ARG_WITH(
 	schannel-libdir,
-	[  --with-schannel-libdir=<libdir> look for libschannel libraries in <libdir>],
+	AC_HELP_STRING([--with-schannel-libdir=DIR], [look for libschannel libraries in DIR]),
 	[
 	    SCHANNEL_LDFLAGS="-L$withval"
 	],
@@ -562,7 +569,7 @@ else
     rpc_default_gss_negotiate=no
 fi
 
-RPC_ARG_DEFINE(gss_negotiate, AUTH_GSS_NEGOTIATE, ${rpc_default_gss_negotiate}, Include the DCE gss_negotiate auth service)
+RPC_ARG_DEFINE(gss_negotiate, AUTH_GSS_NEGOTIATE, auto, Include the DCE gss_negotiate auth service)
 if test x"$rpc_arg_gss_negotiate" = xyes
 then
 	AC_DEFINE([ENABLE_AUTH_GSS_NEGOTIATE], [], [Enable GSS negotiate auth mechanism])
@@ -571,7 +578,7 @@ AM_CONDITIONAL(AUTH_GSS_NEGOTIATE, test x${rpc_arg_gss_negotiate} = xyes)
 
 # If we found libschannel, build it by default, otherwise disable it by
 # default.
-RPC_ARG_DEFINE(schannel, AUTH_SCHANNEL, ${ac_cv_lib_schannel_schn_wrap}, Include the schannel auth service)
+RPC_ARG_DEFINE(schannel, AUTH_SCHANNEL, auto, Include the schannel auth service)
 if test x"$rpc_arg_schannel" = xyes
 then
 	AC_DEFINE([ENABLE_AUTH_SCHANNEL], [], [Enable schannel auth mechanism])
