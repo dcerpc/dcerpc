@@ -5,7 +5,7 @@ include $(top_srcdir)/ncklib/ncklib.mk
 
 # Build the shared library
 lib_LTLIBRARIES = libdcerpc.la
-libdcerpc_la_SOURCES = dummyfuncs.c strlcpy.c strlcat.c
+libdcerpc_la_SOURCES = dummyfuncs.c
 libdcerpc_la_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS_unistr)
 libdcerpc_la_LDFLAGS = $(AM_LDFLAGS) $(LDFLAGS_unistr) $(NAF_NP_LDFLAGS)
 
@@ -28,6 +28,7 @@ libdcerpc_la_LIBADD =			\
 	../idl_lib/libidl.la		\
 	../uuid/libuuid.la		\
 	../libdcethread/libdcethread.la	\
+	../compat/libcompat.la		\
 	$(LIB_socket)			\
 	$(LIB_nsl)			\
 	$(LIB_dl)			\

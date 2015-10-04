@@ -111,7 +111,10 @@ fi
 AC_DEFINE_UNQUOTED([SDKROOT], ["$SDKROOT"], [Apple SDKROOT we are building against])
 AC_SUBST(SDKROOT, $SDKROOT)
 
-AM_INIT_AUTOMAKE(dcerpc, 1.1.0.7)
+AM_INIT_AUTOMAKE([1.11 -Wall silent-rules foreign subdir-objects])
+AM_MAINTAINER_MODE([enable])
+AM_SILENT_RULES([yes])
+
 LT_INIT([disable-static pic-only dlopen])
 
 # AC_PREFIX_DEFAULT(/opt/dcerpc)
@@ -138,10 +141,14 @@ AC_C_INLINE
 XAC_C_ATTRIBUTE_UNUSED
 
 AC_CHECK_PROGS([FLEX], [flex])
+case "$FLEX" in
+    *flex) ;;
+    *) AC_MSG_ERROR([could not find flex]) ;;
+esac
 
 AC_PROG_YACC
 AC_PATH_PROG(BISON, bison)
-case $ac_cv_path_BISON in
+case "$BISON" in
     *bison) ;;
     *) AC_MSG_ERROR([could not find bison]) ;;
 esac
@@ -668,6 +675,7 @@ AM_CONDITIONAL(HAVE_MOONUNIT, $HAVE_MOONUNIT)
 AC_OUTPUT(
 Makefile
 dnl freedce.spec
+compat/Makefile
 libdcethread/Makefile
 uuid/Makefile
 include/Makefile

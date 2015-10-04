@@ -24,11 +24,10 @@ dceidl_SOURCES = acf_y.c acf_l.c nidl_y.c nidl_l.c astp_com.c astp_cpx.c \
 	message.c nametbl.c namdump.c propagat.c sysdep.c mtsbacke.c \
 	ddbe.c ddspell.c cspeldcl.c cspell.c cstubmts.c hdgen.c clihamts.c \
 	mtspipes.c irepgen.c irepscp.c ifspemts.c sstubmts.c comstmts.c \
-	user_exc.c icharsup.c astp_exp.c \
-	$(top_srcdir)/dcelib/strlcat.c \
-	$(top_srcdir)/dcelib/strlcpy.c
+	user_exc.c icharsup.c astp_exp.c
 
 dceidl_LDFLAGS = @LTLDFLAGS@
+dceidl_LDADD = ../compat/libcompat.la
 
 noinst_HEADERS= ast.h astp.h astp_dmp.h backend.h be_pvt.h bedeck.h \
  checker.h chkichar.h clihamts.h clihandl.h command.h commstat.h cspeldcl.h \
