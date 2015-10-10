@@ -1,3 +1,17 @@
+env:
+  global:
+   - secure: "AXUeD+OWDkXwOiXWDaCqxLSv70MvKIp/agw6dkUjcChtLwiw/dQ34P/JkM8KJ1QWdupJ/ak4JYkl2LUcQgYgXvQqxeDVsEWRzvkooCMfG/yc0xjOW8zX758QuwecEFog8I7Lj1GC1r8OtGqjy+G9DoIcFCP+I7lR/6YRifOhGvtQf6qnO2XaLTBTM+vZb2q03wO0Hb9S053B1QE5rvOMqHbJUEtD2KhnbL8FRJRhoVYIngUDyroyRLhxK7Yjljf0or7e52DnZPuQETUyiORYfp3PrS1SaIxZyIOy6MikJdRT8lSxtjUSVmO4UAGe/IQkcq/P+VIUu1UfAL6U+dhVBaBqgtZB8ZRjN0LZIvAJkNufDi3PinXPTWT0+hjnQ5kA6KQ3mz5c2d24hMZvpL/Ez3XTXog8/gvkTO3BaAErfCnu7MNFyd1twd01cj8Uruk4+JyU/3V41LgSs4FOrdc4HsmnD9Mw9vAVpSuDQHVrr0el72cYgwq6QEBZXV9mYqoSUxZqQgzVrwaeu0DCkHGNo8wS/QcSL/j9choliyK6vmD+VgQVZ88gJK0m1G2aSlpafWJofH/I1jLdYmdty7ApPr12ztldYuM9PrAEyieolNXTyhgVZKPLxIbBckFXZilW1Y+rEYX8v5HTwEajVJNzyGW1Nu63fbnvndZM5NSDFdw="
+
+addons:
+  coverity_scan:
+    project:
+      name: "jpeach/dcerpc"
+      description: "Build submitted via Travis CI"
+    notification_email: jpeach@apache.org
+    build_command_prepend: "cd dcerpc; autoreconf -i; ./configure; make clean"
+    build_command:   "cd dcerpc; make -j 4"
+    branch_pattern: master
+
 language: C
 script:
     - cd dcerpc
@@ -7,3 +21,5 @@ script:
 compiler:
     - clang
     - gcc
+
+
