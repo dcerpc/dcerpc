@@ -9,10 +9,11 @@ addons:
       description: "Build submitted via Travis CI"
     notification_email: jpeach@apache.org
     build_command_prepend: "cd dcerpc; autoreconf -i; ./configure; make clean"
-    build_command:   "cd dcerpc; make -j 4"
+    build_command: "make"
     branch_pattern: master
 
 language: C
+
 script:
     - cd dcerpc
     - autoreconf -i
