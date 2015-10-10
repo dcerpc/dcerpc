@@ -1,8 +1,9 @@
 language: C
 script:
-    - cd dcerpc && autoreconf -i
-    - cd dcerpc && ./configure
-    - cd dcerpc && make
+    - cd dcerpc
+    - autoreconf -i
+    - ./configure
+    - make
 compiler:
     - clang
     - gcc
