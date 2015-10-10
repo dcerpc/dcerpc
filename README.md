@@ -1,6 +1,5 @@
-<a href="https://scan.coverity.com/projects/dce-rpc">
-  <img alt="Coverity Scan Build Status" src="https://scan.coverity.com/projects/6628/badge.svg"/>
-</a>
+[![Build Status](https://travis-ci.org/jpeach/dcerpc.svg?branch=master)](https://travis-ci.org/jpeach/dcerpc)
+[![Coverity Status](https://scan.coverity.com/projects/6628/badge.svg)](https://scan.coverity.com/projects/dce-rpc)
 
 DCE/RPC
 -------
