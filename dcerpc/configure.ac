@@ -111,9 +111,12 @@ fi
 AC_DEFINE_UNQUOTED([SDKROOT], ["$SDKROOT"], [Apple SDKROOT we are building against])
 AC_SUBST(SDKROOT, $SDKROOT)
 
-AM_INIT_AUTOMAKE([1.11 -Wall silent-rules foreign subdir-objects])
+# Note, we use -Wno-portability to disable warnings about GNU make-specific rules.
+AM_INIT_AUTOMAKE([1.11 -Wall -Wno-portability silent-rules foreign subdir-objects])
 AM_MAINTAINER_MODE([enable])
 AM_SILENT_RULES([yes])
+
+AM_PROG_AR
 
 LT_INIT([disable-static pic-only dlopen])
 
