@@ -3,14 +3,14 @@ AC_DEFUN([LINK_SMBCLIENT_IFELSE],
 dnl   - $1 action if successful
 dnl   - $2 action if unsuccessful
 [
-    AC_LINK_IFELSE(
-	[
-	    #include <SMBClient/smbclient.h>
-	    int main(void) {
+    AC_LINK_IFELSE([
+	AC_LANG_PROGRAM([
+	        #include <SMBClient/smbclient.h>
+            ], [
 		SMBHANDLE ctx;
 		NTSTATUS s = SMBOpenServer("\\foo", &ctx);
-	    }
-	],
+	    ])
+        ],
 	[ $1 ],
 	[ $2 ])
 ])
