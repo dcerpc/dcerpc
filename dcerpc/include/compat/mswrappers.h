@@ -126,7 +126,7 @@ typedef UCHAR * PUCHAR;
 #endif
 
 typedef unsigned int RPC_STATUS;
-typedef handle_t RPC_BINDING_HANDLE;
+typedef rpc_binding_handle_t RPC_BINDING_HANDLE;
 typedef rpc_if_handle_t RPC_IF_HANDLE;
 typedef idl_uuid_t UUID;
 typedef rpc_mgr_proc_t RPC_MGR_EPV;
@@ -229,6 +229,10 @@ RPC_STATUS RpcServerListen(
     unsigned32 minimum_call_threads, /*not used*/
     /* [in] */ unsigned32 max_calls_exec,
     unsigned32 dont_wait /*not used*/
+);
+
+RPC_STATUS RpcMgmtStopServerListening(
+    /* [in] */ RPC_BINDING_HANDLE binding_handle
 );
 
 RPC_STATUS LwMapDCEStatusToWinerror(

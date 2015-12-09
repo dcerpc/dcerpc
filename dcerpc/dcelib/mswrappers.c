@@ -394,6 +394,15 @@ RPC_STATUS RpcServerListen(
     return LwMapDCEStatusToWinerror(status);
 }
 
+RPC_STATUS RpcMgmtStopServerListening(
+    /* [in] */ RPC_BINDING_HANDLE binding_handle
+)
+{
+    RPC_STATUS status = rpc_s_ok;
+    rpc_mgmt_stop_server_listening(binding_handle, &status);
+    return LwMapDCEStatusToWinerror(status);
+}
+
 RPC_STATUS LwMapDCEStatusToWinerror(
     RPC_STATUS dceStatus
 )
