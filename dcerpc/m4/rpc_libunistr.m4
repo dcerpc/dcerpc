@@ -61,20 +61,21 @@ AC_SEARCH_LIBS(ambstowc16s, unistr,
 	    [
 		LIBS="-framework CoreFoundation"
 		AC_LINK_IFELSE(
-		    [
-			#include <CoreFoundation/CFStringEncodingConverter.h>
-			int main(void) {
+                [
+                    AC_LANG_PROGRAM(
+                        [
+			    #include <CoreFoundation/CFStringEncodingConverter.h>
+                        ], [
 			    CFStringEncodingBytesToUnicode(
 				0 /* encoding */, 0 /* flags */,
 				NULL /* bytes */, 0 /* numBytes */,
 				NULL /* usedByteLen */, NULL /* characters */,
 				0 /* maxCharLen */, NULL /* usedCharLen */);
-			    return 0;
-			}
-		    ],
-		    [
-			_rpc_libunistr_found=yes
-		    ])
+                        ])
+                ],
+                [
+                    _rpc_libunistr_found=yes
+                ])
 	    ])
 ])
 

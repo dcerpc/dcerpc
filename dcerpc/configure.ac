@@ -643,6 +643,18 @@ AM_CONDITIONAL(HAVE_LIKEWISE_LWMAPSECURITY,
 	test x${rpc_have_likewise_lwmapsecurity} = xyes)
 
 #####################################################################
+## COMPONENT: dcelib
+
+RPC_LIBUNISTR(CPPFLAGS_unistr, LDFLAGS_unistr, LIB_unistr,
+       AC_MSG_WARN([cannot find a UNICODE converter]))
+
+dnl XXX Add Linux unicode support using GNU libunistring?
+
+AC_SUBST(CPPFLAGS_unistr)
+AC_SUBST(LDFLAGS_unistr)
+AC_SUBST(LIB_unistr)
+
+#####################################################################
 ## COMPONENT: rpcd
 
 AS_AC_EXPAND(SBINDIR, ["${sbindir}"])
