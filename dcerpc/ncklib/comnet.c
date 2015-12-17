@@ -2931,12 +2931,12 @@ extern void rpc_server_use_protseq_socket
 
 #define BINDING_VEC_INCR_LEN 1
 
-INTERNAL void bv_alloc (old_vec, new_vec, status)
-
-rpc_binding_vector_p_t  old_vec;
-rpc_binding_vector_p_t  *new_vec;
-unsigned32              *status;
-
+INTERNAL void bv_alloc
+(
+  rpc_binding_vector_p_t  old_vec,
+  rpc_binding_vector_p_t  *new_vec,
+  unsigned32              *status
+)
 {
     rpc_binding_vector_p_t  bvp;
     int                     bv_size;    /* sizeof the binding vector */
