@@ -7,7 +7,7 @@ DCE/RPC
 This project is a fork of the Likewise DCE/RPC renovation.  The
 Likewise git repository was once available
 [here](git://git.likewisesoftware.com/likewise-open.git) and can
-probably stull be found somewhere on the internet.
+probably still be found somewhere on the internet.
 
 Build notes.
 ------------
