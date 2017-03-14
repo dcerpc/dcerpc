@@ -116,7 +116,8 @@ AM_INIT_AUTOMAKE([1.11 -Wall -Wno-portability silent-rules foreign subdir-object
 AM_MAINTAINER_MODE([enable])
 AM_SILENT_RULES([yes])
 
-AM_PROG_AR
+m4_pattern_allow([AM_PROG_AR])
+#AM_PROG_AR
 
 LT_INIT([disable-static pic-only dlopen])
 
