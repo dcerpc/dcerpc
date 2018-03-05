@@ -133,7 +133,7 @@ static void nidl_yyerror (YYLTYPE *, nidl_parser_p, char const *);
 %defines
 %error-verbose
 %pure-parser
-%name-prefix="nidl_yy"
+%name-prefix "nidl_yy"
 
 /* Tell Bison that the Flexer takes a yyscan_t parameter. */
 %lex-param { void * lexxer }
