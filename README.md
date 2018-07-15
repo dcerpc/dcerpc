@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/jpeach/dcerpc.svg?branch=master)](https://travis-ci.org/jpeach/dcerpc)
+[![Build Status](https://travis-ci.org/dcerpc/dcerpc.svg?branch=master)](https://travis-ci.org/dcerpc/dcerpc)
 [![Coverity Status](https://scan.coverity.com/projects/6628/badge.svg)](https://scan.coverity.com/projects/dce-rpc)
 
 DCE/RPC

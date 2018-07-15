@@ -138,7 +138,7 @@ static void nidl_yyerror (YYLTYPE *, nidl_parser_p, char const *);
 /* Tell Bison that the Flexer takes a yyscan_t parameter. */
 %lex-param { void * lexxer }
 /* Tell Bison that we will pass the yyscan_t scanner into yyparse. */
-%parse-param { nidl_parser_state_t * nidl }
+%parse-param { struct nidl_parser_state_t * nidl }
 
 /* Tell Bison how to get the lexxer argument from the parser state. */
 %{

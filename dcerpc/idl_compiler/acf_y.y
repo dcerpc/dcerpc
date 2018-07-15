@@ -286,7 +286,7 @@ static void acf_warning
 /* Tell Bison that the Flexer takes a yyscan_t parameter. */
 %lex-param { void * lexxer }
 /* Tell Bison that we will pass the yyscan_t scanner into yyparse. */
-%parse-param { acf_parser_state_t * acf }
+%parse-param { struct acf_parser_state_t * acf }
 
 /* Tell Bison how to get the lexxer argument from the parser state. */
 %{
