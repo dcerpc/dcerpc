@@ -81,12 +81,8 @@
 #include <errno.h>
 
 #include <config.h>
-
-#if HAVE_WC16STR_H
-#include <wc16str.h>
-#elif HAVE_COREFOUNDATION_CFSTRINGENCODINGCONVERTER_H
 #include "wc16str.h"
-#endif
+
 
 RPC_STATUS WideChar16ToMultiByte(PWSTR input, idl_char **output);
 RPC_STATUS MultiByteToWideChar16(idl_char *input, PWSTR *output);
