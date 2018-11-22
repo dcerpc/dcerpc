@@ -281,7 +281,7 @@ static void acf_warning
 %defines
 %error-verbose
 %pure-parser
-%name-prefix "acf_yy"
+%name-prefix="acf_yy"
 
 /* Tell Bison that the Flexer takes a yyscan_t parameter. */
 %lex-param { void * lexxer }
