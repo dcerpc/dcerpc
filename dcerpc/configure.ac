@@ -143,18 +143,14 @@ AC_OBJEXT
 AC_C_INLINE
 XAC_C_ATTRIBUTE_UNUSED
 
-AC_CHECK_PROGS([FLEX], [flex])
-case "$FLEX" in
-    *flex) ;;
-    *) AC_MSG_ERROR([could not find flex]) ;;
-esac
+AC_ARG_VAR([FLEX], [Flex lexer generator command])
+AC_PATH_PROG([FLEX],[flex])
+AX_PROG_FLEX_VERSION([2.5.35], [], AC_MSG_ERROR([Flex version 2.5.35 or later is required]))
 
-AC_PROG_YACC
-AC_PATH_PROG(BISON, bison)
-case "$BISON" in
-    *bison) ;;
-    *) AC_MSG_ERROR([could not find bison]) ;;
-esac
+# We need at Bison >= 2.4 for the %name-prefix directive.
+AC_ARG_VAR([BISON], [Bison parser generator command])
+AC_PATH_PROG([BISON], [bison])
+AX_PROG_BISON_VERSION([2.4.0], [], AC_MSG_ERROR([Bison version 2.4 or later is required]))
 
 AX_CFLAGS_GCC_OPTION(-fno-strict-aliasing)
 
