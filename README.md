@@ -26,7 +26,7 @@ project that builds the DCERPC framework using the previously
 installed IDL compiler.
 
 The dcerpc and dceidl projects should typically by run with different
-build architectures, since dceidl is expected to run on the uild
+build architectures, since dceidl is expected to run on the build
 host, and dcerpc is expected to run on the target host. Inside
 Apple, the build group has all this preconfigured.
 
