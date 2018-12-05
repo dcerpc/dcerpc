@@ -44,6 +44,10 @@ set is constant, and independent of the suported architecture.
 Therefore it is valid to do a single configure pass followed by a
 multi-architecture build.
 
+On macOS, the [Homebrew](https://brew.sh) versions of Flex and Bison
+are required, since the versions shipped with the base system are
+too old.
+
 DCE/RPC Documentation
 --------------------
 

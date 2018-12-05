@@ -64,11 +64,14 @@ LEXER="$(basename ${SCRIPT_INPUT_FILE_0})"
 PARSER="$(basename ${SCRIPT_INPUT_FILE_1})"
 PREFIX="$(parser_prefix ${PARSER})"
 
+FLEX=${FLEX:-$(brew --prefix flex)/bin/flex}
+BISON=${BISON:-$(brew --prefix bison)/bin/bison}
+
 mkdir -p "$OUTDIR"
 cd "$OUTDIR"
 
-run flex -P${PREFIX} -o $(outfile_name ${LEXER} c) ${SCRIPT_INPUT_FILE_0}
-run bison -v -d -p ${PREFIX} -o $(outfile_name ${PARSER} c) ${SCRIPT_INPUT_FILE_1}
+run ${FLEX} -P${PREFIX} -o $(outfile_name ${LEXER} c) ${SCRIPT_INPUT_FILE_0}
+run ${BISON} -v -d -p ${PREFIX} -o $(outfile_name ${PARSER} c) ${SCRIPT_INPUT_FILE_1}
 
 echo $LEXER \-\> $(outfile_name ${LEXER} c) $(outfile_name ${LEXER} h)
 echo $PARSER \-\> $(outfile_name ${PARSER} c) $(outfile_name ${PARSER} h)

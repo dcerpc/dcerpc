@@ -161,6 +161,8 @@ if configure_is_required ; then
 	CXX=$(xcrun -find c++) \
 	CFLAGS="-arch $SDKARCH -isysroot $SDKROOT" \
 	CXXFLAGS="-arch $SDKARCH -isysroot $SDKROOT" \
+        FLEX="$(brew --prefix flex)/bin/flex" \
+        BISON="$(brew --prefix bison)/bin/bison" \
 	${PLATFORM_CONFIGURE_OPTIONS} \
 	--disable-dependency-tracking \
 	--enable-idldumpers \
