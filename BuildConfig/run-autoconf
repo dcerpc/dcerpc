@@ -126,10 +126,10 @@ message SDKROOT is $SDKROOT
 message SDK architecture is $SDKARCH
 
 if autoreconf_is_required ; then
-    message "running buildconf"
-    ./buildconf || error buildconf failed
+    message "running autoreconf"
+    autoreconf -f -i || error autoreconf failed
 else
-    message "configure exists, skipping buildconf phase"
+    message "configure exists, skipping autoreconf phase"
 fi
 
 case $(sw_vers -productVersion) in

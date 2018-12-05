@@ -12,7 +12,6 @@ contents of the dceext threads stuff...
 Then, to build from scratch:
 
 autoreconf -fis
-./buildconf
 ./configure --prefix=/opt/dcerpc --with-pthread-ext-dir=/opt/dcerpc
 make
 
