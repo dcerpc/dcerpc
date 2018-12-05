@@ -84,12 +84,6 @@ AC_CONFIG_AUX_DIR([build])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_TARGET
 
-# reduce target_cpu
-case $target_cpu in
-	i?86)	target_cpu="i386";;
-	hppa2.0*) target_cpu="hppa2.0";;
-esac
-
 # reduce linux* to linux-gnu for target_os
 # reduce hpux11.* to hpux11.11
 # reduce freebsd 6.x/7.x/8.x to 6.0

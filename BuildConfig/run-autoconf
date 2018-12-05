@@ -46,6 +46,17 @@ message()
     echo "$PROG: " "$@"
 }
 
+# We used to use arch(1), but that always emits `i386` even on
+# x86_64 hosts.
+architecture()
+{
+    case $(machine) in
+        i386) echo i386 ;;
+        x86_64|x86_64h) echo x86_64 ;;
+        *) echo unknown ;;
+    esac
+}
+
 # We need to know something about the archs supported by the SDK
 # so that we can set CFLAGS to make sure that the compiler can
 # create executables. If we don't do this, configure will fail
@@ -53,7 +64,7 @@ message()
 detect_sdk_arch()
 {
     local crt1=${SDKROOT}/usr/lib/crt1.o
-    local native=$(xcrun arch)
+    local native=$(architecture)
 
     # Get the list of archs that the SDK compiler will be able to
     # link
@@ -145,7 +156,7 @@ if configure_is_required ; then
     message "running configure"
     ./configure \
 	--host=$SDKARCH-apple-darwin$(uname -r) \
-	--build=$(xcrun arch)-apple-darwin$(uname -r) \
+	--build=$(architecture)-apple-darwin$(uname -r) \
 	CC=$(xcrun -find cc) \
 	CXX=$(xcrun -find c++) \
 	CFLAGS="-arch $SDKARCH -isysroot $SDKROOT" \
