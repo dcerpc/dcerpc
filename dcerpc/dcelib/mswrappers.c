@@ -79,6 +79,7 @@
 #include "compat/winerror.h"
 #include <stdlib.h>
 #include <errno.h>
+#include "wc16str.h"
 
 #include <config.h>
 

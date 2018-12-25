@@ -31,20 +31,20 @@
  */
 
 /*
-**
-**  NAME:
-**
-**      wc16str.c
-**
-**  FACILITY:
-**
-**      Microsoft RPC compatibility wrappers.
-**
-**  ABSTRACT:
-**
-**  This module converts between UTF8 and UTF16 encodings.
-**
-*/
+ **
+ **  NAME:
+ **
+ **      wc16str.c
+ **
+ **  FACILITY:
+ **
+ **      Microsoft RPC compatibility wrappers.
+ **
+ **  ABSTRACT:
+ **
+ **  This module converts between UTF8 and UTF16 encodings.
+ **
+ */
 
 #include "compat/mswrappers.h"
 
@@ -52,15 +52,29 @@
 #include <config.h>
 #endif
 
-#include <CoreFoundation/CFStringEncodingConverter.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include "wc16str.h"
+#include <CoreFoundation/CoreFoundation.h>
+typedef CFIndex (*CFStringEncodingToBytesProc)(uint32_t flags, const UniChar *characters, CFIndex numChars, uint8_t *bytes, CFIndex maxByteLen, CFIndex *usedByteLen);
 
 #define CONVERSION_FLAGS ( \
-    kCFStringEncodingAllowLossyConversion \
+kCFStringEncodingAllowLossyConversion \
 )
+
+
+
+enum {
+    kCFStringEncodingConversionSuccess = 0,
+    kCFStringEncodingInvalidInputStream = 1,
+    kCFStringEncodingInsufficientOutputBufferLength = 2,
+    kCFStringEncodingConverterUnavailable = 3
+};
+#import <libkern/OSAtomic.h>
+
+
+
+
 
 static size_t
 wchar16_strlen(const wchar16_t *source)
@@ -81,28 +95,33 @@ awc16stombs(const wchar16_t * input)
     CFIndex inputlen = wchar16_strlen(input);
     char * output;
 
-    uint32_t ret;
-    CFIndex produced = 0;   // output units produced
 
     output = malloc(3 * (inputlen + 1));
     if (output == NULL) {
-	return NULL;
+        return NULL;
     }
 
-    ret = CFStringEncodingUnicodeToBytes(
-	    kCFStringEncodingUTF8,
-	    CONVERSION_FLAGS,
-	    input, inputlen,
-	    &inputlen,
-	    (uint8_t *)output, inputlen * 3,
-	    &produced);
+    CFStringRef inputStringRef=CFStringCreateWithBytes(NULL, (const UInt8 *)input, inputlen, kCFStringEncodingUnicode, false);
+    CFDataRef outputData = CFStringCreateExternalRepresentation(NULL, inputStringRef, kCFStringEncodingUTF16BE, 0);
+    CFDataGetBytes(outputData, CFRangeMake(0, CFDataGetLength(outputData)), (unsigned char *)output);
+    fprintf(stderr,"%s\n","hello");
 
-    if (ret != kCFStringEncodingConversionSuccess) {
-	free(output);
-	return NULL;
-    }
+    //    ret = CFStringEncodingUnicodeToBytes(
+    //        kCFStringEncodingUTF8,
+    //        CONVERSION_FLAGS,
+    //        input, inputlen,
+    //        &inputlen,
+    //        (uint8_t *)output, inputlen * 3,
+    //        &produced);
 
-    output[produced] = '\0';
+    //    if (ret ==NULL) {
+    //    free(output);
+    //    return NULL;
+    //    }
+
+    output[CFDataGetLength(outputData)] = '\0';
+    CFRelease(outputData);
+    CFRelease(inputStringRef);
     return output;
 }
 
@@ -112,27 +131,39 @@ ambstowc16s(const char * input)
     CFIndex inputlen = strlen(input);
     wchar16_t * output;
 
-    uint32_t ret;
-    CFIndex produced = 0;   // output units produced
+    //    uint32_t ret;
+    //    CFIndex produced = 0;   // output units produced
 
     output = malloc(sizeof(wchar16_t) *(inputlen + 1));
     if (output == NULL) {
-	return NULL;
+        return NULL;
     }
 
-    ret = CFStringEncodingBytesToUnicode(
-	    kCFStringEncodingUTF8,
-	    CONVERSION_FLAGS,
-	    (const uint8_t *)input, inputlen,
-	    &inputlen,
-	    output, inputlen * sizeof(wchar16_t),
-	    &produced);
 
-    if (ret != kCFStringEncodingConversionSuccess) {
-	free(output);
-	return NULL;
-    }
+    CFStringRef inputStringRef=CFStringCreateWithBytes(NULL, (const UInt8 *)input, inputlen, kCFStringEncodingUTF16BE, false);
+    CFDataRef outputData = CFStringCreateExternalRepresentation(NULL, inputStringRef, kCFStringEncodingUTF8, 0);
+    CFDataGetBytes(outputData, CFRangeMake(0, CFDataGetLength(outputData)), (unsigned char *)output);
 
-    output[produced] = '\0';
+
+    //    ret = CFStringEncodingBytesToUnicode(
+    //        kCFStringEncodingUTF8,
+    //        CONVERSION_FLAGS,
+    //        (const uint8_t *)input, inputlen,
+    //        &inputlen,
+    //        output, inputlen * sizeof(wchar16_t),
+    //        &produced);
+    //
+    //    if (ret != kCFStringEncodingConversionSuccess) {
+    //    free(output);
+    //    return NULL;
+    //    }
+
+    output[CFDataGetLength(outputData)] = '\0';
+
+    CFRelease(outputData);
+    CFRelease(inputStringRef);
+    fprintf(stderr,"%s\n","bye");
+
     return output;
 }
+

@@ -428,7 +428,7 @@
 			isEditable = 1;
 			outputFiles = (
 				"${SHARED_DERIVED_FILE_DIR}/dce/${INPUT_FILE_BASE}_cstub.c",
-				"${SHARED_DERIVED_FILE_DIR}/dce/${INPUT_FILE_BASE}.h",
+				"",
 			);
 			script = "${SRCROOT}/BuildConfig/idl-compiler -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -keep c_source -no_cpp -v -no_mepv -cepv -server none out ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH} ${INPUT_FILE_PATH} &&\nmv -n ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce/ &&\nmv -n ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/${INPUT_FILE_BASE}_cstub.c ${SHARED_DERIVED_FILE_DIR}/dce/\n";
 		};
@@ -2991,6 +2991,8 @@
 /* Begin PBXProject section */
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "dcerpc" */;
 			compatibilityVersion = "Xcode 3.1";
 			developmentRegion = English;
@@ -3054,7 +3056,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "${SRCROOT}/BuildConfig/run-autoconf\n";
+			shellScript = "SDKROOT=\"\"  ${SRCROOT}/BuildConfig/run-autoconf\n";
 			showEnvVarsInLog = 0;
 		};
 		D6C14748118F4D730083EE16 /* Remove Framework Cruft */ = {
@@ -3084,7 +3086,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "${SRCROOT}/BuildConfig/run-autoconf\n";
+			shellScript = "SDKROOT=\"\" ${SRCROOT}/BuildConfig/run-autoconf\n";
 		};
 		D6E6B60A10BCB25A00E1DCF5 /* Generate ACF Parser */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3138,7 +3140,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "set -e\nxcrun install -d ${DSTROOT}/${DCEIDL_CATALOG_PATH}\ncp -X ${SHARED_DERIVED_FILE_DIR}/idl.cat ${DSTROOT}/${DCEIDL_CATALOG_PATH}";
+			shellScript = "set -e\nxcrun install -d ${DSTROOT}/${DCEIDL_CATALOG_PATH}\ncp -X ${SHARED_DERIVED_FILE_DIR}/idl.cat ${DSTROOT}/${DCEIDL_CATALOG_PATH}\n";
 			showEnvVarsInLog = 0;
 		};
 		DD81451C1087DAD200EAA9D9 /* Create rpc dir */ = {
@@ -3187,7 +3189,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "gencat ${SHARED_DERIVED_FILE_DIR}/idl.cat ${SRCROOT}/dcerpc/idl_compiler/nidlmsg.m";
+			shellScript = "gencat ${SHARED_DERIVED_FILE_DIR}/idl.cat ${SRCROOT}/dcerpc/idl_compiler/nidlmsg.m\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -3806,11 +3808,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DD04350B10769FF80010E492 /* dcerpc_framework.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 46;
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = "DCERPC-Info.plist";
 				PRODUCT_NAME = DCERPC;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -3818,11 +3822,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DD04350B10769FF80010E492 /* dcerpc_framework.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 46;
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = "DCERPC-Info.plist";
 				PRODUCT_NAME = DCERPC;
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
