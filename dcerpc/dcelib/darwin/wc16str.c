@@ -52,15 +52,12 @@
 #include <config.h>
 #endif
 
-#include <CoreFoundation/CFStringEncodingConverter.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "wc16str.h"
 
-#define CONVERSION_FLAGS ( \
-    kCFStringEncodingAllowLossyConversion \
-)
+#include <CoreFoundation/CoreFoundation.h>
 
 static size_t
 wchar16_strlen(const wchar16_t *source)
@@ -74,63 +71,121 @@ wchar16_strlen(const wchar16_t *source)
     return len;
 }
 
-/* Convert from UTF16 (native endian) to UTF16. */
+/* Convert from UTF16 (native endian) to UTF8. */
 char *
 awc16stombs(const wchar16_t * input)
 {
-    CFIndex inputlen = wchar16_strlen(input);
+    const Boolean isExternalRepresentation = false;
+    const UInt8 lossByte = 0; /* No lossy conversion. */
+
+    CFStringRef inputStringRef;
+
+    size_t inputlen;
     char * output;
 
     uint32_t ret;
-    CFIndex produced = 0;   // output units produced
+    CFIndex produced = 0; /* output units produced. */
+
+    inputlen = wchar16_strlen(input);
+
+    /* Special case the empty string so that we can assme that a 0
+     * return from CFSTRINGGetBytes means failure.
+     */
+    if (inputlen == 0) {
+        return strdup("");
+    }
 
     output = malloc(3 * (inputlen + 1));
     if (output == NULL) {
-	return NULL;
+        return NULL;
     }
 
-    ret = CFStringEncodingUnicodeToBytes(
-	    kCFStringEncodingUTF8,
-	    CONVERSION_FLAGS,
-	    input, inputlen,
-	    &inputlen,
-	    (uint8_t *)output, inputlen * 3,
-	    &produced);
+    inputStringRef = CFStringCreateWithBytes(
+            kCFAllocatorDefault,
+            (const UInt8 *)input,
+            inputlen * sizeof(wchar16_t),
+            kCFStringEncodingUTF16,
+            isExternalRepresentation);
+    if (inputStringRef == NULL) {
+        free(output);
+        return NULL;
+    }
 
-    if (ret != kCFStringEncodingConversionSuccess) {
-	free(output);
-	return NULL;
+    produced = CFStringGetBytes(
+            inputStringRef,
+            CFRangeMake(0, CFStringGetLength(inputStringRef)),
+            kCFStringEncodingUTF8,
+            lossByte,
+            isExternalRepresentation,
+            (void *)output,
+            3 * inputlen,
+            NULL);
+
+    CFRelease(inputStringRef);
+
+    if (produced == 0) {
+        free(output);
+        return NULL;
     }
 
     output[produced] = '\0';
     return output;
 }
 
+/* Convert from UTF8 to UTF16 (native endian). */
 wchar16_t *
 ambstowc16s(const char * input)
 {
-    CFIndex inputlen = strlen(input);
+    const Boolean isExternalRepresentation = false;
+    const UInt8 lossByte = 0; /* No lossy conversion. */
+
+    CFStringRef inputStringRef;
+
+    CFIndex inputlen;
     wchar16_t * output;
 
     uint32_t ret;
     CFIndex produced = 0;   // output units produced
 
-    output = malloc(sizeof(wchar16_t) *(inputlen + 1));
-    if (output == NULL) {
-	return NULL;
+    inputlen = strlen(input);
+
+    /* Special case the empty string so that we can assme that a 0
+     * return from CFSTRINGGetBytes means failure.
+     */
+    if (inputlen == 0) {
+        return calloc(1, sizeof(wchar16_t));
     }
 
-    ret = CFStringEncodingBytesToUnicode(
-	    kCFStringEncodingUTF8,
-	    CONVERSION_FLAGS,
-	    (const uint8_t *)input, inputlen,
-	    &inputlen,
-	    output, inputlen * sizeof(wchar16_t),
-	    &produced);
+    output = malloc(sizeof(wchar16_t) * (inputlen + 1));
+    if (output == NULL) {
+        return NULL;
+    }
 
-    if (ret != kCFStringEncodingConversionSuccess) {
-	free(output);
-	return NULL;
+    inputStringRef = CFStringCreateWithBytes(
+            kCFAllocatorDefault,
+            (const UInt8 *)input,
+            inputlen,
+            kCFStringEncodingUTF8,
+            isExternalRepresentation);
+
+    if (inputStringRef == NULL) {
+        free(output);
+        return NULL;
+    }
+
+    produced = CFStringGetBytes(
+            inputStringRef,
+            CFRangeMake(0, CFStringGetLength(inputStringRef)),
+            kCFStringEncodingUTF16,
+            lossByte,
+            isExternalRepresentation,
+            (void *)output,
+            sizeof(wchar_t) * inputlen,
+            NULL);
+
+    if (produced == 0) {
+        free(output);
+        return NULL;
     }
 
     output[produced] = '\0';

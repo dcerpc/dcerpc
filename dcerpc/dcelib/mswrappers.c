@@ -84,7 +84,7 @@
 
 #if HAVE_WC16STR_H
 #include <wc16str.h>
-#elif HAVE_COREFOUNDATION_CFSTRINGENCODINGCONVERTER_H
+#else
 #include "wc16str.h"
 #endif
 
