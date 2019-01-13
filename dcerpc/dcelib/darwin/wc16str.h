@@ -46,5 +46,10 @@
  **
  */
 
+#ifndef _WC16STR_H_
+#define _WC16STR_H_
+
 char *awc16stombs(const wchar16_t * input);
 wchar16_t *ambstowc16s(const char * input);
+
+#endif /* _WC16STR_H_ */

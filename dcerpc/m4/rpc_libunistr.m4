@@ -57,20 +57,24 @@ AC_SEARCH_LIBS(ambstowc16s, unistr,
 	    LDFLAGS=
 	    LIBS=
 
-	    AC_CHECK_HEADERS([CoreFoundation/CFStringEncodingConverter.h],
+	    AC_CHECK_HEADERS([CoreFoundation/CoreFoundation.h],
 	    [
 		LIBS="-framework CoreFoundation"
 		AC_LINK_IFELSE(
                 [
                     AC_LANG_PROGRAM(
                         [
-			    #include <CoreFoundation/CFStringEncodingConverter.h>
+			    #include <CoreFoundation/CoreFoundation.h>
                         ], [
-			    CFStringEncodingBytesToUnicode(
-				0 /* encoding */, 0 /* flags */,
-				NULL /* bytes */, 0 /* numBytes */,
-				NULL /* usedByteLen */, NULL /* characters */,
-				0 /* maxCharLen */, NULL /* usedCharLen */);
+                            CFStringGetBytes(
+                                NULL /* theString */,
+                                CFRangeMake(0, 0) /*range */,
+                                kCFStringEncodingUTF8,
+                                0 /* lossByte */,
+                                0 /* isExternalRepresentation */,
+                                NULL /* buffer */,
+                                0 /* maxBufLen */,
+                                NULL /* *usedBufLen */);
                         ])
                 ],
                 [
