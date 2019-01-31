@@ -9,8 +9,8 @@ Likewise git repository was once available
 [here](git://git.likewisesoftware.com/likewise-open.git) and can
 probably still be found somewhere on the internet.
 
-Build notes.
-------------
+Build notes
+-----------
 
 The build system for DCE/RPC is relatively complex, partly due to
 the use of automake and libtool and partly because it does a lot
@@ -47,6 +47,8 @@ multi-architecture build.
 On macOS, the [Homebrew](https://brew.sh) versions of Flex and Bison
 are required, since the versions shipped with the base system are
 too old.
+
+Build instructions are on the website [here](http://www.dcerpc.org/source/#getting-and-building-the-source).
 
 DCE/RPC Documentation
 --------------------
