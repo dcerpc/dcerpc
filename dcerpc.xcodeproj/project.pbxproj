@@ -166,6 +166,7 @@
 		D67F763E11068B71003C1D11 /* rpctimer.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB266100408FD0080B762 /* rpctimer.c */; };
 		D69F92761108BD9500DDCD00 /* lrpc.idl in Sources */ = {isa = PBXBuildFile; fileRef = D6AE33151108BA6D0050828C /* lrpc.idl */; };
 		D6B20416118F93F600CFFEC6 /* junk.c in Headers */ = {isa = PBXBuildFile; fileRef = DD9D320C107D51CF00FA8214 /* junk.c */; settings = {ATTRIBUTES = (Public, ); }; };
+		D6EB6EEB2202B09100A282F1 /* ep.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0F7100408FD0080B762 /* ep.idl */; };
 		DD0435211076A0D60010E492 /* libidl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE0178F106C2FFD00A5E41A /* libidl.a */; };
 		DD0435221076A0D60010E492 /* libnck.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD10F5D6106D341E005F1EF3 /* libnck.a */; };
 		DD0435231076A0D60010E492 /* libuuid.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE017DE106C334200A5E41A /* libuuid.a */; };
@@ -248,7 +249,6 @@
 		DD081622106C1A250007E433 /* codesets.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0E7100408FD0080B762 /* codesets.idl */; };
 		DD081623106C1A250007E433 /* conv.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0E9100408FD0080B762 /* conv.idl */; };
 		DD081624106C1A250007E433 /* convc.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0EA100408FD0080B762 /* convc.idl */; };
-		DD081625106C1A250007E433 /* ep.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0F7100408FD0080B762 /* ep.idl */; };
 		DD081626106C1A250007E433 /* id_base.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB118100408FD0080B762 /* id_base.idl */; };
 		DD081627106C1A250007E433 /* iovector.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB11C100408FD0080B762 /* iovector.idl */; };
 		DD081628106C1A250007E433 /* lbase.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB11D100408FD0080B762 /* lbase.idl */; };
@@ -266,7 +266,6 @@
 		DD081634106C1A250007E433 /* twr.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB163100408FD0080B762 /* twr.idl */; };
 		DD081635106C1A250007E433 /* uuid.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB164100408FD0080B762 /* uuid.idl */; };
 		DD10F4CE106D245F005F1EF3 /* pickle.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB254100408FD0080B762 /* pickle.idl */; };
-		DD10F4CF106D2471005F1EF3 /* ep.idl in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB0F7100408FD0080B762 /* ep.idl */; };
 		DD10F5DA106D3450005F1EF3 /* comfork.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB1DB100408FD0080B762 /* comfork.c */; };
 		DD10F5DB106D3450005F1EF3 /* mgmt.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB245100408FD0080B762 /* mgmt.c */; };
 		DD10F5DC106D3450005F1EF3 /* ndrglob.c in Sources */ = {isa = PBXBuildFile; fileRef = DD3DB248100408FD0080B762 /* ndrglob.c */; };
@@ -418,7 +417,7 @@
 			outputFiles = (
 				"${SHARED_DERIVED_FILE_DIR}/dce/${INPUT_FILE_BASE}.h",
 			);
-			script = "${SRCROOT}/BuildConfig/idl-compiler -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -cepv -client none -server none -no_mepv out ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH} ${INPUT_FILE_PATH} &&\nmv -n ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce";
+			script = "${SRCROOT}/BuildConfig/idl-compiler -D_SOCKADDR_LEN -D_GNU_SOURCE -D_REENTRANT -D_POSIX_C_SOURCE=3 -I ${SOURCE_ROOT}/dcerpc/include -cepv -client none -server none -no_mepv out ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH} ${INPUT_FILE_PATH} &&\nmv -n ${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/${INPUT_FILE_BASE}.h ${SHARED_DERIVED_FILE_DIR}/dce\n";
 		};
 		DD10F4D8106D259A005F1EF3 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -2991,6 +2990,8 @@
 /* Begin PBXProject section */
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "dcerpc" */;
 			compatibilityVersion = "Xcode 3.1";
 			developmentRegion = English;
@@ -3138,7 +3139,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "set -e\nxcrun install -d ${DSTROOT}/${DCEIDL_CATALOG_PATH}\ncp -X ${SHARED_DERIVED_FILE_DIR}/idl.cat ${DSTROOT}/${DCEIDL_CATALOG_PATH}";
+			shellScript = "set -e\nxcrun install -d ${DSTROOT}/${DCEIDL_CATALOG_PATH}\ncp -X ${SHARED_DERIVED_FILE_DIR}/idl.cat ${DSTROOT}/${DCEIDL_CATALOG_PATH}\n";
 			showEnvVarsInLog = 0;
 		};
 		DD81451C1087DAD200EAA9D9 /* Create rpc dir */ = {
@@ -3285,7 +3286,6 @@
 				DD081622106C1A250007E433 /* codesets.idl in Sources */,
 				DD081623106C1A250007E433 /* conv.idl in Sources */,
 				DD081624106C1A250007E433 /* convc.idl in Sources */,
-				DD081625106C1A250007E433 /* ep.idl in Sources */,
 				DD081626106C1A250007E433 /* id_base.idl in Sources */,
 				DD081627106C1A250007E433 /* iovector.idl in Sources */,
 				DD081629106C1A250007E433 /* mgmt.idl in Sources */,
@@ -3309,8 +3309,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D6EB6EEB2202B09100A282F1 /* ep.idl in Sources */,
 				DD10F4CE106D245F005F1EF3 /* pickle.idl in Sources */,
-				DD10F4CF106D2471005F1EF3 /* ep.idl in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
