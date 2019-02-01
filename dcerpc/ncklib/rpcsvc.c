@@ -81,41 +81,6 @@
 #include <rpcsvc.h>
 #include <stdarg.h>
 
-#if HAVE_CRASHREPORTERCLIENT_H
-
-#include <CrashReporterClient.h>
-
-#elif defined(__APPLE__)
-
-/*
- * The following symbol is reference by Crash Reporter symbolicly
- * (instead of through undefined references. To get strip(1) to know
- * this symbol is not to be stripped it needs to have the
- * REFERENCED_DYNAMICALLY bit (0x10) set.  This would have been done
- * automaticly by ld(1) if this symbol were referenced through undefined
- * symbols.
- *
- * NOTE: this is an unsupported interface and the CrashReporter team reserve
- * the right to change it at any time.
- */
-char *__crashreporter_info__ = NULL;
-asm(".desc ___crashreporter_info__, 0x10");
-
-#define CRSetCrashLogMessage(msg) do { \
-    __crashreporter_info__ = (msg); \
-} while (0)
-
-#else
-
-/* No CrashReporter support, spit it out to stderr and hope someone is
- * watching.
- */
-#define CRSetCrashLogMessage(msg) do { \
-    write(STDERR_FILENO, strlen(msg), msg); \
-} while (0)
-
-#endif
-
 /*
 dce_svc_handle_t rpc_g_svc_handle;
 */
@@ -157,7 +122,6 @@ void rpc_dce_svc_printf (
     if ( (sev_action_flags & svc_c_action_abort) ||
         (sev_action_flags & svc_c_action_exit_bad) )
     {
-        CRSetCrashLogMessage(buff);
         abort();
     }
     else
