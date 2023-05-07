@@ -1,0 +1,27 @@
+name: Ubuntu
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: dependencies
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install -y flex bison autoconf automake libtool
+    - name: configure
+      run: ./configure
+    - name: make
+      run: make -j4
+    - name: make check
+      run: make check
+    - name: make distcheck
+      run: make distcheck
