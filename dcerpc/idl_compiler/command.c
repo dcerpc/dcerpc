@@ -519,7 +519,7 @@ boolean add_def_string
 {
     char **defs = (char**) cmd_val[opt_cpp_def];
     char *def;
-    int len, i = 0;
+    size_t len, i = 0;
 
     len = 1;       /* just to start the loop */
     def = defs[i];

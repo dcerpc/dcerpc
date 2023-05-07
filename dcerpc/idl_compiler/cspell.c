@@ -109,7 +109,7 @@
 
 typedef enum {p_k, a_k, f_k} type_kind_t;
 typedef struct {
-	int len;
+	unsigned int len;
 	struct {
 		type_kind_t kind;
 		union {
@@ -130,7 +130,7 @@ static void CSPELL_add_paren_to_tail
  type_tail_t *tail
 )
 {
-	int i;
+	unsigned int i;
 
 	i = (tail->len) ++;
 	if (tail->len > MAX_TAIL_LEN) INTERNAL_ERROR("Data structure too compilicated; Tail array overflow");
@@ -144,7 +144,7 @@ static void CSPELL_add_array_to_tail
  boolean in_typedef_or_struct
 )
 {
-	int i;
+	unsigned int i;
 
 	i = (tail->len) ++;
 	if (tail->len > MAX_TAIL_LEN) INTERNAL_ERROR("Data structure too compilicated; Tail array overflow");
@@ -190,7 +190,7 @@ static void CSPELL_type_tail
  boolean encoding_services   /* TRUE => [encode] or [decode] on operation */
 )
 {
-	int i;
+	unsigned int i;
 
 	for (i = 0; i < tail->len; i++)
 		switch (tail->vec[i].kind) {
