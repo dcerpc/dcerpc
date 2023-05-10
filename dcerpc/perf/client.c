@@ -177,7 +177,6 @@ struct tinfo_t
 #define N_TESTS (int)(sizeof tinfo / sizeof (struct tinfo_t))
 
 
-#ifdef _POSIX_THREADS
 
 #define MAX_TASKS 40
 
@@ -186,7 +185,6 @@ idl_boolean use_shared_handle = false;
 int n_tasks;
 pthread_mutex_t global_mutex;
 
-#endif
 
 idl_boolean authenticate;
 unsigned32  authn_level;
@@ -290,12 +288,10 @@ int             test;
         fprintf (stderr, "  -1: Avoid doing certain things that NCS 1.5 can't do\n");
         fprintf (stderr, "  -r: Reset bindings every <frequency> calls in a single pass\n");
         fprintf (stderr, "  -R: Recreate bindings every <frequency> calls in a single pass\n");
-#ifdef _POSIX_THREADS
         fprintf (stderr,
             "  -m: Causes nthreads tasks to run at same time (tasking systems only)\n");
         fprintf (stderr,
             "  -M: Same as -m but use a shared binding handle (tasking systems only)\n");
-#endif
         fprintf (stderr,
             "  -i: Causes statistics to be dumped at end of run\n");
         fprintf (stderr,
@@ -772,9 +768,7 @@ char                *argv[];
     }
     ENDTRY
 
-#ifdef _POSIX_THREADS
     if (! multithread)
-#endif
     memcpy(&(if_rep->id), &if_uuid, sizeof(idl_uuid_t));
 }
 
@@ -1858,9 +1852,7 @@ char                *argv[];
     unsigned32          slow_secs=0;
     perf_slow_mode_t    slow_mode=0;
     static char         *slow_mode_names[4] = {"sleep", "I/O", "CPU", "Fork sleep"};
-#ifdef _POSIX_THREADS
     static handle_t     first_handle = NULL;
-#endif
 
     d = (unsigned32 *)malloc(MSIZE);
 
@@ -1900,7 +1892,6 @@ char                *argv[];
         exit (1);
     }
 
-#ifdef _POSIX_THREADS
     if (multithread)
     {
         pthread_mutex_lock(&global_mutex);
@@ -1928,7 +1919,6 @@ char                *argv[];
         pthread_mutex_unlock(&global_mutex);
     }
     else
-#endif
     {
         rh = binding_from_string_binding(NULL, argv[2]);
     }
@@ -2128,9 +2118,7 @@ char                *argv[];
                     break;
                 }
             }
-#ifdef _POSIX_THREADS
             if (! multithread)
-#endif
             {
                 if (reset_binding_freq > 0 && calln % reset_binding_freq == 0)
                 {
@@ -2149,9 +2137,7 @@ char                *argv[];
         end_timing(&start_time, cpp, &avg_time);
 
         if (verify && (! idem)
-#ifdef _POSIX_THREADS
             && (! multithread)
-#endif
             )
         {
             perf_info(rh, &n_calls, &n_brd, &n_maybe, &n_brd_maybe);
@@ -2312,7 +2298,6 @@ char *argv[];
 }
 
 
-#ifdef _POSIX_THREADS
 
 struct task_info_t
 {
@@ -2359,10 +2344,8 @@ int                 len __attribute__(unused);
     ENDTRY
 }
 
-#endif
 
 
-#ifdef _POSIX_THREADS
 
 /*
  * Start up multiple tasks, each running a test.
@@ -2438,7 +2421,6 @@ char                *argv[];
     }
 }
 
-#endif
 
 
 /*
@@ -2628,14 +2610,12 @@ fork_test_replay:
             recreate_binding_freq = atoi(optarg);
             break;
 
-#ifdef _POSIX_THREADS
         case 'm':
         case 'M':
             multithread = true;
             n_tasks = atoi(optarg);
             use_shared_handle = (c == 'M');
             break;
-#endif
 
 	case 'B':
 	    socket_buf_size = atoi(optarg);
@@ -2689,7 +2669,6 @@ fork_test_replay:
 
     if (fork_count != 0 || do_fork != 6)
     {
-#ifdef _POSIX_THREADS
         pthread_mutex_init(&global_mutex, pthread_mutexattr_default);
 
         if (multithread)
@@ -2697,7 +2676,6 @@ fork_test_replay:
             multi_test(test, argc, argv);
             exit(0);
         }
-#endif
 
         start_test(test, argc, argv);
 
