@@ -221,7 +221,6 @@ struct msec_time
 
 static long clock_ticks;
 
-#ifndef NO_GETTIMEOFDAY
 
 #define GETTIMEOFDAY(t) \
 { \
@@ -230,21 +229,6 @@ static long clock_ticks;
     gettimeofday(t, &tz); \
 }
 
-#else
-
-struct timeval
-{
-    unsigned long tv_sec;
-    unsigned long tv_usec;
-};
-
-#define GETTIMEOFDAY(t) \
-{ \
-    (t)->tv_sec  = time(NULL); \
-    (t)->tv_usec = 0; \
-}
-
-#endif
 
 
 /*
