@@ -94,10 +94,8 @@
 #include <string.h>
 #include <malloc.h>
 #include <sys/time.h>
-#ifndef NO_TIMES
 #include <sys/times.h>
 #include <unistd.h>
-#endif  /* NO_TIMES */
 #include <stdlib.h>
 #include <sys/wait.h>
 
@@ -213,13 +211,6 @@ unsigned32 socket_buf_size = 0;	/* os default */
 
 int verbose = 1;
 
-#ifdef NO_TIMES
-struct msec_time
-{
-    unsigned long msec;
-    unsigned short usec;
-};
-#else
 struct msec_time
 {
     struct tms ptime;
@@ -231,7 +222,6 @@ struct msec_time
 };
 
 static long clock_ticks;
-#endif  /* NO_TIMES */
 
 #ifndef NO_GETTIMEOFDAY
 
@@ -312,9 +302,7 @@ int             test;
             "  -p: Authenticate using <authn proto>/<authz proto> at <level> to <principal>\n");
         fprintf (stderr,
             "      <level> and <principal> may be omitted\n");
-#ifndef NO_TIMES
         fprintf (stderr, "CLK_TCK: %ld ticks/sec\n", clock_ticks);
-#endif  /* NO_TIMES */
         fprintf (stderr, "\n");
 
         for (i = 0; i < N_TESTS; i++)
@@ -344,39 +332,6 @@ int point;
     }
 }
 
-#ifdef NO_TIMES
-/*
- * Take a starting time and an iteration count, and produce an average
- * time per iteration based on the current time.
- */
-
-static void end_timing(start_time, iterations, avg_time)
-
-struct timeval *start_time;
-unsigned long iterations;
-struct msec_time *avg_time;
-
-{
-    struct timeval elapsed_time;
-    unsigned long elapsed_usec;
-
-    GETTIMEOFDAY(&elapsed_time);
-
-    if (elapsed_time.tv_usec < start_time->tv_usec)
-    {
-        elapsed_time.tv_sec--;
-        elapsed_time.tv_usec += 1000000;
-    }
-
-    elapsed_time.tv_usec -= start_time->tv_usec;
-    elapsed_time.tv_sec  -= start_time->tv_sec;
-
-    elapsed_usec = (elapsed_time.tv_sec * 1000000) + elapsed_time.tv_usec;
-
-    avg_time->msec = (elapsed_usec / iterations) / 1000;
-    avg_time->usec = (elapsed_usec / iterations) % 1000;
-}
-#else
 static void start_timing(start_time)
 struct msec_time *start_time;
 {
@@ -436,7 +391,6 @@ struct msec_time *avg_time;
     avg_time->r_msec = (elapsed_usec / iterations) / 1000;
     avg_time->r_usec = (elapsed_usec / iterations) % 1000;
 }
-#endif  /* NO_TIMES */
 
 /*
  * Get an RPC handle for a name
@@ -1891,11 +1845,7 @@ char                *argv[];
     unsigned short      passes;
     handle_t            rh;
     unsigned32          st;
-#ifdef NO_TIMES
-    struct timeval      start_time;
-#else
     struct msec_time    start_time;
-#endif  /* NO_TIMES */
     struct msec_time    avg_time;
     unsigned short      cpp;
     unsigned32          *d;
@@ -2032,11 +1982,7 @@ char                *argv[];
             perf_init(rh);
         }
 
-#ifdef NO_TIMES
-        GETTIMEOFDAY(&start_time);
-#else
         start_timing(&start_time);
-#endif  /* NO_TIMES */
 
         for (calln = 1; calln <= cpp; calln++)
         {
@@ -2216,15 +2162,6 @@ char                *argv[];
             }
         }
 
-#ifdef NO_TIMES
-        printf("        pass %3d; ms/call: %lu.%03u",
-                pass, avg_time.msec, avg_time.usec);
-
-        if (len > 0 && avg_time.msec > 0)
-        {
-            printf("; kbytes/sec: %3lu", (len * 4) / avg_time.msec);
-        }
-#else
         if (avg_time.u_msec == 0 || avg_time.s_msec == 0)
             printf("        pass %3d; ms/call: %lu.%03lu (ms/pass: %lu/%lu)",
                    pass, avg_time.r_msec, avg_time.r_usec,
@@ -2239,7 +2176,6 @@ char                *argv[];
         {
             printf("; kbytes/sec: %3lu", (len * 4) / avg_time.r_msec);
         }
-#endif  /* NO_TIMES */
 
         printf("\n");
 
@@ -2258,11 +2194,7 @@ char                *argv[];
 
 {
     handle_t            rh;
-#ifdef NO_TIMES
-    struct timeval      start_time;
-#else
     struct msec_time    start_time;
-#endif  /* NO_TIMES */
     struct msec_time    avg_time;
     idl_boolean         fwd;
     idl_boolean         idem;
@@ -2280,11 +2212,7 @@ char                *argv[];
     printf("    forward: %s; idempotent: %s\n",
             fwd ? "yes" : "no", idem ? "yes" : "no");
 
-#ifdef NO_TIMES
-    GETTIMEOFDAY(&start_time);
-#else
     start_timing(&start_time);
-#endif  /* NO_TIMES */
 
     if (fwd)
         if (idem)
@@ -2299,13 +2227,9 @@ char                *argv[];
 
     end_timing(&start_time, 1, &avg_time);
 
-#ifdef NO_TIMES
-    printf("        ms: %lu.%03u\n", avg_time.msec, avg_time.usec);
-#else
     printf("        ms: %lu.%03lu (%lu/%lu)\n",
            avg_time.r_msec, avg_time.r_usec,
            avg_time.u_msec, avg_time.s_msec);
-#endif  /* NO_TIMES */
 }
 
 /*
