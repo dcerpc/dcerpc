@@ -153,7 +153,7 @@ void perfb_brd
 
 void perfb_null
 (
-    handle_t                h __attribute__(unused)
+    handle_t                h __attribute__((unused))
 )
 {
 }
@@ -162,7 +162,7 @@ void perfb_null
 
 void perfb_null_idem
 (
-    handle_t                h __attribute__(unused)
+    handle_t                h __attribute__((unused))
 )
 {
 }

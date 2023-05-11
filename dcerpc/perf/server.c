@@ -149,12 +149,12 @@ static struct
 
 idl_boolean shut_ok = true;
 
-static boolean32 mgmt_auth_fn (h, op, st)
-
-handle_t            h __attribute__(unused);
-unsigned32          op;
-unsigned32          *st;
-
+static boolean32 mgmt_auth_fn
+(
+    handle_t            h __attribute__((unused)),
+    unsigned32          op,
+    unsigned32          *st
+)
 {
     boolean32 b;
 
@@ -173,8 +173,11 @@ unsigned32          *st;
  *
  * return true iff the rpc_if_id_t's are identical.
  */
-static idl_boolean if_id_is_equal(ifid1, ifid2)
-rpc_if_id_p_t ifid1, ifid2;
+static idl_boolean if_id_is_equal
+(
+    rpc_if_id_p_t ifid1,
+    rpc_if_id_p_t ifid2
+)
 {
     unsigned32 st;
 
@@ -192,12 +195,14 @@ rpc_if_id_p_t ifid1, ifid2;
  *      for perf.idl/perf_null_slow use reserved pool threads
  *      otherwise use a default pool thread
  */
-static void thread_pool_fn(obj_uuid, if_id, opnum, phandle, status)
-uuid_p_t                obj_uuid;
-rpc_if_id_p_t           if_id;
-unsigned32              opnum;
-rpc_thread_pool_handle_t *phandle;
-unsigned32              *status;
+static void thread_pool_fn
+(
+    uuid_p_t                obj_uuid,
+    rpc_if_id_p_t           if_id,
+    unsigned32              opnum,
+    rpc_thread_pool_handle_t *phandle,
+    unsigned32              *status
+)
 {
     unsigned32 st;
     static int once = 1;
@@ -234,7 +239,7 @@ unsigned32              *status;
  *       -1 - couldn't create pool
  *        1 - couldn't set thread pool fn
  */
-static int setup_thread_pools()
+static int setup_thread_pools(void)
 {
     unsigned32 st;
 
@@ -273,8 +278,10 @@ static int setup_thread_pools()
  *       -1 - couldn't free pool
  *        1 - couldn't set thread pool fn NULL
  */
-int teardown_thread_pools(wait_flg)
-idl_boolean wait_flg;
+int teardown_thread_pools
+(
+    idl_boolean wait_flg
+)
 {
     unsigned32 st;
 
@@ -308,8 +315,7 @@ idl_boolean wait_flg;
  * Register the interfaces we export.
  */
 
-static void register_ifs ()
-
+static void register_ifs (void)
 {
     unsigned32          st;
 
@@ -347,8 +353,7 @@ static void register_ifs ()
  * Register the bogus objects we handle.
  */
 
-static void register_objs ()
-
+static void register_objs (void)
 {
     unsigned32          st;
 
@@ -399,12 +404,12 @@ static void register_objs ()
  * Create sockets to listen on.
  */
 
-static void get_sockets (argc, argv, max_calls)
-
-int                 argc;
-char                *argv[];
-unsigned32          max_calls;
-
+static void get_sockets
+(
+    int                 argc,
+    char                *argv[],
+    unsigned32          max_calls
+)
 {
     unsigned32          st;
     unsigned long       i;
@@ -480,7 +485,6 @@ unsigned32          max_calls;
  */
 
 void usage(void)
-
 {
     fprintf(stderr, "usage: server [-sD] [-S <server loops>] [-d <debug switches>]\n");
     fprintf(stderr, "              [-p <authn proto>,<principal>[,<keytab file>]] [-v <verbose level>]\n");
@@ -512,11 +516,11 @@ void usage(void)
  * routine is called (selectively) from manager routines.
  */
 
-void print_binding_info(text, h)
-
-char        *text;
-handle_t    h;
-
+void print_binding_info
+(
+    char        *text,
+    handle_t    h
+)
 {
     unsigned32          st;
     unsigned32          authn_level, authn_protocol, authz_protocol;
@@ -626,11 +630,11 @@ void rpc__cn_inq_sock_buffsize (
 
 extern int lookup_name(char *table[], char *s);
 
-int main (argc, argv)
-
-int                 argc;
-char                *argv[];
-
+int main
+(
+    int                 argc,
+    char                *argv[]
+)
 {
     unsigned32      st;
     idl_boolean     debug = false;
@@ -646,9 +650,6 @@ char                *argv[];
     idl_boolean     b_reg = false;      /* ditto for perfb i/f */
     idl_char        *keytab;
     unsigned32      ssize,rsize;
-
-	 DO_NOT_CLOBBER(i);
-	 DO_NOT_CLOBBER(ep_reg);
 
     while ((c = getopt(argc, argv, "beslrDB:d:p:S:v:")) != EOF)
     {
@@ -808,7 +809,7 @@ char                *argv[];
 
     i = 0;
 
-    TRY
+    DCETHREAD_TRY
     {
         while (true)
         {
@@ -840,7 +841,7 @@ char                *argv[];
             SLEEP (SERVER_LOOP_SLEEP_TIME);
         }
     }
-    FINALLY
+    DCETHREAD_FINALLY
     {
         if (ep_reg)
         {
@@ -853,7 +854,7 @@ char                *argv[];
             }
         }
     }
-    ENDTRY
+    DCETHREAD_ENDTRY
 
     VRprintf(1, ("Exiting\n"));
 	 return 0;

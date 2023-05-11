@@ -145,7 +145,7 @@ void perf_init
 
 void perf_info
 (
-    handle_t                h __attribute__(unused),
+    handle_t                h __attribute__((unused)),
     unsigned32           *n,
     unsigned32           *nm,
     unsigned32           *nb,
@@ -162,7 +162,7 @@ void perf_info
 
 void perf_null
 (
-    handle_t                h __attribute__(unused)
+    handle_t                h __attribute__((unused))
 )
 {
     common();
@@ -172,7 +172,7 @@ void perf_null
 
 void perf_null_idem
 (
-    handle_t                h __attribute__(unused)
+    handle_t                h __attribute__((unused))
 )
 {
     common();
@@ -182,7 +182,7 @@ void perf_null_idem
 
 void perf_in
 (
-    handle_t                h __attribute__(unused),
+    handle_t                h __attribute__((unused)),
     perf_data_t             d,
     unsigned32           l,
     idl_boolean             verify,
@@ -210,7 +210,7 @@ void perf_in
 
 void perf_in_idem
 (
-    handle_t                h __attribute__(unused),
+    handle_t                h __attribute__((unused)),
     perf_data_t             d,
     unsigned32           l,
     idl_boolean             verify,
@@ -224,7 +224,7 @@ void perf_in_idem
 
 void perf_out
 (
-    handle_t                h __attribute__(unused),
+    handle_t                h __attribute__((unused)),
     perf_data_t             d,
     unsigned32           *l,
     unsigned32           m,
@@ -306,7 +306,7 @@ void perf_brd_maybe
 
 void perf_fp_test
 (
-    handle_t                h __attribute__(unused),
+    handle_t                h __attribute__((unused)),
     float                   *f1,
     float                   *f2,
     double                  d1,
@@ -334,7 +334,7 @@ static rpc_binding_vector_p_t fwd_bv;
 void perf_register_b
 (
     handle_t                h,
-    idl_boolean             global __attribute__(unused),
+    idl_boolean             global __attribute__((unused)),
     unsigned32              *st
 )
 {
@@ -504,7 +504,7 @@ void perf_exception
      * catch them. Therefore do a simple RAISE here.
      */
 
-    RAISE (exc_e_intdiv);
+    DCETHREAD_RAISE (dcethread_intdiv_e);
 
 }
 
@@ -512,7 +512,7 @@ void perf_exception
 
 static void slow
 (
-    handle_t                h __attribute__(unused),
+    handle_t                h __attribute__((unused)),
     perf_slow_mode_t        mode,
     unsigned32           secs
 )
@@ -521,7 +521,7 @@ static void slow
 
     common();
 
-    TRY
+    DCETHREAD_TRY
     {
         start_time = time(0l);
 
@@ -620,17 +620,12 @@ DONE:
             }
         }
     }
-    CATCH(cma_e_alerted)
-    {
-        printf("    ...'cancel' exception caught\n");
-        RERAISE;
-    }
-    CATCH_ALL
+    DCETHREAD_CATCH_ALL(THIS_CATCH)
     {
         printf("    ...unknown exception caught\n");
-        RERAISE;
+        DCETHREAD_RERAISE;
     }
-    ENDTRY
+    DCETHREAD_ENDTRY
 }
 
 /***************************************************************************/
@@ -645,13 +640,13 @@ void perf_null_slow
   int oc = 0;
 
   if (mode == perf_slow_cpu)
-    oc = pthread_setcancel(CANCEL_OFF);
+    pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &oc);
 
   print_binding_info ("perf_null_slow", h);
   slow (h, mode, secs);
 
   if (mode == perf_slow_cpu)
-    pthread_setcancel(oc);
+    pthread_setcancelstate(oc, NULL);
 
 }
 
@@ -667,13 +662,13 @@ void perf_null_slow_idem
   int oc =0;
 
   if (mode == perf_slow_cpu)
-    oc = pthread_setcancel(CANCEL_OFF);
+    pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &oc);
 
   print_binding_info ("perf_null_slow_idem", h);
   slow(h, mode, secs);
 
   if (mode == perf_slow_cpu)
-    pthread_setcancel(oc);
+    pthread_setcancelstate(oc, NULL);
 
 }
 
@@ -728,7 +723,7 @@ static void *shutdown_thread
 
 void perf_shutdown2
 (
-    handle_t                h __attribute__(unused),
+    handle_t                h __attribute__((unused)),
     unsigned32              secs
 )
 {
@@ -742,8 +737,7 @@ void perf_shutdown2
     p = (struct shutdown_info *) malloc (sizeof *p);
     p->secs = secs;
 
-    pthread_create (&thread, pthread_attr_default,
-	shutdown_thread, (void *) p);
+    pthread_create (&thread, NULL, shutdown_thread, (void *) p);
     pthread_detach (&thread);
 }
 
@@ -891,7 +885,7 @@ void perf_brd_fault
     common();
     n_brd++;
     print_binding_info ("perf_brd_fault", h);
-    RAISE (rpc_x_unknown_remote_fault);
+    DCETHREAD_RAISE (rpc_x_unknown_remote_fault);
 }
 
 

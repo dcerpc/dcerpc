@@ -109,19 +109,19 @@ typedef struct
     unsigned short              stub_rtl_if_vers;
 } rpc_if_rep_t, *rpc_if_rep_p_t;
 
-static void looping_test();
-static void brd_test();
-static void unreg_test();
-static void forwarding_test();
-static void exception_test();
-static void shutdown_test();
-static void callback_test();
-static void generic_test();
-static void context_test();
-static void static_cancel_test();
-static void stats_test();
-static void inq_if_ids_test();
-static void one_shot_test();
+static void looping_test(int, int, char*[]);
+static void brd_test(int, int, char*[]);
+static void unreg_test(int, int, char*[]);
+static void forwarding_test(int, int, char*[]);
+static void exception_test(int, int, char*[]);
+static void shutdown_test(int, int, char*[]);
+static void callback_test(int, int, char*[]);
+static void generic_test(int, int, char*[]);
+static void context_test(int, int, char*[]);
+static void static_cancel_test(int, int, char*[]);
+static void stats_test(int, int, char*[]);
+static void inq_if_ids_test(int, int, char*[]);
+static void one_shot_test(int, int, char*[]);
 
 #define SHUTMODE_MGR    1
 #define SHUTMODE_NO_MGR 2
@@ -129,9 +129,9 @@ static void one_shot_test();
 
 struct tinfo_t
 {
-    void (*proc)();
-    char *name;
-    char *usage;
+    void (*proc)(int, int, char*[]);
+    const char *name;
+    const char *usage;
 } tinfo[] =
     {
         /*  0 */     {looping_test,    "Null call",
@@ -221,23 +221,19 @@ struct msec_time
 
 static long clock_ticks;
 
-
 #define GETTIMEOFDAY(t) \
 { \
-    struct timezone tz; \
- \
-    gettimeofday(t, &tz); \
+    gettimeofday(t, NULL); \
 }
-
 
 
 /*
  * Print how to use this program
  */
-void usage (test)
-
-int             test;
-
+void usage
+(
+    int test
+)
 {
     int             i;
 
@@ -300,10 +296,9 @@ int             test;
  * of time.
  */
 
-static void check_wait_point(point)
-
-int point;
-
+static void check_wait_point(
+    int point
+)
 {
     if (wait_point == point)
     {
@@ -312,8 +307,9 @@ int point;
     }
 }
 
-static void start_timing(start_time)
-struct msec_time *start_time;
+static void start_timing(
+    struct msec_time *start_time
+)
 {
     GETTIMEOFDAY(&start_time->elapsed);
 
@@ -326,12 +322,11 @@ struct msec_time *start_time;
  * time per iteration based on the current time.
  */
 
-static void end_timing(start_time, iterations, avg_time)
-
-struct msec_time *start_time;
-unsigned long iterations;
-struct msec_time *avg_time;
-
+static void end_timing(
+    struct msec_time *start_time,
+    unsigned long iterations,
+    struct msec_time *avg_time
+)
 {
     struct tms ptime;
     unsigned long elapsed_usec;
@@ -376,11 +371,11 @@ struct msec_time *avg_time;
  * Get an RPC handle for a name
  */
 
-static handle_t binding_from_string_binding (object, name)
-
-idl_uuid_t              *object;
-char                *name;
-
+static handle_t binding_from_string_binding
+(
+    idl_uuid_t              *object,
+    unsigned_char_p_t       name
+)
 {
     unsigned32          st;
     handle_t            h;
@@ -486,11 +481,11 @@ char                *name;
  * Convert a binding to a string binding.
  */
 
-static void binding_to_string_binding (rh, name)
-
-handle_t            rh;
-unsigned_char_p_t   *name;
-
+static void binding_to_string_binding
+(
+    handle_t            rh,
+    unsigned_char_p_t   *name
+)
 {
     unsigned32      st;
 
@@ -507,10 +502,10 @@ unsigned_char_p_t   *name;
  * Reset a binding.
  */
 
-static void binding_reset (rh)
-
-handle_t    rh;
-
+static void binding_reset
+(
+    handle_t    rh
+)
 {
     unsigned32      st;
 
@@ -527,12 +522,12 @@ handle_t    rh;
  * Broadcast test
  */
 
-static void brd_test (test, argc, argv)
-
-int                 test;
-int                 argc;
-char                *argv[];
-
+static void brd_test
+(
+    int                 test,
+    int                 argc,
+    char                *argv[]
+)
 {
     handle_t            rh;
     unsigned32          st;
@@ -586,7 +581,7 @@ char                *argv[];
 
     rh = binding_from_string_binding (NULL, name);
 
-    TRY
+    DCETHREAD_TRY
     {
         perf_brd_fault(rh);
         binding_to_string_binding (rh, &name2);
@@ -594,16 +589,16 @@ char                *argv[];
         rpc_string_free (&name2, &st);
         exit(1);
     }
-    CATCH (rpc_x_comm_failure)
+    DCETHREAD_CATCH (rpc_x_comm_failure)
     {
         printf ("    call failed as expected\n");
     }
-    CATCH_ALL
+    DCETHREAD_CATCH_ALL(THIS_CATCH)
     {
         exc_report(THIS_CATCH);
         printf ("    call failed, but with something other than \"communications failure\"\n");
     }
-    ENDTRY
+    DCETHREAD_ENDTRY
 
     rpc_binding_free (&rh, &st);
 
@@ -616,34 +611,34 @@ char                *argv[];
 
     rh = binding_from_string_binding (NULL, name);
 
-    TRY
+    DCETHREAD_TRY
     {
         perfb_brd(rh, result);
         binding_to_string_binding (rh, &name2);
         fprintf (stderr, "*** Call succeeded (shouldn't have); bound to \"%s\", result=\"%s\"\n", name2, result);
         exit(1);
     }
-    CATCH (rpc_x_comm_failure)
+    DCETHREAD_CATCH (rpc_x_comm_failure)
     {
         printf ("    call failed as expected\n");
     }
-    CATCH_ALL
+    DCETHREAD_CATCH_ALL(THIS_CATCH)
     {
         printf ("    call failed, but with something other than \"communications failure\"\n");
     }
-    ENDTRY
+    DCETHREAD_ENDTRY
 }
 
 /*
  * Shutdown test
  */
 
-static void shutdown_test (test, argc, argv)
-
-int                 test;
-int                 argc;
-char                *argv[];
-
+static void shutdown_test
+(
+    int                 test,
+    int                 argc,
+    char                *argv[]
+)
 {
     handle_t            rh;
     int                 mode;
@@ -689,12 +684,12 @@ char                *argv[];
  * Unregistered interface test.
  */
 
-static void unreg_test (test, argc, argv)
-
-int                 test;
-int                 argc;
-char                *argv[];
-
+static void unreg_test
+(
+    int                 test,
+    int                 argc,
+    char                *argv[]
+)
 {
     char                name[256];
     handle_t            rh;
@@ -741,16 +736,16 @@ char                *argv[];
      * Now try a RPC to an interface that the server doesn't
      * have registered.
      */
-    TRY
+    DCETHREAD_TRY
     {
         perfb_init(rh, (idl_char *) name);
         fprintf(stderr, "*** Call that should have failed succeeded!\n");
     }
-    CATCH (rpc_x_unknown_if)
+    DCETHREAD_CATCH (rpc_x_unknown_if)
     {
         printf("  \"Unknown interface\" exception correctly raised\n");
     }
-    ENDTRY
+    DCETHREAD_ENDTRY
 
     if (! multithread)
     memcpy(&(if_rep->id), &if_uuid, sizeof(idl_uuid_t));
@@ -760,8 +755,10 @@ char                *argv[];
  * Inquire Interface ids test
  */
 
-static void do_inq_if_ids (name)
-char *name;
+static void do_inq_if_ids
+(
+    char *name
+)
 {
     handle_t                rh;
     rpc_if_id_vector_p_t    if_ids;
@@ -808,12 +805,12 @@ char *name;
     }
 }
 
-static void inq_if_ids_test (test, argc, argv)
-
-int                 test;
-int                 argc;
-char                *argv[];
-
+static void inq_if_ids_test
+(
+    int                 test,
+    int                 argc,
+    char                *argv[]
+)
 {
     if (argc < 2)
     {
@@ -828,8 +825,10 @@ char                *argv[];
  * Statistics test
  */
 
-static void do_stats (name)
-char *name;
+static void do_stats
+(
+    const char *name
+)
 {
     handle_t                rh;
     rpc_stats_vector_p_t    stats;
@@ -857,7 +856,7 @@ char *name;
 
     if (name != NULL)
     {
-        binding_to_string_binding(rh, &pstring, &st);
+        binding_to_string_binding(rh, &pstring);
     }
 
     printf("  Stats for %s\n", pstring);
@@ -878,12 +877,12 @@ char *name;
     }
 }
 
-static void stats_test (test, argc, argv)
-
-int                 test;
-int                 argc;
-char                *argv[];
-
+static void stats_test
+(
+    int                 test,
+    int                 argc,
+    char                *argv[]
+)
 {
     if (argc < 2)
     {
@@ -898,12 +897,12 @@ char                *argv[];
  * Auxiliary routine for forwarding test.
  */
 
-static void forwarding_mgmt_test (rh, obj, msg)
-
-handle_t            rh;
-uuid_p_t            obj;
-char                *msg;
-
+static void forwarding_mgmt_test
+(
+    handle_t            rh,
+    uuid_p_t            obj,
+    char                *msg
+)
 {
     unsigned int                 i;
     rpc_if_id_vector_p_t if_ids;
@@ -972,12 +971,12 @@ char                *msg;
  * Forwarding test.
  */
 
-static void forwarding_test (test, argc, argv)
-
-int                 test;
-int                 argc;
-char                *argv[];
-
+static void forwarding_test
+(
+    int                 test,
+    int                 argc,
+    char                *argv[]
+)
 {
     handle_t            rh;
     char                name[256];
@@ -990,9 +989,6 @@ char                *argv[];
     unsigned32          sum, rsum;
     idl_char            result[256];
     unsigned_char_p_t   pstring;
-
-	DO_NOT_CLOBBER(rh);
-	DO_NOT_CLOBBER(rsum);
 
     if (argc < 4)
     {
@@ -1014,7 +1010,7 @@ char                *argv[];
         exit(1);
     }
 
-    TRY
+    DCETHREAD_TRY
     {
         if (! compat_mode)
         {
@@ -1031,7 +1027,7 @@ char                *argv[];
                 exit(1);
             }
 
-            binding_to_string_binding(rh, &pstring, &st);
+            binding_to_string_binding(rh, &pstring);
             printf("  binding resolved to: %s\n", pstring);
             rpc_string_free(&pstring, &st);
         }
@@ -1057,7 +1053,7 @@ char                *argv[];
             rsum += d[i];
         }
 
-        TRY
+        DCETHREAD_TRY
         {
             perfb_in(rh, d, FSIZE, true, &sum);
             if (sum != rsum)
@@ -1070,13 +1066,13 @@ char                *argv[];
                 printf("  large forwarded call completed OK\n");
             }
         }
-        CATCH (rpc_x_op_rng_error)
+        DCETHREAD_CATCH (rpc_x_op_rng_error)
         {
             printf ("  warning: server doesn't implement \"perfb_in\" procedure ");
             printf ("(probably an old server)\n");
             printf ("           large forwarded call test skipped\n");
         }
-        ENDTRY
+        DCETHREAD_ENDTRY
 
         if (! compat_mode)
         {
@@ -1100,37 +1096,37 @@ char                *argv[];
             exit(1);
         }
 
-        TRY
+        DCETHREAD_TRY
         {
             perfb_brd(rh, result);
             binding_to_string_binding (rh, &name2);
             printf("  broadcast forwarded call completed OK\n");
             printf("    bound to \"%s\", result=\"%s\"\n", name2, result);
         }
-        CATCH (rpc_x_invalid_call_opt)
+        DCETHREAD_CATCH (rpc_x_invalid_call_opt)
         {
             printf ("  warning: can't do broadcast\n");
         }
-        CATCH (rpc_x_op_rng_error)
+        DCETHREAD_CATCH (rpc_x_op_rng_error)
         {
             printf ("  warning: server doesn't implement \"perfb_brd\" procedure ");
             printf ("(probably an old server)\n");
             printf ("           broadcast call test skipped\n");
         }
-        CATCH (rpc_x_comm_failure)
+        DCETHREAD_CATCH (rpc_x_comm_failure)
         {
             printf ("  warning: communications failure (may be an old server)\n");
             printf ("           broadcast call test skipped\n");
         }
-        CATCH_ALL
+        DCETHREAD_CATCH_ALL(THIS_CATCH)
         {
             exc_report(THIS_CATCH);
             fprintf (stderr, "*** Unknown exception raised in during broadcast forwarded call\n");
-            RERAISE;
+            DCETHREAD_RERAISE;
         }
-        ENDTRY
+        DCETHREAD_ENDTRY
     }
-    FINALLY
+    DCETHREAD_FINALLY
     {
         /*
          * Tell server to unregister the "perfb" interface.
@@ -1145,19 +1141,19 @@ char                *argv[];
             exit(1);
         }
     }
-    ENDTRY
+    DCETHREAD_ENDTRY
 }
 
 /*
  * Exception test.
  */
 
-static void exception_test (test, argc, argv)
-
-int                 test;
-int                 argc;
-char                *argv[];
-
+static void exception_test
+(
+    int                 test,
+    int                 argc,
+    char                *argv[]
+)
 {
     handle_t            rh;
 
@@ -1168,39 +1164,31 @@ char                *argv[];
 
     rh = binding_from_string_binding(NULL, argv[2]);
 
-    TRY
+    DCETHREAD_TRY
     {
         perf_exception(rh);
         fprintf(stderr, "*** NO exception raised\n");
         exit (1);
     }
-#ifndef PD_BUILD
-    CATCH (exc_intdiv_e)
-#else
-    CATCH (exc_e_intdiv)
-#endif
+    DCETHREAD_CATCH (dcethread_intdiv_e)
     {
         printf("  Integer div-by-zero exception correctly raised\n");
     }
-#ifndef PD_BUILD
-    CATCH (exc_fltdiv_e)
-#else
-    CATCH (exc_e_fltdiv)
-#endif
+    DCETHREAD_CATCH (dcethread_fltdiv_e)
     {
         printf("  Floating div-by-zero exception correctly raised\n");
     }
-    CATCH (exc_e_aritherr)
+    DCETHREAD_CATCH (dcethread_aritherr_e)
     {
         printf("  Arithmetic error exception correctly raised\n");
     }
-    CATCH_ALL
+    DCETHREAD_CATCH_ALL(THIS_CATCH)
     {
         exc_report(THIS_CATCH);
         fprintf(stderr, "*** WRONG exception raised\n");
         exit(1);
     }
-    ENDTRY
+    DCETHREAD_ENDTRY
 }
 
 /*
@@ -1209,31 +1197,31 @@ char                *argv[];
 
 static unsigned long callback_passes, callback_count;
 
-void perfc_init (h, p)
-
-handle_t            h __attribute__(unused);
-unsigned32       *p;
-
+void perfc_init
+(
+    handle_t          h __attribute__((unused)),
+    unsigned32       *p
+)
 {
     callback_count = 0;
     *p = callback_passes;
 }
 
-void perfc_cb (h, c)
-
-handle_t            h __attribute__(unused);
-unsigned32       *c;
-
+void perfc_cb
+(
+    handle_t         h __attribute__((unused)),
+    unsigned32       *c
+)
 {
     *c = ++callback_count;
     printf("    ...in callback %lu\n", *c);
 }
 
-void perfc_cb_idem (h, c)
-
-handle_t            h __attribute__(unused);
-unsigned32       *c;
-
+void perfc_cb_idem
+(
+    handle_t         h __attribute__((unused)),
+    unsigned32       *c
+)
 {
     *c = ++callback_count;
     printf("    ...in idempotent callback %lu\n", *c);
@@ -1249,12 +1237,12 @@ perfc_v2_0_epv_t perfc_v2_mgr_epv =
 /*
  * Callback test
  */
-static void callback_test (test, argc, argv)
-
-int                 test;
-int                 argc;
-char                *argv[];
-
+static void callback_test
+(
+    int                 test,
+    int                 argc,
+    char                *argv[]
+)
 {
     handle_t            rh;
     unsigned32          st;
@@ -1298,10 +1286,11 @@ char                *argv[];
  * Returns T if two double floats are "pretty close" to each other.
  */
 
-static idl_boolean approx_eq (d1, d2)
-
-double              d1, d2;
-
+static idl_boolean approx_eq
+(
+    double              d1,
+    double              d2
+)
 {
     double ratio = d1 / d2;
     return (ratio > .9999 && ratio < 1.00001);
@@ -1311,12 +1300,12 @@ double              d1, d2;
  * Generic interface test
  */
 
-static void generic_test (test, argc, argv)
-
-int                 test;
-int                 argc;
-char                *argv[];
-
+static void generic_test
+(
+    int                 test,
+    int                 argc,
+    char                *argv[]
+)
 {
     handle_t            rh;
     unsigned32       x;
@@ -1358,7 +1347,7 @@ char                *argv[];
         fprintf(stderr, "*** op2 on Bar1 returned %lu instead of 65\n", x);
     }
 
-    TRY {
+    DCETHREAD_TRY {
         idl_uuid_t  random_uuid;
         unsigned32 st;
 
@@ -1369,46 +1358,46 @@ char                *argv[];
             "*** op1 on random uuid: \"Unsupported type\" exception expected\n");
         exit(1);
     }
-    CATCH (rpc_x_unsupported_type)
+    DCETHREAD_CATCH (rpc_x_unsupported_type)
     {
         printf("    op1 on random uuid: \"Unsupported type\" exception correctly raised\n");
     }
-    CATCH (rpc_x_comm_failure)
+    DCETHREAD_CATCH (rpc_x_comm_failure)
     {
         fprintf(stderr, "*** op1 on random uuid: comm failure\n");
         exit(1);
     }
-    CATCH_ALL
+    DCETHREAD_CATCH_ALL(THIS_CATCH)
     {
         exc_report(THIS_CATCH);
         fprintf(stderr, "*** op1 on random uuid: incorrect exception\n");
         exit(1);
     }
-    ENDTRY
+    DCETHREAD_ENDTRY
 
-    TRY {
+    DCETHREAD_TRY {
         rh = binding_from_string_binding(&ZotObj, argv[2]);
         perfg_op1(rh, 17, &x);
         fprintf(stderr,
             "*** op1 on unsupported type: \"Unsupported type\" exception expected\n");
         exit(1);
     }
-    CATCH (rpc_x_unsupported_type)
+    DCETHREAD_CATCH (rpc_x_unsupported_type)
     {
         printf("    op1 on unsupported uuid: \"Unsupported type\" exception correctly raised\n");
     }
-    CATCH (rpc_x_comm_failure)
+    DCETHREAD_CATCH (rpc_x_comm_failure)
     {
         fprintf(stderr, "*** op1 on random uuid: comm failure\n");
         exit(1);
     }
-    CATCH_ALL
+    DCETHREAD_CATCH_ALL(THIS_CATCH)
     {
         exc_report(THIS_CATCH);
         fprintf(stderr, "*** op1 on random uuid: incorrect exception\n");
         exit(1);
     }
-    ENDTRY
+    DCETHREAD_ENDTRY
 
     printf("  ...OK\n");
 }
@@ -1431,25 +1420,31 @@ char                *argv[];
  * Determine if a cancel is pending (and clear it).
  */
 
-static boolean32 cancel_was_pending()
+static boolean32 cancel_was_pending(void)
 {
     volatile boolean32 pending = false;
 
-    TRY
+    /* There's no portable way to test the cancellation state of a POSIX thread.
+     * If you call pthread_testcancel(), the thread might actually be canceled
+     * as a side effect, so the function might not even return.
+     */
+#if 0
+    DCETHREAD_TRY
     {
         pthread_testcancel();
     }
-    CATCH (pthread_cancel_e)
+    DCETHREAD_CATCH (pthread_cancel_e)
     {
         printf("pending is set to TRUE\n"); fflush(stdout);
         pending = true;
     }
-    CATCH_ALL
+    DCETHREAD_CATCH_ALL(THIS_CATCH)
     {
         exc_report(THIS_CATCH);
         fprintf(stderr, "*** Unknown exception raised\n");
     }
-    ENDTRY
+    DCETHREAD_ENDTRY
+#endif
 
     return pending;
 }
@@ -1460,12 +1455,11 @@ static boolean32 cancel_was_pending()
  * Perform a RPC that doesn't call a cancellable operation
  * and verify that a cancel is pending upon completion.
  */
-void static_cancel_test1(rh, idem, slow_secs)
-
-rpc_binding_handle_t    rh;
-unsigned32              idem;
-unsigned long           slow_secs;
-
+void static_cancel_test1(
+    rpc_binding_handle_t    rh,
+    unsigned32              idem,
+    unsigned long           slow_secs
+)
 {
 
   boolean32 pending;
@@ -1473,9 +1467,9 @@ unsigned long           slow_secs;
   printf("    Static Cancel Test 1 (server should NOT detect cancel):\n");
 
   /* make sure general cancellability is on */
-  pthread_setcancel(CANCEL_ON);
+  pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
 
-    TRY
+    DCETHREAD_TRY
     {
 
       /*
@@ -1498,28 +1492,30 @@ unsigned long           slow_secs;
         else
             fprintf(stderr, "    *** lost cancel (not pending)!\n");
     }
-    CATCH (pthread_cancel_e)
+#if 0
+    DCETHREAD_CATCH (pthread_cancel_e)
     {
         fprintf(stderr, "    *** unexpected cancel exception raised!\n");
         if (cancel_was_pending())
             fprintf(stderr, "    *** and cancel still pending!\n");
     }
-    CATCH (rpc_x_cancel_timeout)
+#endif
+    DCETHREAD_CATCH (rpc_x_cancel_timeout)
     {
         fprintf(stderr, "    *** unexpected cancel timeout exception raised!\n");
         if (! cancel_was_pending())
             fprintf(stderr, "    *** and lost cancel (not pending)!\n");
-	    RERAISE;
+        DCETHREAD_RERAISE;
     }
-    CATCH_ALL
+    DCETHREAD_CATCH_ALL(THIS_CATCH)
     {
         exc_report(THIS_CATCH);
         fprintf(stderr, "    *** unexpected exception raised!\n");
         fprintf(stderr, "    *** cancel %s pending\n",
                 cancel_was_pending() ? "still" : "not");
-	RERAISE;
+	DCETHREAD_RERAISE;
     }
-    ENDTRY
+    DCETHREAD_ENDTRY
 }
 
 /*
@@ -1528,19 +1524,18 @@ unsigned long           slow_secs;
  * Perform a RPC that does call a cancellable operation
  * and verify that a cancel is detected.
  */
-void static_cancel_test2(rh, idem, slow_secs)
-
-rpc_binding_handle_t    rh;
-unsigned32              idem;
-unsigned long           slow_secs;
-
+void static_cancel_test2(
+    rpc_binding_handle_t    rh,
+    unsigned32              idem,
+    unsigned long           slow_secs
+)
 {
     int oc;
     boolean32 pending;
 
     printf("    Static Cancel Test 2 (server SHOULD detect cancel):\n");
 
-    TRY
+    DCETHREAD_TRY
     {
         pthread_cancel(pthread_self());
         if (idem)
@@ -1554,35 +1549,37 @@ unsigned long           slow_secs;
         fprintf(stderr, "    *** cancel exception NOT raised!\n");
 
 	pending = cancel_was_pending();
-	oc = pthread_setcancel(CANCEL_OFF);
+	oc = pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL);
 
         if (pending)
             printf("    ... but cancel not lost (was pending)\n");
         else
             fprintf(stderr, "    *** and lost cancel (not pending)!\n");
     }
-    CATCH (pthread_cancel_e)
+#if 0
+    DCETHREAD_CATCH (pthread_cancel_e)
     {
         fprintf(stderr, "        Correct cancel exception operation\n");
         if (cancel_was_pending())
             fprintf(stderr, "    *** but ERROR: cancel still pending!\n");
     }
-    CATCH (rpc_x_cancel_timeout)
+#endif
+    DCETHREAD_CATCH (rpc_x_cancel_timeout)
     {
         fprintf(stderr, "    *** unexpected cancel timeout exception raised!\n");
         if (! cancel_was_pending())
             fprintf(stderr, "    *** and lost cancel (not pending)!\n");
-	RERAISE;
+	DCETHREAD_RERAISE;
     }
-    CATCH_ALL
+    DCETHREAD_CATCH_ALL(THIS_CATCH)
     {
         exc_report(THIS_CATCH);
         fprintf(stderr, "    *** unexpected exception raised!\n");
         fprintf(stderr, "    *** cancel %s pending\n",
                 cancel_was_pending() ? "still" : "not");
-	RERAISE;
+	DCETHREAD_RERAISE;
     }
-    ENDTRY
+    DCETHREAD_ENDTRY
 }
 
 /*
@@ -1591,12 +1588,11 @@ unsigned long           slow_secs;
  * Perform a RPC that doesn't call a cancellable operation followed
  * by one that does and verify that a cancel is detected.
  */
-void static_cancel_test3(rh, idem, slow_secs)
-
-rpc_binding_handle_t    rh;
-unsigned32              idem;
-unsigned long           slow_secs;
-
+void static_cancel_test3(
+    rpc_binding_handle_t    rh,
+    unsigned32              idem,
+    unsigned long           slow_secs
+)
 {
     int oc;
     boolean32 pending;
@@ -1604,7 +1600,7 @@ unsigned long           slow_secs;
 
     printf("    Static Cancel Test 3 (server SHOULD detect cancel on 2nd RPC):\n");
 
-    TRY
+    DCETHREAD_TRY
     {
         pthread_cancel(pthread_self());
 
@@ -1622,7 +1618,7 @@ unsigned long           slow_secs;
         }
 
 	pending = cancel_was_pending();
-	oc = pthread_setcancel(CANCEL_OFF);
+	oc = pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL);
 
         fprintf(stderr, "    *** cancel exception NOT raised!\n");
         if (pending)
@@ -1634,7 +1630,8 @@ unsigned long           slow_secs;
             fprintf(stderr, "    *** and lost cancel (not pending)!\n");
         }
     }
-    CATCH (pthread_cancel_e)
+#if 0
+    DCETHREAD_CATCH (pthread_cancel_e)
     {
         if (! first_done)
         {
@@ -1649,15 +1646,16 @@ unsigned long           slow_secs;
                 fprintf(stderr, "    *** but ERROR: cancel still pending!\n");
         }
     }
-    CATCH (rpc_x_cancel_timeout)
+#endif
+    DCETHREAD_CATCH (rpc_x_cancel_timeout)
     {
         fprintf(stderr, "    *** unexpected cancel timeout raised (%s call)!\n",
                                     first_done ? "2nd" : "1st");
         if (! cancel_was_pending())
             fprintf(stderr, "    *** and lost cancel (not pending)!\n");
-	RERAISE;
+	DCETHREAD_RERAISE;
     }
-    CATCH_ALL
+    DCETHREAD_CATCH_ALL(THIS_CATCH)
     {
         exc_report(THIS_CATCH);
         fprintf(stderr, "    *** unexpected exception raised (%s call)!\n",
@@ -1665,19 +1663,19 @@ unsigned long           slow_secs;
         fprintf(stderr, "    *** cancel %s pending\n",
                 cancel_was_pending() ? "still" : "not");
     }
-    ENDTRY
+    DCETHREAD_ENDTRY
 }
 
 /*
  * Static Cancel test
  */
 
-static void static_cancel_test (test, argc, argv)
-
-int                 test;
-int                 argc;
-char                *argv[];
-
+static void static_cancel_test
+(
+    int                 test,
+    int                 argc,
+    char                *argv[]
+)
 {
     handle_t            rh;
     int                 idem;
@@ -1735,12 +1733,12 @@ char                *argv[];
  * Context test
  */
 
-static void context_test (test, argc, argv)
-
-int                 test;
-int                 argc;
-char                *argv[];
-
+static void context_test
+(
+    int                 test,
+    int                 argc,
+    char                *argv[]
+)
 {
     handle_t            rh;
     unsigned32          data, rdata;
@@ -1784,7 +1782,7 @@ char                *argv[];
         if (delay.tv_sec > 0)
         {
             printf ("        Sleeping for %ld seconds...\n", delay.tv_sec);
-            pthread_delay_np(&delay);
+            SLEEP(delay.tv_sec);
             printf ("        ...awake\n");
         }
 
@@ -1811,12 +1809,12 @@ char                *argv[];
  * Looping test
  */
 
-static void looping_test (test, argc, argv)
-
-int                 test;
-int                 argc;
-char                *argv[];
-
+static void looping_test
+(
+    int                 test,
+    int                 argc,
+    char                *argv[]
+)
 {
 #define MSIZE (1024 * 1024)
     unsigned32          i;
@@ -2156,12 +2154,12 @@ char                *argv[];
  * One shot test
  */
 
-static void one_shot_test (test, argc, argv)
-
-int                 test;
-int                 argc;
-char                *argv[];
-
+static void one_shot_test
+(
+    int                 test,
+    int                 argc,
+    char                *argv[]
+)
 {
     handle_t            rh;
     struct msec_time    start_time;
@@ -2206,20 +2204,22 @@ char                *argv[];
  * Start test.  Catch and print any exceptions that are raised.
  */
 
-void rpc__cn_set_sock_buffsize (
+void rpc__cn_set_sock_buffsize
+(
         unsigned32	  /* rsize */,
         unsigned32	  /* ssize */,
         unsigned32	* /* st */);
-void rpc__cn_inq_sock_buffsize (
+void rpc__cn_inq_sock_buffsize
+(
         unsigned32	* /* rsize */,
         unsigned32	* /* ssize */,
         unsigned32  * /* st */);
 
-static void start_test(test, argc, argv)
-
-int test;
-int argc;
-char *argv[];
+static void start_test(
+    int test,
+    int argc,
+    char *argv[]
+)
 {
     unsigned32 rsize, ssize;
     error_status_t status;
@@ -2245,40 +2245,40 @@ char *argv[];
         exit(1);
     }
 
-    TRY
+    DCETHREAD_TRY
     {
         (*tinfo[test].proc)(test, argc, argv);
     }
-    CATCH (rpc_x_comm_failure)
+    DCETHREAD_CATCH (rpc_x_comm_failure)
     {
         fprintf(stderr, "*** \"Communications failure\" exception raised\n");
     }
-    CATCH (rpc_x_op_rng_error)
+    DCETHREAD_CATCH (rpc_x_op_rng_error)
     {
         fprintf(stderr, "*** \"Operation out of range\" exception raised\n");
     }
-    CATCH (rpc_x_unknown_if)
+    DCETHREAD_CATCH (rpc_x_unknown_if)
     {
         fprintf(stderr, "*** \"Unknown interface\" exception raised\n");
     }
-    CATCH (rpc_x_unknown_error)
+    DCETHREAD_CATCH (rpc_x_unknown_error)
     {
         fprintf(stderr, "*** \"Unknown error\" exception raised\n");
     }
-    CATCH (rpc_x_unknown_remote_fault)
+    DCETHREAD_CATCH (rpc_x_unknown_remote_fault)
     {
         fprintf(stderr, "*** \"Unknown remote fault\" exception raised\n");
     }
-    CATCH_ALL
+    DCETHREAD_CATCH_ALL(THIS_CATCH)
     {
         exc_report(THIS_CATCH);
         fprintf(stderr, "*** Unknown exception raised\n");
     }
-    FINALLY
+    DCETHREAD_FINALLY
     {
         check_wait_point(0);
     }
-    ENDTRY
+    DCETHREAD_ENDTRY
 }
 
 
@@ -2295,11 +2295,10 @@ struct task_info_t
  * Base procedure for multithreading test
  */
 
-static void multi_task (info, len)
-
-struct task_info_t  *info;
-int                 len __attribute__(unused);
-
+static void multi_task
+(
+    struct task_info_t  *info
+)
 {
     unsigned32  st;
 
@@ -2315,19 +2314,18 @@ int                 len __attribute__(unused);
         }
     }
 
-    TRY
+    DCETHREAD_TRY
     {
         start_test(info->test, info->argc, info->argv);
     }
-    CATCH_ALL
+    DCETHREAD_CATCH_ALL(THIS_CATCH)
     {
         exc_report(THIS_CATCH);
         fprintf(stderr, "*** Multi-thread base: exception raised (thread %d)\n", info->thread);
-        RERAISE;
+        DCETHREAD_RERAISE;
     }
-    ENDTRY
+    DCETHREAD_ENDTRY
 }
-
 
 
 
@@ -2338,17 +2336,16 @@ int                 len __attribute__(unused);
 #define TASK_STACK_SIZE (64 * 1024)
 #define TASK_PRIORITY 3
 
-static void multi_test (test, argc, argv)
-
-int                 test;
-int                 argc;
-char                *argv[];
+static void multi_test
+(
+    int                 test,
+    int                 argc,
+    char                *argv[]
+)
 {
     int                 i;
     volatile idl_boolean  done;
     pthread_t           tasks[MAX_TASKS];
-
-	DO_NOT_CLOBBER(i);
 
     if (n_tasks > MAX_TASKS)
     {
@@ -2369,34 +2366,33 @@ char                *argv[];
         info->argc   = argc;
         info->argv   = argv;
 
-        TRY {
-            pthread_create(&tasks[i], pthread_attr_default,
-                (pthread_startroutine_t) multi_task, (pthread_addr_t) info);
-        } CATCH_ALL {
+        DCETHREAD_TRY {
+            pthread_create(&tasks[i], NULL, multi_task, info);
+        } DCETHREAD_CATCH_ALL(THIS_CATCH) {
             exc_report(THIS_CATCH);
             printf("*** pthread_create failed\n");
             exit(1);
-        } ENDTRY
+        } DCETHREAD_ENDTRY
     }
 
     done = false;
     while (!done)
     {
-        TRY {
+        DCETHREAD_TRY {
             for (i = 0; i < n_tasks; i++)
             {
                 void *junk;
                 pthread_join(tasks[i], &junk);
             }
             done = true;
-        } CATCH_ALL {
+        } DCETHREAD_CATCH_ALL(THIS_CATCH) {
             exc_report(THIS_CATCH);
             printf("*** Cancelling threads\n");
             for (i = 0; i < n_tasks; i++)
             {
                 pthread_cancel(tasks[i]);
             }
-        } ENDTRY
+        } DCETHREAD_ENDTRY
     }
 
     if (stats)
@@ -2405,14 +2401,13 @@ char                *argv[];
     }
 }
 
-
 
 /*
  * Parse authentication (-p) option.
  */
 extern int lookup_name(char *table[], char *s);
 
-static void parse_auth_option()
+static void parse_auth_option(void)
 {
     extern char         *optarg;
     char                *s;
@@ -2425,7 +2420,7 @@ static void parse_auth_option()
         exit(1);
     }
 
-    strlcpy(tmp, optarg, strlen(optarg)+1));
+    strlcpy(tmp, optarg, strlen(optarg)+1);
 
     /*
      * We can't free tmp, so we will loose some memory after each fork.
@@ -2459,17 +2454,18 @@ static void parse_auth_option()
 /*
  * Main program
  */
-extern void rpc__dbg_set_switches    (
+extern void rpc__dbg_set_switches
+(
         char            * /*s*/,
         unsigned32      * /*st*/
     );
 extern void dump_stg_info(void);
 
-int main (argc, argv)
-
-int                 argc;
-char                *argv[];
-
+int main
+(
+    int                 argc,
+    char                *argv[]
+)
 {
     int                 test, save_argc=0;
     unsigned32          st;
@@ -2562,7 +2558,7 @@ fork_test_replay:
                     exit(1);
                 }
 
-                strlcpy(tmp, optarg, strlen(optarg)+1));
+                strlcpy(tmp, optarg, strlen(optarg)+1);
 
                 /*
                  * We can't free tmp, so we will loose some memory after each fork.
@@ -2653,7 +2649,7 @@ fork_test_replay:
 
     if (fork_count != 0 || do_fork != 6)
     {
-        pthread_mutex_init(&global_mutex, pthread_mutexattr_default);
+        pthread_mutex_init(&global_mutex, NULL);
 
         if (multithread)
         {
