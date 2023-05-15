@@ -1,0 +1,24 @@
+name: macOS
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: dependencies
+      run: |
+        brew install flex bison autoconf automake libtool
+    - name: build dceidl
+      run: xcodebuild -configuration Debug -target dceidl
+    - name: install dceidl
+      run: sudo xcodebuild -configuration Debug -target dceidl install DSTROOT=/
+    - name: make framework
+      run: xcodebuild -configuration Debug -target DCERPC
