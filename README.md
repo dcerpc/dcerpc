@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/dcerpc/dcerpc.svg?branch=master)](https://travis-ci.org/dcerpc/dcerpc)
+[![macOS Status](https://github.com/dcerpc/dcerpc/actions/workflows/macos-build.yml/badge.svg)](https://github.com/dcerpc/dcerpc/actions/workflows/macos-build.yml)
+[![Linux Status](https://github.com/dcerpc/dcerpc/actions/workflows/ubuntu-build.yml/badge.svg)](https://github.com/dcerpc/dcerpc/actions/workflows/ubuntu-build.yml)
 [![Coverity Status](https://scan.coverity.com/projects/6628/badge.svg)](https://scan.coverity.com/projects/dce-rpc)
 
 DCE/RPC
