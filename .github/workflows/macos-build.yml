@@ -17,8 +17,8 @@ jobs:
       run: |
         brew install flex bison autoconf automake libtool
     - name: build dceidl
-      run: xcodebuild -configuration Debug -target dceidl
+      run: xcodebuild -configuration Release -target dceidl
     - name: install dceidl
-      run: sudo xcodebuild -configuration Debug -target dceidl install DSTROOT=/
+      run: sudo xcodebuild -configuration Release -target dceidl install DSTROOT=/
     - name: make framework
-      run: xcodebuild -configuration Debug -target DCERPC
+      run: xcodebuild -configuration Release -target DCERPC
