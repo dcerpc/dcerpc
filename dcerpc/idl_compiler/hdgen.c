@@ -155,32 +155,27 @@ static void CSPELL_constant_def
 {
     char const *s;
 
-    /* We want to make sure that the literal values for constants are
-     * independent of the architecture of the IDL compiler. We should always
-     * generate the same value.
-     */
-#if __LP64__
-#define LONG_MODIFIER
-#else
-#define LONG_MODIFIER "l"
-#endif
-
     fprintf (fid, "#define ");
     spell_name (fid, cp->name);
     fprintf (fid, " %s", cast);
-    if (cp->defined_as != NULL)
+    if (cp->defined_as != NULL) {
         spell_name (fid, cp->defined_as->name);
-    else
+    } else {
         switch (cp->kind) {
             case AST_nil_const_k:
                 fprintf (fid, "NULL");
                 break;
             case AST_int_const_k:
-		 /* handle the signed-ness of the constant */
-		 if (cp->int_signed)
-                	fprintf (fid, "(%"LONG_MODIFIER"d)", cp->value.int_val);
-		 else
-			fprintf (fid, "(0x%"LONG_MODIFIER"x)", cp->value.int_val); /* prevent signed-edness problems with cxx */
+		 /* Handle the signed-ness of the constant. Cast the value
+                  * to an in type so that the literal values for constants are
+                  * independent of the architecture of the IDL compiler. We should
+                  * always generate the same value.
+                  */
+		 if (cp->int_signed) {
+                	fprintf (fid, "(%d)", (int)cp->value.int_val);
+                 } else {
+			fprintf (fid, "(0x%x)", (unsigned int)cp->value.int_val); /* prevent signed-edness problems with cxx */
+                 }
                 break;
             case AST_hyper_int_const_k:
                 fprintf (fid, "{%ld,%lu}",
@@ -199,6 +194,7 @@ static void CSPELL_constant_def
                          cp->value.boolean_val ? "ndr_true" : "ndr_false");
                 break;
         }
+    }
     fprintf (fid, "\n");
 }
 
