@@ -75,6 +75,7 @@ API_FILES = $(COMMON_FILES) \
 	dcethread_self.c \
 	dcethread_exc_init.c \
 	dcethread_exc_setstatus.c \
+	dcethread_exc_getname.c \
 	dcethread_exc_getstatus.c \
 	dcethread_exc_matches.c \
 	dcethread_exc_raise.c \

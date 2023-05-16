@@ -205,7 +205,7 @@ idl_uuid_t NilTypeObj =
 idl_uuid_t NilObj = {0,0,0,0,0,{0,0,0,0,0,0} };
 
 
-char *authn_level_names[] =
+const char *authn_level_names[] =
 {
     "default",
     "none",
@@ -217,7 +217,7 @@ char *authn_level_names[] =
     NULL
 };
 
-char *authn_names[] =
+const char *authn_names[] =
 {
     "none",
     "dce_private",
@@ -226,7 +226,7 @@ char *authn_names[] =
     NULL
 };
 
-char *authz_names[] =
+const char *authz_names[] =
 {
     "none",
     "name",
@@ -238,10 +238,9 @@ char *authz_names[] =
  * Return error text.
  */
 
-char *error_text (st)
-
-unsigned32      st;
-
+char *error_text (
+    unsigned32      st
+)
 {
     static dce_error_string_t error_string;
     int inq_st;
@@ -289,4 +288,12 @@ int lookup_name(char *table[], char *s)
     usage(-1);
 	 /* NOTREACHED */
 	 return -1;
+}
+
+/* The DCE implementation of exc_report was lost somewhere along the line ... */
+void exc_report(dcethread_exc* exc)
+{
+    fprintf(stderr, "exception: %s (%d)\n",
+            dcethread_exc_getname(exc),
+            dcethread_exc_getstatus(exc));
 }

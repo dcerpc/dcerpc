@@ -90,7 +90,7 @@
 #         run_client.sh ncadg_ip_udp:129.35.130.133[2001]
 #
 
-CLIENT=client
+CLIENT=./client
 DEBUG=
 PC=false
 

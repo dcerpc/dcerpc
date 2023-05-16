@@ -308,6 +308,7 @@ typedef struct _dcethread_exc
 void dcethread_exc_init(dcethread_exc* exc, const char* name);
 void dcethread_exc_setstatus(dcethread_exc* exc, int value);
 int dcethread_exc_getstatus(dcethread_exc* exc);
+const char * dcethread_exc_getname(dcethread_exc* exc);
 int dcethread_exc_matches(dcethread_exc* exc, dcethread_exc* pattern);
 __DCETHREAD_NORETURN__ void dcethread_exc_raise(dcethread_exc* exc, const char* file, unsigned int line);
 

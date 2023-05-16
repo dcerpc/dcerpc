@@ -3,11 +3,12 @@ include $(top_srcdir)/include.mk
 
 MY_IDLFLAGS = -no_mepv -I$(IDL_INCLUDE_DIR)/.. -I$(top_builddir)/include $(DCETHREADINCLUDES)
 libs=$(top_builddir)/dcelib/libdcerpc.la \
-	$(top_builddir)/threads/libdcepthreads.la \
-	$(top_builddir)/uuid/libuuid.la -lstdc++ \
-	$(top_builddir)/ncklib/transport/cn/libprot_ncacn.la \
-	$(top_builddir)/ncklib/transport/dg/libprot_ncadg.la 
-
+	$(top_builddir)/libdcethread/libdcethread.la \
+	$(top_builddir)/uuid/libuuid.la \
+	$(top_builddir)/ncklib/libprot_ncadg.la \
+	$(top_builddir)/ncklib/libprot_ncacn.la \
+	@LIB_pthread@ \
+	-lm
 
 EXTRA_PROGRAMS=client server
 TESTS=run_tests.sh
@@ -15,7 +16,7 @@ EXTRA_DIST=run_tests.sh
 
 run_tests.sh:	$(EXTRA_PROGRAMS)
 
-client_SOURCES=client.c util.c perfg.c perfb.c
+client_SOURCES=client.c util.c
 server_SOURCES=server.c util.c perf.c perfg.c perfb.c
 client_LDADD=perf_cstub.o perfb_cstub.o perfc_sstub.o perfg_cstub.o $(libs)
 server_LDADD=perf_sstub.o perfb_sstub.o perfc_cstub.o perfg_sstub.o $(libs)
@@ -39,4 +40,3 @@ perfc_cstub.o perfc_sstub.o perfc.h: perfc.idl
 
 perfg_cstub.o perfg_sstub.o perfg.h: perfg.idl
 	$(IDL) $(MY_IDLFLAGS) perfg.idl
-

@@ -103,13 +103,7 @@
 #include <perfc.h>
 #include <perfg.h>
 
-#ifndef NO_TASKING
-#  include <dce/pthread.h>
-#  include <dce/exc_handling.h>
-#  ifdef BROKEN_CMA_EXC_HANDLING
-#    define pthread_cancel_e  cma_e_alerted
-#  endif
-#endif
+#include <dce/dcethread.h>
 
 #include <dce/rpcexc.h>
 
@@ -117,7 +111,8 @@
 #  define index strchr
 #endif
 
-extern char *error_text();
+extern char *error_text(unsigned32);
+extern void exc_report(dcethread_exc*);
 
 #define MARSHALL_DOUBLE(d)
 #define UNMARSHALL_DOUBLE(d)
@@ -125,33 +120,14 @@ extern char *error_text();
 extern uuid_old_t FooType, BarType, FooObj1, FooObj2, BarObj1, BarObj2;
 extern idl_uuid_t NilTypeObj, NilObj, ZotObj, ZotType;
 
-extern char *authn_level_names[];
-extern char *authn_names[];
-extern char *authz_names[];
+extern const char *authn_level_names[];
+extern const char *authn_names[];
+extern const char *authz_names[];
 
 #define DEBUG_LEVEL   "0.1"
 #define LOSSY_LEVEL   "4.99"
 
-#ifdef CMA_INCLUDE
-#define USE_PTHREAD_DELAY_NP
-#endif
-
-#ifdef USE_PTHREAD_DELAY_NP
-
-#define SLEEP(secs) \
-{ \
-    struct timespec delay; \
-    delay.tv_sec  = (secs); \
-    delay.tv_nsec = 0; \
-    pthread_delay_np(&delay); \
-}
-
-#else
-
-#define SLEEP(secs) \
-    sleep(secs)
-
-#endif
+#define SLEEP(secs)  sleep(secs)
 
 #define VRprintf(level, stuff) \
 { \

@@ -74,87 +74,15 @@
  * @APPLE_LICENSE_HEADER_END@
  */
 
-/*
-**
-**  NAME
-**
-**      rpcp.h
-**
-**  FACILITY:
-**
-**      Remote Procedure Call (RPC)
-**
-**  ABSTRACT:
-**
-**  Server manager routines for performance and system execiser
-**  auxiliary interface. This interface is generic.
-**
-**
-*/
+#include <config.h>
 
-#include <perf_c.h>
-#include <perf_p.h>
-
-/***************************************************************************/
+#include "dcethread-private.h"
+#include "dcethread-util.h"
+#include "dcethread-debug.h"
+#include "dcethread-exception.h"
 
-void foo_perfg_op1 (h, n, x)
-
-handle_t                h __attribute__((unused));
-unsigned long           n;
-unsigned long           *x;
-
+const char *
+dcethread_exc_getname(dcethread_exc* exc)
 {
-    *x = 2 * n;
+    return dcethread__exc_getname(exc);
 }
-
-/***************************************************************************/
-
-void foo_perfg_op2 (h, n, x)
-
-handle_t                h __attribute__((unused));
-unsigned long           n;
-unsigned long           *x;
-
-{
-    *x = 3 * n;
-}
-
-/***************************************************************************/
-
-perfg_v1_0_epv_t foo_perfg_epv =
-{
-    foo_perfg_op1,
-    foo_perfg_op2
-};
-
-/***************************************************************************/
-
-void bar_perfg_op1 (h, n, x)
-
-handle_t                h __attribute__((unused));
-unsigned long           n;
-unsigned long           *x;
-
-{
-    *x = 4 * n;
-}
-
-/***************************************************************************/
-
-void bar_perfg_op2 (h, n, x)
-
-handle_t                h __attribute__((unused));
-unsigned long           n;
-unsigned long           *x;
-
-{
-    *x = 5 * n;
-}
-
-/***************************************************************************/
-
-perfg_v1_0_epv_t bar_perfg_epv =
-{
-    bar_perfg_op1,
-    bar_perfg_op2
-};

@@ -96,4 +96,4 @@ extern perfg_v1_0_epv_t foo_perfg_epv, bar_perfg_epv;
 extern perf_v2_0_epv_t perf_epv;
 
 extern idl_boolean use_reserved_threads;
-extern int teardown_thread_pools();
+extern int teardown_thread_pools(idl_boolean);
